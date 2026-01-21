@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من نحن - تأجير سيارات كركوك</title>
+    
+    <!-- روابط خارجية -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- أنماطنا -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- أنماط خاصة بصفحة من نحن -->
+    <style>
+        .about-hero {
+            background: linear-gradient(rgba(26, 35, 126, 0.85), rgba(13, 71, 161, 0.85)), url('https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .about-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .mission-section {
+            padding: 80px 0;
+            background: #f8fafc;
+        }
+        
+        .mission-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            height: 100%;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .mission-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .mission-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .story-section {
+            padding: 80px 0;
+        }
+        
+        .story-image {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .story-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        
+        .team-section {
+            padding: 80px 0;
+            background: #f8fafc;
+        }
+        
+        .team-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .team-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .team-info {
+            padding: 25px;
+        }
+        
+        .team-social {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .team-social a {
+            width: 40px;
+            height: 40px;
+            background: #f1f5f9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a237e;
+            transition: all 0.3s ease;
+        }
+        
+        .team-social a:hover {
+            background: #1a237e;
+            color: white;
+        }
+        
+        .values-section {
+            padding: 80px 0;
+        }
+        
+        .value-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .value-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .contact-info-section {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            color: white;
+            padding: 80px 0;
+            border-radius: 20px;
+            margin: 60px 0;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .about-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .mission-card, .team-card {
+                margin-bottom: 30px;
+            }
+            
+            .value-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .value-icon {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <div class="container">
+            <!-- الشعار -->
+            <a href="index.html" class="logo">
+                <i class="fas fa-car"></i>
+                <span>تأجير سيارات كركوك</span>
+            </a>
+            
+            <!-- القائمة الرئيسية -->
+            <ul class="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="cars.html"><i class="fas fa-car"></i> السيارات</a></li>
+                <li><a href="bookings.html"><i class="fas fa-calendar-alt"></i> الحجوزات</a></li>
+                <li><a href="about.html" class="active"><i class="fas fa-info-circle"></i> من نحن</a></li>
+                <li><a href="contact.html"><i class="fas fa-phone"></i> اتصل بنا</a></li>
+            </ul>
+            
+            <!-- زر القائمة المتنقلة -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- القائمة المتنقلة -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+            <li><a href="cars.html"><i class="fas fa-car"></i> السيارات</a></li>
+            <li><a href="bookings.html"><i class="fas fa-calendar-alt"></i> الحجوزات</a></li>
+            <li><a href="about.html" class="active"><i class="fas fa-info-circle"></i> من نحن</a></li>
+            <li><a href="contact.html"><i class="fas fa-phone"></i> اتصل بنا</a></li>
+            <li><a href="admin-login.html"><i class="fas fa-user-shield"></i> دخول المدير</a></li>
+        </ul>
+    </div>
+
+    <!-- قسم البطل -->
+    <section class="about-hero">
+        <div class="container">
+            <h1>من نحن</h1>
+            <p class="hero-subtitle">
+                قصة نجاحنا ورسالتنا في تقديم أفضل خدمات تأجير السيارات في كركوك
+            </p>
+        </div>
+    </section>
+
+    <!-- قسم القصة -->
+    <section class="story-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 col-lg-6">
+                    <div class="story-image">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="قصة الشركة">
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="ps-lg-5 mt-5 mt-lg-0">
+                        <h2>قصتنا</h2>
+                        <p class="lead">
+                            تأسست شركة "تأجير سيارات كركوك" عام 2018 بفكرة بسيطة: 
+                            تقديم خدمة تأجير سيارات مميزة ومحترفة في محافظة كركوك.
+                        </p>
+                        <p>
+                            بدأنا برؤية واضحة وهي توفير حلول نقل موثوقة وآمنة للسكان 
+                            والزوار، مع التركيز على جودة الخدمة والرضا التام للعملاء.
+                        </p>
+                        <p>
+                            على مر السنين، نمت شركتنا من أسطول صغير إلى واحدة من 
+                            أبرز شركات تأجير السيارات في المنطقة، بفضل ثقة عملائنا 
+                            الكرام وتفاني فريق العمل.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الرسالة والرؤية -->
+    <section class="mission-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>رسالتنا ورؤيتنا</h2>
+                <p class="section-subtitle">ما نؤمن به وما نسعى لتحقيقه</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="mission-card">
+                        <div class="mission-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3>رسالتنا</h3>
+                        <p>
+                            تقديم خدمة تأجير سيارات استثنائية من خلال أسطول حديث، 
+                            فريق عمل محترف، والتزام كامل برضا العملاء، مما يساهم 
+                            في تطوير قطاع النقل والخدمات في محافظة كركوك.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-md-6">
+                    <div class="mission-card">
+                        <div class="mission-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3>رؤيتنا</h3>
+                        <p>
+                            أن نكون الشركة الرائدة في تأجير السيارات في العراق، 
+                            معروفين بتميزنا في الجودة والخدمة والابتكار، 
+                            ونساهم في تنشيط السياحة والاقتصاد المحلي.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم القيم -->
+    <section class="values-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>قيمنا الأساسية</h2>
+                <p class="section-subtitle">المبادئ التي نعمل وفقاً لها</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div>
+                            <h3>النزاهة</h3>
+                            <p>
+                                نلتزم بأعلى معايير الشفافية والأمانة في جميع 
+                                تعاملاتنا مع العملاء والشركاء.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-md-6">
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div>
+                            <h3>الجودة</h3>
+                            <p>
+                                نحافظ على أعلى معايير الجودة في سياراتنا وخدماتنا، 
+                                ونسعى للتحسين المستمر.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-md-6">
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <h3>التركيز على العميل</h3>
+                            <p>
+                                نضع احتياجات وراحة عملائنا في صلب أولوياتنا، 
+                                ونسعى لتقديم تجربة استثنائية.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-md-6">
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div>
+                            <h3>الابتكار</h3>
+                            <p>
+                                نتبنى التقنيات الحديثة والأفكار المبتكرة لتحسين 
+                                خدماتنا وتجربة عملائنا.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم فريق العمل -->
+    <section class="team-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>فريق العمل</h2>
+                <p class="section-subtitle">الوجوه خلف نجاحنا</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="team-card">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="المدير العام" class="team-image">
+                        <div class="team-info">
+                            <h4>أحمد محمد</h4>
+                            <p class="text-muted">المدير العام</p>
+                            <p>
+                                خبرة 15 عاماً في إدارة شركات تأجير السيارات.
+                            </p>
+                            <div class="team-social">
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-facebook"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="team-card">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="مديرة العمليات" class="team-image">
+                        <div class="team-info">
+                            <h4>سارة علي</h4>
+                            <p class="text-muted">مديرة العمليات</p>
+                            <p>
+                                متخصصة في إدارة العمليات وخدمة العملاء.
+                            </p>
+                            <div class="team-social">
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="team-card">
+                        <img src="https://randomuser.me/api/portraits/men/65.jpg" alt="مدير الصيانة" class="team-image">
+                        <div class="team-info">
+                            <h4>حسن كريم</h4>
+                            <p class="text-muted">مدير الصيانة</p>
+                            <p>
+                                خبرة 20 عاماً في صيانة وإصلاح السيارات.
+                            </p>
+                            <div class="team-social">
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-md-6 col-lg-3">
+                    <div class="team-card">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="مديرة المبيعات" class="team-image">
+                        <div class="team-info">
+                            <h4>نور محمد</h4>
+                            <p class="text-muted">مديرة المبيعات</p>
+                            <p>
+                                متخصصة في تطوير الأعمال والتسويق.
+                            </p>
+                            <div class="team-social">
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-facebook"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم معلومات الاتصال -->
+    <section class="contact-info-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <h2>تواصل معنا</h2>
+                    <p class="lead">
+                        نرحب باستفساراتكم واقتراحاتكم. فريقنا متاح دائماً لخدمتكم.
+                    </p>
+                </div>
+                <div class="col-12 col-md-4 text-md-end">
+                    <a href="contact.html" class="btn btn-accent btn-lg">
+                        <i class="fas fa-envelope"></i> اتصل بنا
+                    </a>
+                </div>
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-12 col-md-4">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h4>العنوان</h4>
+                            <p>كركوك، شارع الجمهورية، العراق</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-md-4">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h4>الهاتف</h4>
+                            <p>07701234567</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-md-4">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4>البريد الإلكتروني</h4>
+                            <p>info@kirkukcars.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- التذييل -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="footer-section">
+                        <h4>تأجير سيارات كركوك</h4>
+                        <p>
+                            شركة رائدة في تأجير السيارات في محافظة كركوك، 
+                            نقدم خدمات مميزة بمعايير عالية الجودة.
+                        </p>
+   

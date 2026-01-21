@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الحجوزات - تأجير سيارات كركوك</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-car"></i>
+                تأجير سيارات كركوك
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="cars.html">السيارات</a></li>
+                <li><a href="bookings.html" class="active">الحجوزات</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- محتوى صفحة الحجوزات -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1>الحجوزات</h1>
+                <p>إدارة جميع حجوزات السيارات</p>
+            </div>
+
+            <!-- قسم حجز جديد -->
+            <section class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-plus-circle"></i> حجز جديد</h3>
+                </div>
+                <div class="card-body">
+                    <form id="newBookingForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>اختر سيارة</label>
+                                <select class="form-control" id="carSelect" required>
+                                    <option value="">اختر سيارة</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>اسم العميل</label>
+                                <input type="text" class="form-control" placeholder="أدخل اسم العميل" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>رقم الهاتف</label>
+                                <input type="tel" class="form-control" placeholder="0770XXXXXXX" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>تاريخ البدء</label>
+                                <input type="date" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>تاريخ الانتهاء</label>
+                                <input type="date" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> تأكيد الحجز
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- قائمة الحجوزات -->
+            <section class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-list"></i> الحجوزات الحالية</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>رقم الحجز</th>
+                                    <th>العميل</th>
+                                    <th>السيارة</th>
+                                    <th>الفترة</th>
+                                    <th>الحالة</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTable">
+                                <!-- سيتم ملؤه بالبيانات -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- التذييل -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2023 تأجير سيارات كركوك</p>
+        </div>
+    </footer>
+
+    <!-- السكريبتات -->
+    <script src="js/utils.js"></script>
+    <script src="js/booking.js"></script>
+    <script>
+        // تهيئة صفحة الحجوزات
+        document.addEventListener('DOMContentLoaded', function() {
+            // تحميل السيارات في القائمة المنسدلة
+            loadCarsForBooking();
+            
+            // تحميل الحجوزات
+            loadBookings();
+            
+            // معالجة نموذج الحجز الجديد
+            document.getElementById('newBookingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                createNewBooking();
+            });
+        });
+        
+        function loadCarsForBooking() {
+            // محاكاة بيانات السيارات
+            const cars = [
+                { id: 1, name: 'تويوتا كامري 2023', price: '50,000 دينار/يوم' },
+                { id: 2, name: 'هيونداي سوناتا 2022', price: '45,000 دينار/يوم' },
+                { id: 3, name: 'كيا سورينتو 2023', price: '60,000 دينار/يوم' }
+            ];
+            
+            const select = document.getElementById('carSelect');
+            cars.forEach(car => {
+                const option = document.createElement('option');
+                option.value = car.id;
+                option.textContent = `${car.name} - ${car.price}`;
+                select.appendChild(option);
+            });
+        }
+        
+        function loadBookings() {
+            // محاكاة بيانات الحجوزات
+            const bookings = [
+                { id: 'BK001', customer: 'علي أحمد', car: 'تويوتا كامري', period: '10-15 نوفمبر', status: 'نشط' },
+                { id: 'BK002', customer: 'سارة محمد', car: 'هيونداي سوناتا', period: '12-18 نوفمبر', status: 'مؤكد' }
+            ];
+            
+            const tbody = document.getElementById('bookingsTable');
+            bookings.forEach(booking => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${booking.id}</td>
+                    <td>${booking.customer}</td>
+                    <td>${booking.car}</td>
+                    <td>${booking.period}</td>
+                    <td><span class="badge badge-success">${booking.status}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary">عرض</button>
+                        <button class="btn btn-sm btn-danger">إلغاء</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function createNewBooking() {
+            alert('تم إنشاء الحجز بنجاح!');
+            // في التطبيق الحقيقي، أضف منطق حفظ الحجز هنا
+        }
+    </script>
+</body>
+</html>

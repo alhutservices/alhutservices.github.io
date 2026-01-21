@@ -2,79 +2,671 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>الحوت - احجز سيارة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الحوت لتأجير السيارات - كركوك</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial; text-align: center; padding: 20px; background: #f5f5f5; }
-        .step { background: white; padding: 30px; margin: 20px auto; max-width: 600px; border-radius: 10px; display: none; }
-        .step.active { display: block; }
-        button { background: #1a5fb4; color: white; border: none; padding: 12px 24px; margin: 10px; border-radius: 5px; cursor: pointer; }
-        input, select { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a5fb4;
+            --primary-dark: #0d4a9c;
+            --secondary: #e67e22;
+            --accent: #27ae60;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            --gradient-secondary: linear-gradient(135deg, var(--secondary), #d35400);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.2);
+            --radius: 15px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            direction: rtl;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* تأثيرات الخلفية */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: 20%;
+            left: 15%;
+            animation-delay: 5s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            left: 10%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        /* الرأس */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform: translateY(0);
+            transition: var(--transition);
+        }
+
+        .header:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(26, 95, 180, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo-text h1 {
+            font-size: 2.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+
+        .logo-text p {
+            color: var(--dark);
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        /* خطوات التقدم */
+        .progress-container {
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-secondary);
+            width: 33.33%;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            opacity: 0.5;
+            transform: scale(0.9);
+            transition: var(--transition);
+        }
+
+        .progress-step.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid transparent;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+
+        .progress-step.active .step-number {
+            background: var(--gradient-secondary);
+            border-color: white;
+            box-shadow: 0 0 20px rgba(230, 126, 34, 0.4);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* نماذج الحجز */
+        .booking-container {
+            perspective: 1000px;
+        }
+
+        .form-step {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transform-style: preserve-3d;
+            opacity: 0;
+            transform: rotateY(-180deg) translateZ(-100px);
+            transition: var(--transition);
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .form-step.active {
+            opacity: 1;
+            transform: rotateY(0) translateZ(0);
+            position: relative;
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(26, 95, 180, 0.1);
+        }
+
+        .form-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(26, 95, 180, 0.3);
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        /* تصميم الحقول */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 16px;
+        }
+
+        .form-label i {
+            margin-left: 8px;
+            color: var(--primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid rgba(26, 95, 180, 0.1);
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Tajawal', sans-serif;
+            background: rgba(255, 255, 255, 0.9);
+            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(26, 95, 180, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .form-control:hover {
+            border-color: var(--primary);
+        }
+
+        /* زر الاختيار المخصص */
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            pointer-events: none;
+        }
+
+        /* أزرار التنقل */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(26, 95, 180, 0.1);
+        }
+
+        .btn {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 5px 15px rgba(26, 95, 180, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(26, 95, 180, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* صفحة النجاح */
+        .success-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+            transform: scale(0.8);
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            to { transform: scale(1); }
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 30px rgba(26, 95, 180, 0.3);
+            animation: successBounce 1s ease infinite alternate;
+        }
+
+        @keyframes successBounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        .success-title {
+            font-size: 2.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .booking-code {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 30px 0;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ملخص الحجز */
+        .booking-summary {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid var(--accent);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: var(--dark);
+            font-size: 1.2rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-item {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .summary-item:hover {
+            transform: translateY(-3px);
+            background: white;
+        }
+
+        /* التجاوب مع الجوال */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .logo-text h1 {
+                font-size: 2rem;
+            }
+            
+            .form-step {
+                padding: 25px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .success-container {
+                padding: 40px 20px;
+            }
+            
+            .success-title {
+                font-size: 2rem;
+            }
+            
+            .booking-code {
+                font-size: 2rem;
+            }
+        }
+
+        /* تأثيرات إضافية */
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(26, 95, 180, 0.4); }
+            to { box-shadow: 0 0 20px rgba(26, 95, 180, 0.8), 0 0 30px rgba(26, 95, 180, 0.6); }
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
     </style>
 </head>
 <body>
-    <h1>🔷 احجز سيارتك مع الحوت</h1>
-    <p>📍 كركوك - العراق | 📞 0771 322 5471</p>
-    
-    <div class="step active" id="step1">
-        <h2>الخطوة 1: اختر السيارة والتواريخ</h2>
-        <select>
-            <option>تويوتا كامري 2023 - 55,000 دينار/يوم</option>
-            <option>هيونداي أكسنت 2023 - 45,000 دينار/يوم</option>
-        </select>
-        <br>
-        <input type="date" id="startDate">
-        <input type="date" id="endDate">
-        <br><br>
-        <button onclick="showStep(2)">التالي →</button>
-    </div>
-    
-    <div class="step" id="step2">
-        <h2>الخطوة 2: معلوماتك الشخصية</h2>
-        <input type="text" placeholder="الاسم الكامل">
-        <input type="tel" placeholder="رقم الهاتف">
-        <input type="email" placeholder="البريد الإلكتروني">
-        <br><br>
-        <button onclick="showStep(1)">← السابق</button>
-        <button onclick="showStep(3)">التالي →</button>
-    </div>
-    
-    <div class="step" id="step3">
-        <h2>الخطوة 3: تأكيد الحجز</h2>
-        <p>✔️ تويوتا كامري 2023</p>
-        <p>✔️ 3 أيام - 165,000 دينار</p>
-        <br>
-        <button onclick="showStep(2)">← السابق</button>
-        <button onclick="completeBooking()">تأكيد الحجز ✓</button>
-    </div>
-    
-    <div id="success" style="display:none; background:green; color:white; padding:30px; border-radius:10px; max-width:600px; margin:auto;">
-        <h2>🎉 تم الحجز بنجاح!</h2>
-        <p>شكراً لاختيارك الحوت لتأجير السيارات</p>
-        <p>📞 سنتصل بك على الرقم: 0771 322 5471</p>
-        <button onclick="location.href='index.html'">العودة للرئيسية</button>
+    <!-- تأثيرات الخلفية -->
+    <div class="bg-animation">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
     </div>
 
-    <script>
-        // تعيين التواريخ
-        const today = new Date();
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        
-        document.getElementById('startDate').valueAsDate = today;
-        document.getElementById('endDate').valueAsDate = tomorrow;
-        
-        // دالة الانتقال
-        function showStep(step) {
-            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-            document.getElementById('step' + step).classList.add('active');
-        }
-        
-        // دالة إكمال الحجز
-        function completeBooking() {
-            document.querySelectorAll('.step').forEach(s => s.style.display = 'none');
-            document.getElementById('success').style.display = 'block';
-            alert('تم الحجز! سنتصل بك قريباً على 0771 322 5471');
-        }
-    </script>
-</body>
-</html>
+    <div class="container">
+        <!-- الرأس -->
+        <div class="header floating">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>الحوت لتأجير السيارات</h1>
+                    <p>كركوك - العراق | هاتف: 0771 322 5471</p>
+                </div>
+            </div>
+            <p style="color: #666; margin-top: 10px;">احجز سيارتك في 3 خطوات سهلة مع ضمان أفضل الأسعار</p>
+        </div>
+
+        <!-- خطوات التقدم -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-steps">
+                <div class="progress-step active" id="step1Indicator">
+                    <div class="step-number">1</div>
+                    <div class="step-label">اختر السيارة</div>
+                </div>
+                <div class="progress-step" id="step2Indicator">
+                    <div class="step-number">2</div>
+                    <div class="step-label">معلوماتك</div>
+                </div>
+                <div class="progress-step" id="step3Indicator">
+                    <div class="step-number">3</div>
+                    <div class="step-label">تأكيد الحجز</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- حاوية النماذج -->
+        <div class="booking-container">
+            <!-- الخطوة 1: اختيار السيارة -->
+            <div class="form-step active" id="step1">
+                <div class="form-header">
+                    <div class="form-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h2 class="form-title">اختر السيارة والتواريخ</h2>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-car"></i> نوع السيارة</label>
+                        <div class="select-wrapper">
+                            <select class="form-control" id="carType">
+                                <option>تويوتا كامري 2023 - 55,000 دينار/يوم</option>
+                                <option>هيونداي أكسنت 2023 - 45,000 دينار/يوم</option>
+                                <option>كيا سيراتو 2023 - 50,000 دينار/يوم</option>
+                                <option>مرسيدس C-Class 2022 - 120,000 دينار/يوم</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-map-marker-alt"></i> مكان الاستلام</label>
+                        <div class="select-wrapper">
+                            <select class="form-control" id="pickupLocation">
+                                <option>مطار كركوك الدولي</option>
+                                <option>وسط مدينة كركوك</option>
+                                <option>فرع الحوت الرئيسي</option>
+                                <option>توصيل إلى العنوان</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-calendar"></i> تاريخ الاستلام</label>
+                        <input type="date" class="form-control" id="startDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-calendar-check"></i> تاريخ الإعادة</label>
+                        <input type="date" class="form-control" id="endDate">
+                    </div>
+                </div>
+
+                <!-- ملخص سريع -->
+                <div class="booking-summary">
+                    <div class="summary-title">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>ملخص الحجز السريع</span>

@@ -6,12 +6,13 @@
     <title>تأكيد الحجز - تأجير سيارات كركوك</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --success-color: #27ae60;
-            --accent-color: #e74c3c;
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --danger: #e74c3c;
         }
         
         * {
@@ -31,19 +32,31 @@
             direction: rtl;
         }
         
-        .confirmation-container {
+        .confirmation-card {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             padding: 40px;
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .confirmation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
         }
         
         .success-icon {
-            font-size: 80px;
-            color: var(--success-color);
+            font-size: 100px;
+            color: var(--success);
             margin-bottom: 20px;
             animation: bounce 1s infinite alternate;
         }
@@ -54,171 +67,305 @@
         }
         
         h1 {
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
         }
         
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
+        .booking-id {
+            font-size: 1.4rem;
+            color: var(--danger);
+            background: #fdf2f2;
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: inline-block;
+            margin: 15px 0;
+            font-weight: bold;
+            border: 2px dashed var(--danger);
         }
         
-        .booking-details {
+        .progress-container {
+            margin: 30px 0;
             background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+        
+        .progress-step {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
             border-radius: 10px;
+            border-right: 4px solid #ddd;
+            transition: all 0.3s;
+        }
+        
+        .progress-step.active {
+            border-right-color: var(--secondary);
+            background: #e3f2fd;
+        }
+        
+        .progress-step.completed {
+            border-right-color: var(--success);
+            background: #d4edda;
+        }
+        
+        .step-icon {
+            font-size: 1.5rem;
+            width: 40px;
+        }
+        
+        .step-text {
+            flex: 1;
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        .step-time {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .details-container {
+            background: #f0f7ff;
+            border-radius: 15px;
             padding: 25px;
             margin: 25px 0;
             text-align: right;
-            border-right: 4px solid var(--secondary-color);
+            border: 2px solid #e3f2fd;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
         }
         
         .detail-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .detail-item:last-child {
-            border-bottom: none;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-bottom: 3px solid #3498db;
         }
         
         .detail-label {
-            color: #666;
-            font-weight: 600;
+            color: var(--primary);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
         }
         
         .detail-value {
-            color: var(--primary-color);
-            font-weight: 700;
-        }
-        
-        .whatsapp-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: #25D366;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
+            color: #333;
             font-size: 1.1rem;
-            margin: 20px 0;
-            transition: all 0.3s;
-            border: none;
-            cursor: pointer;
-            width: 100%;
         }
         
-        .whatsapp-button:hover {
-            background: #128C7E;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
-        }
-        
-        .whatsapp-button i {
-            font-size: 1.5rem;
-        }
-        
-        .action-buttons {
+        .actions {
             display: flex;
             gap: 15px;
             margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
         
         .btn {
-            flex: 1;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 15px 35px;
+            border-radius: 10px;
             text-decoration: none;
-            font-weight: 600;
-            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
             transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            min-width: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         .btn-primary {
-            background: var(--secondary-color);
+            background: var(--secondary);
             color: white;
         }
         
         .btn-primary:hover {
             background: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
         }
         
-        .btn-secondary {
-            background: #f8f9fa;
-            color: var(--primary-color);
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #219653;
+            transform: translateY(-3px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
             border: 2px solid #ddd;
         }
         
-        .btn-secondary:hover {
-            background: #e9ecef;
+        .btn-outline:hover {
+            background: #f8f9fa;
+            border-color: var(--primary);
         }
         
-        .note {
+        .notification {
             margin-top: 25px;
-            padding: 15px;
+            padding: 20px;
             background: #fff8e1;
-            border-radius: 8px;
-            color: #ff8f00;
-            font-size: 0.9rem;
+            border-radius: 10px;
             border-right: 4px solid #ffb300;
+            color: #856404;
+            text-align: right;
+        }
+        
+        .notification i {
+            color: #ffb300;
+            margin-left: 10px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .status-sending {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .status-sent {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
         }
         
         @media (max-width: 768px) {
-            .confirmation-container {
+            .confirmation-card {
                 padding: 25px;
             }
             
-            .action-buttons {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions {
                 flex-direction: column;
+            }
+            
+            .btn {
+                min-width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="confirmation-container">
+    <div class="confirmation-card">
         <div class="success-icon">
             <i class="fas fa-check-circle"></i>
         </div>
         
         <h1>تم تأكيد حجزك بنجاح! 🎉</h1>
-        <p class="subtitle">رقم الحجز: <strong>#KRK-${Date.now().toString().slice(-6)}</strong></p>
+        <div class="booking-id" id="booking-id">جاري توليد رقم الحجز...</div>
         
-        <div class="booking-details" id="bookingDetails">
-            <!-- سيتم ملؤها بالجافاسكريبت -->
+        <div class="progress-container">
+            <div class="progress-step active" id="step1">
+                <div class="step-icon">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <div class="step-text">جاري إرسال تأكيد الحجز</div>
+                <div class="step-time" id="step1-time">--:--</div>
+            </div>
+            
+            <div class="progress-step" id="step2">
+                <div class="step-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="step-text">في انتظار تأكيد المسؤول</div>
+                <div class="step-time">24 ساعة</div>
+            </div>
+            
+            <div class="progress-step" id="step3">
+                <div class="step-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class="step-text">استلام السيارة</div>
+                <div class="step-time">حسب الموعد</div>
+            </div>
         </div>
         
-        <button class="whatsapp-button" id="whatsappBtn">
-            <i class="fab fa-whatsapp"></i>
-            ارسل تأكيد الحجز عبر واتساب
-        </button>
-        
-        <div class="note">
-            <i class="fas fa-info-circle"></i>
-            سيتم التواصل معك خلال 24 ساعة لتأكيد التفاصيل النهائية وتسليم السيارة.
+        <div class="details-container">
+            <h3 style="color: var(--primary); margin-bottom: 20px;">
+                <i class="fas fa-file-contract"></i> تفاصيل حجزك
+            </h3>
+            <div class="details-grid" id="details-grid">
+                <!-- سيتم ملؤها بالجافاسكريبت -->
+            </div>
+            <div class="status-badge status-sending" id="email-status">
+                جاري إرسال البريد...
+            </div>
         </div>
         
-        <div class="action-buttons">
+        <div class="actions">
             <a href="index.html" class="btn btn-primary">
                 <i class="fas fa-home"></i> العودة للرئيسية
             </a>
-            <a href="cars.html" class="btn btn-secondary">
-                <i class="fas fa-car"></i> استئجار سيارة أخرى
+            <button onclick="resendConfirmation()" class="btn btn-success" id="resend-btn" style="display: none;">
+                <i class="fas fa-redo"></i> إعادة إرسال التأكيد
+            </button>
+            <a href="cars.html" class="btn btn-outline">
+                <i class="fas fa-car"></i> حجز سيارة أخرى
             </a>
+        </div>
+        
+        <div class="notification">
+            <i class="fas fa-info-circle"></i>
+            <strong>معلومة مهمة:</strong> تم إرسال تأكيد الحجز إلى مسؤول النظام. سيتم التواصل معك خلال 24 ساعة على الرقم المدخل لتأكيد التفاصيل النهائية.
         </div>
     </div>
 
     <script>
-        // استرجاع بيانات الحجز
-        const bookingData = JSON.parse(localStorage.getItem('bookingData')) || {};
-        const personalData = JSON.parse(localStorage.getItem('personalData')) || {};
+        // ==================== إعدادات EmailJS ====================
+        const EMAILJS_CONFIG = {
+            SERVICE_ID: 'service_dp7qk4a', // Service ID الخاص بك
+            TEMPLATE_ID: 'YOUR_TEMPLATE_ID', // ضع Template ID هنا بعد إنشائه
+            PUBLIC_KEY: 'YOUR_PUBLIC_KEY', // ضع Public Key هنا
+            ADMIN_EMAIL: 'tahaobide2019@gmail.com'
+        };
         
-        // دالة لتحويل رمز السيارة إلى اسم
+        // تهيئة EmailJS
+        emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+        
+        // ==================== متغيرات البرنامج ====================
+        let bookingNumber = '';
+        let bookingData = {};
+        let personalData = {};
+        
+        // ==================== دوال المساعدة ====================
         function getCarName(carCode) {
             const cars = {
                 'camry': 'تويوتا كامري 2023',
@@ -228,108 +375,195 @@
                 'h1': 'هيونداي H1 2023',
                 'sunny': 'نيسان صني 2023'
             };
-            return cars[carCode] || 'سيارة';
+            return cars[carCode] || carCode;
         }
         
-        // دالة لعرض تفاصيل الحجز
+        function formatPrice(price) {
+            if (!price) return '0 دينار';
+            const num = parseInt(price.replace(/[^\d]/g, ''));
+            return num.toLocaleString('ar-IQ') + ' دينار عراقي';
+        }
+        
+        function generateBookingNumber() {
+            const now = new Date();
+            const dateStr = now.getFullYear().toString().slice(-2) + 
+                          (now.getMonth() + 1).toString().padStart(2, '0') + 
+                          now.getDate().toString().padStart(2, '0');
+            const randomStr = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return `KRK${dateStr}${randomStr}`;
+        }
+        
+        // ==================== عرض تفاصيل الحجز ====================
         function displayBookingDetails() {
-            const detailsContainer = document.getElementById('bookingDetails');
+            const detailsGrid = document.getElementById('details-grid');
             
-            const details = `
+            const detailsHTML = `
                 <div class="detail-item">
-                    <span class="detail-label">السيارة:</span>
+                    <span class="detail-label"><i class="fas fa-user"></i> الاسم الكامل</span>
+                    <span class="detail-value">${personalData.name || 'غير محدد'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fas fa-phone"></i> رقم الهاتف</span>
+                    <span class="detail-value" style="color: #27ae60;">${personalData.phone || 'غير محدد'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label"><i class="fas fa-car"></i> نوع السيارة</span>
                     <span class="detail-value">${getCarName(bookingData.carType)}</span>
                 </div>
                 <div class="detail-item">
-                    <span class="detail-label">المدة:</span>
+                    <span class="detail-label"><i class="fas fa-calendar-alt"></i> مدة التأجير</span>
                     <span class="detail-value">${bookingData.days || 1} يوم</span>
                 </div>
                 <div class="detail-item">
-                    <span class="detail-label">التاريخ:</span>
-                    <span class="detail-value">${bookingData.pickupDate || 'غير محدد'}</span>
+                    <span class="detail-label"><i class="fas fa-money-bill-wave"></i> المبلغ الإجمالي</span>
+                    <span class="detail-value" style="color: #e74c3c;">${formatPrice(bookingData.totalPrice || '0')}</span>
                 </div>
+                ${bookingData.pickupDate ? `
                 <div class="detail-item">
-                    <span class="detail-label">الوقت:</span>
-                    <span class="detail-value">${bookingData.pickupTime || 'غير محدد'}</span>
+                    <span class="detail-label"><i class="fas fa-calendar-check"></i> تاريخ الاستلام</span>
+                    <span class="detail-value">${bookingData.pickupDate}</span>
                 </div>
+                ` : ''}
+                ${bookingData.location?.area ? `
                 <div class="detail-item">
-                    <span class="detail-label">الموقع:</span>
-                    <span class="detail-value">${bookingData.location?.area || 'غير محدد'}</span>
+                    <span class="detail-label"><i class="fas fa-map-marker-alt"></i> موقع الاستلام</span>
+                    <span class="detail-value">${bookingData.location.area}</span>
                 </div>
+                ` : ''}
+                ${personalData.email ? `
                 <div class="detail-item">
-                    <span class="detail-label">المبلغ:</span>
-                    <span class="detail-value">${bookingData.totalPrice || '0 دينار'}</span>
-                </div>
-                ${personalData.name ? `
-                <div class="detail-item">
-                    <span class="detail-label">الاسم:</span>
-                    <span class="detail-value">${personalData.name}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">الهاتف:</span>
-                    <span class="detail-value">${personalData.phone}</span>
+                    <span class="detail-label"><i class="fas fa-envelope"></i> البريد الإلكتروني</span>
+                    <span class="detail-value">${personalData.email}</span>
                 </div>
                 ` : ''}
             `;
             
-            detailsContainer.innerHTML = details;
+            detailsGrid.innerHTML = detailsHTML;
         }
         
-        // دالة إرسال رسالة واتساب
-        function sendWhatsAppMessage() {
-            // إنشاء نص الرسالة
-            const message = `📋 *طلب حجز جديد - تأجير سيارات كركوك*
+        // ==================== تحديث حالة الخطوات ====================
+        function updateStep(stepNumber, status) {
+            const step = document.getElementById(`step${stepNumber}`);
+            const icon = step.querySelector('.step-icon i');
             
-🚗 *السيارة:* ${getCarName(bookingData.carType)}
-📅 *المدة:* ${bookingData.days || 1} يوم
-💰 *المبلغ:* ${bookingData.totalPrice || '0 دينار'}
-📆 *التاريخ:* ${bookingData.pickupDate || 'غير محدد'}
-⏰ *الوقت:* ${bookingData.pickupTime || 'غير محدد'}
-📍 *الموقع:* ${bookingData.location?.area || 'غير محدد'}
-
-👤 *معلومات العميل:*
-   • الاسم: ${personalData.name || 'غير محدد'}
-   • الهاتف: ${personalData.phone || 'غير محدد'}
-   • البريد: ${personalData.email || 'غير محدد'}
-
-📝 *ملاحظات:* ${bookingData.notes || 'لا توجد'}
-
-🔢 *رقم الحجز:* KRK-${Date.now().toString().slice(-6)}
-⏳ *الوقت:* ${new Date().toLocaleString('ar-IQ')}
-
-_تم إرسال هذا الطلب تلقائياً من الموقع الإلكتروني_`;
+            step.className = `progress-step ${status}`;
             
-            // ترميز الرسالة
-            const encodedMessage = encodeURIComponent(message);
+            if (status === 'completed') {
+                icon.className = 'fas fa-check-circle';
+                icon.style.color = '#27ae60';
+            } else if (status === 'active') {
+                icon.className = 'fas fa-spinner fa-spin';
+                icon.style.color = '#3498db';
+            }
             
-            // رقم واتساب الخاص بك (بدون +)
-            const phoneNumber = '9647713225471';
+            // تحديث الوقت للخطوة الأولى
+            if (stepNumber === 1) {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('ar-IQ', { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('step1-time').textContent = timeStr;
+            }
+        }
+        
+        // ==================== إرسال البريد الإلكتروني ====================
+        async function sendBookingConfirmation() {
+            try {
+                // تحديث حالة الخطوة الأولى
+                updateStep(1, 'active');
+                
+                // تحديث حالة البريد
+                document.getElementById('email-status').className = 'status-badge status-sending';
+                document.getElementById('email-status').textContent = 'جاري إرسال البريد...';
+                
+                // إعداد بيانات البريد
+                const templateParams = {
+                    to_email: EMAILJS_CONFIG.ADMIN_EMAIL,
+                    booking_number: bookingNumber,
+                    booking_date: new Date().toLocaleDateString('ar-IQ'),
+                    booking_time: new Date().toLocaleTimeString('ar-IQ'),
+                    customer_name: personalData.name || 'غير محدد',
+                    customer_phone: personalData.phone || 'غير محدد',
+                    customer_email: personalData.email || 'غير محدد',
+                    car_type: getCarName(bookingData.carType),
+                    rental_days: bookingData.days || 1,
+                    total_price: formatPrice(bookingData.totalPrice || '0'),
+                    pickup_date: bookingData.pickupDate || 'غير محدد',
+                    pickup_time: bookingData.pickupTime || 'غير محدد',
+                    location: bookingData.location?.area || 'غير محدد',
+                    notes: bookingData.notes || 'لا توجد ملاحظات'
+                };
+                
+                // إرسال البريد
+                const response = await emailjs.send(
+                    EMAILJS_CONFIG.SERVICE_ID,
+                    EMAILJS_CONFIG.TEMPLATE_ID,
+                    templateParams
+                );
+                
+                // إذا نجح الإرسال
+                if (response.status === 200) {
+                    // تحديث الحالة
+                    updateStep(1, 'completed');
+                    updateStep(2, 'active');
+                    
+                    document.getElementById('email-status').className = 'status-badge status-sent';
+                    document.getElementById('email-status').textContent = '✓ تم إرسال البريد بنجاح';
+                    
+                    // حفظ الحجار محلياً
+                    saveBookingToLocalStorage(templateParams);
+                    
+                    console.log('تم إرسال البريد بنجاح:', response);
+                    return true;
+                }
+                
+            } catch (error) {
+                console.error('خطأ في إرسال البريد:', error);
+                
+                // تحديث الحالة بالفشل
+                document.getElementById('email-status').className = 'status-badge status-failed';
+                document.getElementById('email-status').textContent = '❌ فشل إرسال البريد';
+                
+                // إظهار زر إعادة المحاولة
+                document.getElementById('resend-btn').style.display = 'flex';
+                
+                return false;
+            }
+        }
+        
+        // ==================== حفظ الحجز محلياً ====================
+        function saveBookingToLocalStorage(data) {
+            try {
+                const allBookings = JSON.parse(localStorage.getItem('carRentalBookings')) || [];
+                
+                const bookingRecord = {
+                    id: bookingNumber,
+                    timestamp: new Date().toISOString(),
+                    ...data,
+                    status: 'جديد',
+                    read: false
+                };
+                
+                allBookings.unshift(bookingRecord);
+                
+                // حفظ فقط آخر 100 حجز
+                if (allBookings.length > 100) {
+                    allBookings.pop();
+                }
+                
+                localStorage.setItem('carRentalBookings', JSON.stringify(allBookings));
+                console.log('تم حفظ الحجز محلياً');
+                
+            } catch (error) {
+                console.error('خطأ في حفظ البيانات:', error);
+            }
+        }
+        
+        // ==================== إعادة إرسال البريد ====================
+        function resendConfirmation() {
+            document.getElementById('resend-btn').style.display = 'none';
+            document.getElementById('email-status').className = 'status-badge status-sending';
+            document.getElementById('email-status').textContent = 'جاري إعادة الإرسال...';
             
-            // رابط واتساب
-            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-            
-            // فتح واتساب
-            window.open(whatsappURL, '_blank');
-            
-            // عرض رسالة تأكيد
             setTimeout(() => {
-                alert('تم فتح واتساب. الرجاء إرسال الرسالة بنفسك إذا لم تفتح تلقائياً.');
+                sendBookingConfirmation();
             }, 1000);
-        }
-        
-        // تهيئة الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            displayBookingDetails();
-            
-            // إضافة حدث للزر
-            document.getElementById('whatsappBtn').addEventListener('click', sendWhatsAppMessage);
-            
-            // إرسال تلقائي بعد 3 ثواني (اختياري)
-            setTimeout(() => {
-                // يمكن تفعيل هذا السطر للإرسال التلقائي
-                // sendWhatsAppMessage();
-            }, 3000);
-        });
-    </script>
-</body>
-</html>
+    

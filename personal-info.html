@@ -1,10 +1,101 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head><meta charset="UTF-8"><title>بياناتك</title></head>
-<body>
-<h2>بيانات الزبون</h2>
-<input id="name" placeholder="الاسم">
-<input id="phone" placeholder="الهاتف">
-<button onclick="send()">تأكيد عبر واتساب</button>
-<script src="js/booking.js"></script>
-</body></html>
+<script>
+// دالة إرسال رسالة واتساب تلقائية إليك
+async function sendAutoWhatsAppToAdmin() {
+    // جمع بيانات الحجز
+    const bookingData = JSON.parse(localStorage.getItem('bookingData')) || {};
+    const personalData = {
+        name: document.getElementById('name')?.value || 'غير محدد',
+        phone: document.getElementById('phone')?.value || 'غير محدد',
+        email: document.getElementById('email')?.value || 'غير محدد'
+    };
+    
+    // حفظ البيانات الشخصية
+    localStorage.setItem('personalData', JSON.stringify(personalData));
+    
+    // دالة لتحويل رمز السيارة إلى اسم
+    function getCarName(carCode) {
+        const cars = {
+            'camry': 'تويوتا كامري 2023',
+            'elantra': 'هيونداي النترا 2024',
+            'sportage': 'كيا سبورتيج 2023',
+            'mercedes': 'مرسيدس C200 2022',
+            'h1': 'هيونداي H1 2023',
+            'sunny': 'نيسان صني 2023'
+        };
+        return cars[carCode] || carCode;
+    }
+    
+    // إنشاء نص الرسالة
+    const bookingNumber = `KRK-${Date.now().toString().slice(-6)}`;
+    const message = `📋 *طلب حجز جديد*
+    
+🔢 *رقم الحجز:* ${bookingNumber}
+⏰ *الوقت:* ${new Date().toLocaleString('ar-IQ')}
+
+🚗 *السيارة:* ${getCarName(bookingData.carType)}
+📅 *المدة:* ${bookingData.days || 1} يوم
+💰 *المبلغ:* ${bookingData.totalPrice || '0 دينار'}
+📆 *التاريخ:* ${bookingData.pickupDate || 'غير محدد'}
+⏰ *الوقت:* ${bookingData.pickupTime || 'غير محدد'}
+📍 *الموقع:* ${bookingData.location?.area || 'غير محدد'}
+
+👤 *العميل:*
+   • الاسم: ${personalData.name}
+   • الهاتف: ${personalData.phone}
+   • البريد: ${personalData.email}
+
+📝 *ملاحظات:* ${bookingData.notes || 'لا توجد'}
+
+📞 *للتواصل مع العميل:* ${personalData.phone}
+
+_تم إرسال هذه الرسالة تلقائياً من موقع تأجير السيارات_`;
+    
+    // إعداد بيانات API
+    const apiKey = '123456'; // استبدل بمفتاح CallMeBot الحقيقي
+    const phoneNumber = '9647713225471'; // رقمك
+    const text = encodeURIComponent(message);
+    
+    // رابط API
+    const apiURL = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${text}&apikey=${apiKey}`;
+    
+    try {
+        // إرسال الطلب (استخدم no-cors لتجنب مشاكل)
+        const response = await fetch(apiURL, { mode: 'no-cors' });
+        
+        console.log('تم إرسال رسالة واتساب تلقائياً إلى المسؤول');
+        return true;
+    } catch (error) {
+        console.error('خطأ في الاتصال:', error);
+        
+        // بديل: إنشاء رابط واتساب يدوي
+        createWhatsAppLink(message);
+        return false;
+    }
+}
+
+// دالة بديلة إنشاء رابط واتساب
+function createWhatsAppLink(message) {
+    const whatsappURL = `https://wa.me/9647713225471?text=${encodeURIComponent(message)}`;
+    window.open(whatsappURL, '_blank');
+}
+
+// عند إرسال النموذج
+document.getElementById('personal-info-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // حفظ البيانات الشخصية
+    const personalData = {
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        email: document.getElementById('email').value
+    };
+    
+    localStorage.setItem('personalData', JSON.stringify(personalData));
+    
+    // إرسال رسالة واتساب
+    await sendAutoWhatsAppToAdmin();
+    
+    // الانتقال لصفحة التأكيد
+    window.location.href = 'confirmation.html';
+});
+</script>

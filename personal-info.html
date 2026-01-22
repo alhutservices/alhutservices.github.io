@@ -1,109 +1,106 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>بيانات الزبون | الحوت 🐋</title>
+  <title>الحوت لتأجير السيارات 🐋 - بيانات الزبون</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <!-- Leaflet Library للخريطة -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
-
 <body>
 
-<header class="top-bar">
-  <h1>🐋 الحوت لتأجير السيارات – بيانات الزبون</h1>
-</header>
+<section class="customer-page">
+  <div class="customer-card">
 
-<section class="form-container">
+    <h2>🐋 بيانات الزبون</h2>
+    <p class="subtitle">يرجى إدخال البيانات بدقة لإتمام الحجز</p>
 
-  <h2>🧾 معلومات الزبون</h2>
-  <p class="subtitle">الرجاء إدخال البيانات بدقة لإتمام الحجز</p>
+    <form id="customerForm">
 
-  <form id="customerForm">
+      <div class="form-group">
+        <label>الاسم الثلاثي</label>
+        <input type="text" id="name" placeholder="مثال: أحمد محمد علي" required>
+      </div>
 
-    <label>👤 الاسم الثلاثي</label>
-    <input type="text" id="fullName" required>
+      <div class="form-group">
+        <label>رقم الهاتف</label>
+        <input type="tel" id="phone" placeholder="07xxxxxxxx" required>
+      </div>
 
-    <label>📞 رقم الهاتف</label>
-    <input type="tel" id="phone" required>
+      <div class="form-group">
+        <label>رقم الهوية الوطنية</label>
+        <input type="text" id="idNumber" placeholder="رقم الهوية" required>
+      </div>
 
-    <label>🪪 رقم الهوية الوطنية / جواز السفر</label>
-    <input type="text" id="identity" required>
+      <div class="form-group">
+        <label>رقم إجازة السوق</label>
+        <input type="text" id="licenseNumber" placeholder="رقم إجازة السوق" required>
+      </div>
 
-    <!-- رفع الهوية -->
-    <label>📸 صورة الهوية الوطنية</label>
-    <input type="file" accept="image/*" required>
+      <div class="alert-box">
+        ⚠️ يرجى إحضار <strong>الهوية الوطنية + إجازة السوق</strong> عند استلام السيارة
+      </div>
 
-    <label>📸 صورة إجازة السوق</label>
-    <input type="file" accept="image/*" required>
+      <div class="form-group">
+        <label>موقع استلام السيارة</label>
+        <div id="map"></div>
+      </div>
 
-    <!-- تنبيه قانوني -->
-    <div class="notice-box">
-      ⚠️ يجب إحضار <strong>الهوية الأصلية</strong> و<strong>إجازة السوق</strong> عند الاستلام.
-      عدم الالتزام يؤدي إلى إلغاء الحجز فورًا.
-    </div>
+      <button type="submit" class="submit-btn">
+        متابعة تأكيد الحجز →
+      </button>
 
-    <!-- الموقع -->
-    <label>📍 موقع استلام السيارة</label>
-    <input type="text" id="pickupLocation" required>
-
-    <button type="button" class="btn-secondary" onclick="getLocation()">
-      📡 تحديد موقعي تلقائيًا
-    </button>
-
-    <div class="map-box">
-      <iframe id="mapFrame"
-        src="https://www.google.com/maps?q=Kirkuk&output=embed">
-      </iframe>
-    </div>
-
-    <!-- موافقة قانونية -->
-    <div class="checkbox-box">
-      <input type="checkbox" id="agree" required>
-      <label for="agree">
-        أتعهد بصحة المعلومات وأوافق على شروط التأجير
-      </label>
-    </div>
-
-    <button type="submit" class="btn-primary">
-      🔐 متابعة تأكيد الحجز
-    </button>
-
-  </form>
+    </form>
+  </div>
 </section>
 
 <script>
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(pos => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
-      pickupLocation.value = `GPS: ${lat}, ${lng}`;
-      document.getElementById("mapFrame").src =
-        `https://www.google.com/maps?q=${lat},${lng}&output=embed`;
-    }, () => {
-      alert("تعذر تحديد الموقع");
-    });
-  }
-}
+  // 1️⃣ تهيئة الخريطة
+  var map = L.map('map').setView([35.4681, 44.3922], 13); // مركز كركوك
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
-document.getElementById("customerForm").addEventListener("submit", e => {
-  e.preventDefault();
+  var marker;
 
-  if (!agree.checked) {
-    alert("يجب الموافقة على الشروط");
-    return;
-  }
+  // 2️⃣ تحديد الموقع عند الضغط على الخريطة
+  map.on('click', function(e) {
+      var lat = e.latlng.lat;
+      var lng = e.latlng.lng;
 
-  const customer = {
-    name: fullName.value,
-    phone: phone.value,
-    identity: identity.value,
-    location: pickupLocation.value
-  };
+      if(marker) map.removeLayer(marker);
+      marker = L.marker([lat, lng]).addTo(map)
+        .bindPopup("موقع الاستلام").openPopup();
 
-  localStorage.setItem("customerData", JSON.stringify(customer));
-  window.location.href = "confirmation.html";
-});
+      document.querySelector("#locationInput").value = lat + "," + lng;
+  });
+
+  // 3️⃣ إرسال البيانات على واتساب
+  document.querySelector("#customerForm").addEventListener("submit", function(e){
+      e.preventDefault();
+
+      var name = document.querySelector("#name").value;
+      var phone = document.querySelector("#phone").value;
+      var idNumber = document.querySelector("#idNumber").value;
+      var licenseNumber = document.querySelector("#licenseNumber").value;
+      var location = document.querySelector("#locationInput").value;
+
+      var message = `🐋 *الحوت لتأجير السيارات*\n\n` +
+                    `الاسم: ${name}\n` +
+                    `رقم الهاتف: ${phone}\n` +
+                    `الهوية الوطنية: ${idNumber}\n` +
+                    `إجازة السوق: ${licenseNumber}\n` +
+                    `موقع الاستلام: ${location}`;
+
+      // رقم واتساب الشركة
+      var waNumber = "+9647713225471";
+
+      // فتح واتساب
+      var waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+      window.open(waLink, "_blank");
+  });
 </script>
 
 </body>

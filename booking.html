@@ -1,27 +1,105 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>الميزات الإضافية</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>حجز السيارة | الحوت لتأجير السيارات</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-<h1>الميزات الإضافية</h1>
+<!-- ===== NAVBAR ===== -->
+<div class="navbar">
+  <h2>🐋 الحوت</h2>
+  <div>
+    <a href="index.html">الرئيسية</a>
+    <a href="cars.html">السيارات</a>
+    <a href="booking.html">احجز الآن</a>
+  </div>
+</div>
 
-<form onsubmit="nextPage(event)">
-<label><input type="checkbox" value="مقعد أطفال"> مقعد أطفال</label><br>
-<label><input type="checkbox" value="توصيل السيارة"> توصيل السيارة</label><br>
-<label><input type="checkbox" value="سائق مع السيارة"> سائق مع السيارة</label><br>
+<!-- ===== HEADER ===== -->
+<section class="hero" style="padding:50px 20px">
+  <h1>🚗 اختر سيارتك</h1>
+  <p>اختر السيارة المناسبة ثم الميزات الإضافية</p>
+</section>
 
-<button type="submit">التالي</button>
-</form>
+<!-- ===== CARS SELECTION ===== -->
+<section>
+  <div class="cars">
+
+    <div class="car">
+      <img src="images/corolla.jpg" alt="تويوتا كورولا">
+      <div class="car-content">
+        <h3>تويوتا كورولا</h3>
+        <p>سيدان • اقتصادية • مريحة</p>
+        <button onclick="selectCar('تويوتا كورولا')">اختيار السيارة</button>
+      </div>
+    </div>
+
+    <div class="car">
+      <img src="images/prado.jpg" alt="تويوتا برادو">
+      <div class="car-content">
+        <h3>تويوتا برادو</h3>
+        <p>دفع رباعي • قوية • سفر</p>
+        <button onclick="selectCar('تويوتا برادو')">اختيار السيارة</button>
+      </div>
+    </div>
+
+    <div class="car">
+      <img src="images/rio.jpg" alt="كيا ريو">
+      <div class="car-content">
+        <h3>كيا ريو</h3>
+        <p>اقتصادية • مدينة • موفرة</p>
+        <button onclick="selectCar('كيا ريو')">اختيار السيارة</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== EXTRAS ===== -->
+<section>
+  <h2 class="section-title">ميزات إضافية</h2>
+
+  <form onsubmit="goNext(event)">
+    <label>
+      <input type="checkbox" value="🚼 مقعد أطفال">
+      مقعد أطفال
+    </label>
+
+    <label>
+      <input type="checkbox" value="🚗 توصيل السيارة">
+      توصيل السيارة لموقعك
+    </label>
+
+    <label>
+      <input type="checkbox" value="👨‍✈️ سائق مع السيارة">
+      سائق مع السيارة
+    </label>
+
+    <button type="submit">➡️ المتابعة</button>
+  </form>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  🐋 الحوت لتأجير السيارات – كركوك
+</footer>
 
 <script>
-function nextPage(e){
+function selectCar(car){
+  localStorage.setItem("car", car);
+  alert("تم اختيار: " + car);
+}
+
+function goNext(e){
   e.preventDefault();
   let extras = [];
-  document.querySelectorAll("input:checked").forEach(x => extras.push(x.value));
+  document.querySelectorAll("input[type=checkbox]:checked")
+    .forEach(x => extras.push(x.value));
+
   localStorage.setItem("extras", extras.join("، "));
   window.location.href = "personal-info.html";
 }

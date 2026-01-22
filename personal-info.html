@@ -1,32 +1,68 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>معلومات الزبون</title>
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>معلومات الزبون | الحوت لتأجير السيارات</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<h1>معلومات الزبون</h1>
+<!-- NAVBAR -->
+<div class="navbar">
+  <h2>🐋 الحوت</h2>
+  <div>
+    <a href="index.html">الرئيسية</a>
+    <a href="cars.html">السيارات</a>
+    <a href="booking.html">احجز الآن</a>
+    <a href="about.html">من نحن</a>
+  </div>
+</div>
 
-<form onsubmit="confirmBooking(event)">
-<input required placeholder="الاسم الثلاثي" id="name">
-<input required placeholder="رقم الهوية / الجواز" id="id">
-<input required placeholder="رقم الهاتف" id="phone">
-<input required placeholder="موقع استلام السيارة" id="location">
+<!-- HERO -->
+<section class="hero">
+  <h1>📝 معلومات الزبون</h1>
+  <p>أكمل بياناتك ليتم تجهيز الحجز</p>
+</section>
 
-<button type="submit">تأكيد</button>
-</form>
+<!-- FORM -->
+<section>
+  <form id="personalForm">
+    <label>الاسم الثلاثي</label>
+    <input type="text" id="name" placeholder="أدخل اسمك الكامل" required>
+
+    <label>رقم الهوية / جواز السفر</label>
+    <input type="text" id="id" placeholder="مثال: 12345678" required>
+
+    <label>رقم الهاتف</label>
+    <input type="tel" id="phone" placeholder="مثال: 07712345678" required>
+
+    <label>موقع استلام السيارة</label>
+    <input type="text" id="location" placeholder="العنوان أو المنطقة" required>
+
+    <button type="submit">➡️ تأكيد البيانات</button>
+  </form>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  🐋 الحوت لتأجير السيارات – كركوك  
+  <br>📧 tahaobide2019@gmail.com | 📞 +9647713225471
+</footer>
 
 <script>
-function confirmBooking(e){
+document.getElementById("personalForm").addEventListener("submit", function(e){
   e.preventDefault();
-  localStorage.setItem("name", name.value);
-  localStorage.setItem("id", id.value);
-  localStorage.setItem("phone", phone.value);
-  localStorage.setItem("location", location.value);
+
+  // حفظ البيانات في localStorage
+  localStorage.setItem("name", document.getElementById("name").value);
+  localStorage.setItem("id", document.getElementById("id").value);
+  localStorage.setItem("phone", document.getElementById("phone").value);
+  localStorage.setItem("location", document.getElementById("location").value);
+
+  // الانتقال لصفحة التأكيد
   window.location.href = "confirmation.html";
-}
+});
 </script>
 
 </body>

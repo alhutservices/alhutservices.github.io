@@ -1,113 +1,48 @@
-/**
- * auth.js - إدارة المصادقة والصلاحيات
- */
+// utils.js – VIP++
+// هذا الملف يحتوي على وظائف يمكن إعادة استخدامها في كل صفحات الموقع
 
-const auth = {
-    // تسجيل الدخول
-    login: async function(email, password) {
-        try {
-            // التحقق من المدخلات
-            if (!validator.isEmail(email)) {
-                throw new Error('البريد الإلكتروني غير صحيح');
-            }
-            
-            if (!validator.isNotEmpty(password)) {
-                throw new Error('كلمة المرور مطلوبة');
-            }
-            
-            // جلب المستخدمين
-            const users = storage.get('users') || [];
-            
-            // البحث عن المستخدم
-            const user = users.find(u => 
-                u.email === email && u.password === password
-            );
-            
-            if (!user) {
-                throw new Error('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-            }
-            
-            // حفظ بيانات المستخدم (بدون كلمة المرور)
-            const userData = { ...user };
-            delete userData.password;
-            
-            storage.set('currentUser', userData);
-            storage.set('token', this.generateToken(userData));
-            
-            // تسجيل نشاط الدخول
-            this.logActivity(userData.id, 'تسجيل الدخول');
-            
-            return {
-                success: true,
-                user: userData,
-                message: 'تم تسجيل الدخول بنجاح'
-            };
-            
-        } catch (error) {
-            return {
-                success: false,
-                error: error.message
-            };
+// التحقق من رقم الهاتف العراقي
+function validatePhone(phone){
+    const regex = /^07\d{8}$/; // يبدأ بـ 07 ويليه 8 أرقام
+    return regex.test(phone);
+}
+
+// التحقق من أن جميع الحقول ممتلئة
+function validateForm(fields){
+    for(let key in fields){
+        if(fields[key].trim() === ""){
+            return false;
         }
-    },
-    
-    // تسجيل الخروج
-    logout: function() {
-        const user = storage.get('currentUser');
-        
-        if (user) {
-            // تسجيل نشاط الخروج
-            this.logActivity(user.id, 'تسجيل الخروج');
-        }
-        
-        // مسح بيانات المستخدم
-        storage.remove('currentUser');
-        storage.remove('token');
-        
-        // توجيه إلى صفحة تسجيل الدخول
-        window.location.href = 'login.html';
-    },
-    
-    // التحقق من حالة تسجيل الدخول
-    isAuthenticated: function() {
-        const token = storage.get('token');
-        const user = storage.get('currentUser');
-        
-        return !!(token && user);
-    },
-    
-    // التحقق من الصلاحيات
-    hasRole: function(requiredRole) {
-        const user = storage.get('currentUser');
-        
-        if (!user) return false;
-        
-        // إذا كان المستخدم مديراً، فلديه جميع الصلاحيات
-        if (user.role === 'admin') return true;
-        
-        // التحقق من الصلاحية المطلوبة
-        return user.role === requiredRole;
-    },
-    
-    // التحقق من الصلاحيات المتعددة
-    hasAnyRole: function(roles) {
-        const user = storage.get('currentUser');
-        
-        if (!user) return false;
-        
-        if (user.role === 'admin') return true;
-        
-        return roles.includes(user.role);
-    },
-    
-    // توليد رمز مميز
-    generateToken: function(userData) {
-        const timestamp = Date.now();
-        const data = `${userData.id}-${userData.email}-${timestamp}`;
-        
-        // توليد رمز بسيط (في التطبيق الحقيقي، استخدم مكتبة مثل jwt)
-        return btoa(data);
-    },
-    
-    // تسجيل النشاط
-  
+    }
+    return true;
+}
+
+// إنشاء رسالة واتساب جاهزة
+function createWhatsAppMessage(){
+    const data = {
+        car: localStorage.getItem("car"),
+        extras: localStorage.getItem("extras") || "-",
+        name: localStorage.getItem("name"),
+        id: localStorage.getItem("id"),
+        phone: localStorage.getItem("phone"),
+        location: localStorage.getItem("location")
+    };
+
+    return `
+🚗 حجز جديد – الحوت لتأجير السيارات
+
+السيارة: ${data.car}
+الميزات: ${data.extras}
+الاسم: ${data.name}
+الهوية: ${data.id}
+الهاتف: ${data.phone}
+موقع الاستلام: ${data.location}
+`;
+}
+
+// إرسال رسالة واتساب
+function sendWhatsApp(){
+    const msg = encodeURIComponent(createWhatsAppMessage());
+    const url = "https://wa.me/9647713225471?text=" + msg;
+    window.open(url, "_blank");
+}

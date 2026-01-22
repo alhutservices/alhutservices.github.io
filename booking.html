@@ -2,33 +2,30 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>حجز السيارة - الحوت</title>
+<title>الميزات الإضافية</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<h2>إكمال الحجز</h2>
+<h1>الميزات الإضافية</h1>
 
-<form id="bookingForm">
-
-<label>السيارة المختارة</label>
-<input type="text" id="car" readonly>
-
-<h3>ميزات إضافية</h3>
+<form onsubmit="nextPage(event)">
 <label><input type="checkbox" value="مقعد أطفال"> مقعد أطفال</label><br>
 <label><input type="checkbox" value="توصيل السيارة"> توصيل السيارة</label><br>
-<label><input type="checkbox" value="سائق مع السيارة"> سائق مع السيارة</label>
+<label><input type="checkbox" value="سائق مع السيارة"> سائق مع السيارة</label><br>
 
-<h3>معلومات الزبون</h3>
-
-<input type="text" id="name" placeholder="الاسم الثلاثي" required>
-<input type="text" id="id" placeholder="رقم الهوية أو الجواز" required>
-<input type="tel" id="phone" placeholder="رقم الهاتف" required>
-<input type="text" id="location" placeholder="موقع استلام السيارة" required>
-
-<button type="submit">تأكيد الحجز</button>
+<button type="submit">التالي</button>
 </form>
 
-<script src="js/booking.js"></script>
+<script>
+function nextPage(e){
+  e.preventDefault();
+  let extras = [];
+  document.querySelectorAll("input:checked").forEach(x => extras.push(x.value));
+  localStorage.setItem("extras", extras.join("، "));
+  window.location.href = "personal-info.html";
+}
+</script>
+
 </body>
 </html>

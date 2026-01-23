@@ -161,3 +161,115 @@ footer {
   .premium-header {flex-direction: column;}
   .premium-header nav a {margin:10px 10px 0 0;}
 }
+/* Page Hero */
+.page-hero {
+  position: relative;
+  height: 300px;
+  background: url('../images/cars-bg.jpg') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.page-hero.small {
+  height: 250px;
+}
+.page-hero .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(11,61,145,0.7);
+}
+.page-hero h1 {
+  position: relative;
+  color: #fff;
+  font-size: 36px;
+  z-index: 2;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin: 40px 0;
+}
+.filters select {
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: none;
+  background: #fff;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  font-family: 'Cairo';
+  font-size: 15px;
+}
+
+/* Cars Grid */
+.cars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+  gap: 30px;
+  padding: 0 40px 60px;
+}
+
+.car-card {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  transition: 0.4s;
+  position: relative;
+}
+.car-card:hover {
+  transform: translateY(-12px);
+}
+.car-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+.car-card .badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: linear-gradient(135deg,#f5c518,#0b3d91);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+.car-card .content {
+  padding: 20px;
+}
+.car-card h3 {
+  margin: 0;
+  color: #0b3d91;
+  font-size: 22px;
+}
+.car-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+}
+.car-card ul li {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.car-card .price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #f5c518;
+}
+.car-card a {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  background: #0b3d91;
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+.car-card a:hover {
+  background: #f5c518;
+  color: #000;
+}

@@ -1,281 +1,391 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تفاصيل السيارة | الحوت لتأجير السيارات</title>
-<link rel="stylesheet" href="css/style.css">
-<style>
-/* تصميم VIP+++ */
-body{
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin:0;
-  padding:0;
-  background:#f4f6f8;
-}
-
-.navbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 30px;
-  background:#0b3d91;
-  color:#fff;
-  position: sticky;
-  top:0;
-  z-index:100;
-}
-.navbar a{
-  color:#fff;
-  text-decoration:none;
-  margin-left:20px;
-  font-weight:bold;
-  transition:0.3s;
-}
-.navbar a:hover{
-  color:#25d366;
-}
-
-.hero{
-  text-align:center;
-  padding:50px 20px;
-  background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)), url('images/hero.jpg') center/cover no-repeat;
-  color:#fff;
-  border-bottom-left-radius:50px;
-  border-bottom-right-radius:50px;
-}
-
-.hero h1{
-  font-size:40px;
-  margin-bottom:10px;
-  text-shadow:2px 2px 5px rgba(0,0,0,0.5);
-}
-
-.details-container{
-  max-width:1000px;
-  margin:40px auto;
-  display:flex;
-  flex-wrap:wrap;
-  gap:30px;
-  background:#fff;
-  border-radius:25px;
-  box-shadow:0 20px 50px rgba(0,0,0,0.15);
-  padding:30px;
-}
-
-.car-slider{
-  flex:1 1 450px;
-  text-align:center;
-  position:relative;
-}
-
-.car-slider img{
-  width:100%;
-  border-radius:25px;
-  transition:.5s;
-}
-
-.slider-btn{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  background:rgba(0,0,0,0.4);
-  color:#fff;
-  border:none;
-  padding:10px;
-  border-radius:50%;
-  cursor:pointer;
-  font-size:20px;
-  transition:.3s;
-}
-.slider-btn:hover{
-  background:#25d366;
-}
-
-.slider-btn.left{
-  left:10px;
-}
-.slider-btn.right{
-  right:10px;
-}
-
-.car-info{
-  flex:1 1 500px;
-}
-
-.car-info h2{
-  margin-top:0;
-  color:#0b3d91;
-  font-size:32px;
-}
-
-.car-info p{
-  font-size:16px;
-  margin:10px 0;
-  color:#555;
-}
-
-.car-info .price{
-  font-size:24px;
-  font-weight:bold;
-  color:#25d366;
-  margin-top:15px;
-}
-
-.extras{
-  margin-top:20px;
-}
-.extras label{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:10px;
-  cursor:pointer;
-  font-weight:bold;
-}
-.extras input{
-  transform:scale(1.3);
-  cursor:pointer;
-}
-
-.total{
-  font-size:22px;
-  font-weight:bold;
-  color:#0b3d91;
-  margin-top:20px;
-}
-
-.btn-book{
-  background:#25d366;
-  color:#fff;
-  border:none;
-  padding:15px 25px;
-  border-radius:25px;
-  font-size:20px;
-  cursor:pointer;
-  margin-top:25px;
-  width:100%;
-  transition:.3s;
-}
-.btn-book:hover{
-  transform:scale(1.05);
-  opacity:.9;
-}
-
-@media(max-width:768px){
-  .details-container{
-    flex-direction:column;
-  }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل السيارة - الحوت لتأجير السيارات</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
 </head>
 <body>
+    <!-- شريط التنقل العلوي -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-car"></i>
+                    <span>الحوت</span>
+                    <span class="logo-sub">لتأجير السيارات</span>
+                </a>
+            </div>
+            
+            <div class="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="cars.html"><i class="fas fa-car"></i> السيارات</a></li>
+                    <li><a href="booking.html"><i class="fas fa-calendar-check"></i> حجز سريع</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> عن الشركة</a></li>
+                    <li><a href="faq.html"><i class="fas fa-question-circle"></i> الأسئلة الشائعة</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="language-switcher">
+                        <button class="lang-btn" id="langToggle">
+                            <i class="fas fa-globe"></i>
+                            <span>العربية</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="lang-dropdown">
+                            <a href="#" data-lang="ar">العربية</a>
+                            <a href="#" data-lang="en">English</a>
+                        </div>
+                    </div>
+                    <a href="admin-dashboard.html" class="admin-btn">
+                        <i class="fas fa-user-cog"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <h2>🐋 الحوت</h2>
-  <div>
-    <a href="index.html">الرئيسية</a>
-    <a href="cars.html">السيارات</a>
-    <a href="booking.html">احجز الآن</a>
-    <a href="about.html">من نحن</a>
-  </div>
-</div>
-
-<!-- HERO -->
-<section class="hero">
-  <h1>تفاصيل السيارة</h1>
-  <p>اعرف كل المعلومات حول سيارتك قبل الحجز</p>
-</section>
-
-<!-- DETAILS -->
-<section class="details-container">
-
-  <!-- سلايدر السيارة -->
-  <div class="car-slider">
-    <button class="slider-btn left" onclick="prevImage()">❮</button>
-    <img id="car-img" src="images/corolla.jpg" alt="السيارة">
-    <button class="slider-btn right" onclick="nextImage()">❯</button>
-  </div>
-
-  <!-- معلومات السيارة -->
-  <div class="car-info">
-    <h2 id="car-name">تويوتا كورولا</h2>
-    <p id="car-type">سيدان</p>
-    <p id="car-features">اقتصادية • مريحة • مناسبة للعائلة</p>
-    <p class="price">السعر اليومي: $<span id="car-price">50</span></p>
-
-    <!-- ميزات إضافية -->
-    <div class="extras">
-      <h3>ميزات إضافية</h3>
-      <label><input type="checkbox" value="مقعد أطفال" data-price="5"> مقعد أطفال (+$5)</label>
-      <label><input type="checkbox" value="سائق" data-price="20"> سائق (+$20)</label>
-      <label><input type="checkbox" value="توصيل السيارة" data-price="10"> توصيل السيارة (+$10)</label>
-    </div>
-
-    <!-- المجموع -->
-    <p class="total">المجموع: $<span id="total">50</span></p>
-
-    <!-- زر حجز الآن -->
-    <button class="btn-book" onclick="bookCar()">🚗 احجز الآن</button>
-  </div>
-
-</section>
-
-<script>
-  // بيانات السيارة
-  const carImages = [
-    "images/corolla.jpg",
-    "images/corolla2.jpg",
-    "images/corolla3.jpg"
-  ];
-  let currentImage = 0;
-
-  const carName = localStorage.getItem("car") || "تويوتا كورولا";
-  const carPrice = parseFloat(localStorage.getItem("price")) || 50;
-  const carType = localStorage.getItem("type") || "سيدان";
-  const carFeatures = localStorage.getItem("features") || "اقتصادية • مريحة • مناسبة للعائلة";
-
-  document.getElementById("car-name").innerText = carName;
-  document.getElementById("car-price").innerText = carPrice;
-  document.getElementById("car-features").innerText = carFeatures;
-  document.getElementById("car-type").innerText = carType;
-  document.getElementById("car-img").src = carImages[currentImage];
-  document.getElementById("total").innerText = carPrice;
-
-  // سلايدر الصور
-  function prevImage(){
-    currentImage = (currentImage -1 + carImages.length) % carImages.length;
-    document.getElementById("car-img").src = carImages[currentImage];
-  }
-  function nextImage(){
-    currentImage = (currentImage +1) % carImages.length;
-    document.getElementById("car-img").src = carImages[currentImage];
-  }
-
-  // تحديث السعر حسب الميزات الإضافية
-  const extras = document.querySelectorAll(".extras input");
-  extras.forEach(extra => {
-    extra.addEventListener("change", () => {
-      let total = carPrice;
-      let selectedExtras = [];
-      extras.forEach(e => {
-        if(e.checked){
-          total += parseFloat(e.dataset.price);
-          selectedExtras.push(e.value);
-        }
-      });
-      document.getElementById("total").innerText = total;
-      localStorage.setItem("extras", selectedExtras.join("، "));
-    });
-  });
-
-  // حجز السيارة
-  function bookCar(){
-    localStorage.setItem("price", document.getElementById("total").innerText);
-    window.location.href = "booking.html";
-  }
-</script>
-
-</body>
-</html>
+    <!-- قسم تفاصيل السيارة -->
+    <section class="car-details-page">
+        <div class="container">
+            <!-- مسار التنقل -->
+            <div class="breadcrumb">
+                <a href="index.html">الرئيسية</a>
+                <i class="fas fa-chevron-left"></i>
+                <a href="cars.html">السيارات</a>
+                <i class="fas fa-chevron-left"></i>
+                <span id="carName">تفاصيل السيارة</span>
+            </div>
+            
+            <div class="car-details-container">
+                <!-- القسم الأيسر: صور السيارة -->
+                <div class="car-images-section">
+                    <!-- الصورة الرئيسية -->
+                    <div class="main-image">
+                        <div class="image-badge">
+                            <span class="badge popular" id="popularBadge" style="display: none;">
+                                <i class="fas fa-fire"></i> الأكثر طلباً
+                            </span>
+                            <span class="badge discount" id="discountBadge" style="display: none;">
+                                <i class="fas fa-percentage"></i> خصم 15%
+                            </span>
+                        </div>
+                        <img id="mainCarImage" src="images/car1.jpg" alt="صورة السيارة">
+                        <button class="view-360-btn" id="view360Btn">
+                            <i class="fas fa-sync-alt"></i> عرض 360°
+                        </button>
+                    </div>
+                    
+                    <!-- معرض الصور المصغرة -->
+                    <div class="image-gallery">
+                        <div class="gallery-thumbnails swiper" id="galleryThumbs">
+                            <div class="swiper-wrapper" id="thumbnailsWrapper">
+                                <!-- سيتم إضافة الصور المصغرة ديناميكياً -->
+                            </div>
+                        </div>
+                        <div class="gallery-controls">
+                            <button class="gallery-btn prev">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <button class="gallery-btn next">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- عرض 360 درجة -->
+                    <div class="view-360-container" id="view360Container" style="display: none;">
+                        <div class="view-360-header">
+                            <h3><i class="fas fa-sync-alt"></i> عرض 360 درجة</h3>
+                            <button class="close-360" id="close360Btn">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="view-360-content">
+                            <div class="view-360-image" id="view360Image">
+                                <img src="images/car-360/1.jpg" alt="عرض 360 درجة">
+                            </div>
+                            <div class="view-360-controls">
+                                <button class="rotate-btn" id="rotateLeft">
+                                    <i class="fas fa-undo"></i> دوران لليسار
+                                </button>
+                                <div class="rotation-slider">
+                                    <input type="range" min="1" max="36" value="1" id="rotationSlider">
+                                    <div class="rotation-labels">
+                                        <span>0°</span>
+                                        <span>180°</span>
+                                        <span>360°</span>
+                                    </div>
+                                </div>
+                                <button class="rotate-btn" id="rotateRight">
+                                    <i class="fas fa-redo"></i> دوران لليمين
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- القسم الأيمن: تفاصيل السيارة -->
+                <div class="car-info-section">
+                    <div class="car-header">
+                        <div class="car-title">
+                            <h1 id="carTitle">تويوتا كامري 2023</h1>
+                            <div class="car-rating">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="rating-text">4.5 (128 تقييم)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="car-price">
+                            <div class="daily-price">
+                                <span class="price" id="dailyPrice">75,000</span>
+                                <span class="currency">دينار/يوم</span>
+                            </div>
+                            <div class="weekly-price">
+                                <span class="price" id="weeklyPrice">450,000</span>
+                                <span class="currency">دينار/أسبوع</span>
+                            </div>
+                            <div class="monthly-price">
+                                <span class="price" id="monthlyPrice">1,500,000</span>
+                                <span class="currency">دينار/شهر</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- معلومات أساسية -->
+                    <div class="car-basic-info">
+                        <div class="info-item">
+                            <i class="fas fa-car"></i>
+                            <div>
+                                <span class="info-label">الفئة</span>
+                                <span class="info-value" id="carCategory">عائلية</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-user-friends"></i>
+                            <div>
+                                <span class="info-label">الركاب</span>
+                                <span class="info-value" id="carCapacity">5 أشخاص</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-cogs"></i>
+                            <div>
+                                <span class="info-label">ناقل الحركة</span>
+                                <span class="info-value" id="carTransmission">أوتوماتيك</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-gas-pump"></i>
+                            <div>
+                                <span class="info-label">الوقود</span>
+                                <span class="info-value" id="carFuel">بنزين</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-calendar"></i>
+                            <div>
+                                <span class="info-label">السنة</span>
+                                <span class="info-value" id="carYear">2023</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <div>
+                                <span class="info-label">الحالة</span>
+                                <span class="info-value available" id="carStatus">متاحة</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- المواصفات الفنية -->
+                    <div class="car-specifications">
+                        <h3><i class="fas fa-list-alt"></i> المواصفات الفنية</h3>
+                        <div class="specs-grid">
+                            <div class="spec-item">
+                                <span class="spec-label">المحرك</span>
+                                <span class="spec-value" id="specEngine">2.5L 4 سلندر</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">القوة</span>
+                                <span class="spec-value" id="specPower">203 حصان</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">العجلات</span>
+                                <span class="spec-value" id="specWheels">17 إنش</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">التسارع</span>
+                                <span class="spec-value" id="specAcceleration">8.2 ثانية (0-100 كم/س)</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">السرعة القصوى</span>
+                                <span class="spec-value" id="specSpeed">210 كم/س</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">استهلاك الوقود</span>
+                                <span class="spec-value" id="specFuelConsumption">7.8 لتر/100 كم</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">الأبعاد</span>
+                                <span class="spec-value" id="specDimensions">4885 × 1840 × 1445 ملم</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">سعة الصندوق</span>
+                                <span class="spec-value" id="specTrunk">524 لتر</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- المميزات -->
+                    <div class="car-features">
+                        <h3><i class="fas fa-star"></i> المميزات والإضافات</h3>
+                        <div class="features-grid">
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>تكييف هواء</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>نظام ملاحة</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>كاميرا خلفية</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>مثبت سرعة</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>تحكم بالسرعة</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>نظام صوتي</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>وسائد هوائية</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>نظام فرامل ABS</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>شاشة لمس</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>بلوتوث</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>USB ports</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>نظام أمان</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- أسعار الإيجار -->
+                    <div class="rental-prices">
+                        <h3><i class="fas fa-money-bill-wave"></i> أسعار الإيجار</h3>
+                        <div class="prices-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>المدة</th>
+                                        <th>السعر</th>
+                                        <th>التوفير</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>يومي</td>
+                                        <td>75,000 دينار</td>
+                                        <td>--</td>
+                                    </tr>
+                                    <tr>
+                                        <td>أسبوعي (7 أيام)</td>
+                                        <td>450,000 دينار</td>
+                                        <td>75,000 دينار</td>
+                                    </tr>
+                                    <tr>
+                                        <td>شهري (30 يوم)</td>
+                                        <td>1,500,000 دينار</td>
+                                        <td>750,000 دينار</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- زر الحجز -->
+                    <div class="booking-action">
+                        <button class="btn btn-primary btn-lg" id="bookNowBtn">
+                            <i class="fas fa-calendar-check"></i>
+                            احجز الآن
+                        </button>
+                        <button class="btn btn-outline btn-lg" id="addToFavorites">
+                            <i class="far fa-heart"></i>
+                            إضافة للمفضلة
+                        </button>
+                        <button class="btn btn-whatsapp" id="whatsappInquiry">
+                            <i class="fab fa-whatsapp"></i>
+                            استفسار عبر واتساب
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- التقييمات والمراجعات -->
+            <div class="reviews-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-comments"></i> تقييمات العملاء</h2>
+                    <div class="overall-rating">
+                        <div class="rating-score">
+                            <span class="score">4.5</span>
+                            <span class="max">/5</span>
+                        </div>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="reviews-count">بناءً على 128 تقييم</span>
+                    </div>
+                </div>
+                
+                <div class="reviews-grid" id="reviewsList">
+                    <!-- سيتم تحميل التقييمات ديناميكياً -->
+                </div>
+                
+                <div class="add-review">
+                    <h3><i class="fas fa-edit"></i> أضف تقييمك</h3>
+                    <form id="reviewForm">
+            

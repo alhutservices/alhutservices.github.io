@@ -1,160 +1,318 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>السيارات المتاحة | الحوت لتأجير السيارات</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>السيارات - الحوت لتأجير السيارات</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slider-range@1.0.0/slider-range.min.css">
 </head>
 <body>
+    <!-- شريط التنقل العلوي (مشابه للصفحة الرئيسية) -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-car"></i>
+                    <span>الحوت</span>
+                    <span class="logo-sub">لتأجير السيارات</span>
+                </a>
+            </div>
+            
+            <div class="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="cars.html" class="active"><i class="fas fa-car"></i> السيارات</a></li>
+                    <li><a href="booking.html"><i class="fas fa-calendar-check"></i> حجز سريع</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> عن الشركة</a></li>
+                    <li><a href="faq.html"><i class="fas fa-question-circle"></i> الأسئلة الشائعة</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="language-switcher">
+                        <button class="lang-btn" id="langToggle">
+                            <i class="fas fa-globe"></i>
+                            <span>العربية</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="lang-dropdown">
+                            <a href="#" data-lang="ar">العربية</a>
+                            <a href="#" data-lang="en">English</a>
+                        </div>
+                    </div>
+                    <a href="admin-dashboard.html" class="admin-btn">
+                        <i class="fas fa-user-cog"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <h2>🐋 الحوت</h2>
-  <div>
-    <a href="index.html">الرئيسية</a>
-    <a href="cars.html">السيارات</a>
-    <a href="booking.html">احجز الآن</a>
-    <a href="about.html">من نحن</a>
-  </div>
-</div>
+    <!-- قسم البحث والفلترة -->
+    <section class="cars-page">
+        <div class="container">
+            <div class="page-header">
+                <h1>تصفح مجموعتنا من السيارات</h1>
+                <p>اختر السيارة المناسبة لرحلتك من بين مجموعة واسعة من السيارات</p>
+            </div>
+            
+            <div class="cars-container">
+                <!-- القائمة الجانبية للفلترة -->
+                <aside class="filter-sidebar">
+                    <div class="filter-section">
+                        <h3><i class="fas fa-filter"></i> فلترة النتائج</h3>
+                        
+                        <!-- فلترة حسب الفئة -->
+                        <div class="filter-group">
+                            <h4>فئة السيارة</h4>
+                            <div class="filter-options">
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="family">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-user-friends"></i>
+                                    عائلية
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="sports">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    رياضية
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="economic">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-gas-pump"></i>
+                                    اقتصادية
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="luxury">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-crown"></i>
+                                    فاخرة
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="suv">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-truck"></i>
+                                    دفع رباعي
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="checkbox" name="category" value="commercial">
+                                    <span class="checkmark"></span>
+                                    <i class="fas fa-truck-moving"></i>
+                                    تجارية
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- فلترة حسب السعر -->
+                        <div class="filter-group">
+                            <h4>السعر اليومي (دينار)</h4>
+                            <div class="price-range">
+                                <div class="range-values">
+                                    <span id="minPrice">25,000</span>
+                                    <span id="maxPrice">150,000</span>
+                                </div>
+                                <div class="range-slider">
+                                    <input type="range" min="25000" max="150000" value="25000" class="slider" id="priceMin">
+                                    <input type="range" min="25000" max="150000" value="150000" class="slider" id="priceMax">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- فلترة حسب الوقود -->
+                        <div class="filter-group">
+                            <h4>نوع الوقود</h4>
+                            <div class="filter-options">
+                                <label class="filter-checkbox">
+                                    <input type="radio" name="fuel" value="all" checked>
+                                    <span class="checkmark radio"></span>
+                                    الكل
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="radio" name="fuel" value="gasoline">
+                                    <span class="checkmark radio"></span>
+                                    بنزين
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="radio" name="fuel" value="diesel">
+                                    <span class="checkmark radio"></span>
+                                    ديزل
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="radio" name="fuel" value="hybrid">
+                                    <span class="checkmark radio"></span>
+                                    هايبرد
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- فلترة حسب ناقل الحركة -->
+                        <div class="filter-group">
+                            <h4>ناقل الحركة</h4>
+                            <div class="filter-options">
+                                <label class="filter-checkbox">
+                                    <input type="radio" name="transmission" value="all" checked>
+                                    <span class="checkmark radio"></span>
+                                    الكل
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="radio" name="transmission" value="automatic">
+                                    <span class="checkmark radio"></span>
+                                    أوتوماتيك
+                                </label>
+                                <label class="filter-checkbox">
+                                    <input type="radio" name="transmission" value="manual">
+                                    <span class="checkmark radio"></span>
+                                    عادي
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- فلترة حسب سنة الصنع -->
+                        <div class="filter-group">
+                            <h4>سنة الصنع</h4>
+                            <div class="year-range">
+                                <div class="range-values">
+                                    <span id="minYear">2018</span>
+                                    <span id="maxYear">2023</span>
+                                </div>
+                                <div class="range-slider">
+                                    <input type="range" min="2018" max="2023" value="2018" class="slider" id="yearMin">
+                                    <input type="range" min="2018" max="2023" value="2023" class="slider" id="yearMax">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- فلترة حسب السعة -->
+                        <div class="filter-group">
+                            <h4>عدد الركاب</h4>
+                            <div class="capacity-buttons">
+                                <button class="capacity-btn" data-capacity="2">2</button>
+                                <button class="capacity-btn" data-capacity="4">4</button>
+                                <button class="capacity-btn" data-capacity="5">5</button>
+                                <button class="capacity-btn" data-capacity="7">7+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-actions">
+                            <button class="btn btn-primary btn-block" id="applyFilters">
+                                <i class="fas fa-check"></i>
+                                تطبيق الفلترة
+                            </button>
+                            <button class="btn btn-outline btn-block" id="resetFilters">
+                                <i class="fas fa-redo"></i>
+                                إعادة تعيين
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+                
+                <!-- قسم عرض السيارات -->
+                <main class="cars-main">
+                    <!-- شريط التحكم في العرض والترتيب -->
+                    <div class="cars-controls">
+                        <div class="results-count">
+                            <span id="carsCount">0</span> سيارة متاحة
+                        </div>
+                        
+                        <div class="view-controls">
+                            <button class="view-btn active" data-view="grid">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="view-btn" data-view="list">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="sort-controls">
+                            <select id="sortBy">
+                                <option value="default">الترتيب الافتراضي</option>
+                                <option value="price_low">السعر: من الأقل للأعلى</option>
+                                <option value="price_high">السعر: من الأعلى للأقل</option>
+                                <option value="year_new">الموديل: الأحدث أولاً</option>
+                                <option value="year_old">الموديل: الأقدم أولاً</option>
+                                <option value="name">الاسم: أ-ي</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- قائمة السيارات -->
+                    <div class="cars-grid" id="carsList">
+                        <!-- سيتم تحميل السيارات ديناميكياً -->
+                    </div>
+                    
+                    <!-- رسالة عدم وجود نتائج -->
+                    <div class="no-results" id="noResults" style="display: none;">
+                        <div class="no-results-content">
+                            <i class="fas fa-car-crash"></i>
+                            <h3>لا توجد سيارات تطابق بحثك</h3>
+                            <p>حاول تعديل معايير البحث الخاصة بك أو إعادة تعيين الفلاتر</p>
+                            <button class="btn btn-primary" id="resetSearch">
+                                <i class="fas fa-redo"></i>
+                                إعادة تعيين البحث
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- ترقيم الصفحات -->
+                    <div class="pagination" id="pagination">
+                        <button class="page-btn disabled">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
 
-<!-- HERO -->
-<section class="hero">
-  <h1>🚗 السيارات المتاحة</h1>
-  <p>اختر السيارة التي تناسبك وابدأ الحجز بخطوات بسيطة</p>
-</section>
+    <!-- قسم الأسئلة الشائعة المصغرة -->
+    <section class="mini-faq">
+        <div class="container">
+            <h3>أسئلة شائعة عن الحجز</h3>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h4><i class="fas fa-question-circle"></i> ما هي المستندات المطلوبة؟</h4>
+                    <p>هوية وطنية أو جواز سفر ساري المفعول، ورخصة قيادة سارية.</p>
+                </div>
+                <div class="faq-item">
+                    <h4><i class="fas fa-question-circle"></i> هل يمكن التوصيل للمطار؟</h4>
+                    <p>نعم، نوفر خدمة التوصيل للمطار والفنادق والمنازل.</p>
+                </div>
+                <div class="faq-item">
+                    <h4><i class="fas fa-question-circle"></i> ما هي سياسة الإلغاء؟</h4>
+                    <p>يمكن الإلغاء مجاناً قبل 24 ساعة من موعد الاستلام.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- CAR GRID -->
-<section>
-  <div class="cars">
+    <!-- الفوتر (مشابه للصفحة الرئيسية) -->
+    <footer class="footer">
+        <!-- نفس الفوتر الموجود في index.html -->
+    </footer>
 
-    <!-- CAR 1 -->
-    <div class="car">
-      <img src="images/corolla.jpg" alt="تويوتا كورولا">
-      <div class="car-content">
-        <h3>تويوتا كورولا</h3>
-        <p>سيدان • اقتصادية • مريحة</p>
-        <p><strong>السعر اليومي:</strong> 50$</p>
-        <button onclick="selectCar('تويوتا كورولا')">🚗 احجز الآن</button>
-      </div>
-    </div>
+    <!-- زر الواتساب العائم -->
+    <a href="https://wa.me/9647713225471" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
-    <!-- CAR 2 -->
-    <div class="car">
-      <img src="images/prado.jpg" alt="تويوتا برادو">
-      <div class="car-content">
-        <h3>تويوتا برادو</h3>
-        <p>دفع رباعي • قوية • سفر</p>
-        <p><strong>السعر اليومي:</strong> 120$</p>
-        <button onclick="selectCar('تويوتا برادو')">🚗 احجز الآن</button>
-      </div>
-    </div>
-
-    <!-- CAR 3 -->
-    <div class="car">
-      <img src="images/rio.jpg" alt="كيا ريو">
-      <div class="car-content">
-        <h3>كيا ريو</h3>
-        <p>اقتصادية • مدينة • موفرة</p>
-        <p><strong>السعر اليومي:</strong> 40$</p>
-        <button onclick="selectCar('كيا ريو')">🚗 احجز الآن</button>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  🐋 الحوت لتأجير السيارات – كركوك  
-  <br>📧 tahaobide2019@gmail.com | 📞 +9647713225471
-</footer>
-
-<script>
-function selectCar(car){
-  localStorage.setItem("car", car);
-  window.location.href = "booking.html"; // ينقل مباشرة لصفحة الحجز
-}
-</script>
-
-<style>
-/* VIP++ CAR GRID STYLE */
-.cars{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:25px;
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
-}
-
-.car{
-  background:#fff;
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:0 15px 35px rgba(0,0,0,.1);
-  transition:.4s;
-}
-
-.car:hover{
-  transform:translateY(-10px);
-}
-
-.car img{
-  width:100%;
-  height:200px;
-  object-fit:cover;
-}
-
-.car-content{
-  padding:18px;
-}
-
-.car h3{
-  margin:0 0 8px 0;
-}
-
-.car p{
-  margin:5px 0;
-  color:#666;
-}
-
-.car button{
-  width:100%;
-  background:#25d366;
-  color:#fff;
-  padding:14px;
-  border:none;
-  border-radius:15px;
-  font-size:16px;
-  cursor:pointer;
-  margin-top:10px;
-  transition:.3s;
-}
-
-.car button:hover{
-  transform:scale(1.05);
-  opacity:.9;
-}
-
-.hero{
-  text-align:center;
-  padding:50px 20px;
-  background:linear-gradient(rgba(7,26,43,.85),rgba(7,26,43,.85)), url('images/hero.jpg') center/cover;
-  color:#fff;
-}
-
-.hero h1{
-  font-size:36px;
-  margin-bottom:10px;
-}
-
-.hero p{
-  font-size:18px;
-  opacity:.9;
-}
-</style>
-
+    <script src="js/utils.js"></script>
+    <script src="js/cars.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slider-range@1.0.0/slider-range.min.js"></script>
 </body>
 </html>

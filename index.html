@@ -3,75 +3,96 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحوت - تأجير سيارات</title>
+<title>الحوت | تأجير سيارات Premium</title>
 
-<!-- خطوط عربية -->
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/theme.css">
 
-<!-- أيقونات -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-<!-- CSS -->
-<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<header>
-  <div class="logo">الحوت <span>🚗</span></div>
+<!-- ===== NAVBAR ===== -->
+<header class="navbar">
+  <div class="logo">🐋 الحوت</div>
   <nav>
-    <a href="index.html">الرئيسية</a>
-    <a href="cars.html">السيارات</a>
-    <a href="about.html">عن الشركة</a>
-    <a href="booking.html" class="btn btn-primary">احجز الآن</a>
+    <a href="#">الرئيسية</a>
+    <a href="#">السيارات</a>
+    <a href="#">العروض</a>
+    <a href="#">تواصل معنا</a>
+    <a class="btn-primary" href="#">احجز الآن</a>
   </nav>
 </header>
 
+<!-- ===== HERO ===== -->
 <section class="hero">
-  <div class="overlay"></div>
   <div class="hero-content">
-    <h1>رحلتك تبدأ معنا</h1>
-    <p>اختر السيارة المناسبة واستمتع بتجربة تأجير سلسة ومريحة في أي مكان بالعراق</p>
-    <a href="cars.html" class="btn btn-primary">استعرض السيارات</a>
+    <h1>تأجير سيارات فاخر<br><span>بأسلوب ذكي</span></h1>
+    <p>اختر سيارتك، أضف خدماتك، واستلمها أينما كنت</p>
+    <a class="btn-gold" href="#">ابدأ الحجز</a>
   </div>
 </section>
 
-<section class="featured-cars">
-  <h2>أشهر سياراتنا</h2>
-  <div class="cars-grid" id="cars-list">
-    <!-- سيتم تحميل السيارات تلقائيًا من data/cars.json -->
+<!-- ===== FEATURES ===== -->
+<section class="features">
+  <div class="feature-card">
+    🚗
+    <h3>أسطول متنوع</h3>
+    <p>اقتصادي • فاخر • SUV • رياضي</p>
+  </div>
+  <div class="feature-card">
+    ⚡
+    <h3>حجز سريع</h3>
+    <p>3 خطوات فقط بدون تعقيد</p>
+  </div>
+  <div class="feature-card">
+    📍
+    <h3>توصيل مرن</h3>
+    <p>منزل • مطار • فندق</p>
   </div>
 </section>
 
-<section class="why-choose">
-  <h2>لماذا تختار الحوت؟</h2>
-  <div class="features-grid">
-    <div class="feature">
-      <i class="fas fa-shield-alt fa-2x"></i>
-      <h3>أمان مضمون</h3>
-      <p>جميع سياراتنا خضعت لفحوصات سلامة كاملة قبل التسليم</p>
+<!-- ===== CARS ===== -->
+<section class="cars">
+  <h2>الأكثر طلباً</h2>
+  <div class="car-grid">
+
+    <div class="car-card">
+      <img src="https://images.unsplash.com/photo-1619767886558-efdc7b9dd1c5" alt="">
+      <h3>Toyota Camry 2023</h3>
+      <p>أوتوماتيك • 5 ركاب</p>
+      <span>50$ / يوم</span>
+      <button>اختيار</button>
     </div>
-    <div class="feature">
-      <i class="fas fa-hand-holding-dollar fa-2x"></i>
-      <h3>أسعار مناسبة</h3>
-      <p>خطط أسعار مرنة تناسب جميع الميزانيات</p>
+
+    <div class="car-card">
+      <img src="https://images.unsplash.com/photo-1605559424843-9c5c9c19a79b" alt="">
+      <h3>Range Rover</h3>
+      <p>دفع رباعي • فاخر</p>
+      <span>120$ / يوم</span>
+      <button>اختيار</button>
     </div>
-    <div class="feature">
-      <i class="fas fa-headset fa-2x"></i>
-      <h3>دعم متواصل</h3>
-      <p>خدمة العملاء متاحة على مدار الساعة لأي استفسار</p>
+
+    <div class="car-card">
+      <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70" alt="">
+      <h3>BMW M4</h3>
+      <p>رياضي • أوتوماتيك</p>
+      <span>150$ / يوم</span>
+      <button>اختيار</button>
     </div>
+
   </div>
 </section>
 
-<footer>
-  <p>جميع الحقوق محفوظة © الحوت 2026</p>
-  <div class="socials">
-    <a href="#"><i class="fab fa-facebook-f"></i></a>
-    <a href="#"><i class="fab fa-instagram"></i></a>
-    <a href="#"><i class="fab fa-twitter"></i></a>
-  </div>
+<!-- ===== CTA ===== -->
+<section class="cta">
+  <h2>جاهز للانطلاق؟</h2>
+  <p>ابدأ تجربة تأجير مختلفة كلياً</p>
+  <a href="#" class="btn-gold">احجز سيارتك الآن</a>
+</section>
+
+<footer class="footer">
+  © 2026 شركة الحوت لتأجير السيارات
 </footer>
 
-<script src="js/main.js"></script>
 </body>
 </html>

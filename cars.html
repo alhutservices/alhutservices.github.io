@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>السيارات - الحوت</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div class="logo">الحوت</div>
+  <nav>
+    <a href="index.html">الرئيسية</a>
+    <a href="cars.html">السيارات</a>
+    <a href="about.html">عن الشركة</a>
+  </nav>
+</header>
+
+<section style="padding:20px;">
+<h2>استعرض السيارات</h2>
+<form id="filter-form" style="margin-bottom:20px;">
+  <select id="type">
+    <option value="">النوع</option>
+    <option value="عائلية">عائلية</option>
+    <option value="SUV">دفع رباعي</option>
+    <option value="رياضية">رياضية</option>
+    <option value="فاخرة">فاخرة</option>
+    <option value="اقتصادية">اقتصادية</option>
+  </select>
+  <select id="capacity">
+    <option value="">عدد الركاب</option>
+    <option value="2">2</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="7">7</option>
+  </select>
+  <select id="transmission">
+    <option value="">ناقل الحركة</option>
+    <option value="أوتوماتيك">أوتوماتيك</option>
+    <option value="عادي">عادي</option>
+  </select>
+  <input type="number" id="price" placeholder="السعر الأقصى">
+  <button type="submit">تصفية</button>
+</form>
+
+<div id="cars-list" class="cars-list"></div>
+
+<footer>
+جميع الحقوق محفوظة © الحوت
+</footer>
+
+<script src="js/filter.js"></script>
+</body>
+</html>

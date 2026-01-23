@@ -3,11 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>أسطول السيارات | الحوت</title>
+<title>تفاصيل السيارة | الحوت</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/responsive.css">
 
 </head>
 <body>
@@ -16,49 +15,45 @@
   <div class="logo">🐋 الحوت</div>
   <nav>
     <a href="index.html">الرئيسية</a>
-    <a href="cars.html" class="active">السيارات</a>
-    <a href="about.html">عن الشركة</a>
+    <a href="cars.html">السيارات</a>
     <a href="booking.html" class="btn-primary">احجز الآن</a>
   </nav>
 </header>
 
-<!-- عنوان الصفحة -->
-<section class="page-hero small">
-  <div class="overlay"></div>
-  <h1>اختر سيارتك المثالية</h1>
+<!-- Hero Image -->
+<section class="car-hero">
+  <img src="images/camry.jpg" alt="Toyota Camry">
+  <div class="car-hero-info">
+    <h1>Toyota Camry 2023</h1>
+    <p>سيارة عائلية مريحة، اقتصادية، مناسبة للرحلات الطويلة</p>
+  </div>
 </section>
 
-<!-- فلترة Premium -->
-<section class="filters">
-  <select id="category">
-    <option value="">نوع السيارة</option>
-    <option value="اقتصادية">اقتصادية</option>
-    <option value="عائلية">عائلية</option>
-    <option value="فاخرة">فاخرة</option>
-    <option value="SUV">SUV</option>
-  </select>
+<!-- Details -->
+<section class="car-details-container">
 
-  <select id="gear">
-    <option value="">ناقل الحركة</option>
-    <option value="أوتوماتيك">أوتوماتيك</option>
-    <option value="عادي">عادي</option>
-  </select>
+  <div class="car-specs">
+    <h2>مواصفات السيارة</h2>
+    <ul>
+      <li>🚘 الفئة: عائلية</li>
+      <li>⚙️ ناقل الحركة: أوتوماتيك</li>
+      <li>⛽ الوقود: بنزين</li>
+      <li>👥 عدد الركاب: 5</li>
+      <li>📅 سنة الصنع: 2023</li>
+    </ul>
+  </div>
 
-  <select id="fuel">
-    <option value="">نوع الوقود</option>
-    <option value="بنزين">بنزين</option>
-    <option value="ديزل">ديزل</option>
-    <option value="هايبرد">هايبرد</option>
-  </select>
+  <div class="car-booking-box">
+    <div class="price">70$ / اليوم</div>
+    <p>الدفع نقدًا عند الاستلام</p>
+    <a href="booking.html" class="btn-primary full">احجز هذه السيارة</a>
+  </div>
+
 </section>
-
-<!-- السيارات -->
-<section class="cars-grid" id="carsGrid"></section>
 
 <footer>
-  © 2026 الحوت – تجربة تأجير سيارات فاخرة
+  © 2026 الحوت – تأجير سيارات فاخر
 </footer>
 
-<script src="js/filter.js"></script>
 </body>
 </html>

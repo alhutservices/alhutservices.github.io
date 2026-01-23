@@ -1,79 +1,92 @@
 /* ===============================
-   GLOBAL
+   GLOBAL RESET
 ================================ */
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Cairo', sans-serif;
-  background: #f5f7fb;
-  color: #333;
+  font-family: 'Tajawal', 'Cairo', sans-serif;
+  background-color: #F8FAFC;
+  color: #1F2937;
+  line-height: 1.6;
 }
 
 a {
   text-decoration: none;
+  color: inherit;
 }
 
 img {
-  max-width: 100%;
   display: block;
+  max-width: 100%;
+}
+
+/* ===============================
+   COLORS
+================================ */
+:root {
+  --primary: #0E1A2B;      /* Navy فاخر */
+  --secondary: #1F2937;    /* Dark Gray */
+  --accent: #C9A24D;       /* Gold هادئ */
+  --bg-light: #F8FAFC;
+  --card-bg: #FFFFFF;
+  --shadow: rgba(0,0,0,0.15);
 }
 
 /* ===============================
    BUTTONS
 ================================ */
 .btn-primary {
-  background: linear-gradient(135deg, #0b3d91, #1f6ad8);
+  background: linear-gradient(135deg, var(--primary), #1F3B5F);
   color: #fff;
-  padding: 12px 26px;
-  border-radius: 10px;
+  padding: 12px 28px;
+  border-radius: 12px;
   font-weight: 600;
-  transition: 0.3s;
+  transition: all 0.3s ease;
   display: inline-block;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 12px 25px var(--shadow);
 }
 
 .btn-secondary {
-  background: #e0e6f1;
-  color: #0b3d91;
-  padding: 12px 26px;
-  border-radius: 10px;
+  background: #E5E7EB;
+  color: var(--primary);
+  padding: 12px 28px;
+  border-radius: 12px;
   font-weight: 600;
   transition: 0.3s;
-  display: inline-block;
 }
 
 .btn-secondary:hover {
-  background: #d0d8ea;
+  background: #D1D5DB;
 }
 
 /* ===============================
    HEADER
 ================================ */
 .premium-header {
-  background: #0b3d91;
-  color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 18px 50px;
+  background: var(--primary);
+  color: #fff;
   position: sticky;
   top: 0;
-  z-index: 999;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+  z-index: 1000;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
 }
 
-.logo {
-  font-size: 26px;
+.premium-header .logo {
+  font-size: 28px;
   font-weight: 700;
-  color: #f5c518;
+  color: var(--accent);
 }
 
 .premium-header nav a {
@@ -83,17 +96,16 @@ img {
   transition: 0.3s;
 }
 
-.premium-header nav a:hover,
-.premium-header nav a.active {
-  color: #f5c518;
+.premium-header nav a:hover {
+  color: var(--accent);
 }
 
 /* ===============================
-   HERO SECTIONS
+   HERO SECTION
 ================================ */
 .hero-premium {
   position: relative;
-  height: 90vh;
+  height: 85vh;
   background: url('../images/hero.jpg') center/cover no-repeat;
   display: flex;
   align-items: center;
@@ -103,15 +115,14 @@ img {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(11,61,145,0.6);
+  background: rgba(14,26,43,0.65);
 }
 
 .hero-content {
   position: relative;
-  text-align: center;
   color: #fff;
+  text-align: center;
   max-width: 700px;
-  animation: fadeInUp 1s ease;
 }
 
 .hero-content h1 {
@@ -124,33 +135,8 @@ img {
   margin-bottom: 25px;
 }
 
-/* ===============================
-   PAGE HERO
-================================ */
-.page-hero {
-  position: relative;
-  height: 280px;
-  background: url('../images/cars-bg.jpg') center/cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.page-hero.small {
-  height: 230px;
-}
-
-.page-hero .overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(11,61,145,0.7);
-}
-
-.page-hero h1 {
-  position: relative;
-  color: #fff;
-  font-size: 36px;
-  z-index: 1;
+.hero-content .btn-primary {
+  font-size: 18px;
 }
 
 /* ===============================
@@ -158,10 +144,10 @@ img {
 ================================ */
 .filters {
   display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin: 40px 20px;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin: 40px 20px;
 }
 
 .filters select {
@@ -169,31 +155,32 @@ img {
   border-radius: 10px;
   border: none;
   background: #fff;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 18px var(--shadow);
   font-size: 15px;
 }
 
 /* ===============================
-   CARS GRID
+   CAR GRID
 ================================ */
 .cars-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
   gap: 30px;
   padding: 0 40px 60px;
 }
 
 .car-card {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+  box-shadow: 0 12px 35px var(--shadow);
   transition: 0.4s;
   position: relative;
 }
 
 .car-card:hover {
-  transform: translateY(-12px);
+  transform: translateY(-10px);
+  box-shadow: 0 18px 45px var(--shadow);
 }
 
 .car-card img {
@@ -205,7 +192,7 @@ img {
   position: absolute;
   top: 15px;
   right: 15px;
-  background: linear-gradient(135deg, #f5c518, #0b3d91);
+  background: var(--accent);
   color: #fff;
   padding: 6px 14px;
   border-radius: 20px;
@@ -219,7 +206,7 @@ img {
 .car-card h3 {
   margin: 0;
   font-size: 22px;
-  color: #0b3d91;
+  color: var(--primary);
 }
 
 .car-card ul {
@@ -236,14 +223,14 @@ img {
 .car-card .price {
   font-size: 20px;
   font-weight: bold;
-  color: #f5c518;
+  color: var(--accent);
 }
 
 .car-card a {
   display: block;
   margin-top: 15px;
   text-align: center;
-  background: #0b3d91;
+  background: var(--primary);
   color: #fff;
   padding: 12px;
   border-radius: 10px;
@@ -251,8 +238,8 @@ img {
 }
 
 .car-card a:hover {
-  background: #f5c518;
-  color: #000;
+  background: var(--accent);
+  color: var(--primary);
 }
 
 /* ===============================
@@ -268,15 +255,20 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.car-hero:hover img {
+  transform: scale(1.05);
 }
 
 .car-hero-info {
   position: absolute;
   bottom: 30px;
   right: 40px;
-  background: rgba(11,61,145,0.85);
+  background: rgba(14,26,43,0.85);
   color: #fff;
-  padding: 20px 30px;
+  padding: 25px 35px;
   border-radius: 14px;
 }
 
@@ -287,20 +279,16 @@ img {
   padding: 50px;
 }
 
-.car-specs,
-.car-booking-box {
-  border-radius: 16px;
-}
-
 .car-specs {
-  background: #fff;
+  background: var(--card-bg);
   padding: 30px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  border-radius: 16px;
+  box-shadow: 0 12px 35px var(--shadow);
 }
 
 .car-specs h2 {
   margin-top: 0;
-  color: #0b3d91;
+  color: var(--primary);
 }
 
 .car-specs ul {
@@ -313,15 +301,100 @@ img {
 }
 
 .car-booking-box {
-  background: linear-gradient(135deg, #0b3d91, #062c6f);
+  background: linear-gradient(135deg, var(--primary), #1F3B5F);
   color: #fff;
-  padding: 30px;
-  box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 12px 35px var(--shadow);
 }
 
 .car-booking-box .price {
   font-size: 28px;
   font-weight: bold;
+}
+
+/* ===============================
+   BOOKING STEPS
+================================ */
+.steps-bar {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 40px 0;
+}
+
+.step {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #ccc;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  padding-top: 10px;
+}
+
+.step.active {
+  background: var(--primary);
+}
+
+.step span {
+  display: block;
+  font-size: 12px;
+}
+
+.step-card {
+  display: none;
+  background: var(--card-bg);
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 12px 35px var(--shadow);
+  animation: fadeInUp 0.6s ease;
+}
+
+.step-card.active {
+  display: block;
+}
+
+.summary-box {
+  display: flex;
+  gap: 20px;
+}
+
+.summary-box img {
+  width: 180px;
+  border-radius: 12px;
+}
+
+.addon {
+  display: block;
+  margin: 15px 0;
+  font-size: 16px;
+}
+
+.total {
+  margin: 20px 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+input, .upload {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #D1D5DB;
+}
+
+.upload input {
+  display: none;
+}
+
+.note {
+  color: #555;
+  font-size: 14px;
 }
 
 /* ===============================
@@ -332,24 +405,24 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f5f7fb, #e6ebf5);
+  background: linear-gradient(135deg, #F8FAFC, #E5E7EB);
 }
 
 .confirmation-card {
-  background: #fff;
+  background: var(--card-bg);
   padding: 40px;
   border-radius: 22px;
   max-width: 600px;
   width: 90%;
   text-align: center;
-  box-shadow: 0 15px 45px rgba(0,0,0,0.25);
+  box-shadow: 0 15px 45px var(--shadow);
 }
 
 .success-icon {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #0b3d91, #1f6ad8);
+  background: linear-gradient(135deg, var(--primary), #1F3B5F);
   color: #fff;
   font-size: 42px;
   line-height: 80px;
@@ -357,15 +430,15 @@ img {
 }
 
 .summary {
-  background: #f7f9fc;
+  background: #F7F9FC;
   padding: 20px;
   border-radius: 14px;
   text-align: right;
 }
 
 .note-box {
-  background: #e8f0ff;
-  color: #0b3d91;
+  background: #E8F0FF;
+  color: var(--primary);
   padding: 15px;
   border-radius: 12px;
   margin: 20px 0;
@@ -375,7 +448,7 @@ img {
    FOOTER
 ================================ */
 footer {
-  background: #0b3d91;
+  background: var(--primary);
   color: #fff;
   text-align: center;
   padding: 25px;
@@ -411,5 +484,9 @@ footer {
 
   .hero-content h1 {
     font-size: 34px;
+  }
+
+  .cars-grid {
+    padding: 0 20px 40px;
   }
 }

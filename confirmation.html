@@ -1,1 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تم تأكيد الحجز | الحوت</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<header class="premium-header">
+  <div class="logo">🐋 الحوت</div>
+</header>
+
+<section class="confirmation-wrapper">
+
+  <div class="confirmation-card">
+    <div class="success-icon">✔</div>
+
+    <h1>تم تأكيد حجزك بنجاح</h1>
+    <p class="ref">
+      رقم الحجز: <strong id="refNumber"></strong>
+    </p>
+
+    <div class="summary">
+      <h3>تفاصيل الحجز</h3>
+      <ul>
+        <li>🚘 السيارة: Toyota Camry 2023</li>
+        <li>📅 الاستلام: 10 / 3 / 2026 - 10:00 صباحًا</li>
+        <li>📅 الإرجاع: 13 / 3 / 2026 - 10:00 صباحًا</li>
+        <li>📍 موقع التسليم: حسب العنوان المحدد</li>
+        <li>💰 طريقة الدفع: نقدًا عند الاستلام</li>
+      </ul>
+    </div>
+
+    <div class="note-box">
+      📲 تم إرسال تفاصيل الحجز إلى واتساب الشركة، سيتم التواصل معك قريبًا.
+    </div>
+
+    <div class="actions">
+      <a href="index.html" class="btn-secondary">العودة للرئيسية</a>
+      <a href="cars.html" class="btn-primary">حجز سيارة أخرى</a>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  © 2026 الحوت – تجربة تأجير سيارات فاخرة
+</footer>
+
+<script>
+  // توليد رقم حجز
+  document.getElementById("refNumber").innerText =
+    "ALHOOT-" + Math.floor(100000 + Math.random() * 900000);
+</script>
+
+</body>
+</html>

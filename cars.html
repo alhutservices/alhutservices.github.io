@@ -3,50 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>السيارات - الحوت</title>
+<title>أسطول السيارات | الحوت</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
+
 </head>
 <body>
-<header>
-  <div class="logo">الحوت</div>
+
+<header class="premium-header">
+  <div class="logo">🐋 الحوت</div>
   <nav>
     <a href="index.html">الرئيسية</a>
-    <a href="cars.html">السيارات</a>
+    <a href="cars.html" class="active">السيارات</a>
     <a href="about.html">عن الشركة</a>
+    <a href="booking.html" class="btn-primary">احجز الآن</a>
   </nav>
 </header>
 
-<section style="padding:20px;">
-<h2>استعرض السيارات</h2>
-<form id="filter-form" style="margin-bottom:20px;">
-  <select id="type">
-    <option value="">النوع</option>
-    <option value="عائلية">عائلية</option>
-    <option value="SUV">دفع رباعي</option>
-    <option value="رياضية">رياضية</option>
-    <option value="فاخرة">فاخرة</option>
+<!-- عنوان الصفحة -->
+<section class="page-hero small">
+  <div class="overlay"></div>
+  <h1>اختر سيارتك المثالية</h1>
+</section>
+
+<!-- فلترة Premium -->
+<section class="filters">
+  <select id="category">
+    <option value="">نوع السيارة</option>
     <option value="اقتصادية">اقتصادية</option>
+    <option value="عائلية">عائلية</option>
+    <option value="فاخرة">فاخرة</option>
+    <option value="SUV">SUV</option>
   </select>
-  <select id="capacity">
-    <option value="">عدد الركاب</option>
-    <option value="2">2</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    <option value="7">7</option>
-  </select>
-  <select id="transmission">
+
+  <select id="gear">
     <option value="">ناقل الحركة</option>
     <option value="أوتوماتيك">أوتوماتيك</option>
     <option value="عادي">عادي</option>
   </select>
-  <input type="number" id="price" placeholder="السعر الأقصى">
-  <button type="submit">تصفية</button>
-</form>
 
-<div id="cars-list" class="cars-list"></div>
+  <select id="fuel">
+    <option value="">نوع الوقود</option>
+    <option value="بنزين">بنزين</option>
+    <option value="ديزل">ديزل</option>
+    <option value="هايبرد">هايبرد</option>
+  </select>
+</section>
+
+<!-- السيارات -->
+<section class="cars-grid" id="carsGrid"></section>
 
 <footer>
-جميع الحقوق محفوظة © الحوت
+  © 2026 الحوت – تجربة تأجير سيارات فاخرة
 </footer>
 
 <script src="js/filter.js"></script>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>الحوت - تأجير سيارات</title>
 
-<!-- خطوط حديثة -->
+<!-- خطوط عربية -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 
 <!-- أيقونات -->
@@ -16,18 +16,16 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="logo">الحوت <span>🚗</span></div>
   <nav>
     <a href="index.html">الرئيسية</a>
     <a href="cars.html">السيارات</a>
     <a href="about.html">عن الشركة</a>
-    <a href="booking.html" class="btn">احجز الآن</a>
+    <a href="booking.html" class="btn btn-primary">احجز الآن</a>
   </nav>
 </header>
 
-<!-- HERO -->
 <section class="hero">
   <div class="overlay"></div>
   <div class="hero-content">
@@ -37,41 +35,13 @@
   </div>
 </section>
 
-<!-- CARS FEATURE -->
 <section class="featured-cars">
   <h2>أشهر سياراتنا</h2>
-  <div class="cars-grid">
-    <div class="car-card">
-      <img src="images/corolla.jpg" alt="تويوتا كورولا">
-      <div class="car-info">
-        <h3>تويوتا كورولا</h3>
-        <p>عائلية | أوتوماتيك | 5 ركاب</p>
-        <p class="price">50,000 د.ع / يوم</p>
-        <a href="car-details.html?car=1" class="btn btn-details">تفاصيل</a>
-      </div>
-    </div>
-    <div class="car-card">
-      <img src="images/bmw-x5.jpg" alt="BMW X5">
-      <div class="car-info">
-        <h3>BMW X5</h3>
-        <p>SUV | أوتوماتيك | 7 ركاب</p>
-        <p class="price">120,000 د.ع / يوم</p>
-        <a href="car-details.html?car=2" class="btn btn-details">تفاصيل</a>
-      </div>
-    </div>
-    <div class="car-card">
-      <img src="images/audi-a6.jpg" alt="Audi A6">
-      <div class="car-info">
-        <h3>Audi A6</h3>
-        <p>فاخرة | أوتوماتيك | 5 ركاب</p>
-        <p class="price">110,000 د.ع / يوم</p>
-        <a href="car-details.html?car=3" class="btn btn-details">تفاصيل</a>
-      </div>
-    </div>
+  <div class="cars-grid" id="cars-list">
+    <!-- سيتم تحميل السيارات تلقائيًا من data/cars.json -->
   </div>
 </section>
 
-<!-- WHY CHOOSE US -->
 <section class="why-choose">
   <h2>لماذا تختار الحوت؟</h2>
   <div class="features-grid">
@@ -93,7 +63,6 @@
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <p>جميع الحقوق محفوظة © الحوت 2026</p>
   <div class="socials">
@@ -103,5 +72,6 @@
   </div>
 </footer>
 
+<script src="js/main.js"></script>
 </body>
 </html>

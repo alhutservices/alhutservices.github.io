@@ -1,44 +1,43 @@
-async function displayCars(cars) {
-  const container = document.getElementById('cars-list');
-  container.innerHTML = '';
-  cars.forEach(car => {
-    container.innerHTML += `
+const cars = [
+  {
+    name: "Toyota Camry 2023",
+    category: "عائلية",
+    gear: "أوتوماتيك",
+    fuel: "بنزين",
+    price: 70,
+    image: "images/camry.jpg"
+  },
+  {
+    name: "BMW X5",
+    category: "SUV",
+    gear: "أوتوماتيك",
+    fuel: "بنزين",
+    price: 120,
+    image: "images/bmw.jpg"
+  }
+];
+
+const grid = document.getElementById("carsGrid");
+
+function renderCars(list) {
+  grid.innerHTML = "";
+  list.forEach(car => {
+    grid.innerHTML += `
       <div class="car-card">
-        <img src="${car.image}" alt="${car.name}">
-        <div class="info">
+        <span class="badge">${car.category}</span>
+        <img src="${car.image}">
+        <div class="content">
           <h3>${car.name}</h3>
-          <p>السعر اليومي: ${car.price} د.ع</p>
-          <p>السعة: ${car.capacity} ركاب</p>
-          <p>ناقل الحركة: ${car.transmission}</p>
-          <a href="car-details.html?id=${car.id}">التفاصيل</a>
+          <ul>
+            <li>🚘 ناقل: ${car.gear}</li>
+            <li>⛽ وقود: ${car.fuel}</li>
+          </ul>
+          <div class="price">${car.price}$ / يوم</div>
+          <a href="car-details.html">تفاصيل السيارة</a>
         </div>
       </div>
     `;
   });
 }
 
-async function filterCars(event) {
-  event.preventDefault();
-  const type = document.getElementById('type').value;
-  const capacity = document.getElementById('capacity').value;
-  const transmission = document.getElementById('transmission').value;
-  const price = document.getElementById('price').value;
-
-  const response = await fetch('data/cars.json');
-  let cars = await response.json();
-
-  if (type) cars = cars.filter(c => c.type === type);
-  if (capacity) cars = cars.filter(c => c.capacity == capacity);
-  if (transmission) cars = cars.filter(c => c.transmission === transmission);
-  if (price) cars = cars.filter(c => c.price <= price);
-
-  displayCars(cars);
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-  const response = await fetch('data/cars.json');
-  const cars = await response.json();
-  displayCars(cars);
-
-  document.getElementById('filter-form').addEventListener('submit', filterCars);
-});
+renderCars(cars);

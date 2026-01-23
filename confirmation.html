@@ -1,63 +1,376 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>تأكيد الحجز | الحوت 🐋</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأكيد الحجز - الحوت لتأجير السيارات</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- شريط التنقل العلوي -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-car"></i>
+                    <span>الحوت</span>
+                    <span class="logo-sub">لتأجير السيارات</span>
+                </a>
+            </div>
+            
+            <div class="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="cars.html"><i class="fas fa-car"></i> السيارات</a></li>
+                    <li><a href="booking.html"><i class="fas fa-calendar-check"></i> حجز سريع</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> عن الشركة</a></li>
+                    <li><a href="faq.html"><i class="fas fa-question-circle"></i> الأسئلة الشائعة</a></li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <div class="language-switcher">
+                        <button class="lang-btn" id="langToggle">
+                            <i class="fas fa-globe"></i>
+                            <span>العربية</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="lang-dropdown">
+                            <a href="#" data-lang="ar">العربية</a>
+                            <a href="#" data-lang="en">English</a>
+                        </div>
+                    </div>
+                    <a href="admin-dashboard.html" class="admin-btn">
+                        <i class="fas fa-user-cog"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </div>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-<header class="top-bar">
-  <h1>🐋 الحوت لتأجير السيارات</h1>
-</header>
-
-<section class="confirmation-box">
-  <h2>✅ تأكيد الحجز</h2>
-
-  <div id="summary"></div>
-
-  <button id="sendWhatsapp" class="btn-whatsapp">
-    📲 إرسال الطلب عبر واتساب
-  </button>
-</section>
-
-<script src="utils.js"></script>
-<script>
-const car = JSON.parse(localStorage.getItem("selectedCar"));
-const extras = JSON.parse(localStorage.getItem("extras")) || [];
-const customer = JSON.parse(localStorage.getItem("customerData"));
-
-let extrasText = extras.length ? extras.join("، ") : "لا يوجد";
-
-const message = `
-🚗 *طلب حجز جديد – الحوت لتأجير السيارات 🐋*
-
-👤 الاسم: ${customer.name}
-📞 الهاتف: ${customer.phone}
-🪪 الهوية: ${customer.identity}
-📍 موقع الاستلام: ${customer.location}
-
-🚘 السيارة: ${car.name}
-💰 السعر اليومي: ${car.price}$
-
-➕ إضافات: ${extrasText}
-`;
-
-document.getElementById("summary").innerHTML = `
-<p><strong>الزبون:</strong> ${customer.name}</p>
-<p><strong>الهاتف:</strong> ${customer.phone}</p>
-<p><strong>السيارة:</strong> ${car.name}</p>
-<p><strong>الإضافات:</strong> ${extrasText}</p>
-<p><strong>السعر اليومي:</strong> ${car.price}$</p>
-`;
-
-document.getElementById("sendWhatsapp").onclick = () => {
-  const phone = "9647713225471";
-  const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-  window.open(url, "_blank");
-};
-</script>
-
-</body>
-</html>
+    <!-- صفحة تأكيد الحجز -->
+    <section class="confirmation-page">
+        <div class="container">
+            <div class="confirmation-container">
+                <!-- رسالة النجاح -->
+                <div class="confirmation-success">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h1>تم تأكيد حجزك بنجاح!</h1>
+                    <p class="success-message">
+                        شكراً لاختيارك شركة الحوت لتأجير السيارات. تم تأكيد حجزك وسيتم التواصل معك قريباً.
+                    </p>
+                    
+                    <div class="reference-number">
+                        <div class="reference-icon">
+                            <i class="fas fa-hashtag"></i>
+                        </div>
+                        <div class="reference-info">
+                            <span class="reference-label">رقم المرجع</span>
+                            <span class="reference-value" id="bookingRef">HWT-2023-001</span>
+                        </div>
+                        <button class="copy-btn" id="copyReference">
+                            <i class="far fa-copy"></i>
+                            نسخ
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- تفاصيل الحجز -->
+                <div class="booking-details">
+                    <div class="details-header">
+                        <h2><i class="fas fa-file-invoice"></i> تفاصيل الحجز</h2>
+                        <div class="booking-status">
+                            <span class="status-badge confirmed">
+                                <i class="fas fa-check"></i>
+                                مؤكد
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="details-grid">
+                        <!-- معلومات العميل -->
+                        <div class="details-card">
+                            <h3><i class="fas fa-user"></i> معلومات العميل</h3>
+                            <div class="info-list">
+                                <div class="info-item">
+                                    <span class="info-label">الاسم الكامل:</span>
+                                    <span class="info-value" id="customerName">محمد أحمد</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">رقم الهاتف:</span>
+                                    <span class="info-value" id="customerPhone">07713225471</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">البريد الإلكتروني:</span>
+                                    <span class="info-value" id="customerEmail">mohamed@example.com</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">الجنسية:</span>
+                                    <span class="info-value" id="customerNationality">عراقي</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- معلومات السيارة -->
+                        <div class="details-card">
+                            <h3><i class="fas fa-car"></i> معلومات السيارة</h3>
+                            <div class="car-info">
+                                <div class="car-image-small">
+                                    <img id="bookingCarImage" src="images/car1.jpg" alt="السيارة">
+                                </div>
+                                <div class="car-details-text">
+                                    <h4 id="bookingCarName">تويوتا كامري 2023</h4>
+                                    <div class="car-specs">
+                                        <span><i class="fas fa-user-friends"></i> <span id="bookingCapacity">5</span> أشخاص</span>
+                                        <span><i class="fas fa-cogs"></i> <span id="bookingTransmission">أوتوماتيك</span></span>
+                                        <span><i class="fas fa-gas-pump"></i> <span id="bookingFuel">بنزين</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-list">
+                                <div class="info-item">
+                                    <span class="info-label">الفئة:</span>
+                                    <span class="info-value" id="bookingCategory">عائلية</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">سنة الصنع:</span>
+                                    <span class="info-value" id="bookingYear">2023</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- مواعيد الحجز -->
+                        <div class="details-card">
+                            <h3><i class="fas fa-calendar-alt"></i> مواعيد الحجز</h3>
+                            <div class="dates-info">
+                                <div class="date-item">
+                                    <div class="date-icon pickup">
+                                        <i class="fas fa-calendar-plus"></i>
+                                    </div>
+                                    <div class="date-details">
+                                        <span class="date-label">تاريخ الاستلام</span>
+                                        <span class="date-value" id="pickupDateText">15 ديسمبر 2023</span>
+                                        <span class="time-value" id="pickupTimeText">10:00 صباحاً</span>
+                                    </div>
+                                </div>
+                                <div class="date-item">
+                                    <div class="date-icon return">
+                                        <i class="fas fa-calendar-minus"></i>
+                                    </div>
+                                    <div class="date-details">
+                                        <span class="date-label">تاريخ الإرجاع</span>
+                                        <span class="date-value" id="returnDateText">18 ديسمبر 2023</span>
+                                        <span class="time-value" id="returnTimeText">10:00 صباحاً</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">مدة الحجز:</span>
+                                    <span class="info-value" id="bookingDuration">3 أيام</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- معلومات التسليم -->
+                        <div class="details-card">
+                            <h3><i class="fas fa-map-marker-alt"></i> موقع التسليم</h3>
+                            <div class="location-info">
+                                <div class="location-icon">
+                                    <i class="fas fa-map-pin"></i>
+                                </div>
+                                <div class="location-details">
+                                    <span class="location-type" id="deliveryType">توصيل للمطار</span>
+                                    <span class="location-address" id="deliveryAddress">مطار كركوك الدولي، صالة الوصول الرئيسية</span>
+                                </div>
+                            </div>
+                            <div class="map-mini" id="miniMap">
+                                <!-- خريطة مصغرة -->
+                            </div>
+                        </div>
+                        
+                        <!-- الخدمات الإضافية -->
+                        <div class="details-card">
+                            <h3><i class="fas fa-concierge-bell"></i> الخدمات الإضافية</h3>
+                            <div class="services-list" id="bookingServices">
+                                <!-- سيتم إضافة الخدمات هنا -->
+                            </div>
+                            <div class="no-services" id="noServicesMessage" style="display: none;">
+                                <p><i class="fas fa-info-circle"></i> لم يتم اختيار أي خدمات إضافية</p>
+                            </div>
+                        </div>
+                        
+                        <!-- ملخص الدفع -->
+                        <div class="details-card total-card">
+                            <h3><i class="fas fa-money-bill-wave"></i> ملخص الدفع</h3>
+                            <div class="payment-summary">
+                                <div class="summary-item">
+                                    <span>إيجار السيارة (3 أيام):</span>
+                                    <span class="amount" id="carRentAmount">225,000 دينار</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>الخدمات الإضافية:</span>
+                                    <span class="amount" id="servicesAmount">25,000 دينار</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>الضرائب والرسوم:</span>
+                                    <span class="amount" id="taxesAmount">15,000 دينار</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>التأمين:</span>
+                                    <span class="amount" id="insuranceAmount">20,000 دينار</span>
+                                </div>
+                                <div class="summary-item total">
+                                    <span>المجموع الكلي:</span>
+                                    <span class="amount" id="totalAmount">285,000 دينار</span>
+                                </div>
+                                <div class="payment-method">
+                                    <span>طريقة الدفع:</span>
+                                    <span class="method"><i class="fas fa-money-bill"></i> نقداً عند الاستلام</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الإجراءات -->
+                <div class="confirmation-actions">
+                    <div class="actions-grid">
+                        <button class="action-btn whatsapp-btn" id="sendWhatsAppBtn">
+                            <div class="action-icon">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div class="action-text">
+                                <h4>إرسال عبر واتساب</h4>
+                                <p>إرسال تفاصيل الحجز إلى رقمك</p>
+                            </div>
+                        </button>
+                        
+                        <button class="action-btn print-btn" id="printBookingBtn">
+                            <div class="action-icon">
+                                <i class="fas fa-print"></i>
+                            </div>
+                            <div class="action-text">
+                                <h4>طباعة التفاصيل</h4>
+                                <p>طباعة تأكيد الحجز</p>
+                            </div>
+                        </button>
+                        
+                        <button class="action-btn email-btn" id="sendEmailBtn">
+                            <div class="action-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="action-text">
+                                <h4>إرسال بالبريد</h4>
+                                <p>إرسال نسخة إلى بريدك</p>
+                            </div>
+                        </button>
+                        
+                        <button class="action-btn modify-btn" id="modifyBookingBtn">
+                            <div class="action-icon">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="action-text">
+                                <h4>تعديل الحجز</h4>
+                                <p>تغيير موعد أو سيارة</p>
+                            </div>
+                        </button>
+                        
+                        <button class="action-btn cancel-btn" id="cancelBookingBtn">
+                            <div class="action-icon">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <div class="action-text">
+                                <h4>إلغاء الحجز</h4>
+                                <p>إلغاء هذا الحجز</p>
+                            </div>
+                        </button>
+                        
+                        <button class="action-btn new-btn" onclick="window.location.href='booking.html'">
+                            <div class="action-icon">
+                                <i class="fas fa-plus-circle"></i>
+                            </div>
+                            <div class="action-text">
+                                <h4>حجز جديد</h4>
+                                <p>إجراء حجز جديد</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- التعليمات المهمة -->
+                <div class="important-instructions">
+                    <div class="instructions-header">
+                        <h3><i class="fas fa-exclamation-circle"></i> تعليمات مهمة</h3>
+                    </div>
+                    <div class="instructions-list">
+                        <div class="instruction-item">
+                            <div class="instruction-icon">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <div class="instruction-content">
+                                <h4>المستندات المطلوبة</h4>
+                                <p>يرجى إحضار الهوية الوطنية/جواز السفر ورخصة القيادة الأصلية عند استلام السيارة.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="instruction-item">
+                            <div class="instruction-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="instruction-content">
+                                <h4>التوقيت</h4>
+                                <p>يجب الحضور قبل 30 دقيقة من الموعد المحدد لإتمام الإجراءات.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="instruction-item">
+                            <div class="instruction-icon">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div class="instruction-content">
+                                <h4>فحص السيارة</h4>
+                                <p>سيتم إجراء فحص مشترك للسيارة وتسجيل أي عيوب قبل التسليم.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="instruction-item">
+                            <div class="instruction-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="instruction-content">
+                                <h4>الدفع</h4>
+                                <p>الدفع نقداً فقط عند استلام السيارة. لا نقبل الدفع المسبق.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="instruction-item">
+                            <div class="instruction-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div class="instruction-content">
+                                <h4>الدعم الفني</h4>
+                                <p>للطوارئ أو الاستفسارات، اتصل بنا على <strong>07713225471</strong> على مدار الساعة.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- معلومات الاتصال -->
+                <div class="contact-info-box">
+                    <div class="contact-header">
+                        <h3><i class="fas fa-headset"></i> معلومات الاتصال</h3>
+                    </div>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <div>
+                                <span class="contact-label">رقم الهاتف</span>
+        

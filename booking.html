@@ -3,71 +3,100 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحجز - الحوت</title>
+<title>الحجز | الحوت</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/booking-steps.css">
+
 </head>
 <body>
-<header>
-<div class="logo">الحوت</div>
-<nav>
-  <a href="index.html">الرئيسية</a>
-  <a href="cars.html">السيارات</a>
-  <a href="about.html">عن الشركة</a>
-</nav>
+
+<header class="premium-header">
+  <div class="logo">🐋 الحوت</div>
+  <nav>
+    <a href="index.html">الرئيسية</a>
+    <a href="cars.html">السيارات</a>
+  </nav>
 </header>
 
-<section class="steps-container">
-  <div class="progress">
-    <div class="active"></div>
-    <div></div>
-    <div></div>
-  </div>
+<!-- Progress -->
+<div class="steps-bar">
+  <div class="step active">1<br><span>السيارة</span></div>
+  <div class="step">2<br><span>الخدمات</span></div>
+  <div class="step">3<br><span>البيانات</span></div>
+</div>
 
-  <!-- الخطوة 1: اختيار السيارة -->
-  <div class="step active" id="step-1">
-    <h3>اختر السيارة</h3>
-    <p>سيارتك: <span id="selected-car"></span></p>
-    <button id="next-to-step-2">التالي</button>
+<!-- Step 1 -->
+<section class="step-card active">
+  <h2>السيارة المختارة</h2>
+  <div class="summary-box">
+    <img src="images/camry.jpg">
+    <div>
+      <h3>Toyota Camry 2023</h3>
+      <p>عائلية • أوتوماتيك • بنزين</p>
+      <strong>70$ / يوم</strong>
+    </div>
   </div>
+  <button class="btn-primary next">التالي</button>
+</section>
 
-  <!-- الخطوة 2: الخدمات الإضافية -->
-  <div class="step" id="step-2">
-    <h3>الخدمات الإضافية</h3>
-    <form id="extras-form">
-      <label><input type="checkbox" name="delivery"> توصيل السيارة</label><br>
-      <label><input type="checkbox" name="child-seat"> كرسي أطفال</label><br>
-      <label><input type="checkbox" name="gps"> نظام ملاحة GPS</label><br>
-      <label><input type="checkbox" name="driver"> سائق خاص</label><br>
-    </form>
-    <button id="back-to-step-1">عودة</button>
-    <button id="next-to-step-3">التالي</button>
-  </div>
+<!-- Step 2 -->
+<section class="step-card">
+  <h2>الخدمات الإضافية</h2>
 
-  <!-- الخطوة 3: بيانات الزبون -->
-  <div class="step" id="step-3">
-    <h3>معلومات الزبون والحجز النهائي</h3>
-    <form id="customer-form">
-      <input type="text" name="fullname" placeholder="الاسم الكامل" required>
-      <input type="text" name="phone" placeholder="رقم الهاتف" required>
-      <input type="file" name="id" placeholder="صورة الهوية">
-      <input type="file" name="license" placeholder="رخصة القيادة">
-      <input type="text" name="pickup" placeholder="موقع الاستلام" required>
-      <input type="text" name="return" placeholder="موقع الإرجاع" required>
-      <p id="total-cost">الإجمالي: 0 د.ع</p>
-      <button type="submit">تأكيد الحجز</button>
-    </form>
-    <button id="back-to-step-2">عودة</button>
-  </div>
+  <label class="addon">
+    <input type="checkbox" data-price="15"> 🚗 توصيل السيارة (+15$)
+  </label>
+
+  <label class="addon">
+    <input type="checkbox" data-price="10"> 👶 كرسي أطفال (+10$)
+  </label>
+
+  <label class="addon">
+    <input type="checkbox" data-price="8"> 📍 GPS (+8$)
+  </label>
+
+  <label class="addon">
+    <input type="checkbox" data-price="50"> 👨‍✈️ سائق خاص (+50$)
+  </label>
+
+  <div class="total">الإجمالي: <span id="total">70</span>$</div>
+
+  <button class="btn-secondary back">رجوع</button>
+  <button class="btn-primary next">التالي</button>
+</section>
+
+<!-- Step 3 -->
+<section class="step-card">
+  <h2>بيانات الزبون</h2>
+
+  <input type="text" placeholder="الاسم الكامل">
+  <input type="tel" placeholder="رقم الهاتف">
+
+  <label class="upload">
+    📄 رفع الهوية / الجواز
+    <input type="file">
+  </label>
+
+  <label class="upload">
+    🚘 رخصة القيادة
+    <input type="file">
+  </label>
+
+  <input type="datetime-local">
+  <input type="datetime-local">
+
+  <p class="note">💰 الدفع نقدًا عند الاستلام</p>
+
+  <button class="btn-secondary back">رجوع</button>
+  <a href="confirmation.html" class="btn-primary">تأكيد الحجز</a>
 </section>
 
 <footer>
-جميع الحقوق محفوظة © الحوت
+  © 2026 الحوت
 </footer>
 
 <script src="js/booking.js"></script>
-<script src="js/utils.js"></script>
-<script src="js/map.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
 </body>
 </html>

@@ -3,60 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تم تأكيد الحجز | الحوت</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<title>الحوت - تأكيد الحجز</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-
 </head>
 <body>
 
 <header class="premium-header">
   <div class="logo">🐋 الحوت</div>
+  <nav>
+    <a href="index.html">الرئيسية</a>
+    <a href="cars.html">السيارات</a>
+    <a href="about.html">عن الشركة</a>
+    <a href="booking.html">الحجز</a>
+    <a href="contact.html">تواصل معنا</a>
+  </nav>
 </header>
 
 <section class="confirmation-wrapper">
-
   <div class="confirmation-card">
     <div class="success-icon">✔</div>
-
-    <h1>تم تأكيد حجزك بنجاح</h1>
-    <p class="ref">
-      رقم الحجز: <strong id="refNumber"></strong>
-    </p>
-
+    <h2>تم تأكيد الحجز!</h2>
+    <p>شكرًا لك على حجز سيارتك معنا. رقم الحجز الخاص بك هو:</p>
+    <div class="note-box">#123456</div>
     <div class="summary">
-      <h3>تفاصيل الحجز</h3>
-      <ul>
-        <li>🚘 السيارة: Toyota Camry 2023</li>
-        <li>📅 الاستلام: 10 / 3 / 2026 - 10:00 صباحًا</li>
-        <li>📅 الإرجاع: 13 / 3 / 2026 - 10:00 صباحًا</li>
-        <li>📍 موقع التسليم: حسب العنوان المحدد</li>
-        <li>💰 طريقة الدفع: نقدًا عند الاستلام</li>
-      </ul>
+      <p><strong>السيارة:</strong> Toyota Camry 2023</p>
+      <p><strong>الخدمات الإضافية:</strong> GPS, كرسي أطفال</p>
+      <p><strong>تاريخ الاستلام:</strong> 25/01/2026</p>
+      <p><strong>تاريخ الإرجاع:</strong> 28/01/2026</p>
     </div>
-
-    <div class="note-box">
-      📲 تم إرسال تفاصيل الحجز إلى واتساب الشركة، سيتم التواصل معك قريبًا.
-    </div>
-
-    <div class="actions">
-      <a href="index.html" class="btn-secondary">العودة للرئيسية</a>
-      <a href="cars.html" class="btn-primary">حجز سيارة أخرى</a>
-    </div>
+    <a href="index.html" class="btn-primary" style="margin-top:20px;">عودة للصفحة الرئيسية</a>
   </div>
-
 </section>
-
-<footer>
-  © 2026 الحوت – تجربة تأجير سيارات فاخرة
-</footer>
-
-<script>
-  // توليد رقم حجز
-  document.getElementById("refNumber").innerText =
-    "ALHOOT-" + Math.floor(100000 + Math.random() * 900000);
-</script>
 
 </body>
 </html>

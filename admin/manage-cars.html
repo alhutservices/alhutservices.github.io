@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدارة السيارات - الحوت</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script defer src="../js/admin.js"></script>
+</head>
+<body>
+  <header>
+    <div class="logo">الحوت - Admin</div>
+    <nav>
+      <a href="dashboard.html">الرئيسية</a>
+      <a href="manage-cars.html">إدارة السيارات</a>
+    </nav>
+  </header>
+
+  <section style="padding:30px;">
+    <h2>إدارة السيارات</h2>
+    <table border="1" cellpadding="10" cellspacing="0" style="width:100%;background:#fff;border-radius:8px;overflow:hidden;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>الاسم</th>
+          <th>النوع</th>
+          <th>السعر</th>
+          <th>تعديل</th>
+          <th>حذف</th>
+        </tr>
+      </thead>
+      <tbody id="cars-table">
+        <!-- سيتم تحميل السيارات من cars.json -->
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:30px;">إضافة سيارة جديدة</h3>
+    <form id="add-car-form">
+      <input type="text" name="name" placeholder="اسم السيارة" required>
+      <input type="text" name="type" placeholder="النوع" required>
+      <input type="number" name="capacity" placeholder="السعة" required>
+      <input type="text" name="transmission" placeholder="ناقل الحركة" required>
+      <input type="text" name="fuel" placeholder="نوع الوقود" required>
+      <input type="number" name="price" placeholder="السعر اليومي" required>
+      <input type="text" name="image" placeholder="رابط الصورة" required>
+      <button type="submit">إضافة السيارة</button>
+    </form>
+  </section>
+</body>
+</html>

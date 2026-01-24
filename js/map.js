@@ -1,16 +1,23 @@
-// مثال خرائط لتحديد التسليم
 function initMap() {
-  const mapContainer = document.getElementById('map');
-  if (!mapContainer) return;
+  const mapDiv = document.getElementById('map');
+  const defaultLocation = { lat: 33.3152, lng: 44.3661 }; // بغداد كموقع افتراضي
 
-  const map = new google.maps.Map(mapContainer, {
-    center: { lat: 33.3128, lng: 44.3615 },
-    zoom: 6
+  const map = new google.maps.Map(mapDiv, {
+    zoom: 12,
+    center: defaultLocation
   });
 
   const marker = new google.maps.Marker({
-    position: { lat: 33.3128, lng: 44.3615 },
+    position: defaultLocation,
     map: map,
     draggable: true
   });
+
+  google.maps.event.addListener(marker, 'dragend', function() {
+    const pos = marker.getPosition();
+    console.log('موقع الزبون:', pos.lat(), pos.lng());
+  });
 }
+
+// يجب إضافة رابط API من Google Maps في index.html أو personal-info.html
+// <script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>

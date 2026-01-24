@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحوت - بيانات الحجز</title>
+<title>الحوت - بيانات الزبون</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/booking-steps.css">
 <script src="js/booking.js" defer></script>
+<script src="js/map.js" defer></script>
 </head>
 <body>
 
@@ -24,70 +25,57 @@
 
 <section class="page-hero small">
   <div class="overlay"></div>
-  <h1>بيانات الحجز والخدمات الإضافية</h1>
+  <h1>بيانات الزبون والخدمات الإضافية</h1>
 </section>
 
 <div class="step-card active" data-step="2">
+  <h2>أضف خدماتك وبياناتك الشخصية</h2>
 
-  <h2 style="color:#0E1A2B; margin-bottom:25px;">أضف خدماتك ومعلوماتك الشخصية</h2>
-
-  <!-- ================= خدمات إضافية ================= -->
+  <!-- خدمات إضافية -->
   <div class="addons-grid">
     <label class="addon">
       <input type="checkbox" name="addon" value="GPS">
-      <div class="addon-content">
-        <h3>نظام ملاحة GPS</h3>
-        <p>تحديد المواقع بسهولة أثناء الرحلة.</p>
-      </div>
+      <div class="addon-content"><h3>نظام ملاحة GPS</h3><p>تحديد المواقع بسهولة أثناء الرحلة.</p></div>
     </label>
-
     <label class="addon">
       <input type="checkbox" name="addon" value="ChildSeat">
-      <div class="addon-content">
-        <h3>كرسي أطفال</h3>
-        <p>راحة وأمان للأطفال أثناء الرحلة.</p>
-      </div>
+      <div class="addon-content"><h3>كرسي أطفال</h3><p>راحة وأمان للأطفال أثناء الرحلة.</p></div>
     </label>
-
     <label class="addon">
       <input type="checkbox" name="addon" value="Driver">
-      <div class="addon-content">
-        <h3>سائق خاص</h3>
-        <p>استمتع برحلة بدون قيادة.</p>
-      </div>
+      <div class="addon-content"><h3>سائق خاص</h3><p>استمتع برحلة بدون قيادة.</p></div>
     </label>
-
     <label class="addon">
       <input type="checkbox" name="addon" value="Delivery">
-      <div class="addon-content">
-        <h3>توصيل السيارة</h3>
-        <p>توصيل السيارة إلى المنزل أو الفندق أو المطار.</p>
-      </div>
+      <div class="addon-content"><h3>توصيل السيارة</h3><p>توصيل السيارة إلى المنزل أو الفندق.</p></div>
     </label>
   </div>
 
-  <!-- ================= بيانات المستخدم ================= -->
+  <!-- معلومات الزبون -->
   <div class="user-info">
     <input type="text" placeholder="الاسم الكامل" name="fullName" required>
     <input type="tel" placeholder="رقم الهاتف" name="phone" required>
-
-    <label style="font-weight:600; margin-top:15px;">رفع المستندات</label>
+    <label style="font-weight:600;">رفع المستندات</label>
     <input type="file" name="documents" class="upload" accept="image/*">
   </div>
 
-  <!-- ================= مواعيد الاستلام والإرجاع ================= -->
-  <div class="date-time" style="margin-top:25px;">
+  <!-- مواعيد الاستلام والإرجاع -->
+  <div class="date-time">
     <label>تاريخ ووقت الاستلام</label>
     <input type="datetime-local" name="pickup" required>
     <label>تاريخ ووقت الإرجاع</label>
     <input type="datetime-local" name="return" required>
   </div>
 
-  <div class="buttons" style="margin-top:30px;">
+  <!-- الخريطة -->
+  <div class="map-container" style="margin-top:25px; height:300px; border-radius:16px; overflow:hidden;">
+    <div id="map"></div>
+  </div>
+
+  <div class="buttons" style="margin-top:25px;">
     <button class="btn-secondary prev-step">السابق</button>
     <button class="btn-primary next-step">التالي</button>
   </div>
-
 </div>
 
 </body>

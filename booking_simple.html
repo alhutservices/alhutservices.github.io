@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حجز بسيط | شركة الحوت</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100 py-10 px-4 font-['Tajawal'] text-right">
+    <div class="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl p-8 border-t-8 border-[#002349]">
+        <h2 class="text-2xl font-black mb-6 text-[#002349]">إتمام بيانات الحجز</h2>
+        <div class="bg-blue-50 p-4 rounded-xl mb-6">
+            <p>الخدمة المختارة: <b id="stype">-</b></p>
+            <p>السعر المقدر: <b id="stotal" class="text-green-700">-</b></p>
+        </div>
+        <div class="space-y-4">
+            <input type="text" id="sname" placeholder="الاسم بالكامل" class="w-full p-4 border rounded-xl outline-none focus:border-blue-500">
+            <input type="tel" id="sphone" placeholder="رقم الموبايل" class="w-full p-4 border rounded-xl outline-none focus:border-blue-500">
+            <textarea id="saddr" placeholder="عنوان التوصيل أو الموقع" class="w-full p-4 border rounded-xl h-32 outline-none focus:border-blue-500"></textarea>
+            <button onclick="sendSimple()" class="w-full bg-[#002349] text-white py-5 rounded-xl font-bold text-xl">تأكيد الحجز (واتساب)</button>
+        </div>
+    </div>
+    <script>
+        window.onload = function() {
+            const p = new URLSearchParams(window.location.search);
+            document.getElementById('stype').innerText = p.get('type') === 'training' ? "كورس تعليم قيادة" : "سيارة حمل ("+p.get('vehicle')+")";
+            document.getElementById('stotal').innerText = parseInt(p.get('price')).toLocaleString() + " د.ع";
+        };
+        function sendSimple() {
+            const msg = `*طلب حجز شركة الحوت*%0Aالخدمة: ${document.getElementById('stype').innerText}%0Aالاسم: ${document.getElementById('sname').value}%0Aالعنوان: ${document.getElementById('saddr').value}%0Aالسعر: ${document.getElementById('stotal').innerText}`;
+            window.open(`https://wa.me/9647713225471?text=${msg}`);
+        }
+    </script>
+</body>
+  </html>
+

@@ -3,118 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الحوت - تأجير سيارات كركوك</title>
+    <title>الحوت لتأجير السيارات | Al-Hoot Rental</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/booking-steps.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --whale-blue: #0b1c2d; --gold: #c5a059; }
+        body { background-color: var(--whale-blue); color: white; font-family: 'Segoe UI', sans-serif; }
+        .gold-border { border: 1px solid var(--gold); }
+        .btn-gold { background: var(--gold); color: var(--whale-blue); font-weight: bold; }
+    </style>
 </head>
 <body>
-
-<!-- ================= HEADER ================= -->
-<header class="premium-header">
-    <div class="logo">الحوت</div>
-    <nav>
-        <a href="index.html" class="active">الرئيسية</a>
-        <a href="cars.html">السيارات</a>
-        <a href="booking.html">الحجز</a>
-        <a href="about.html">من نحن</a>
-        <a href="confirmation.html">تأكيد الحجز</a>
+    <nav class="p-6 flex justify-between items-center border-b border-gray-700">
+        <div class="text-2xl font-bold text-[#c5a059]">AL-HOOT <span class="text-white">الحوت</span></div>
+        <ul class="flex gap-6">
+            <li><a href="index.html" class="hover:text-[#c5a059]">الرئيسية</a></li>
+            <li><a href="cars.html" class="hover:text-[#c5a059]">السيارات</a></li>
+            <li><a href="#" class="hover:text-[#c5a059]">من نحن</a></li>
+        </ul>
     </nav>
-</header>
 
-<!-- ================= HERO ================= -->
-<section class="page-hero">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <h1>تأجير سياراتك بأفضل الأسعار والراحة القصوى</h1>
-        <p>اختر سيارتك، أضف الخدمات، واستمتع برحلة مريحة</p>
-        <a href="cars.html" class="btn-primary">ابدأ الحجز الآن</a>
-    </div>
-</section>
+    <header class="py-20 text-center">
+        <h1 class="text-5xl font-extrabold mb-4">استأجر سيارة أحلامك بنقرة واحدة</h1>
+        <p class="text-gray-400 mb-8">نظام الحوت يوفر لك الرفاهية والأمان في تنقلاتك</p>
+        <a href="cars.html" class="btn-gold px-10 py-3 rounded-full transition hover:scale-105 inline-block">تصفح الأسطول</a>
+    </header>
 
-<!-- ================= FEATURED CARS ================= -->
-<section class="featured-cars" style="padding: 60px 20px;">
-    <h2 style="text-align:center; margin-bottom:40px; font-size:32px;">أبرز السيارات</h2>
-    <div class="cars-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:30px;">
-        
-        <!-- CAR CARD 1 -->
-        <div class="car-card">
-            <div class="badge">VIP</div>
-            <img src="images/car1.jpg" alt="سيارة عائلية">
-            <div class="content">
-                <h3>تويوتا كامري</h3>
-                <ul>
-                    <li>سعة: 5 ركاب</li>
-                    <li>ناقل حركة: أوتوماتيك</li>
-                    <li>وقود: بنزين</li>
-                </ul>
-                <div class="price">50$ / يوم</div>
-            </div>
-        </div>
+    <section class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8" id="featured-cars">
+        </section>
 
-        <!-- CAR CARD 2 -->
-        <div class="car-card">
-            <div class="badge">جديد</div>
-            <img src="images/car2.jpg" alt="سيارة رياضية">
-            <div class="content">
-                <h3>BMW X6</h3>
-                <ul>
-                    <li>سعة: 5 ركاب</li>
-                    <li>ناقل حركة: أوتوماتيك</li>
-                    <li>وقود: هايبرد</li>
-                </ul>
-                <div class="price">120$ / يوم</div>
-            </div>
-        </div>
-
-        <!-- CAR CARD 3 -->
-        <div class="car-card">
-            <img src="images/car3.jpg" alt="سيارة دفع رباعي">
-            <div class="content">
-                <h3>جيب رانجلر</h3>
-                <ul>
-                    <li>سعة: 5 ركاب</li>
-                    <li>ناقل حركة: أوتوماتيك</li>
-                    <li>وقود: ديزل</li>
-                </ul>
-                <div class="price">90$ / يوم</div>
-            </div>
-        </div>
-
-    </div>
-</section>
-
-<!-- ================= STEPS PREVIEW ================= -->
-<section class="booking-steps-preview" style="padding:60px 20px; background:#F1F5F9;">
-    <h2 style="text-align:center; margin-bottom:40px; font-size:32px;">خطوات الحجز</h2>
-    <div class="steps-bar">
-        <div class="step active">
-            1
-            <span>اختيار السيارة</span>
-        </div>
-        <div class="step">
-            2
-            <span>إضافة الخدمات</span>
-        </div>
-        <div class="step">
-            3
-            <span>بياناتك</span>
-        </div>
-    </div>
-</section>
-
-<!-- ================= CTA ================= -->
-<section class="cta" style="text-align:center; padding:60px 20px;">
-    <h2>جاهز للبدء برحلتك؟</h2>
-    <p>احجز سيارتك الآن وتمتع براحة لا مثيل لها</p>
-    <a href="booking.html" class="btn-primary">ابدأ الحجز الآن</a>
-</section>
-
-<!-- ================= FOOTER ================= -->
-<footer style="background: var(--primary); color:#fff; padding:30px 20px; text-align:center;">
-    <p>&copy; 2026 شركة الحوت لتأجير السيارات. جميع الحقوق محفوظة.</p>
-</footer>
-
-<script src="js/main.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>

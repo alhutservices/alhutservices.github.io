@@ -1,136 +1,143 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحوت - حجز سيارة</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/booking-steps.css">
-<script src="js/booking.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الحوت - حجز سيارتك</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/booking-steps.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <header class="premium-header">
-  <div class="logo">🐋 الحوت</div>
-  <nav>
-    <a href="index.html">الرئيسية</a>
-    <a href="cars.html">السيارات</a>
-    <a href="about.html">عن الشركة</a>
-    <a href="booking.html" class="active">الحجز</a>
-    <a href="contact.html">تواصل معنا</a>
-  </nav>
+    <div class="logo">الحوت</div>
+    <nav>
+        <a href="index.html">الرئيسية</a>
+        <a href="cars.html">السيارات</a>
+        <a href="booking.html" class="active">الحجز</a>
+        <a href="about.html">من نحن</a>
+    </nav>
 </header>
 
-<section class="page-hero small">
-  <div class="overlay"></div>
-  <h1>احجز سيارتك بسهولة</h1>
+<section class="booking-container" style="padding:60px 20px; background:#F8FAFC;">
+    <h1 style="text-align:center; margin-bottom:50px; font-size:36px;">احجز سيارتك بثلاث خطوات فقط</h1>
+
+    <!-- ===== STEPS BAR ===== -->
+    <div class="steps-bar">
+        <div class="step active" data-step="1">
+            1
+            <span>اختيار السيارة</span>
+        </div>
+        <div class="step" data-step="2">
+            2
+            <span>إضافة الخدمات</span>
+        </div>
+        <div class="step" data-step="3">
+            3
+            <span>بياناتك</span>
+        </div>
+    </div>
+
+    <!-- ===== STEPS CONTENT ===== -->
+    <div class="steps-content">
+
+        <!-- STEP 1 -->
+        <div class="step-content active" data-step="1">
+            <h2>اختر السيارة التي تناسبك</h2>
+            <div class="cars-grid">
+                <div class="car-card" onclick="selectCar(this)">
+                    <div class="badge">VIP</div>
+                    <img src="images/car1.jpg" alt="تويوتا كامري">
+                    <div class="content">
+                        <h3>تويوتا كامري</h3>
+                        <ul>
+                            <li>سعة: 5 ركاب</li>
+                            <li>ناقل حركة: أوتوماتيك</li>
+                        </ul>
+                        <div class="price">50$ / يوم</div>
+                    </div>
+                </div>
+                <div class="car-card" onclick="selectCar(this)">
+                    <div class="badge">جديد</div>
+                    <img src="images/car2.jpg" alt="BMW X6">
+                    <div class="content">
+                        <h3>BMW X6</h3>
+                        <ul>
+                            <li>سعة: 5 ركاب</li>
+                            <li>ناقل حركة: أوتوماتيك</li>
+                        </ul>
+                        <div class="price">120$ / يوم</div>
+                    </div>
+                </div>
+                <div class="car-card" onclick="selectCar(this)">
+                    <img src="images/car3.jpg" alt="جيب رانجلر">
+                    <div class="content">
+                        <h3>جيب رانجلر</h3>
+                        <ul>
+                            <li>سعة: 5 ركاب</li>
+                            <li>ناقل حركة: أوتوماتيك</li>
+                        </ul>
+                        <div class="price">90$ / يوم</div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center; margin-top:40px;">
+                <button class="btn-primary" onclick="nextStep()">التالي</button>
+            </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step-content" data-step="2">
+            <h2>اختر الخدمات الإضافية</h2>
+            <div class="addons-grid">
+                <div class="addon" onclick="toggleAddon(this)">
+                    <h3>كرسي أطفال</h3>
+                    <p>مناسب للأطفال حتى 5 سنوات</p>
+                </div>
+                <div class="addon" onclick="toggleAddon(this)">
+                    <h3>نظام ملاحة GPS</h3>
+                    <p>لتسهيل الوصول لكل الأماكن</p>
+                </div>
+                <div class="addon" onclick="toggleAddon(this)">
+                    <h3>سائق خاص</h3>
+                    <p>استمتع برحلة بدون قيادة</p>
+                </div>
+                <div class="addon" onclick="toggleAddon(this)">
+                    <h3>توصيل السيارة</h3>
+                    <p>إلى المنزل أو الفندق أو المطار</p>
+                </div>
+            </div>
+            <div style="text-align:center; margin-top:40px;">
+                <button class="btn-secondary" onclick="prevStep()">الرجوع</button>
+                <button class="btn-primary" onclick="nextStep()">التالي</button>
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step-content" data-step="3">
+            <h2>أدخل بياناتك</h2>
+            <form id="customer-form" style="max-width:600px; margin:0 auto; display:flex; flex-direction:column; gap:20px;">
+                <input type="text" placeholder="الاسم الكامل" required>
+                <input type="tel" placeholder="رقم الهاتف" required>
+                <input type="file" accept="image/*" placeholder="رفع المستندات">
+                <input type="text" placeholder="عنوان التسليم" required>
+                <input type="datetime-local" placeholder="تاريخ ووقت الاستلام" required>
+                <input type="datetime-local" placeholder="تاريخ ووقت الإرجاع" required>
+            </form>
+            <div style="text-align:center; margin-top:30px;">
+                <button class="btn-secondary" onclick="prevStep()">الرجوع</button>
+                <button class="btn-primary" onclick="finishBooking()">تأكيد الحجز</button>
+            </div>
+        </div>
+
+    </div>
 </section>
 
-<!-- STEPS BAR -->
-<section class="steps-bar premium">
-  <div class="step active" data-step="1">1<span>اختر السيارة</span></div>
-  <div class="step" data-step="2">2<span>بياناتك والخدمات</span></div>
-  <div class="step" data-step="3">3<span>تأكيد الحجز</span></div>
-</section>
+<footer style="background: var(--primary); color:#fff; padding:30px 20px; text-align:center;">
+    <p>&copy; 2026 شركة الحوت لتأجير السيارات. جميع الحقوق محفوظة.</p>
+</footer>
 
-<!-- STEP 1: اختيار السيارة -->
-<div class="step-card active" data-step="1">
-  <h2>اختر السيارة</h2>
-  <div class="cars-grid premium">
-    <div class="car-card">
-      <img src="images/car1.jpg" alt="Toyota Camry">
-      <div class="badge">فاخرة</div>
-      <div class="content">
-        <h3>Toyota Camry 2023</h3>
-        <ul>
-          <li>ناقل: أوتوماتيك</li>
-          <li>سعة: 5 ركاب</li>
-          <li>الوقود: بنزين</li>
-        </ul>
-        <div class="price">120$/اليوم</div>
-        <input type="radio" name="selected-car" value="Toyota Camry 2023">
-      </div>
-    </div>
-
-    <div class="car-card">
-      <img src="images/car2.jpg" alt="BMW X5">
-      <div class="badge">SUV</div>
-      <div class="content">
-        <h3>BMW X5 2022</h3>
-        <ul>
-          <li>ناقل: أوتوماتيك</li>
-          <li>سعة: 5 ركاب</li>
-          <li>الوقود: ديزل</li>
-        </ul>
-        <div class="price">250$/اليوم</div>
-        <input type="radio" name="selected-car" value="BMW X5 2022">
-      </div>
-    </div>
-  </div>
-  <button class="btn-primary next-step">التالي</button>
-</div>
-
-<!-- STEP 2: البيانات والخدمات -->
-<div class="step-card" data-step="2">
-  <h2>خدمات إضافية وبياناتك</h2>
-  <div class="addons-grid">
-    <label class="addon">
-      <input type="checkbox" name="addon" value="GPS">
-      <div class="addon-content"><h3>GPS</h3><p>نظام ملاحة</p></div>
-    </label>
-    <label class="addon">
-      <input type="checkbox" name="addon" value="ChildSeat">
-      <div class="addon-content"><h3>كرسي أطفال</h3><p>راحة وأمان للأطفال</p></div>
-    </label>
-    <label class="addon">
-      <input type="checkbox" name="addon" value="Driver">
-      <div class="addon-content"><h3>سائق خاص</h3><p>استمتع بالرحلة بدون قيادة</p></div>
-    </label>
-    <label class="addon">
-      <input type="checkbox" name="addon" value="Delivery">
-      <div class="addon-content"><h3>توصيل السيارة</h3><p>توصيل إلى المنزل أو الفندق</p></div>
-    </label>
-  </div>
-
-  <div class="user-info">
-    <input type="text" placeholder="الاسم الكامل" name="fullName" required>
-    <input type="tel" placeholder="رقم الهاتف" name="phone" required>
-    <label style="font-weight:600;">رفع المستندات</label>
-    <input type="file" name="documents" class="upload" accept="image/*">
-  </div>
-
-  <div class="date-time">
-    <label>تاريخ ووقت الاستلام</label>
-    <input type="datetime-local" name="pickup" required>
-    <label>تاريخ ووقت الإرجاع</label>
-    <input type="datetime-local" name="return" required>
-  </div>
-
-  <div class="buttons">
-    <button class="btn-secondary prev-step">السابق</button>
-    <button class="btn-primary next-step">التالي</button>
-  </div>
-</div>
-
-<!-- STEP 3: التأكيد -->
-<div class="step-card" data-step="3">
-  <h2>تأكيد الحجز</h2>
-  <div class="summary-box premium">
-    <img src="images/car1.jpg" alt="Selected Car">
-    <div>
-      <p><strong>السيارة:</strong> <span id="summary-car">---</span></p>
-      <p><strong>الخدمات:</strong> <span id="summary-addons">---</span></p>
-      <p><strong>الاسم:</strong> <span id="summary-name">---</span></p>
-      <p><strong>الهاتف:</strong> <span id="summary-phone">---</span></p>
-      <p class="total"><strong>السعر الإجمالي:</strong> <span id="summary-price">---</span></p>
-    </div>
-  </div>
-  <div class="buttons">
-    <button class="btn-secondary prev-step">السابق</button>
-    <a href="confirmation.html" class="btn-primary">تأكيد الحجز</a>
-  </div>
-</div>
-
+<script src="js/booking.js"></script>
 </body>
 </html>

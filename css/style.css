@@ -1,171 +1,50 @@
-/* إعدادات الخطوط والألوان الأساسية (أزرق وأبيض) */
+/* تصميم مستوحى من Seyaha.net */
 :root {
-    --primary-blue: #0A6BEF; /* أزرق أساسي قوي */
-    --dark-blue: #002B5B; /* أزرق داكن للخلفيات */
-    --light-blue: #E0F2FE; /* أزرق فاتح للعناصر الخفيفة */
-    --white: #FFFFFF;
-    --gray-text: #E0E0E0; /* نص رمادي فاتح */
-    --light-gray-bg: #F0F0F0; /* خلفية رمادية فاتحة */
-    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --primary-blue: #2563eb; /* أزرق سياحة العصري */
+    --bg-light: #f8fafc;    /* خلفية رمادية فاتحة جداً */
+    --text-main: #1e293b;   /* نص داكن مريح */
+    --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
 }
 
-/* تنسيق الجسم والخلفية */
 body {
-    background-color: var(--dark-blue);
-    background-image: radial-gradient(circle at top right, #003F8A, var(--dark-blue));
-    color: var(--white);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    overflow-x: hidden;
-    direction: rtl; /* دعم اللغة العربية */
-    text-align: right; /* دعم اللغة العربية */
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    direction: rtl;
 }
 
-/* تصميم كروت السيارات (Premium Cards) */
+/* كروت السيارات بنمط سياحة */
 .car-card {
-    background: rgba(255, 255, 255, 0.08); /* تأثير زجاجي فاتح */
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(10, 107, 239, 0.3); /* حدود زرقاء شفافة */
-    border-radius: 20px;
-    padding: 15px;
-    transition: var(--transition);
-    position: relative;
-    overflow: hidden;
-    color: var(--gray-text); /* لون نص الكروت */
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: var(--card-shadow);
 }
 
 .car-card:hover {
-    transform: translateY(-10px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
     border-color: var(--primary-blue);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
 }
 
-.car-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(10, 107, 239, 0.15), transparent);
-    transition: 0.5s;
-}
-
-.car-card:hover::before {
-    left: 100%;
-}
-
-.car-card h3 {
-    color: var(--primary-blue); /* لون أزرق لعنوان السيارة */
-}
-
-/* الأزرار الزرقاء (التي كانت ذهبية) */
+/* الأزرار */
 .btn-premium {
-    background: linear-gradient(45deg, var(--primary-blue), #50A0FF); /* تدرج أزرق */
-    color: var(--white);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 12px 25px;
-    border-radius: 50px;
-    transition: var(--transition);
-    border: none;
-    cursor: pointer;
-    display: inline-block;
+    background-color: var(--primary-blue);
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 10px 20px;
     text-align: center;
+    transition: 0.2s;
 }
 
 .btn-premium:hover {
-    box-shadow: 0 0 20px rgba(10, 107, 239, 0.4);
-    transform: scale(1.05);
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
 }
 
-/* تنسيق مراحل الحجز (Step Indicators) */
-.step-pill {
-    transition: var(--transition);
-    position: relative;
-    z-index: 2;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: var(--light-blue);
-    border-color: rgba(255, 255, 255, 0.3);
-}
-
-.step-pill.active {
-    background: var(--primary-blue);
-    box-shadow: 0 0 15px rgba(10, 107, 239, 0.5);
-    border-color: var(--white);
-    color: var(--white);
-}
-
-/* تأثيرات المدخلات (Form Inputs) */
-input, select, textarea {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: var(--white) !important;
-    transition: var(--transition);
-}
-
-input::placeholder, textarea::placeholder {
-    color: rgba(255, 255, 255, 0.6) !important;
-}
-
-input:focus {
-    border-color: var(--primary-blue) !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    outline: none;
-    box-shadow: 0 0 10px rgba(10, 107, 239, 0.3);
-}
-
-/* الأقسام الداخلية في صفحة الحجز */
-.booking-section-card {
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-.booking-section-card h3 {
-    color: var(--primary-blue);
-    margin-bottom: 15px;
-}
-
-/* الرسالة التنبيهية للدفع */
-.payment-info {
-    background-color: var(--primary-blue);
-    border: 1px solid var(--white);
-    color: var(--white);
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-}
-
-/* الرسوم المتحركة لدخول العناصر */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.animate-fade {
-    animation: fadeInUp 0.6s ease forwards;
-}
-
-/* شريط التمرير (Scrollbar) */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--dark-blue);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--primary-blue);
-    border-radius: 10px;
+/* الهيدر (Navigation) */
+nav {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }

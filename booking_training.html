@@ -7,43 +7,124 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background: #f8fafc; }
+        .bg-whale { background-color: #002349; }
+        #map { height: 220px; border-radius: 1.5rem; margin-bottom: 1rem; border: 2px solid #e2e8f0; z-index: 1; }
+        .gender-card input:checked + div { border-color: #D4AF37; background-color: #fffdf5; }
+    </style>
 </head>
-<body class="bg-gray-50 py-10 px-4 font-['Tajawal'] text-right">
-    <div class="max-w-xl mx-auto bg-white rounded-3xl shadow-2xl p-8 border-t-8 border-blue-900">
-        <h2 class="text-2xl font-black mb-6 text-blue-900 text-center"><i class="fas fa-graduation-cap text-gold"></i> حجز كورس تعليم سياقة</h2>
-        <div class="space-y-6">
-            <input type="text" id="tName" placeholder="الاسم الكامل للمتدرب" class="w-full p-4 border rounded-2xl outline-none focus:border-gold font-bold">
-            
-            <div class="bg-gray-50 p-4 rounded-2xl border">
-                <label class="block font-black mb-4 text-center">جنس المتدرب (لتحديد نوع المدرب)</label>
-                <div class="grid grid-cols-2 gap-4">
-                    <label class="flex items-center justify-center p-4 border-2 rounded-2xl cursor-pointer bg-white" id="mLab">
-                        <input type="radio" name="gender" value="ذكر" checked class="ml-2"> ذكر
-                    </label>
-                    <label class="flex items-center justify-center p-4 border-2 rounded-2xl cursor-pointer bg-white" id="fLab">
-                        <input type="radio" name="gender" value="أنثى" class="ml-2"> أنثى
-                    </label>
+<body class="py-10 px-4">
+    <div class="max-w-2xl mx-auto bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border-t-8 border-whale">
+        <div class="p-8 md:p-12">
+            <div class="text-center mb-8">
+                <div class="inline-block p-4 bg-blue-50 rounded-full mb-4">
+                    <i class="fas fa-graduation-cap text-4xl text-whale"></i>
                 </div>
+                <h2 class="text-3xl font-black text-whale">حجز كورس تعليم سياقة</h2>
+                <p class="text-gray-500 mt-2 font-bold">يرجى ملء البيانات لتحديد موعد التدريب</p>
             </div>
 
-            <input type="tel" id="tPhone" placeholder="رقم الهاتف" class="w-full p-4 border rounded-2xl outline-none focus:border-gold font-bold text-right">
-            <textarea id="tAddr" placeholder="العنوان السكني بالتفصيل" class="w-full p-4 border rounded-2xl h-24 outline-none focus:border-gold font-bold"></textarea>
-            
-            <div class="p-4 bg-yellow-50 rounded-2xl border-2 border-yellow-200 text-center">
-                <span class="text-gray-600 font-bold">سعر الكورس الكامل:</span>
-                <span class="text-2xl font-black text-blue-900 block">100,000 د.ع</span>
-            </div>
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-400 mb-2 mr-2 text-right">الاسم الكامل للمتدرب</label>
+                    <input type="text" id="tName" placeholder="أدخل اسمك الثلاثي" class="w-full p-4 bg-gray-50 border-2 border-transparent focus:border-gold rounded-2xl outline-none font-bold transition-all text-right">
+                </div>
 
-            <button onclick="sendOrder()" class="w-full bg-blue-900 text-white py-5 rounded-2xl font-black text-xl shadow-lg">إرسال الطلب (واتساب) <i class="fab fa-whatsapp ml-2"></i></button>
+                <div>
+                    <label class="block text-sm font-bold text-gray-400 mb-3 mr-2 text-right">جنس المتدرب (لتحديد نوع المدرب)</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <label class="gender-card cursor-pointer">
+                            <input type="radio" name="gender" value="ذكر" checked class="hidden">
+                            <div class="p-4 border-2 rounded-2xl text-center font-bold text-gray-600 transition-all flex items-center justify-center gap-2">
+                                <i class="fas fa-male text-blue-500"></i> ذكر
+                            </div>
+                        </label>
+                        <label class="gender-card cursor-pointer">
+                            <input type="radio" name="gender" value="أنثى" class="hidden">
+                            <div class="p-4 border-2 rounded-2xl text-center font-bold text-gray-600 transition-all flex items-center justify-center gap-2">
+                                <i class="fas fa-female text-pink-500"></i> أنثى
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-400 mb-2 mr-2 text-right">رقم الهاتف</label>
+                    <input type="tel" id="tPhone" placeholder="0770XXXXXXX" class="w-full p-4 bg-gray-50 border-2 border-transparent focus:border-gold rounded-2xl outline-none font-bold text-right" dir="ltr">
+                </div>
+
+                <div class="bg-gray-50 p-5 rounded-[2rem] border border-gray-100">
+                    <label class="block text-sm font-bold text-whale mb-3 text-right"><i class="fas fa-map-marked-alt text-gold"></i> حدد موقع سكنك على الخريطة:</label>
+                    <div id="map"></div>
+                    <button onclick="getLocation()" class="w-full py-3 bg-white text-blue-700 border border-blue-200 rounded-xl font-bold text-sm mb-3 hover:bg-blue-50 transition">
+                        <i class="fas fa-crosshairs mr-1"></i> تحديد موقعي الحالي عبر GPS
+                    </button>
+                    <input type="hidden" id="tCoords">
+                    <textarea id="tAddr" placeholder="وصف إضافي للعنوان أو أقرب نقطة دالة" class="w-full p-4 bg-white border rounded-2xl h-24 outline-none focus:border-gold font-bold text-right"></textarea>
+                </div>
+
+                <div class="bg-yellow-50 p-5 rounded-2xl border-2 border-yellow-100 flex justify-between items-center">
+                    <span class="font-bold text-yellow-800 text-lg">سعر الكورس:</span>
+                    <span class="text-2xl font-black text-whale">100,000 د.ع</span>
+                </div>
+
+                <button onclick="sendTrainingOrder()" class="w-full bg-whale text-white py-5 rounded-2xl font-black text-xl shadow-xl hover:scale-[1.02] transition-transform">
+                    تأكيد وإرسال عبر واتساب <i class="fab fa-whatsapp ml-2"></i>
+                </button>
+            </div>
         </div>
     </div>
+
     <script>
-        function sendOrder() {
+        let map, marker;
+
+        window.onload = function() {
+            // إحداثيات كركوك كبداية
+            const kirkukCoord = [35.4687, 44.3921];
+            map = L.map('map').setView(kirkukCoord, 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+            marker = L.marker(kirkukCoord, {draggable: true}).addTo(map);
+            
+            marker.on('dragend', function() {
+                const pos = marker.getLatLng();
+                document.getElementById('tCoords').value = pos.lat + "," + pos.lng;
+            });
+
+            document.getElementById('tCoords').value = kirkukCoord[0] + "," + kirkukCoord[1];
+        };
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(p => {
+                    const lat = p.coords.latitude;
+                    const lng = p.coords.longitude;
+                    map.setView([lat, lng], 16);
+                    marker.setLatLng([lat, lng]);
+                    document.getElementById('tCoords').value = lat + "," + lng;
+                });
+            }
+        }
+
+        function sendTrainingOrder() {
+            const name = document.getElementById('tName').value;
+            const phone = document.getElementById('tPhone').value;
             const gender = document.querySelector('input[name="gender"]:checked').value;
-            const msg = `*طلب كورس تعليم سياقة*%0A---------------------------%0A*المتدرب:* ${document.getElementById('tName').value}%0A*الجنس:* ${gender}%0A*الهاتف:* ${document.getElementById('tPhone').value}%0A*العنوان:* ${document.getElementById('tAddr').value}%0A*السعر:* 100,000 د.ع`;
-            window.open(`https://wa.me/9647713225471?text=${msg}`);
+            const addr = document.getElementById('tAddr').value;
+            const coords = document.getElementById('tCoords').value;
+
+            if(!name || !phone) {
+                alert("⚠️ فضلاً، أدخل الاسم ورقم الهاتف للمتابعة");
+                return;
+            }
+
+            const msg = `*طلب كورس تعليم سياقة - شركة الحوت*%0A---------------------------%0A*اسم المتدرب:* ${name}%0A*الجنس:* ${gender}%0A*الهاتف:* ${phone}%0A*العنوان:* ${addr}%0A*السعر:* 100,000 د.ع%0A*الموقع:* http://maps.google.com/maps?q=${coords}`;
+            
+            window.open(`https://wa.me/9647713225471?text=${msg}`, '_blank');
         }
     </script>
 </body>
 </html>
-

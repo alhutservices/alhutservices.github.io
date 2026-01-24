@@ -63,6 +63,12 @@
                     <div class="space-y-4">
                         <input type="text" id="custName" placeholder="الاسم الثلاثي" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-gold">
                         <input type="tel" id="custPhone" placeholder="رقم الهاتف" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-gold">
+                        
+                        <div id="personalOnlyFields" class="hidden space-y-4">
+                            <input type="text" id="idNumber" placeholder="رقم الهوية الوطنية" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-gold border-gold/30">
+                            <input type="text" id="licenseNumber" placeholder="رقم إجازة السوق" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-gold border-gold/30">
+                        </div>
+
                         <textarea id="custAddr" placeholder="العنوان بالتفصيل" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-gold h-28"></textarea>
                         <button onclick="getGPS()" class="w-full py-3 bg-blue-50 text-blue-700 rounded-xl font-bold flex justify-center items-center gap-2"><i class="fas fa-map-pin"></i> تحديد موقعي الحالي</button>
                         <input type="hidden" id="custCoords">
@@ -90,6 +96,8 @@
 
     <script>
         let base = 0;
+        let currentType = '';
+
         function goTo(n) {
             document.querySelectorAll('.booking-stage').forEach(s => s.classList.remove('active'));
             document.getElementById('stage'+n).classList.add('active');
@@ -98,16 +106,21 @@
 
         window.onload = function() {
             const p = new URLSearchParams(window.location.search);
-            const type = p.get('type'), date = p.get('date'), pr = p.get('price'), veh = p.get('vehicle');
+            currentType = p.get('type');
+            const date = p.get('date'), pr = p.get('price'), veh = p.get('vehicle');
+            
             document.getElementById('resDate').innerText = date || 'غير محدد';
 
-            if (type === 'training' || type === 'cargo') {
+            if (currentType === 'training' || currentType === 'cargo') {
                 base = parseInt(pr) || 100000;
-                document.getElementById('resType').innerText = (type === 'training') ? "تدريب قيادة" : `حمل (${veh})`;
-                goTo(3); // قفز مباشر للمرحلة 3
+                document.getElementById('resType').innerText = (currentType === 'training') ? "تدريب قيادة" : `حمل (${veh})`;
+                document.getElementById('personalOnlyFields').classList.add('hidden');
+                goTo(3);
             } else {
-                base = 50000; // سعر ابتدائي للشخصي
+                base = 50000;
                 document.getElementById('resType').innerText = "سيارة شخصية";
+                // إظهار حقول الهوية والإجازة لأن الخدمة شخصية
+                document.getElementById('personalOnlyFields').classList.remove('hidden');
                 goTo(1);
             }
             calcPrice();
@@ -135,8 +148,20 @@
             const phone = document.getElementById('custPhone').value;
             const addr = document.getElementById('custAddr').value;
             const total = document.getElementById('resTotal').innerText;
-            if(!name || !phone || !addr) { alert("أكمل البيانات أولاً"); return; }
-            const msg = `*حجز جديد شركة الحوت*%0Aالخدمة: ${document.getElementById('resType').innerText}%0Aالعميل: ${name}%0Aالهاتف: ${phone}%0Aالتاريخ: ${document.getElementById('resDate').innerText}%0Aالعنوان: ${addr}%0Aالسعر: ${total}%0Aموقع GPS: https://maps.google.com/?q=${document.getElementById('custCoords').value}`;
+            
+            // جلب بيانات الهوية والإجازة إذا كانت الخدمة شخصية
+            let personalData = "";
+            if (currentType === 'personal') {
+                const idNum = document.getElementById('idNumber').value;
+                const licNum = document.getElementById('licenseNumber').value;
+                if(!idNum || !licNum) { alert("⚠️ يرجى إدخال رقم الهوية ورقم الإجازة"); return; }
+                personalData = `%0A*رقم الهوية:* ${idNum}%0A*رقم الإجازة:* ${licNum}`;
+            }
+
+            if(!name || !phone || !addr) { alert("⚠️ أكمل البيانات الأساسية أولاً"); return; }
+            
+            const msg = `*حجز جديد شركة الحوت*%0A---------------------------%0A*الخدمة:* ${document.getElementById('resType').innerText}${personalData}%0A*العميل:* ${name}%0A*الهاتف:* ${phone}%0A*التاريخ:* ${document.getElementById('resDate').innerText}%0A*العنوان:* ${addr}%0A*السعر:* ${total}%0A*موقع GPS:* http://maps.google.com/?q=${document.getElementById('custCoords').value}`;
+            
             window.open(`https://wa.me/9647713225471?text=${msg}`, '_blank');
         }
     </script>

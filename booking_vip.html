@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حجز VIP | شركة الحوت</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background: #f4f7fa; }
+        .bg-whale { background-color: #002349; }
+        .text-gold { color: #D4AF37; }
+        .booking-stage { display: none; }
+        .booking-stage.active { display: block; animation: fadeInUp 0.5s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="py-10 px-4">
+    <div class="max-w-5xl mx-auto bg-white rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
+        <div class="flex-1 p-8 md:p-12">
+            <h2 id="pageTitle" class="text-3xl font-black mb-8 text-whale underline decoration-gold">إتمام حجز المركبة</h2>
+            
+            <div class="booking-stage active" id="stage1">
+                <div id="weddingQtyDiv" class="hidden mb-6 bg-gold/5 p-4 rounded-2xl border-2 border-gold/20">
+                    <label class="block font-black mb-2">عدد السيارات المطلوبة للحفلة:</label>
+                    <input type="number" id="carQty" value="1" min="1" onchange="calcPrice()" class="w-full p-3 rounded-xl border-2 border-gold text-center font-black text-xl">
+                </div>
+
+                <div id="extrasArea" class="space-y-4 mb-8">
+                    </div>
+                <button onclick="document.getElementById('stage1').classList.remove('active'); document.getElementById('stage2').classList.add('active');" class="w-full bg-whale text-white py-4 rounded-2xl font-bold shadow-lg">التالي: بيانات الهوية</button>
+            </div>
+
+            <div class="booking-stage" id="stage2">
+                <div class="space-y-4">
+                    <input type="text" id="custName" placeholder="الاسم الثلاثي" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-gold">
+                    <input type="tel" id="custPhone" placeholder="رقم الهاتف" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-gold text-right">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" id="idDoc" placeholder="رقم الهوية / جواز السفر" class="w-full p-4 bg-gray-50 border-2 border-gold/30 rounded-2xl outline-none focus:border-gold">
+                        <input type="text" id="licDoc" placeholder="رقم إجازة السوق" class="w-full p-4 bg-gray-50 border-2 border-gold/30 rounded-2xl outline-none focus:border-gold">
+                    </div>
+
+                    <textarea id="custAddr" placeholder="العنوان بالتفصيل" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-gold h-24"></textarea>
+                    <button onclick="sendOrder()" class="w-full bg-green-600 text-white py-5 rounded-2xl font-black text-xl shadow-xl">تأكيد وإرسال <i class="fab fa-whatsapp"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full md:w-[320px] bg-whale text-white p-10 flex flex-col justify-between">
+            <div>
+                <h3 class="text-xl font-bold text-gold mb-6 border-b border-white/10 pb-2">ملخص الحجز</h3>
+                <div class="space-y-4 text-sm">
+                    <p>الخدمة: <span id="resType" class="font-bold"></span></p>
+                    <p>التاريخ: <span id="resDate" class="font-bold"></span></p>
+                    <div id="resExtras" class="text-gold italic"></div>
+                </div>
+            </div>
+            <div class="pt-6 border-t border-white/10">
+                <p class="opacity-50">الإجمالي:</p>
+                <span id="resTotal" class="text-3xl font-black text-gold">0 د.ع</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let base = 50000;
+        let type = '';
+
+        window.onload = function() {
+            const p = new URLSearchParams(window.location.search);
+            type = p.get('type');
+            document.getElementById('resDate').innerText = p.get('date');
+            
+            const extrasDiv = document.getElementById('extrasArea');
+
+            if(type === 'wedding') {
+                base = 100000;
+                document.getElementById('resType').innerText = "سيارات مزينة";
+                document.getElementById('weddingQtyDiv').classList.remove('hidden');
+                extrasDiv.innerHTML = `
+                    <label class="flex justify-between p-4 bg-gray-50 rounded-xl border cursor-pointer"><div class="flex items-center gap-2"><i class="fas fa-leaf text-gold"></i> تزيين ورد طبيعي</div><div class="flex items-center gap-2"><span>75,000 د.ع</span><input type="checkbox" value="75000" data-name="ورد" class="extra-check w-5 h-5" onchange="calcPrice()"></div></label>
+                `;
+            } else {
+                document.getElementById('resType').innerText = "سيارة شخصية";
+                extrasDiv.innerHTML = `
+                    <label class="flex justify-between p-4 bg-gray-50 rounded-xl border cursor-pointer"><div class="flex items-center gap-2"><i class="fas fa-truck text-gold"></i> توصيل للمنزل</div><div class="flex items-center gap-2"><span>10,000 د.ع</span><input type="checkbox" value="10000" data-name="توصيل" class="extra-check w-5 h-5" onchange="calcPrice()"></div></label>
+                    <label class="flex justify-between p-4 bg-gray-50 rounded-xl border cursor-pointer"><div class="flex items-center gap-2"><i class="fas fa-user-tie text-gold"></i> سائق خاص</div><div class="flex items-center gap-2"><span>50,000 د.ع</span><input type="checkbox" value="50000" data-name="سائق" class="extra-check w-5 h-5" onchange="calcPrice()"></div></label>
+                `;
+            }
+            calcPrice();
+        };
+
+        function calcPrice() {
+            let ex = 0; let names = [];
+            const qty = (type==='wedding') ? parseInt(document.getElementById('carQty').value) || 1 : 1;
+            document.querySelectorAll('.extra-check:checked').forEach(c => { ex += parseInt(c.value); names.push(c.getAttribute('data-name')); });
+            document.getElementById('resTotal').innerText = ((base * qty) + ex).toLocaleString() + " د.ع";
+            document.getElementById('resExtras').innerText = names.join(' + ');
+        }
+
+        function sendOrder() {
+            const id = document.getElementById('idDoc').value;
+            const lic = document.getElementById('licDoc').value;
+            if(!id || !lic) { alert("رقم الهوية والإجازة مطلوب!"); return; }
+            const msg = `*حجز VIP شركة الحوت*%0Aالخدمة: ${document.getElementById('resType').innerText}%0Aالاسم: ${document.getElementById('custName').value}%0Aالهوية: ${id}%0Aالإجازة: ${lic}%0Aالإجمالي: ${document.getElementById('resTotal').innerText}`;
+            window.open(`https://wa.me/9647713225471?text=${msg}`);
+        }
+    </script>
+</body>
+</html>
+

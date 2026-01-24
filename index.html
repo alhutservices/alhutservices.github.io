@@ -24,16 +24,18 @@
     <main class="container mx-auto px-4">
         <div class="bg-white shadow-2xl rounded-[3rem] p-8 -mt-24 relative z-20 max-w-5xl mx-auto border border-gray-100">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+                
                 <div class="space-y-2 text-right">
                     <label class="block text-sm font-bold text-gray-500 mr-2">نوع الخدمة</label>
-                    <select id="mainService" onchange="checkService()" class="w-full p-4 bg-gray-50 border-2 border-transparent focus:border-gold rounded-2xl outline-none font-bold text-whale">
+                    <select id="mainService" onchange="checkService()" class="w-full p-4 bg-gray-50 border-2 border-transparent focus:border-gold rounded-2xl outline-none font-bold text-whale transition-all">
                         <option value="">-- اختر الخدمة --</option>
-                        <option value="personal">🚗 سيارة شخصية</option>
-                        <option value="wedding">🎁 سيارات مزينة (لحفلة)</option>
+                        <option value="personal">🚗 تأجير سيارة شخصية</option>
+                        <option value="wedding">🎁 سيارات مزينة (أعراس)</option>
                         <option value="training">🎓 تعليم قيادة (كورس)</option>
-                        <option value="cargo">🚛 سيارة حمل</option>
+                        <option value="cargo">🚛 سيارة حمل ونقل</option>
                     </select>
                 </div>
+
                 <div id="cargoDiv" class="space-y-2 hidden text-right">
                     <label class="block text-sm font-bold text-gray-500 mr-2">نوع المركبة</label>
                     <select id="cargoType" class="w-full p-4 bg-gray-50 border-2 border-gold rounded-2xl outline-none font-bold text-whale">
@@ -41,40 +43,78 @@
                         <option value="سيارة كبيرة">سيارة حمل كبيرة (20 ألف)</option>
                     </select>
                 </div>
+
                 <div class="space-y-2 text-right">
                     <label class="block text-sm font-bold text-gray-500 mr-2">تاريخ الحجز</label>
                     <input type="date" id="searchDate" class="w-full p-4 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-gold font-bold">
                 </div>
+
                 <div>
                     <button onclick="processSearch()" class="w-full btn-gold py-4 rounded-2xl font-black text-lg shadow-xl">
-                        ابحث الآن <i class="fas fa-search mr-2"></i>
+                        احجز الآن <i class="fas fa-arrow-left mr-2"></i>
                     </button>
                 </div>
             </div>
         </div>
+
+        <section class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 text-center pb-20">
+            <div class="p-8 bg-white rounded-3xl shadow-sm">
+                <i class="fas fa-shield-alt text-4xl text-whale mb-4"></i>
+                <h3 class="font-black text-xl mb-2">أمان وموثوقية</h3>
+                <p class="text-gray-500">نضمن لك أفضل السيارات بأفضل الحالات الفنية.</p>
+            </div>
+            <div class="p-8 bg-white rounded-3xl shadow-sm">
+                <i class="fas fa-clock text-4xl text-whale mb-4"></i>
+                <h3 class="font-black text-xl mb-2">سرعة في التجهيز</h3>
+                <p class="text-gray-500">خدمة عملاء على مدار الساعة لتلبية طلباتكم في كركوك.</p>
+            </div>
+            <div class="p-8 bg-white rounded-3xl shadow-sm border-b-4 border-gold">
+                <i class="fas fa-map-marked-alt text-4xl text-whale mb-4"></i>
+                <h3 class="font-black text-xl mb-2">خدمة التوصيل</h3>
+                <p class="text-gray-500">نصل إليك أينما كنت داخل حدود المدينة.</p>
+            </div>
+        </section>
     </main>
 
     <script>
+        // وظيفة لإظهار وإخفاء خيارات سيارات الحمل
         function checkService() {
             const s = document.getElementById('mainService').value;
-            document.getElementById('cargoDiv').style.display = (s === 'cargo') ? 'block' : 'none';
+            const cargoDiv = document.getElementById('cargoDiv');
+            if (s === 'cargo') {
+                cargoDiv.classList.remove('hidden');
+            } else {
+                cargoDiv.classList.add('hidden');
+            }
         }
+
+        // الوظيفة الأساسية لتوجيه الزبائن للملفات الصحيحة
         function processSearch() {
-            const s = document.getElementById('mainService').value;
-            const d = document.getElementById('searchDate').value;
-            if (!s || !d) { alert("⚠️ يرجى اختيار الخدمة والتاريخ أولاً"); return; }
+            const service = document.getElementById('mainService').value;
+            const date = document.getElementById('searchDate').value;
+
+            if (!service || !date) {
+                alert("⚠️ فضلاً، حدد نوع الخدمة وتاريخ الحجز للمتابعة.");
+                return;
+            }
+
+            // الحالة الأولى: خدمات VIP (تتطلب هوية وإجازة وإضافات)
+            if (service === 'personal' || service === 'wedding') {
+                // إذا كان لديك صفحة أسطول سيارات (cars.html) يفضل التوجه لها أولاً
+                // ولكن هنا سأوجههم مباشرة لصفحة الحجز VIP كما طلبت
+                window.location.href = `booking_vip.html?type=${service}&date=${date}`;
+            } 
             
-            if (s === 'personal' || s === 'wedding') {
-                // تذهب للأسطول لاختيار موديل السيارة
-                window.location.href = `cars.html?type=${s}&date=${d}`;
+            // الحالة الثانية: خدمات بسيطة (تعليم قيادة)
+            else if (service === 'training') {
+                window.location.href = `booking_simple.html?type=training&date=${date}&price=100000`;
             } 
-            else if (s === 'training') {
-                window.location.href = `booking.html?type=training&date=${d}&price=100000`;
-            } 
-            else if (s === 'cargo') {
-                const v = document.getElementById('cargoType').value;
-                const p = (v === 'ستوتة') ? '10000' : '20000';
-                window.location.href = `booking.html?type=cargo&vehicle=${v}&date=${d}&price=${p}`;
+            
+            // الحالة الثالثة: خدمات بسيطة (حمل ونقل)
+            else if (service === 'cargo') {
+                const vehicle = document.getElementById('cargoType').value;
+                const price = (vehicle === 'ستوتة') ? '10000' : '20000';
+                window.location.href = `booking_simple.html?type=cargo&vehicle=${vehicle}&date=${date}&price=${price}`;
             }
         }
     </script>

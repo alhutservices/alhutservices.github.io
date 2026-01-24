@@ -1,56 +1,78 @@
-/* css/booking.steps.css */
-:root {
-    --primary-blue: #0A6BEF;
-    --dark-blue: #002B5B;
-    --glass-white: rgba(255, 255, 255, 0.05);
+/* تصميم شريط التقدم */
+.step-line {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #ddd;
+    z-index: 0;
 }
 
-.step-container {
+.step-item {
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f3f4f6; /* لون خلفية الصفحة لدمج الخط */
+    padding: 0 10px;
 }
 
-.step-content {
-    display: none;
-    animation: slideIn 0.4s ease-out;
-}
-
-.step-content.active {
-    display: block;
-}
-
-@keyframes slideIn {
-    from { opacity: 0; transform: translateX(-20px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-
-.step-circle {
-    width: 50px;
-    height: 50px;
+.step-num {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: #05162a;
-    border: 2px solid rgba(255,255,255,0.1);
+    background: #fff;
+    border: 2px solid #ddd;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    transition: all 0.3s ease;
-    z-index: 2;
+    transition: all 0.4s ease;
 }
 
-.step-circle.active {
-    background: var(--primary-blue);
-    border-color: #fff;
-    box-shadow: 0 0 15px rgba(10, 107, 239, 0.5);
+.step-item.active .step-num {
+    background: var(--gold-primary);
+    border-color: var(--gold-primary);
+    color: var(--whale-blue);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
 }
 
-/* شريط السعر العائم */
-.price-summary-tag {
-    background: linear-gradient(45deg, var(--primary-blue), #004fb1);
-    padding: 15px;
+.step-label {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #999;
+}
+
+.step-item.active .step-label { color: var(--whale-blue); }
+
+/* تأثيرات المراحل */
+.booking-stage {
+    display: none;
+    animation: slideIn 0.5s forwards;
+}
+
+.booking-stage.active { display: block; }
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* كروت الخدمات الإضافية */
+.service-card { cursor: pointer; }
+.card-content {
+    border: 2px solid #eee;
+    padding: 20px;
     border-radius: 15px;
     text-align: center;
-    margin-top: 20px;
-    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
 }
 
+input[type="checkbox"]:checked + .card-content {
+    border-color: var(--gold-primary);
+    background: #fffdf5;
+    transform: scale(1.05);
+}

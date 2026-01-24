@@ -17,35 +17,38 @@
 </head>
 <body>
     <header class="bg-whale text-white pt-20 pb-40 text-center relative">
-        <h1 class="text-6xl font-black mb-4 text-gold">الحـوت</h1>
-        <p class="text-xl opacity-90">أفضل خدمات السيارات في كركوك</p>
+        <h1 class="text-6xl font-black mb-4 text-gold tracking-widest">الحـوت</h1>
+        <p class="text-xl opacity-90">الريادة في خدمات السيارات بمدينة كركوك</p>
     </header>
 
     <main class="container mx-auto px-4">
         <div class="bg-white shadow-2xl rounded-[3rem] p-8 -mt-24 relative z-20 max-w-5xl mx-auto border border-gray-100">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
-                <div class="space-y-2">
-                    <label class="block text-sm font-bold text-gray-500 text-right">نوع الخدمة</label>
+                <div class="space-y-2 text-right">
+                    <label class="block text-sm font-bold text-gray-500 mr-2">نوع الخدمة</label>
                     <select id="mainService" onchange="checkService()" class="w-full p-4 bg-gray-50 border-2 border-transparent focus:border-gold rounded-2xl outline-none font-bold text-whale">
-                        <option value="">-- اختر --</option>
+                        <option value="">-- اختر الخدمة --</option>
                         <option value="personal">🚗 سيارة شخصية</option>
+                        <option value="wedding">🎁 سيارات مزينة (لحفلة)</option>
                         <option value="training">🎓 تعليم قيادة (كورس)</option>
                         <option value="cargo">🚛 سيارة حمل</option>
                     </select>
                 </div>
-                <div id="cargoDiv" class="space-y-2 hidden">
-                    <label class="block text-sm font-bold text-gray-500">نوع المركبة</label>
+                <div id="cargoDiv" class="space-y-2 hidden text-right">
+                    <label class="block text-sm font-bold text-gray-500 mr-2">نوع المركبة</label>
                     <select id="cargoType" class="w-full p-4 bg-gray-50 border-2 border-gold rounded-2xl outline-none font-bold text-whale">
                         <option value="ستوتة">ستوتة (10 آلاف)</option>
-                        <option value="سيارة كبيرة">سيارة كبيرة (20 ألف)</option>
+                        <option value="سيارة كبيرة">سيارة حمل كبيرة (20 ألف)</option>
                     </select>
                 </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-bold text-gray-500">التاريخ</label>
+                <div class="space-y-2 text-right">
+                    <label class="block text-sm font-bold text-gray-500 mr-2">تاريخ الحجز</label>
                     <input type="date" id="searchDate" class="w-full p-4 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-gold font-bold">
                 </div>
                 <div>
-                    <button onclick="processSearch()" class="w-full btn-gold py-4 rounded-2xl font-black text-lg shadow-xl">ابحث الآن</button>
+                    <button onclick="processSearch()" class="w-full btn-gold py-4 rounded-2xl font-black text-lg shadow-xl">
+                        ابحث الآن <i class="fas fa-search mr-2"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -59,9 +62,15 @@
         function processSearch() {
             const s = document.getElementById('mainService').value;
             const d = document.getElementById('searchDate').value;
-            if (!s || !d) { alert("⚠️ اختر الخدمة والتاريخ أولاً"); return; }
-            if (s === 'personal') window.location.href = `booking.html?type=personal&date=${d}`;
-            else if (s === 'training') window.location.href = `booking.html?type=training&date=${d}&price=100000`;
+            if (!s || !d) { alert("⚠️ يرجى اختيار الخدمة والتاريخ أولاً"); return; }
+            
+            if (s === 'personal' || s === 'wedding') {
+                // تذهب للأسطول لاختيار موديل السيارة
+                window.location.href = `cars.html?type=${s}&date=${d}`;
+            } 
+            else if (s === 'training') {
+                window.location.href = `booking.html?type=training&date=${d}&price=100000`;
+            } 
             else if (s === 'cargo') {
                 const v = document.getElementById('cargoType').value;
                 const p = (v === 'ستوتة') ? '10000' : '20000';

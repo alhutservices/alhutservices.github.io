@@ -3,185 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إتمام الحجز | شركة الحوت الفاخرة</title>
+    <title>إتمام الحجز | شركة الحوت</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f4f7fa; color: #002349; }
+        body { font-family: 'Tajawal', sans-serif; background: #f4f7fa; }
         .bg-whale { background-color: #002349; }
         .text-gold { color: #D4AF37; }
-        .border-gold { border-color: #D4AF37; }
-        
-        /* نظام المراحل */
         .booking-stage { display: none; }
-        .booking-stage.active { display: block; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ستايل المدخلات الفخم */
-        .custom-input {
-            width: 100%; padding: 1rem 1.25rem; background-color: #f8fafc;
-            border: 2px solid #e2e8f0; border-radius: 1.25rem; outline: none;
-            transition: all 0.3s ease; font-weight: 600;
-        }
-        .custom-input:focus { border-color: #D4AF37; background-color: white; box-shadow: 0 10px 15px -3px rgba(212, 175, 55, 0.1); }
-
-        /* شريط الخطوات */
-        .step-dot { width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: 0.4s; }
-        .step-item.active .step-dot { background: #D4AF37; color: #002349; box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
-        .step-line { flex: 1; height: 3px; background: #e2e8f0; margin: 0 10px; }
-        .step-item.active + .step-line { background: #D4AF37; }
+        .booking-stage.active { display: block; animation: fadeInUp 0.5s ease; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .step-item.active .num { background: #D4AF37; color: #002349; box-shadow: 0 0 10px rgba(212,175,55,0.5); }
     </style>
 </head>
-<body class="py-12">
+<body class="py-10 px-4">
 
-    <div class="max-w-6xl mx-auto px-4">
-        <div class="mb-12 max-w-2xl mx-auto flex items-center justify-between relative">
-            <div class="step-item active flex flex-col items-center gap-2" id="st1">
-                <div class="step-dot">1</div>
-                <span class="text-xs font-black">السيارة</span>
-            </div>
-            <div class="step-line"></div>
-            <div class="step-item flex flex-col items-center gap-2" id="st2">
-                <div class="step-dot">2</div>
-                <span class="text-xs font-black">الخدمات</span>
-            </div>
-            <div class="step-line"></div>
-            <div class="step-item flex flex-col items-center gap-2" id="st3">
-                <div class="step-dot">3</div>
-                <span class="text-xs font-black">التأكيد</span>
-            </div>
+    <div class="max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-10 max-w-lg mx-auto relative">
+            <div class="absolute h-1 bg-gray-200 w-full top-5 -z-10"></div>
+            <div class="step-item active" id="st1"><div class="num w-10 h-10 rounded-full bg-white border-2 flex items-center justify-center font-bold mx-auto">1</div></div>
+            <div class="step-item" id="st2"><div class="num w-10 h-10 rounded-full bg-white border-2 flex items-center justify-center font-bold mx-auto">2</div></div>
+            <div class="step-item" id="st3"><div class="num w-10 h-10 rounded-full bg-white border-2 flex items-center justify-center font-bold mx-auto">3</div></div>
         </div>
 
-        <div class="bg-white rounded-[3rem] shadow-2xl border border-gray-100 overflow-hidden flex flex-col lg:flex-row min-h-[600px]">
-            
-            <div class="flex-1 p-8 md:p-14">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[550px]">
+            <div class="flex-1 p-8 md:p-12">
                 
-                <div class="booking-stage" id="stage1">
-                    <h2 class="text-3xl font-black mb-8">تفاصيل المركبة المختارة</h2>
-                    <div class="bg-gray-50 p-8 rounded-[2rem] border-2 border-dashed border-gray-200 mb-8">
-                        <i class="fas fa-car-side text-5xl text-gold mb-4"></i>
-                        <p class="text-xl font-bold">يرجى اختيار خدماتك الإضافية في الخطوة التالية.</p>
+                <div class="booking-stage active" id="stage1">
+                    <h2 class="text-3xl font-black mb-6 text-whale">تأكيد المركبة المختارة</h2>
+                    <div class="p-6 bg-gray-50 border-2 border-gold rounded-3xl mb-8 flex items-center gap-4">
+                        <i class="fas fa-car-side text-4xl text-gold"></i>
+                        <p class="font-bold">سيارة شخصية (سياحة وعمل)</p>
                     </div>
-                    <button onclick="changeStage(2)" class="bg-whale text-white px-10 py-4 rounded-2xl font-bold shadow-lg">استمرار للخدمات</button>
+                    <button onclick="goTo(2)" class="w-full bg-whale text-white py-4 rounded-2xl font-bold">التالي: الإضافات</button>
+                </div>
+
+                <div class="booking-stage" id="stage2">
+                    <h2 class="text-3xl font-black mb-6 text-whale text-right">الخدمات الإضافية</h2>
+                    <div class="space-y-4 mb-8">
+                        <label class="flex justify-between items-center p-4 bg-gray-50 rounded-2xl cursor-pointer border-2 border-transparent hover:border-gold transition">
+                            <div class="flex items-center gap-3"><i class="fas fa-truck text-gold"></i> <b>توصيل للبيت</b></div>
+                            <div class="flex items-center gap-3"><span>10,000 د.ع</span> <input type="checkbox" value="10000" data-name="توصيل" onchange="calcPrice()" class="extra-check w-6 h-6"></div>
+                        </label>
+                        <label class="flex justify-between items-center p-4 bg-gray-50 rounded-2xl cursor-pointer border-2 border-transparent hover:border-gold transition">
+                            <div class="flex items-center gap-3"><i class="fas fa-baby text-gold"></i> <b>كرسي أطفال</b></div>
+                            <div class="flex items-center gap-3"><span>10,000 د.ع</span> <input type="checkbox" value="10000" data-name="كرسي أطفال" onchange="calcPrice()" class="extra-check w-6 h-6"></div>
+                        </label>
+                        <label class="flex justify-between items-center p-4 bg-gray-50 rounded-2xl cursor-pointer border-2 border-transparent hover:border-gold transition">
+                            <div class="flex items-center gap-3"><i class="fas fa-user-tie text-gold"></i> <b>سائق خاص</b></div>
+                            <div class="flex items-center gap-3"><span>50,000 د.ع</span> <input type="checkbox" value="50000" data-name="سائق خاص" onchange="calcPrice()" class="extra-check w-6 h-6"></div>
+                        </label>
+                    </div>
+                    <button onclick="goTo(3)" class="w-full bg-whale text-white py-4 rounded-2xl font-bold">التالي: بيانات الحجز</button>
                 </div>
 
                 <div class="booking-stage" id="stage3">
-                    <h2 class="text-3xl font-black mb-2">تأكيد الحجز النهائي</h2>
-                    <p class="text-gray-400 mb-10">يرجى تزويدنا ببيانات التواصل لضمان وصول الخدمة إليك بدقة.</p>
-                    
-                    <div class="space-y-6 max-w-xl">
-                        <div class="relative">
-                            <i class="fas fa-user absolute right-5 top-5 text-gray-300"></i>
-                            <input type="text" id="c_name" placeholder="الاسم الثلاثي للزبون" class="custom-input pr-12">
-                        </div>
-                        
-                        <div class="relative">
-                            <i class="fas fa-phone absolute right-5 top-5 text-gray-300"></i>
-                            <input type="tel" id="c_phone" placeholder="رقم الموبايل (واتساب)" class="custom-input pr-12">
-                        </div>
-
-                        <div class="relative">
-                            <i class="fas fa-map-marked-alt absolute right-5 top-5 text-gray-300"></i>
-                            <textarea id="c_address" placeholder="عنوان التسليم بالتفصيل (حي - شارع - معلم)" class="custom-input pr-12 h-32 resize-none"></textarea>
-                        </div>
-
-                        <button onclick="getGPS()" class="w-full py-4 bg-gold/10 text-gold border-2 border-gold border-dashed rounded-2xl font-bold hover:bg-gold hover:text-whale transition-all flex items-center justify-center gap-3">
-                            <i class="fas fa-location-arrow"></i> تحديد موقعك الحالي عبر GPS
-                        </button>
-                        <input type="hidden" id="c_coords">
-
-                        <button onclick="confirmBooking()" class="w-full bg-whale text-white py-5 rounded-[1.5rem] font-black text-xl shadow-2xl hover:scale-[1.02] transition-transform flex items-center justify-center gap-4 mt-8">
-                             تأكيد الحجز والإرسال <i class="fab fa-whatsapp text-2xl"></i>
-                        </button>
+                    <h2 class="text-3xl font-black mb-6 text-whale">بيانات الزبون والموقع</h2>
+                    <div class="space-y-4">
+                        <input type="text" id="custName" placeholder="الاسم الثلاثي" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-gold">
+                        <input type="tel" id="custPhone" placeholder="رقم الهاتف" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-gold">
+                        <textarea id="custAddr" placeholder="العنوان بالتفصيل" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-gold h-28"></textarea>
+                        <button onclick="getGPS()" class="w-full py-3 bg-blue-50 text-blue-700 rounded-xl font-bold flex justify-center items-center gap-2"><i class="fas fa-map-pin"></i> تحديد موقعي الحالي</button>
+                        <input type="hidden" id="custCoords">
+                        <button onclick="submitOrder()" class="w-full bg-green-600 text-white py-5 rounded-2xl font-black text-xl flex justify-center items-center gap-3">تأكيد عبر واتساب <i class="fab fa-whatsapp"></i></button>
                     </div>
                 </div>
             </div>
 
-            <div class="w-full lg:w-[400px] bg-whale p-10 text-white relative">
-                <div class="relative z-10">
-                    <h3 class="text-2xl font-black mb-10 text-gold flex items-center gap-3">
-                        <span class="w-2 h-8 bg-gold rounded-full"></span> تفاصيل طلبك
-                    </h3>
-                    
-                    <div class="space-y-8">
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-gold"><i class="fas fa-concierge-bell"></i></div>
-                            <div><p class="text-xs opacity-50 mb-1">نوع الخدمة</p><p id="sum-type" class="font-bold text-lg">شخصية</p></div>
-                        </div>
-
-                        <div class="flex items-start gap-4">
-                            <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-gold"><i class="fas fa-calendar-check"></i></div>
-                            <div><p class="text-xs opacity-50 mb-1">تاريخ الاستلام</p><p id="sum-date" class="font-bold text-lg">-</p></div>
-                        </div>
-
-                        <div class="pt-10 border-t border-white/10 mt-10">
-                            <p class="text-xs opacity-50 mb-2">المبلغ الإجمالي التقريبي</p>
-                            <div class="flex items-baseline gap-2 text-gold">
-                                <span id="sum-total" class="text-4xl font-black">0</span>
-                            </div>
-                        </div>
+            <div class="w-full md:w-[350px] bg-whale text-white p-10 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-xl font-bold border-b border-white/10 pb-4 mb-8 text-gold text-right">ملخص الطلب</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between font-bold"><span>نوع الخدمة:</span> <span id="resType">شخصية</span></div>
+                        <div class="flex justify-between font-bold text-gray-400"><span>التاريخ:</span> <span id="resDate">-</span></div>
+                        <div id="extrasList" class="text-xs text-gold py-2 italic text-right"></div>
                     </div>
                 </div>
-                <i class="fas fa-shuttle-van absolute bottom-[-50px] left-[-30px] text-[20rem] opacity-[0.03] rotate-12"></i>
+                <div class="pt-6 border-t border-white/10 flex justify-between items-baseline">
+                    <span class="text-xl">الإجمالي:</span>
+                    <span id="resTotal" class="text-3xl font-black text-gold">0</span>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        function changeStage(n) {
+        let base = 0;
+        function goTo(n) {
             document.querySelectorAll('.booking-stage').forEach(s => s.classList.remove('active'));
             document.getElementById('stage'+n).classList.add('active');
-            for(let i=1; i<=3; i++) {
-                if(i <= n) document.getElementById('st'+i).classList.add('active');
-                else document.getElementById('st'+i).classList.remove('active');
-            }
+            for(let i=1; i<=3; i++) document.getElementById('st'+i).classList.toggle('active', i<=n);
         }
 
         window.onload = function() {
             const p = new URLSearchParams(window.location.search);
-            const type = p.get('type'), date = p.get('date'), price = p.get('price'), vehicle = p.get('vehicle');
+            const type = p.get('type'), date = p.get('date'), pr = p.get('price'), veh = p.get('vehicle');
+            document.getElementById('resDate').innerText = date || 'غير محدد';
 
-            if(date) document.getElementById('sum-date').innerText = date;
-
-            if(type === 'training' || type === 'cargo') {
-                changeStage(3); // القفز الفوري للمرحلة الثالثة بتصميمها الكامل
-                if(type === 'training') {
-                    document.getElementById('sum-type').innerText = "كورس تعليم قيادة";
-                    document.getElementById('sum-total').innerText = "100,000 د.ع";
-                } else {
-                    document.getElementById('sum-type').innerText = "حمل (" + vehicle + ")";
-                    document.getElementById('sum-total').innerText = parseInt(price).toLocaleString() + " د.ع";
-                }
+            if (type === 'training' || type === 'cargo') {
+                base = parseInt(pr) || 100000;
+                document.getElementById('resType').innerText = (type === 'training') ? "تدريب قيادة" : `حمل (${veh})`;
+                goTo(3); // قفز مباشر للمرحلة 3
             } else {
-                document.getElementById('sum-total').innerText = "$180";
-                changeStage(1);
+                base = 50000; // سعر ابتدائي للشخصي
+                document.getElementById('resType').innerText = "سيارة شخصية";
+                goTo(1);
             }
+            calcPrice();
         };
 
-        function getGPS() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => {
-                    document.getElementById('c_coords').value = pos.coords.latitude + "," + pos.coords.longitude;
-                    alert("✅ رائع! تم التقاط موقعك بدقة.");
-                });
-            }
+        function calcPrice() {
+            let extra = 0; let names = [];
+            document.querySelectorAll('.extra-check:checked').forEach(c => {
+                extra += parseInt(c.value);
+                names.push(c.getAttribute('data-name'));
+            });
+            document.getElementById('resTotal').innerText = (base + extra).toLocaleString() + " د.ع";
+            document.getElementById('extrasList').innerText = names.length > 0 ? "مع: " + names.join(' + ') : "";
         }
 
-        function confirmBooking() {
-            const name = document.getElementById('c_name').value;
-            const phone = document.getElementById('c_phone').value;
-            const addr = document.getElementById('c_address').value;
-            const type = document.getElementById('sum-type').innerText;
-            const total = document.getElementById('sum-total').innerText;
-            const date = document.getElementById('sum-date').innerText;
-            const coords = document.getElementById('c_coords').value;
+        function getGPS() {
+            if (navigator.geolocation) navigator.geolocation.getCurrentPosition(p => {
+                document.getElementById('custCoords').value = p.coords.latitude + "," + p.coords.longitude;
+                alert("✅ تم تحديد الموقع!");
+            });
+        }
 
-            if(!name || !phone || !addr) { alert("⚠️ لطفاً، أكمل بياناتك أولاً لخدمتك بشكل أفضل."); return; }
-
-            const map = coords ? `https://www.google.com/maps?q=${coords}` : "لم يحدد";
-            const msg = `*طلب حجز جديد - شركة الحوت*%0A---------------------------%0A*نوع الخدمة:* ${type}%0A*العميل:* ${name}%0A*الهاتف:* ${phone}%0A*التاريخ:* ${date}%0A*العنوان:* ${addr}%0A*السعر:* ${total}%0A*الموقع:* ${map}`;
-            
+        function submitOrder() {
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const addr = document.getElementById('custAddr').value;
+            const total = document.getElementById('resTotal').innerText;
+            if(!name || !phone || !addr) { alert("أكمل البيانات أولاً"); return; }
+            const msg = `*حجز جديد شركة الحوت*%0Aالخدمة: ${document.getElementById('resType').innerText}%0Aالعميل: ${name}%0Aالهاتف: ${phone}%0Aالتاريخ: ${document.getElementById('resDate').innerText}%0Aالعنوان: ${addr}%0Aالسعر: ${total}%0Aموقع GPS: https://maps.google.com/?q=${document.getElementById('custCoords').value}`;
             window.open(`https://wa.me/9647713225471?text=${msg}`, '_blank');
         }
     </script>

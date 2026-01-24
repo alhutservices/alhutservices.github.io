@@ -2,54 +2,41 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أسطول الحوت - تصفح السيارات</title>
+    <title>تأجير السيارات - الحوت</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-[#002B5B] text-white">
+<body class="bg-slate-50">
 
-    <nav class="p-6 flex justify-between items-center border-b border-white/10">
-        <div class="text-2xl font-bold text-[#0A6BEF]">AL-HOOT <span class="text-white">الحوت</span></div>
-        <div class="flex gap-6">
-            <a href="index.html" class="hover:text-[#0A6BEF] transition">الرئيسية</a>
-            <a href="cars.html" class="text-[#0A6BEF] font-bold">السيارات</a>
+    <nav class="bg-white p-4 sticky top-0 z-50 border-b border-slate-100">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-2xl font-bold text-blue-600">AL-HOOT <span class="text-slate-800">الحوت</span></div>
+            <div class="hidden md:flex gap-8 font-medium">
+                <a href="index.html" class="text-blue-600 border-b-2 border-blue-600 pb-1">الرئيسية</a>
+                <a href="#" class="text-slate-500 hover:text-blue-600">من نحن</a>
+            </div>
+            <button class="md:hidden text-slate-600">☰</button>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-12">
-        <div class="flex flex-col lg:flex-row gap-8">
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-6">
             
-            <aside class="w-full lg:w-1/4">
-                <div class="bg-white/5 p-6 rounded-3xl border border-white/10 sticky top-10">
-                    <h2 class="text-xl font-bold mb-6 text-[#0A6BEF]">تصفية النتائج</h2>
-                    
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">نوع السيارة</label>
-                            <select id="car-type" class="w-full p-3 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-[#0A6BEF]">
-                                <option value="">الكل</option>
-                                <option value="luxury">فاخرة</option>
-                                <option value="sport">رياضية</option>
-                                <option value="economic">اقتصادية</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm text-gray-400 mb-2">السعر الأقصى ($)</label>
-                            <input type="range" id="price-range" min="100" max="1000" step="50" class="w-full accent-[#0A6BEF]">
-                            <div class="text-center mt-2 font-bold"><span id="price-display">1000</span>$</div>
-                        </div>
-
-                        <button onclick="applyFilters()" class="w-full py-3 bg-[#0A6BEF] rounded-xl font-bold hover:bg-blue-600 transition">تطبيق</button>
-                    </div>
+            <aside class="w-full lg:w-1/4 bg-white p-6 rounded-xl border border-slate-200 h-fit">
+                <h3 class="font-bold text-lg mb-4 flex items-center gap-2">⚙️ تصفية النتائج</h3>
+                <div class="space-y-4">
+                    <select id="car-type" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">نوع السيارة</option>
+                        <option value="luxury">فاخرة</option>
+                        <option value="economic">اقتصادية</option>
+                    </select>
+                    <input type="range" id="price-range" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                    <button onclick="applyFilters()" class="w-full bg-blue-600 text-white p-3 rounded-lg font-bold">تطبيق البحث</button>
                 </div>
             </aside>
 
-            <main class="w-full lg:w-3/4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="all-cars-list">
-                    </div>
-            </main>
+            <main class="w-full lg:w-3/4 grid grid-cols-1 md:grid-cols-2 gap-6" id="all-cars-list">
+                </main>
         </div>
     </div>
 

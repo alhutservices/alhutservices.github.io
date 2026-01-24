@@ -11,15 +11,15 @@
         body { font-family: 'Tajawal', sans-serif; background: #f8fafc; }
         .bg-whale { background-color: #002349; }
         .text-gold { color: #D4AF37; }
-        .btn-gold { background: linear-gradient(45deg, #D4AF37, #F9E27D); color: #002349; transition: 0.3s; }
+        .btn-gold { background: linear-gradient(45deg, #D4AF37, #F9E27D); color: #002349; transition: 0.3s; cursor: pointer; }
         .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
 
-    <header class="bg-whale text-white pt-20 pb-40 text-center relative overflow-hidden">
-        <h1 class="text-6xl font-black mb-4 animate-bounce text-gold">الحـوت</h1>
-        <p class="text-xl opacity-90">خيارك الأول للسيارات الشخصية، التعليم، والحمل في كركوك</p>
+    <header class="bg-whale text-white pt-20 pb-40 text-center">
+        <h1 class="text-6xl font-black mb-4 text-gold">الحـوت</h1>
+        <p class="text-xl opacity-90 text-white">خدمات التأجير، التعليم، والنقل في كركوك</p>
     </header>
 
     <main class="container mx-auto px-4">
@@ -27,9 +27,9 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
                 
                 <div class="space-y-2">
-                    <label class="block text-sm font-bold text-gray-500">اختر نوع الخدمة</label>
-                    <select id="mainService" onchange="toggleCargo()" class="w-full p-4 bg-gray-50 border-2 border-transparent focus:border-gold rounded-2xl outline-none font-bold text-whale">
-                        <option value="">-- اختر --</option>
+                    <label class="block text-sm font-bold text-gray-500">نوع الخدمة</label>
+                    <select id="mainService" onchange="checkService()" class="w-full p-4 bg-gray-50 border-2 border-transparent focus:border-gold rounded-2xl outline-none font-bold text-whale">
+                        <option value="">-- اختر الخدمة --</option>
                         <option value="personal">🚗 سيارة شخصية</option>
                         <option value="training">🎓 تعليم قيادة (كورس)</option>
                         <option value="cargo">🚛 سيارة حمل</option>
@@ -50,8 +50,8 @@
                 </div>
 
                 <div>
-                    <button onclick="processSearch()" class="w-full btn-gold py-4 rounded-2xl font-black text-lg shadow-xl">
-                        ابحث الآن <i class="fas fa-search mr-2"></i>
+                    <button onclick="smartRedirect()" class="w-full btn-gold py-4 rounded-2xl font-black text-lg shadow-xl">
+                        تأكيد الطلب <i class="fas fa-chevron-left mr-2"></i>
                     </button>
                 </div>
             </div>
@@ -59,28 +59,38 @@
     </main>
 
     <script>
-        function toggleCargo() {
-            const s = document.getElementById('mainService').value;
-            document.getElementById('cargoDiv').style.display = (s === 'cargo') ? 'block' : 'none';
+        // إظهار وإخفاء قسم الحمل
+        function checkService() {
+            const service = document.getElementById('mainService').value;
+            const cargoDiv = document.getElementById('cargoDiv');
+            cargoDiv.style.display = (service === 'cargo') ? 'block' : 'none';
         }
 
-        function processSearch() {
-            const s = document.getElementById('mainService').value;
-            const d = document.getElementById('searchDate').value;
+        // الوظيفة المسؤولة عن التوجيه الصحيح
+        function smartRedirect() {
+            const service = document.getElementById('mainService').value;
+            const date = document.getElementById('searchDate').value;
 
-            if (!s || !d) {
-                alert("⚠️ يرجى اختيار الخدمة والتاريخ أولاً!");
+            // التأكد من ملئ البيانات
+            if (!service || !date) {
+                alert("⚠️ يرجى اختيار الخدمة والتاريخ أولاً");
                 return;
             }
 
-            if (s === 'personal') {
-                window.location.href = `cars.html?date=${d}`;
-            } else if (s === 'training') {
-                window.location.href = `booking.html?type=training&date=${d}&price=100000`;
-            } else if (s === 'cargo') {
-                const v = document.getElementById('cargoType').value;
-                const p = (v === 'ستوتة') ? '10000' : '20000';
-                window.location.href = `booking.html?type=cargo&vehicle=${v}&date=${d}&price=${p}`;
+            // التوجيه الذكي
+            if (service === 'personal') {
+                // الشخصية فقط تذهب للأسطول
+                window.location.href = `cars.html?date=${date}`;
+            } 
+            else if (service === 'training') {
+                // التعليم يذهب فوراً لصفحة الحجز مع تجاوز أي صفحة أخرى
+                window.location.href = `booking.html?type=training&date=${date}&price=100000`;
+            } 
+            else if (service === 'cargo') {
+                // الحمل يذهب فوراً لصفحة الحجز
+                const vehicle = document.getElementById('cargoType').value;
+                const price = (vehicle === 'ستوتة') ? '10000' : '20000';
+                window.location.href = `booking.html?type=cargo&vehicle=${vehicle}&date=${date}&price=${price}`;
             }
         }
     </script>

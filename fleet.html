@@ -3,148 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أسطول الحوت | اختر فخامتك</title>
+    <title>أسطول الحوت | اختر سيارتك</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f1f5f9; }
         .hero-bg { background: linear-gradient(135deg, #002349 0%, #003366 100%); }
-        
-        .whale-float { display: inline-block; animation: floating 4s ease-in-out infinite; }
-        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
-        .car-card { 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            border: 1px solid rgba(0,0,0,0.05);
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-        }
-        .car-card:hover { 
-            transform: translateY(-12px); 
-            box-shadow: 0 30px 60px -12px rgba(0, 35, 73, 0.2);
-            border-color: #D4AF37;
-        }
-        .price-tag { background: linear-gradient(90deg, #D4AF37, #fde047); }
-        
-        /* تحسين شكل السكرول */
-        select {
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: left 1rem center;
-            background-size: 1em;
-        }
+        .car-card { transition: all 0.4s ease; border-radius: 3rem; overflow: hidden; background: white; border: 1px solid #eee; }
+        .car-card:hover { transform: translateY(-10px); border-color: #D4AF37; box-shadow: 0 20px 40px rgba(0,35,73,0.1); }
+        .price-badge { background: linear-gradient(45deg, #D4AF37, #fde047); color: #002349; padding: 8px 20px; border-radius: 1.5rem; font-weight: 900; }
     </style>
 </head>
 <body class="text-[#002349]">
 
     <header class="hero-bg text-white pt-16 pb-40 text-center relative overflow-hidden">
-        <div class="whale-float text-6xl mb-4">🐋</div>
+        <div class="text-6xl mb-4">🐋</div>
         <h1 class="text-4xl font-black text-[#D4AF37]">أسطول سيارات الحوت</h1>
-        <p class="text-lg opacity-80 mt-2 font-light">نخبة السيارات بين يديك في كركوك</p>
-        
-        <div id="serviceBadge" class="mt-4 inline-block px-6 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-xs font-bold tracking-widest uppercase">
-            جاري التعرف على الخدمة...
-        </div>
+        <p id="serviceLabel" class="text-lg opacity-80 mt-2 font-bold uppercase"></p>
     </header>
 
     <main class="container mx-auto px-4 -mt-24 relative z-10 pb-20">
-        <div class="bg-white/80 backdrop-blur-xl shadow-2xl rounded-[3rem] p-6 max-w-5xl mx-auto mb-12 border border-white flex flex-wrap gap-6 justify-center items-center">
-            <div class="relative group">
-                <i class="fas fa-microchip absolute right-4 top-1/2 -translate-y-1/2 text-[#D4AF37]"></i>
-                <select id="engineFilter" onchange="renderFleet()" class="pr-12 pl-10 py-4 bg-slate-50 rounded-2xl font-black outline-none focus:ring-2 focus:ring-[#D4AF37] transition-all min-w-[200px]">
-                    <option value="all">كل المحركات</option>
-                    <option value="hybrid">هايبرد (صديق للبيئة)</option>
-                    <option value="auto">أوتوماتيك</option>
-                </select>
-            </div>
-
-            <div class="relative group">
-                <i class="fas fa-layer-group absolute right-4 top-1/2 -translate-y-1/2 text-[#D4AF37]"></i>
-                <select id="categoryFilter" onchange="renderFleet()" class="pr-12 pl-10 py-4 bg-slate-50 rounded-2xl font-black outline-none focus:ring-2 focus:ring-[#D4AF37] transition-all min-w-[200px]">
-                    <option value="all">كل الفئات</option>
-                    <option value="economy">اقتصادية</option>
-                    <option value="family">عائلية / SUV</option>
-                    <option value="luxury">فاخرة VIP</option>
-                </select>
-            </div>
+        <div class="bg-white/80 backdrop-blur-xl shadow-2xl rounded-[3rem] p-6 max-w-5xl mx-auto mb-12 border border-white flex flex-wrap gap-4 justify-center items-center">
+            <select id="engineFilter" onchange="renderFleet()" class="p-4 bg-slate-50 rounded-2xl font-black outline-none border-none">
+                <option value="all">كل أنواع المحركات</option>
+                <option value="hybrid">هايبرد (هجين)</option>
+                <option value="auto">أوتوماتيك</option>
+            </select>
+            <select id="categoryFilter" onchange="renderFleet()" class="p-4 bg-slate-50 rounded-2xl font-black outline-none border-none">
+                <option value="all">كل الفئات</option>
+                <option value="economy">اقتصادية</option>
+                <option value="family">عائلية / SUV</option>
+                <option value="luxury">فاخرة VIP</option>
+            </select>
         </div>
 
-        <div id="fleetGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
-            </div>
+        <div id="fleetGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto"></div>
     </main>
 
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const serviceType = params.get('type');
-        
-        // تحديث البادج العلوي
-        const badge = document.getElementById('serviceBadge');
-        if(serviceType === 'wedding') {
-            badge.innerHTML = "✨ قسم سيارات الأعراس والمناسبات";
-            badge.classList.add('text-yellow-400');
-        } else {
-            badge.innerHTML = "🚗 قسم التأجير الشخصي اليومي";
-        }
+        const u = new URLSearchParams(window.location.search);
+        const type = u.get('type');
+        document.getElementById('serviceLabel').innerText = type === 'wedding' ? '✨ قسم سيارات الحفلات والأعراس' : '🚗 قسم السيارات الشخصية';
 
         const fleet = [
-            { name: "تويوتا كورولا 2025", engine: "hybrid", cat: "economy", price: "45,000", img: "Cars/corolla.jpg", tags: ["اعتمادية", "موفرة"] },
-            { name: "دودج جارجر SRT", engine: "auto", cat: "luxury", price: "85,000", img: "Cars/charger.jpg", tags: ["وحش الطريق", "رياضية"] },
-            { name: "هيونداي توسان", engine: "auto", cat: "family", price: "60,000", img: "Cars/tucson.jpg", tags: ["عائلية", "مريحة"] },
-            { name: "مرسيدس S-Class", engine: "auto", cat: "luxury", price: "150,000", img: "Cars/mercedes.jpg", tags: ["VIP", "ملكية"] },
-            { name: "نيسان صني", engine: "auto", cat: "economy", price: "35,000", img: "Cars/sunny.jpg", tags: ["عملية"] }
+            { name: "تويوتا كورولا 2025", engine: "hybrid", cat: "economy", price: "45000", img: "Cars/corolla.jpg" },
+            { name: "دودج جارجر SRT", engine: "auto", cat: "luxury", price: "85000", img: "Cars/charger.jpg" },
+            { name: "هيونداي توسان", engine: "auto", cat: "family", price: "60000", img: "Cars/tucson.jpg" },
+            { name: "مرسيدس S-Class", engine: "auto", cat: "luxury", price: "150000", img: "Cars/mercedes.jpg" }
         ];
 
         function renderFleet() {
-            const engine = document.getElementById('engineFilter').value;
-            const category = document.getElementById('categoryFilter').value;
+            const eng = document.getElementById('engineFilter').value;
+            const cat = document.getElementById('categoryFilter').value;
             const grid = document.getElementById('fleetGrid');
             grid.innerHTML = '';
 
-            const filtered = fleet.filter(car => {
-                return (engine === 'all' || car.engine === engine) && 
-                       (category === 'all' || car.cat === category);
-            });
-
-            if(filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-20 bg-white rounded-[3rem] shadow-inner">
-                        <div class="text-6xl mb-4">🔍</div>
-                        <p class="text-gray-400 font-black text-xl">عذراً، لا توجد سيارة بهذه المواصفات حالياً</p>
-                    </div>`;
-                return;
-            }
-
-            filtered.forEach(car => {
+            fleet.filter(car => (eng === 'all' || car.engine === eng) && (cat === 'all' || car.cat === cat))
+                 .forEach(car => {
                 grid.innerHTML += `
-                    <div class="car-card rounded-[3rem] overflow-hidden p-3 flex flex-col">
-                        <div class="relative">
-                            <img src="${car.img}" class="w-full h-56 object-cover rounded-[2.5rem] shadow-md" onerror="this.src='https://via.placeholder.com/400x300?text=Al-Hut+Car'">
-                            <div class="absolute top-4 left-4 price-tag text-[#002349] px-4 py-2 rounded-2xl font-black shadow-lg">
-                                ${car.price} <span class="text-[10px]">د.ع/يوم</span>
-                            </div>
-                        </div>
-                        
-                        <div class="p-5 text-center flex-1 flex flex-col justify-between">
-                            <div>
-                                <h3 class="text-2xl font-black mb-2">${car.name}</h3>
-                                <div class="flex flex-wrap justify-center gap-2 mb-4">
-                                    ${car.tags.map(t => `<span class="text-[9px] bg-slate-100 px-3 py-1 rounded-full font-bold text-slate-500 uppercase">${t}</span>`).join('')}
-                                </div>
-                                <div class="grid grid-cols-2 gap-2 mb-6">
-                                    <div class="bg-slate-50 p-2 rounded-xl text-xs font-bold text-slate-400">
-                                        <i class="fas fa-cog ml-1 text-[#D4AF37]"></i> ${car.engine === 'hybrid' ? 'هايبرد' : 'أوتوماتيك'}
-                                    </div>
-                                    <div class="bg-slate-50 p-2 rounded-xl text-xs font-bold text-slate-400">
-                                        <i class="fas fa-tag ml-1 text-[#D4AF37]"></i> ${car.cat}
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <button onclick="selectCar('${car.name}', '${car.price}')" class="w-full bg-[#002349] text-white py-5 rounded-[1.8rem] font-black text-lg hover:bg-[#D4AF37] hover:text-[#002349] transition-all shadow-xl active:scale-95">
-                                اختيار هذه السيارة
-                            </button>
+                    <div class="car-card p-4">
+                        <img src="${car.img}" class="w-full h-52 object-cover rounded-[2.5rem] mb-4" onerror="this.src='https://via.placeholder.com/400x250?text=Al-Hut+Car'">
+                        <div class="px-2">
+                            <h3 class="text-2xl font-black mb-2">${car.name}</h3>
+                            <div class="price-badge inline-block mb-6">${parseInt(car.price).toLocaleString()} د.ع / يوم</div>
+                            <button onclick="selectCar('${car.name}', '${car.price}')" class="w-full bg-[#002349] text-white py-4 rounded-2xl font-black hover:bg-[#D4AF37] hover:text-black transition-all">اختيار السيارة</button>
                         </div>
                     </div>
                 `;
@@ -152,14 +75,10 @@
         }
 
         function selectCar(name, price) {
-            const currentParams = new URLSearchParams(window.location.search);
-            currentParams.set('car', name);
-            currentParams.set('price', price.replace(',', ''));
-            
-            // التوجيه لصفحة الإضافات (التي صممناها لتكون الخطوة التالية)
-            window.location.href = `addons.html?${currentParams.toString()}`;
+            u.set('car', name);
+            u.set('price', price);
+            window.location.href = `addons.html?${u.toString()}`;
         }
-
         window.onload = renderFleet;
     </script>
 </body>

@@ -1,44 +1,73 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8"><title>أسطول الحوت | كركوك</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أسطول الحوت | اختر سيارتك</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f0f4f8; }
-        .car-card:hover { transform: translateY(-10px); }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
+        .hero-bg { background: linear-gradient(135deg, #002349 0%, #003366 100%); }
+        
+        .whale-float {
+            display: inline-block;
+            animation: floating 4s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .car-card { transition: all 0.3s ease; border: 1px solid #eee; }
+        .car-card:hover { transform: translateY(-10px); shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border-color: #D4AF37; }
     </style>
 </head>
-<body class="p-6">
-    <header class="text-center mb-10">
-        <h1 class="text-3xl font-black text-[#002349]">أسطول سيارات الحوت 🐋</h1>
-        <p class="text-gray-500">اختر الفئة التي تناسبك للمتابعة</p>
+<body class="text-[#002349]">
+
+    <header class="hero-bg text-white pt-12 pb-32 text-center relative">
+        <div class="whale-float text-5xl mb-4">🐋</div>
+        <h1 class="text-3xl font-black text-[#D4AF37]">أسطول سيارات الحوت</h1>
+        <p class="text-sm opacity-80 mt-2">اختر الفئة والمواصفات التي تناسبك</p>
     </header>
 
-    <div class="flex flex-wrap gap-4 justify-center mb-10 bg-white p-6 rounded-[2rem] shadow-sm max-w-4xl mx-auto">
-        <select id="engineFilter" onchange="renderFleet()" class="p-3 rounded-xl border-2 border-gray-100 font-bold outline-none focus:border-[#D4AF37]">
-            <option value="all">كل المحركات</option>
-            <option value="hybrid">هايبرد (هجين)</option>
-            <option value="auto">أوتوماتيك</option>
-            <option value="manual">عادي</option>
-        </select>
-        <select id="categoryFilter" onchange="renderFleet()" class="p-3 rounded-xl border-2 border-gray-100 font-bold outline-none focus:border-[#D4AF37]">
-            <option value="all">كل الفئات</option>
-            <option value="economy">اقتصادية</option>
-            <option value="sport">رياضية</option>
-            <option value="family">عائلية (SUV)</option>
-            <option value="luxury">فاخرة / VIP</option>
-        </select>
-    </div>
+    <main class="container mx-auto px-4 -mt-20 relative z-10 pb-20">
+        <div class="bg-white shadow-xl rounded-[2.5rem] p-6 max-w-4xl mx-auto mb-12 flex flex-wrap gap-4 justify-center items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-cog text-gray-400"></i>
+                <select id="engineFilter" onchange="renderFleet()" class="bg-gray-50 p-3 rounded-xl font-bold outline-none focus:ring-2 focus:ring-[#D4AF37]">
+                    <option value="all">كل أنواع الكير</option>
+                    <option value="hybrid">هايبرد (هجين)</option>
+                    <option value="auto">أوتوماتيك</option>
+                    <option value="manual">عادي</option>
+                </select>
+            </div>
 
-    <div id="fleetGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto"></div>
+            <div class="flex items-center gap-2">
+                <i class="fas fa-car text-gray-400"></i>
+                <select id="categoryFilter" onchange="renderFleet()" class="bg-gray-50 p-3 rounded-xl font-bold outline-none focus:ring-2 focus:ring-[#D4AF37]">
+                    <option value="all">كل الفئات</option>
+                    <option value="economy">اقتصادية</option>
+                    <option value="sport">رياضية</option>
+                    <option value="family">عائلية</option>
+                    <option value="luxury">فاخرة VIP</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="fleetGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            </div>
+    </main>
 
     <script>
+        // مصفوفة السيارات (تأكد من وضع صورك في مجلد Cars)
         const fleet = [
             { name: "تويوتا كورولا 2025", engine: "hybrid", cat: "economy", price: "45,000", img: "Cars/corolla.jpg" },
             { name: "دودج جارجر SRT", engine: "auto", cat: "sport", price: "85,000", img: "Cars/charger.jpg" },
             { name: "هيونداي تايسون", engine: "auto", cat: "family", price: "60,000", img: "Cars/tucson.jpg" },
-            { name: "مرسيدس S-Class", engine: "auto", cat: "luxury", price: "150,000", img: "Cars/mercedes.jpg" }
+            { name: "مرسيدس S-Class", engine: "auto", cat: "luxury", price: "150,000", img: "Cars/mercedes.jpg" },
+            { name: "نيسان صني", engine: "manual", cat: "economy", price: "35,000", img: "Cars/sunny.jpg" }
         ];
 
         function renderFleet() {
@@ -46,22 +75,46 @@
             const category = document.getElementById('categoryFilter').value;
             const grid = document.getElementById('fleetGrid');
             grid.innerHTML = '';
-            fleet.forEach(car => {
-                if ((engine === 'all' || car.engine === engine) && (category === 'all' || car.cat === category)) {
-                    grid.innerHTML += `
-                    <div class="car-card bg-white rounded-[2.5rem] p-5 shadow-lg border border-gray-50 transition-all text-center">
-                        <img src="${car.img}" class="w-full h-40 object-cover rounded-2xl mb-4 bg-gray-100" onerror="this.src='https://via.placeholder.com/400x300?text=Al-Hut+Car'">
-                        <h3 class="text-xl font-black">${car.name}</h3>
-                        <p class="text-sm text-[#D4AF37] font-bold mb-4">${car.price} د.ع / يوم</p>
-                        <button onclick="selectCar('${car.name}')" class="w-full bg-[#002349] text-white py-3 rounded-xl font-bold">اختيار السيارة</button>
-                    </div>`;
-                }
+
+            const filtered = fleet.filter(car => {
+                return (engine === 'all' || car.engine === engine) && 
+                       (category === 'all' || car.cat === category);
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = '<p class="col-span-full text-center text-gray-400 font-bold py-10">عذراً، لا توجد سيارات مطابقة لبحثك حالياً</p>';
+                return;
+            }
+
+            filtered.forEach(car => {
+                grid.innerHTML += `
+                    <div class="car-card bg-white rounded-[2.5rem] overflow-hidden shadow-sm p-4 text-center flex flex-col justify-between">
+                        <div>
+                            <img src="${car.img}" class="w-full h-44 object-cover rounded-[2rem] mb-4 bg-gray-50" onerror="this.src='https://via.placeholder.com/400x250?text=Al-Hut+Car'">
+                            <span class="text-[10px] bg-blue-50 text-[#002349] px-3 py-1 rounded-full font-bold uppercase tracking-wider">
+                                ${car.cat === 'luxury' ? '⭐ فاخرة' : 'جودة الحوت'}
+                            </span>
+                            <h3 class="text-xl font-black mt-2 mb-1">${car.name}</h3>
+                            <p class="text-[#D4AF37] font-black text-lg mb-4">${car.price} د.ع <span class="text-xs text-gray-400 font-normal">/ يوم</span></p>
+                            
+                            <div class="flex justify-center gap-4 text-xs text-gray-500 mb-6">
+                                <span><i class="fas fa-gas-pump ml-1"></i> ${car.engine === 'hybrid' ? 'هايبرد' : (car.engine === 'auto' ? 'أوتو' : 'عادي')}</span>
+                                <span><i class="fas fa-th-large ml-1"></i> ${car.cat}</span>
+                            </div>
+                        </div>
+                        <button onclick="selectCar('${car.name}')" class="w-full bg-[#002349] text-white py-4 rounded-2xl font-bold hover:bg-[#D4AF37] hover:text-[#002349] transition-all">
+                            اختيار السيارة
+                        </button>
+                    </div>
+                `;
             });
         }
+
         function selectCar(name) {
             const params = new URLSearchParams(window.location.search);
             window.location.href = `addons.html?${params.toString()}&car=${encodeURIComponent(name)}`;
         }
+
         window.onload = renderFleet;
     </script>
 </body>

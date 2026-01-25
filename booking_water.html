@@ -10,94 +10,69 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
-        .hero-bg { background: linear-gradient(135deg, #075985 0%, #0369a1 100%); }
+        body { font-family: 'Tajawal', sans-serif; background-color: #F0F9FF; }
+        /* خلفية الهيدر باللون الأزرق المائي */
+        .hero-section { background: linear-gradient(180deg, #0EA5E9 0%, #0284C7 100%); border-radius: 0 0 3rem 3rem; }
         
-        /* تصميم الخانات المستوحى من كورس التعليم */
-        .info-block {
-            background: #ffffff;
-            border-radius: 2rem;
-            padding: 1.5rem;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
+        /* ستايل الخانات الذهبية المقتبس من الصورة */
+        .input-card {
+            background: white;
+            border: 2px solid #FFD700; /* الإطار الذهبي المميز */
+            border-radius: 1.5rem;
+            padding: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: 0.3s;
         }
-        .info-block:focus-within {
-            border-color: #D4AF37;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        }
+        .input-label { color: #64748b; font-size: 0.8rem; font-weight: 800; margin-bottom: 5px; display: block; }
+        .input-field { width: 100%; border: none; outline: none; font-weight: 900; color: #075985; font-size: 1rem; background: transparent; }
 
-        .input-minimal {
-            width: 100%;
-            background: transparent;
-            border: none;
-            outline: none;
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: #002349;
-            padding-top: 0.5rem;
-        }
+        /* حاوية الخريطة */
+        .map-container { background: #E0F2FE; border-radius: 2.5rem; padding: 1.5rem; margin-top: 1.5rem; }
+        .map-box { height: 250px; border-radius: 1.5rem; border: 3px solid white; margin-bottom: 10px; z-index: 1; }
         
-        .label-style {
-            font-size: 0.75rem;
-            font-weight: 900;
-            color: #94a3b8;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-transform: uppercase;
-        }
-
-        #map { height: 250px; border-radius: 2rem; border: 4px solid white; z-index: 1; }
+        .btn-location { background: #0EA5E9; color: white; padding: 10px 20px; border-radius: 1rem; font-weight: 800; font-size: 0.8rem; width: 100%; }
+        .btn-main { background: #0EA5E9; color: white; padding: 1.2rem; border-radius: 1.5rem; font-weight: 900; font-size: 1.2rem; width: 100%; box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3); }
     </style>
 </head>
-<body class="text-[#002349]">
+<body>
 
-    <header class="hero-bg text-white pt-16 pb-44 text-center relative overflow-hidden">
-        <div class="absolute top-0 right-0 opacity-10 text-[15rem] pointer-events-none">💧</div>
-        <h1 class="text-4xl font-black text-[#D4AF37] mb-2">تأكيد طلب الماء 🐋</h1>
-        <p id="cityDisplay" class="text-lg opacity-90 italic">خدمة الحوت في مدينة ...</p>
+    <header class="hero-section text-white pt-10 pb-20 text-center relative">
+        <div class="text-5xl mb-3">💧</div>
+        <h1 class="text-3xl font-black italic">تأكيد حوضية الماء</h1>
+        <p id="cityDisplay" class="opacity-80 text-sm mt-2">نحن نصل إليك أينما كنت</p>
     </header>
 
-    <main class="container mx-auto px-4 -mt-32 relative z-10 pb-20">
-        <div class="bg-white/80 backdrop-blur-md shadow-2xl rounded-[3.5rem] p-8 md:p-12 max-w-4xl mx-auto border border-white">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                <div class="info-block">
-                    <label class="label-style">👤 اسم الزبون الكامل</label>
-                    <input type="text" id="custName" placeholder="أدخل اسمك الثلاثي" class="input-minimal">
-                </div>
-
-                <div class="info-block">
-                    <label class="label-style">📞 رقم التواصل (واتساب)</label>
-                    <input type="tel" id="custPhone" placeholder="077XXXXXXXX" class="input-minimal text-left" dir="ltr">
-                </div>
-
-                <div class="md:col-span-2 info-block">
-                    <label class="label-style">🏠 أقرب نقطة دالة أو ملاحظات التوصيل</label>
-                    <textarea id="locDetails" placeholder="مثال: قرب المحطة الرئيسية، الباب الأخضر.." class="input-minimal h-20 resize-none"></textarea>
-                </div>
-
-                <div class="md:col-span-2 mt-4 space-y-4">
-                    <div class="flex items-center justify-between px-2">
-                        <h3 class="font-black text-lg flex items-center gap-2">
-                            📍 موقع التفريغ <span class="text-xs font-normal text-slate-400">(اسحب الماركر لتحديد الموقع)</span>
-                        </h3>
-                        <button onclick="getLocation()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg hover:bg-blue-700 transition-all flex items-center gap-2">
-                             بث موقعي الحالي <i class="fas fa-location-arrow"></i>
-                        </button>
-                    </div>
-                    <div id="map"></div>
-                </div>
-
-                <div class="md:col-span-2 pt-6">
-                    <button onclick="confirmOrder()" class="w-full bg-[#002349] text-[#D4AF37] py-6 rounded-[2rem] font-black text-2xl shadow-2xl hover:bg-black transition-all transform active:scale-95 flex items-center justify-center gap-4 group">
-                        إكمال الطلب الآن 🐋
-                        <i class="fas fa-paper-plane group-hover:translate-x-[-10px] transition-all"></i>
-                    </button>
-                </div>
-
+    <main class="container mx-auto px-6 -mt-12 pb-20">
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="input-card">
+                <label class="input-label">👤 اسم المتدرب (الزبون)</label>
+                <input type="text" id="custName" placeholder="أكتب اسمك.." class="input-field">
             </div>
+            <div class="input-card">
+                <label class="input-label">📞 رقم (واتساب)</label>
+                <input type="tel" id="custPhone" placeholder="077..." class="input-field text-left" dir="ltr">
+            </div>
+        </div>
+
+        <div class="input-card mb-8" style="border-color: #BAE6FD;">
+            <label class="input-label">🏠 نقطة دالة للموقع</label>
+            <input type="text" id="locDetails" placeholder="مثلاً: قرب مدرسة الحكمة.." class="input-field">
+        </div>
+
+        <div class="map-container">
+            <h3 class="font-black text-sky-900 mb-4 flex items-center gap-2">
+                <i class="fas fa-map-marker-alt text-red-500"></i> تحديد موقع اللقاء (التفريغ):
+            </h3>
+            <div id="map" class="map-box"></div>
+            <button onclick="getLocation()" class="btn-location flex items-center justify-center gap-2">
+                 تحديد موقعي الحالي <i class="fas fa-location-arrow"></i>
+            </button>
+        </div>
+
+        <div class="mt-10">
+            <button onclick="confirmWaterOrder()" class="btn-main flex items-center justify-center gap-3">
+                مراجعة البيانات <i class="fas fa-chevron-left"></i>
+            </button>
         </div>
     </main>
 
@@ -108,7 +83,8 @@
         window.onload = function() {
             const city = u.get('city') || "كركوك";
             document.getElementById('cityDisplay').innerText = `خدمة الحوت في مدينة ${city} 📍`;
-            
+
+            // تهيئة الخريطة
             map = L.map('map', {zoomControl: false}).setView([35.4687, 44.3921], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
             marker = L.marker([35.4687, 44.3921], {draggable: true}).addTo(map);
@@ -123,16 +99,13 @@
             }
         }
 
-        function confirmOrder() {
+        function confirmWaterOrder() {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
             const desc = document.getElementById('locDetails').value;
             const pos = marker.getLatLng();
 
-            if(!name || !phone) {
-                alert("لطفاً حوتنا العزيز، املأ الاسم والهاتف 🐋💙");
-                return;
-            }
+            if(!name || !phone) return alert("يرجى ملء الاسم ورقم الهاتف 🐋💧");
 
             u.set('name', name);
             u.set('phone', phone);

@@ -3,148 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إضافات الحوت | خصص طلبك</title>
+    <title>تخصيص الرفاهية | الحوت 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="prices.js"></script>
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
         .hero-bg { background: linear-gradient(135deg, #002349 0%, #003366 100%); }
-        .addon-card { transition: all 0.3s ease; border: 2px solid transparent; cursor: pointer; }
-        .addon-card.selected { border-color: #D4AF37; background-color: #fffdf5; transform: scale(1.02); }
-        .checkbox-custom { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ddd; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-        .selected .checkbox-custom { background: #D4AF37; border-color: #D4AF37; color: white; }
+        .addon-card { 
+            cursor: pointer; transition: all 0.3s ease; 
+            border: 2px solid transparent; background: white; border-radius: 2rem;
+        }
+        .addon-card.selected { border-color: #D4AF37; background: #fffcf0; transform: scale(1.02); }
+        .price-tag { color: #D4AF37; font-weight: 900; }
     </style>
 </head>
 <body class="text-[#002349]">
 
-    <header class="hero-bg text-white pt-12 pb-32 text-center relative">
-        <h1 class="text-3xl font-black text-[#D4AF37]">تخصيص الرفاهية 🐋</h1>
-        <p id="carDisplay" class="text-sm opacity-80 mt-2 font-bold tracking-widest uppercase"></p>
+    <header class="hero-bg text-white pt-12 pb-32 text-center">
+        <h1 class="text-3xl font-black text-[#D4AF37]">خيارات الرفاهية والإضافات</h1>
+        <p class="opacity-80 mt-2">خصص رحلتك مع خدمات شركة الحوت المميزة</p>
     </header>
 
     <main class="container mx-auto px-4 -mt-20 relative z-10 pb-20">
-        <div class="bg-white shadow-2xl rounded-[3rem] p-8 max-w-4xl mx-auto">
+        <div class="max-w-4xl mx-auto space-y-8">
             
-            <h2 class="text-2xl font-black mb-6 text-center">أضف لمستك الخاصة للطلب</h2>
-
-            <div id="personalSection" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div onclick="toggleAddon(this, 15000, 'كرسي أطفال')" class="addon-card p-5 rounded-3xl bg-gray-50 flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <div class="text-2xl">👶</div>
-                        <div><div class="font-black">كرسي أطفال</div><div class="text-xs text-gray-400">15,000 د.ع</div></div>
-                    </div>
-                    <div class="checkbox-custom"><i class="fas fa-check text-[10px]"></i></div>
+            <div id="addonsList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 </div>
 
-                <div onclick="toggleAddon(this, 10000, 'توصيل للبيت')" class="addon-card p-5 rounded-3xl bg-gray-50 flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <div class="text-2xl">🏠</div>
-                        <div><div class="font-black">توصيل للسيارة</div><div class="text-xs text-gray-400">10,000 د.ع</div></div>
-                    </div>
-                    <div class="checkbox-custom"><i class="fas fa-check text-[10px]"></i></div>
-                </div>
-
-                <div onclick="toggleAddon(this, 40000, 'سائق خاص')" class="addon-card p-5 rounded-3xl bg-gray-50 flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <div class="text-2xl">🤵‍♂️</div>
-                        <div><div class="font-black">سائق خاص</div><div class="text-xs text-gray-400">40,000 د.ع</div></div>
-                    </div>
-                    <div class="checkbox-custom"><i class="fas fa-check text-[10px]"></i></div>
-                </div>
-
-                <div onclick="toggleAddon(this, 5000, 'GPS')" class="addon-card p-5 rounded-3xl bg-gray-50 flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <div class="text-2xl">🛰️</div>
-                        <div><div class="font-black">نظام GPS</div><div class="text-xs text-gray-400">5,000 د.ع</div></div>
-                    </div>
-                    <div class="checkbox-custom"><i class="fas fa-check text-[10px]"></i></div>
+            <div id="weddingColors" class="hidden bg-white p-8 rounded-[3rem] shadow-xl border border-gray-100">
+                <h3 class="text-xl font-black mb-6 flex items-center gap-2">
+                    <i class="fas fa-palette text-[#D4AF37]"></i> اختر لون التزيين (الموكب)
+                </h3>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="selectColor('أبيض ملكي')" class="px-6 py-3 rounded-xl border-2 border-gray-100 font-bold hover:border-[#D4AF37]">أبيض ملكي ⚪</button>
+                    <button onclick="selectColor('أحمر كلاسيك')" class="px-6 py-3 rounded-xl border-2 border-gray-100 font-bold hover:border-[#D4AF37]">أمر كلاسيك 🔴</button>
+                    <button onclick="selectColor('ذهبي فاخر')" class="px-6 py-3 rounded-xl border-2 border-gray-100 font-bold hover:border-[#D4AF37]">ذهبي فاخر 🟡</button>
                 </div>
             </div>
 
-            <div id="weddingSection" class="hidden space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-xs font-black text-gray-400 mb-2 mr-2">لون السيارة</label>
-                        <select id="carColor" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none border-2 border-transparent focus:border-[#D4AF37]">
-                            <option>أبيض ملكي</option>
-                            <option>أسود فاخر</option>
-                            <option>فضي</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black text-gray-400 mb-2 mr-2">لون التزيين (الورد)</label>
-                        <select id="decorColor" class="w-full p-4 bg-gray-50 rounded-2xl font-bold outline-none border-2 border-transparent focus:border-[#D4AF37]">
-                            <option>أحمر كلاسيك</option>
-                            <option>أبيض ووردي</option>
-                            <option>بنفسجي</option>
-                            <option>تزيين ذهبي</option>
-                        </select>
-                    </div>
+            <div class="bg-[#002349] text-white p-8 rounded-[3rem] shadow-2xl flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <p class="text-sm opacity-60">الإجمالي التقريبي</p>
+                    <h2 id="totalDisplay" class="text-4xl font-black text-[#D4AF37]">0 د.ع</h2>
                 </div>
-
-                <div onclick="toggleAddon(this, 250000, 'موكب سيارتين فخمة')" class="addon-card p-6 rounded-[2rem] bg-yellow-50 border-2 border-yellow-200 flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <div class="text-3xl text-yellow-600">🏛️</div>
-                        <div>
-                            <div class="font-black text-yellow-900 text-lg">موكب الحوت الفخم</div>
-                            <div class="text-sm text-yellow-700">سيارتين فخمتين إضافيتين من اختيار الشركة</div>
-                            <div class="text-sm font-black mt-1">+ 250,000 د.ع</div>
-                        </div>
-                    </div>
-                    <div class="checkbox-custom"><i class="fas fa-check"></i></div>
-                </div>
-            </div>
-
-            <div class="mt-10 pt-6 border-t flex flex-col items-center">
-                <div class="text-center mb-6">
-                    <span class="text-gray-400 font-bold">إجمالي السعر الإضافي:</span>
-                    <div id="totalAddons" class="text-3xl font-black text-[#002349]">0 د.ع</div>
-                </div>
-                <button onclick="goNext()" class="w-full md:w-2/3 bg-[#D4AF37] text-[#002349] py-5 rounded-3xl font-black text-xl shadow-xl hover:shadow-2xl transition-all">تأكيد البيانات <i class="fas fa-chevron-left mr-2"></i></button>
+                <button onclick="proceedToBooking()" class="bg-[#D4AF37] text-[#002349] px-12 py-5 rounded-2xl font-black text-xl hover:bg-white transition-all w-full md:w-auto">
+                    استمرار للحجز <i class="fas fa-chevron-left mr-2"></i>
+                </button>
             </div>
         </div>
     </main>
 
     <script>
         const u = new URLSearchParams(window.location.search);
-        let currentTotal = 0;
+        const basePrice = parseInt(u.get('price') || 0);
+        const type = u.get('type');
         let selectedAddons = [];
+        let selectedColor = "";
 
         window.onload = function() {
-            document.getElementById('carDisplay').innerText = `السيارة المختارة: ${u.get('car')}`;
-            if(u.get('type') === 'wedding') {
-                document.getElementById('weddingSection').classList.remove('hidden');
-            } else {
-                document.getElementById('personalSection').classList.remove('hidden');
-            }
+            renderAddons();
+            if(type === 'wedding') document.getElementById('weddingColors').classList.remove('hidden');
+            updateTotal();
         };
 
-        function toggleAddon(el, price, name) {
-            el.classList.toggle('selected');
-            if(el.classList.contains('selected')) {
-                currentTotal += price;
-                selectedAddons.push(name);
-            } else {
-                currentTotal -= price;
-                selectedAddons = selectedAddons.filter(a => a !== name);
+        function renderAddons() {
+            const list = document.getElementById('addonsList');
+            // قراءة الأسعار من ملف prices.js المركزي
+            const data = AL_HUT_DATA.addons;
+
+            const options = [
+                { id: 'driver', name: 'سائق خاص', price: data.driver, icon: 'fa-user-tie' },
+                { id: 'baby_seat', name: 'كرسي أطفال', price: data.baby_seat, icon: 'fa-baby' },
+                { id: 'delivery', name: 'توصيل للمنزل', price: data.delivery, icon: 'fa-home' }
+            ];
+
+            if(type === 'wedding') {
+                options.push({ id: 'wedding_convoy', name: 'موكب تزيين كامل', price: data.wedding_convoy, icon: 'fa-holly-berry' });
             }
-            document.getElementById('totalAddons').innerText = currentTotal.toLocaleString() + " د.ع";
+
+            options.forEach(opt => {
+                list.innerHTML += `
+                    <div onclick="toggleAddon('${opt.id}', ${opt.price}, this)" class="addon-card p-6 shadow-lg flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center text-[#002349]">
+                                <i class="fas ${opt.icon} text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-black">${opt.name}</h4>
+                                <p class="text-xs opacity-50">خدمة اختيارية</p>
+                            </div>
+                        </div>
+                        <span class="price-tag">+ ${opt.price.toLocaleString()}</span>
+                    </div>
+                `;
+            });
         }
 
-        function goNext() {
-            const finalPrice = parseInt(u.get('price')) + currentTotal;
-            u.set('total_price', finalPrice);
-            u.set('addons', selectedAddons.join(' + '));
-            
-            // إضافة ألوان الحفلات إذا كانت موجودة
-            if(u.get('type') === 'wedding') {
-                const colors = `لون السيارة: ${document.getElementById('carColor').value}، تزيين: ${document.getElementById('decorColor').value}`;
-                u.set('colors', colors);
-                window.location.href = `booking_wedding.html?${u.toString()}`;
+        function toggleAddon(id, price, el) {
+            const index = selectedAddons.findIndex(a => a.id === id);
+            if(index > -1) {
+                selectedAddons.splice(index, 1);
+                el.classList.remove('selected');
             } else {
-                window.location.href = `booking_personal.html?${u.toString()}`;
+                selectedAddons.push({id, price, name: el.querySelector('h4').innerText});
+                el.classList.add('selected');
             }
+            updateTotal();
+        }
+
+        function selectColor(c) {
+            selectedColor = c;
+            alert("تم اختيار لون التزيين: " + c);
+        }
+
+        function updateTotal() {
+            const addonsSum = selectedAddons.reduce((sum, a) => sum + a.price, 0);
+            const total = basePrice + addonsSum;
+            document.getElementById('totalDisplay').innerText = total.toLocaleString() + " د.ع";
+            u.set('total_price', total);
+        }
+
+        function proceedToBooking() {
+            const addonNames = selectedAddons.map(a => a.name).join(' + ');
+            u.set('addons', addonNames);
+            u.set('colors', selectedColor);
+            
+            // التوجيه الذكي بناءً على نوع الخدمة
+            const target = (type === 'wedding') ? 'booking_wedding.html' : 'booking_personal.html';
+            window.location.href = `${target}?${u.toString()}`;
         }
     </script>
 </body>

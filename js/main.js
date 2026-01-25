@@ -1,51 +1,32 @@
-// جلب السيارات من cars.json وعرضها
-async function fetchCars() {
-  const response = await fetch('data/cars.json');
-  const cars = await response.json();
-  return cars;
-}
-
-// عرض السيارات في الصفحة الرئيسية
-async function displayFeaturedCars() {
-  const cars = await fetchCars();
-  const container = document.getElementById('featured-cars');
-  container.innerHTML = '';
-  cars.slice(0, 4).forEach(car => {
-    container.innerHTML += `
-      <div class="car-card">
-        <img src="${car.image}" alt="${car.name}">
-        <div class="info">
-          <h3>${car.name}</h3>
-          <p>السعر اليومي: ${car.price} د.ع</p>
-          <a href="car-details.html?id=${car.id}">التفاصيل</a>
-        </div>
-      </div>
-    `;
-  });
-}
-
-// عرض تفاصيل السيارة حسب ID
-async function displayCarDetails() {
-  const params = new URLSearchParams(window.location.search);
-  const carId = params.get('id');
-  const cars = await fetchCars();
-  const car = cars.find(c => c.id == carId);
-  if (!car) return;
-  
-  const container = document.getElementById('car-details');
-  container.innerHTML = `
-    <h2>${car.name}</h2>
-    <img src="${car.image}" alt="${car.name}" style="width:100%; max-width:600px;">
-    <p>السعر اليومي: ${car.price} د.ع</p>
-    <p>السعة: ${car.capacity} ركاب</p>
-    <p>ناقل الحركة: ${car.transmission}</p>
-    <p>نوع الوقود: ${car.fuel}</p>
-    <a href="booking.html?car=${car.id}" class="btn">احجز الآن</a>
-  `;
-}
-
-// تنفيذ عند التحميل
+// Al-Hut Main Engine - 2026
 document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('featured-cars')) displayFeaturedCars();
-  if (document.getElementById('car-details')) displayCarDetails();
+    console.log("Al-Hut Automotive System Initialized... 🐋");
+
+    // تأثير ظهور العناصر تدريجياً عند التمرير
+    const observerOptions = { threshold: 0.1 };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('opacity-100', 'translate-y-0');
+                entry.target.classList.remove('opacity-0', 'translate-y-10');
+            }
+        });
+    }, observerOptions);
+
+    // استهداف صناديق المميزات للتفاعل
+    document.querySelectorAll('.feature-card').forEach(card => {
+        card.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+        observer.observe(card);
+    });
 });
+
+// وظيفة اهتزاز الإيموجي عند الحجز لتنبيه المستخدم
+function shakeEmoji() {
+    const emoji = document.querySelector('.whale-emoji');
+    if(emoji) {
+        emoji.style.animation = 'none';
+        setTimeout(() => {
+            emoji.style.animation = 'swim 3s ease-in-out infinite';
+        }, 10);
+    }
+}

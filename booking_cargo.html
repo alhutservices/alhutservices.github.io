@@ -3,101 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طلب حمل | الحوت 🐋</title>
+    <title>حجز سيارة حمل 🚛</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-    <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f5f3ff; }
-        .glass-card { background: white; border-radius: 3rem; }
-        .map-box { height: 200px; border-radius: 2rem; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.05); z-index: 1; }
-        .input-style { border: 2px solid #ddd6fe; border-radius: 1.25rem; padding: 1rem; width: 100%; font-weight: bold; outline: none; }
-        .leaflet-control-geocoder { border: 3px solid #7c3aed !important; border-radius: 12px !important; min-width: 220px !important; }
-    </style>
+    <style>body { font-family: 'Tajawal', sans-serif; } #mS, #mE { height: 180px; border-radius: 1.5rem; margin: 10px 0; }</style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-xl mx-auto glass-card shadow-2xl overflow-hidden border-t-[12px] border-[#7c3aed]">
-        <div class="bg-indigo-50 p-8 text-center border-b border-indigo-100">
-            <div class="text-5xl mb-3">🚛</div>
-            <h2 class="text-3xl font-black text-[#4338ca]">طلب نقل حمل</h2>
-            <p class="text-[10px] font-bold text-indigo-400 mt-2">السعر: 1,500 د.ع لكل كم</p>
-        </div>
+<body class="bg-gray-100 p-4">
+    <div class="max-w-md mx-auto bg-white rounded-[2.5rem] shadow-xl p-6">
+        <h2 class="text-2xl font-black text-center mb-6 text-indigo-900">بيانات النقل 🚛</h2>
+        <div class="space-y-4">
+            <input type="text" id="n" placeholder="الاسم الكامل" class="w-full p-4 border-2 rounded-2xl outline-none font-bold">
+            <input type="tel" id="ph" placeholder="رقم الهاتف" class="w-full p-4 border-2 rounded-2xl outline-none font-bold text-left" dir="ltr">
+            <input type="text" id="nt" placeholder="📦 ماذا سننقل؟" class="w-full p-4 border-2 rounded-2xl outline-none font-bold">
+            
+            <p class="font-bold text-sm text-gray-400">📍 حدد موقع الاستلام</p>
+            <div id="mS"></div>
+            <p class="font-bold text-sm text-gray-400">🏁 حدد موقع التسليم</p>
+            <div id="mE"></div>
 
-        <div class="p-8 space-y-6">
-            <div class="grid grid-cols-2 gap-4">
-                <input type="text" id="cName" placeholder="اسمك الكامل" class="input-style">
-                <input type="tel" id="cPhone" placeholder="رقم الهاتف" class="input-style text-left" dir="ltr">
-            </div>
-            <input type="text" id="cNotes" placeholder="📦 ماذا سننقل؟ (مثلاً: أثاث)" class="input-style">
-
-            <div class="bg-indigo-50 p-6 rounded-[2.5rem] border-2 border-white shadow-inner space-y-4">
-                <label class="block font-black text-sm text-indigo-900">📍 1. موقع الاستلام</label>
-                <div id="mapStart" class="map-box"></div>
-                <button onclick="getStartGPS()" class="w-full py-3 bg-[#7c3aed] text-white rounded-2xl font-black text-xs">تحديد موقعي الحالي 🛰️</button>
-                <input type="text" id="startDesc" placeholder="وصف مكان الاستلام كتابةً" class="input-style bg-white">
-            </div>
-
-            <div class="bg-purple-50 p-6 rounded-[2.5rem] border-2 border-white shadow-inner space-y-4">
-                <label class="block font-black text-sm text-purple-900">🏁 2. موقع التسليم (ابحث عن المنطقة)</label>
-                <div id="mapEnd" class="map-box"></div>
-                <input type="text" id="endDesc" placeholder="وصف وجهة التسليم كتابةً" class="input-style bg-white">
-            </div>
-
-            <div class="bg-yellow-50 p-6 rounded-[2.5rem] border-2 border-yellow-200 text-center">
-                <div class="grid grid-cols-2 divide-x divide-x-reverse divide-yellow-200">
-                    <div><p class="text-[10px] font-black">المسافة</p><div id="distVal" class="text-xl font-black">0 كم</div></div>
-                    <div><p class="text-[10px] font-black">السعر المتوقع</p><div id="priceVal" class="text-xl font-black text-green-600">0 د.ع</div></div>
-                </div>
-            </div>
-
-            <button onclick="confirmCargo()" class="w-full bg-[#7c3aed] text-white py-5 rounded-[2rem] font-black text-xl shadow-2xl">مراجعة الطلب</button>
+            <button onclick="rev()" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-xl shadow-lg">مراجعة الحجز</button>
         </div>
     </div>
 
     <script>
-        let mapStart, markerStart, mapEnd, markerEnd;
-        const PRICE_PER_KM = 1500;
+        let mS, mkS, mE, mkE;
+        const urlP = new URLSearchParams(window.location.search);
+        const prov = urlP.get('province') || 'غير محدد';
 
         window.onload = function() {
-            mapStart = L.map('mapStart', {zoomControl: false}).setView([35.4687, 44.3921], 12);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapStart);
-            markerStart = L.marker([35.4687, 44.3921], {draggable: true}).addTo(mapStart);
-            L.Control.geocoder({defaultMarkGeocode: false, placeholder: "🔍 ابحث هنا..."}).on('markgeocode', e => {
-                mapStart.setView(e.geocode.center, 16); markerStart.setLatLng(e.geocode.center); calculate();
-            }).addTo(mapStart);
+            mS = L.map('mS').setView([33.3152, 44.3661], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mS);
+            mkS = L.marker([33.3152, 44.3661], {draggable:true}).addTo(mS);
 
-            mapEnd = L.map('mapEnd', {zoomControl: false}).setView([35.4687, 44.3921], 12);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapEnd);
-            markerEnd = L.marker([35.4687, 44.3921], {draggable: true}).addTo(mapEnd);
-            L.Control.geocoder({defaultMarkGeocode: false, placeholder: "🔍 ابحث عن الوجهة..."}).on('markgeocode', e => {
-                mapEnd.setView(e.geocode.center, 16); markerEnd.setLatLng(e.geocode.center); calculate();
-            }).addTo(mapEnd);
-
-            markerStart.on('dragend', calculate); markerEnd.on('dragend', calculate);
+            mE = L.map('mE').setView([33.3152, 44.3661], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mE);
+            mkE = L.marker([33.3152, 44.3661], {draggable:true}).addTo(mE);
         };
 
-        function calculate() {
-            const d = (markerStart.getLatLng().distanceTo(markerEnd.getLatLng()) / 1000).toFixed(1);
-            document.getElementById('distVal').innerText = d + ' كم';
-            document.getElementById('priceVal').innerText = Math.round(d * PRICE_PER_KM).toLocaleString() + ' د.ع';
-        }
-
-        function getStartGPS() {
-            navigator.geolocation.getCurrentPosition(p => {
-                const c = [p.coords.latitude, p.coords.longitude];
-                mapStart.setView(c, 17); markerStart.setLatLng(c); calculate();
-            });
-        }
-
-        function confirmCargo() {
-            const d = (markerStart.getLatLng().distanceTo(markerEnd.getLatLng()) / 1000).toFixed(1);
-            const p = Math.round(d * PRICE_PER_KM);
-            const query = `service=cargo&emoji=🚛&name=${encodeURIComponent(document.getElementById('cName').value)}&phone=${document.getElementById('cPhone').value}&notes=${encodeURIComponent(document.getElementById('cNotes').value)}&start_desc=${encodeURIComponent(document.getElementById('startDesc').value)}&end_desc=${encodeURIComponent(document.getElementById('endDesc').value)}&dist=${d}&final_price=${p}&slat=${markerStart.getLatLng().lat}&slng=${markerStart.getLatLng().lng}&elat=${markerEnd.getLatLng().lat}&elng=${markerEnd.getLatLng().lng}`;
-            window.location.href = `review.html?${query}`;
+        function rev() {
+            const d = (mkS.getLatLng().distanceTo(mkE.getLatLng()) / 1000).toFixed(1);
+            const pr = Math.round(d * 1500);
+            const q = `service=cargo&province=${encodeURIComponent(prov)}&name=${encodeURIComponent(document.getElementById('n').value)}&phone=${document.getElementById('ph').value}&notes=${encodeURIComponent(document.getElementById('nt').value)}&dist=${d}&price=${pr}&slat=${mkS.getLatLng().lat}&slng=${mkS.getLatLng().lng}&elat=${mkE.getLatLng().lat}&elng=${mkE.getLatLng().lng}&emoji=🚛`;
+            window.location.href = "review.html?" + q;
         }
     </script>
 </body>

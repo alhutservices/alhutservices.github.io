@@ -1,121 +1,38 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حجز سيارة VIP | شركة الحوت</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
-        #map { height: 280px; border-radius: 2rem; border: 3px solid #f1f5f9; z-index: 1; }
-        .vip-card { border-top: 10px solid #D4AF37; }
-    </style>
-</head>
-<body class="py-10 px-4">
+<script>
+    let map, marker;
 
-    <div class="max-w-2xl mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden vip-card">
-        <div class="p-8 md:p-12">
-            <div class="text-center mb-10">
-                <div class="text-5xl mb-3">🐋</div>
-                <h2 class="text-3xl font-black text-[#002349]">حجز خدمة الملكي (VIP)</h2>
-                <p class="text-gray-400 font-bold mt-2">يرجى تأكيد بياناتك وموقع الاستلام</p>
-                <div class="h-1.5 w-16 bg-[#D4AF37] mx-auto rounded-full mt-4"></div>
-            </div>
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById('vType').innerText = params.get('type') === 'wedding' ? '🎁 سيارات أعراس مزينة' : '🚗 تأجير سيارة شخصية';
+        document.getElementById('vDate').innerText = params.get('date') || 'غير محدد';
 
-            <div class="bg-gradient-to-r from-[#002349] to-[#004080] p-6 rounded-[2rem] mb-8 text-white flex justify-between items-center">
-                <div>
-                    <span class="text-[10px] font-bold opacity-60 uppercase">الخدمة المطلوبة</span>
-                    <p id="vType" class="text-xl font-black text-[#D4AF37]">سيارة أعراس مزينة</p>
-                </div>
-                <div class="text-left">
-                    <span class="text-[10px] font-bold opacity-60 uppercase">تاريخ الحجز</span>
-                    <p id="vDate" class="text-lg font-bold">-</p>
-                </div>
-            </div>
+        // إعداد الخريطة الافتراضية على كركوك
+        const defaultPos = [35.4687, 44.3921];
+        map = L.map('map').setView(defaultPos, 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        marker = L.marker(defaultPos, {draggable: true}).addTo(map);
 
-            <div class="space-y-5">
-                <div class="relative">
-                    <i class="fas fa-user absolute right-5 top-5 text-gray-300"></i>
-                    <input type="text" id="vName" placeholder="الاسم الثلاثي للزبون" class="w-full pr-12 p-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:border-[#D4AF37] font-bold transition-all">
-                </div>
-
-                <div class="relative">
-                    <i class="fab fa-whatsapp absolute right-5 top-5 text-gray-300"></i>
-                    <input type="tel" id="vPhone" placeholder="رقم الهاتف المرتبط بالواتساب" class="w-full pr-12 p-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:border-[#D4AF37] font-bold text-right transition-all">
-                </div>
-
-                <div class="bg-gray-50 p-6 rounded-[2.5rem] border-2 border-dashed border-gray-200">
-                    <label class="block font-black mb-4 text-[#002349] text-center">
-                        <i class="fas fa-map-marked-alt text-[#D4AF37] ml-2"></i> موقع الاستلام (GPS)
-                    </label>
-                    <div id="map" class="mb-4"></div>
-                    <input type="hidden" id="vCoords">
-                    <p class="text-[10px] text-center text-gray-400 font-bold uppercase">يمكنك تحريك الدبوس لتحديد الموقع بدقة</p>
-                </div>
-
-                <button onclick="sendVipOrder()" class="w-full bg-[#002349] text-white py-6 rounded-3xl font-black text-xl shadow-2xl hover:bg-green-600 transform hover:scale-[1.02] transition-all flex items-center justify-center gap-3">
-                    تأكيد الحجز الملكي <i class="fab fa-whatsapp text-2xl"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let map, marker;
-
-        window.onload = function() {
-            // جلب البيانات من الرابط
-            const params = new URLSearchParams(window.location.search);
-            const type = params.get('type');
-            document.getElementById('vType').innerText = type === 'wedding' ? '🎁 سيارات أعراس مزينة' : '🚗 تأجير سيارة شخصية';
-            document.getElementById('vDate').innerText = params.get('date') || 'غير محدد';
-
-            // إعداد الخريطة
-            const kirkuk = [35.4687, 44.3921];
-            map = L.map('map').setView(kirkuk, 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            marker = L.marker(kirkuk, {draggable: true}).addTo(map);
-            
-            // تحديد الموقع تلقائياً عبر GPS
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(pos) {
-                    const userLocation = [pos.coords.latitude, pos.coords.longitude];
-                    map.setView(userLocation, 16);
-                    marker.setLatLng(userLocation);
-                    document.getElementById('vCoords').value = userLocation[0] + "," + userLocation[1];
-                });
-            }
-
-            marker.on('dragend', function() {
-                const pos = marker.getLatLng();
-                document.getElementById('vCoords').value = pos.lat + "," + pos.lng;
+        // وظيفة تحديد الموقع الحالي (مثل كورس التعليم)
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const userPos = [lat, lon];
+                
+                map.setView(userPos, 16); // تقريب الكاميرا على موقع الزبون
+                marker.setLatLng(userPos); // نقل الدبوس لموقع الزبون
+                document.getElementById('vCoords').value = lat + "," + lon;
+            }, function() {
+                console.log("تم رفض الوصول للموقع، البقاء على إحداثيات كركوك الافتراضية.");
             });
-            document.getElementById('vCoords').value = kirkuk[0] + "," + kirkuk[1];
-        };
-
-        function sendVipOrder() {
-            const name = document.getElementById('vName').value;
-            const phone = document.getElementById('vPhone').value;
-            const coords = document.getElementById('vCoords').value;
-            const type = document.getElementById('vType').innerText;
-            const date = document.getElementById('vDate').innerText;
-
-            if(!name || !phone) { alert("⚠️ يرجى تزويدنا بالاسم ورقم الهاتف لإتمام الحجز"); return; }
-
-            const message = `*طلب حجز VIP جديد (شركة الحوت)*%0A` +
-                            `------------------------------%0A` +
-                            `👑 الخدمة: ${type}%0A` +
-                            `📅 التاريخ: ${date}%0A` +
-                            `👤 الاسم: ${name}%0A` +
-                            `📞 الهاتف: ${phone}%0A` +
-                            `📍 الموقع: https://www.google.com/maps?q=${coords}`;
-
-            window.open(`https://wa.me/9647713225471?text=${message}`);
         }
-    </script>
-</body>
-</html>
+
+        marker.on('dragend', function() {
+            const pos = marker.getLatLng();
+            document.getElementById('vCoords').value = pos.lat + "," + pos.lng;
+        });
+        document.getElementById('vCoords').value = defaultPos[0] + "," + defaultPos[1];
+    };
+    
+    // ... باقي دالة إرسال الواتساب كما هي ...
+</script>

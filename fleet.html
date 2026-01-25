@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أسطول الحوت | اختر سيارتك</title>
+    <title>أسطول الحوت | اختيار السيارة</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="prices.js"></script>
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f1f5f9; }
         .hero-bg { background: linear-gradient(135deg, #002349 0%, #003366 100%); }
@@ -18,23 +18,22 @@
 <body class="text-[#002349]">
 
     <header class="hero-bg text-white pt-16 pb-40 text-center relative overflow-hidden">
-        <div class="text-6xl mb-4">🐋</div>
         <h1 class="text-4xl font-black text-[#D4AF37]">أسطول سيارات الحوت</h1>
-        <p id="serviceLabel" class="text-lg opacity-80 mt-2 font-bold uppercase"></p>
+        <p id="serviceLabel" class="text-lg opacity-80 mt-2 font-bold"></p>
     </header>
 
     <main class="container mx-auto px-4 -mt-24 relative z-10 pb-20">
         <div class="bg-white/80 backdrop-blur-xl shadow-2xl rounded-[3rem] p-6 max-w-5xl mx-auto mb-12 border border-white flex flex-wrap gap-4 justify-center items-center">
             <select id="engineFilter" onchange="renderFleet()" class="p-4 bg-slate-50 rounded-2xl font-black outline-none border-none">
-                <option value="all">كل أنواع المحركات</option>
-                <option value="hybrid">هايبرد (هجين)</option>
+                <option value="all">كل المحركات</option>
+                <option value="hybrid">هايبرد</option>
                 <option value="auto">أوتوماتيك</option>
             </select>
             <select id="categoryFilter" onchange="renderFleet()" class="p-4 bg-slate-50 rounded-2xl font-black outline-none border-none">
                 <option value="all">كل الفئات</option>
                 <option value="economy">اقتصادية</option>
-                <option value="family">عائلية / SUV</option>
-                <option value="luxury">فاخرة VIP</option>
+                <option value="family">عائلية</option>
+                <option value="luxury">فاخرة</option>
             </select>
         </div>
 
@@ -44,14 +43,7 @@
     <script>
         const u = new URLSearchParams(window.location.search);
         const type = u.get('type');
-        document.getElementById('serviceLabel').innerText = type === 'wedding' ? '✨ قسم سيارات الحفلات والأعراس' : '🚗 قسم السيارات الشخصية';
-
-        const fleet = [
-            { name: "تويوتا كورولا 2025", engine: "hybrid", cat: "economy", price: "45000", img: "Cars/corolla.jpg" },
-            { name: "دودج جارجر SRT", engine: "auto", cat: "luxury", price: "85000", img: "Cars/charger.jpg" },
-            { name: "هيونداي توسان", engine: "auto", cat: "family", price: "60000", img: "Cars/tucson.jpg" },
-            { name: "مرسيدس S-Class", engine: "auto", cat: "luxury", price: "150000", img: "Cars/mercedes.jpg" }
-        ];
+        document.getElementById('serviceLabel').innerText = type === 'wedding' ? '✨ قسم سيارات الحفلات' : '🚗 قسم السيارات الشخصية';
 
         function renderFleet() {
             const eng = document.getElementById('engineFilter').value;
@@ -59,14 +51,15 @@
             const grid = document.getElementById('fleetGrid');
             grid.innerHTML = '';
 
-            fleet.filter(car => (eng === 'all' || car.engine === eng) && (cat === 'all' || car.cat === cat))
+            // الآن نقرأ البيانات من AL_HUT_DATA الموجود في ملف prices.js
+            AL_HUT_DATA.fleet.filter(car => (eng === 'all' || car.engine === eng) && (cat === 'all' || car.cat === cat))
                  .forEach(car => {
                 grid.innerHTML += `
                     <div class="car-card p-4">
                         <img src="${car.img}" class="w-full h-52 object-cover rounded-[2.5rem] mb-4" onerror="this.src='https://via.placeholder.com/400x250?text=Al-Hut+Car'">
                         <div class="px-2">
                             <h3 class="text-2xl font-black mb-2">${car.name}</h3>
-                            <div class="price-badge inline-block mb-6">${parseInt(car.price).toLocaleString()} د.ع / يوم</div>
+                            <div class="price-badge inline-block mb-6">${car.price.toLocaleString()} د.ع / يوم</div>
                             <button onclick="selectCar('${car.name}', '${car.price}')" class="w-full bg-[#002349] text-white py-4 rounded-2xl font-black hover:bg-[#D4AF37] hover:text-black transition-all">اختيار السيارة</button>
                         </div>
                     </div>

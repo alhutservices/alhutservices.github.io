@@ -3,116 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق الحوت 🐋 | التميز في الخدمة</title>
+    <title>تطبيق الحوت 🐋 | واجهة الخدمات الذكية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background: linear-gradient(135deg, #f5f3ff 0%, #e0e7ff 100%); min-height: 100vh; }
-        
-        /* حركة الحوت العائم */
-        .floating-whale {
-            animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 20px 15px rgba(0,0,0,0.1));
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background: linear-gradient(180deg, #EEF2FF 0%, #E0E7FF 100%);
+            min-height: 100vh;
         }
 
-        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-radius: 3rem; border: 1px solid rgba(255,255,255,0.5); }
-        .input-smart { border: 2px solid #e2e8f0; border-radius: 1.5rem; padding: 1rem; width: 100%; font-weight: bold; outline: none; transition: 0.3s; text-align: center; color: #1e1b4b; }
-        .input-smart:focus { border-color: #6366f1; box-shadow: 0 0 20px rgba(99, 102, 241, 0.1); }
-        .feature-card { background: white; padding: 1rem; border-radius: 1.5rem; text-align: center; border-bottom: 4px solid #6366f1; transition: 0.3s; }
-        .feature-card:hover { transform: scale(1.05); }
+        /* حوت عائم بتأثير ظل واقعي */
+        .whale-container {
+            perspective: 1000px;
+        }
+        .floating-whale {
+            font-size: 80px;
+            animation: whaleFloat 4s ease-in-out infinite;
+            display: inline-block;
+            filter: drop-shadow(0 25px 15px rgba(99, 102, 241, 0.2));
+        }
+        @keyframes whaleFloat {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-25px) rotate(5deg); }
+        }
+
+        /* لوحة زجاجية متطورة */
+        .main-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4rem;
+            box-shadow: 0 40px 100px rgba(79, 70, 229, 0.1);
+        }
+
+        .input-premium {
+            background: #F8FAFC;
+            border: 2px solid #F1F5F9;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            width: 100%;
+            font-weight: 800;
+            color: #1E1B4B;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            appearance: none;
+        }
+        .input-premium:focus {
+            background: white;
+            border-color: #6366F1;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-launch {
+            background: linear-gradient(90deg, #4F46E5 0%, #7C3AED 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 2rem;
+            font-weight: 900;
+            font-size: 1.25rem;
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+            transition: 0.3s;
+        }
+        .btn-launch:active { transform: scale(0.96); }
+
+        .feature-icon {
+            background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%);
+            width: 60px; height: 60px;
+            border-radius: 1.2rem;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 10px;
+            color: #6366F1;
+            font-size: 1.5rem;
+        }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-10 flex flex-col items-center">
 
-    <div class="max-w-xl mx-auto space-y-8">
-        
-        <div class="text-center py-6">
-            <div class="text-8xl floating-whale mb-4">🐋</div>
-            <h1 class="text-4xl font-black text-indigo-900 tracking-tight">تطبيق الحوت</h1>
-            <p class="text-indigo-500 font-bold">ذكاء الأعمال في خدمات النقل</p>
-        </div>
+    <div class="whale-container text-center mb-10">
+        <div class="floating-whale">🐋</div>
+        <h1 class="text-5xl font-black text-slate-900 mt-4 tracking-tighter">تطبيق الحوت</h1>
+        <p class="text-indigo-500 font-black uppercase text-sm tracking-[0.2em] mt-2">الجيل القادم من الخدمات</p>
+    </div>
 
-        <div class="glass-panel p-8 shadow-2xl border-t-[10px] border-indigo-600">
-            <div class="space-y-5">
+    <div class="main-card w-full max-w-xl p-10 space-y-8 relative">
+        <div class="absolute -top-6 right-10 bg-indigo-600 text-white px-6 py-2 rounded-full text-xs font-black shadow-lg">حجز سريع ⚡</div>
+
+        <div class="space-y-6">
+            <div class="relative">
+                <label class="text-[11px] font-black text-slate-400 mr-4 mb-2 block">📍 المحافظة المستهدفة</label>
+                <select id="province" class="input-premium">
+                    <option value="كركوك">كركوك</option>
+                    <option value="بغداد">بغداد</option>
+                    <option value="ديالى">ديالى</option>
+                    <option value="البصرة">البصرة</option>
+                </select>
+            </div>
+
+            <div class="relative">
+                <label class="text-[11px] font-black text-slate-400 mr-4 mb-2 block">⚙️ نوع الخدمة</label>
+                <select id="service" class="input-premium">
+                    <option value="booking_cargo.html">شحن ونقل بضائع 🚛</option>
+                    <option value="booking_water.html">تزويد صهريج ماء 💧</option>
+                    <option value="booking_training.html">تدريب قيادة سيارات 🎓</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2">📍 وجهتك (المحافظة)</label>
-                    <select id="province" class="input-smart text-lg">
-                        <option value="كركوك">كركوك</option>
-                        <option value="بغداد">بغداد</option>
-                        <option value="ديالى">ديالى</option>
-                        <option value="البصرة">البصرة</option>
-                    </select>
+                    <label class="text-[11px] font-black text-slate-400 mr-4 mb-2 block">📅 التاريخ</label>
+                    <input type="date" id="date" class="input-premium">
                 </div>
-
                 <div>
-                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2">⚙️ الخدمة المطلوبة</label>
-                    <select id="service" class="input-smart text-lg">
-                        <option value="booking_cargo.html">نقل بضائع وحمل 🚛</option>
-                        <option value="booking_water.html">تزويد مياه (تنكر) 💧</option>
-                        <option value="booking_training.html">كورس تعليم قيادة 🎓</option>
-                    </select>
+                    <label class="text-[11px] font-black text-slate-400 mr-4 mb-2 block">⏰ التوقيت</label>
+                    <input type="time" id="time" class="input-premium">
                 </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-black text-gray-400 mb-2 mr-2">📅 موعد الانطلاق</label>
-                        <input type="date" id="date" class="input-smart">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-black text-gray-400 mb-2 mr-2">⏰ التوقيت</label>
-                        <input type="time" id="time" class="input-smart">
-                    </div>
-                </div>
-
-                <button onclick="launchService()" class="w-full bg-indigo-600 text-white py-5 rounded-[2rem] font-black text-xl shadow-xl hover:bg-indigo-700 active:scale-95 transition-all flex items-center justify-center gap-3">
-                    ابدأ الآن <i class="fas fa-rocket"></i>
-                </button>
             </div>
-        </div>
 
-        <div class="grid grid-cols-3 gap-3">
-            <div class="feature-card shadow-sm">
-                <div class="text-2xl mb-1">⚡</div>
-                <p class="text-[10px] font-black text-gray-700">سرعة فائقة</p>
-            </div>
-            <div class="feature-card shadow-sm">
-                <div class="text-2xl mb-1">🛡️</div>
-                <p class="text-[10px] font-black text-gray-700">أمان تام</p>
-            </div>
-            <div class="feature-card shadow-sm">
-                <div class="text-2xl mb-1">💰</div>
-                <p class="text-[10px] font-black text-gray-700">أفضل سعر</p>
-            </div>
-        </div>
-
-        <div class="text-center text-gray-400 text-[10px] font-bold pb-8">
-            تطوير شركة الحوت للأنظمة الذكية © 2026
+            <button onclick="startApp()" class="w-full btn-launch flex items-center justify-center gap-3">
+                تأكيد الدخول <i class="fas fa-arrow-left"></i>
+            </button>
         </div>
     </div>
 
+    <div class="grid grid-cols-3 gap-6 max-w-xl w-full mt-12">
+        <div class="text-center group">
+            <div class="feature-icon group-hover:bg-indigo-600 group-hover:text-white transition-all"><i class="fas fa-bolt"></i></div>
+            <p class="font-black text-slate-800 text-sm">سرعة</p>
+        </div>
+        <div class="text-center group">
+            <div class="feature-icon group-hover:bg-indigo-600 group-hover:text-white transition-all"><i class="fas fa-shield-alt"></i></div>
+            <p class="font-black text-slate-800 text-sm">أمان</p>
+        </div>
+        <div class="text-center group">
+            <div class="feature-icon group-hover:bg-indigo-600 group-hover:text-white transition-all"><i class="fas fa-star"></i></div>
+            <p class="font-black text-slate-800 text-sm">دقة</p>
+        </div>
+    </div>
+
+    <div class="mt-12 text-slate-400 text-[10px] font-black tracking-widest uppercase">
+        WHALE SMART SYSTEMS © 2026
+    </div>
+
     <script>
-        function launchService() {
+        function startApp() {
             const province = document.getElementById('province').value;
-            const page = document.getElementById('service').value;
+            const servicePage = document.getElementById('service').value;
             const date = document.getElementById('date').value;
             const time = document.getElementById('time').value;
 
             if(!date || !time) {
-                alert("⚠️ يرجى تحديد التاريخ والوقت");
+                alert("يرجى اختيار الوقت والتاريخ");
                 return;
             }
 
-            // نقل البيانات كـ Parameters
+            // إرسال البيانات بشكل آمن
             const query = `?province=${encodeURIComponent(province)}&date=${date}&time=${encodeURIComponent(time)}`;
-            window.location.href = page + query;
+            window.location.href = servicePage + query;
         }
 
-        // ضبط التاريخ التلقائي
+        // ضبط التاريخ التلقائي لليوم
         window.onload = function() {
             document.getElementById('date').value = new Date().toISOString().split('T')[0];
         }

@@ -5,70 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>المراجعة | الحوت</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body class="p-4 bg-gray-100 text-right font-['Tajawal']">
     <div class="max-w-xl mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden border-t-[10px] border-[#002349]">
-        <div class="bg-[#002349] p-8 text-center text-white">
-            <div id="dispEmoji" class="text-6xl mb-2">🐋</div>
-            <h2 class="text-2xl font-black">تأكيد الحجز</h2>
-        </div>
-
-        <div class="p-8 space-y-6">
-            <div class="bg-gray-50 p-6 rounded-[2rem] space-y-4 shadow-inner border border-gray-100">
-                <div class="flex justify-between border-b pb-2"><span class="text-gray-400">الاسم:</span> <span id="dispName" class="font-bold"></span></div>
-                <div class="flex justify-between border-b pb-2"><span class="text-gray-400">الخدمة:</span> <span id="dispCar" class="font-bold"></span></div>
-                
-                <div id="dispCargo" class="hidden space-y-3 bg-yellow-50 p-4 rounded-2xl border border-yellow-200">
-                    <div class="flex justify-between"><span class="text-gray-500 font-bold text-xs">المسافة:</span> <span id="dispDist" class="font-black text-yellow-700"></span></div>
-                    <div class="flex justify-between"><span class="text-gray-800 font-black">السعر النهائي:</span> <span id="dispPrice" class="font-black text-xl text-yellow-900"></span></div>
+        <div class="bg-[#002349] p-8 text-center text-[#D4AF37] text-2xl font-black">تأكيد الطلب 🐋</div>
+        
+        <div class="p-8 space-y-4">
+            <div class="bg-gray-50 p-6 rounded-3xl space-y-3">
+                <div class="flex justify-between border-b pb-2"><span>الاسم:</span> <span id="rN" class="font-bold"></span></div>
+                <div class="flex justify-between border-b pb-2"><span>الخدمة:</span> <span id="rC" class="font-bold"></span></div>
+                <div id="rCargo" class="hidden space-y-2 pt-2">
+                    <div class="text-green-700 font-bold text-xs">من: <span id="rSD" class="text-black"></span></div>
+                    <div class="text-blue-700 font-bold text-xs">إلى: <span id="rED" class="text-black"></span></div>
+                    <div class="flex justify-between bg-yellow-100 p-3 rounded-xl font-black"><span>السعر:</span> <span id="rP"></span></div>
                 </div>
-
-                <div id="dispGenderRow" class="hidden flex justify-between border-b pb-2"><span class="text-gray-400">الجنس:</span> <span id="dispGender" class="font-bold"></span></div>
             </div>
 
-            <button onclick="finalWhatsApp()" class="w-full bg-[#002349] text-white py-5 rounded-2xl font-black text-xl flex items-center justify-center gap-3">إرسال للواتساب <i class="fab fa-whatsapp"></i></button>
-            <button onclick="history.back()" class="w-full text-gray-400 font-bold text-sm">رجوع لتعديل البيانات</button>
+            <button onclick="send()" class="w-full bg-[#002349] text-white py-5 rounded-2xl font-black text-xl">إرسال للواتساب</button>
         </div>
     </div>
 
     <script>
         const u = new URLSearchParams(window.location.search);
+        document.getElementById('rN').innerText = u.get('name');
+        document.getElementById('rC').innerText = u.get('car');
         
-        document.getElementById('dispEmoji').innerText = u.get('emoji') || '🐋';
-        document.getElementById('dispName').innerText = u.get('name');
-        document.getElementById('dispCar').innerText = u.get('car');
-
         if(u.get('price')) {
-            document.getElementById('dispCargo').classList.remove('hidden');
-            document.getElementById('dispDist').innerText = u.get('dist') + " كم";
-            document.getElementById('dispPrice').innerText = parseInt(u.get('price')).toLocaleString() + " د.ع";
-        }
-        
-        if(u.get('gender')) {
-            document.getElementById('dispGenderRow').classList.remove('hidden');
-            document.getElementById('dispGender').innerText = u.get('gender');
+            document.getElementById('rCargo').classList.remove('hidden');
+            document.getElementById('rSD').innerText = u.get('sDesc');
+            document.getElementById('rED').innerText = u.get('eDesc');
+            document.getElementById('rP').innerText = parseInt(u.get('price')).toLocaleString() + " د.ع";
         }
 
-        function finalWhatsApp() {
-            let loc = "";
-            if(u.get('slat')) {
-                loc = `📍 البداية: https://www.google.com/maps?q=${u.get('slat')},${u.get('slng')}\n🏁 النهاية: https://www.google.com/maps?q=${u.get('elat')},${u.get('elng')}`;
-            } else {
-                loc = `📍 الموقع: https://www.google.com/maps?q=${u.get('lat')},${u.get('lng')}`;
-            }
+        function send() {
+            let loc = `📍 البداية: https://www.google.com/maps?q=${u.get('slat')},${u.get('slng')}\n🏁 النهاية: https://www.google.com/maps?q=${u.get('elat')},${u.get('elng')}`;
+            if(!u.get('slat')) loc = `📍 الموقع: https://www.google.com/maps?q=${u.get('lat')},${u.get('lng')}`;
 
             const msg = `*طلب حجز شركة الحوت ${u.get('emoji') || '🐋'}*
 --------------------------
 👤 الاسم: ${u.get('name')}
 🚗 الخدمة: ${u.get('car')}
-${u.get('gender') ? '👫 الجنس: ' + u.get('gender') : ''}
-${u.get('dist') ? '📏 المسافة: ' + u.get('dist') + ' كم' : ''}
+--------------------------
+${u.get('sDesc') ? '📤 من: ' + u.get('sDesc') : ''}
+${u.get('eDesc') ? '📥 إلى: ' + u.get('eDesc') : ''}
 ${u.get('price') ? '💰 السعر: ' + parseInt(u.get('price')).toLocaleString() + ' د.ع' : ''}
 --------------------------
 ${loc}`;
-
             window.open(`https://wa.me/9647713225471?text=${encodeURIComponent(msg)}`);
         }
     </script>

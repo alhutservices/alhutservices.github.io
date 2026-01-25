@@ -15,6 +15,8 @@
         #map { height: 180px; border-radius: 2rem; border: 4px solid white; box-shadow: 0 8px 20px rgba(124, 58, 237, 0.1); z-index: 1; }
         .input-training { border: 2px solid #ddd6fe; transition: 0.3s; border-radius: 1.25rem; padding: 1rem; width: 100%; background: #f9fafb; font-weight: bold; outline: none; }
         .input-training:focus { border-color: #7c3aed; background: white; }
+        .gender-btn { flex: 1; padding: 1rem; border: 2px solid #ddd6fe; border-radius: 1.25rem; font-weight: bold; transition: 0.3s; cursor: pointer; text-align: center; background: white; }
+        .gender-btn.active { background: #7c3aed; color: white; border-color: #7c3aed; }
     </style>
 </head>
 <body class="p-4 md:p-8 text-right">
@@ -25,41 +27,41 @@
             <div id="summary" class="mt-4 p-3 bg-white rounded-2xl text-sm font-bold text-indigo-700 shadow-sm inline-block border border-indigo-100"></div>
         </div>
 
-        <div class="p-8 space-y-5 text-right">
+        <div class="p-8 space-y-5">
             <div>
                 <label class="block text-xs font-black text-gray-400 mb-2 mr-2">اسم المتدرب</label>
                 <input type="text" id="tName" placeholder="الاسم الكامل" class="input-training">
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2">رقم الهوية</label>
-                    <input type="text" id="tID" placeholder="رقم الهوية" class="input-training">
-                </div>
-                <div>
-                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2">العمر</label>
-                    <input type="text" id="tAge" placeholder="العمر" class="input-training">
+                <input type="text" id="tID" placeholder="رقم الهوية" class="input-training">
+                <input type="text" id="tAge" placeholder="العمر" class="input-training">
+            </div>
+
+            <div>
+                <label class="block text-xs font-black text-gray-400 mb-2 mr-2">جنس المتدرب</label>
+                <div class="flex gap-4">
+                    <div id="maleBtn" onclick="setGender('ذكر')" class="gender-btn active">👨 ذكر</div>
+                    <div id="femaleBtn" onclick="setGender('أنثى')" class="gender-btn">👩 أنثى</div>
                 </div>
             </div>
 
             <div class="bg-indigo-50 p-6 rounded-[2.5rem] border-2 border-white shadow-inner">
                 <label class="block font-black mb-3 text-sm text-indigo-900 mr-2 flex items-center gap-2">
-                    <i class="fas fa-map-marker-alt"></i> تحديد موقع اللقاء:
+                    <i class="fas fa-map-marker-alt"></i> موقع اللقاء:
                 </label>
                 <div id="map" class="mb-4"></div>
-                <button type="button" onclick="getGPS()" class="w-full py-4 bg-[#7c3aed] text-white rounded-2xl font-black text-sm shadow-lg hover:bg-[#6d28d9] transition-all">
-                    تحديد موقعي الحالي 🛰️
-                </button>
+                <button type="button" onclick="getGPS()" class="w-full py-4 bg-[#7c3aed] text-white rounded-2xl font-black text-sm shadow-lg">تحديد موقعي الحالي 🛰️</button>
             </div>
 
-            <button onclick="goToReviewTraining()" class="w-full bg-[#7c3aed] text-white py-5 rounded-2xl font-black text-xl shadow-2xl hover:bg-[#6d28d9] transition-all flex items-center justify-center gap-3">
-                مراجعة بيانات الطالب <i class="fas fa-graduation-cap"></i>
+            <button onclick="goToReviewTraining()" class="w-full bg-[#7c3aed] text-white py-5 rounded-2xl font-black text-xl shadow-2xl flex items-center justify-center gap-3">
+                مراجعة البيانات <i class="fas fa-chevron-left"></i>
             </button>
         </div>
     </div>
 
     <script>
-        let map, marker;
+        let map, marker, selectedGender = 'ذكر';
         const p = new URLSearchParams(window.location.search);
         const date = p.get('date'); const time = p.get('time');
         document.getElementById('summary').innerHTML = `📅 يبدأ في: ${date} <span class="mx-2">|</span> ⏰ الساعة: ${time}`;
@@ -70,13 +72,17 @@
             marker = L.marker([35.4687, 44.3921], {draggable: true}).addTo(map);
         };
 
+        function setGender(g) {
+            selectedGender = g;
+            document.getElementById('maleBtn').classList.toggle('active', g === 'ذكر');
+            document.getElementById('femaleBtn').classList.toggle('active', g === 'أنثى');
+        }
+
         function getGPS() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => {
-                    const coords = [pos.coords.latitude, pos.coords.longitude];
-                    map.setView(coords, 17); marker.setLatLng(coords);
-                });
-            }
+            navigator.geolocation.getCurrentPosition(pos => {
+                const coords = [pos.coords.latitude, pos.coords.longitude];
+                map.setView(coords, 17); marker.setLatLng(coords);
+            });
         }
 
         function goToReviewTraining() {
@@ -85,7 +91,7 @@
             const age = document.getElementById('tAge').value;
             const latlng = marker.getLatLng();
             if(!name || !id || !age) { alert("⚠️ يرجى إكمال البيانات"); return; }
-            window.location.href = `review.html?service=training&car=كورس تعليم قيادة&date=${date}&time=${encodeURIComponent(time)}&name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}&age=${age}&lat=${latlng.lat}&lng=${latlng.lng}&emoji=🎓`;
+            window.location.href = `review.html?service=training&car=كورس تعليم قيادة&date=${date}&time=${encodeURIComponent(time)}&name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}&age=${age}&gender=${encodeURIComponent(selectedGender)}&lat=${latlng.lat}&lng=${latlng.lng}&emoji=🎓`;
         }
     </script>
 </body>

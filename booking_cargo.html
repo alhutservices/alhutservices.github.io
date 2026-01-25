@@ -3,78 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طلب نقل حمل | الحوت 🐋</title>
+    <title>تأكيد البيانات | الحوت 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #F8F9FD; }
-        .hero-section { background: linear-gradient(180deg, #6366F1 0%, #4F46E5 100%); border-radius: 0 0 3rem 3rem; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #FFFFFF; margin: 0; padding: 0; }
         
-        /* ستايل الخانات المقتبس من الصورة */
+        /* الانحناء البنفسجي العلوي مثل الصورة */
+        .top-curve {
+            background: #8B5CF6; 
+            height: 180px;
+            border-radius: 0 0 50% 50% / 0 0 20% 20%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .truck-icon { width: 80px; margin-bottom: 10px; }
+
+        /* الحاوية الرمادية الفاتحة للخريطة */
+        .map-section {
+            background-color: #F1F5F9;
+            border-radius: 2.5rem;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .map-box { 
+            height: 180px; 
+            border-radius: 1.5rem; 
+            border: 2px solid white; 
+            margin: 15px 0;
+            z-index: 1;
+        }
+
+        /* زر الأرجواني مثل الصورة */
+        .btn-purple {
+            background-color: #8B5CF6;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            border-radius: 1.2rem;
+            font-weight: 900;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3);
+        }
+
         .input-card {
             background: white;
-            border: 2px solid #FFD700; /* الإطار الذهبي */
-            border-radius: 1.5rem;
-            padding: 1rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            transition: 0.3s;
+            border: 2px solid #FFD700;
+            border-radius: 1rem;
+            padding: 10px 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-        .input-label { color: #94a3b8; font-size: 0.8rem; font-weight: 800; margin-bottom: 5px; display: block; }
-        .input-field { width: 100%; border: none; outline: none; font-weight: 900; color: #1e1b4b; font-size: 1rem; }
 
-        .map-container { background: #EEF2FF; border-radius: 2.5rem; padding: 1.5rem; margin-top: 1.5rem; }
-        .map-box { height: 200px; border-radius: 1.5rem; border: 3px solid white; margin-bottom: 10px; z-index: 1; }
-        
-        .btn-location { background: #6366F1; color: white; padding: 10px 20px; border-radius: 1rem; font-weight: 800; font-size: 0.8rem; width: 100%; }
-        .btn-main { background: #6366F1; color: white; padding: 1.2rem; border-radius: 1.5rem; font-weight: 900; font-size: 1.2rem; width: 100%; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3); }
+        .label-text { color: #94a3b8; font-size: 0.75rem; font-weight: 800; margin-bottom: 2px; display: block; }
+        .input-draw { border: none; outline: none; width: 100%; font-weight: 900; color: #1e293b; }
     </style>
 </head>
 <body>
 
-    <header class="hero-section text-white pt-10 pb-20 text-center relative">
-        <img src="https://cdn-icons-png.flaticon.com/512/411/411763.png" class="w-20 mx-auto mb-4" alt="truck">
-        <h1 class="text-3xl font-black italic">تأكيد طلب الشحن</h1>
-        <p class="opacity-80 text-sm mt-2">حدد تفاصيل النقل بدقة لمساعدتنا في خدمتك</p>
-    </header>
+    <div class="top-curve">
+        <img src="https://cdn-icons-png.flaticon.com/512/411/411763.png" class="truck-icon" alt="truck">
+        <h1 class="text-white text-2xl font-black">تأبُد كَتار أدُش منين</h1> </div>
 
-    <main class="container mx-auto px-6 -mt-12 pb-20">
-        <div class="grid grid-cols-2 gap-4 mb-8">
+    <main class="px-6 -mt-10 pb-10">
+        <p class="text-center text-gray-400 text-xs font-bold mb-4">اسم المتدرب</p>
+        
+        <div class="grid grid-cols-2 gap-3 mb-6">
             <div class="input-card">
-                <label class="input-label">👤 اسم المتدرب (الزبون)</label>
-                <input type="text" id="custName" placeholder="أكتب هنا.." class="input-field">
+                <label class="label-text">👤 الاسم الكامل</label>
+                <input type="text" id="custName" placeholder="أكتب هنا" class="input-draw text-sm">
             </div>
             <div class="input-card">
-                <label class="input-label">📞 رقم (واتساب)</label>
-                <input type="tel" id="custPhone" placeholder="077..." class="input-field text-left" dir="ltr">
+                <label class="label-text">📞 رقم (واتساب)</label>
+                <input type="tel" id="custPhone" placeholder="077..." class="input-draw text-sm text-left" dir="ltr">
             </div>
         </div>
 
-        <div class="input-card mb-8" style="border-color: #E2E8F0;">
-            <label class="input-label">📦 ماذا ستنقل؟ (أو ملاحظات إضافية)</label>
-            <input type="text" id="cargoNotes" placeholder="مثلاً: أثاث منزل، بضاعة.." class="input-field">
-        </div>
-
-        <div class="map-container">
-            <h3 class="font-black text-indigo-900 mb-4 flex items-center gap-2">
-                <i class="fas fa-arrow-up text-green-500"></i> تحديد موقع الاستلام (منين؟)
-            </h3>
+        <div class="map-section">
+            <h3 class="text-center font-black text-indigo-900 text-sm">📍 تحديد موقع اللقاء (منين؟):</h3>
             <div id="mapStart" class="map-box"></div>
-            <button onclick="getLocation('start')" class="btn-location">تحديد موقعي الحالي 🛰️</button>
+            <button onclick="getLocation('start')" class="btn-purple text-xs py-3">تحديد موقعي الحالي 🛰️</button>
         </div>
 
-        <div class="map-container">
-            <h3 class="font-black text-indigo-900 mb-4 flex items-center gap-2">
-                <i class="fas fa-arrow-down text-red-500"></i> تحديد موقع التسليم (لوين؟)
-            </h3>
+        <div class="map-section">
+            <h3 class="text-center font-black text-indigo-900 text-sm">🏁 تحديد موقع التسليم (لوين؟):</h3>
             <div id="mapEnd" class="map-box"></div>
-            <button onclick="getLocation('end')" class="btn-location">تحديد الوجهة الحالية 🛰️</button>
+            <button onclick="getLocation('end')" class="btn-purple text-xs py-3">تحديد وجهة التسليم 🛰️</button>
         </div>
 
-        <div class="mt-10">
-            <button onclick="confirmCargoOrder()" class="btn-main flex items-center justify-center gap-3">
+        <div class="mt-8">
+            <button onclick="confirmCargo()" class="btn-main btn-purple">
                 مراجعة البيانات <i class="fas fa-chevron-left"></i>
             </button>
         </div>
@@ -85,12 +114,12 @@
         const u = new URLSearchParams(window.location.search);
 
         window.onload = function() {
-            // تهيئة خريطة الانطلاق
+            // خريطة البداية
             mapStart = L.map('mapStart', {zoomControl: false}).setView([35.4687, 44.3921], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapStart);
             markerStart = L.marker([35.4687, 44.3921], {draggable: true}).addTo(mapStart);
 
-            // تهيئة خريطة التسليم
+            // خريطة النهاية
             mapEnd = L.map('mapEnd', {zoomControl: false}).setView([35.4687, 44.3921], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapEnd);
             markerEnd = L.marker([35.4687, 44.3921], {draggable: true}).addTo(mapEnd);
@@ -100,27 +129,22 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(pos => {
                     const c = [pos.coords.latitude, pos.coords.longitude];
-                    if(type === 'start') {
-                        mapStart.setView(c, 16); markerStart.setLatLng(c);
-                    } else {
-                        mapEnd.setView(c, 16); markerEnd.setLatLng(c);
-                    }
+                    if(type === 'start') { mapStart.setView(c, 16); markerStart.setLatLng(c); }
+                    else { mapEnd.setView(c, 16); markerEnd.setLatLng(c); }
                 });
             }
         }
 
-        function confirmCargoOrder() {
+        function confirmCargo() {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
-            const notes = document.getElementById('cargoNotes').value;
-            
-            if(!name || !phone) return alert("يرجى ملء البيانات أولاً 🐋");
+            if(!name || !phone) return alert("يرجى إكمال البيانات 🐋");
 
             u.set('name', name);
             u.set('phone', phone);
-            u.set('cargo_notes', notes);
             u.set('slat', markerStart.getLatLng().lat); u.set('slng', markerStart.getLatLng().lng);
             u.set('elat', markerEnd.getLatLng().lat); u.set('elng', markerEnd.getLatLng().lng);
+            u.set('vehicle', 'سيارة حمل 🚛');
 
             window.location.href = `review.html?${u.toString()}`;
         }

@@ -15,58 +15,50 @@
 
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f0f9ff; }
-        .glass-card { background: rgba(255, 255, 255, 0.98); }
+        .glass-card { background: white; border-radius: 3.5rem; }
         .map-box { height: 250px; border-radius: 2rem; border: 4px solid white; box-shadow: 0 8px 20px rgba(14, 165, 233, 0.1); z-index: 1; }
         .input-style { border: 2px solid #bae6fd; transition: 0.3s; border-radius: 1.25rem; padding: 1rem; width: 100%; background: #f9fafb; font-weight: bold; outline: none; }
         .input-style:focus { border-color: #0ea5e9; background: white; border-width: 2.5px; }
-        
-        /* شريط البحث البارز */
-        .leaflet-control-geocoder { 
-            border: 3px solid #0ea5e9 !important; 
-            border-radius: 15px !important; 
-            box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.3) !important;
-            min-width: 260px !important;
-        }
+        .required-label::after { content: " *"; color: #ef4444; }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-xl mx-auto glass-card rounded-[3.5rem] shadow-2xl overflow-hidden border-t-[12px] border-[#0ea5e9]">
+<body class="p-4">
+    <div class="max-w-xl mx-auto glass-card shadow-2xl overflow-hidden border-t-[12px] border-[#0ea5e9]">
         
         <div class="bg-sky-50 p-8 text-center border-b border-sky-100">
             <div class="text-5xl mb-3">💧</div>
             <h2 class="text-3xl font-black text-[#0369a1]">طلب صهريج ماء</h2>
-            <div class="mt-4 p-2 bg-white rounded-2xl text-xs font-bold text-sky-700 shadow-sm inline-block border border-sky-100 italic">خدمة الحوت للمياه الصافية 🐋</div>
+            <p class="text-xs font-bold text-sky-400 mt-2 tracking-widest uppercase">خدمة الحوت للمياه الصافية 🐋</p>
         </div>
 
         <div class="p-8 space-y-6">
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2">👤 الاسم</label>
+                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2 required-label">الاسم</label>
                     <input type="text" id="wName" placeholder="اسمك الكامل" class="input-style">
                 </div>
                 <div>
-                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2">📞 هاتف</label>
+                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2 required-label">هاتف</label>
                     <input type="tel" id="wPhone" placeholder="077..." class="input-style text-left" dir="ltr">
                 </div>
             </div>
 
             <div class="bg-sky-50 p-6 rounded-[2.5rem] border-2 border-white shadow-inner space-y-4">
                 <label class="block font-black text-sm text-sky-900 flex items-center gap-2">
-                    <i class="fas fa-map-marked-alt text-blue-600"></i> تحديد موقع التوصيل:
+                    <i class="fas fa-map-marker-alt text-blue-600"></i> تحديد الموقع على الخريطة:
                 </label>
                 
                 <div id="map" class="map-box"></div>
                 
-                <div class="flex gap-2">
-                    <button onclick="getGPS()" class="flex-1 py-3 bg-[#0ea5e9] text-white rounded-xl font-black text-xs shadow-lg hover:bg-[#0284c7] transition-all">
-                        تحديد موقعي الآن 🛰️
-                    </button>
+                <button onclick="getGPS()" class="w-full py-3 bg-[#0ea5e9] text-white rounded-xl font-black text-xs shadow-lg active:scale-95 transition-all">
+                    تحديد موقعي الآن 🛰️
+                </button>
+
+                <div class="mt-4">
+                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2 required-label">وصف العنوان بدقة (إجباري)</label>
+                    <input type="text" id="wDesc" placeholder="مثلاً: الحي الصناعي، خلف مدرسة الأمل" class="input-style bg-white border-red-100">
+                    <p class="text-[10px] text-red-400 font-bold mt-2 mr-2">* يرجى كتابة اسم المنطقة أو أقرب نقطة دالة.</p>
                 </div>
-
-                <p class="text-[10px] text-sky-500 font-bold text-center">💡 يمكنك استخدام البحث 🔍 داخل الخريطة أو سحب الماركر</p>
-
-                <label class="block text-xs font-black text-gray-400 mb-1 mr-2 mt-4">🏠 وصف العنوان (اختياري)</label>
-                <input type="text" id="wDesc" placeholder="مثلاً: الحي الصناعي، قرب كشك السعادة" class="input-style bg-white">
             </div>
 
             <button onclick="confirmWater()" class="w-full bg-[#0369a1] text-white py-5 rounded-[2rem] font-black text-xl shadow-2xl flex items-center justify-center gap-3 active:scale-95 transition-all">
@@ -77,21 +69,17 @@
 
     <script>
         let map, marker;
-        const u = new URLSearchParams(window.location.search);
 
         window.onload = function() {
-            // تهيئة الخريطة
             map = L.map('map', {zoomControl: false}).setView([35.4687, 44.3921], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
             marker = L.marker([35.4687, 44.3921], {draggable: true}).addTo(map);
 
-            // تفعيل البحث البارز داخل الخريطة
             L.Control.geocoder({
                 defaultMarkGeocode: false,
                 placeholder: "🔍 ابحث عن منطقتك...",
             }).on('markgeocode', function(e) {
-                const latlng = e.geocode.center;
-                map.setView(latlng, 16); marker.setLatLng(latlng);
+                map.setView(e.geocode.center, 16); marker.setLatLng(e.geocode.center);
             }).addTo(map);
         };
 
@@ -101,31 +89,23 @@
                     const coords = [pos.coords.latitude, pos.coords.longitude];
                     map.setView(coords, 17); marker.setLatLng(coords);
                 });
-            } else {
-                alert("يرجى تفعيل الـ GPS في جهازك 🐋");
             }
         }
 
         function confirmWater() {
             const name = document.getElementById('wName').value;
             const phone = document.getElementById('wPhone').value;
-            const desc = document.getElementById('wDesc').value;
+            const desc = document.getElementById('wDesc').value; // حقل العنوان
             const pos = marker.getLatLng();
 
-            if(!name || !phone) {
-                alert("⚠️ لطفاً املأ الاسم ورقم الهاتف");
+            // فحص إذا كانت الحقول فارغة (خاصة وصف العنوان)
+            if(!name || !phone || !desc) {
+                alert("⚠️ عذراً! يرجى كتابة الاسم ورقم الهاتف ووصف العنوان بدقة.");
                 return;
             }
 
-            u.set('name', name);
-            u.set('phone', phone);
-            u.set('location_desc', desc);
-            u.set('lat', pos.lat);
-            u.set('lng', pos.lng);
-            u.set('service', 'water');
-            u.set('emoji', '💧');
-
-            window.location.href = `review.html?${u.toString()}`;
+            const query = `service=water&emoji=💧&name=${encodeURIComponent(name)}&phone=${phone}&location_desc=${encodeURIComponent(desc)}&lat=${pos.lat}&lng=${pos.lng}`;
+            window.location.href = `review.html?${query}`;
         }
     </script>
 </body>

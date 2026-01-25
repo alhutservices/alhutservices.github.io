@@ -8,91 +8,91 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #00152b; color: white; overflow-x: hidden; }
-        .hero-gradient { background: radial-gradient(circle at center, #002349 0%, #000c1a 100%); }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.4s ease; }
-        .glass-card:hover { background: rgba(255, 255, 255, 0.07); border-color: #D4AF37; transform: translateY(-5px); }
-        .gold-glow { text-shadow: 0 0 15px rgba(212, 175, 55, 0.5); }
-        .whale-animation { animation: float 6s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
+        .hero-bg { background: linear-gradient(135deg, #002349 0%, #003366 100%); }
+        
+        /* حركة الحوت العائم */
+        .whale-float {
+            display: inline-block;
+            font-size: 5rem;
+            animation: floating 4s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .feature-card { transition: 0.3s; }
+        .feature-card:hover { transform: translateY(-5px); }
     </style>
 </head>
-<body class="hero-gradient min-h-screen">
+<body class="text-[#002349]">
 
-    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
-        <div class="absolute -top-24 -left-24 w-96 h-96 bg-[#D4AF37] rounded-full blur-[120px]"></div>
-        <div class="absolute top-1/2 -right-24 w-80 h-80 bg-blue-600 rounded-full blur-[120px]"></div>
-    </div>
-
-    <header class="relative z-10 pt-16 pb-12 text-center">
-        <div class="whale-animation inline-block mb-6">
-            <span class="text-7xl">🐋</span>
-        </div>
-        <h1 class="text-7xl font-black tracking-tighter gold-glow text-[#D4AF37] mb-2">الحـوت</h1>
-        <p class="text-gray-400 text-lg font-light tracking-widest uppercase">Elite Car Services - Kirkuk</p>
+    <header class="hero-bg text-white pt-20 pb-48 text-center relative">
+        <div class="whale-float mb-4">🐋</div>
+        <h1 class="text-6xl font-black text-[#D4AF37] mb-2">الحـوت</h1>
+        <p class="text-xl opacity-90 font-light">لخدمات السيارات في كركوك</p>
     </header>
 
-    <main class="relative z-10 container mx-auto px-6 pb-20">
-        <div class="max-w-4xl mx-auto">
-            
-            <div class="glass-card rounded-[3rem] p-8 md:p-12 shadow-2xl mb-12">
-                <h2 class="text-2xl font-bold mb-8 text-center border-b border-white/10 pb-4">ابدأ رحلتك معنا</h2>
+    <main class="container mx-auto px-4 -mt-32 relative z-10">
+        <div class="bg-white shadow-2xl rounded-[3rem] p-8 md:p-12 max-w-5xl mx-auto border border-gray-100">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="space-y-3">
-                        <label class="block text-xs font-bold text-[#D4AF37] mr-4">ما هي الخدمة المطلوبة؟</label>
-                        <div class="relative">
-                            <i class="fas fa-concierge-bell absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <select id="mainService" onchange="checkService()" class="w-full bg-white/5 border border-white/10 p-4 pr-12 rounded-2xl outline-none font-bold focus:border-[#D4AF37] transition-all appearance-none text-white">
-                                <option value="" class="bg-[#00152b]">اختر نوع الخدمة</option>
-                                <option value="personal" class="bg-[#00152b]">🚗 تأجير سيارة شخصية</option>
-                                <option value="wedding" class="bg-[#00152b]">🎁 سيارات مزينة (أعراس)</option>
-                                <option value="training" class="bg-[#00152b]">🎓 تعليم قيادة (كورس)</option>
-                                <option value="cargo" class="bg-[#00152b]">🚛 سيارة حمل ونقل</option>
-                                <option value="water" class="bg-[#00152b]">💧 تنكر ماء</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="space-y-3">
-                        <label class="block text-xs font-bold text-[#D4AF37] mr-4">متى موعد الحجز؟</label>
-                        <div class="relative">
-                            <i class="fas fa-calendar-alt absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input type="date" id="searchDate" class="w-full bg-white/5 border border-white/10 p-4 pr-12 rounded-2xl outline-none font-bold focus:border-[#D4AF37] transition-all text-white">
-                        </div>
-                    </div>
-
-                    <div id="cargoDiv" class="hidden md:col-span-2 space-y-3 animate-fade-in">
-                        <label class="block text-xs font-bold text-[#D4AF37] mr-4">نوع مركبة الحمل</label>
-                        <select id="cargoType" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl font-bold text-white outline-none">
-                            <option value="ستوتة" class="bg-[#00152b]">ستوتة (10 آلاف)</option>
-                            <option value="سيارة كبيرة" class="bg-[#00152b]">سيارة حمل كبيرة (20 ألف)</option>
-                        </select>
-                    </div>
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-gray-400 mr-2 text-right">نوع الخدمة</label>
+                    <select id="mainService" onchange="checkService()" class="w-full p-4 bg-gray-50 border-2 border-transparent rounded-2xl font-bold text-[#002349] focus:border-[#D4AF37] outline-none transition-all">
+                        <option value="">-- اختر الخدمة --</option>
+                        <option value="personal">🚗 تأجير سيارة شخصية</option>
+                        <option value="wedding">🎁 سيارات مزينة (أعراس)</option>
+                        <option value="training">🎓 تعليم قيادة (كورس)</option>
+                        <option value="cargo">🚛 سيارة حمل ونقل</option>
+                        <option value="water">💧 تنكر ماء</option>
+                    </select>
                 </div>
 
-                <button onclick="processSearch()" class="w-full mt-10 bg-[#D4AF37] text-[#00152b] py-5 rounded-2xl font-black text-xl shadow-[0_10px_30px_rgba(212,175,55,0.3)] hover:scale-[1.02] active:scale-95 transition-all">
-                    استكشف الأسطول المتاح <i class="fas fa-chevron-left mr-2"></i>
+                <div id="cargoDiv" class="space-y-2 hidden">
+                    <label class="block text-sm font-bold text-gray-400 mr-2 text-right">نوع المركبة</label>
+                    <select id="cargoType" class="w-full p-4 bg-gray-50 border-2 border-[#D4AF37] rounded-2xl font-bold">
+                        <option value="ستوتة">ستوتة (10 آلاف)</option>
+                        <option value="سيارة كبيرة">سيارة حمل كبيرة (20 ألف)</option>
+                    </select>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-gray-400 mr-2 text-right">تاريخ الحجز</label>
+                    <input type="date" id="searchDate" class="w-full p-4 bg-gray-50 rounded-2xl border-2 border-transparent font-bold focus:border-[#D4AF37] outline-none">
+                </div>
+
+                <button onclick="processSearch()" class="w-full bg-[#D4AF37] text-[#002349] py-4 rounded-2xl font-black text-lg shadow-xl hover:bg-[#b8962d] transition-all">
+                    المتابعة <i class="fas fa-arrow-left mr-2"></i>
                 </button>
             </div>
+        </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div class="glass-card p-4 rounded-3xl">
-                    <i class="fas fa-shield-alt text-[#D4AF37] mb-2 text-xl"></i>
-                    <p class="text-[10px] font-bold">أمان تام</p>
+        <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto pb-20">
+            <div class="feature-card bg-white p-8 rounded-[2.5rem] shadow-sm text-center border border-gray-50">
+                <div class="w-16 h-16 bg-blue-50 text-[#002349] rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">
+                    <i class="fas fa-shield-check"></i>
                 </div>
-                <div class="glass-card p-4 rounded-3xl">
-                    <i class="fas fa-clock text-[#D4AF37] mb-2 text-xl"></i>
-                    <p class="text-[10px] font-bold">دقة بالمواعيد</p>
+                <h3 class="text-xl font-black mb-3">أمان وثقة</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">جميع سياراتنا مؤمنة ومفحوصة دورياً لضمان سلامتك وسلامة عائلتك خلال الرحلة.</p>
+            </div>
+
+            <div class="feature-card bg-white p-8 rounded-[2.5rem] shadow-sm text-center border border-gray-50">
+                <div class="w-16 h-16 bg-yellow-50 text-[#D4AF37] rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">
+                    <i class="fas fa-star"></i>
                 </div>
-                <div class="glass-card p-4 rounded-3xl">
-                    <i class="fas fa-gem text-[#D4AF37] mb-2 text-xl"></i>
-                    <p class="text-[10px] font-bold">فخامة ملكية</p>
+                <h3 class="text-xl font-black mb-3">خدمة VIP</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">نقدم لك تجربة متميزة من لحظة الاختيار وحتى الاستلام، مع دعم فني متواصل على مدار الساعة.</p>
+            </div>
+
+            <div class="feature-card bg-white p-8 rounded-[2.5rem] shadow-sm text-center border border-gray-50">
+                <div class="w-16 h-16 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6">
+                    <i class="fas fa-shipping-fast"></i>
                 </div>
-                <div class="glass-card p-4 rounded-3xl">
-                    <i class="fas fa-headset text-[#D4AF37] mb-2 text-xl"></i>
-                    <p class="text-[10px] font-bold">دعم 24/7</p>
-                </div>
+                <h3 class="text-xl font-black mb-3">سرعة التنفيذ</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">نظام حجز ذكي يضمن لك الحصول على خدمتك في الوقت المحدد دون تأخير أو انتظار.</p>
             </div>
         </div>
     </main>
@@ -100,12 +100,7 @@
     <script>
         function checkService() {
             const service = document.getElementById('mainService').value;
-            const cargoDiv = document.getElementById('cargoDiv');
-            if(service === 'cargo') {
-                cargoDiv.classList.remove('hidden');
-            } else {
-                cargoDiv.classList.add('hidden');
-            }
+            document.getElementById('cargoDiv').style.display = (service === 'cargo') ? 'block' : 'none';
         }
 
         function processSearch() {
@@ -113,7 +108,7 @@
             const date = document.getElementById('searchDate').value;
 
             if (!service || !date) { 
-                alert("يرجى اختيار الخدمة وتحديد التاريخ لمتابعة حجزك"); 
+                alert("⚠️ يرجى اختيار الخدمة والتاريخ"); 
                 return; 
             }
 

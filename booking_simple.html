@@ -3,81 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تأكيد الحجز | الحوت</title>
+    <title>تأكيد الطلب | الحوت</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
-        #map { height: 220px; border-radius: 1.5rem; z-index: 1; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f0f4f8; }
+        .glass-card { background: rgba(255, 255, 255, 0.98); }
     </style>
 </head>
-<body class="p-4">
-    <div class="max-w-xl mx-auto bg-white rounded-[2.5rem] shadow-xl overflow-hidden border-t-8 border-[#002349] p-8">
-        <div class="text-center mb-6">
-            <div class="text-4xl mb-2">🐋</div>
-            <h2 class="text-2xl font-black text-[#002349]">إكمال حجز النقل / الماء</h2>
+<body class="p-4 md:p-8 text-right">
+    <div class="max-w-xl mx-auto glass-card rounded-[3.5rem] shadow-2xl overflow-hidden border-t-[12px] border-[#002349]">
+        <div id="headerBg" class="p-8 text-center border-b">
+            <div id="mainEmoji" class="text-5xl mb-3"></div>
+            <h2 id="serviceTitle" class="text-3xl font-black text-[#002349]"></h2>
+            <div id="summary" class="mt-4 p-3 bg-white rounded-2xl text-sm font-bold shadow-sm inline-block"></div>
         </div>
 
-        <div class="space-y-4">
-            <input type="text" id="sName" placeholder="الاسم الكامل" class="w-full p-4 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#D4AF37] font-bold">
-            <input type="tel" id="sPhone" placeholder="رقم الهاتف (0770XXXXXXX)" class="w-full p-4 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#D4AF37] font-bold text-right">
-
-            <div class="bg-gray-50 p-4 rounded-[2rem] border-2 border-gray-100 shadow-sm">
-                <label class="block font-black mb-3 text-sm text-gray-600 mr-2 text-right">📍 حدد موقع سكنك على الخريطة:</label>
-                <div id="map" class="mb-3 border-4 border-white shadow-inner"></div>
-                
-                <button type="button" onclick="getLocation()" class="w-full mb-3 py-3 bg-white border-2 border-blue-100 text-blue-600 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-blue-50 transition-all">
-                    <i class="fas fa-crosshairs"></i> تحديد موقعي الحالي عبر GPS
-                </button>
-
-                <textarea id="sAddress" placeholder="وصف إضافي للعنوان أو أقرب نقطة دالة" class="w-full p-4 bg-white border-2 border-gray-100 rounded-2xl outline-none text-sm font-medium" rows="2"></textarea>
-                <input type="hidden" id="sCoords">
+        <div class="p-8 space-y-5">
+            <div>
+                <label class="block text-xs font-black text-gray-400 mb-2 mr-2">الاسم الكامل</label>
+                <input type="text" id="uName" placeholder="اكتب اسمك هنا" class="w-full p-4 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#002349] font-bold text-[#002349]">
             </div>
 
-            <button onclick="sendSimpleOrder()" class="w-full bg-[#002349] text-white py-5 rounded-2xl font-black text-xl shadow-lg hover:bg-green-600 transition-all">
-                تأكيد عبر واتساب <i class="fab fa-whatsapp mr-2"></i>
+            <div class="grid grid-cols-2 gap-4">
+                <input type="text" id="uID" placeholder="رقم الهوية" class="w-full p-4 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#002349] font-bold">
+                <input type="text" id="uLic" placeholder="رقم الإجازة (إن وجد)" class="w-full p-4 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#002349] font-bold">
+            </div>
+
+            <div class="bg-blue-50 p-4 rounded-2xl border-r-8 border-blue-500">
+                <p class="text-blue-800 text-xs font-bold leading-relaxed">
+                    ✅ يرجى التأكد من الموعد والمكان المسجل في الطلب.
+                </p>
+            </div>
+
+            <button onclick="goToReviewSimple()" class="w-full bg-[#002349] text-white py-5 rounded-2xl font-black text-xl shadow-2xl hover:bg-black transition-all">
+                مراجعة الطلب الآن
             </button>
         </div>
     </div>
 
     <script>
-        let map, marker;
-        const kirkuk = [35.4687, 44.3921];
+        const p = new URLSearchParams(window.location.search);
+        const service = p.get('service');
+        const vehicle = p.get('vehicle') || p.get('car');
+        const date = p.get('date');
+        const time = p.get('time');
 
-        window.onload = function() {
-            map = L.map('map').setView(kirkuk, 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            marker = L.marker(kirkuk, {draggable: true}).addTo(map);
-            marker.on('dragend', () => {
-                const p = marker.getLatLng();
-                document.getElementById('sCoords').value = p.lat + "," + p.lng;
-            });
-            document.getElementById('sCoords').value = kirkuk[0] + "," + kirkuk[1];
-        };
+        // تخصيص الإيموجيات بناءً على الخدمة
+        let emoji = "🐋";
+        let title = "تأكيد الطلب";
+        let bgColor = "bg-blue-50";
 
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((p) => {
-                    const pos = [p.coords.latitude, p.coords.longitude];
-                    map.setView(pos, 17);
-                    marker.setLatLng(pos);
-                    document.getElementById('sCoords').value = pos[0] + "," + pos[1];
-                }, () => alert("يرجى تفعيل الـ GPS"));
-            }
+        if(service === 'cargo') {
+            emoji = "📦";
+            title = "طلب سيارة حمل";
+            bgColor = "bg-yellow-50";
+        } else if(service === 'water') {
+            emoji = "💧";
+            title = "طلب تنكر ماء";
+            bgColor = "bg-cyan-50";
+        } else if(service === 'training') {
+            emoji = "🎓";
+            title = "كورس تعليم قيادة";
+            bgColor = "bg-indigo-50";
         }
 
-        function sendSimpleOrder() {
-            const name = document.getElementById('sName').value;
-            const phone = document.getElementById('sPhone').value;
-            const addr = document.getElementById('sAddress').value;
-            const coords = document.getElementById('sCoords').value;
-            if(!name || !phone) { alert("يرجى ملء البيانات"); return; }
+        document.getElementById('mainEmoji').innerText = emoji;
+        document.getElementById('serviceTitle').innerText = title;
+        document.getElementById('headerBg').className = `${bgColor} p-8 text-center border-b`;
+        document.getElementById('summary').innerHTML = `${vehicle} <span class="mx-2">|</span> 📅 ${date} <span class="mx-2">|</span> ⏰ ${time}`;
+
+        function goToReviewSimple() {
+            const name = document.getElementById('uName').value;
+            const id = document.getElementById('uID').value;
+            const lic = document.getElementById('uLic').value || "غير متوفر";
             
-            const msg = `*طلب حجز (نقل/ماء)*%0Aالاسم: ${name}%0Aالهاتف: ${phone}%0Aالوصف: ${addr}%0Aالموقع: https://www.google.com/maps?q=${coords}`;
-            window.open(`https://wa.me/9647713225471?text=${msg}`);
+            if(!name || !id) { alert("⚠️ يرجى كتابة الاسم ورقم الهوية"); return; }
+            
+            // التوجيه لصفحة المراجعة
+            window.location.href = `review.html?service=${service}&car=${encodeURIComponent(vehicle)}&date=${date}&time=${encodeURIComponent(time)}&name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}&lic=${encodeURIComponent(lic)}&emoji=${encodeURIComponent(emoji)}`;
         }
     </script>
 </body>

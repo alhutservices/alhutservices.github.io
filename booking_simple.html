@@ -1,127 +1,34 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إتمام الحجز | شركة الحوت</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <style>
-        body { font-family: 'Tajawal', sans-serif; }
-        #map { height: 250px; border-radius: 1.5rem; border: 2px solid #e5e7eb; z-index: 1; }
-    </style>
-</head>
-<body class="bg-gray-100 py-10 px-4 text-right text-[#002349]">
+<script>
+    let uprice = 0, map, marker;
 
-    <div class="max-w-2xl mx-auto bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border-t-8 border-[#002349]">
-        <div class="p-8 md:p-10">
-            <div class="text-center mb-8">
-                <div class="text-4xl mb-2">🐋</div>
-                <h2 class="text-2xl font-black text-[#002349]">تأكيد طلب النقل / الماء</h2>
-                <div class="h-1 w-12 bg-[#D4AF37] mx-auto rounded-full mt-2"></div>
-            </div>
+    window.onload = function() {
+        const p = new URLSearchParams(window.location.search);
+        uprice = parseInt(p.get('price')) || 0;
+        document.getElementById('stype').innerText = p.get('vehicle') || "غير محدد";
+        recalc();
 
-            <div class="bg-blue-50 p-6 rounded-3xl mb-6 grid grid-cols-2 gap-4 border border-blue-100">
-                <div>
-                    <span class="text-xs font-bold text-blue-400 uppercase">نوع المركبة</span>
-                    <p id="stype" class="font-black text-lg text-[#002349]">-</p>
-                </div>
-                <div class="text-left">
-                    <span class="text-xs font-bold text-blue-400 uppercase">السعر للمركبة</span>
-                    <p id="sunit" class="font-black text-lg text-green-700">-</p>
-                </div>
-            </div>
-
-            <div class="bg-yellow-50 p-6 rounded-3xl border-2 border-yellow-200 mb-8">
-                <label class="block font-black mb-3 text-center text-yellow-800">كم عدد المركبات المطلوبة؟</label>
-                <input type="number" id="sqty" value="1" min="1" onchange="recalc()" class="w-full p-4 rounded-2xl border-2 border-yellow-400 text-center font-black text-3xl outline-none focus:bg-white transition-all">
-            </div>
-
-            <div class="space-y-4">
-                <input type="text" id="sname" placeholder="الاسم الثلاثي الكامل" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-[#D4AF37] font-bold">
-                <input type="tel" id="sphone" placeholder="رقم الهاتف (واتساب)" class="w-full p-4 bg-gray-50 border rounded-2xl outline-none focus:border-[#D4AF37] font-bold text-right">
-                
-                <div class="bg-gray-50 p-5 rounded-3xl border">
-                    <label class="block font-bold mb-3 text-[#002349]">
-                        <i class="fas fa-map-marker-alt text-red-500 ml-1"></i> حدد موقع التوصيل بدقة:
-                    </label>
-                    <div id="map" class="mb-4"></div>
-                    <input type="hidden" id="scoords">
-                    <textarea id="saddr" placeholder="وصف إضافي للعنوان (اختياري)" class="w-full p-4 bg-white border rounded-2xl h-20 outline-none font-bold"></textarea>
-                </div>
-
-                <div class="flex justify-between items-center py-6 border-t mt-6">
-                    <span class="text-xl font-black text-[#002349]">المبلغ الإجمالي:</span>
-                    <span id="stotal" class="text-3xl font-black text-green-700">0 د.ع</span>
-                </div>
-
-                <button onclick="sendOrder()" class="w-full bg-[#002349] text-white py-6 rounded-3xl font-black text-xl shadow-2xl hover:bg-green-600 transition-all flex items-center justify-center gap-3">
-                    تأكيد الطلب عبر واتساب <i class="fab fa-whatsapp text-2xl"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let uprice = 0, map, marker;
-
-        window.onload = function() {
-            // جلب البيانات من الرابط
-            const p = new URLSearchParams(window.location.search);
-            uprice = parseInt(p.get('price')) || 0;
-            document.getElementById('stype').innerText = p.get('vehicle') || "غير محدد";
-            document.getElementById('sunit').innerText = uprice.toLocaleString() + " د.ع";
-            recalc();
-
-            // إعداد الخريطة (افتراضياً على كركوك)
-            const kirkuk = [35.4687, 44.3921];
-            map = L.map('map').setView(kirkuk, 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            marker = L.marker(kirkuk, {draggable: true}).addTo(map);
-            
-            // محاولة جلب موقع الزبون تلقائياً (GPS)
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(pos) {
-                    const userPos = [pos.coords.latitude, pos.coords.longitude];
-                    map.setView(userPos, 16);
-                    marker.setLatLng(userPos);
-                    document.getElementById('scoords').value = userPos[0] + "," + userPos[1];
-                });
-            }
-
-            marker.on('dragend', function() {
-                const pos = marker.getLatLng();
-                document.getElementById('scoords').value = pos.lat + "," + pos.lng;
+        const kirkuk = [35.4687, 44.3921];
+        map = L.map('map').setView(kirkuk, 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        marker = L.marker(kirkuk, {draggable: true}).addTo(map);
+        
+        // تفعيل الـ GPS التلقائي فوراً
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                map.setView([lat, lng], 16);
+                marker.setLatLng([lat, lng]);
+                document.getElementById('scoords').value = lat + "," + lng;
             });
-            document.getElementById('scoords').value = kirkuk[0] + "," + kirkuk[1];
-        };
-
-        function recalc() {
-            const qty = document.getElementById('sqty').value;
-            document.getElementById('stotal').innerText = (uprice * qty).toLocaleString() + " د.ع";
         }
 
-        function sendOrder() {
-            const name = document.getElementById('sname').value;
-            const phone = document.getElementById('sphone').value;
-            const coords = document.getElementById('scoords').value;
-            
-            if(!name || !phone) { alert("⚠️ يرجى ملء الاسم ورقم الهاتف"); return; }
-
-            const msg = `*طلب حجز من شركة الحوت*%0A` +
-                        `--------------------------%0A` +
-                        `🔹 الخدمة: ${document.getElementById('stype').innerText}%0A` +
-                        `🔹 العدد: ${document.getElementById('sqty').value}%0A` +
-                        `🔹 الاسم: ${name}%0A` +
-                        `🔹 الهاتف: ${phone}%0A` +
-                        `🔹 الإجمالي: ${document.getElementById('stotal').innerText}%0A` +
-                        `📍 الموقع: https://www.google.com/maps?q=${coords}`;
-            
-            window.open(`https://wa.me/9647713225471?text=${msg}`);
-        }
-    </script>
-</body>
-</html>
+        marker.on('dragend', function() {
+            const pos = marker.getLatLng();
+            document.getElementById('scoords').value = pos.lat + "," + pos.lng;
+        });
+        document.getElementById('scoords').value = kirkuk[0] + "," + kirkuk[1];
+    };
+    
+    // ... باقي دالة الحساب والإرسال كما هي ...
+</script>

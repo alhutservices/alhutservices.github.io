@@ -3,91 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق الحوت 🐋 | الخدمات اللوجستية</title>
+    <title>الحوت للخدمات 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
-        .service-card { transition: 0.3s; cursor: pointer; border: 2px solid transparent; }
-        .service-card:hover { transform: translateY(-5px); border-color: #6366f1; background-color: #f5f3ff; }
-        .select-style { border: 3px solid #6366f1; border-radius: 1.5rem; padding: 1rem; width: 100%; font-weight: 900; color: #4338ca; outline: none; appearance: none; background: white url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="%236366f1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>') no-repeat left 1rem center; }
-    </style>
+    <style>body { font-family: 'Tajawal', sans-serif; }</style>
 </head>
-<body class="p-4 md:p-8">
-
-    <div class="max-w-xl mx-auto space-y-8">
-        <div class="text-center py-8">
-            <div class="text-6xl mb-4">🐋</div>
-            <h1 class="text-4xl font-black text-indigo-900">تطبيق الحوت</h1>
-            <p class="text-gray-500 font-bold mt-2">خيارك الأول للنقل والخدمات</p>
-        </div>
-
-        <div class="bg-white p-8 rounded-[2.5rem] shadow-xl border-t-8 border-indigo-600">
-            <label class="block text-sm font-black text-gray-400 mb-4 mr-2 uppercase tracking-widest">خطوة 1: اختر محافظتك أولاً 📍</label>
-            <select id="provinceSelect" class="select-style text-xl" onchange="saveProvince()">
+<body class="bg-gray-50 p-6 text-center">
+    <div class="max-w-md mx-auto space-y-6">
+        <h1 class="text-4xl font-black text-indigo-900 mb-8">تطبيق الحوت 🐋</h1>
+        
+        <div class="bg-white p-6 rounded-3xl shadow-lg border-2 border-indigo-100">
+            <label class="block font-bold text-gray-500 mb-2">اختر محافظتك 📍</label>
+            <select id="prov" class="w-full p-4 border-2 border-indigo-600 rounded-2xl text-xl font-black text-indigo-600 outline-none">
                 <option value="كركوك">كركوك</option>
                 <option value="بغداد">بغداد</option>
                 <option value="ديالى">ديالى</option>
                 <option value="البصرة">البصرة</option>
-                <option value="أربيل">أربيل</option>
-                <option value="الموصل">الموصل</option>
             </select>
         </div>
 
-        <div class="grid grid-cols-1 gap-4">
-            <label class="block text-sm font-black text-gray-400 mb-2 mr-2 uppercase tracking-widest">خطوة 2: اختر الخدمة المطلوبة 🛠️</label>
-            
-            <div onclick="goToService('booking_cargo.html')" class="service-card bg-white p-6 rounded-[2rem] shadow-md flex items-center gap-6">
-                <div class="text-4xl bg-indigo-100 p-4 rounded-2xl">🚛</div>
-                <div>
-                    <h3 class="text-xl font-black text-gray-800">سيارات حمل (شحن)</h3>
-                    <p class="text-sm text-gray-500 font-bold">نقل أثاث، بضائع، ومعدات</p>
-                </div>
-                <i class="fas fa-chevron-left mr-auto text-gray-300"></i>
-            </div>
+        <div class="space-y-4">
+            <button onclick="go('booking_cargo.html')" class="w-full p-6 bg-white shadow-md rounded-3xl flex items-center gap-4 hover:bg-indigo-50 transition-all border-b-4 border-indigo-200">
+                <span class="text-4xl">🚛</span>
+                <span class="text-xl font-black text-gray-700">طلب سيارة حمل</span>
+            </button>
 
-            <div onclick="goToService('booking_water.html')" class="service-card bg-white p-6 rounded-[2rem] shadow-md flex items-center gap-6">
-                <div class="text-4xl bg-blue-100 p-4 rounded-2xl">💧</div>
-                <div>
-                    <h3 class="text-xl font-black text-gray-800">تنكر ماء (صهريج)</h3>
-                    <p class="text-sm text-gray-500 font-bold">توصيل مياه صالحة للشرب</p>
-                </div>
-                <i class="fas fa-chevron-left mr-auto text-gray-300"></i>
-            </div>
-
-            <div onclick="goToService('booking_training.html')" class="service-card bg-white p-6 rounded-[2rem] shadow-md flex items-center gap-6">
-                <div class="text-4xl bg-green-100 p-4 rounded-2xl">🎓</div>
-                <div>
-                    <h3 class="text-xl font-black text-gray-800">كورس تعليم السياقة</h3>
-                    <p class="text-sm text-gray-500 font-bold">مدربون محترفون لتعليم القيادة</p>
-                </div>
-                <i class="fas fa-chevron-left mr-auto text-gray-300"></i>
-            </div>
-        </div>
-
-        <div class="text-center text-gray-400 text-xs font-bold pt-8">
-            جميع الحقوق محفوظة لشركة الحوت 2026 ©
+            <button onclick="go('booking_water.html')" class="w-full p-6 bg-white shadow-md rounded-3xl flex items-center gap-4 hover:bg-blue-50 transition-all border-b-4 border-blue-200">
+                <span class="text-4xl">💧</span>
+                <span class="text-xl font-black text-gray-700">طلب تنكر ماء</span>
+            </button>
         </div>
     </div>
 
     <script>
-        // دالة لحفظ المحافظة فور اختيارها
-        function saveProvince() {
-            const province = document.getElementById('provinceSelect').value;
-            localStorage.setItem('selectedProvince', province);
-            console.log("تم حفظ المحافظة:", province);
+        function go(page) {
+            const p = document.getElementById('prov').value;
+            window.location.href = page + "?province=" + encodeURIComponent(p);
         }
-
-        // دالة الانتقال للخدمة مع إرسال المحافظة في الرابط كاحتياط إضافي
-        function goToService(page) {
-            const province = document.getElementById('provinceSelect').value;
-            localStorage.setItem('selectedProvince', province); // حفظ للتأكيد
-            window.location.href = `${page}?province=${encodeURIComponent(province)}`;
-        }
-
-        // تشغيل الحفظ التلقائي عند تحميل الصفحة لأول مرة
-        window.onload = saveProvince;
     </script>
 </body>
 </html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بيانات المستأجر | الحوت</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
+        .hero-bg { background: linear-gradient(135deg, #002349 0%, #003366 100%); }
+        .input-field { width: 100%; padding: 0.85rem; background: #f1f5f9; border-radius: 1rem; border: 2px solid transparent; font-weight: bold; outline: none; transition: 0.3s; font-size: 0.9rem; }
+        .input-field:focus { border-color: #D4AF37; background: white; }
+        #map { height: 180px; border-radius: 1.5rem; border: 3px solid white; z-index: 1; }
+    </style>
+</head>
+<body class="text-[#002349]">
+
+    <header class="hero-bg text-white pt-10 pb-28 text-center">
+        <h1 class="text-2xl font-black text-[#D4AF37]">توثيق بيانات الحجز</h1>
+        <p class="text-xs opacity-80 mt-1 px-4">يرجى إدخال البيانات الرسمية لإتمام عقد التأجير</p>
+    </header>
+
+    <main class="container mx-auto px-4 -mt-16 relative z-10 pb-20">
+        <div class="bg-white shadow-2xl rounded-[3rem] p-6 md:p-10 max-w-2xl mx-auto border border-gray-50">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-[10px] font-black text-gray-400 mb-1 mr-2 uppercase">الاسم الثلاثي الكامل</label>
+                    <input type="text" id="custName" placeholder="كما في الهوية الرسمية" class="input-field">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 mb-1 mr-2 uppercase">رقم الهاتف</label>
+                    <input type="tel" id="custPhone" placeholder="077XXXXXXXX" class="input-field text-left" dir="ltr">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 mb-1 mr-2 uppercase">رقم الهوية الوطنية / الجواز</label>
+                    <input type="text" id="idNumber" placeholder="رقم المستمسك الرسمي" class="input-field">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="block text-[10px] font-black text-gray-400 mb-1 mr-2 uppercase">رقم إجازة السوق</label>
+                    <input type="text" id="drivingLicense" placeholder="رقم إجازة القيادة النافذة" class="input-field">
+                </div>
+
+                <div class="md:col-span-2 bg-blue-50 p-4 rounded-[2rem] mt-2">
+                    <label class="block text-xs font-black text-blue-700 mb-2 mr-2 flex items-center gap-2">
+                        <i class="fas fa-map-marker-alt"></i> موقع استلام السيارة
+                    </label>
+                    <div id="map"></div>
+                    <button onclick="getLocation()" class="w-full mt-3 py-2 bg-blue-600 text-white rounded-xl font-bold text-[10px] shadow-md uppercase tracking-widest">تحديث موقعي الحالي 🛰️</button>
+                </div>
+
+                <div class="md:col-span-2 pt-4">
+                    <button onclick="confirmBooking()" class="w-full bg-[#002349] text-white py-4 rounded-2xl font-black text-xl shadow-xl hover:bg-black transition-all flex items-center justify-center gap-3">
+                        مراجعة الطلب النهائي <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let map, marker;
+        const u = new URLSearchParams(window.location.search);
+
+        window.onload = function() {
+            map = L.map('map').setView([35.4687, 44.3921], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            marker = L.marker([35.4687, 44.3921], {draggable: true}).addTo(map);
+        };
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    const c = [pos.coords.latitude, pos.coords.longitude];
+                    map.setView(c, 16); marker.setLatLng(c);
+                });
+            }
+        }
+
+        function confirmBooking() {
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const idNo = document.getElementById('idNumber').value;
+            const license = document.getElementById('drivingLicense').value;
+            const pos = marker.getLatLng();
+
+            if(!name || !phone || !idNo || !license) {
+                alert("لطفاً، جميع البيانات الرسمية مطلوبة لضمان الحجز 🐋");
+                return;
+            }
+
+            // إضافة البيانات الجديدة للرابط
+            u.set('name', name);
+            u.set('phone', phone);
+            u.set('id_no', idNo);
+            u.set('license', license);
+            u.set('lat', pos.lat);
+            u.set('lng', pos.lng);
+            u.set('emoji', '🚗');
+
+            window.location.href = `review.html?${u.toString()}`;
+        }
+    </script>
+</body>
+</html>
+

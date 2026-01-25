@@ -3,100 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مراجعة الطلب | الحوت</title>
+    <title>المراجعة | الحوت</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
-<body class="p-4 bg-slate-50 text-right">
+<body class="p-4 bg-gray-100 text-right font-['Tajawal']">
     <div class="max-w-xl mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden border-t-[10px] border-[#002349]">
-        <div class="bg-slate-900 p-8 text-center">
-            <div id="rEmoji" class="text-6xl mb-2">🐋</div>
-            <h2 class="text-2xl font-black text-[#D4AF37]">تأكيد تفاصيل الحجز</h2>
+        <div class="bg-[#002349] p-8 text-center text-white">
+            <div id="dispEmoji" class="text-6xl mb-2">🐋</div>
+            <h2 class="text-2xl font-black">تأكيد الحجز</h2>
         </div>
 
         <div class="p-8 space-y-6">
-            <div class="bg-gray-50 p-6 rounded-[2rem] border border-gray-100 space-y-4">
-                <div class="flex justify-between border-b pb-2"><span class="text-gray-400">الاسم:</span> <span id="rName" class="font-bold text-slate-800"></span></div>
-                <div class="flex justify-between border-b pb-2"><span class="text-gray-400">الخدمة:</span> <span id="rCar" class="font-bold text-blue-700"></span></div>
+            <div class="bg-gray-50 p-6 rounded-[2rem] space-y-4 shadow-inner border border-gray-100">
+                <div class="flex justify-between border-b pb-2"><span class="text-gray-400">الاسم:</span> <span id="dispName" class="font-bold"></span></div>
+                <div class="flex justify-between border-b pb-2"><span class="text-gray-400">الخدمة:</span> <span id="dispCar" class="font-bold"></span></div>
                 
-                <div id="genderRow" class="hidden flex justify-between border-b pb-2"><span class="text-gray-400">الجنس:</span> <span id="rGender" class="font-bold text-purple-700"></span></div>
-
-                <div id="cargoInfo" class="hidden space-y-3 pt-2">
-                    <div class="flex justify-between text-green-700"><span class="font-bold text-xs">المسافة:</span> <span id="rDist" class="font-black"></span></div>
-                    <div class="flex justify-between bg-yellow-100 p-4 rounded-2xl border-2 border-yellow-300">
-                        <span class="font-black text-yellow-800">السعر الإجمالي:</span>
-                        <span id="rPrice" class="font-black text-yellow-900 text-xl"></span>
-                    </div>
+                <div id="dispCargo" class="hidden space-y-3 bg-yellow-50 p-4 rounded-2xl border border-yellow-200">
+                    <div class="flex justify-between"><span class="text-gray-500 font-bold text-xs">المسافة:</span> <span id="dispDist" class="font-black text-yellow-700"></span></div>
+                    <div class="flex justify-between"><span class="text-gray-800 font-black">السعر النهائي:</span> <span id="dispPrice" class="font-black text-xl text-yellow-900"></span></div>
                 </div>
 
-                <div class="flex justify-between"><span class="text-gray-400">الموعد:</span> <span id="rDateTime" class="font-bold"></span></div>
+                <div id="dispGenderRow" class="hidden flex justify-between border-b pb-2"><span class="text-gray-400">الجنس:</span> <span id="dispGender" class="font-bold"></span></div>
             </div>
 
-            <button onclick="sendToWhatsApp()" class="w-full bg-[#002349] text-white py-5 rounded-2xl font-black text-xl shadow-xl flex items-center justify-center gap-3 active:scale-95 transition-all">
-                إرسال الطلب للواتساب <i class="fab fa-whatsapp"></i>
-            </button>
-            
-            <button onclick="history.back()" class="w-full text-gray-400 font-bold text-sm">تعديل البيانات</button>
+            <button onclick="finalWhatsApp()" class="w-full bg-[#002349] text-white py-5 rounded-2xl font-black text-xl flex items-center justify-center gap-3">إرسال للواتساب <i class="fab fa-whatsapp"></i></button>
+            <button onclick="history.back()" class="w-full text-gray-400 font-bold text-sm">رجوع لتعديل البيانات</button>
         </div>
     </div>
 
     <script>
-        // قراءة الروابط (URL)
-        const params = new URLSearchParams(window.location.search);
+        const u = new URLSearchParams(window.location.search);
         
-        // عرض البيانات الأساسية
-        document.getElementById('rEmoji').innerText = params.get('emoji') || '🐋';
-        document.getElementById('rName').innerText = params.get('name') || 'غير معروف';
-        document.getElementById('rCar').innerText = params.get('car') || 'خدمة الحوت';
-        document.getElementById('rDateTime').innerText = (params.get('date') || '') + " | " + (params.get('time') || '');
+        document.getElementById('dispEmoji').innerText = u.get('emoji') || '🐋';
+        document.getElementById('dispName').innerText = u.get('name');
+        document.getElementById('dispCar').innerText = u.get('car');
 
-        // فحص كورس التعليم (الجنس)
-        if(params.get('gender')) {
-            document.getElementById('genderRow').classList.remove('hidden');
-            document.getElementById('rGender').innerText = params.get('gender');
+        if(u.get('price')) {
+            document.getElementById('dispCargo').classList.remove('hidden');
+            document.getElementById('dispDist').innerText = u.get('dist') + " كم";
+            document.getElementById('dispPrice').innerText = parseInt(u.get('price')).toLocaleString() + " د.ع";
+        }
+        
+        if(u.get('gender')) {
+            document.getElementById('dispGenderRow').classList.remove('hidden');
+            document.getElementById('dispGender').innerText = u.get('gender');
         }
 
-        // فحص سيارات الحمل (السعر والمسافة)
-        if(params.get('price')) {
-            document.getElementById('cargoInfo').classList.remove('hidden');
-            document.getElementById('rDist').innerText = params.get('dist') + " كم";
-            document.getElementById('rPrice').innerText = parseInt(params.get('price')).toLocaleString() + " د.ع";
-        }
-
-        function sendToWhatsApp() {
-            const name = params.get('name');
-            const car = params.get('car');
-            const date = params.get('date');
-            const time = params.get('time');
-            const emoji = params.get('emoji') || '🐋';
-            
-            let locationPart = "";
-            // إذا كانت سيارة حمل (نقطتين)
-            if(params.get('slat')) {
-                locationPart = `📍 مكان الانطلاق: https://www.google.com/maps?q=${params.get('slat')},${params.get('slng')}
-🏁 مكان التوصيل: https://www.google.com/maps?q=${params.get('elat')},${params.get('elng')}`;
+        function finalWhatsApp() {
+            let loc = "";
+            if(u.get('slat')) {
+                loc = `📍 البداية: https://www.google.com/maps?q=${u.get('slat')},${u.get('slng')}\n🏁 النهاية: https://www.google.com/maps?q=${u.get('elat')},${u.get('elng')}`;
             } else {
-                locationPart = `📍 الموقع: https://www.google.com/maps?q=${params.get('lat')},${params.get('lng')}`;
+                loc = `📍 الموقع: https://www.google.com/maps?q=${u.get('lat')},${u.get('lng')}`;
             }
 
-            let pricePart = params.get('price') ? `📏 المسافة: ${params.get('dist')} كم\n💰 السعر: ${parseInt(params.get('price')).toLocaleString()} د.ع` : "";
-            let genderPart = params.get('gender') ? `👫 الجنس: ${params.get('gender')}` : "";
+            const msg = `*طلب حجز شركة الحوت ${u.get('emoji') || '🐋'}*
+--------------------------
+👤 الاسم: ${u.get('name')}
+🚗 الخدمة: ${u.get('car')}
+${u.get('gender') ? '👫 الجنس: ' + u.get('gender') : ''}
+${u.get('dist') ? '📏 المسافة: ' + u.get('dist') + ' كم' : ''}
+${u.get('price') ? '💰 السعر: ' + parseInt(u.get('price')).toLocaleString() + ' د.ع' : ''}
+--------------------------
+${loc}`;
 
-            const finalMsg = `*طلب جديد من شركة الحوت ${emoji}*
---------------------------
-👤 الاسم: ${name}
-🚗 الخدمة: ${car}
-${genderPart}
-📅 الموعد: ${date} | ${time}
---------------------------
-${pricePart}
---------------------------
-${locationPart}
---------------------------
-✅ تم التأكيد من قبل العميل.`;
-
-            window.open(`https://wa.me/9647713225471?text=${encodeURIComponent(finalMsg)}`);
+            window.open(`https://wa.me/9647713225471?text=${encodeURIComponent(msg)}`);
         }
     </script>
 </body>

@@ -7,82 +7,74 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f0f4f8; }
         .glass-card { background: rgba(255, 255, 255, 0.98); }
+        #map { height: 180px; border-radius: 2rem; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1); z-index: 1; }
+        .input-field { border: 2px solid #e2e8f0; border-radius: 1.25rem; padding: 1rem; width: 100%; font-weight: bold; outline: none; transition: 0.3s; }
+        .input-field:focus { border-color: #002349; background: white; }
     </style>
 </head>
 <body class="p-4 md:p-8 text-right">
     <div class="max-w-xl mx-auto glass-card rounded-[3.5rem] shadow-2xl overflow-hidden border-t-[12px] border-[#002349]">
         <div id="headerBg" class="p-8 text-center border-b">
-            <div id="mainEmoji" class="text-5xl mb-3"></div>
-            <h2 id="serviceTitle" class="text-3xl font-black text-[#002349]"></h2>
+            <div id="mainEmoji" class="text-5xl mb-3">🐋</div>
+            <h2 id="serviceTitle" class="text-3xl font-black text-[#002349]">تأكيد الطلب</h2>
             <div id="summary" class="mt-4 p-3 bg-white rounded-2xl text-sm font-bold shadow-sm inline-block"></div>
         </div>
 
         <div class="p-8 space-y-5">
             <div>
                 <label class="block text-xs font-black text-gray-400 mb-2 mr-2">الاسم الكامل</label>
-                <input type="text" id="uName" placeholder="اكتب اسمك هنا" class="w-full p-4 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#002349] font-bold text-[#002349]">
+                <input type="text" id="uName" placeholder="اكتب اسمك هنا" class="input-field">
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <input type="text" id="uID" placeholder="رقم الهوية" class="w-full p-4 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#002349] font-bold">
-                <input type="text" id="uLic" placeholder="رقم الإجازة (إن وجد)" class="w-full p-4 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#002349] font-bold">
+                <input type="text" id="uID" placeholder="رقم الهوية" class="input-field">
+                <input type="text" id="uLic" placeholder="رقم الإجازة (إن وجد)" class="input-field">
             </div>
 
-            <div class="bg-blue-50 p-4 rounded-2xl border-r-8 border-blue-500">
-                <p class="text-blue-800 text-xs font-bold leading-relaxed">
-                    ✅ يرجى التأكد من الموعد والمكان المسجل في الطلب.
-                </p>
+            <div class="bg-gray-50 p-6 rounded-[2.5rem] border-2 border-white shadow-inner">
+                <label class="block font-black mb-3 text-sm text-gray-700 mr-2 flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt"></i> تحديد موقع التوصيل/العمل:
+                </label>
+                <div id="map" class="mb-4"></div>
+                <button type="button" onclick="getGPS()" class="w-full py-4 bg-[#002349] text-white rounded-2xl font-black text-sm shadow-lg">تحديد موقعي الحالي 🛰️</button>
             </div>
 
-            <button onclick="goToReviewSimple()" class="w-full bg-[#002349] text-white py-5 rounded-2xl font-black text-xl shadow-2xl hover:bg-black transition-all">
-                مراجعة الطلب الآن
-            </button>
+            <button onclick="goToReviewSimple()" class="w-full bg-[#002349] text-white py-5 rounded-2xl font-black text-xl shadow-2xl transition-all">مراجعة الطلب الآن</button>
         </div>
     </div>
 
     <script>
+        let map, marker;
         const p = new URLSearchParams(window.location.search);
-        const service = p.get('service');
-        const vehicle = p.get('vehicle') || p.get('car');
-        const date = p.get('date');
-        const time = p.get('time');
+        const service = p.get('service'); const vehicle = p.get('vehicle') || p.get('car');
+        const date = p.get('date'); const time = p.get('time');
 
-        // تخصيص الإيموجيات بناءً على الخدمة
-        let emoji = "🐋";
-        let title = "تأكيد الطلب";
-        let bgColor = "bg-blue-50";
-
-        if(service === 'cargo') {
-            emoji = "📦";
-            title = "طلب سيارة حمل";
-            bgColor = "bg-yellow-50";
-        } else if(service === 'water') {
-            emoji = "💧";
-            title = "طلب تنكر ماء";
-            bgColor = "bg-cyan-50";
-        } else if(service === 'training') {
-            emoji = "🎓";
-            title = "كورس تعليم قيادة";
-            bgColor = "bg-indigo-50";
-        }
+        let emoji = "🐋", title = "تأكيد الطلب", bgColor = "bg-blue-50";
+        if(service === 'cargo') { emoji = "📦"; title = "طلب سيارة حمل"; bgColor = "bg-yellow-50"; }
+        else if(service === 'water') { emoji = "💧"; title = "طلب تنكر ماء"; bgColor = "bg-cyan-50"; }
 
         document.getElementById('mainEmoji').innerText = emoji;
         document.getElementById('serviceTitle').innerText = title;
         document.getElementById('headerBg').className = `${bgColor} p-8 text-center border-b`;
         document.getElementById('summary').innerHTML = `${vehicle} <span class="mx-2">|</span> 📅 ${date} <span class="mx-2">|</span> ⏰ ${time}`;
 
+        window.onload = function() {
+            map = L.map('map').setView([35.4687, 44.3921], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            marker = L.marker([35.4687, 44.3921], {draggable: true}).addTo(map);
+        };
+        function getGPS() { navigator.geolocation.getCurrentPosition(pos => { const coords = [pos.coords.latitude, pos.coords.longitude]; map.setView(coords, 17); marker.setLatLng(coords); }); }
+
         function goToReviewSimple() {
-            const name = document.getElementById('uName').value;
-            const id = document.getElementById('uID').value;
-            const lic = document.getElementById('uLic').value || "غير متوفر";
-            
-            if(!name || !id) { alert("⚠️ يرجى كتابة الاسم ورقم الهوية"); return; }
-            
-            // التوجيه لصفحة المراجعة
-            window.location.href = `review.html?service=${service}&car=${encodeURIComponent(vehicle)}&date=${date}&time=${encodeURIComponent(time)}&name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}&lic=${encodeURIComponent(lic)}&emoji=${encodeURIComponent(emoji)}`;
+            const name = document.getElementById('uName').value; const id = document.getElementById('uID').value;
+            const lic = document.getElementById('uLic').value || "غير متوفر"; const latlng = marker.getLatLng();
+            if(!name || !id) { alert("⚠️ أكمل البيانات"); return; }
+            window.location.href = `review.html?service=${service}&car=${encodeURIComponent(vehicle)}&date=${date}&time=${encodeURIComponent(time)}&name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}&lic=${encodeURIComponent(lic)}&lat=${latlng.lat}&lng=${latlng.lng}&emoji=${encodeURIComponent(emoji)}`;
         }
     </script>
 </body>

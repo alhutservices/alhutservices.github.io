@@ -3,44 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الحوت الذكية 🐋</title>
+    <title>منصة الحوت الذكية | الرئيسية 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #002349; color: white; }
-        .glass-container { background: white; border-radius: 4rem 4rem 0 0; color: #002349; min-height: 70vh; }
-        .input-box { background: #f1f5f9; border-radius: 1.5rem; border: 2px solid transparent; transition: 0.3s; }
-        .input-box:focus-within { border-color: #D4AF37; background: white; }
-        .btn-gold { background: #D4AF37; color: #002349; transition: 0.3s; }
-        .btn-gold:active { transform: scale(0.95); }
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background: #002349; 
+            background-image: radial-gradient(rgba(212, 175, 55, 0.2) 0.5px, transparent 0.5px);
+            background-size: 30px 30px;
+        }
+        .main-card { 
+            background: white; 
+            border-radius: 4rem; 
+            position: relative;
+            margin-top: 50px;
+        }
+        /* تصميم الحوت العائم الإبداعي */
+        .floating-whale {
+            width: 100px; height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem;
+            position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 8px solid #002349;
+            z-index: 20;
+            animation: floatWhale 3s ease-in-out infinite;
+        }
+        @keyframes floatWhale {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, -15px); }
+        }
+        .input-group { background: #f8fafc; border-radius: 1.5rem; padding: 1rem; border: 2px solid transparent; transition: 0.3s; }
+        .input-group:focus-within { border-color: #D4AF37; background: white; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .label-style { font-size: 0.7rem; color: #94a3b8; font-weight: 900; margin-right: 0.5rem; display: block; margin-bottom: 4px; }
+        .btn-whale { background: #D4AF37; color: #002349; box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3); }
     </style>
 </head>
-<body>
+<body class="p-4 pt-20">
 
-    <div class="pt-10 pb-10 text-center">
-        <div class="flex justify-center mb-4">
-            <img src="https://em-content.zobj.net/source/apple/354/whale_1f40b.png" alt="Whale" class="w-24">
+    <div class="max-w-xl mx-auto main-card shadow-2xl pb-10">
+        
+        <div class="floating-whale">🐋</div>
+
+        <div class="p-8 pt-16 text-center">
+            <h1 class="text-4xl font-black text-[#002349] tracking-tighter">الحوت</h1>
+            <p class="text-sm font-bold text-slate-400 mt-1 uppercase tracking-widest">أهلاً بك في منصة الحوت الذكية ☀️</p>
         </div>
-        <h1 class="text-5xl font-black text-[#D4AF37] mb-2">الحوت</h1>
-        <p class="text-lg opacity-90 italic">صباح الخير.. أهلاً بك في منصة الحوت الذكية ☀️</p>
-    </div>
 
-    <main class="glass-container p-8 shadow-2xl">
-        <div class="max-w-md mx-auto space-y-6">
+        <div class="px-6 space-y-4">
             
-            <div class="space-y-2">
-                <label class="block text-xs font-black text-gray-400 mr-2 uppercase tracking-widest">المدينة</label>
-                <div class="input-box p-4 flex items-center gap-3">
-                    <i class="fas fa-map-marker-alt text-[#D4AF37]"></i>
-                    <input type="text" id="cityInput" value="كركوك" class="bg-transparent w-full font-black outline-none text-lg">
+            <div>
+                <span class="label-style">المدينة</span>
+                <div class="input-group flex items-center gap-3">
+                    <i class="fas fa-city text-[#D4AF37]"></i>
+                    <input type="text" id="cityInput" value="كركوك" class="bg-transparent w-full font-black outline-none text-[#002349]">
                 </div>
             </div>
 
-            <div class="space-y-2">
-                <label class="block text-xs font-black text-gray-400 mr-2 uppercase tracking-widest">الخدمة المطلوبة</label>
-                <div class="input-box relative">
-                    <select id="serviceSelect" class="w-full bg-transparent p-4 pr-10 font-black outline-none appearance-none text-lg cursor-pointer">
+            <div>
+                <span class="label-style">الخدمة المطلوبة</span>
+                <div class="input-group flex items-center gap-3">
+                    <i class="fas fa-th-large text-[#D4AF37]"></i>
+                    <select id="serviceSelect" class="bg-transparent w-full font-black outline-none text-[#002349] appearance-none cursor-pointer">
                         <option value="" disabled selected>-- اختر الخدمة --</option>
                         <option value="taxi">🚗 سيارات شخصية (تكسي)</option>
                         <option value="wedding">🎉 سيارات حفلات ومناسبات</option>
@@ -48,33 +76,34 @@
                         <option value="water">💧 توصيل صهريج ماء</option>
                         <option value="training">🎓 كورس تعليم قيادة</option>
                     </select>
-                    <i class="fas fa-chevron-down absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                 </div>
             </div>
 
-            <div class="space-y-2">
-                <label class="block text-xs font-black text-gray-400 mr-2 uppercase tracking-widest">التاريخ</label>
-                <div class="input-box p-4 flex items-center gap-3">
-                    <i class="fas fa-calendar-alt text-[#D4AF37]"></i>
-                    <input type="date" id="dateInput" value="2026-01-26" class="bg-transparent w-full font-black outline-none">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <span class="label-style">التاريخ</span>
+                    <div class="input-group flex items-center gap-2">
+                        <i class="fas fa-calendar-day text-[#D4AF37] text-xs"></i>
+                        <input type="date" id="dateInput" value="2026-01-26" class="bg-transparent w-full font-black text-xs outline-none text-[#002349]">
+                    </div>
+                </div>
+                <div>
+                    <span class="label-style">الوقت</span>
+                    <div class="input-group flex items-center gap-2">
+                        <i class="fas fa-clock text-[#D4AF37] text-xs"></i>
+                        <input type="time" id="timeInput" class="bg-transparent w-full font-black text-xs outline-none text-[#002349]">
+                    </div>
                 </div>
             </div>
 
-            <div class="space-y-2">
-                <label class="block text-xs font-black text-gray-400 mr-2 uppercase tracking-widest">الوقت</label>
-                <div class="input-box p-4 flex items-center gap-3 relative">
-                    <i class="fas fa-clock text-[#D4AF37]"></i>
-                    <input type="time" id="timeInput" class="bg-transparent w-full font-black outline-none appearance-none">
-                    <i class="fas fa-chevron-down absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                </div>
+            <div class="pt-4">
+                <button onclick="navigate()" class="btn-whale w-full py-5 rounded-[2.5rem] font-black text-xl flex items-center justify-center gap-3 active:scale-95 transition-all">
+                    استمر الآن <i class="fas fa-arrow-left"></i>
+                </button>
             </div>
-
-            <button onclick="navigate()" class="btn-gold w-full py-5 rounded-3xl font-black text-xl shadow-xl flex items-center justify-center gap-3 mt-4">
-                استمر الآن <i class="fas fa-arrow-left"></i>
-            </button>
 
         </div>
-    </main>
+    </div>
 
     <script>
         function navigate() {
@@ -84,11 +113,10 @@
             const time = document.getElementById('timeInput').value;
 
             if (!service || !city || !date || !time) {
-                alert("⚠️ يرجى ملء جميع البيانات لإكمال الطلب 🐋");
+                alert("يرجى ملء جميع البيانات 🐋");
                 return;
             }
 
-            // خريطة التوجيه حسب الخدمة
             const pages = {
                 'taxi': 'booking_taxi.html',
                 'wedding': 'booking_wedding.html',
@@ -97,8 +125,7 @@
                 'training': 'booking_training.html'
             };
 
-            const targetPage = pages[service];
-            window.location.href = `${targetPage}?province=${encodeURIComponent(city)}&date=${date}&time=${encodeURIComponent(time)}`;
+            window.location.href = `${pages[service]}?province=${encodeURIComponent(city)}&date=${date}&time=${encodeURIComponent(time)}`;
         }
     </script>
 </body>

@@ -7,55 +7,56 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; color: #002349; }
-        .hero-review { background: linear-gradient(135deg, #002349 0%, #003366 100%); padding: 1.5rem 0 5.5rem 0; }
-        .data-card { background: white; border-radius: 2.5rem; border: 1px solid #e2e8f0; position: relative; margin-top: -10px; }
-        .floating-icon { width: 70px; height: 70px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; position: absolute; top: -35px; right: 50%; transform: translateX(50%); shadow: 0 10px 25px rgba(0,0,0,0.1); border: 4px solid #f8fafc; z-index: 10; }
-        .info-row { display: flex; justify-content: space-between; padding: 0.55rem 1rem; border-bottom: 1px dashed #f1f5f9; align-items: center; }
-        .label { font-weight: 800; color: #64748b; font-size: 0.75rem; flex-shrink: 0; }
-        .value { font-weight: 900; color: #002349; font-size: 0.85rem; text-align: left; }
-        .btn-confirm { background: #D4AF37; color: #002349; box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4); }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f5f3ff; }
+        /* القالب الذي طلبته: زوايا كبيرة 3.5rem */
+        .glass-card { background: white; border-radius: 3.5rem; position: relative; }
+        /* الأيقونة العائمة بنفس أسلوب index */
+        .floating-icon { 
+            width: 80px; height: 80px; background: white; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 2.5rem; position: absolute; top: -40px; right: 50%; 
+            transform: translateX(50%); box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            border: 6px solid #f5f3ff; z-index: 10; 
+        }
+        .info-row { display: flex; justify-content: space-between; padding: 0.75rem 1.5rem; border-bottom: 1px dashed #ddd6fe; align-items: center; }
+        .label { font-weight: 800; color: #6b7280; font-size: 0.8rem; }
+        .value { font-weight: 900; color: #4338ca; font-size: 0.9rem; text-align: left; }
+        .btn-wa { background: #4338ca; box-shadow: 0 10px 20px rgba(67, 56, 202, 0.2); }
     </style>
 </head>
-<body class="bg-slate-50">
+<body class="p-4 pt-16">
 
-    <div class="hero-review text-center text-white">
-        <i class="fas fa-clipboard-check text-2xl text-[#D4AF37] mb-1"></i>
-        <h1 class="text-2xl font-black text-[#D4AF37]">مراجعة الطلب</h1>
-        <p class="text-[10px] opacity-70 font-bold uppercase tracking-widest">تأكيد البيانات النهائية</p>
-    </div>
+    <div class="max-w-xl mx-auto glass-card shadow-2xl overflow-hidden border-t-[12px] border-[#4338ca]">
+        
+        <div id="floatingEmoji" class="floating-icon">🐋</div>
 
-    <main class="container mx-auto px-5 -mt-10">
-        <div class="max-w-md mx-auto relative">
-            
-            <div id="floatingEmoji" class="floating-icon shadow-xl">🐋</div>
+        <div class="bg-indigo-50 p-8 pt-12 text-center border-b border-indigo-100">
+            <h2 id="serviceName" class="text-2xl font-black text-[#4338ca]">جاري التحميل...</h2>
+            <p id="displayCity" class="text-xs font-bold text-indigo-400 mt-2 tracking-widest uppercase">المدينة: جاري التحديد...</p>
+        </div>
 
-            <div class="data-card shadow-2xl p-6 pt-10 border-b-8 border-[#002349]">
-                <div class="text-center mb-4 pb-2 border-b border-gray-50">
-                    <h2 id="serviceName" class="text-lg font-black text-[#002349]">جاري التحميل...</h2>
-                    <p id="displayCity" class="text-[12px] text-blue-600 font-black mt-1"></p>
+        <div class="p-6 space-y-2">
+            <div id="dataContainer" class="bg-slate-50 rounded-[2rem] py-4 border-2 border-white shadow-inner">
                 </div>
 
-                <div id="dataContainer" class="space-y-0.5">
-                    </div>
-            </div>
-
-            <div class="mt-5 px-2">
-                <button onclick="sendToWhatsApp()" class="btn-confirm w-full py-4 rounded-[2rem] font-black text-lg flex items-center justify-center gap-2 active:scale-95 transition-all">
-                    تأكيد الطلب واتساب <i class="fab fa-whatsapp text-2xl"></i>
+            <div class="pt-4 space-y-3">
+                <button onclick="sendToWhatsApp()" class="btn-wa w-full text-white py-5 rounded-[2rem] font-black text-xl flex items-center justify-center gap-3 active:scale-95 transition-all">
+                    تأكيد وإرسال <i class="fab fa-whatsapp text-2xl"></i>
                 </button>
-                <button onclick="window.history.back()" class="w-full py-3 text-[11px] text-gray-400 font-bold tracking-tight">
-                   <i class="fas fa-edit"></i> تعديل المعلومات السابقة
+                
+                <button onclick="window.history.back()" class="w-full text-gray-400 font-bold text-xs uppercase tracking-tighter">
+                    <i class="fas fa-edit ml-1"></i> تعديل المعلومات
                 </button>
             </div>
         </div>
-    </main>
+    </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
         const service = params.get('service');
-        const city = params.get('province') || params.get('city') || 'كركوك';
+        const city = params.get('province') || 'كركوك';
         const myWhatsApp = "+9647713225471";
 
         const serviceInfo = {
@@ -67,10 +68,10 @@
         const current = serviceInfo[service] || { name: 'طلب خدمة', emoji: '🐋' };
         document.getElementById('floatingEmoji').innerText = current.emoji;
         document.getElementById('serviceName').innerText = current.name;
-        document.getElementById('displayCity').innerText = `📍 المدينة: ${city}`;
+        document.getElementById('displayCity').innerText = `المدينة: ${city} 🐋`;
 
         const container = document.getElementById('dataContainer');
-        function addRow(label, val) {
+        function add(label, val) {
             if (!val || val === 'undefined') return;
             container.innerHTML += `
                 <div class="info-row">
@@ -79,29 +80,29 @@
                 </div>`;
         }
 
-        // توزيع البيانات
-        addRow("الاسم", params.get('name'));
-        addRow("الهاتف", params.get('phone'));
+        // توزيع البيانات حسب نوع الخدمة
+        add("الاسم", params.get('name'));
+        add("الهاتف", params.get('phone'));
 
         if(service === 'cargo') {
-            addRow("نوع الحمولة", params.get('notes'));
-            addRow("من", params.get('start_desc'));
-            addRow("إلى", params.get('end_desc'));
-            addRow("المسافة", params.get('dist') + " كم");
-            addRow("السعر", params.get('final_price') + " د.ع");
+            add("الحمولة", params.get('notes'));
+            add("من", params.get('start_desc'));
+            add("إلى", params.get('end_desc'));
+            add("المسافة", params.get('dist') + " كم");
+            add("السعر", params.get('final_price') + " د.ع");
         } else if(service === 'water') {
-            addRow("وصف العنوان", params.get('location_desc'));
+            add("وصف العنوان", params.get('location_desc'));
         } else if(service === 'training') {
-            addRow("الهوية", params.get('id'));
-            addRow("العمر", params.get('age'));
-            addRow("الجنس", params.get('gender'));
-            addRow("الموعد", params.get('date') + " | " + params.get('time'));
+            add("الهوية", params.get('id'));
+            add("العمر", params.get('age'));
+            add("الجنس", params.get('gender'));
+            add("الموعد", params.get('date') + " | " + params.get('time'));
         }
 
         function sendToWhatsApp() {
             let msg = `*طلب جديد: ${current.name} 🐋*\n`;
             msg += `--------------------------\n`;
-            msg += `📍 *المدينة:* ${city}\n`;
+            msg += `🏙️ *المدينة:* ${city}\n`;
             msg += `👤 *الاسم:* ${decodeURIComponent(params.get('name'))}\n`;
             msg += `📞 *الهاتف:* ${params.get('phone')}\n`;
 
@@ -110,21 +111,16 @@
                 msg += `🏁 *إلى:* ${decodeURIComponent(params.get('end_desc'))}\n`;
                 msg += `📏 *المسافة:* ${params.get('dist')} كم\n`;
                 msg += `💰 *السعر:* ${params.get('final_price')} د.ع\n`;
-                msg += `🗺️ *الموقع:* http://maps.google.com/maps?q=${params.get('slat')},${params.get('slng')}\n`;
+                msg += `🗺️ *الموقع:* https://www.google.com/maps?q=${params.get('slat')},${params.get('slng')}\n`;
             } else {
-                const lat = params.get('lat');
-                const lng = params.get('lng');
-                msg += `🗺️ *الموقع:* http://maps.google.com/maps?q=${lat},${lng}\n`;
+                msg += `📝 *العنوان:* ${decodeURIComponent(params.get('location_desc') || 'محدد بالخريطة')}\n`;
+                msg += `🗺️ *الموقع:* https://www.google.com/maps?q=${params.get('lat')},${params.get('lng')}\n`;
             }
 
             msg += `--------------------------\n`;
             msg += `_عبر منصة الحوت الذكية_`;
-
             window.open(`https://wa.me/${myWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
         }
-    </script>
-</body>
-</html>
     </script>
 </body>
 </html>

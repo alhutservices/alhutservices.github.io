@@ -44,6 +44,8 @@
                     <label class="block text-xs font-black text-slate-400 mr-2 uppercase">الخدمة المطلوبة</label>
                     <select id="mainService" onchange="toggleCargo()" class="smart-input appearance-none text-sm">
                         <option value="">-- اختر الخدمة --</option>
+                        <option value="personal">🚗 سيارة شخصية (Personal)</option>
+                        <option value="wedding">✨ سيارة مزينة (حفلات)</option>
                         <option value="training">🎓 تعليم قيادة (مدربين)</option>
                         <option value="cargo">🚛 سيارة حمل ونقل</option>
                         <option value="water">💧 تنكر ماء (حوضي)</option>
@@ -96,20 +98,17 @@
     </main>
 
     <script>
-        // التحية الديناميكية بناءً على الوقت
         const hour = new Date().getHours();
         const greet = document.getElementById('dynamicGreeting');
         if (hour < 12) greet.innerText = "صباح الخير.. أهلاً بك في منصة الحوت الذكية ☀️";
         else if (hour < 18) greet.innerText = "طاب يومك.. أهلاً بك في منصة الحوت الذكية 🌤️";
         else greet.innerText = "مساء الخير.. أهلاً بك في منصة الحوت الذكية ✨";
 
-        // إظهار خيارات الحمل عند اختيارها
         function toggleCargo() {
             const s = document.getElementById('mainService').value;
             document.getElementById('cargoExtra').classList.toggle('hidden', s !== 'cargo');
         }
 
-        // دالة الدخول الذكية
         function startBooking() {
             const city = document.getElementById('citySelect').value;
             const service = document.getElementById('mainService').value;
@@ -122,19 +121,23 @@
                 return;
             }
 
-            // أهم جزء: تمرير المدينة بكلمة province ليتعرف عليها ملف المراجعة لاحقاً
             const query = `?province=${encodeURIComponent(city)}&date=${date}&time=${encodeURIComponent(time)}`;
 
-            if(service === 'cargo') {
-                window.location.href = `booking_cargo.html${query}&vehicle=${encodeURIComponent(vehicle)}`;
-            } else if(service === 'water') {
-                window.location.href = `booking_water.html${query}`;
-            } else if(service === 'training') {
-                window.location.href = `booking_training.html${query}`;
-            }
+            // التوجيه الذكي
+            const routes = {
+                'personal': 'booking_personal.html',
+                'wedding': 'booking_wedding.html',
+                'cargo': 'booking_cargo.html',
+                'water': 'booking_water.html',
+                'training': 'booking_training.html'
+            };
+
+            let finalPath = routes[service] + query;
+            if(service === 'cargo') finalPath += `&vehicle=${encodeURIComponent(vehicle)}`;
+            
+            window.location.href = finalPath;
         }
 
-        // ضبط التاريخ الافتراضي لليوم
         window.onload = function() {
             document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
         }

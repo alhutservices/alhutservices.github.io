@@ -42,7 +42,23 @@
     <script>
         const u = new URLSearchParams(window.location.search);
         const detailsContainer = document.getElementById('detailsList');
-        
+        const myNumber = "9647713225471"; // رقمك المسجل
+
+        // ترجمة المفاتيح للعربية
+        const labelsDict = {
+            'name': '👤 الاسم الكامل',
+            'phone': '📞 رقم الهاتف',
+            'date': '📅 التاريخ المختار',
+            'time': '⏰ الوقت المختار',
+            'gender': '👨‍👩‍👧 جنس المتدرب',
+            'notes': '📦 ملاحظات/حمولة',
+            'vehicle': '🚗 نوع المركبة',
+            'start_desc': '📍 نقطة الانطلاق',
+            'end_desc': '🏁 نقطة التسليم',
+            'location_desc': '🏠 وصف الموقع',
+            'dist': '📏 المسافة المقدرة'
+        };
+
         // تعيين الإيموجي المناسب
         if(u.get('emoji')) document.getElementById('serviceEmoji').innerText = u.get('emoji');
 
@@ -55,73 +71,58 @@
                 </div>`;
         }
 
+        // بناء محتوى البيانات تلقائياً
         let html = '';
-        html += createRow('👤 الاسم الكامل', u.get('name'));
-        html += createRow('📞 رقم الهاتف', u.get('phone'));
-
-        // حالة كورس التعليم
-        if(u.get('service') === 'training') {
-            html += createRow('📅 التاريخ المختار', u.get('date'));
-            html += createRow('⏰ الوقت المختار', u.get('time'));
-            html += createRow('👨‍👩‍👧 جنس المتدرب', u.get('gender'));
-        }
-
-        // حالة سيارات الحمل
-        if(u.get('slat') && u.get('elat')) {
-            html += createRow('📏 المسافة المقدرة', u.get('dist') ? u.get('dist') + ' كم' : '');
-            html += createRow('📍 نقطة الانطلاق', u.get('start_desc'));
-            html += createRow('🏁 نقطة التسليم', u.get('end_desc'));
-            html += createRow('📦 ملاحظات الحمولة', u.get('notes'));
-            
-            const price = u.get('final_price');
-            if(price) {
-                html += `
-                <div class="data-row bg-yellow-50 p-4 rounded-2xl mt-4 border-2 border-yellow-200">
-                    <span class="font-black text-yellow-700">💰 التكلفة المقدرة</span>
-                    <span class="text-2xl font-black text-green-600">${Number(price).toLocaleString()} د.ع</span>
-                </div>`;
+        u.forEach((value, key) => {
+            // استثناء البيانات التقنية من القائمة العادية
+            const skip = ['service', 'emoji', 'lat', 'lng', 'slat', 'slng', 'elat', 'elng', 'final_price'];
+            if(!skip.includes(key) && value) {
+                html += createRow(labelsDict[key] || key, value);
             }
-        }
+        });
 
-        // حالة تنكر الماء
-        if(u.get('service') === 'water') {
-            html += createRow('🏠 وصف الموقع', u.get('location_desc'));
+        // إضافة السعر بتنسيق خاص إذا وجد
+        const price = u.get('final_price');
+        if(price) {
+            html += `
+            <div class="data-row bg-yellow-50 p-4 rounded-2xl mt-4 border-2 border-yellow-200">
+                <span class="font-black text-yellow-700">💰 التكلفة المقدرة</span>
+                <span class="text-2xl font-black text-green-600">${Number(price).toLocaleString()} د.ع</span>
+            </div>`;
         }
 
         detailsContainer.innerHTML = html;
 
         function sendToWhatsApp() {
-            const name = decodeURIComponent(u.get('name') || '');
-            const phone = u.get('phone') || '';
-            const service = u.get('service') === 'training' ? 'كورس تعليم قيادة' : u.get('service') === 'water' ? 'طلب تنكر ماء' : 'سيارة حمل (شحن)';
-            const emoji = u.get('emoji') || '📋';
-
+            const serviceName = u.get('service') === 'training' ? 'تعليم قيادة' : 
+                               u.get('service') === 'water' ? 'توصيل ماء' : 
+                               u.get('service') === 'cargo' ? 'سيارة حمل' :
+                               u.get('service') === 'personal' ? 'سيارة شخصية' : 'طلب خدمة';
+            
             let msg = `*طلب جديد من تطبيق الحوت 🐋*\n`;
             msg += `--------------------------\n`;
-            msg += `*الخدمة:* ${emoji} ${service}\n`;
-            msg += `*الزبون:* ${name}\n`;
-            msg += `*الهاتف:* ${phone}\n`;
+            msg += `*الخدمة:* ${u.get('emoji') || '📋'} ${serviceName}\n`;
+            
+            u.forEach((value, key) => {
+                const skip = ['service', 'emoji', 'lat', 'lng', 'slat', 'slng', 'elat', 'elng'];
+                if(!skip.includes(key) && value) {
+                    msg += `*${labelsDict[key] || key}:* ${decodeURIComponent(value)}\n`;
+                }
+            });
 
-            // إضافة تفاصيل المسافة والسعر للحمل
-            if(u.get('dist')) {
-                msg += `*المسافة:* ${u.get('dist')} كم\n`;
-                msg += `*السعر:* ${Number(u.get('final_price')).toLocaleString()} د.ع\n`;
-                msg += `*من:* ${decodeURIComponent(u.get('start_desc') || 'الموقع المحدد')}\n`;
-                msg += `*إلى:* ${decodeURIComponent(u.get('end_desc') || 'الوجهة المحددة')}\n\n`;
-                msg += `📍 *موقع الاستلام:* https://www.google.com/maps?q=${u.get('slat')},${u.get('slng')}\n`;
-                msg += `🏁 *موقع التسليم:* https://www.google.com/maps?q=${u.get('elat')},${u.get('elng')}\n`;
-            } 
-            // تفاصيل التعليم أو الماء
-            else {
-                if(u.get('date')) msg += `*الموعد:* ${u.get('date')} | ${decodeURIComponent(u.get('time'))}\n`;
-                msg += `*الوصف:* ${decodeURIComponent(u.get('location_desc') || u.get('start_desc') || 'لا يوجد وصف إضافي')}\n\n`;
-                msg += `📍 *الموقع:* https://www.google.com/maps?q=${u.get('lat') || u.get('slat')},${u.get('lng') || u.get('slng')}\n`;
+            // روابط الخرائط الذكية
+            const lat = u.get('lat') || u.get('slat');
+            const lng = u.get('lng') || u.get('slng');
+            if(lat && lng) {
+                msg += `\n📍 *الموقع:* https://www.google.com/maps?q=${lat},${lng}\n`;
+            }
+            if(u.get('elat')) {
+                msg += `🏁 *وجهة التسليم:* https://www.google.com/maps?q=${u.get('elat')},${u.get('elng')}\n`;
             }
 
-            // استبدل الرقم التالي برقمك الخاص
-            const myNumber = "9647700000000"; 
-            const finalUrl = `https://wa.me/${myNumber}?text=${encodeURIComponent(msg)}`;
-            window.location.href = finalUrl;
+            msg += `\n🐋 _تم عبر تطبيق الحوت_`;
+            
+            window.location.href = `https://wa.me/${myNumber}?text=${encodeURIComponent(msg)}`;
         }
     </script>
 </body>

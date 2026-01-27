@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شركة الحوت 🐋 | منصة الخدمات الذكية</title>
+    <title>شركة الحوت 🐋 | Al-Hut Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
@@ -15,14 +15,15 @@
         .smart-input { width: 100%; padding: 1rem; background-color: #f1f5f9; border: 2px solid transparent; border-radius: 1.25rem; font-weight: 700; color: #002349; outline: none; transition: 0.3s; }
         .smart-input:focus { background-color: #fff; border-color: #D4AF37; }
         .city-overlay { position: absolute; inset: 0; opacity: 0.4; transition: 1s; pointer-events: none; }
-        .lang-switcher { position: absolute; top: 15px; left: 15px; z-index: 100; display: flex; gap: 5px; }
-        .lang-btn { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 10px; font-size: 12px; cursor: pointer; transition: 0.3s; }
+        
+        /* زر اختيار اللغة */
+        .lang-btn { background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 12px; font-size: 0.75rem; color: white; cursor: pointer; transition: 0.3s; }
         .lang-btn:hover { background: #D4AF37; color: #002349; }
     </style>
 </head>
 <body class="text-[#002349]">
 
-    <div class="lang-switcher">
+    <div class="absolute top-4 left-4 right-4 z-50 flex justify-center gap-2">
         <button onclick="changeLang('ar')" class="lang-btn">العربية</button>
         <button onclick="changeLang('ku')" class="lang-btn">کوردی</button>
         <button onclick="changeLang('tr')" class="lang-btn">Türkçe</button>
@@ -32,7 +33,7 @@
     <header id="mainHero" class="hero-bg text-white pt-16 pb-44 text-center relative overflow-hidden">
         <div id="cityOverlay" class="city-overlay"></div>
         <div class="whale-float mb-4 text-7xl" id="whaleIcon">🐋</div>
-        <h1 class="text-6xl font-black text-[#D4AF37] mb-2 tracking-tighter" id="brandTitle">الحـوت</h1>
+        <h1 class="text-6xl font-black text-[#D4AF37] mb-2 tracking-tighter" id="brandName">الحـوت</h1>
         <p id="dynamicGreeting" class="text-xl opacity-90 font-light italic px-4 h-8 transition-all duration-500"></p>
     </header>
 
@@ -40,31 +41,31 @@
         <div class="bg-white shadow-2xl rounded-[3.5rem] p-8 md:p-12 max-w-7xl mx-auto border border-gray-100">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                 
-                <div class="md:col-span-2 space-y-2">
-                    <label class="block text-sm font-black text-slate-400 mr-2 uppercase" id="lblCity">المدينة</label>
+                <div class="md:col-span-2 space-y-2 text-right" id="cityContainer">
+                    <label class="block text-sm font-black text-slate-400 mr-2 uppercase" id="labelCity">المدينة</label>
                     <select id="citySelect" onchange="adaptToCity()" class="smart-input appearance-none cursor-pointer">
-                    </select>
+                        </select>
                 </div>
 
-                <div class="md:col-span-3 space-y-2">
-                    <label class="block text-sm font-black text-slate-400 mr-2 uppercase" id="lblService">الخدمة المطلوبة</label>
+                <div class="md:col-span-3 space-y-2 text-right" id="serviceContainer">
+                    <label class="block text-sm font-black text-slate-400 mr-2 uppercase" id="labelService">الخدمة المطلوبة</label>
                     <select id="mainService" class="smart-input appearance-none text-sm cursor-pointer">
-                    </select>
+                        </select>
                 </div>
 
-                <div class="md:col-span-2 space-y-2">
-                    <label class="block text-sm font-black text-slate-400 mr-2" id="lblDate">التاريخ</label>
+                <div class="md:col-span-2 space-y-2 text-right" id="dateContainer">
+                    <label class="block text-sm font-black text-slate-400 mr-2" id="labelDate">التاريخ</label>
                     <input type="date" id="dateInput" class="smart-input">
                 </div>
 
-                <div class="md:col-span-2 space-y-2">
-                    <label class="block text-sm font-black text-slate-400 mr-2" id="lblTime">الوقت</label>
+                <div class="md:col-span-2 space-y-2 text-right" id="timeContainer">
+                    <label class="block text-sm font-black text-slate-400 mr-2" id="labelTime">الوقت</label>
                     <input type="time" id="timeInput" class="smart-input" onchange="validateTime()">
                 </div>
 
                 <div class="md:col-span-3">
-                    <button onclick="startBooking()" id="btnSubmit" class="w-full bg-[#D4AF37] text-[#002349] py-4 rounded-2xl font-black text-xl shadow-xl hover:bg-[#b8962d] transition-all flex items-center justify-center gap-2 active:scale-95">
-                        <span id="btnText">استمر الآن</span> <i class="fas fa-arrow-left" id="btnIcon"></i>
+                    <button id="submitBtn" onclick="startBooking()" class="w-full bg-[#D4AF37] text-[#002349] py-4 rounded-2xl font-black text-xl shadow-xl hover:bg-[#b8962d] transition-all flex items-center justify-center gap-2 active:scale-95">
+                        <span id="btnText">استمر الآن</span> <i id="btnIcon" class="fas fa-arrow-left"></i>
                     </button>
                 </div>
             </div>
@@ -76,125 +77,122 @@
 
         const data = {
             ar: {
-                dir: 'rtl', font: 'Tajawal', brand: 'الحـوت', city: 'المدينة', service: 'الخدمة المطلوبة', date: 'التاريخ', time: 'الوقت', btn: 'استمر الآن',
-                alert: 'يرجى ملء جميع الحقول للمتابعة 🐋',
-                timeAlert: 'عذراً، أوقات الحجز المتاحة من 8 صباحاً حتى 11 مساءً فقط 🐋',
-                pastTimeAlert: 'لا يمكن اختيار وقت قد مضى، يرجى اختيار وقت قادم!',
+                dir: 'rtl', font: 'Tajawal', brand: 'الحـوت', labelCity: 'المدينة', labelService: 'الخدمة المطلوبة',
+                labelDate: 'التاريخ', labelTime: 'الوقت', btnText: 'استمر الآن', alert: 'يرجى ملء جميع الحقول للمتابعة 🐋',
+                timeAlert: 'عذراً، أوقات العمل من 8 صباحاً حتى 11 مساءً 🐋',
+                pastTimeAlert: 'لا يمكن اختيار وقت قد مضى!',
                 morning: 'صباح الخير', day: 'طاب يومك', evening: 'مساء الخير',
-                cities: { 'كركوك': 'كركوك 💎', 'بغداد': 'بغداد 🏰', 'أربيل': 'أربيل 🏔️', 'السليمانية': 'السليمانية 🌲', 'الموصل': 'الموصل 🏹', 'البصرة': 'البصرة ⚓', 'الأنبار': 'الأنبار 🌴', 'ديالى': 'ديالى 🍊' },
-                msgs: {
-                    'كركوك': 'يا أهل كركوك.. الحوت يحييكم في مدينة التآخي والجمال 💎',
-                    'بغداد': 'من بغداد دار السلام.. الحوت يرافقكم في كل شوارعها العريقة 🏰',
-                    'أربيل': 'بخير ببن لـ أربيل.. استمتع بجمال القلعة مع خدماتنا المتميزة 🏔️',
-                    'السليمانية': 'سليماني جوان.. تمتع بأجواء السليمانية الرائعة مع سياراتنا 🌲',
-                    'الموصل': 'أهلاً بالموصل الحدباء.. خدمات الحوت في خدمة نينوى وأهلها 🏹',
-                    'البصرة': 'حي الله أهل البصرة.. الحوت يرسو في ثغر العراق الباسم ⚓',
-                    'الأنبار': 'تحية لأهل الأنبار الكرام.. الحوت يصل لقلب الكرم العراقي 🌴',
-                    'ديالى': 'أهلاً بك في ديالى.. الحوت في مدينة البرتقال والجمال 🍊'
-                },
-                services: ['-- اختر الخدمة --', '🚗 تأجير سيارة شخصية', '🎁 سيارات أعراس ومناسبات', '🎓 تعليم قيادة (مدربين)']
+                services: { placeholder: '-- اختر الخدمة --', personal: '🚗 تأجير سيارة شخصية', wedding: '🎁 سيارات أعراس ومناسبات', training: '🎓 تعليم قيادة (مدربين)' },
+                cities: { 'كركوك': 'كركوك 💎', 'بغداد': 'بغداد 🏰', 'أربيل': 'أربيل 🏔️', 'السليمانية': 'السليمانية 🌲' },
+                msgs: { 'كركوك': 'يا أهل كركوك.. الحوت يحييكم في مدينة التآخي والجمال 💎', 'بغداد': 'من بغداد دار السلام.. الحوت يرافقكم في كل شوارعها العريقة 🏰', 'أربيل': 'بخير ببن لـ أربيل.. استمتع بجمال القلعة مع خدماتنا المتميزة 🏔️', 'السليمانية': 'سليماني جوان.. تمتع بأجواء السليمانية الرائعة مع سياراتنا 🌲' }
             },
             ku: {
-                dir: 'rtl', font: 'Tajawal', brand: 'ئەلحووت', city: 'شار', service: 'خزمەتگوزاری', date: 'بەروار', time: 'کات', btn: 'بەردەوام بە',
-                alert: 'تکایە هەموو خانەکان پڕبکەرەوە 🐋',
+                dir: 'rtl', font: 'Tajawal', brand: 'ئەلحووت', labelCity: 'شار', labelService: 'جۆری خزمەتگوزاری',
+                labelDate: 'بەروار', labelTime: 'کات', btnText: 'بەردەوام بە', alert: 'تکایە هەموو خانەکان پڕبکەرەوە 🐋',
                 timeAlert: 'ببورە، کاتی کارکردن لە ٨ی بەیانی تا ١١ی شەو دەبێت 🐋',
                 pastTimeAlert: 'ناتوانی کاتێکی ڕابردوو هەڵبژێریت!',
                 morning: 'بەیانیت باش', day: 'ڕۆژت باش', evening: 'ئێوارەت باش',
-                cities: { 'كركوك': 'کەرکوک 💎', 'بغداد': 'بەغداد 🏰', 'أربيل': 'هەولێر 🏔️', 'السليمانية': 'سلێمانی 🌲', 'الموصل': 'مووسڵ 🏹', 'البصرة': 'بەسرە ⚓', 'الأنبار': 'ئەنبار 🌴', 'ديالى': 'دیالە 🍊' },
-                msgs: { 'كركوك': 'سڵاو بۆ کەرکوکی دڵ.. 💎', 'بغداد': 'سڵاو لە بەغدای پایتەخت.. 🏰', 'أربيل': 'بەخێربێن بۆ هەولێری قەڵا.. 🏔️', 'السليمانية': 'سلێمانی جوان.. 🌲' },
-                services: ['-- خزمەتگوزاری هەڵبژێرە --', '🚗 بەکرێگرتنی ئۆتۆمبێل', '🎁 ئۆتۆمبێلی زەماوەند', '🎓 فێربوونی شۆفێری']
+                services: { placeholder: '-- خزمەتگوزاری هەڵبژێرە --', personal: '🚗 بەکرێگرتنی ئۆتۆمبێل', wedding: '🎁 ئۆتۆمبێلی زەماوەند', training: '🎓 فێربوونی شۆفێری' },
+                cities: { 'كركوك': 'کەرکوک 💎', 'بغداد': 'بەغداد 🏰', 'أربيل': 'هەولێر 🏔️', 'السليمانية': 'سلێمانی 🌲' },
+                msgs: { 'كركوك': 'سڵاو بۆ کەرکوکی دڵی کوردستان.. ئەلحووت خزمەتتان دەکات 💎', 'بغداد': 'سڵاو لە بەغدای پایتەخت.. ئەلحووت لەگەڵتاندایە 🏰', 'أربيل': 'بەخێربێن بۆ هەولێری قەڵا و منارە.. 🏔️', 'السليمانية': 'سلێمانی جوان.. چێژ لە کەشوهەوای سلێمانی وەربگرە 🌲' }
             },
             tr: {
-                dir: 'ltr', font: 'Poppins', brand: 'AL-HUT', city: 'Şehir', service: 'Hizmet', date: 'Tarih', time: 'Saat', btn: 'Devam Et',
-                alert: 'Lütfen alanları doldurun 🐋',
+                dir: 'ltr', font: 'Poppins', brand: 'AL-HUT', labelCity: 'Şehir', labelService: 'Hizmet Türü',
+                labelDate: 'Tarih', labelTime: 'Saat', btnText: 'Devam Et', alert: 'Lütfen tüm alanları doldurun 🐋',
                 timeAlert: 'Çalışma saatleri 08:00 - 23:00 arasıdır 🐋',
-                pastTimeAlert: 'Geçmiş zamanı seçemezsiniz!',
-                morning: 'Günaydın', day: 'Tünaydın', evening: 'İyi akşamlar',
-                cities: { 'كركوك': 'Kerkük 💎', 'بغداد': 'Bağdat 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Süleymaniye 🌲', 'الموصل': 'Musul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Enbar 🌴', 'ديالى': 'Diyala 🍊' },
-                msgs: { 'كركوك': 'Kerkük\'e selamlar.. 💎', 'بغداد': 'Bağdat\'a hoş geldiniz.. 🏰', 'أربيل': 'Erbil\'e hoş geldiniz.. 🏔️', 'السليمانية': 'Güzel Süleymaniye.. 🌲' },
-                services: ['-- Hizmet Seçin --', '🚗 Araç Kiralama', '🎁 Düğün Araçları', '🎓 Sürüş Eğitimi']
+                pastTimeAlert: 'Geçmiş bir zamanı seçemezsiniz!',
+                morning: 'Günaydın', day: 'İyi günler', evening: 'İyi akşamlar',
+                services: { placeholder: '-- Hizmet Seçin --', personal: '🚗 Bireysel Araç Kiralama', wedding: '🎁 Düğün ve Etkinlik Araçları', training: '🎓 Sürüş Eğitimi' },
+                cities: { 'كركوك': 'Kerkük 💎', 'بغداد': 'Bağdat 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Süleymaniye 🌲' },
+                msgs: { 'كركوك': 'Kerküklü kardeşlerimize selamlar.. Al-Hut yanınızda 💎', 'بغداد': 'Barış şehri Bağdat.. Al-Hut her sokakta sizinle 🏰', 'أربيل': 'Erbil\'e hoş geldiniz.. Kalenin güzelliğini bizimle yaşayın 🏔️', 'السليمانية': 'Güzel Süleymaniye.. Harika atmosferin tadını çıkarın 🌲' }
             },
             en: {
-                dir: 'ltr', font: 'Poppins', brand: 'AL-HUT', city: 'City', service: 'Service', date: 'Date', time: 'Time', btn: 'Continue',
-                alert: 'Please fill all fields 🐋',
-                timeAlert: 'Working hours are 8 AM to 11 PM 🐋',
+                dir: 'ltr', font: 'Poppins', brand: 'AL-HUT', labelCity: 'City', labelService: 'Required Service',
+                labelDate: 'Date', labelTime: 'Time', btnText: 'Continue Now', alert: 'Please fill all fields to continue 🐋',
+                timeAlert: 'Working hours are from 8 AM to 11 PM 🐋',
                 pastTimeAlert: 'You cannot select a past time!',
-                morning: 'Good Morning', day: 'Good Day', evening: 'Good Evening',
-                cities: { 'كركوك': 'Kirkuk 💎', 'بغداد': 'Baghdad 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Slemani 🌲', 'الموصل': 'Mosul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Anbar 🌴', 'ديالى': 'Diyala 🍊' },
-                msgs: { 'كركوك': 'Welcome Kirkuk.. 💎', 'بغداد': 'Welcome Baghdad.. 🏰', 'أربيل': 'Welcome Erbil.. 🏔️', 'السليمانية': 'Welcome Slemani.. 🌲' },
-                services: ['-- Select Service --', '🚗 Car Rental', '🎁 Wedding Cars', '🎓 Driving School']
+                morning: 'Good Morning', day: 'Have a nice day', evening: 'Good Evening',
+                services: { placeholder: '-- Select Service --', personal: '🚗 Personal Car Rental', wedding: '🎁 Wedding & Events Cars', training: '🎓 Driving Training' },
+                cities: { 'كركوك': 'Kirkuk 💎', 'بغداد': 'Baghdad 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Slemani 🌲' },
+                msgs: { 'كركوك': 'Welcome Kirkuk.. Al-Hut greets the city of coexistence 💎', 'بغداد': 'From Baghdad, the city of peace.. Al-Hut is with you 🏰', 'أربيل': 'Welcome to Erbil.. Enjoy the Citadel with our services 🏔️', 'السليمانية': 'Slemani Jwan.. Enjoy the wonderful atmosphere with us 🌲' }
             }
         };
+
+        function validateTime() {
+            const timeInput = document.getElementById('timeInput');
+            const dateInput = document.getElementById('dateInput');
+            const selectedTime = timeInput.value;
+            const selectedDate = dateInput.value;
+            const l = data[currentLang];
+
+            if (!selectedTime) return;
+
+            const hour = parseInt(selectedTime.split(':')[0]);
+            const minutes = parseInt(selectedTime.split(':')[1]);
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+
+            // 1. أوقات الدوام بالعراق (8 صباحاً - 11 مساءً)
+            if (hour < 8 || hour >= 23) {
+                alert(l.timeAlert);
+                timeInput.value = "";
+                return;
+            }
+
+            // 2. منع اختيار وقت قد مضى لليوم الحالي
+            if (selectedDate === today) {
+                if (hour < now.getHours() || (hour === now.getHours() && minutes < now.getMinutes())) {
+                    alert(l.pastTimeAlert);
+                    timeInput.value = "";
+                }
+            }
+        }
 
         function changeLang(lang) {
             currentLang = lang;
             const l = data[lang];
+            
             document.getElementById('htmlTag').dir = l.dir;
             document.body.style.fontFamily = l.font + ', sans-serif';
             
-            document.getElementById('brandTitle').innerText = l.brand;
-            document.getElementById('lblCity').innerText = l.city;
-            document.getElementById('lblService').innerText = l.service;
-            document.getElementById('lblDate').innerText = l.date;
-            document.getElementById('lblTime').innerText = l.time;
-            document.getElementById('btnText').innerText = l.btn;
+            document.getElementById('brandName').innerText = l.brand;
+            document.getElementById('labelCity').innerText = l.labelCity;
+            document.getElementById('labelService').innerText = l.labelService;
+            document.getElementById('labelDate').innerText = l.labelDate;
+            document.getElementById('labelTime').innerText = l.labelTime;
+            document.getElementById('btnText').innerText = l.btnText;
             document.getElementById('btnIcon').className = `fas fa-arrow-${l.dir === 'rtl' ? 'left' : 'right'}`;
 
             const citySelect = document.getElementById('citySelect');
-            citySelect.innerHTML = Object.entries(l.cities).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+            const currentCity = citySelect.value || 'كركوك';
+            citySelect.innerHTML = Object.entries(l.cities).map(([key, val]) => `<option value="${key}" ${key === currentCity ? 'selected' : ''}>${val}</option>`).join('');
 
             const serviceSelect = document.getElementById('mainService');
-            serviceSelect.innerHTML = l.services.map((s, i) => `<option value="${i===0?'':i}">${s}</option>`).join('');
-            
+            serviceSelect.innerHTML = `
+                <option value="">${l.services.placeholder}</option>
+                <option value="personal">${l.services.personal}</option>
+                <option value="wedding">${l.services.wedding}</option>
+                <option value="training">${l.services.training}</option>
+            `;
+
             adaptToCity();
-        }
-
-        function validateTime() {
-            const timeInp = document.getElementById('timeInput');
-            const dateInp = document.getElementById('dateInput');
-            if (!timeInp.value) return;
-
-            const hour = parseInt(timeInp.value.split(':')[0]);
-            const l = data[currentLang];
-            const now = new Date();
-            const todayStr = now.toISOString().split('T')[0];
-
-            // 1. تحديد ساعات الدوام في العراق (8 ص - 11 م)
-            if (hour < 8 || hour >= 23) {
-                alert(l.timeAlert);
-                timeInp.value = "";
-                return;
-            }
-
-            // 2. منع اختيار وقت قد مضى في نفس اليوم
-            if (dateInp.value === todayStr) {
-                const minutes = parseInt(timeInp.value.split(':')[1]);
-                if (hour < now.getHours() || (hour === now.getHours() && minutes < now.getMinutes())) {
-                    alert(l.pastTimeAlert);
-                    timeInp.value = "";
-                }
-            }
         }
 
         function adaptToCity() {
             const city = document.getElementById('citySelect').value;
             const greet = document.getElementById('dynamicGreeting');
             const overlay = document.getElementById('cityOverlay');
-            const hour = new Date().getHours();
             const l = data[currentLang];
+            const hour = new Date().getHours();
             
             let timeText = hour < 12 ? l.morning : (hour < 18 ? l.day : l.evening);
-            
-            const cityStyles = {
-                'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'البصرة': '#0277bd',
-                'الموصل': '#4e342e', 'السليمانية': '#6a1b9a', 'الأنبار': '#ef6c00', 'ديالى': '#558b2f'
-            };
+            const styleColor = { 'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'السليمانية': '#6a1b9a' };
 
             greet.style.opacity = 0;
             setTimeout(() => {
-                greet.innerText = `${timeText}.. ${l.msgs[city]}`;
+                greet.innerText = `${timeText}.. ${l.msgs[city] || ''}`;
                 greet.style.opacity = 1;
-                overlay.style.backgroundColor = cityStyles[city];
+                overlay.style.backgroundColor = styleColor[city] || '#002349';
             }, 300);
         }
 
@@ -202,18 +200,18 @@
             const service = document.getElementById('mainService').value;
             const date = document.getElementById('dateInput').value;
             const time = document.getElementById('timeInput').value;
+
             if(!service || !date || !time) {
                 alert(data[currentLang].alert);
                 return;
             }
-            // التوجيه مع البيانات
-            window.location.href = `fleet.html?city=${document.getElementById('citySelect').value}&service=${service}&date=${date}&time=${time}&lang=${currentLang}`;
+            window.location.href = `fleet.html?type=${service}&lang=${currentLang}&date=${date}&time=${time}`;
         }
 
-        window.onload = function() {
-            const dInput = document.getElementById('dateInput');
-            dInput.min = new Date().toISOString().split('T')[0];
-            dInput.value = dInput.min;
+        window.onload = () => {
+            const dateInput = document.getElementById('dateInput');
+            dateInput.min = new Date().toISOString().split('T')[0];
+            dateInput.value = dateInput.min;
             changeLang('ar');
         }
     </script>

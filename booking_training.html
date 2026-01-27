@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>حجز كورس تعليم | الحوت 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -15,72 +15,126 @@
 
     <style>
         :root { --main-color: #7c3aed; --bg-soft: #f5f3ff; --border-soft: #ddd6fe; }
-        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg-soft); transition: 0.5s; }
-        .glass-card { background: rgba(255, 255, 255, 0.98); transition: 0.5s; }
-        #map { height: 220px; border-radius: 2rem; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.05); z-index: 1; }
-        .input-training { border: 2px solid var(--border-soft); transition: 0.3s; border-radius: 1.25rem; padding: 1rem; width: 100%; background: #f9fafb; font-weight: bold; outline: none; }
+        
+        /* منع ظهور شريط التمرير الجانبي */
+        html, body { 
+            overflow-x: hidden; 
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-soft);
+            transition: background-color 0.5s;
+        }
+
+        body { font-family: 'Tajawal', sans-serif; }
+
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.98); 
+            transition: 0.5s; 
+            width: 100%;
+            max-width: 550px; /* العرض الأقصى ليبقى متناسقاً */
+            margin: auto;
+        }
+
+        #map { 
+            height: 220px; 
+            border-radius: 2rem; 
+            border: 4px solid white; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05); 
+            z-index: 1; 
+            width: 100%;
+        }
+
+        .input-training { 
+            border: 2px solid var(--border-soft); 
+            transition: 0.3s; 
+            border-radius: 1.25rem; 
+            padding: 0.8rem 1rem; 
+            width: 100%; 
+            background: #f9fafb; 
+            font-weight: bold; 
+            outline: none;
+            font-size: 0.9rem;
+        }
+
         .input-training:focus { border-color: var(--main-color); background: white; }
-        .gender-btn { flex: 1; padding: 1rem; border: 2px solid var(--border-soft); border-radius: 1.25rem; font-weight: bold; transition: 0.3s; cursor: pointer; text-align: center; background: white; }
-        .gender-btn.active { background: var(--main-color); color: white; border-color: var(--main-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+
+        .gender-btn { 
+            flex: 1; 
+            padding: 0.8rem; 
+            border: 2px solid var(--border-soft); 
+            border-radius: 1.25rem; 
+            font-weight: bold; 
+            transition: 0.3s; 
+            cursor: pointer; 
+            text-align: center; 
+            background: white;
+            font-size: 0.9rem;
+        }
+
+        .gender-btn.active { 
+            background: var(--main-color); 
+            color: white; 
+            border-color: var(--main-color); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        }
+
         .dynamic-text { color: var(--main-color); transition: 0.5s; }
         .dynamic-border { border-color: var(--main-color); transition: 0.5s; }
         .leaflet-control-geocoder { border-radius: 10px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     </style>
 </head>
-<body class="p-4 md:p-8 text-right">
+<body class="p-2 md:p-8">
 
-    <div id="mainCard" class="max-w-xl mx-auto glass-card rounded-[3.5rem] shadow-2xl overflow-hidden border-t-[12px] dynamic-border">
+    <div id="mainCard" class="glass-card rounded-[2.5rem] md:rounded-[3.5rem] shadow-2xl overflow-hidden border-t-[12px] dynamic-border mt-4 mb-10">
         
-        <div id="headerBox" class="bg-indigo-50 p-8 text-center border-b border-indigo-100 transition-all duration-500">
-            <div class="text-5xl mb-3">🎓</div>
-            <h2 class="text-3xl font-black dynamic-text">كورس تعليم قيادة</h2>
-            <div id="summary" class="mt-4 p-3 bg-white rounded-2xl text-sm font-bold dynamic-text shadow-sm inline-block border border-indigo-100">
-                جاري تحميل البيانات...
+        <div id="headerBox" class="bg-indigo-50 p-6 md:p-8 text-center border-b border-indigo-100 transition-all duration-500">
+            <div class="text-4xl md:text-5xl mb-2">🎓</div>
+            <h2 class="text-2xl md:text-3xl font-black dynamic-text">كورس تعليم قيادة</h2>
+            <div id="summary" class="mt-3 p-2 px-4 bg-white rounded-xl text-[12px] md:text-sm font-bold dynamic-text shadow-sm inline-block border border-indigo-100">
+                جاري التحميل...
             </div>
         </div>
 
-        <div class="p-8 space-y-5">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-5 md:p-8 space-y-4">
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2">اسم المتدرب</label>
+                    <label class="block text-[11px] font-black text-gray-400 mb-1 mr-2">اسم المتدرب</label>
                     <input type="text" id="tName" placeholder="الاسم الكامل" class="input-training">
                 </div>
                 <div>
-                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2">رقم الهاتف</label>
-                    <input type="text" id="tPhone" placeholder="077XXXXXXXX" class="input-training">
+                    <label class="block text-[11px] font-black text-gray-400 mb-1 mr-2">رقم الهاتف</label>
+                    <input type="tel" id="tPhone" placeholder="077XXXXXXXX" class="input-training text-left" dir="ltr">
                 </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2">رقم الهوية الوطنية</label>
+                    <label class="block text-[11px] font-black text-gray-400 mb-1 mr-2">رقم الهوية الوطنية</label>
                     <input type="text" id="tNationalID" placeholder="رقم الهوية" class="input-training">
                 </div>
                 <div>
-                    <label class="block text-xs font-black text-gray-400 mb-2 mr-2">العمر</label>
-                    <input type="number" id="tAge" placeholder="العمر" class="input-training">
+                    <label class="block text-[11px] font-black text-gray-400 mb-1 mr-2">العمر</label>
+                    <input type="number" id="tAge" placeholder="مثال: 25" class="input-training">
                 </div>
             </div>
 
-            <div class="space-y-3">
-                <label class="block text-xs font-black text-gray-400 mr-2 uppercase">اختيار جنس المتدرب</label>
-                <div class="flex gap-4">
+            <div class="space-y-2 pt-2">
+                <label class="block text-[11px] font-black text-gray-400 mr-2 uppercase">الجنس</label>
+                <div class="flex gap-3">
                     <div id="maleBtn" onclick="setGender('ذكر 👨')" class="gender-btn active">👨 ذكر</div>
                     <div id="femaleBtn" onclick="setGender('أنثى 👩')" class="gender-btn">👩 أنثى</div>
                 </div>
             </div>
 
-            <div class="bg-slate-50 p-6 rounded-[2.5rem] border-2 border-white shadow-inner">
-                <label class="block font-black mb-3 text-sm text-slate-700 mr-2 flex items-center gap-2">
-                    <i class="fas fa-map-marker-alt dynamic-text"></i> حدد موقع اللقاء أو ابحث عنه:
+            <div class="bg-slate-50 p-4 md:p-6 rounded-[2rem] border-2 border-white shadow-inner">
+                <label class="block font-black mb-2 text-xs md:text-sm text-slate-700 mr-1 flex items-center gap-2">
+                    <i class="fas fa-map-marker-alt dynamic-text"></i> موقع اللقاء (اسحب العلامة):
                 </label>
-                <div id="map" class="mb-4"></div>
-                <button type="button" onclick="getGPS()" class="w-full py-4 bg-white border-2 dynamic-border dynamic-text rounded-2xl font-black text-sm shadow-sm hover:bg-slate-50 transition-all">
-                    تحديد موقعي الحالي 🛰️
+                <div id="map" class="mb-3"></div>
+                <button type="button" onclick="getGPS()" class="w-full py-3 bg-white border-2 dynamic-border dynamic-text rounded-xl font-black text-[12px] shadow-sm hover:bg-slate-50 active:scale-95 transition-all">
+                    تحديد موقعي الآن 🛰️
                 </button>
             </div>
 
-            <button onclick="goToReviewTraining()" id="submitBtn" class="w-full bg-[#7c3aed] text-white py-5 rounded-2xl font-black text-xl shadow-2xl flex items-center justify-center gap-3 active:scale-95 transition-all" style="background-color: var(--main-color);">
+            <button onclick="goToReviewTraining()" id="submitBtn" class="w-full bg-[#7c3aed] text-white py-4 md:py-5 rounded-2xl font-black text-lg md:text-xl shadow-2xl flex items-center justify-center gap-3 active:scale-95 transition-all" style="background-color: var(--main-color);">
                 مراجعة البيانات <i class="fas fa-chevron-left"></i>
             </button>
         </div>
@@ -90,7 +144,7 @@
         let map, marker, selectedGender = 'ذكر 👨';
         const params = new URLSearchParams(window.location.search);
         
-        document.getElementById('summary').innerHTML = `📅 التاريخ: ${params.get('date') || 'قيد الاختيار'} <span class="mx-2">|</span> ⏰ الوقت: ${params.get('time') || 'قيد الاختيار'}`;
+        document.getElementById('summary').innerHTML = `📅 التاريخ: ${params.get('date') || 'اليوم'} <span class="mx-1 md:mx-2">|</span> ⏰ الوقت: ${params.get('time') || 'الآن'}`;
 
         window.onload = function() {
             map = L.map('map').setView([35.4687, 44.3921], 13);
@@ -100,7 +154,6 @@
             L.Control.geocoder({
                 defaultMarkGeocode: false,
                 placeholder: "ابحث عن منطقة...",
-                errorMessage: "لم يتم العثور"
             })
             .on('markgeocode', function(e) {
                 const center = e.geocode.center;
@@ -153,23 +206,6 @@
                 `&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}` +
                 `&nationalID=${encodeURIComponent(nationalID)}&age=${age}` +
                 `&gender=${encodeURIComponent(selectedGender)}` +
-                `&lat=${latlng.lat}&lng=${latlng.lng}&emoji=🎓`;
-
-            window.location.href = reviewUrl;
-        }
-    </script>
-</body>
-</html>
-            const id = document.getElementById('tID').value;
-            const age = document.getElementById('tAge').value;
-            const latlng = marker.getLatLng();
-
-            if(!name || !id || !age) return alert("يرجى إكمال جميع البيانات 🐋");
-
-            const reviewUrl = `review.html?service=training&car=كورس تعليم قيادة` +
-                `&date=${params.get('date')}&time=${params.get('time')}` +
-                `&name=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}` +
-                `&age=${age}&gender=${encodeURIComponent(selectedGender)}` +
                 `&lat=${latlng.lat}&lng=${latlng.lng}&emoji=🎓`;
 
             window.location.href = reviewUrl;

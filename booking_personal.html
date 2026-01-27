@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>حجز الأسطول الشخصي | الحوت 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f1f5f9; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f1f5f9; transition: 0.5s; }
         .hero-bg { background: linear-gradient(135deg, #002349 0%, #003366 100%); }
-        
-        /* تصميم الحقول الإبداعي */
         .glass-input {
             background: #f8fafc;
             border: 2px solid #e2e8f0;
@@ -30,60 +28,45 @@
             box-shadow: 0 10px 15px -3px rgba(212, 175, 55, 0.1);
             transform: translateY(-2px);
         }
-
         .section-card {
             background: white;
             border-radius: 3.5rem;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(255,255,255,0.7);
         }
-
-        #map { 
-            height: 220px; 
-            border-radius: 2.5rem; 
-            border: 4px solid #f1f5f9;
-            z-index: 1;
-        }
-
+        #map { height: 220px; border-radius: 2.5rem; border: 4px solid #f1f5f9; z-index: 1; }
         .icon-box {
-            width: 40px;
-            height: 40px;
-            background: #f1f5f9;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #002349;
-            margin-left: 12px;
+            width: 40px; height: 40px; background: #f1f5f9; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; color: #002349;
         }
+        [dir="rtl"] .icon-box { margin-left: 12px; }
+        [dir="ltr"] .icon-box { margin-right: 12px; }
     </style>
 </head>
 <body class="text-[#002349]">
 
     <header class="hero-bg text-white pt-16 pb-44 text-center relative overflow-hidden">
         <div class="absolute top-0 right-0 opacity-10 text-[20rem] font-black -rotate-12 pointer-events-none">🐋</div>
-        <h1 class="text-4xl font-black text-[#D4AF37] mb-2">إكمال بيانات الرحلة</h1>
-        <p id="carSub" class="text-lg opacity-80 font-light italic">جاري تجهيز مركبتك الفاخرة...</p>
+        <h1 id="pageTitle" class="text-4xl font-black text-[#D4AF37] mb-2">إكمال بيانات الرحلة</h1>
+        <p id="carSub" class="text-lg opacity-80 font-light italic px-4"></p>
     </header>
 
     <main class="container mx-auto px-4 -mt-32 relative z-10 pb-20">
         <div class="section-card p-8 md:p-12 max-w-4xl mx-auto">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div id="formGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 
                 <div class="space-y-6">
                     <div class="flex items-center mb-2">
                         <div class="icon-box"><i class="fas fa-user-tie"></i></div>
-                        <h3 class="font-black text-xl">المعلومات الشخصية</h3>
+                        <h3 id="section1Title" class="font-black text-xl">المعلومات الشخصية</h3>
                     </div>
-
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-[10px] font-black text-slate-400 mr-4 mb-1 uppercase tracking-widest">الاسم الكامل</label>
-                            <input type="text" id="custName" placeholder="كما هو مذكور في الهوية" class="glass-input">
+                            <label id="lblCustName" class="block text-[10px] font-black text-slate-400 mr-4 mb-1 uppercase tracking-widest">الاسم الكامل</label>
+                            <input type="text" id="custName" class="glass-input">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-black text-slate-400 mr-4 mb-1 uppercase tracking-widest">رقم الهاتف</label>
+                            <label id="lblCustPhone" class="block text-[10px] font-black text-slate-400 mr-4 mb-1 uppercase tracking-widest">رقم الهاتف</label>
                             <input type="tel" id="custPhone" placeholder="077XXXXXXXX" class="glass-input text-left" dir="ltr">
                         </div>
                     </div>
@@ -92,17 +75,16 @@
                 <div class="space-y-6">
                     <div class="flex items-center mb-2">
                         <div class="icon-box"><i class="fas fa-id-card"></i></div>
-                        <h3 class="font-black text-xl">الوثائق القانونية</h3>
+                        <h3 id="section2Title" class="font-black text-xl">الوثائق القانونية</h3>
                     </div>
-
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-[10px] font-black text-slate-400 mr-4 mb-1 uppercase tracking-widest">رقم البطاقة الوطنية / الجواز</label>
-                            <input type="text" id="idNumber" placeholder="رقم المستمسك الرسمي" class="glass-input">
+                            <label id="lblID" class="block text-[10px] font-black text-slate-400 mr-4 mb-1 uppercase tracking-widest">رقم البطاقة الوطنية / الجواز</label>
+                            <input type="text" id="idNumber" class="glass-input">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-black text-slate-400 mr-4 mb-1 uppercase tracking-widest">رقم إجازة السوق</label>
-                            <input type="text" id="drivingLicense" placeholder="رقم الإجازة النافذة" class="glass-input">
+                            <label id="lblLicense" class="block text-[10px] font-black text-slate-400 mr-4 mb-1 uppercase tracking-widest">رقم إجازة السوق</label>
+                            <input type="text" id="drivingLicense" class="glass-input">
                         </div>
                     </div>
                 </div>
@@ -111,10 +93,10 @@
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center">
                             <div class="icon-box"><i class="fas fa-map-marked-alt"></i></div>
-                            <h3 class="font-black text-xl">موقع التسليم</h3>
+                            <h3 id="section3Title" class="font-black text-xl">موقع التسليم</h3>
                         </div>
                         <button onclick="getLocation()" class="text-blue-600 font-black text-xs hover:underline flex items-center gap-1">
-                             <i class="fas fa-location-arrow"></i> تحديد موقعي الحالي
+                             <i class="fas fa-location-arrow"></i> <span id="btnGPS">تحديد موقعي الحالي</span>
                         </button>
                     </div>
                     <div id="map"></div>
@@ -122,11 +104,10 @@
 
                 <div class="md:col-span-2 pt-6">
                     <button onclick="confirmBooking()" class="w-full bg-[#002349] text-[#D4AF37] py-6 rounded-[2rem] font-black text-2xl shadow-2xl hover:bg-black transition-all transform active:scale-95 flex items-center justify-center gap-4 group">
-                        مراجعة الطلب النهائي 
-                        <i class="fas fa-chevron-left group-hover:-translate-x-2 transition-transform"></i>
+                        <span id="btnSubmit">مراجعة الطلب النهائي</span>
+                        <i id="btnIcon" class="fas fa-chevron-left group-hover:-translate-x-2 transition-transform"></i>
                     </button>
                 </div>
-
             </div>
         </div>
     </main>
@@ -134,16 +115,44 @@
     <script>
         let map, marker;
         const u = new URLSearchParams(window.location.search);
+        const currentLang = u.get('lang') || 'ar';
+
+        const data = {
+            ar: { dir: 'rtl', font: 'Tajawal', title: 'إكمال بيانات الرحلة', sub: 'طلب حجز:', sec1: 'المعلومات الشخصية', name: 'الاسم الكامل', phone: 'رقم الهاتف', sec2: 'الوثائق القانونية', id: 'رقم البطاقة الوطنية', license: 'رقم إجازة السوق', sec3: 'موقع التسليم', gps: 'تحديد موقعي الحالي', submit: 'مراجعة الطلب النهائي', alert: 'لطفاً حوتنا العزيز، جميع البيانات مطلوبة 🐋' },
+            ku: { dir: 'rtl', font: 'Tajawal', title: 'تەواوکردنی زانیاری گەشت', sub: 'داواکاری حیجز:', sec1: 'زانیاری کەسی', name: 'ناوی تەواو', phone: 'ژمارەی مۆبایل', sec2: 'بەڵگەنامە یاساییەکان', id: 'ژمارەی ناسنامە', license: 'ژمارەی مۆڵەتی شۆفێری', sec3: 'شوێنی وەرگرتن', gps: 'شوێنی ئێستام دیاری بکە', submit: 'پێداچوونەوەی کۆتایی', alert: 'تکایە هەموو خانەکان پڕبکەرەوە 🐋' },
+            tr: { dir: 'ltr', font: 'Poppins', title: 'Yolculuk Bilgilerini Tamamla', sub: 'Rezervasyon Talebi:', sec1: 'Kişisel Bilgiler', name: 'Ad Soyad', phone: 'Telefon Numarası', sec2: 'Yasal Belgeler', id: 'Kimlik / Pasaport No', license: 'Ehliyet Numarası', sec3: 'Teslimat Konumu', gps: 'Mevcut Konumumu Belirle', submit: 'Son İnceleme', alert: 'Lütfen tüm alanları doldurun 🐋' },
+            en: { dir: 'ltr', font: 'Poppins', title: 'Complete Trip Details', sub: 'Booking Request:', sec1: 'Personal Information', name: 'Full Name', phone: 'Phone Number', sec2: 'Legal Documents', id: 'National ID / Passport', license: 'Driving License No', sec3: 'Delivery Location', gps: 'Get My Current Location', submit: 'Final Review', alert: 'Please fill all fields to continue 🐋' }
+        };
+
+        function initLang() {
+            const l = data[currentLang];
+            document.getElementById('htmlTag').dir = l.dir;
+            document.body.style.fontFamily = l.font + ', sans-serif';
+            document.getElementById('pageTitle').innerText = l.title;
+            document.getElementById('section1Title').innerText = l.sec1;
+            document.getElementById('lblCustName').innerText = l.name;
+            document.getElementById('lblCustPhone').innerText = l.phone;
+            document.getElementById('section2Title').innerText = l.sec2;
+            document.getElementById('lblID').innerText = l.id;
+            document.getElementById('lblLicense').innerText = l.license;
+            document.getElementById('section3Title').innerText = l.sec3;
+            document.getElementById('btnGPS').innerText = l.gps;
+            document.getElementById('btnSubmit').innerText = l.submit;
+            
+            const carName = u.get('car') || 'AL-HUT CAR';
+            document.getElementById('carSub').innerText = `${l.sub} ${carName}`;
+
+            if(l.dir === 'ltr') {
+                document.getElementById('formGrid').classList.remove('text-right');
+                document.getElementById('formGrid').classList.add('text-left');
+                document.getElementById('btnIcon').className = "fas fa-chevron-right group-hover:translate-x-2 transition-transform";
+            }
+        }
 
         window.onload = function() {
-            const car = u.get('car') || 'سيارة الحوت';
-            document.getElementById('carSub').innerText = `طلب حجز: ${car}`;
-            
-            // تهيئة الخريطة بلمسة احترافية
+            initLang();
             map = L.map('map', {zoomControl: false}).setView([35.4687, 44.3921], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            
-            // أيقونة مخصصة للماركر (اختياري)
             marker = L.marker([35.4687, 44.3921], {draggable: true}).addTo(map);
         };
 
@@ -164,7 +173,7 @@
             const pos = marker.getLatLng();
 
             if(!name || !phone || !idNo || !license) {
-                alert("لطفاً حوتنا العزيز، جميع البيانات مطلوبة لضمان حجزك 🐋");
+                alert(data[currentLang].alert);
                 return;
             }
 
@@ -175,6 +184,7 @@
             u.set('lat', pos.lat);
             u.set('lng', pos.lng);
             u.set('emoji', '🚗');
+            u.set('lang', currentLang);
 
             window.location.href = `review.html?${u.toString()}`;
         }

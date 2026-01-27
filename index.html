@@ -14,9 +14,7 @@
         @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
         .smart-input { width: 100%; padding: 1rem; background-color: #f1f5f9; border: 2px solid transparent; border-radius: 1.25rem; font-weight: 700; color: #002349; outline: none; transition: 0.3s; }
         .smart-input:focus { background-color: #fff; border-color: #D4AF37; }
-        
-        /* طبقة ناعمة لتغيير ألوان المدن */
-        .city-overlay { position: absolute; inset: 0; opacity: 0.3; transition: 1s; pointer-events: none; }
+        .city-overlay { position: absolute; inset: 0; opacity: 0.4; transition: 1s; pointer-events: none; }
     </style>
 </head>
 <body class="text-[#002349]">
@@ -24,8 +22,8 @@
     <header id="mainHero" class="hero-bg text-white pt-16 pb-44 text-center relative overflow-hidden">
         <div id="cityOverlay" class="city-overlay"></div>
         <div class="whale-float mb-4 text-7xl" id="whaleIcon">🐋</div>
-        <h1 class="text-6xl font-black text-[#D4AF37] mb-2">الحـوت</h1>
-        <p id="dynamicGreeting" class="text-xl opacity-90 font-light italic px-4"></p>
+        <h1 class="text-6xl font-black text-[#D4AF37] mb-2 tracking-tighter">الحـوت</h1>
+        <p id="dynamicGreeting" class="text-xl opacity-90 font-light italic px-4 h-8 transition-all duration-500"></p>
     </header>
 
     <main class="container mx-auto px-4 -mt-32 relative z-10 pb-20">
@@ -34,21 +32,21 @@
                 
                 <div class="md:col-span-2 space-y-2">
                     <label class="block text-sm font-black text-slate-400 mr-2 uppercase">المدينة</label>
-                    <select id="citySelect" onchange="adaptToCity()" class="smart-input appearance-none">
+                    <select id="citySelect" onchange="adaptToCity()" class="smart-input appearance-none cursor-pointer">
+                        <option value="كركوك" selected>كركوك 💎</option>
                         <option value="بغداد">بغداد 🏰</option>
-                        <option value="كركوك" selected>كركوك 🏰</option>
-                        <option value="أربيل">أربيل 🏰</option>
-                        <option value="البصرة">البصرة ⚓</option>
+                        <option value="أربيل">أربيل 🏔️</option>
+                        <option value="السليمانية">السليمانية 🌲</option>
                         <option value="الموصل">الموصل 🏹</option>
-                        <option value="النجف">النجف 🕌</option>
-                        <option value="كربلاء">كربلاء 🕌</option>
-                        <option value="السليمانية">السليمانية 🏔️</option>
+                        <option value="البصرة">البصرة ⚓</option>
+                        <option value="الأنبار">الأنبار 🌴</option>
+                        <option value="ديالى">ديالى 🍊</option>
                     </select>
                 </div>
 
                 <div class="md:col-span-3 space-y-2">
                     <label class="block text-sm font-black text-slate-400 mr-2 uppercase">الخدمة المطلوبة</label>
-                    <select id="mainService" class="smart-input appearance-none text-sm">
+                    <select id="mainService" class="smart-input appearance-none text-sm cursor-pointer">
                         <option value="">-- اختر الخدمة --</option>
                         <option value="personal">🚗 تأجير سيارة شخصية</option>
                         <option value="wedding">🎁 سيارات أعراس ومناسبات</option>
@@ -76,7 +74,6 @@
     </main>
 
     <script>
-        // دالة التفاعل مع المدينة
         function adaptToCity() {
             const city = document.getElementById('citySelect').value;
             const greet = document.getElementById('dynamicGreeting');
@@ -85,19 +82,18 @@
             
             let timeText = hour < 12 ? "صباح الخير" : (hour < 18 ? "طاب يومك" : "مساء الخير");
             
-            // تخصيص الرسالة والألوان حسب المدينة
             const cityStyles = {
-                'كركوك': { msg: `أهلاً بأهل كركوك الغوالي.. الحوت في خدمتكم بقلب المدينة 💎`, color: '#004d40' },
-                'بغداد': { msg: `من بغداد دار السلام.. الحوت يوصلك وين ما تريد 🏰`, color: '#1a237e' },
-                'البصرة': { msg: `حي الله أهل البصرة.. خدماتنا وصلت لثغر العراق الباسم ⚓`, color: '#01579b' },
-                'أربيل': { msg: `بخير ببن لـ أربيل.. الحوت يرافقك في طرق الشمال الجميلة 🏔️`, color: '#33691e' },
-                'الموصل': { msg: `أهلاً بأهلنا في الموصل الحدباء.. الحوت يجدد العهد معكم 🏹`, color: '#3e2723' },
-                'النجف': { msg: `أهلاً بزوار وأهل النجف الكرام.. الحوت في خدمتكم 🕌`, color: '#bf360c' },
-                'كربلاء': { msg: `أهلاً بزوار وأهل كربلاء المقدسة.. الحوت معكم دائماً 🕌`, color: '#1b5e20' },
-                'السليمانية': { msg: `بخير ببن لـ سليماني.. استمتع بأجواء السليمانية مع سياراتنا 🏔️`, color: '#4a148c' }
+                'كركوك': { msg: `يا أهل كركوك.. الحوت يحييكم في مدينة التآخي والجمال 💎`, color: '#004d40' },
+                'بغداد': { msg: `من بغداد دار السلام.. الحوت يرافقكم في كل شوارعها العريقة 🏰`, color: '#1a237e' },
+                'أربيل': { msg: `بخير ببن لـ أربيل.. استمتع بجمال القلعة مع خدماتنا المتميزة 🏔️`, color: '#2e7d32' },
+                'البصرة': { msg: `حي الله أهل البصرة.. الحوت يرسو في ثغر العراق الباسم ⚓`, color: '#0277bd' },
+                'الموصل': { msg: `أهلاً بالموصل الحدباء.. خدمات الحوت في خدمة نينوى وأهلها 🏹`, color: '#4e342e' },
+                'السليمانية': { msg: `سليماني جوان.. تمتع بأجواء السليمانية الرائعة مع سياراتنا 🌲`, color: '#6a1b9a' },
+                'الأنبار': { msg: `تحية لأهل الأنبار الكرام.. الحوت يصل لقلب الكرم العراقي 🌴`, color: '#ef6c00' },
+                'ديالى': { msg: `أهلاً بك في ديالى.. الحوت في مدينة البرتقال والجمال 🍊`, color: '#558b2f' }
             };
 
-            const style = cityStyles[city] || { msg: `أهلاً بك في ${city}.. الحوت خيارك الذكي الأول 🐋`, color: '#002349' };
+            const style = cityStyles[city];
             
             greet.style.opacity = 0;
             setTimeout(() => {
@@ -130,7 +126,7 @@
 
         window.onload = function() {
             document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
-            adaptToCity(); // لتشغيل الترحيب فور فتح الموقع
+            adaptToCity();
         }
     </script>
 </body>

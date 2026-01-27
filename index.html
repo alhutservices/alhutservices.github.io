@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شركة الحوت 🐋 | منصة الخدمات الذكية</title>
+    <title>شركة الحوت 🐋 | Al-Hut Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; transition: 0.5s; }
         .hero-bg { background: linear-gradient(135deg, #002349 0%, #003366 100%); transition: 1s; position: relative; }
@@ -15,14 +15,25 @@
         .smart-input { width: 100%; padding: 1rem; background-color: #f1f5f9; border: 2px solid transparent; border-radius: 1.25rem; font-weight: 700; color: #002349; outline: none; transition: 0.3s; }
         .smart-input:focus { background-color: #fff; border-color: #D4AF37; }
         .city-overlay { position: absolute; inset: 0; opacity: 0.4; transition: 1s; pointer-events: none; }
+        
+        /* زر اختيار اللغة */
+        .lang-btn { background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 12px; font-size: 0.75rem; color: white; cursor: pointer; transition: 0.3s; }
+        .lang-btn:hover { background: #D4AF37; color: #002349; }
     </style>
 </head>
 <body class="text-[#002349]">
 
+    <div class="absolute top-4 left-4 right-4 z-50 flex justify-center gap-2">
+        <button onclick="changeLang('ar')" class="lang-btn">العربية</button>
+        <button onclick="changeLang('ku')" class="lang-btn">کوردی</button>
+        <button onclick="changeLang('tr')" class="lang-btn">Türkçe</button>
+        <button onclick="changeLang('en')" class="lang-btn">English</button>
+    </div>
+
     <header id="mainHero" class="hero-bg text-white pt-16 pb-44 text-center relative overflow-hidden">
         <div id="cityOverlay" class="city-overlay"></div>
         <div class="whale-float mb-4 text-7xl" id="whaleIcon">🐋</div>
-        <h1 class="text-6xl font-black text-[#D4AF37] mb-2 tracking-tighter">الحـوت</h1>
+        <h1 class="text-6xl font-black text-[#D4AF37] mb-2 tracking-tighter" id="brandName">الحـوت</h1>
         <p id="dynamicGreeting" class="text-xl opacity-90 font-light italic px-4 h-8 transition-all duration-500"></p>
     </header>
 
@@ -30,43 +41,31 @@
         <div class="bg-white shadow-2xl rounded-[3.5rem] p-8 md:p-12 max-w-7xl mx-auto border border-gray-100">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                 
-                <div class="md:col-span-2 space-y-2">
-                    <label class="block text-sm font-black text-slate-400 mr-2 uppercase">المدينة</label>
+                <div class="md:col-span-2 space-y-2 text-right" id="cityContainer">
+                    <label class="block text-sm font-black text-slate-400 mr-2 uppercase" id="labelCity">المدينة</label>
                     <select id="citySelect" onchange="adaptToCity()" class="smart-input appearance-none cursor-pointer">
-                        <option value="كركوك" selected>كركوك 💎</option>
-                        <option value="بغداد">بغداد 🏰</option>
-                        <option value="أربيل">أربيل 🏔️</option>
-                        <option value="السليمانية">السليمانية 🌲</option>
-                        <option value="الموصل">الموصل 🏹</option>
-                        <option value="البصرة">البصرة ⚓</option>
-                        <option value="الأنبار">الأنبار 🌴</option>
-                        <option value="ديالى">ديالى 🍊</option>
-                    </select>
+                        </select>
                 </div>
 
-                <div class="md:col-span-3 space-y-2">
-                    <label class="block text-sm font-black text-slate-400 mr-2 uppercase">الخدمة المطلوبة</label>
+                <div class="md:col-span-3 space-y-2 text-right" id="serviceContainer">
+                    <label class="block text-sm font-black text-slate-400 mr-2 uppercase" id="labelService">الخدمة المطلوبة</label>
                     <select id="mainService" class="smart-input appearance-none text-sm cursor-pointer">
-                        <option value="">-- اختر الخدمة --</option>
-                        <option value="personal">🚗 تأجير سيارة شخصية</option>
-                        <option value="wedding">🎁 سيارات أعراس ومناسبات</option>
-                        <option value="training">🎓 تعليم قيادة (مدربين)</option>
-                    </select>
+                        </select>
                 </div>
 
-                <div class="md:col-span-2 space-y-2">
-                    <label class="block text-sm font-black text-slate-400 mr-2">التاريخ</label>
+                <div class="md:col-span-2 space-y-2 text-right" id="dateContainer">
+                    <label class="block text-sm font-black text-slate-400 mr-2" id="labelDate">التاريخ</label>
                     <input type="date" id="dateInput" class="smart-input">
                 </div>
 
-                <div class="md:col-span-2 space-y-2">
-                    <label class="block text-sm font-black text-slate-400 mr-2">الوقت</label>
+                <div class="md:col-span-2 space-y-2 text-right" id="timeContainer">
+                    <label class="block text-sm font-black text-slate-400 mr-2" id="labelTime">الوقت</label>
                     <input type="time" id="timeInput" class="smart-input">
                 </div>
 
                 <div class="md:col-span-3">
-                    <button onclick="startBooking()" class="w-full bg-[#D4AF37] text-[#002349] py-4 rounded-2xl font-black text-xl shadow-xl hover:bg-[#b8962d] transition-all flex items-center justify-center gap-2 active:scale-95">
-                        استمر الآن <i class="fas fa-arrow-left"></i>
+                    <button id="submitBtn" onclick="startBooking()" class="w-full bg-[#D4AF37] text-[#002349] py-4 rounded-2xl font-black text-xl shadow-xl hover:bg-[#b8962d] transition-all flex items-center justify-center gap-2 active:scale-95">
+                        <span id="btnText">استمر الآن</span> <i id="btnIcon" class="fas fa-arrow-left"></i>
                     </button>
                 </div>
             </div>
@@ -74,59 +73,114 @@
     </main>
 
     <script>
+        let currentLang = 'ar';
+
+        const data = {
+            ar: {
+                dir: 'rtl', font: 'Tajawal', brand: 'الحـوت', labelCity: 'المدينة', labelService: 'الخدمة المطلوبة',
+                labelDate: 'التاريخ', labelTime: 'الوقت', btnText: 'استمر الآن', alert: 'يرجى ملء جميع الحقول للمتابعة 🐋',
+                morning: 'صباح الخير', day: 'طاب يومك', evening: 'مساء الخير',
+                services: { placeholder: '-- اختر الخدمة --', personal: '🚗 تأجير سيارة شخصية', wedding: '🎁 سيارات أعراس ومناسبات', training: '🎓 تعليم قيادة (مدربين)' },
+                cities: { 'كركوك': 'كركوك 💎', 'بغداد': 'بغداد 🏰', 'أربيل': 'أربيل 🏔️', 'السليمانية': 'السليمانية 🌲' },
+                msgs: { 'كركوك': 'يا أهل كركوك.. الحوت يحييكم في مدينة التآخي والجمال 💎', 'بغداد': 'من بغداد دار السلام.. الحوت يرافقكم في كل شوارعها العريقة 🏰', 'أربيل': 'بخير ببن لـ أربيل.. استمتع بجمال القلعة مع خدماتنا المتميزة 🏔️', 'السليمانية': 'سليماني جوان.. تمتع بأجواء السليمانية الرائعة مع سياراتنا 🌲' }
+            },
+            ku: {
+                dir: 'rtl', font: 'Tajawal', brand: 'ئەلحووت', labelCity: 'شار', labelService: 'جۆری خزمەتگوزاری',
+                labelDate: 'بەروار', labelTime: 'کات', btnText: 'بەردەوام بە', alert: 'تکایە هەموو خانەکان پڕبکەرەوە 🐋',
+                morning: 'بەیانیت باش', day: 'ڕۆژت باش', evening: 'ئێوارەت باش',
+                services: { placeholder: '-- خزمەتگوزاری هەڵبژێرە --', personal: '🚗 بەکرێگرتنی ئۆتۆمبێل', wedding: '🎁 ئۆتۆمبێلی زەماوەند', training: '🎓 فێربوونی شۆفێری' },
+                cities: { 'كركوك': 'کەرکوک 💎', 'بغداد': 'بەغداد 🏰', 'أربيل': 'هەولێر 🏔️', 'السليمانية': 'سلێمانی 🌲' },
+                msgs: { 'كركوك': 'سڵاو بۆ کەرکوکی دڵی کوردستان.. ئەلحووت خزمەتتان دەکات 💎', 'بغداد': 'سڵاو لە بەغدای پایتەخت.. ئەلحووت لەگەڵتاندایە 🏰', 'أربيل': 'بەخێربێن بۆ هەولێری قەڵا و منارە.. 🏔️', 'السليمانية': 'سلێمانی جوان.. چێژ لە کەشوهەوای سلێمانی وەربگرە 🌲' }
+            },
+            tr: {
+                dir: 'ltr', font: 'Poppins', brand: 'AL-HUT', labelCity: 'Şehir', labelService: 'Hizmet Türü',
+                labelDate: 'Tarih', labelTime: 'Saat', btnText: 'Devam Et', alert: 'Lütfen tüm alanları doldurun 🐋',
+                morning: 'Günaydın', day: 'İyi günler', evening: 'İyi akşamlar',
+                services: { placeholder: '-- Hizmet Seçin --', personal: '🚗 Bireysel Araç Kiralama', wedding: '🎁 Düğün ve Etkinlik Araçları', training: '🎓 Sürüş Eğitimi' },
+                cities: { 'كركوك': 'Kerkük 💎', 'بغداد': 'Bağdat 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Süleymaniye 🌲' },
+                msgs: { 'كركوك': 'Kerküklü kardeşlerimize selamlar.. Al-Hut yanınızda 💎', 'بغداد': 'Barış şehri Bağdat.. Al-Hut her sokakta sizinle 🏰', 'أربيل': 'Erbil\'e hoş geldiniz.. Kalenin güzelliğini bizimle yaşayın 🏔️', 'السليمانية': 'Güzel Süleymaniye.. Harika atmosferin tadını çıkarın 🌲' }
+            },
+            en: {
+                dir: 'ltr', font: 'Poppins', brand: 'AL-HUT', labelCity: 'City', labelService: 'Required Service',
+                labelDate: 'Date', labelTime: 'Time', btnText: 'Continue Now', alert: 'Please fill all fields to continue 🐋',
+                morning: 'Good Morning', day: 'Have a nice day', evening: 'Good Evening',
+                services: { placeholder: '-- Select Service --', personal: '🚗 Personal Car Rental', wedding: '🎁 Wedding & Events Cars', training: '🎓 Driving Training' },
+                cities: { 'كركوك': 'Kirkuk 💎', 'بغداد': 'Baghdad 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Slemani 🌲' },
+                msgs: { 'كركوك': 'Welcome Kirkuk.. Al-Hut greets the city of coexistence 💎', 'بغداد': 'From Baghdad, the city of peace.. Al-Hut is with you 🏰', 'أربيل': 'Welcome to Erbil.. Enjoy the Citadel with our services 🏔️', 'السليمانية': 'Slemani Jwan.. Enjoy the wonderful atmosphere with us 🌲' }
+            }
+        };
+
+        function changeLang(lang) {
+            currentLang = lang;
+            const l = data[lang];
+            
+            // تحديث الاتجاه والخط
+            document.getElementById('htmlTag').dir = l.dir;
+            document.body.style.fontFamily = l.font + ', sans-serif';
+            document.querySelectorAll('.text-right, .text-left').forEach(el => {
+                el.classList.remove('text-right', 'text-left');
+                el.classList.add(l.dir === 'rtl' ? 'text-right' : 'text-left');
+            });
+
+            // تحديث النصوص الثابتة
+            document.getElementById('brandName').innerText = l.brand;
+            document.getElementById('labelCity').innerText = l.labelCity;
+            document.getElementById('labelService').innerText = l.labelService;
+            document.getElementById('labelDate').innerText = l.labelDate;
+            document.getElementById('labelTime').innerText = l.labelTime;
+            document.getElementById('btnText').innerText = l.btnText;
+            document.getElementById('btnIcon').className = `fas fa-arrow-${l.dir === 'rtl' ? 'left' : 'right'}`;
+
+            // تحديث قائمة المدن
+            const citySelect = document.getElementById('citySelect');
+            const currentCity = citySelect.value || 'كركوك';
+            citySelect.innerHTML = Object.entries(l.cities).map(([key, val]) => `<option value="${key}" ${key === currentCity ? 'selected' : ''}>${val}</option>`).join('');
+
+            // تحديث قائمة الخدمات
+            const serviceSelect = document.getElementById('mainService');
+            serviceSelect.innerHTML = `
+                <option value="">${l.services.placeholder}</option>
+                <option value="personal">${l.services.personal}</option>
+                <option value="wedding">${l.services.wedding}</option>
+                <option value="training">${l.services.training}</option>
+            `;
+
+            adaptToCity();
+        }
+
         function adaptToCity() {
             const city = document.getElementById('citySelect').value;
             const greet = document.getElementById('dynamicGreeting');
             const overlay = document.getElementById('cityOverlay');
+            const l = data[currentLang];
             const hour = new Date().getHours();
             
-            let timeText = hour < 12 ? "صباح الخير" : (hour < 18 ? "طاب يومك" : "مساء الخير");
-            
-            const cityStyles = {
-                'كركوك': { msg: `يا أهل كركوك.. الحوت يحييكم في مدينة التآخي والجمال 💎`, color: '#004d40' },
-                'بغداد': { msg: `من بغداد دار السلام.. الحوت يرافقكم في كل شوارعها العريقة 🏰`, color: '#1a237e' },
-                'أربيل': { msg: `بخير ببن لـ أربيل.. استمتع بجمال القلعة مع خدماتنا المتميزة 🏔️`, color: '#2e7d32' },
-                'البصرة': { msg: `حي الله أهل البصرة.. الحوت يرسو في ثغر العراق الباسم ⚓`, color: '#0277bd' },
-                'الموصل': { msg: `أهلاً بالموصل الحدباء.. خدمات الحوت في خدمة نينوى وأهلها 🏹`, color: '#4e342e' },
-                'السليمانية': { msg: `سليماني جوان.. تمتع بأجواء السليمانية الرائعة مع سياراتنا 🌲`, color: '#6a1b9a' },
-                'الأنبار': { msg: `تحية لأهل الأنبار الكرام.. الحوت يصل لقلب الكرم العراقي 🌴`, color: '#ef6c00' },
-                'ديالى': { msg: `أهلاً بك في ديالى.. الحوت في مدينة البرتقال والجمال 🍊`, color: '#558b2f' }
-            };
+            let timeText = hour < 12 ? l.morning : (hour < 18 ? l.day : l.evening);
+            const styleColor = { 'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'السليمانية': '#6a1b9a' };
 
-            const style = cityStyles[city];
-            
             greet.style.opacity = 0;
             setTimeout(() => {
-                greet.innerText = `${timeText}.. ${style.msg}`;
+                greet.innerText = `${timeText}.. ${l.msgs[city] || ''}`;
                 greet.style.opacity = 1;
-                overlay.style.backgroundColor = style.color;
+                overlay.style.backgroundColor = styleColor[city] || '#002349';
             }, 300);
         }
 
         function startBooking() {
-            const city = document.getElementById('citySelect').value;
             const service = document.getElementById('mainService').value;
             const date = document.getElementById('dateInput').value;
             const time = document.getElementById('timeInput').value;
 
             if(!service || !date || !time) {
-                alert("يرجى ملء جميع الحقول للمتابعة 🐋");
+                alert(data[currentLang].alert);
                 return;
             }
-
-            const query = `?province=${encodeURIComponent(city)}&date=${date}&time=${encodeURIComponent(time)}&type=${service}`;
-
-            if(service === 'personal' || service === 'wedding') {
-                window.location.href = `fleet.html${query}`;
-            } 
-            else if(service === 'training') {
-                window.location.href = `booking_training.html${query}`;
-            }
+            window.location.href = `fleet.html?type=${service}&lang=${currentLang}`;
         }
 
-        window.onload = function() {
+        window.onload = () => {
             document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
-            adaptToCity();
+            changeLang('ar');
         }
     </script>
 </body>

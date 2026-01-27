@@ -58,9 +58,6 @@
             </div>
 
             <div class="space-y-3">
-                <div class="bg-purple-100 p-3 rounded-xl border-r-4 transition-all duration-500" style="border-color: var(--main-color); background-color: var(--bg-soft);">
-                    <p class="text-[11px] font-black text-indigo-900">💡 ملاحظة: تحديد الجنس يساعدنا في توفير المدرب أو المدربة المناسبة لك.</p>
-                </div>
                 <label class="block text-xs font-black text-gray-400 mr-2 uppercase">جنس المتدرب</label>
                 <div class="flex gap-4">
                     <div id="maleBtn" onclick="setGender('ذكر 👨')" class="gender-btn active">👨 ذكر</div>
@@ -85,38 +82,36 @@
     <script>
         let map, marker, selectedGender = 'ذكر 👨';
         const p = new URLSearchParams(window.location.search);
+        
+        // استلام البيانات من الصفحة الرئيسية
+        const province = p.get('province') || 'غير محدد';
         const date = p.get('date') || 'اليوم'; 
         const time = p.get('time') || 'الآن';
-        document.getElementById('summary').innerHTML = `📅 يبدأ في: ${date} <span class="mx-2">|</span> ⏰ الساعة: ${time}`;
+
+        document.getElementById('summary').innerHTML = `📍 المدينة: ${province} <span class="mx-2">|</span> 📅 التاريخ: ${date}`;
 
         window.onload = function() {
             map = L.map('map').setView([35.4687, 44.3921], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
             marker = L.marker([35.4687, 44.3921], {draggable: true}).addTo(map);
 
-            // إضافة البحث داخل الخريطة
-            L.Control.geocoder({
-                defaultMarkGeocode: false,
-                placeholder: "ابحث عن منطقة...",
-            })
+            L.Control.geocoder({ defaultMarkGeocode: false, placeholder: "ابحث عن منطقة..." })
             .on('markgeocode', function(e) {
-                const center = e.geocode.center;
-                map.setView(center, 16);
-                marker.setLatLng(center);
-            })
-            .addTo(map);
+                map.setView(e.geocode.center, 16);
+                marker.setLatLng(e.geocode.center);
+            }).addTo(map);
         };
 
         function setGender(g) {
             selectedGender = g;
             const root = document.documentElement;
             if(g === 'أنثى 👩') {
-                root.style.setProperty('--main-color', '#db2777'); // زهري
+                root.style.setProperty('--main-color', '#db2777');
                 root.style.setProperty('--bg-soft', '#fdf2f8');
                 document.getElementById('femaleBtn').classList.add('active');
                 document.getElementById('maleBtn').classList.remove('active');
             } else {
-                root.style.setProperty('--main-color', '#7c3aed'); // أرجواني
+                root.style.setProperty('--main-color', '#7c3aed');
                 root.style.setProperty('--bg-soft', '#f5f3ff');
                 document.getElementById('maleBtn').classList.add('active');
                 document.getElementById('femaleBtn').classList.remove('active');
@@ -137,9 +132,10 @@
             const age = document.getElementById('tAge').value;
             const latlng = marker.getLatLng();
 
-            if(!name || !phone || !nationalID || !age) { alert("⚠️ يرجى إكمال جميع البيانات"); return; }
+            if(!name || !phone || !nationalID || !age) { alert("⚠️ يرجى إكمال البيانات"); return; }
             
-            window.location.href = `review.html?service=training&car=كورس تعليم قيادة&date=${date}&time=${encodeURIComponent(time)}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&nationalID=${encodeURIComponent(nationalID)}&age=${age}&gender=${encodeURIComponent(selectedGender)}&lat=${latlng.lat}&lng=${latlng.lng}&emoji=🎓`;
+            // هنا السر: نقوم بإرسال province لصفحة المراجعة
+            window.location.href = `review.html?service=training&province=${encodeURIComponent(province)}&car=كورس تعليم قيادة&date=${date}&time=${encodeURIComponent(time)}&name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}&nationalID=${encodeURIComponent(nationalID)}&age=${age}&gender=${encodeURIComponent(selectedGender)}&lat=${latlng.lat}&lng=${latlng.lng}&emoji=🎓`;
         }
     </script>
 </body>

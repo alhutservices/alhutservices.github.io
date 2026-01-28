@@ -3,133 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة عمليات الحوت 🐋</title>
+    <title>منصة الحوت الذكية 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .active-tab { border-bottom: 4px solid #D4AF37; color: #D4AF37; }
-        .pulse-new { animation: pulse-red 2s infinite; }
-        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.2); } 70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); } 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); } }
+        body { background-color: #f8fafc; font-family: 'Tajawal', sans-serif; }
+        .tab-active { color: #002349; border-bottom: 3px solid #D4AF37; }
+        .order-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .order-card:hover { transform: translateY(-5px); }
+        .shimmer { background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
-<body class="bg-slate-50 font-['Tajawal'] min-h-screen">
+<body>
 
-    <div id="loginScreen" class="fixed inset-0 bg-[#002349] z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white p-8 rounded-[2.5rem] max-w-sm w-full text-center shadow-2xl">
-            <h2 class="text-2xl font-black text-[#002349] mb-4">تسجيل مكتب الحوت 🐋</h2>
-            <input type="text" id="regOfficeName" placeholder="اسم المكتب" class="w-full p-4 mb-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#D4AF37]">
-            <select id="regCity" class="w-full p-4 mb-6 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#D4AF37]">
+    <div id="loginScreen" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-8 rounded-[2.5rem] max-w-sm w-full shadow-2xl border-t-8 border-[#D4AF37]">
+            <div class="text-center mb-6">
+                <div class="text-4xl mb-2">🐋</div>
+                <h2 class="text-xl font-black text-[#002349]">مرحباً بك في منصة الحوت</h2>
+                <p class="text-gray-400 text-xs font-bold">يرجى تحديد هويتك للبدء</p>
+            </div>
+            <input type="text" id="regOfficeName" placeholder="اسم المكتب الرسمي" class="w-full p-4 mb-4 bg-slate-50 rounded-2xl font-bold outline-none border-2 border-transparent focus:border-[#D4AF37] transition-all">
+            <select id="regCity" class="w-full p-4 mb-6 bg-slate-50 rounded-2xl font-bold outline-none border-2 border-transparent focus:border-[#D4AF37] transition-all">
                 <option value="">اختر محافظتك</option>
-                <option value="كركوك">كركوك</option><option value="بغداد">بغداد</option><option value="أربيل">أربيل</option><option value="الموصل">الموصل</option><option value="البصرة">البصرة</option>
+                <option value="كركوك">كركوك</option>
+                <option value="بغداد">بغداد</option>
+                <option value="أربيل">أربيل</option>
+                <option value="الموصل">الموصل</option>
+                <option value="البصرة">البصرة</option>
             </select>
-            <button onclick="saveProfile()" class="w-full bg-[#002349] text-[#D4AF37] py-4 rounded-2xl font-black shadow-lg">تفعيل اللوحة</button>
+            <button onclick="saveProfile()" class="w-full bg-[#002349] text-white py-4 rounded-2xl font-black shadow-lg hover:bg-slate-800 transition-all">دخول المنصة</button>
         </div>
     </div>
 
-    <div class="max-w-4xl mx-auto p-4">
-        <header class="bg-[#002349] text-white p-6 rounded-[2rem] mb-4 shadow-xl">
-            <div class="flex justify-between items-center mb-6">
-                <div><h1 class="text-xl font-black">مركز العمليات 🐋</h1><p id="profileDisplay" class="text-[10px] text-[#D4AF37] font-bold"></p></div>
-                <button onclick="clearProfile()" class="text-[10px] opacity-50">تسجيل خروج</button>
+    <div class="max-w-2xl mx-auto pb-20">
+        <header class="bg-white border-b sticky top-0 z-40 px-6 py-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-black text-[#002349]">غرفة العمليات 🐋</h1>
+                <p id="profileInfo" class="text-[10px] font-bold text-[#D4AF37] uppercase tracking-tighter"></p>
             </div>
-            <div class="flex gap-4 border-t border-white/10 pt-4">
-                <button onclick="switchTab('new')" id="tabNew" class="flex-1 pb-2 font-black active-tab">طلبات جديدة</button>
-                <button onclick="switchTab('claimed')" id="tabClaimed" class="flex-1 pb-2 font-black opacity-50">طلباتي المستلمة</button>
-            </div>
+            <button onclick="clearProfile()" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:text-red-500 transition-all">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
         </header>
-        <div id="ordersArea" class="space-y-4"></div>
+
+        <div class="flex bg-white px-2 border-b">
+            <button onclick="switchTab('new')" id="btnNew" class="flex-1 py-4 text-sm font-black tab-active transition-all">الطلبات الواردة</button>
+            <button onclick="switchTab('mine')" id="btnMine" class="flex-1 py-4 text-sm font-black text-slate-400 transition-all">طلباتي المستلمة</button>
+        </div>
+
+        <div id="contentArea" class="p-4 space-y-4">
+            </div>
     </div>
+
+    <button onclick="refreshData()" class="fixed bottom-6 left-6 w-14 h-14 bg-[#002349] text-[#D4AF37] rounded-full shadow-2xl flex items-center justify-center animate-bounce z-50">
+        <i class="fas fa-sync-alt"></i>
+    </button>
 
     <audio id="alertSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbzP18ey_neMD-NMnB8YZQIJ5OhH7Val9NwVfn_XWbv9qVFpMKGximwr5hE6MN4NmXY0YQ/exec";
-        let currentTab = 'new', myOffice = localStorage.getItem('huta_office'), myCity = localStorage.getItem('huta_city'), lastCount = 0;
+        let currentTab = 'new';
+        let office = localStorage.getItem('huta_office');
+        let city = localStorage.getItem('huta_city');
+        let lastId = "";
 
         window.onload = () => {
-            if (!myOffice || !myCity) document.getElementById('loginScreen').classList.remove('hidden');
-            else { document.getElementById('profileDisplay').innerText = `المكتب: ${myOffice} | ${myCity}`; refreshData(); setInterval(refreshData, 20000); }
+            if (!office || !city) {
+                document.getElementById('loginScreen').classList.remove('hidden');
+            } else {
+                document.getElementById('profileInfo').innerText = `المكتب: ${office} | ${city}`;
+                refreshData();
+                setInterval(refreshData, 15000); // تحديث كل 15 ثانية لمواكبة الطلبات
+            }
         };
 
         function saveProfile() {
-            const o = document.getElementById('regOfficeName').value.trim(), c = document.getElementById('regCity').value;
-            if(o && c) { localStorage.setItem('huta_office', o); localStorage.setItem('huta_city', c); location.reload(); }
+            const o = document.getElementById('regOfficeName').value.trim();
+            const c = document.getElementById('regCity').value;
+            if (o && c) {
+                localStorage.setItem('huta_office', o);
+                localStorage.setItem('huta_city', c);
+                location.reload();
+            }
         }
 
-        function clearProfile() { if(confirm("خروج؟")) { localStorage.clear(); location.reload(); } }
+        function clearProfile() { if(confirm("هل تريد تسجيل الخروج؟")) { localStorage.clear(); location.reload(); } }
 
-        function switchTab(tab) {
-            currentTab = tab;
-            document.getElementById('tabNew').classList.toggle('active-tab', tab === 'new');
-            document.getElementById('tabNew').classList.toggle('opacity-50', tab !== 'new');
-            document.getElementById('tabClaimed').classList.toggle('active-tab', tab === 'claimed');
-            document.getElementById('tabClaimed').classList.toggle('opacity-50', tab !== 'claimed');
+        function switchTab(t) {
+            currentTab = t;
+            document.getElementById('btnNew').className = t === 'new' ? 'flex-1 py-4 text-sm font-black tab-active' : 'flex-1 py-4 text-sm font-black text-slate-400';
+            document.getElementById('btnMine').className = t === 'mine' ? 'flex-1 py-4 text-sm font-black tab-active' : 'flex-1 py-4 text-sm font-black text-slate-400';
             refreshData();
         }
 
         async function refreshData() {
             try {
                 const response = await fetch(`${scriptURL}?action=getAllOrders`);
-                const allOrders = await response.json();
+                const data = await response.json();
+                
                 if (currentTab === 'new') {
-                    const newOrders = allOrders.filter(o => o.province === myCity && o.status === "قيد الانتظار");
-                    if(newOrders.length > lastCount) document.getElementById('alertSound').play().catch(e=>{});
-                    lastCount = newOrders.length;
-                    renderNewOrders(newOrders);
+                    // تصفية الطلبات: يجب أن تكون في نفس المدينة وحالتها "قيد الانتظار"
+                    const news = data.filter(o => o.province.trim() === city.trim() && o.status === "قيد الانتظار");
+                    if (news.length > 0 && news[0].id !== lastId) {
+                        document.getElementById('alertSound').play().catch(e => {});
+                        lastId = news[0].id;
+                    }
+                    renderNew(news);
                 } else {
-                    renderClaimedOrders(allOrders.filter(o => o.claimedBy === myOffice && o.status !== "ملغي نهائياً ❌"));
+                    const mines = data.filter(o => o.claimedBy === office && o.status !== "ملغي نهائياً ❌");
+                    renderMines(mines);
                 }
-            } catch (e) { console.log("خطأ اتصال"); }
+            } catch (e) { console.error("Connection Error"); }
         }
 
-        function renderNewOrders(orders) {
-            let html = orders.length === 0 ? '<p class="text-center py-10 opacity-40">لا توجد طلبات جديدة...</p>' : '';
+        function renderNew(orders) {
+            let html = orders.length === 0 ? '<div class="text-center py-20"><i class="fas fa-radar fa-3x text-slate-100 mb-4"></i><p class="text-slate-300 font-bold">بانتظار طلبات جديدة من ' + city + '...</p></div>' : '';
             orders.forEach(o => {
-                html += `<div class="bg-white p-6 rounded-[2rem] shadow-sm border-r-8 border-red-500 pulse-new flex justify-between items-center">
-                    <div><h3 class="font-black text-[#002349]">${o.car}</h3><p class="text-xs font-bold text-gray-400">الموعد: ${o.time}</p></div>
-                    <button onclick="claimOrder('${o.id}')" class="bg-[#002349] text-[#D4AF37] px-6 py-3 rounded-xl font-black text-sm">استلام</button>
+                html += `
+                <div class="order-card bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 flex justify-between items-center border-r-8 border-blue-500">
+                    <div>
+                        <h3 class="font-black text-[#002349] text-lg">${o.car}</h3>
+                        <p class="text-[10px] font-bold text-slate-400 italic">الموعد: ${o.time}</p>
+                    </div>
+                    <button onclick="claim('${o.id}')" class="bg-[#002349] text-white px-8 py-3 rounded-2xl font-black text-sm hover:bg-black transition-all shadow-md">استلام ✅</button>
                 </div>`;
             });
-            document.getElementById('ordersArea').innerHTML = html;
+            document.getElementById('contentArea').innerHTML = html;
         }
 
-        function renderClaimedOrders(orders) {
-            let html = orders.length === 0 ? '<p class="text-center py-10 opacity-40">لم تستلم أي طلبات بعد...</p>' : '';
+        function renderMines(orders) {
+            let html = orders.length === 0 ? '<div class="text-center py-20"><p class="text-slate-300 font-bold italic">لم تقم باستلام أي طلبات بعد</p></div>' : '';
             orders.forEach(o => {
-                const isPendingCancel = o.status === "مطلوب إلغاء ⚠️";
-                html += `<div class="bg-white p-6 rounded-[2rem] shadow-md border-r-8 ${isPendingCancel ? 'border-orange-400' : 'border-green-500'}">
-                    <div class="flex justify-between mb-4">
-                        <span class="px-3 py-1 rounded-full text-[10px] font-black italic ${isPendingCancel ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-700'}">
-                            ${o.status === "تم الاستلام" ? 'بيانات الزبون جاهزة ✅' : o.status}
-                        </span>
+                const isCanceled = o.status === "مطلوب إلغاء ⚠️";
+                html += `
+                <div class="order-card bg-white p-6 rounded-[2.5rem] shadow-lg border-r-8 ${isCanceled ? 'border-orange-400' : 'border-green-500'}">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[9px] font-black px-3 py-1 bg-slate-100 rounded-full text-slate-500">ID: ${o.id}</span>
+                        <span class="text-[10px] font-black ${isCanceled ? 'text-orange-500' : 'text-green-600'} italic underline">${o.status}</span>
                     </div>
-                    <h3 class="font-black text-xl text-[#002349] mb-2">${o.car}</h3>
-                    <div class="space-y-2 text-sm font-bold">
-                        <p class="flex justify-between border-b pb-1"><span>👤 الزبون:</span> <span>${o.name}</span></p>
-                        <p class="flex justify-between border-b pb-1"><span>📞 الهاتف:</span> <a href="tel:${o.phone}" class="text-blue-600 underline">${o.phone}</a></p>
-                        <p class="flex justify-between border-b pb-1"><span>⏰ الموعد:</span> <span>${o.time}</span></p>
+                    <h3 class="font-black text-xl text-[#002349] mb-4">${o.car}</h3>
+                    <div class="grid gap-3 mb-6">
+                        <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl">
+                            <i class="fas fa-user text-slate-400"></i>
+                            <span class="font-bold text-sm text-slate-700">${o.name}</span>
+                        </div>
+                        <a href="tel:${o.phone}" class="flex items-center gap-3 bg-green-50 p-3 rounded-2xl">
+                            <i class="fas fa-phone text-green-500"></i>
+                            <span class="font-black text-sm text-green-700">${o.phone}</span>
+                        </a>
                     </div>
-                    <div class="grid grid-cols-2 gap-2 mt-4">
-                        <button onclick="completeOrder('${o.id}')" class="bg-green-600 text-white py-3 rounded-xl font-black text-xs">إتمام الطلب</button>
-                        <button onclick="requestCancel('${o.id}')" class="bg-red-100 text-red-600 py-3 rounded-xl font-black text-xs">طلب إلغاء</button>
+                    <div class="flex gap-2">
+                        <button onclick="complete('${o.id}')" class="flex-1 bg-green-600 text-white py-4 rounded-2xl font-black text-xs">تم الإنجاز</button>
+                        <button onclick="cancel('${o.id}')" class="flex-1 bg-red-50 text-red-600 py-4 rounded-2xl font-black text-xs">طلب إلغاء</button>
                     </div>
                 </div>`;
             });
-            document.getElementById('ordersArea').innerHTML = html;
+            document.getElementById('contentArea').innerHTML = html;
         }
 
-        async function claimOrder(id) {
-            const res = await fetch(`${scriptURL}?action=claim&id=${id}&office=${encodeURIComponent(myOffice)}`);
-            if((await res.text()) === "تم بنجاح") switchTab('claimed');
+        async function claim(id) {
+            const res = await fetch(`${scriptURL}?action=claim&id=${id}&office=${encodeURIComponent(office)}`);
+            if (await res.text()) switchTab('mine');
         }
 
-        async function completeOrder(id) {
-            if(confirm("هل تم إكمال الخدمة؟")) { await fetch(`${scriptURL}?action=complete&id=${id}`); refreshData(); }
+        async function complete(id) {
+            if (confirm("سيتم نقل الطلب للأرشيف، هل انتهيت؟")) {
+                await fetch(`${scriptURL}?action=complete&id=${id}`);
+                refreshData();
+            }
         }
 
-        async function requestCancel(id) {
-            const reason = prompt("سبب الإلغاء:");
-            if(reason) { await fetch(`${scriptURL}?action=requestCancel&id=${id}&reason=${encodeURIComponent(reason)}`); refreshData(); }
+        async function cancel(id) {
+            const r = prompt("ما هو سبب طلب الإلغاء؟");
+            if (r) {
+                await fetch(`${scriptURL}?action=requestCancel&id=${id}&reason=${encodeURIComponent(r)}`);
+                refreshData();
+            }
         }
     </script>
 </body>

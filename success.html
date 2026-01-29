@@ -56,10 +56,10 @@
 
     <script>
         const u = new URLSearchParams(window.location.search);
-        // رابط تطبيق الويب الجديد (الذي قمت بنشره)
-        const scriptURL = "https://script.google.com/macros/s/AKfycby-n4RGZSmkxBI_gmsOIF8sygwGJAXH-l4yvP15EpL8NdcKyZa4M_bQCygy_Ki2nW3IbQ/exec";
+        
+        // الرابط الجديد الذي قمت بتزويدي به
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzj6sn1vSd6EbPbxrPZ3wkLiyrCcxtxj6PCkXL5IjluEulWnqKPHwED-9yyJHxSN-zTvA/exec";
 
-        // محرك الترجمة العكسي لضمان وصول البيانات للإكسل بالعربية فقط
         const translationMap = {
             "Kirkuk": "كركوك", "Baghdad": "بغداد", "Erbil": "أربيل", "Basra": "البصرة",
             "Duhok": "دهوك", "Sulaymaniyah": "السليمانية", "Mosul": "الموصل", 
@@ -74,10 +74,8 @@
         }
 
         window.onload = () => {
-            // إطلاق الاحتفال
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#002349', '#D4AF37'] });
             
-            // جلب البيانات من الرابط
             const rawProv = u.get('city') || u.get('province');
             const rawCar = u.get('car') || u.get('type');
             const rawName = u.get('name') || "زبون مجهول";
@@ -85,10 +83,8 @@
             const rawTime = u.get('time') || "غير محدد";
             const rawPrice = u.get('price') || "0";
 
-            // عرض المحافظة بالعربية في الواجهة
             document.getElementById('prov-ar').innerText = translateToArabic(rawProv);
 
-            // توليد رقم طلب فريد
             let randomID = sessionStorage.getItem('currentOrderID');
             if (!randomID) {
                 randomID = "HUT-" + Math.floor(1000 + Math.random() * 9000);
@@ -96,29 +92,27 @@
             }
             document.getElementById('orderIDDisplay').innerText = "#" + randomID;
             
-            // إرسال البيانات فوراً للإكسل (مرة واحدة فقط)
             if (!sessionStorage.getItem('orderSent')) {
                 const data = {
                     order_id: randomID,
                     name: rawName,
                     phone: rawPhone,
-                    province: translateToArabic(rawProv), // هنا السحر: البيانات تذهب عربية حصراً
-                    car: translateToArabic(rawCar),     // هنا السحر: البيانات تذهب عربية حصراً
+                    province: translateToArabic(rawProv),
+                    car: translateToArabic(rawCar),
                     time: rawTime,
                     price: rawPrice
                 };
 
-                // إرسال البيانات باستخدام fetch
                 fetch(scriptURL, {
                     method: 'POST',
-                    mode: 'no-cors', // لضمان العمل بدون مشاكل CORS
+                    mode: 'no-cors', 
                     cache: 'no-cache',
                     body: JSON.stringify(data)
                 }).then(() => {
                     sessionStorage.setItem('orderSent', 'true');
-                    console.log("✅ تمت بنجاح: البيانات في طريقها للإكسل والداشبورد");
+                    console.log("✅ الطلبية أرسلت بنجاح إلى الإكسل والداشبورد");
                 }).catch(err => {
-                    console.error("❌ فشل الإرسال:", err);
+                    console.error("❌ خطأ في الإرسال:", err);
                 });
             }
         };

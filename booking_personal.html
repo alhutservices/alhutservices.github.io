@@ -17,8 +17,6 @@
         .section-card { background: white; border-radius: 3.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08); }
         #map { height: 220px; border-radius: 2.5rem; border: 4px solid #f1f5f9; z-index: 1; }
         .icon-box { width: 40px; height: 40px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #002349; }
-        [dir="rtl"] .icon-box { margin-left: 12px; }
-        [dir="ltr"] .icon-box { margin-right: 12px; }
     </style>
 </head>
 <body class="text-[#002349]">
@@ -57,13 +55,11 @@
         const currentLang = u.get('lang') || 'ar';
         const trans = {
             ar: { dir: 'rtl', font: 'Tajawal', title: 'إكمال بيانات الرحلة', sub: 'طلب حجز:', sec1: 'المعلومات الشخصية', name: 'الاسم الكامل', phone: 'رقم الهاتف', sec2: 'الوثائق القانونية', id: 'رقم الهوية', license: 'رقم الإجازة', sec3: 'موقع التسليم', gps: 'تحديد موقعي 🛰️', submit: 'مراجعة الطلب النهائي', alert: 'يرجى ملء الحقول 🐋' },
-            ku: { dir: 'rtl', font: 'Tajawal', title: 'تەواوکردنی زانیاری', sub: 'داواکاری حیجز:', sec1: 'زانیاری کەسی', name: 'ناوی تەواو', phone: 'ژمارەی مۆبایل', sec2: 'بەڵگەنامەکان', id: 'ژمارەی ناسنامە', license: 'ژمارەی مۆڵەت', sec3: 'شوێنی وەرگرتن', gps: 'شوێنەکەم دیاری بکە 🛰️', submit: 'پێداچوونەوە', alert: 'خانەکان پڕبکەرەوە 🐋' },
-            tr: { dir: 'ltr', font: 'Poppins', title: 'Bilgileri Tamamla', sub: 'Rezervasyon:', sec1: 'Kişisel Bilgiler', name: 'Ad Soyad', phone: 'Telefon', sec2: 'Yasal Belgeler', id: 'Kimlik No', license: 'Ehliyet No', sec3: 'Teslimat Konumu', gps: 'Konumu Belirle 🛰️', submit: 'Son İnceleme', alert: 'Lütfen alanları doldurun 🐋' },
             en: { dir: 'ltr', font: 'Poppins', title: 'Complete Details', sub: 'Booking:', sec1: 'Personal Info', name: 'Full Name', phone: 'Phone', sec2: 'Documents', id: 'ID Number', license: 'License No', sec3: 'Delivery Location', gps: 'Get Location 🛰️', submit: 'Final Review', alert: 'Please fill all fields 🐋' }
         };
 
         window.onload = function() {
-            const l = trans[currentLang];
+            const l = trans[currentLang] || trans['ar'];
             document.getElementById('htmlTag').dir = l.dir;
             document.body.style.fontFamily = l.font;
             document.getElementById('pageTitle').innerText = l.title;
@@ -84,13 +80,26 @@
         };
 
         function getLocation() { navigator.geolocation.getCurrentPosition(p => { const c=[p.coords.latitude, p.coords.longitude]; map.setView(c,16); marker.setLatLng(c); }); }
+
         function confirmBooking() {
-            if(!document.getElementById('custName').value) { alert(trans[currentLang].alert); return; }
-            u.set('name', document.getElementById('custName').value);
-            u.set('phone', document.getElementById('custPhone').value);
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            
+            if(!name || !phone) { alert(trans[currentLang].alert); return; }
+
+            // إعداد البيانات الجديدة
+            const pos = marker.getLatLng();
+            const googleMapsLink = `https://www.google.com/maps?q=${pos.lat},${pos.lng}`;
+            
+            u.set('name', name);
+            u.set('phone', phone);
             u.set('id_no', document.getElementById('idNumber').value);
             u.set('license', document.getElementById('drivingLicense').value);
-            const pos = marker.getLatLng(); u.set('lat', pos.lat); u.set('lng', pos.lng); u.set('lang', currentLang);
+            u.set('service', 'تأجير سيارة شخصية'); // نوع الخدمة ثابت هنا
+            u.set('gender', 'Male'); // افتراضي للشخصي
+            u.set('map', googleMapsLink); // رابط الخريطة
+            u.set('lang', currentLang);
+
             window.location.href = `review.html?${u.toString()}`;
         }
     </script>

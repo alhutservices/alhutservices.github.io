@@ -3,137 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رادار الحوت السريع 🐋🔊</title>
+    <title>رادار الحوت | Dash-Ultra 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f1f5f9; }
-        .glass-card { background: white; border: 1px solid #e2e8f0; transition: all 0.2s ease; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f1f5f9; overflow-x: hidden; }
+        .glass-card { background: white; border-radius: 2rem; border: 1px solid #e2e8f0; transition: transform 0.2s; }
+        .glass-card:active { transform: scale(0.98); }
         .tab-active { color: #002349; border-bottom: 4px solid #D4AF37; font-weight: 900; }
-        .new-order-pulse { animation: shadow-pulse 1s infinite; }
-        @keyframes shadow-pulse { 0% { box-shadow: 0 0 0 0px rgba(212, 175, 55, 0.4); } 100% { box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); } }
+        .badge-new { animation: pulse-gold 1.5s infinite; }
+        @keyframes pulse-gold { 
+            0% { background-color: #D4AF37; } 
+            50% { background-color: #002349; color: white; } 
+            100% { background-color: #D4AF37; } 
+        }
+        .loading-bar { height: 3px; background: #D4AF37; width: 0%; transition: width 0.3s; position: fixed; top: 0; z-index: 100; }
     </style>
 </head>
-<body class="text-slate-800 pb-24">
+<body class="pb-24">
 
+    <div id="loader" class="loading-bar"></div>
     <audio id="alertSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
 
-    <nav class="sticky top-0 z-50 bg-[#002349] text-white px-6 py-4 flex justify-between items-center shadow-xl">
-        <div>
-            <h1 class="text-xl font-black italic">HUTA <span class="text-[#D4AF37]">RADAR</span></h1>
-            <p id="navOfficeInfo" class="text-[9px] text-blue-200 font-bold uppercase"></p>
+    <nav class="sticky top-0 z-50 bg-[#002349] text-white px-5 py-4 flex justify-between items-center shadow-2xl">
+        <div class="flex items-center gap-2">
+            <div class="bg-[#D4AF37] p-2 rounded-lg text-[#002349] font-black text-xs">🐋 رادار</div>
+            <p id="navOfficeInfo" class="text-[10px] font-bold opacity-80 uppercase tracking-tighter"></p>
         </div>
-        <div class="flex items-center gap-3">
-            <span id="syncStatus" class="w-3 h-3 bg-green-500 rounded-full animate-ping"></span>
-            <button onclick="logout()" class="bg-red-500/20 text-red-400 text-[10px] font-black px-4 py-2 rounded-lg border border-red-500/30">خروج</button>
-        </div>
+        <button onclick="logout()" class="text-[10px] font-black bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1.5 rounded-lg">خروج</button>
     </nav>
 
-    <div class="flex bg-white border-b border-slate-200 sticky top-[68px] z-40 shadow-sm">
-        <button onclick="switchTab('new')" id="tabNew" class="flex-1 py-4 text-sm font-black text-slate-400 transition-all tab-active uppercase">الطلبات المتاحة ⚡</button>
-        <button onclick="switchTab('mine')" id="tabMine" class="flex-1 py-4 text-sm font-black text-slate-400 transition-all uppercase">طلباتي 📦</button>
+    <div class="flex bg-white sticky top-[62px] z-40 border-b border-slate-200 shadow-sm">
+        <button onclick="switchTab('new')" id="tabNew" class="flex-1 py-4 text-xs font-black transition-all tab-active">الرادار العام ✨</button>
+        <button onclick="switchTab('mine')" id="tabMine" class="flex-1 py-4 text-xs font-black transition-all text-slate-400">طلباتي المستلمة 📦</button>
     </div>
 
-    <main class="p-4 max-w-2xl mx-auto space-y-4" id="mainContainer">
-        <div class="text-center py-20 text-slate-400 italic">جاري تشغيل الرادار...</div>
-    </main>
+    <main class="p-4 max-w-2xl mx-auto space-y-4" id="mainContainer"></main>
 
     <script>
-        // الرابط الجديد الفعال
+        // رابط تطبيق الويب الجديد
         const scriptURL = "https://script.google.com/macros/s/AKfycby-n4RGZSmkxBI_gmsOIF8sygwGJAXH-l4yvP15EpL8NdcKyZa4M_bQCygy_Ki2nW3IbQ/exec";
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new';
-        let lastOrderCount = 0;
+        let knownOrderIds = new Set();
 
         if(!officeData) window.location.href = 'login.html';
-        document.getElementById('navOfficeInfo').innerText = `مكتب ${officeData.name} | ${officeData.city}`;
+        document.getElementById('navOfficeInfo').innerText = `${officeData.name} | ${officeData.city}`;
 
-        async function fetchSmartRadar() {
+        async function fetchOrders() {
+            document.getElementById('loader').style.width = "40%";
             try {
-                document.getElementById('syncStatus').classList.replace('bg-green-500', 'bg-blue-500');
                 const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`);
                 const data = await res.json();
+                document.getElementById('loader').style.width = "100%";
                 
-                // فلترة الطلبات الجديدة للمنطقة
-                const newOrders = data.filter(o => o.province === officeData.city && o.status === "قيد الانتظار");
-                
-                // تشغيل الصوت إذا دخل طلب جديد للرادار [cite: 2026-01-29]
-                if (newOrders.length > lastOrderCount && currentTab === 'new') {
-                    playAlert();
+                // منطق التنبيه الصوتي الذكي [cite: 2026-01-29]
+                if (currentTab === 'new') {
+                    data.forEach(o => {
+                        if (o.province === officeData.city && o.status === "قيد الانتظار" && !knownOrderIds.has(o.id)) {
+                            playAlert();
+                            knownOrderIds.add(o.id);
+                        }
+                    });
                 }
-                lastOrderCount = newOrders.length;
                 
-                renderOrders(data);
-                document.getElementById('syncStatus').classList.replace('bg-blue-500', 'bg-green-500');
-            } catch(e) { console.error("Sync Error"); }
+                render(data);
+                setTimeout(() => document.getElementById('loader').style.width = "0%", 400);
+            } catch(e) { console.error("Radar Error"); }
         }
 
         function playAlert() {
             const sound = document.getElementById('alertSound');
-            sound.volume = 1.0;
-            sound.play().catch(e => console.log("التفاعل الأول مطلوب للصوت"));
+            sound.currentTime = 0;
+            sound.play().catch(() => console.log("تفاعل مطلوب للصوت"));
         }
 
-        function renderOrders(data) {
+        function render(data) {
             const container = document.getElementById('mainContainer');
-            let filtered = (currentTab === 'new') 
+            let list = (currentTab === 'new') 
                 ? data.filter(o => o.province === officeData.city && o.status === "قيد الانتظار")
                 : data.filter(o => o.claimedBy === officeData.name);
 
-            if(filtered.length === 0) {
-                container.innerHTML = `<div class="text-center py-20 text-slate-400 font-bold">لا توجد طلبات حالياً ⚓</div>`;
+            if(list.length === 0) {
+                container.innerHTML = `<div class="text-center py-20 text-slate-400 text-sm font-bold italic">لا يوجد شيء في الرادار حالياً.. ⚓</div>`;
                 return;
             }
 
-            container.innerHTML = filtered.map(o => `
-                <div class="glass-card p-6 rounded-[2rem] shadow-lg border-r-[8px] ${currentTab === 'new' ? 'border-[#D4AF37] new-order-pulse' : 'border-blue-600'}">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <span class="text-[10px] font-black bg-slate-100 px-2 py-1 rounded-md text-slate-500 mb-1 inline-block italic">${o.id}</span>
-                            <h3 class="text-xl font-black text-[#002349] leading-tight">${o.car}</h3>
-                            <p class="text-slate-500 text-xs font-bold mt-1"><i class="fas fa-map-pin text-red-500"></i> ${o.province}</p>
+            container.innerHTML = list.map(o => `
+                <div class="glass-card p-5 shadow-xl border-r-[6px] ${currentTab === 'new' ? 'border-[#D4AF37]' : 'border-blue-600'}">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <span class="text-[8px] font-black bg-slate-100 px-2 py-0.5 rounded text-slate-500 mb-1 inline-block uppercase italic">ID: ${o.id}</span>
+                            <h3 class="text-lg font-black text-[#002349]">${o.car}</h3>
+                            <p class="text-slate-500 text-[10px] font-bold mt-0.5"><i class="fas fa-location-dot text-[#D4AF37]"></i> ${o.province}</p>
                         </div>
-                        <div class="text-left font-black text-blue-700 text-xl">${o.price} <span class="text-[9px]">د.ع</span></div>
+                        <div class="text-left">
+                            <div class="text-blue-600 font-black text-lg">${o.price}</div>
+                            <div class="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">دينار عراقي</div>
+                        </div>
                     </div>
 
                     ${currentTab === 'new' ? `
-                        <div class="bg-blue-50 p-4 rounded-2xl mb-4 border border-blue-100">
-                            <p class="text-xs font-black text-blue-900">👤 الزبون: ${o.name}</p>
+                        <div class="mt-4 bg-blue-50/50 p-3 rounded-xl border border-blue-100 flex justify-between items-center">
+                            <p class="text-[10px] font-black text-blue-900">👤 العميل: ${o.name}</p>
+                            <span class="badge-new text-[8px] px-2 py-1 rounded-lg font-black italic">طلب جديد!</span>
                         </div>
-                        <button onclick="updateStatus('${o.id}', 'claim')" class="w-full bg-[#002349] text-[#D4AF37] py-5 rounded-2xl font-black text-sm shadow-xl hover:brightness-125 active:scale-95 transition-all">إقتناص الطلبية الآن ⚡</button>
+                        <button onclick="update('${o.id}', 'claim')" class="w-full mt-3 bg-[#002349] text-[#D4AF37] py-4 rounded-xl font-black text-xs shadow-lg hover:brightness-125 transition-all">إستلام فوري ✅</button>
                     ` : `
-                        <div class="bg-slate-50 p-4 rounded-2xl mb-4 space-y-3">
-                            <a href="tel:${o.phone}" class="flex items-center justify-center gap-3 w-full bg-green-600 text-white py-4 rounded-xl font-black shadow-lg">إتصال بالزبون <i class="fas fa-phone-flip animate-shake"></i></a>
-                            <a href="https://www.google.com/maps/search/${encodeURIComponent(o.province + ' ' + o.name)}" target="_blank" class="flex items-center justify-center gap-3 w-full bg-slate-800 text-white py-3 rounded-xl font-black text-[10px]">موقع الزبون <i class="fas fa-location-arrow"></i></a>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button onclick="updateStatus('${o.id}', 'complete')" class="bg-blue-600 text-white py-4 rounded-xl font-black text-xs shadow-md">تم الإنجاز ✅</button>
-                            <button onclick="updateStatus('${o.id}', 'requestCancel')" class="bg-red-50 text-red-500 py-4 rounded-xl font-black text-xs border border-red-100">إلغاء ❌</button>
+                        <div class="mt-4 grid gap-2">
+                            <a href="tel:${o.phone}" class="flex items-center justify-center gap-2 bg-green-500 text-white py-3.5 rounded-xl font-black text-xs shadow-md">اتصال مباشر <i class="fas fa-phone-flip animate-bounce"></i></a>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="update('${o.id}', 'complete')" class="bg-blue-600 text-white py-3 rounded-xl font-black text-[10px]">تم الإنجاز ✅</button>
+                                <button onclick="update('${o.id}', 'requestCancel')" class="bg-red-50 text-red-500 py-3 rounded-xl font-black text-[10px] border border-red-100">إلغاء ❌</button>
+                            </div>
                         </div>
                     `}
                 </div>
             `).join('');
         }
 
-        async function updateStatus(id, action) {
-            const url = `${scriptURL}?action=${action}&id=${id}&office=${encodeURIComponent(officeData.name)}`;
-            await fetch(url);
-            fetchSmartRadar();
+        async function update(id, act) {
+            const btn = event.target;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+            await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
+            fetchOrders();
         }
 
-        function switchTab(tab) {
-            currentTab = tab;
-            document.querySelectorAll('button[id^="tab"]').forEach(b => b.classList.remove('tab-active'));
-            document.getElementById(tab === 'new' ? 'tabNew' : 'tabMine').classList.add('tab-active');
-            fetchSmartRadar();
+        function switchTab(t) {
+            currentTab = t;
+            document.getElementById('tabNew').className = `flex-1 py-4 text-xs font-black transition-all ${t==='new' ? 'tab-active' : 'text-slate-400'}`;
+            document.getElementById('tabMine').className = `flex-1 py-4 text-xs font-black transition-all ${t==='mine' ? 'tab-active' : 'text-slate-400'}`;
+            fetchOrders();
         }
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        // سرعة الرادار: تحديث كل 5 ثوانٍ لاقتناص الطلبات قبل الجميع [cite: 2026-01-29]
-        setInterval(fetchSmartRadar, 5000);
-        fetchSmartRadar();
+        // سرعة الرادار القصوى: تحديث كل 3 ثوانٍ [cite: 2026-01-29]
+        setInterval(fetchOrders, 3000);
+        fetchOrders();
     </script>
 </body>
 </html>

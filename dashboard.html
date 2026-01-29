@@ -38,7 +38,8 @@
     <main class="p-4 max-w-2xl mx-auto space-y-4" id="mainContainer"></main>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbzj6sn1vSd6EbPbxrPZ3wkLiyrCcxtxj6PCkXL5IjluEulWnqKPHwED-9yyJHxSN-zTvA/exec";
+        // الرابط الجديد الذي قمت بنشره (66pqaA)
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxeucatHHJ5tYX7mv_y4lgxYzX9dBw6eS1sHas4YsVmMWQIlePBjVkWzSDLpVE766pqaA/exec";
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new';
         let knownOrderIds = new Set();
@@ -54,6 +55,7 @@
                 const data = await res.json();
                 loader.style.width = "100%";
                 
+                // نظام التنبيه الصوتي عند وصول طلب جديد للمحافظة
                 if (currentTab === 'new') {
                     data.forEach(o => {
                         if (o.province === officeData.city && o.status === "قيد الانتظار" && !knownOrderIds.has(o.id)) {
@@ -64,10 +66,14 @@
                 }
                 render(data);
                 setTimeout(() => loader.style.width = "0%", 400);
-            } catch(e) { console.error("Error"); }
+            } catch(e) { console.error("Radar Sync Error"); }
         }
 
-        function playAlert() { document.getElementById('alertSound').play().catch(()=>{}); }
+        function playAlert() { 
+            const sound = document.getElementById('alertSound');
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log("Sound blocked by browser")); 
+        }
 
         function render(data) {
             const container = document.getElementById('mainContainer');
@@ -81,55 +87,53 @@
             }
 
             container.innerHTML = list.map(o => {
-                const isCompleted = o.status === "تم الإنجاز ✅";
-                // تحليل "جنس المتدرب" إذا كانت الخدمة تعليم قيادة
-                const genderInfo = (o.car && o.car.includes("تعليم")) ? `<p class="text-[10px] text-pink-600 font-bold mt-1"><i class="fas fa-venus-mars"></i> جنس المتدرب: ${o.gender || 'غير محدد'}</p>` : "";
+                const isCompleted = o.status.includes("إنجاز") || o.status.includes("✅");
+                const isCanceled = o.status.includes("إلغاء");
 
                 return `
                 <div class="glass-card p-5 shadow-xl border-r-[6px] ${isCompleted ? 'completed-card' : (currentTab === 'new' ? 'border-[#D4AF37]' : 'border-blue-600')}">
                     <div class="flex justify-between items-start">
                         <div class="flex-1">
-                            <span class="text-[8px] font-black bg-slate-100 px-2 py-0.5 rounded text-slate-500 mb-1 inline-block italic uppercase">${o.id}</span>
+                            <span class="text-[8px] font-black bg-slate-100 px-2 py-0.5 rounded text-slate-500 mb-1 inline-block italic uppercase tracking-tighter">${o.id}</span>
                             <h3 class="text-lg font-black text-[#002349] leading-tight">${o.car}</h3>
                             <p class="text-slate-500 text-[10px] font-bold mt-1"><i class="fas fa-location-dot text-[#D4AF37]"></i> ${o.province}</p>
-                            ${genderInfo}
                         </div>
                         <div class="text-left">
                             <div class="text-blue-600 font-black text-xl leading-none">${o.price}</div>
-                            <div class="text-[8px] font-bold text-slate-400 uppercase mt-1">دينار عراقي</div>
+                            <div class="text-[8px] font-bold text-slate-400 uppercase mt-1">دينار</div>
                         </div>
                     </div>
 
                     ${currentTab === 'new' ? `
                         <div class="mt-4 bg-blue-50/50 p-3 rounded-2xl border border-blue-100 flex justify-between items-center">
-                            <p class="text-[10px] font-black text-blue-900 italic">👤 الزبون: ${o.name}</p>
+                            <p class="text-[10px] font-black text-blue-900 italic">👤 العميل: ${o.name}</p>
                             <span class="badge-new text-[8px] px-3 py-1 rounded-full font-black uppercase">طلب جديد !</span>
                         </div>
-                        <button onclick="update('${o.id}', 'claim')" class="w-full mt-3 bg-[#002349] text-[#D4AF37] py-4 rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all">إستلام فوري ✅</button>
+                        <button onclick="update('${o.id}', 'claim')" class="w-full mt-3 bg-[#002349] text-[#D4AF37] py-4 rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all">إستلام الطلب فوراً ✅</button>
                     ` : `
                         <div class="mt-4 space-y-2">
                             <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
                                 <div class="grid grid-cols-2 gap-2 mb-3">
                                     <div class="bg-white p-2 rounded-xl shadow-sm text-center">
-                                        <p class="text-[8px] text-slate-400 font-bold uppercase">الاسم</p>
+                                        <p class="text-[8px] text-slate-400 font-bold uppercase">الزبون</p>
                                         <p class="text-[10px] font-black text-[#002349]">${o.name}</p>
                                     </div>
                                     <div class="bg-white p-2 rounded-xl shadow-sm text-center">
-                                        <p class="text-[8px] text-slate-400 font-bold uppercase">وقت الحجز</p>
+                                        <p class="text-[8px] text-slate-400 font-bold uppercase">الموعد</p>
                                         <p class="text-[10px] font-black text-[#002349]">${o.time || 'غير محدد'}</p>
                                     </div>
                                 </div>
                                 ${isCompleted ? `
-                                    <div class="bg-green-100 text-green-700 py-4 rounded-xl text-center font-black text-sm border border-green-200">
-                                        تم إكمال المهمة بنجاح ✅
-                                    </div>
+                                    <div class="bg-green-100 text-green-700 py-4 rounded-xl text-center font-black text-sm border border-green-200">تم الإنجاز بنجاح ✅</div>
+                                ` : isCanceled ? `
+                                    <div class="bg-orange-100 text-orange-700 py-4 rounded-xl text-center font-black text-xs border border-orange-200">طلب إلغاء معلق.. بانتظار المدير ⚠️</div>
                                 ` : `
-                                    <a href="tel:${o.phone}" class="flex items-center justify-center gap-3 bg-green-500 text-white py-4 rounded-xl font-black text-xs shadow-md active:bg-green-700 transition-colors">
+                                    <a href="tel:${o.phone}" class="flex items-center justify-center gap-3 bg-green-500 text-white py-4 rounded-xl font-black text-xs shadow-md active:bg-green-700 transition-colors mb-2">
                                         اتصال بالزبون (${o.phone}) <i class="fas fa-phone-flip"></i>
                                     </a>
-                                    <div class="grid grid-cols-2 gap-2 mt-2">
-                                        <button onclick="update('${o.id}', 'complete')" class="bg-blue-600 text-white py-4 rounded-xl font-black text-[10px] active:bg-blue-800">إنجاز الطلب ✅</button>
-                                        <button onclick="update('${o.id}', 'requestCancel')" class="bg-red-50 text-red-500 py-4 rounded-xl font-black text-[10px] border border-red-100">إلغاء الطلب ❌</button>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <button onclick="update('${o.id}', 'complete')" class="bg-blue-600 text-white py-4 rounded-xl font-black text-[10px] active:bg-blue-800">إنجاز ✅</button>
+                                        <button onclick="update('${o.id}', 'requestCancel')" class="bg-red-50 text-red-500 py-4 rounded-xl font-black text-[10px] border border-red-100">طلب إلغاء ❌</button>
                                     </div>
                                 `}
                             </div>
@@ -140,13 +144,19 @@
         }
 
         async function update(id, act) {
+            if(!confirm("هل تريد تأكيد الإجراء؟")) return;
             const btn = event.currentTarget;
+            const originalContent = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
             btn.disabled = true;
             try {
                 await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
                 await fetchOrders();
-            } catch(e) { alert("خطأ في الاتصال"); fetchOrders(); }
+            } catch(e) { 
+                alert("عذراً، حدث خطأ في الشبكة."); 
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
         }
 
         function switchTab(t) {
@@ -157,7 +167,9 @@
         }
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
-        setInterval(fetchOrders, 3000);
+        
+        // تحديث الرادار كل 15 ثانية لمواكبة الطلبات
+        setInterval(fetchOrders, 15000);
         document.addEventListener('click', () => { document.getElementById('alertSound').load(); }, {once: true});
         fetchOrders();
     </script>

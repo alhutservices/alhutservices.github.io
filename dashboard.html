@@ -3,75 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رادار الحوت | Dash-Ultra 🐋</title>
+    <title>رادار الحوت Ultra | ذكاء العمليات 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f1f5f9; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
-        .glass-card { background: white; border-radius: 2rem; border: 1px solid #e2e8f0; transition: transform 0.2s; }
-        .tab-active { color: #002349; border-bottom: 4px solid #D4AF37; font-weight: 900; }
-        .badge-new { animation: pulse-gold 1.5s infinite; }
-        @keyframes pulse-gold { 0% { background: #D4AF37; color: #002349; } 50% { background: #002349; color: white; } 100% { background: #D4AF37; color: #002349; } }
-        .loading-bar { height: 3px; background: #D4AF37; width: 0%; transition: width 0.3s; position: fixed; top: 0; z-index: 100; }
-        .completed-card { opacity: 0.8; filter: grayscale(0.5); border-right-color: #10b981 !important; pointer-events: none; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: white; }
+        .glass-bg { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .order-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-right: 4px solid transparent; }
+        .order-card:hover { transform: translateY(-5px); background: rgba(51, 65, 85, 0.5); }
+        .tab-active { background: #D4AF37; color: #002349; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+        .pulse-red { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        #refreshBar { height: 3px; background: #D4AF37; width: 0%; transition: width 10s linear; }
     </style>
 </head>
 <body class="pb-24">
+    <audio id="whaleAlert" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
 
-    <div id="loader" class="loading-bar"></div>
-    <audio id="alertSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
-
-    <nav class="sticky top-0 z-50 bg-[#002349] text-white px-5 py-4 flex justify-between items-center shadow-2xl">
-        <div class="flex items-center gap-2">
-            <div class="bg-[#D4AF37] p-2 rounded-lg text-[#002349] font-black text-[10px]">🐋 رادار الحوت</div>
-            <p id="navOfficeInfo" class="text-[9px] font-bold opacity-80 uppercase tracking-tighter"></p>
+    <nav class="sticky top-0 z-50 glass-bg px-5 py-4 flex justify-between items-center shadow-2xl border-b border-white/5">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#D4AF37] rounded-xl flex items-center justify-center text-[#002349] shadow-lg">
+                <i class="fas fa-whale fa-lg"></i>
+            </div>
+            <div>
+                <h1 id="officeDisplay" class="font-black text-xs text-white">جاري التحميل..</h1>
+                <p id="cityDisplay" class="text-[9px] font-bold text-[#D4AF37] uppercase tracking-widest"></p>
+            </div>
         </div>
-        <button onclick="logout()" class="text-[10px] font-black bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-xl">خروج</button>
+        <button onclick="logout()" class="p-2 px-4 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-black">خروج</button>
     </nav>
 
-    <div class="flex bg-white sticky top-[62px] z-40 border-b border-slate-200">
-        <button onclick="switchTab('new')" id="tabNew" class="flex-1 py-4 text-xs font-black transition-all tab-active">الرادار العام ✨</button>
-        <button onclick="switchTab('mine')" id="tabMine" class="flex-1 py-4 text-xs font-black transition-all text-slate-400">طلباتي المستلمة 📦</button>
+    <div id="refreshBar" class="fixed top-[68px] z-50"></div>
+
+    <div class="p-4 sticky top-[71px] z-40 glass-bg flex gap-2">
+        <button onclick="switchTab('new')" id="tabNew" class="flex-1 py-3 rounded-2xl text-[11px] font-black transition-all tab-active">
+            <i class="fas fa-radar ml-1"></i> الرادار العام
+        </button>
+        <button onclick="switchTab('mine')" id="tabMine" class="flex-1 py-3 rounded-2xl text-[11px] font-black transition-all text-slate-400">
+            <i class="fas fa-box-open ml-1"></i> استلاماتي
+        </button>
     </div>
 
-    <main class="p-4 max-w-2xl mx-auto space-y-4" id="mainContainer"></main>
+    <main class="p-4 max-w-2xl mx-auto space-y-4" id="mainContainer">
+        <div class="text-center py-20 opacity-20">
+            <i class="fas fa-circle-notch fa-spin text-4xl mb-4"></i>
+            <p class="font-bold">جاري مسح الرادار...</p>
+        </div>
+    </main>
 
     <script>
-        // الرابط المحدث والنهائي (ObK2g)
         const scriptURL = "https://script.google.com/macros/s/AKfycbxQiq-dn55ZaMfjhOBJzs-YXfrAt_IkcrbfCDhzgIDE3MIB09AGEtRTrCRpa7eCuObK2g/exec";
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new';
-        let knownOrderIds = new Set();
+        let knownOrders = new Set();
 
         if(!officeData) window.location.href = 'login.html';
-        document.getElementById('navOfficeInfo').innerText = `${officeData.name} | ${officeData.city}`;
+        document.getElementById('officeDisplay').innerText = officeData.name;
+        document.getElementById('cityDisplay').innerText = officeData.city;
 
         async function fetchOrders() {
-            const loader = document.getElementById('loader');
-            loader.style.width = "40%";
+            resetProgressBar();
             try {
                 const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`);
                 const data = await res.json();
-                loader.style.width = "100%";
                 
-                if (currentTab === 'new') {
+                // ذكاء التنبيه: إذا كان هناك طلب جديد لم يسبق رؤيته في محافظة المستخدم
+                if(currentTab === 'new') {
                     data.forEach(o => {
-                        if (o.province === officeData.city && o.status === "قيد الانتظار" && !knownOrderIds.has(o.id)) {
-                            playAlert();
-                            knownOrderIds.add(o.id);
+                        if(o.province === officeData.city && o.status === "قيد الانتظار" && !knownOrders.has(o.id)) {
+                            playWhaleAlert();
+                            knownOrders.add(o.id);
                         }
                     });
                 }
                 render(data);
-                setTimeout(() => loader.style.width = "0%", 400);
-            } catch(e) { console.error("Radar Sync Error"); }
-        }
-
-        function playAlert() { 
-            const sound = document.getElementById('alertSound');
-            sound.currentTime = 0;
-            sound.play().catch(e => console.log("Sound blocked by browser")); 
+            } catch(e) { console.error("Radar Error"); }
         }
 
         function render(data) {
@@ -81,100 +88,89 @@
                 : data.filter(o => o.claimedBy === officeData.name);
 
             if(list.length === 0) {
-                container.innerHTML = `<div class="text-center py-20 text-slate-400 text-sm font-bold italic">لا توجد طلبات حالياً.. ⚓</div>`;
+                container.innerHTML = `
+                <div class="text-center py-32 opacity-30">
+                    <i class="fas fa-anchor text-5xl mb-4"></i>
+                    <p class="font-black text-sm uppercase">البحر هادئ.. لا توجد طلبات</p>
+                </div>`;
                 return;
             }
 
-            container.innerHTML = list.map(o => {
-                const isCompleted = o.status.includes("إنجاز") || o.status.includes("✅");
-                const isCanceled = o.status.includes("إلغاء") || o.status.includes("⚠️");
-
-                return `
-                <div class="glass-card p-5 shadow-xl border-r-[6px] ${isCompleted ? 'completed-card' : (currentTab === 'new' ? 'border-[#D4AF37]' : 'border-blue-600')}">
-                    <div class="flex justify-between items-start">
-                        <div class="flex-1">
-                            <span class="text-[8px] font-black bg-slate-100 px-2 py-0.5 rounded text-slate-500 mb-1 inline-block italic uppercase tracking-tighter">${o.id}</span>
-                            <h3 class="text-lg font-black text-[#002349] leading-tight">${o.car}</h3>
-                            <p class="text-slate-500 text-[10px] font-bold mt-1"><i class="fas fa-location-dot text-[#D4AF37]"></i> ${o.province}</p>
+            container.innerHTML = list.map(o => `
+                <div class="order-card p-5 rounded-[2rem] glass-bg border-r-4 ${currentTab === 'new' ? 'border-[#D4AF37]' : 'border-blue-500'}">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="space-y-1">
+                            <span class="text-[8px] bg-white/10 px-2 py-1 rounded-md text-slate-400 font-mono italic">${o.id}</span>
+                            <h3 class="text-lg font-black text-white">${o.car}</h3>
+                            <p class="text-[10px] font-bold text-slate-400"><i class="fas fa-map-marker-alt text-red-500 ml-1"></i> ${o.province} | ${o.name}</p>
                         </div>
                         <div class="text-left">
-                            <div class="text-blue-600 font-black text-xl leading-none">${o.price}</div>
-                            <div class="text-[8px] font-bold text-slate-400 uppercase mt-1">دينار</div>
+                            <p class="text-[#D4AF37] font-black text-xl">${o.price}</p>
+                            <p class="text-[8px] text-slate-500 uppercase font-black">IQD</p>
                         </div>
                     </div>
 
                     ${currentTab === 'new' ? `
-                        <div class="mt-4 bg-blue-50/50 p-3 rounded-2xl border border-blue-100 flex justify-between items-center">
-                            <p class="text-[10px] font-black text-blue-900 italic">👤 العميل: ${o.name}</p>
-                            <span class="badge-new text-[8px] px-3 py-1 rounded-full font-black uppercase">طلب جديد !</span>
+                        <div class="flex items-center gap-2 mb-4 text-[10px] font-bold text-green-400 bg-green-500/10 p-2 rounded-xl">
+                            <i class="fas fa-bolt pulse-red"></i> طلب فوري بانتظارك
                         </div>
-                        <button onclick="update('${o.id}', 'claim')" class="w-full mt-3 bg-[#002349] text-[#D4AF37] py-4 rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all">إستلام الطلب فوراً ✅</button>
+                        <button onclick="update('${o.id}', 'claim')" class="w-full py-4 bg-[#D4AF37] text-[#002349] rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-transform">
+                            استحواذ على الطلب 🐋
+                        </button>
                     ` : `
-                        <div class="mt-4 space-y-2">
-                            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200">
-                                <div class="grid grid-cols-2 gap-2 mb-3">
-                                    <div class="bg-white p-2 rounded-xl shadow-sm text-center">
-                                        <p class="text-[8px] text-slate-400 font-bold uppercase">الزبون</p>
-                                        <p class="text-[10px] font-black text-[#002349]">${o.name}</p>
-                                    </div>
-                                    <div class="bg-white p-2 rounded-xl shadow-sm text-center">
-                                        <p class="text-[8px] text-slate-400 font-bold uppercase">الموعد</p>
-                                        <p class="text-[10px] font-black text-[#002349]">${o.time || 'غير محدد'}</p>
-                                    </div>
-                                </div>
-                                ${isCompleted ? `
-                                    <div class="bg-green-100 text-green-700 py-4 rounded-xl text-center font-black text-sm border border-green-200">تم الإنجاز بنجاح ✅</div>
-                                ` : isCanceled ? `
-                                    <div class="bg-orange-100 text-orange-700 py-4 rounded-xl text-center font-black text-xs border border-orange-200">طلب إلغاء معلق.. بانتظار المدير ⚠️</div>
-                                ` : `
-                                    <a href="tel:${o.phone}" class="flex items-center justify-center gap-3 bg-green-500 text-white py-4 rounded-xl font-black text-xs shadow-md active:bg-green-700 transition-colors mb-2">
-                                        اتصال بالزبون (${o.phone}) <i class="fas fa-phone-flip"></i>
-                                    </a>
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <button onclick="update('${o.id}', 'complete')" class="bg-blue-600 text-white py-4 rounded-xl font-black text-[10px] active:bg-blue-800">إنجاز ✅</button>
-                                        <button onclick="update('${o.id}', 'requestCancel')" class="bg-red-50 text-red-500 py-4 rounded-xl font-black text-[10px] border border-red-100">طلب إلغاء ❌</button>
-                                    </div>
-                                `}
-                            </div>
+                        <div class="grid grid-cols-2 gap-2 mt-4">
+                            <a href="tel:${o.phone}" class="flex items-center justify-center gap-2 bg-white/5 border border-white/10 py-3 rounded-2xl text-[11px] font-black hover:bg-green-500 hover:text-white transition-all">
+                                <i class="fas fa-phone"></i> اتصال
+                            </a>
+                            <button onclick="update('${o.id}', 'complete')" class="flex items-center justify-center gap-2 bg-blue-600/20 border border-blue-500/30 text-blue-400 py-3 rounded-2xl text-[11px] font-black hover:bg-blue-600 hover:text-white">
+                                <i class="fas fa-check-double"></i> تم الإنجاز
+                            </button>
                         </div>
                     `}
                 </div>
-                `; }).join('');
+            `).join('');
         }
 
         async function update(id, act) {
-            if(!confirm("هل تريد تأكيد الإجراء؟")) return;
             const btn = event.currentTarget;
-            const originalContent = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
             btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري التنفيذ..';
+            
             try {
-                // إرسال الإجراء للمحرك الجديد
-                const response = await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
-                const result = await response.text();
-                if(result === "Success") {
-                    await fetchOrders();
-                } else {
-                    throw new Error("API Response Error");
-                }
+                await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
+                fetchOrders();
             } catch(e) { 
-                alert("عذراً، حدث خطأ في الشبكة أو لم يتم تفعيل الصلاحية."); 
-                btn.innerHTML = originalContent;
+                alert("خطأ في الاتصال"); 
                 btn.disabled = false;
             }
         }
 
         function switchTab(t) {
             currentTab = t;
-            document.getElementById('tabNew').className = `flex-1 py-4 text-xs font-black transition-all ${t==='new' ? 'tab-active' : 'text-slate-400'}`;
-            document.getElementById('tabMine').className = `flex-1 py-4 text-xs font-black transition-all ${t==='mine' ? 'tab-active' : 'text-slate-400'}`;
+            document.getElementById('tabNew').className = `flex-1 py-3 rounded-2xl text-[11px] font-black transition-all ${t==='new' ? 'tab-active' : 'text-slate-400'}`;
+            document.getElementById('tabMine').className = `flex-1 py-3 rounded-2xl text-[11px] font-black transition-all ${t==='mine' ? 'tab-active' : 'text-slate-400'}`;
             fetchOrders();
+        }
+
+        function playWhaleAlert() {
+            const sound = document.getElementById('whaleAlert');
+            sound.play().catch(e => console.log("Sound interaction required"));
+        }
+
+        function resetProgressBar() {
+            const bar = document.getElementById('refreshBar');
+            bar.style.transition = 'none';
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.transition = 'width 10s linear';
+                bar.style.width = '100%';
+            }, 50);
         }
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        setInterval(fetchOrders, 15000);
-        document.addEventListener('click', () => { document.getElementById('alertSound').load(); }, {once: true});
+        // تحديث كل 10 ثواني
+        setInterval(fetchOrders, 10000);
         fetchOrders();
     </script>
 </body>

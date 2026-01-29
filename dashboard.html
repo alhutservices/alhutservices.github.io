@@ -38,8 +38,8 @@
     <main class="p-4 max-w-2xl mx-auto space-y-4" id="mainContainer"></main>
 
     <script>
-        // الرابط الجديد الذي قمت بنشره (66pqaA)
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxeucatHHJ5tYX7mv_y4lgxYzX9dBw6eS1sHas4YsVmMWQIlePBjVkWzSDLpVE766pqaA/exec";
+        // الرابط المحدث والنهائي (ObK2g)
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxQiq-dn55ZaMfjhOBJzs-YXfrAt_IkcrbfCDhzgIDE3MIB09AGEtRTrCRpa7eCuObK2g/exec";
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new';
         let knownOrderIds = new Set();
@@ -55,7 +55,6 @@
                 const data = await res.json();
                 loader.style.width = "100%";
                 
-                // نظام التنبيه الصوتي عند وصول طلب جديد للمحافظة
                 if (currentTab === 'new') {
                     data.forEach(o => {
                         if (o.province === officeData.city && o.status === "قيد الانتظار" && !knownOrderIds.has(o.id)) {
@@ -88,7 +87,7 @@
 
             container.innerHTML = list.map(o => {
                 const isCompleted = o.status.includes("إنجاز") || o.status.includes("✅");
-                const isCanceled = o.status.includes("إلغاء");
+                const isCanceled = o.status.includes("إلغاء") || o.status.includes("⚠️");
 
                 return `
                 <div class="glass-card p-5 shadow-xl border-r-[6px] ${isCompleted ? 'completed-card' : (currentTab === 'new' ? 'border-[#D4AF37]' : 'border-blue-600')}">
@@ -140,7 +139,7 @@
                         </div>
                     `}
                 </div>
-            `; }).join('');
+                `; }).join('');
         }
 
         async function update(id, act) {
@@ -150,10 +149,16 @@
             btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
             btn.disabled = true;
             try {
-                await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
-                await fetchOrders();
+                // إرسال الإجراء للمحرك الجديد
+                const response = await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
+                const result = await response.text();
+                if(result === "Success") {
+                    await fetchOrders();
+                } else {
+                    throw new Error("API Response Error");
+                }
             } catch(e) { 
-                alert("عذراً، حدث خطأ في الشبكة."); 
+                alert("عذراً، حدث خطأ في الشبكة أو لم يتم تفعيل الصلاحية."); 
                 btn.innerHTML = originalContent;
                 btn.disabled = false;
             }
@@ -168,7 +173,6 @@
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        // تحديث الرادار كل 15 ثانية لمواكبة الطلبات
         setInterval(fetchOrders, 15000);
         document.addEventListener('click', () => { document.getElementById('alertSound').load(); }, {once: true});
         fetchOrders();

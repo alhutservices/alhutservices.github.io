@@ -43,15 +43,15 @@
             <a href="index.html" class="block w-full py-5 bg-[#002349] text-[#D4AF37] rounded-2xl font-black text-xl shadow-lg hover:scale-105 transition-all">
                 العودة للرئيسية 🏠
             </a>
-            <p class="text-xs font-bold text-slate-400">شكراً لثقتك بـ "الحوت" لتاجير السيارات 🏁</p>
+            <p class="text-xs font-bold text-slate-400">شكراً لثقتك بـ "الحوت" لتأجير السيارات 🏁</p>
         </div>
     </div>
 
     <script>
         const u = new URLSearchParams(window.location.search);
         
-        // تم التحديث إلى الرابط الجديد الذي زودتنا به [cite: 2026-01-29]
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxxEjCSyeT5YD6grfVg2BiNXflzf9fdiagUw0WD8YIbuI8M6jufB2nJznW-MqLEdcqWKQ/exec";
+        // الرابط الجديد الذي نجحت في نشره
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzujkqi1n4TXICqp7g-bBmAErnraR43JIvPdc2zPz0j6UobP-FHnED9-LxL9QF3IE_eqA/exec";
         
         function launchConfetti() {
             confetti({
@@ -65,7 +65,6 @@
         window.onload = () => {
             launchConfetti();
             
-            // قراءة اسم المحافظة من الرابط (city) كما هو موجود في Index الخاص بك [cite: 2026-01-29]
             const prov = u.get('city') || u.get('province');
             if(prov) document.getElementById('userProvince').innerText = prov;
 
@@ -84,10 +83,10 @@
                     order_id: randomID,
                     name: u.get('name'),
                     phone: u.get('phone'),
-                    province: prov, // استخدام المتغير الموحد
-                    car: u.get('car') || u.get('type'), // قراءة السيارة أو نوع الخدمة
-                    date: u.get('date'),
-                    time: u.get('time')
+                    province: prov,
+                    car: u.get('car') || u.get('type'),
+                    time: u.get('time'),
+                    price: u.get('price') || "0" // إرسال السعر للعمود J في الإكسل
                 };
 
                 fetch(scriptURL, {

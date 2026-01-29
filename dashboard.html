@@ -3,113 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رادار الحوت - لوحة التحكم الذكية</title>
+    <title>لوحة تحكم الحوت الذكية 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.8); }
+        .tab-active { color: #002349; border-bottom: 4px solid #D4AF37; }
+    </style>
 </head>
-<body class="bg-slate-950 text-white min-h-screen font-['Tajawal'] pb-10">
+<body class="text-slate-800 pb-20">
 
-    <header class="p-6 bg-slate-900 rounded-b-[3rem] border-b-4 border-[#D4AF37] shadow-2xl mb-6">
-        <div class="flex justify-between items-center max-w-4xl mx-auto">
-            <div>
-                <h1 class="text-2xl font-black italic">🐋 رادار الحوت</h1>
-                <p id="officeInfo" class="text-[#D4AF37] text-xs font-bold mt-1"></p>
-            </div>
-            <button onclick="logout()" class="bg-red-500/10 text-red-500 text-[10px] px-4 py-2 rounded-xl font-bold">خروج</button>
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4 flex justify-between items-center shadow-sm">
+        <div>
+            <h1 class="text-xl font-black text-[#002349]">رادار الحوت <span class="text-[#D4AF37]">.</span></h1>
+            <p id="navOfficeInfo" class="text-[10px] font-bold text-slate-500 uppercase"></p>
         </div>
-    </header>
+        <button onclick="logout()" class="p-2 bg-red-50 rounded-full text-red-500 text-xs font-bold px-4">خروج</button>
+    </nav>
 
-    <div class="max-w-4xl mx-auto px-4">
-        <div class="flex gap-2 mb-8 bg-slate-900 p-2 rounded-2xl border border-slate-800">
-            <button onclick="switchTab('new')" id="btnNew" class="flex-1 py-3 rounded-xl font-black text-sm transition-all bg-[#D4AF37] text-slate-900">طلبات الرادار (الجديدة)</button>
-            <button onclick="switchTab('claimed')" id="btnClaimed" class="flex-1 py-3 rounded-xl font-black text-sm transition-all text-slate-400">طلباتي المستلمة</button>
-        </div>
-
-        <div id="ordersList" class="space-y-4">
-            <div class="text-center py-20 animate-pulse text-slate-500">جاري مسح الرادار...</div>
-        </div>
+    <div class="flex bg-white border-b border-slate-200">
+        <button onclick="switchTab('new')" id="tabNew" class="flex-1 py-4 text-sm font-black text-slate-400 transition-all tab-active">الرادار العام ✨</button>
+        <button onclick="switchTab('mine')" id="tabMine" class="flex-1 py-4 text-sm font-black text-slate-400 transition-all">طلباتي المستلمة 📦</button>
     </div>
 
+    <main class="p-4 max-w-2xl mx-auto space-y-4" id="mainContainer">
+        </main>
+
     <script>
-        // رابط تطبيق الويب الأخير
         const scriptURL = "https://script.google.com/macros/s/AKfycbxmvgqHvXsinogjAISeP7T1afYlh9z2VWpEpvwNYmnC2llzpvJpYvsRLKFJBeTLAZ-EzA/exec";
-        
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new';
 
         if(!officeData) window.location.href = 'login.html';
-        document.getElementById('officeInfo').innerText = `مكتب ${officeData.name} | ${officeData.city}`;
+        document.getElementById('navOfficeInfo').innerText = `${officeData.name} | ${officeData.city}`;
 
-        async function loadOrders() {
+        async function fetchSmartRadar() {
             try {
                 const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`);
                 const data = await res.json();
-                
-                const container = document.getElementById('ordersList');
-                
-                // تصفية الطلبات بناءً على التبويب والمحافظة
-                let filtered;
-                if(currentTab === 'new') {
-                    filtered = data.filter(o => o.province === officeData.city && o.status === "قيد الانتظار");
-                } else {
-                    filtered = data.filter(o => o.claimedBy === officeData.name);
-                }
+                renderOrders(data);
+            } catch(e) { console.error("Radar Error"); }
+        }
 
-                if (filtered.length === 0) {
-                    container.innerHTML = `<div class="text-center py-20 text-slate-600 font-bold">لا توجد طلبات هنا حالياً ⚓</div>`;
-                    return;
-                }
+        function renderOrders(data) {
+            const container = document.getElementById('mainContainer');
+            
+            // فلترة ذكية: الطلب يختفي من الجديد بمجرد قبوله من أي مكتب
+            let filtered = (currentTab === 'new') 
+                ? data.filter(o => o.province === officeData.city && o.status === "قيد الانتظار")
+                : data.filter(o => o.claimedBy === officeData.name);
 
-                container.innerHTML = filtered.map(o => `
-                    <div class="bg-slate-900 p-6 rounded-[2.5rem] border-r-8 ${currentTab === 'new' ? 'border-[#D4AF37]' : 'border-green-500'} shadow-xl">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <h3 class="font-black text-2xl text-white">${o.car}</h3>
-                                <p class="text-slate-400 text-sm font-bold">العميل: ${o.name}</p>
-                                <p class="text-blue-400 text-sm font-bold">📞 ${o.phone}</p>
-                            </div>
-                            <div class="text-left font-black text-green-400 text-xl">${o.price} د.ع</div>
+            if(filtered.length === 0) {
+                container.innerHTML = `<div class="text-center py-20 text-slate-400 font-bold">لا توجد طلبات في هذا القسم حالياً</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(o => `
+                <div class="glass-card p-6 rounded-[2.5rem] shadow-sm hover:shadow-md transition-all border-r-[6px] ${currentTab === 'new' ? 'border-[#D4AF37]' : 'border-blue-500'}">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-[9px] font-black bg-slate-100 text-slate-500 px-3 py-1 rounded-full uppercase mb-2 inline-block italic">${o.id}</span>
+                            <h3 class="text-xl font-black text-[#002349] leading-tight">${o.car}</h3>
+                            <p class="text-slate-500 text-sm mt-1 font-bold italic">المكان: ${o.province}</p>
                         </div>
-
-                        <div class="flex flex-wrap gap-2 mt-4">
-                            ${currentTab === 'new' ? 
-                                `<button onclick="updateStatus('${o.id}', 'claim')" class="flex-1 bg-white text-slate-900 py-3 rounded-xl font-black text-sm">استلام الطلب ✅</button>
-                                 <button onclick="updateStatus('${o.id}', 'requestCancel')" class="bg-slate-800 text-red-500 px-6 py-3 rounded-xl font-bold text-sm">إلغاء</button>` 
-                                : 
-                                `<button class="flex-1 bg-green-500/20 text-green-500 py-3 rounded-xl font-black text-sm border border-green-500/30">تم الاستلام بنجاح</button>`
-                            }
-                        </div>
-                        <p class="text-slate-600 text-[10px] mt-4 text-center font-bold italic">وقت الطلب: ${o.time}</p>
+                        <div class="text-left font-black text-blue-600 text-lg">${o.price} <span class="text-[10px]">د.ع</span></div>
                     </div>
-                `).join('');
-            } catch(e) { console.error("Error:", e); }
+
+                    ${currentTab === 'new' ? `
+                        <div class="bg-blue-50/50 p-4 rounded-2xl mb-4">
+                            <p class="text-xs font-bold text-blue-800">👤 العميل: ${o.name}</p>
+                            <p class="text-[10px] text-blue-400 font-bold mt-1">المعلومات الحساسة (الهاتف والموقع) ستظهر بعد القبول</p>
+                        </div>
+                        <button onclick="updateStatus('${o.id}', 'claim')" class="w-full bg-[#002349] text-[#D4AF37] py-4 rounded-2xl font-black text-sm shadow-xl hover:bg-slate-800 transition-all">إستلام هذه الطلبية ✅</button>
+                    ` : `
+                        <div class="space-y-3 bg-green-50/50 p-4 rounded-3xl mb-4 border border-green-100">
+                            <p class="text-sm font-black text-slate-800">👤 الاسم: ${o.name}</p>
+                            <a href="tel:${o.phone}" class="block w-full text-center bg-white border border-green-200 py-3 rounded-xl text-green-600 font-black text-sm mb-2 italic">📞 إتصال الآن: ${o.phone}</a>
+                            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.province)}" target="_blank" class="block w-full text-center bg-slate-100 py-3 rounded-xl text-slate-600 font-black text-[10px]">📍 فتح موقع الزبون على الخريطة</a>
+                            <p class="text-[10px] text-slate-400 font-bold text-center mt-2 italic">وقت الحجز: ${o.time}</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="updateStatus('${o.id}', 'complete')" class="bg-green-600 text-white py-3 rounded-xl font-black text-xs">تم الإنجاز ✅</button>
+                            <button onclick="updateStatus('${o.id}', 'requestCancel')" class="bg-red-50 text-red-500 py-3 rounded-xl font-black text-xs">إلغاء ❌</button>
+                        </div>
+                    `}
+                </div>
+            `).join('');
         }
 
         async function updateStatus(id, action) {
             const url = `${scriptURL}?action=${action}&id=${id}&office=${encodeURIComponent(officeData.name)}`;
             await fetch(url);
-            alert(action === 'claim' ? "تم نقل الطلب لتبويب 'طلباتي المستلمة'" : "تم الإلغاء");
-            loadOrders();
+            fetchSmartRadar(); // تحديث فوري
         }
 
         function switchTab(tab) {
             currentTab = tab;
-            const btnNew = document.getElementById('btnNew');
-            const btnClaimed = document.getElementById('btnClaimed');
-            
-            if(tab === 'new') {
-                btnNew.className = "flex-1 py-3 rounded-xl font-black text-sm transition-all bg-[#D4AF37] text-slate-900";
-                btnClaimed.className = "flex-1 py-3 rounded-xl font-black text-sm transition-all text-slate-400";
-            } else {
-                btnClaimed.className = "flex-1 py-3 rounded-xl font-black text-sm transition-all bg-green-500 text-white";
-                btnNew.className = "flex-1 py-3 rounded-xl font-black text-sm transition-all text-slate-400";
-            }
-            loadOrders();
+            document.getElementById('tabNew').className = `flex-1 py-4 text-sm font-black transition-all ${tab==='new' ? 'tab-active' : 'text-slate-400'}`;
+            document.getElementById('tabMine').className = `flex-1 py-4 text-sm font-black transition-all ${tab==='mine' ? 'tab-active' : 'text-slate-400'}`;
+            fetchSmartRadar();
         }
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
-        setInterval(loadOrders, 10000);
-        loadOrders();
+        
+        setInterval(fetchSmartRadar, 15000);
+        fetchSmartRadar();
     </script>
 </body>
 </html>

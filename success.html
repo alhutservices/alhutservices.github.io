@@ -40,8 +40,8 @@
     <script>
         const u = new URLSearchParams(window.location.search);
         
-        // الرابط الجديد الذي زودتني به
-        const scriptURL = "https://script.google.com/macros/s/AKfycbw4__ua1E1SNT0A2DUPlGD7DJ0xnh5kqEPLkbZBMRCZe5FavxOB9lBDFLdtJl5IkluE/exec";
+        // تم التحديث للرابط الجديد الذي ينتهي بـ RFIH
+        const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
 
         const translationMap = {
             "Kirkuk": "كركوك", "Kerkük": "كركوك",
@@ -91,7 +91,6 @@
                     location_link: u.get('map') || ""
                 };
 
-                // استخدام fetch مع البيانات لتحليلها في doPost
                 fetch(scriptURL, {
                     method: 'POST',
                     mode: 'no-cors', 
@@ -99,7 +98,7 @@
                     headers: { 'Content-Type': 'application/json' }
                 }).then(() => {
                     sessionStorage.setItem('orderSent', 'true');
-                    console.log("✅ تم إرسال الطلب بنجاح");
+                    console.log("✅ تم إرسال الطلب بنجاح للسيرفر الجديد");
                 }).catch(err => console.error("❌ فشل الإرسال:", err));
             }
         };

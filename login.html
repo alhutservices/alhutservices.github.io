@@ -7,106 +7,44 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; }
+        body { font-family: 'Tajawal', sans-serif; background: radial-gradient(circle at center, #0f172a 0%, #020617 100%); color: white; }
         .input-focus:focus { border-color: #D4AF37; box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
-        .bg-whale { background: radial-gradient(circle at center, #0f172a 0%, #020617 100%); }
     </style>
 </head>
-<body class="bg-whale text-white min-h-screen flex items-center justify-center p-4">
-    
+<body class="min-h-screen flex items-center justify-center p-4">
     <div class="max-w-md w-full bg-slate-900/80 backdrop-blur-xl p-8 rounded-[3.5rem] border-b-[10px] border-[#D4AF37] shadow-2xl border border-white/5">
-        <div class="text-center mb-8">
-            <div class="text-6xl mb-4 animate-bounce">🐋</div>
-            <h2 class="text-3xl font-black mt-2 text-[#D4AF37]">عائلة الحوت</h2>
-            <p class="text-slate-400 text-sm mt-2 font-bold italic">نظام تسجيل المكاتب والشركاء الرسمي</p>
-        </div>
-        
+        <div class="text-center mb-8"><div class="text-6xl mb-4">🐋</div><h2 class="text-3xl font-black text-[#D4AF37]">عائلة الحوت</h2></div>
         <div class="space-y-4">
-            <div class="space-y-2">
-                <label class="text-[10px] font-black uppercase text-[#D4AF37] mr-2 tracking-widest">اسم المكتب التجاري</label>
-                <input id="officeName" type="text" placeholder="مثلاً: مكتب الحوت كركوك" class="w-full p-4 bg-slate-800/50 rounded-2xl border border-slate-700 outline-none font-bold input-focus transition-all text-white">
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase text-[#D4AF37] mr-2 tracking-widest">المحافظة</label>
-                    <select id="citySelect" class="w-full p-4 bg-slate-800/50 rounded-2xl border border-slate-700 outline-none font-bold text-white input-focus transition-all text-sm">
-                        <option value="">اختر..</option>
-                        <option value="بغداد">بغداد</option>
-                        <option value="كركوك">كركوك</option>
-                        <option value="أربيل">أربيل</option>
-                        <option value="البصرة">البصرة</option>
-                        <option value="الموصل">الموصل</option>
-                        <option value="السليمانية">السليمانية</option>
-                        <option value="الأنبار">الأنبار</option>
-                        <option value="ديالى">ديالى</option>
-                    </select>
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase text-[#D4AF37] mr-2 tracking-widest">رقم الهوية</label>
-                    <input id="idNumber" type="number" placeholder="0000" class="w-full p-4 bg-slate-800/50 rounded-2xl border border-slate-700 outline-none font-bold text-center input-focus transition-all text-white">
-                </div>
-            </div>
-
-            <div class="space-y-2">
-                <label class="text-[10px] font-black uppercase text-[#D4AF37] mr-2 tracking-widest">رابط الخرائط (اختياري)</label>
-                <input id="locationURL" type="url" placeholder="Google Maps Link" class="w-full p-4 bg-slate-800/50 rounded-2xl border border-slate-700 outline-none font-bold input-focus transition-all text-xs text-white">
-            </div>
-
-            <button onclick="registerOffice()" id="loginBtn" class="w-full py-5 bg-[#D4AF37] text-slate-950 rounded-2xl font-black text-xl hover:scale-[1.02] active:scale-95 transition-all shadow-[0_10px_30px_rgba(212,175,55,0.3)] mt-6 flex items-center justify-center gap-3">
-                فتح الرادار 🚀
-            </button>
+            <input id="officeName" type="text" placeholder="اسم المكتب" class="w-full p-4 bg-slate-800/50 rounded-2xl border border-slate-700 outline-none text-white">
+            <select id="citySelect" class="w-full p-4 bg-slate-800/50 rounded-2xl border border-slate-700 text-white">
+                <option value="بغداد">بغداد</option><option value="كركوك">كركوك</option><option value="أربيل">أربيل</option>
+                <option value="البصرة">البصرة</option><option value="الموصل">الموصل</option><option value="السليمانية">السليمانية</option>
+                <option value="الأنبار">الأنبار</option><option value="ديالى">ديالى</option>
+            </select>
+            <input id="idNumber" type="number" placeholder="رقم الهوية / الكود" class="w-full p-4 bg-slate-800/50 rounded-2xl border border-slate-700 text-center text-white">
+            <button onclick="registerOffice()" id="loginBtn" class="w-full py-5 bg-[#D4AF37] text-slate-950 rounded-2xl font-black text-xl shadow-lg mt-4">فتح الرادار 🚀</button>
         </div>
-
-        <p class="text-[9px] text-center text-slate-500 mt-6 font-bold uppercase tracking-widest">Huta Radar System v4.0 © 2026</p>
     </div>
-
     <script>
-        // الرابط الجديد الذي أرسلته تم تحديثه هنا بدقة
-        const scriptURL = "https://script.google.com/macros/s/AKfycbw7jO9V-WQqPfqAzX5u37UcqLQOWpwQqhQlVV9HCMmZJkKhuBIq-R3zhPdrskJc8Isq/exec";
-
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxT6xd4OPG1tXJ3pqUIvvly_G47E32uCuCaR52Al5a4EBZd4juMhYacJdT2pkefsn0u/exec";
         async function registerOffice() {
             const btn = document.getElementById('loginBtn');
-            const officeName = document.getElementById('officeName').value.trim();
-            const city = document.getElementById('citySelect').value;
-            const id = document.getElementById('idNumber').value.trim();
-            const map = document.getElementById('locationURL').value.trim();
-
-            if(!officeName || !city || !id) {
-                return alert("يا هلا بك، يرجى إكمال جميع الحقول المطلوبة لتفعيل الرادار.");
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = 'جاري التحقق من الحساب.. <span class="animate-spin ml-2 inline-block">⏳</span>';
-
+            const data = {
+                name: document.getElementById('officeName').value,
+                city: document.getElementById('citySelect').value,
+                id: document.getElementById('idNumber').value
+            };
+            if(!data.name || !data.id) return alert("اكمل البيانات يا حوت!");
+            btn.disabled = true; btn.innerText = "جاري التحقق...";
             try {
-                // الاتصال بالسكريبت الجديد
-                const response = await fetch(`${scriptURL}?action=checkOfficeStatus&id=${id}&name=${encodeURIComponent(officeName)}&city=${city}&map=${encodeURIComponent(map)}`);
-                const result = await response.json();
-
+                const res = await fetch(`${scriptURL}?action=checkOfficeStatus&id=${data.id}&name=${encodeURIComponent(data.name)}&city=${data.city}`);
+                const result = await res.json();
                 if (result.status === "نشط") {
-                    const officeData = { name: officeName, city: city, id: id, map: map };
-                    localStorage.setItem('whale_office_data', JSON.stringify(officeData));
+                    localStorage.setItem('whale_office_data', JSON.stringify(data));
                     window.location.href = 'dashboard.html';
-                } 
-                else if (result.status === "معلق") {
-                    alert("يا هلا بك! طلب انضمامك قيد المراجعة حالياً. سيتم تفعيل الرادار لك من قبل الإدارة قريباً.");
-                    resetBtn(btn);
-                } 
-                else if (result.status === "محظور") {
-                    alert("عذراً، هذا الحساب معطل حالياً. يرجى التواصل مع الإدارة.");
-                    resetBtn(btn);
-                }
-            } catch (error) {
-                console.error("Login Error:", error);
-                alert("حدث خطأ في الاتصال بالسيرفر. تأكد من أنك قمت بنشر السكريبت (New Deployment) بشكل صحيح كـ Web App.");
-                resetBtn(btn);
-            }
-        }
-
-        function resetBtn(btn) {
-            btn.disabled = false;
-            btn.innerHTML = 'فتح الرادار 🚀';
+                } else { alert("حسابك قيد المراجعة أو محظور. تواصل مع الإدارة."); }
+            } catch (e) { alert("خطأ في الاتصال"); }
+            btn.disabled = false; btn.innerText = "فتح الرادار 🚀";
         }
     </script>
 </body>

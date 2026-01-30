@@ -40,13 +40,14 @@
     <script>
         const u = new URLSearchParams(window.location.search);
         
-        // رابط تطبيق الويب الخاص بك (المحدث والنهائي)
-        const scriptURL = "https://script.google.com/macros/s/AKfycbwlBj0BPa4z3zalacIlPHARGpUiCwhWGwGShzQsuzEE3YDhWme6Rr1vckfdHsAGmCnG/exec";
+        // رابط المحرك الجديد والنهائي الخاص بك (المحدث)
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzXvDagqt3s1BAStJ2AFb51MJQb5T5xDoDMcUPwVbXoktasNwpfQA8vxrI2luSdLN8P/exec";
 
+        // خريطة الترجمة لضمان وصول المحافظات والبيانات بالعربية للإكسل
         const translationMap = {
             "Kirkuk": "كركوك", "Kerkük": "كركوك",
             "Baghdad": "بغداد", "Bağdat": "بغداد",
-            "Erbil": "أربيل", "Arbil": "أربيل",
+            "Erbil": "أربيل", 
             "Basra": "البصرة",
             "Duhok": "دهوك", 
             "Sulaymaniyah": "السليمانية", "Slemani": "السليمانية", "Süleymaniye": "السليمانية",
@@ -62,7 +63,8 @@
         window.onload = () => {
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#1e293b', '#D4AF37'] });
             
-            const city = trans(u.get('city') || u.get('province'));
+            const rawCity = u.get('city') || u.get('province');
+            const city = trans(rawCity);
             const car = u.get('car');
             const name = u.get('name');
             const phone = u.get('phone');
@@ -85,13 +87,12 @@
             }
             document.getElementById('orderIDDisplay').innerText = "#" + randomID;
             
-            // إرسال البيانات فوراً للإكسل
             if (!sessionStorage.getItem('orderSent')) {
                 const data = {
                     order_id: randomID,
                     name: name,
                     phone: phone,
-                    province: city,      
+                    province: city,
                     car: car,
                     days: days,
                     addons: addons,
@@ -104,7 +105,6 @@
                     location_link: mapLink
                 };
 
-                // استخدام POST لإرسال البيانات بخصوصية وسرعة
                 fetch(scriptURL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -112,8 +112,8 @@
                     headers: { 'Content-Type': 'application/json' }
                 }).then(() => {
                     sessionStorage.setItem('orderSent', 'true');
-                    console.log("✅ الطلب طار لملف الإكسل!");
-                }).catch(err => console.error("❌ حدثت مشكلة في الإرسال:", err));
+                    console.log("✅ تم إرسال الطلب بنجاح إلى الإكسل");
+                }).catch(err => console.error("❌ خطأ:", err));
             }
         };
     </script>

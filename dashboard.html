@@ -51,8 +51,8 @@
     <main class="p-4 max-w-2xl mx-auto space-y-6" id="mainContainer"></main>
 
     <script>
-        // الرابط النهائي المحدث والنشط الآن
-        const scriptURL = "https://script.google.com/macros/s/AKfycbzXvDagqt3s1BAStJ2AFb51MJQb5T5xDoDMcUPwVbXoktasNwpfQA8vxrI2luSdLN8P/exec";
+        // رابط تطبيق الويب المحدث والخاص بك
+        const scriptURL = "https://script.google.com/macros/s/AKfycbw7HJU42xszDvZDF0l3V3ueO-IA7QwgDmtSTlrhiJ1t7WLCwPmQFfNKUxj_ieLn3p7G/exec";
         
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new';
@@ -72,6 +72,7 @@
         }
 
         function updateCounts() {
+            if(!allOrders.length) return;
             document.getElementById('myCount').innerText = allOrders.filter(o => o.claimedBy === officeData.name && o.status.includes('✅')).length;
             document.getElementById('radarCount').innerText = allOrders.filter(o => o.province === officeData.city && o.status === "قيد الانتظار").length;
         }
@@ -82,7 +83,7 @@
                 ? allOrders.filter(o => o.province === officeData.city && o.status === "قيد الانتظار")
                 : allOrders.filter(o => o.claimedBy === officeData.name);
 
-            if(list.length === 0) {
+            if(!list || list.length === 0) {
                 container.innerHTML = `<div class="text-center py-20 opacity-30 text-sm font-bold">لا توجد طلبات في ${officeData.city} حالياً..</div>`;
                 return;
             }
@@ -94,7 +95,6 @@
                             <span class="text-[9px] font-black bg-slate-100 px-2 py-0.5 rounded text-slate-500 mb-1 inline-block italic">${o.id}</span>
                             <h3 class="text-lg font-black text-[#1e293b] leading-tight">${o.car || 'خدمة الحوت'}</h3>
                             <p class="text-[10px] font-bold text-blue-600 mt-1"><i class="fas fa-calendar-day ml-1"></i>المدة: ${o.days || '1'} يوم</p>
-                            <p class="text-[9px] font-bold text-slate-400 mt-0.5"><i class="fas fa-concierge-bell ml-1"></i>الخدمة: ${o.service || 'عام'}</p>
                         </div>
                         <div class="text-left">
                             <div class="text-[#D4AF37] font-black text-xl">${o.price || '0'}</div>
@@ -107,19 +107,11 @@
                             <span class="text-[10px] font-bold text-slate-400">الزبون:</span>
                             <span class="text-[10px] font-black text-slate-800">${o.name}</span>
                         </div>
-                         <div class="flex justify-between border-b border-white pb-1">
-                            <span class="text-[10px] font-bold text-slate-400">الإضافات:</span>
-                            <span class="text-[10px] font-black text-rose-500">${o.addons || 'لا يوجد'}</span>
-                        </div>
                         
                         ${currentTab === 'mine' ? `
                             <div class="flex justify-between border-b border-white pb-1">
                                 <span class="text-[10px] font-bold text-slate-400">الهاتف:</span>
                                 <span class="text-[10px] font-black text-green-600" dir="ltr">${o.phone}</span>
-                            </div>
-                            <div class="flex justify-between border-b border-white pb-1">
-                                <span class="text-[10px] font-bold text-slate-400">الهوية:</span>
-                                <span class="text-[10px] font-black text-slate-800">${o.nationalID}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-[10px] font-bold text-slate-400">العمر/الجنس:</span>
@@ -158,9 +150,11 @@
         async function update(id, act) {
             if(!confirm("تأكيد هذا الإجراء؟")) return;
             try {
-                await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
-                fetchOrders();
-            } catch(e) { alert("خطأ في الاتصال بالسيرفر"); }
+                const res = await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
+                const result = await res.json();
+                if(result.success) fetchOrders();
+                else alert("عذراً، قد يكون الطلب استلم من قبل مكتب آخر");
+            } catch(e) { alert("حدث خطأ في الاتصال"); }
         }
 
         function switchTab(t) {
@@ -172,7 +166,7 @@
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        setInterval(fetchOrders, 10000); // تحديث الرادار تلقائياً
+        setInterval(fetchOrders, 10000); 
         fetchOrders();
     </script>
 </body>

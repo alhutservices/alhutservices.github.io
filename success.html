@@ -39,10 +39,11 @@
 
     <script>
         const u = new URLSearchParams(window.location.search);
-        // تأكد من وضع رابط السكريبت الخاص بك هنا بعد نشره (Deploy)
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxQiq-dn55ZaMfjhOBJzs-YXfrAt_IkcrbfCDhzgIDE3MIB09AGEtRTrCRpa7eCuObK2g/exec";
+        
+        // رابط تطبيق الويب الخاص بك (المحدث)
+        const scriptURL = "https://script.google.com/macros/s/AKfycbyrMl7y7nTEnqfaQONH9bCSeD7t_rF0iKdMw4cI5loW1m0jXva-mtiM4lybh5xykrPB/exec";
 
-        // خريطة الترجمة لضمان وصول المحافظات والبيانات بالعربية للإكسل (ليعمل الرادار)
+        // خريطة الترجمة لضمان وصول المحافظات والبيانات بالعربية للإكسل (ليعمل الرادار بدقة)
         const translationMap = {
             "Kirkuk": "كركوك", "Kerkük": "كركوك",
             "Baghdad": "بغداد", "Bağdat": "بغداد",
@@ -87,10 +88,9 @@
             }
             document.getElementById('orderIDDisplay').innerText = "#" + randomID;
             
-            // 2. إرسال البيانات للمحرك
+            // 2. إرسال البيانات للمحرك (سكريبت جوجل)
             if (!sessionStorage.getItem('orderSent')) {
                 const data = {
-                    timestamp: new Date().toLocaleString('ar-EG'),
                     order_id: randomID,
                     name: name,
                     phone: phone,

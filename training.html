@@ -6,7 +6,7 @@
     <title>حجز كورس تعليم | الحوت 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -17,13 +17,14 @@
         :root { --main-color: #7c3aed; --bg-soft: #f5f3ff; }
         body { font-family: 'Tajawal', sans-serif; background-color: var(--bg-soft); transition: 0.5s; overflow-x: hidden; }
         .glass-card { background: rgba(255, 255, 255, 0.98); }
-        #map { height: 180px; border-radius: 2rem; border: 4px solid white; box-shadow: 0 8px 20px rgba(124, 58, 237, 0.1); z-index: 1; }
+        #map { height: 220px; border-radius: 2rem; border: 4px solid white; box-shadow: 0 8px 20px rgba(124, 58, 237, 0.1); z-index: 1; }
         .input-training { border: 2px solid #ddd6fe; transition: 0.3s; border-radius: 1.25rem; padding: 1rem; width: 100%; background: #f9fafb; font-weight: bold; outline: none; }
         .input-training:focus { border-color: var(--main-color); background: white; }
         .gender-btn { flex: 1; padding: 1rem; border: 2px solid #ddd6fe; border-radius: 1.25rem; font-weight: bold; transition: 0.3s; cursor: pointer; text-align: center; background: white; }
         .gender-btn.active { background: var(--main-color); color: white; border-color: var(--main-color); box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3); }
         .dynamic-text { color: var(--main-color); transition: 0.5s; }
-        .gender-note { font-size: 0.65rem; font-weight: bold; opacity: 0.7; margin-inline-start: 5px; }
+        /* تحسين شكل مربع البحث */
+        .leaflet-control-geocoder { border-radius: 10px; border: 2px solid var(--main-color) !important; box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important; }
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -36,32 +37,31 @@
             <div id="summary" class="mt-4 p-3 bg-white rounded-2xl text-sm font-bold dynamic-text shadow-sm inline-block border border-indigo-100"></div>
         </div>
 
-        <div class="p-8 space-y-5 text-right" id="formContainer">
+        <div class="p-8 space-y-5 text-right">
             <div>
                 <label id="lblInputName" class="block text-xs font-black text-gray-400 mb-2 mr-2 uppercase">اسم المتدرب</label>
-                <input type="text" id="tName" class="input-training">
+                <input type="text" id="tName" class="input-training" placeholder="الاسم الكامل">
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label id="lblInputPhone" class="block text-xs font-black text-gray-400 mb-2 mr-2 uppercase">رقم الهاتف</label>
-                    <input type="tel" id="tPhone" class="input-training text-left" dir="ltr">
+                    <input type="tel" id="tPhone" class="input-training text-left" dir="ltr" placeholder="07xx xxx xxxx">
                 </div>
                 <div>
                     <label id="lblInputAge" class="block text-xs font-black text-gray-400 mb-2 mr-2 uppercase">العمر</label>
-                    <input type="number" id="tAge" class="input-training">
+                    <input type="number" id="tAge" class="input-training" placeholder="مثال: 25">
                 </div>
             </div>
 
             <div>
                 <label id="lblInputID" class="block text-xs font-black text-gray-400 mb-2 mr-2 uppercase">رقم الهوية الوطنية</label>
-                <input type="text" id="tNationalID" class="input-training">
+                <input type="text" id="tNationalID" class="input-training" placeholder="أو رقم جواز السفر">
             </div>
 
             <div class="space-y-3">
                 <div class="flex items-center mr-2">
                     <label id="lblGender" class="text-xs font-black text-gray-400 uppercase">جنس المتدرب</label>
-                    <span id="genderNote" class="genderNote text-indigo-500 gender-note">(يساعدنا في اختيار جنس المدرب)</span>
                 </div>
                 <div class="flex gap-4">
                     <div id="maleBtn" onclick="setGender('Male')" class="gender-btn active">👨 ذكر</div>
@@ -71,14 +71,14 @@
 
             <div class="bg-indigo-50 p-6 rounded-[2.5rem] border-2 border-white shadow-inner">
                 <label id="lblMap" class="block font-black mb-3 text-sm text-indigo-900 mr-2 flex items-center gap-2">
-                    <i class="fas fa-map-marker-alt dynamic-text"></i> تحديد الموقع:
+                    <i class="fas fa-search dynamic-text"></i> ابحث عن موقعك أو حدده:
                 </label>
                 <div id="map" class="mb-4"></div>
-                <button type="button" id="btnGPS" onclick="getGPS()" class="w-full py-4 text-white rounded-2xl font-black text-sm shadow-lg transition-all" style="background-color: var(--main-color);">تحديد موقعي الحالي 🛰️</button>
+                <button type="button" id="btnGPS" onclick="getGPS()" class="w-full py-4 text-white rounded-2xl font-black text-sm shadow-lg transition-all active:scale-95" style="background-color: var(--main-color);">تحديد موقعي الحالي 🛰️</button>
             </div>
 
-            <button id="btnSubmit" onclick="goToReviewTraining()" class="w-full text-white py-5 rounded-2xl font-black text-xl shadow-2xl flex items-center justify-center gap-3 transition-all active:scale-95" style="background-color: var(--main-color);">
-                <span>مراجعة البيانات</span> <i class="fas fa-chevron-left"></i>
+            <button onclick="goToReviewTraining()" class="w-full text-white py-5 rounded-2xl font-black text-xl shadow-2xl flex items-center justify-center gap-3 transition-all active:scale-95" style="background-color: var(--main-color);">
+                <span id="btnSubmitText">مراجعة البيانات</span> <i class="fas fa-chevron-left"></i>
             </button>
         </div>
     </div>
@@ -89,56 +89,59 @@
         const currentLang = p.get('lang') || 'ar';
 
         const translations = {
-            ar: { dir: 'rtl', font: 'Tajawal', title: 'كورس تعليم قيادة', city: 'المدينة', date: 'التاريخ', name: 'اسم المتدرب', phone: 'رقم الهاتف', age: 'العمر', id: 'رقم الهوية', gender: 'جنس المتدرب', genderNote: '(لتحديد جنس المدرب المناسب)', male: '👨 ذكر', female: '👩 أنثى', map: 'تحديد الموقع:', gps: 'تحديد موقعي الحالي 🛰️', submit: 'مراجعة البيانات', alert: '⚠️ يرجى إكمال البيانات' },
-            en: { dir: 'ltr', font: 'Poppins', title: 'Driving Training Course', city: 'City', date: 'Date', name: 'Student Name', phone: 'Phone Number', age: 'Age', id: 'National ID', gender: 'Gender', genderNote: '(Helps choose trainer gender)', male: '👨 Male', female: '👩 Female', map: 'Location:', gps: 'Get My Location 🛰️', submit: 'Review Details', alert: '⚠️ Please fill all fields' }
+            ar: { dir: 'rtl', title: 'كورس تعليم قيادة', city: 'المدينة', date: 'التاريخ', map: 'ابحث عن موقعك أو حدده:', gps: 'تحديد موقعي الحالي 🛰️', submit: 'مراجعة البيانات', alert: '⚠️ يرجى إكمال البيانات' },
+            en: { dir: 'ltr', title: 'Driving Course', city: 'City', date: 'Date', map: 'Search or Select Location:', gps: 'Get My Location 🛰️', submit: 'Review Details', alert: '⚠️ Please fill all fields' }
+        };
+
+        window.onload = function() {
+            initLang();
+            // إعداد الخريطة
+            map = L.map('map').setView([33.3152, 44.3661], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            marker = L.marker([33.3152, 44.3661], {draggable: true}).addTo(map);
+
+            // إضافة خيار البحث داخل الخريطة
+            const geocoder = L.Control.geocoder({
+                defaultMarkGeocode: false,
+                placeholder: currentLang === 'ar' ? "ابحث عن منطقة..." : "Search area...",
+                errorMessage: currentLang === 'ar' ? "لم يتم العثور على الموقع" : "Location not found"
+            }).on('markgeocode', function(e) {
+                const bbox = e.geocode.bbox;
+                const center = e.geocode.center;
+                map.fitBounds(bbox);
+                marker.setLatLng(center);
+            }).addTo(map);
         };
 
         function initLang() {
             const l = translations[currentLang] || translations['ar'];
             document.getElementById('htmlTag').dir = l.dir;
-            document.body.style.fontFamily = l.font + ', sans-serif';
             document.getElementById('pageTitle').innerText = l.title;
-            document.getElementById('lblInputName').innerText = l.name;
-            document.getElementById('lblInputPhone').innerText = l.phone;
-            document.getElementById('lblInputAge').innerText = l.age;
-            document.getElementById('lblInputID').innerText = l.id;
-            document.getElementById('lblGender').innerText = l.gender;
-            document.getElementById('genderNote').innerText = l.genderNote;
-            document.getElementById('maleBtn').innerText = l.male;
-            document.getElementById('femaleBtn').innerText = l.female;
-            document.getElementById('lblMap').innerHTML = `<i class="fas fa-map-marker-alt dynamic-text"></i> ${l.map}`;
+            document.getElementById('lblMap').innerHTML = `<i class="fas fa-search dynamic-text"></i> ${l.map}`;
             document.getElementById('btnGPS').innerText = l.gps;
-            document.getElementById('btnSubmit').querySelector('span').innerText = l.submit;
+            document.getElementById('btnSubmitText').innerText = l.submit;
             
-            const cityParam = p.get('city') || p.get('province') || '---';
+            const cityParam = p.get('city') || '---';
             const dateParam = p.get('date') || '---';
-            document.getElementById('summary').innerHTML = `📍 ${l.city}: ${cityParam} <span class="mx-2">|</span> 📅 ${l.date}: ${dateParam}`;
+            document.getElementById('summary').innerHTML = `📍 ${l.city}: ${cityParam} | 📅 ${l.date}: ${dateParam}`;
         }
-
-        window.onload = function() {
-            initLang();
-            map = L.map('map').setView([33.3152, 44.3661], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            marker = L.marker([33.3152, 44.3661], {draggable: true}).addTo(map);
-        };
 
         function setGender(g) {
             selectedGender = g;
             const root = document.documentElement;
             if(g === 'Female') {
                 root.style.setProperty('--main-color', '#db2777');
-                root.style.setProperty('--bg-soft', '#fdf2f8');
                 document.getElementById('femaleBtn').classList.add('active');
                 document.getElementById('maleBtn').classList.remove('active');
             } else {
                 root.style.setProperty('--main-color', '#7c3aed');
-                root.style.setProperty('--bg-soft', '#f5f3ff');
                 document.getElementById('maleBtn').classList.add('active');
                 document.getElementById('femaleBtn').classList.remove('active');
             }
         }
 
         function getGPS() {
+            if (!navigator.geolocation) return;
             navigator.geolocation.getCurrentPosition(pos => {
                 const coords = [pos.coords.latitude, pos.coords.longitude];
                 map.setView(coords, 17); marker.setLatLng(coords);
@@ -156,17 +159,21 @@
             
             const googleMapsLink = `https://www.google.com/maps?q=${latlng.lat},${latlng.lng}`;
             
-            // إضافة كافة المتغيرات الجديدة للرابط
-            p.set('service', 'كورس تعليم قيادة');
-            p.set('name', name);
-            p.set('phone', phone);
-            p.set('nationalID', nationalID);
-            p.set('age', age);
-            p.set('gender', selectedGender);
-            p.set('map', googleMapsLink);
-            p.set('car', 'كورس تدريب'); // لتوافق الحقول القديمة
+            const params = new URLSearchParams();
+            params.set('lang', currentLang);
+            params.set('city', p.get('city') || '');
+            params.set('date', p.get('date') || '');
+            params.set('time', p.get('time') || '');
+            params.set('service', 'كورس تعليم قيادة');
+            params.set('name', name);
+            params.set('phone', phone);
+            params.set('nationalID', nationalID);
+            params.set('age', age);
+            params.set('gender', selectedGender === 'Male' ? 'ذكر' : 'أنثى');
+            params.set('map', googleMapsLink);
+            params.set('car', 'كورس تدريب');
 
-            window.location.href = `review.html?${p.toString()}`;
+            window.location.href = `review.html?${params.toString()}`;
         }
     </script>
 </body>

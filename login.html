@@ -15,8 +15,8 @@
     
     <div class="max-w-md w-full bg-slate-900 p-8 rounded-[3.5rem] border-b-[10px] border-[#D4AF37] shadow-2xl">
         <div class="text-center mb-8">
-            <div class="text-6xl mb-4">🐋</div>
-            <h2 class="text-3xl font-black mt-2">عائلة الحوت</h2>
+            <div class="text-6xl mb-4 animate-bounce">🐋</div>
+            <h2 class="text-3xl font-black mt-2 text-[#D4AF37]">عائلة الحوت</h2>
             <p class="text-slate-400 text-sm mt-2 font-bold italic">نظام تسجيل المكاتب والشركاء الرسمي</p>
         </div>
         
@@ -26,28 +26,24 @@
                 <input id="officeName" type="text" placeholder="مثلاً: مكتب الحوت كركوك" class="w-full p-4 bg-slate-800 rounded-2xl border border-slate-700 outline-none font-bold input-focus transition-all">
             </div>
 
-            <div class="space-y-2">
-                <label class="text-[10px] font-black uppercase text-[#D4AF37] mr-2 tracking-widest">صاحب المكتب</label>
-                <input id="ownerName" type="text" placeholder="الاسم الثلاثي الكامل" class="w-full p-4 bg-slate-800 rounded-2xl border border-slate-700 outline-none font-bold input-focus transition-all">
-            </div>
-
             <div class="grid grid-cols-2 gap-3">
                 <div class="space-y-2">
                     <label class="text-[10px] font-black uppercase text-[#D4AF37] mr-2 tracking-widest">المحافظة</label>
-                    <select id="citySelect" class="w-full p-4 bg-slate-800 rounded-2xl border border-slate-700 outline-none font-bold text-white input-focus transition-all">
+                    <select id="citySelect" class="w-full p-4 bg-slate-800 rounded-2xl border border-slate-700 outline-none font-bold text-white input-focus transition-all text-sm">
                         <option value="">اختر..</option>
-                        <option value="كركوك">كركوك</option>
                         <option value="بغداد">بغداد</option>
+                        <option value="كركوك">كركوك</option>
                         <option value="أربيل">أربيل</option>
                         <option value="البصرة">البصرة</option>
                         <option value="الموصل">الموصل</option>
-                        <option value="النجف">النجف</option>
-                        <option value="بقية المحافظات">أخرى</option>
+                        <option value="السليمانية">السليمانية</option>
+                        <option value="الأنبار">الأنبار</option>
+                        <option value="ديالى">ديالى</option>
                     </select>
                 </div>
                 <div class="space-y-2">
                     <label class="text-[10px] font-black uppercase text-[#D4AF37] mr-2 tracking-widest">رقم الهوية</label>
-                    <input id="idNumber" type="number" placeholder="00000" class="w-full p-4 bg-slate-800 rounded-2xl border border-slate-700 outline-none font-bold text-center input-focus transition-all">
+                    <input id="idNumber" type="number" placeholder="0000" class="w-full p-4 bg-slate-800 rounded-2xl border border-slate-700 outline-none font-bold text-center input-focus transition-all">
                 </div>
             </div>
 
@@ -65,33 +61,34 @@
     </div>
 
     <script>
-        // الرابط المحدث الذي يعمل مع كافة الملفات
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxQiq-dn55ZaMfjhOBJzs-YXfrAt_IkcrbfCDhzgIDE3MIB09AGEtRTrCRpa7eCuObK2g/exec";
-
         function registerOffice() {
             const btn = document.getElementById('loginBtn');
-            const data = {
-                name: document.getElementById('officeName').value.trim(),
-                owner: document.getElementById('ownerName').value.trim(),
-                id: document.getElementById('idNumber').value.trim(),
-                city: document.getElementById('citySelect').value,
-                map: document.getElementById('locationURL').value.trim()
-            };
+            const officeName = document.getElementById('officeName').value.trim();
+            const city = document.getElementById('citySelect').value;
+            const id = document.getElementById('idNumber').value.trim();
+            const map = document.getElementById('locationURL').value.trim();
 
-            if(!data.name || !data.owner || !data.id || !data.city) {
-                return alert("يا هلا بك، يرجى إكمال جميع الحقول المطلوبة لتفعيل الرادار.");
+            if(!officeName || !city || !id) {
+                return alert("يرجى إكمال البيانات الأساسية لتفعيل الرادار في محافظتك.");
             }
 
             btn.disabled = true;
-            btn.innerHTML = 'جاري التفعيل.. <span class="animate-spin text-2xl">⏳</span>';
+            btn.innerHTML = 'جاري ربط الرادار.. ⏳';
 
-            // حفظ بيانات المكتب في الذاكرة المحلية للجهاز
-            localStorage.setItem('whale_office_data', JSON.stringify(data));
+            // تخزين بيانات المكتب
+            const officeData = {
+                name: officeName,
+                city: city, // ستكون "بغداد"، "كركوك"... الخ
+                id: id,
+                map: map
+            };
+
+            localStorage.setItem('whale_office_data', JSON.stringify(officeData));
             
-            // الانتقال لصفحة الرادار بعد التفعيل
+            // الانتقال للداشبورد
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
-            }, 1000);
+            }, 800);
         }
     </script>
 </body>

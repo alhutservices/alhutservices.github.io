@@ -53,8 +53,8 @@
     </main>
 
     <script>
-        // الرابط الجديد الذي زودتني به تم تحديثه هنا
-        const scriptURL = "https://script.google.com/macros/s/AKfycbw7jO9V-WQqPfqAzX5u37UcqLQOWpwQqhQlVV9HCMmZJkKhuBIq-R3zhPdrskJc8Isq/exec";
+        // تم تحديث الرابط هنا ليرتبط بالسكريبت الجديد O34 الخاص بك
+        const scriptURL = "https://script.google.com/macros/s/AKfycby09szRjInw_jODIknkQ2BnCr9eb4-dNr669UfVw2eZ-XW8NhmIfZvdiHHlAC2mhO34/exec";
         
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new';
@@ -78,9 +78,7 @@
 
         function updateCounts() {
             if(!allOrders || !allOrders.length) return;
-            // المنجز اليوم: الطلبات التي استلمتها أنت وحالتها مكتملة
             document.getElementById('myCount').innerText = allOrders.filter(o => o.claimedBy === officeData.name && o.status.includes('✅')).length;
-            // الرادار العام: الطلبات التي في محافظتك ولا تزال قيد الانتظار
             document.getElementById('radarCount').innerText = allOrders.filter(o => o.province === officeData.city && o.status === "قيد الانتظار").length;
         }
 
@@ -120,10 +118,6 @@
                                 <span class="text-[10px] font-bold text-slate-400">الهاتف:</span>
                                 <a href="tel:${o.phone}" class="text-[10px] font-black text-green-600 underline" dir="ltr">${o.phone}</a>
                             </div>
-                            <div class="flex justify-between">
-                                <span class="text-[10px] font-bold text-slate-400">العمر/الجنس:</span>
-                                <span class="text-[10px] font-black text-slate-800">${o.age || 'غير محدد'} سنة / ${o.gender || 'غير محدد'}</span>
-                            </div>
                         ` : `
                             <div class="py-1 text-center border-t border-dashed border-slate-200 mt-1">
                                 <span class="text-[8px] font-bold text-slate-300 italic">بقية التفاصيل تظهر بعد الاستلام 🔒</span>
@@ -159,14 +153,9 @@
             try {
                 const res = await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
                 const result = await res.json();
-                if(result.success) {
-                    fetchOrders();
-                } else {
-                    alert("عذراً، قد يكون الطلب استلم من قبل مكتب آخر");
-                }
-            } catch(e) { 
-                alert("حدث خطأ في الاتصال بالسيرفر"); 
-            }
+                if(result.success) fetchOrders();
+                else alert("عذراً، قد يكون الطلب استلم من قبل مكتب آخر");
+            } catch(e) { alert("حدث خطأ في الاتصال بالسيرفر"); }
         }
 
         function switchTab(t) {
@@ -176,12 +165,8 @@
             renderCards();
         }
 
-        function logout() { 
-            localStorage.clear(); 
-            window.location.href = 'login.html'; 
-        }
+        function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        // تحديث البيانات كل 15 ثانية تلقائياً
         setInterval(fetchOrders, 15000); 
         fetchOrders();
     </script>

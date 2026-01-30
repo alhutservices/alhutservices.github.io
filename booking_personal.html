@@ -24,14 +24,29 @@
         .gender-btn { flex: 1; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 1.25rem; font-weight: bold; transition: 0.3s; cursor: pointer; text-align: center; background: white; }
         .gender-btn.active { background: var(--main-color); color: white; border-color: var(--main-color); box-shadow: 0 4px 15px rgba(0, 35, 73, 0.2); }
         .icon-box { width: 40px; height: 40px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--main-color); }
+        .summary-badge { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); border-radius: 1rem; padding: 10px 20px; display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.2); }
     </style>
 </head>
 <body class="text-[#002349]">
 
-    <header class="hero-bg text-white pt-16 pb-44 text-center relative overflow-hidden">
+    <header class="hero-bg text-white pt-12 pb-44 text-center relative overflow-hidden">
         <div class="absolute top-0 right-0 opacity-10 text-[10rem] pointer-events-none">🐋</div>
-        <h1 id="pageTitle" class="text-4xl font-black text-[#D4AF37] mb-2">إكمال البيانات</h1>
-        <p id="carSub" class="text-lg opacity-80 font-bold px-4"></p>
+        <h1 id="pageTitle" class="text-3xl font-black text-[#D4AF37] mb-4">إكمال البيانات</h1>
+        
+        <div class="flex flex-wrap justify-center gap-3 px-4">
+            <div class="summary-badge">
+                <i class="fas fa-car text-amber-400"></i>
+                <span id="carLabel" class="text-sm font-bold"></span>
+            </div>
+            <div class="summary-badge">
+                <i class="fas fa-calendar-alt text-amber-400"></i>
+                <span id="daysLabel" class="text-sm font-bold"></span>
+            </div>
+            <div class="summary-badge">
+                <i class="fas fa-wallet text-amber-400"></i>
+                <span id="priceLabel" class="text-sm font-bold"></span>
+            </div>
+        </div>
     </header>
 
     <main class="container mx-auto px-4 -mt-32 relative z-10 pb-20">
@@ -90,16 +105,14 @@
         const currentLang = u.get('lang') || 'ar';
 
         const trans = {
-            ar: { dir: 'rtl', title: 'إكمال بيانات الرحلة', sub: 'السيارة:', sec1: 'المعلومات الشخصية', sec2: 'الوثائق القانونية', sec3: 'موقع التسليم والاستلام', name: 'الاسم الكامل', phone: 'رقم الهاتف', age: 'العمر', id: 'رقم الهوية', license: 'رقم الإجازة', gps: 'تحديد موقعي 🛰️', submit: 'مراجعة الطلب النهائي', alert: 'يرجى إكمال جميع الحقول الأساسية 🐋' },
-            ku: { dir: 'rtl', title: 'تەواوکردنی زانیارییەکان', sub: 'ئۆتۆمبێل:', sec1: 'زانیاری کەسی', sec2: 'بەڵگەنامەکان', sec3: 'شوێنی وەرگرتن', name: 'ناوى تەواو', phone: 'ژمارەی مۆبایل', age: 'تەمەن', id: 'ژمارەی ناسنامە', license: 'ژمارەی مۆڵەت', gps: 'دیاریکردنی شوێن 🛰️', submit: 'پێداچوونەوەی کۆتایی', alert: 'تکایە هەموو خانەکان پڕ بکەرەوە 🐋' },
-            // ... يمكن إضافة التركي والإنجليزي بنفس الطريقة
+            ar: { dir: 'rtl', title: 'إكمال بيانات الرحلة', sec1: 'المعلومات الشخصية', sec2: 'الوثائق القانونية', sec3: 'موقع التسليم والاستلام', name: 'الاسم الكامل', phone: 'رقم الهاتف', age: 'العمر', id: 'رقم الهوية', license: 'رقم الإجازة', gps: 'تحديد موقعي 🛰️', submit: 'مراجعة الطلب النهائي', alert: 'يرجى إكمال جميع الحقول الأساسية 🐋', unit: 'يوم', curr: 'د.ع' },
+            ku: { dir: 'rtl', title: 'تەواوکردنی زانیارییەکان', sec1: 'زانیاری کەسی', sec2: 'بەڵگەنامەکان', sec3: 'شوێنی وەرگرتن', name: 'ناوى تەواو', phone: 'ژمارەی مۆبایل', age: 'تەمەن', id: 'ژمارەی ناسنامە', license: 'ژمارەی مۆڵەت', gps: 'دیاریکردنی شوێن 🛰️', submit: 'پێداچوونەوەی کۆتایی', alert: 'تکایە هەموو خانەکان پڕ بکەرەوە 🐋', unit: 'ڕۆژ', curr: 'دینار' }
         };
 
         window.onload = function() {
             const l = trans[currentLang] || trans['ar'];
             document.getElementById('htmlTag').dir = l.dir;
             document.getElementById('pageTitle').innerText = l.title;
-            document.getElementById('carSub').innerText = `${l.sub} ${u.get('car') || ''}`;
             document.getElementById('custName').placeholder = l.name;
             document.getElementById('custPhone').placeholder = l.phone;
             document.getElementById('custAge').placeholder = l.age;
@@ -107,12 +120,15 @@
             document.getElementById('drivingLicense').placeholder = l.license;
             document.getElementById('btnSubmit').innerText = l.submit;
 
-            // إعداد الخريطة
+            // عرض الملخص العلوي
+            document.getElementById('carLabel').innerText = u.get('car') || '...';
+            document.getElementById('daysLabel').innerText = `${u.get('days') || 1} ${l.unit}`;
+            document.getElementById('priceLabel').innerText = `${parseInt(u.get('price')).toLocaleString()} ${l.curr}`;
+
             map = L.map('map').setView([33.3152, 44.3661], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
             marker = L.marker([33.3152, 44.3661], {draggable: true}).addTo(map);
 
-            // إضافة مربع البحث
             L.Control.geocoder({
                 defaultMarkGeocode: false,
                 placeholder: currentLang === 'ar' ? "ابحث عن منطقتك..." : "Search...",

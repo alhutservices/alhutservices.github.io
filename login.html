@@ -44,8 +44,8 @@
     </div>
 
     <script>
-        // الرابط الجديد الذي ينتهي بـ IkluE
-        const scriptURL = "https://script.google.com/macros/s/AKfycbw4__ua1E1SNT0A2DUPlGD7DJ0xnh5kqEPLkbZBMRCZe5FavxOB9lBDFLdtJl5IkluE/exec";
+        // الرابط المحدث النهائي RFIH
+        const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
 
         async function registerOffice() {
             const btn = document.getElementById('loginBtn');
@@ -62,7 +62,7 @@
             btn.innerText = "جاري التحقق من النظام...";
 
             try {
-                // الربط مع action=checkOfficeStatus في السكريبت الخاص بك
+                // الربط مع action=checkOfficeStatus
                 const query = `?action=checkOfficeStatus&id=${data.id}&name=${encodeURIComponent(data.name)}&city=${encodeURIComponent(data.city)}&map=${encodeURIComponent(data.map)}`;
                 const res = await fetch(scriptURL + query);
                 const result = await res.json();
@@ -73,7 +73,7 @@
                 } else if (result.status === "محظور") {
                     alert("⚠️ نعتذر، هذا الحساب محظور حالياً.");
                 } else {
-                    alert("⏳ حسابك قيد المراجعة. سيتم تفعيله من قبل الإدارة قريباً.");
+                    alert("⏳ حسابك قيد المراجعة. بمجرد تفعيل المدير لكودك سيفتح الرادار تلقائياً.");
                 }
             } catch (e) {
                 console.error(e);

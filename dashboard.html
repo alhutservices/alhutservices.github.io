@@ -51,8 +51,8 @@
     <main class="p-4 max-w-2xl mx-auto space-y-6" id="mainContainer"></main>
 
     <script>
-        // الرابط الجديد الخاص بك
-        const scriptURL = "https://script.google.com/macros/s/AKfycbyrMl7y7nTEnqfaQONH9bCSeD7t_rF0iKdMw4cI5loW1m0jXva-mtiM4lybh5xykrPB/exec";
+        // الرابط الجديد المحدث (النهائي)
+        const scriptURL = "https://script.google.com/macros/s/AKfycbwlBj0BPa4z3zalacIlPHARGpUiCwhWGwGShzQsuzEE3YDhWme6Rr1vckfdHsAGmCnG/exec";
         
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new';
@@ -72,9 +72,7 @@
         }
 
         function updateCounts() {
-            // الطلبات المنجزة من قبل هذا المكتب
             document.getElementById('myCount').innerText = allOrders.filter(o => o.claimedBy === officeData.name && o.status.includes('✅')).length;
-            // الطلبات المتاحة في نفس محافظة المكتب
             document.getElementById('radarCount').innerText = allOrders.filter(o => o.province === officeData.city && o.status === "قيد الانتظار").length;
         }
 
@@ -109,7 +107,7 @@
                             <span class="text-[10px] font-bold text-slate-400">الاسم:</span>
                             <span class="text-[10px] font-black text-slate-800">${o.name}</span>
                         </div>
-                         <div class="flex justify-between border-b border-white pb-1">
+                        <div class="flex justify-between border-b border-white pb-1">
                             <span class="text-[10px] font-bold text-slate-400">الإضافات:</span>
                             <span class="text-[10px] font-black text-rose-500">${o.addons || 'لا يوجد'}</span>
                         </div>
@@ -160,7 +158,6 @@
         async function update(id, act) {
             if(!confirm("تأكيد هذا الإجراء؟")) return;
             try {
-                // إرسال الطلب للسكريبت
                 await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
                 fetchOrders();
             } catch(e) { alert("خطأ في الاتصال بالسيرفر"); }
@@ -175,8 +172,7 @@
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        // تحديث الرادار كل 10 ثوانٍ تلقائياً
-        setInterval(fetchOrders, 10000);
+        setInterval(fetchOrders, 10000); // تحديث كل 10 ثوانٍ
         fetchOrders();
     </script>
 </body>

@@ -3,41 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دخول الشركاء | رادار الحوت 🐋</title>
+    <title>تسجيل شركاء الحوت | الرادار 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background: #020617; color: white; }
-        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        body { font-family: 'Tajawal', sans-serif; background: radial-gradient(circle at center, #0f172a 0%, #020617 100%); color: white; }
+        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .input-style { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(212, 175, 55, 0.1); transition: 0.3s; }
+        .input-style:focus { border-color: #D4AF37; outline: none; box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-    <div class="max-w-md w-full glass p-8 rounded-[2.5rem] border-b-[8px] border-[#D4AF37] shadow-2xl">
+    <div class="max-w-md w-full glass-panel p-8 rounded-[3.5rem] border-b-[10px] border-[#D4AF37] shadow-2xl">
         <div class="text-center mb-8">
-            <div class="text-5xl mb-3">🐋</div>
-            <h2 class="text-2xl font-black text-[#D4AF37]">رادار عائلة الحوت</h2>
-            <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold">نظام الربط اللحظي للمكاتب</p>
+            <div class="text-6xl mb-4">🐋</div>
+            <h2 class="text-3xl font-black text-[#D4AF37]">عائلة الحوت</h2>
+            <p class="text-slate-400 text-xs mt-2 uppercase tracking-widest font-bold">نظام دخول الشركاء المعتمدين</p>
         </div>
         
         <div class="space-y-4">
-            <input id="officeName" type="text" placeholder="اسم المكتب" class="w-full p-4 bg-slate-800 rounded-2xl outline-none focus:ring-2 ring-[#D4AF37]/50">
+            <input id="officeName" type="text" placeholder="اسم المكتب" class="w-full p-4 rounded-2xl input-style text-white">
             
-            <select id="citySelect" class="w-full p-4 bg-slate-800 rounded-2xl outline-none">
-                <option value="بغداد">بغداد</option><option value="كركوك">كركوك</option><option value="أربيل">أربيل</option>
-                <option value="البصرة">البصرة</option><option value="الموصل">الموصل</option><option value="السليمانية">السليمانية</option>
-                <option value="الأنبار">الأنبار</option><option value="ديالى">ديالى</option>
+            <select id="citySelect" class="w-full p-4 rounded-2xl input-style text-white">
+                <option value="بغداد">بغداد</option>
+                <option value="كركوك">كركوك</option>
+                <option value="أربيل">أربيل</option>
+                <option value="البصرة">البصرة</option>
+                <option value="الموصل">الموصل</option>
+                <option value="السليمانية">السليمانية</option>
+                <option value="الأنبار">الأنبار</option>
+                <option value="ديالى">ديالى</option>
             </select>
 
-            <input id="officeMap" type="url" placeholder="رابط Google Maps للمكتب" class="w-full p-4 bg-slate-800 rounded-2xl outline-none">
+            <input id="officeMap" type="url" placeholder="رابط الموقع (Google Maps)" class="w-full p-4 rounded-2xl input-style text-white">
 
-            <input id="idNumber" type="number" placeholder="رقم الكود الخاص بك" class="w-full p-4 bg-slate-800 rounded-2xl text-center text-lg outline-none font-black text-[#D4AF37]">
+            <input id="idNumber" type="number" placeholder="رقم الكود الخاص بك" class="w-full p-4 rounded-2xl input-style text-center text-white text-lg font-bold">
             
-            <button onclick="registerOffice()" id="loginBtn" class="w-full py-5 bg-[#D4AF37] text-slate-950 rounded-2xl font-black text-xl active:scale-95 transition-transform">دخول النظام 🚀</button>
+            <button onclick="registerOffice()" id="loginBtn" class="w-full py-5 bg-[#D4AF37] text-slate-950 rounded-2xl font-black text-xl shadow-lg mt-4 active:scale-95 transition-transform">فتح الرادار 🚀</button>
         </div>
     </div>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxjkaA9pVrodw8vJcNQnJ2r8yQhIzScsxxj3R_a24Tkyz5V93E0WDwYzyYstI_weXh8/exec";
+        // الرابط الجديد الذي ينتهي بـ IkluE
+        const scriptURL = "https://script.google.com/macros/s/AKfycbw4__ua1E1SNT0A2DUPlGD7DJ0xnh5kqEPLkbZBMRCZe5FavxOB9lBDFLdtJl5IkluE/exec";
 
         async function registerOffice() {
             const btn = document.getElementById('loginBtn');
@@ -48,29 +56,32 @@
                 id: document.getElementById('idNumber').value.trim()
             };
 
-            if(!data.name || !data.id) return alert("الاسم والكود مطلوبان يا حوت!");
+            if(!data.name || !data.id) return alert("الاسم والكود مطلوبان يا حوت! 🐋");
             
             btn.disabled = true; 
-            btn.innerText = "جاري الفحص...";
+            btn.innerText = "جاري التحقق من النظام...";
 
             try {
-                const url = `${scriptURL}?action=checkOfficeStatus&id=${data.id}&name=${encodeURIComponent(data.name)}&city=${encodeURIComponent(data.city)}&map=${encodeURIComponent(data.map)}`;
-                const res = await fetch(url);
+                // الربط مع action=checkOfficeStatus في السكريبت الخاص بك
+                const query = `?action=checkOfficeStatus&id=${data.id}&name=${encodeURIComponent(data.name)}&city=${encodeURIComponent(data.city)}&map=${encodeURIComponent(data.map)}`;
+                const res = await fetch(scriptURL + query);
                 const result = await res.json();
 
                 if (result.status === "نشط") {
                     localStorage.setItem('whale_office_data', JSON.stringify(data));
                     window.location.href = 'dashboard.html';
                 } else if (result.status === "محظور") {
-                    alert("⚠️ هذا الحساب محظور.");
+                    alert("⚠️ نعتذر، هذا الحساب محظور حالياً.");
                 } else {
-                    alert("⌛ حسابك قيد المراجعة لدى الإدارة.");
+                    alert("⏳ حسابك قيد المراجعة. سيتم تفعيله من قبل الإدارة قريباً.");
                 }
             } catch (e) {
-                alert("تعذر الاتصال.. تأكد من الرابط.");
+                console.error(e);
+                alert("❌ فشل الاتصال بالسيرفر. تأكد من جودة الإنترنت.");
+            } finally {
+                btn.disabled = false; 
+                btn.innerText = "فتح الرادار 🚀";
             }
-            btn.disabled = false; 
-            btn.innerText = "دخول النظام 🚀";
         }
     </script>
 </body>

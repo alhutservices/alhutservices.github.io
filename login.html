@@ -62,7 +62,7 @@
     </div>
 
     <script>
-        // الرابط الجديد الذي زودتني به
+        // الرابط الذي زودتني به تم تحديثه هنا
         const scriptURL = "https://script.google.com/macros/s/AKfycbw8wFETe9wXfHluETDSl9xwSQeuC6-XGXS359TJQ6Io4qThy2gBGj1UT5GPwE4pn-na/exec";
 
         async function registerOffice() {
@@ -80,6 +80,7 @@
             btn.innerHTML = 'جاري التحقق من الحساب.. <span class="animate-spin ml-2 inline-block">⏳</span>';
 
             try {
+                // الاتصال المباشر بالرابط الجديد
                 const response = await fetch(`${scriptURL}?action=checkOfficeStatus&id=${id}&name=${encodeURIComponent(officeName)}&city=${city}&map=${encodeURIComponent(map)}`);
                 const result = await response.json();
 
@@ -98,6 +99,7 @@
                 }
             } catch (error) {
                 console.error("Login Error:", error);
+                // هذا هو الخطأ الذي كان يظهر لك سابقاً، إذا استمر يعني أن "عملية النشر" تحتاج مراجعة في جوجل سكريبت
                 alert("حدث خطأ في الاتصال بالسيرفر. تأكد من جودة الإنترنت وحاول مجدداً.");
                 resetBtn(btn);
             }

@@ -48,11 +48,13 @@
         </div>
     </div>
 
-    <main class="p-4 max-w-2xl mx-auto space-y-6" id="mainContainer"></main>
+    <main class="p-4 max-w-2xl mx-auto space-y-6" id="mainContainer">
+        <div class="text-center py-20 opacity-30 text-xs font-bold">جاري تحديث الرادار... 📡</div>
+    </main>
 
     <script>
-        // رابط تطبيق الويب المحدث والخاص بك
-        const scriptURL = "https://script.google.com/macros/s/AKfycbw7HJU42xszDvZDF0l3V3ueO-IA7QwgDmtSTlrhiJ1t7WLCwPmQFfNKUxj_ieLn3p7G/exec";
+        // الرابط الجديد الذي زودتني به
+        const scriptURL = "https://script.google.com/macros/s/AKfycbw8wFETe9wXfHluETDSl9xwSQeuC6-XGXS359TJQ6Io4qThy2gBGj1UT5GPwE4pn-na/exec";
         
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new';
@@ -68,11 +70,13 @@
                 allOrders = await res.json();
                 renderCards();
                 updateCounts();
-            } catch(e) { console.error("Fetch Error"); }
+            } catch(e) { 
+                console.error("Fetch Error"); 
+            }
         }
 
         function updateCounts() {
-            if(!allOrders.length) return;
+            if(!allOrders || !allOrders.length) return;
             document.getElementById('myCount').innerText = allOrders.filter(o => o.claimedBy === officeData.name && o.status.includes('✅')).length;
             document.getElementById('radarCount').innerText = allOrders.filter(o => o.province === officeData.city && o.status === "قيد الانتظار").length;
         }
@@ -133,7 +137,7 @@
                                     <a href="tel:${o.phone}" class="flex items-center justify-center gap-2 bg-green-500 text-white py-4 rounded-2xl font-black text-[10px] shadow-md active:scale-95">
                                         <i class="fas fa-phone"></i> اتصال
                                     </a>
-                                    <a href="${o.map}" target="_blank" class="flex items-center justify-center gap-2 ${o.map && o.map !== 'undefined' ? 'bg-blue-600' : 'bg-slate-300 pointer-events-none'} text-white py-4 rounded-2xl font-black text-[10px] shadow-md active:scale-95">
+                                    <a href="${o.map}" target="_blank" class="flex items-center justify-center gap-2 ${o.map && o.map !== 'undefined' && o.map !== '' ? 'bg-blue-600' : 'bg-slate-300 pointer-events-none'} text-white py-4 rounded-2xl font-black text-[10px] shadow-md active:scale-95">
                                         <i class="fas fa-location-dot"></i> الموقع
                                     </a>
                                 </div>
@@ -154,7 +158,7 @@
                 const result = await res.json();
                 if(result.success) fetchOrders();
                 else alert("عذراً، قد يكون الطلب استلم من قبل مكتب آخر");
-            } catch(e) { alert("حدث خطأ في الاتصال"); }
+            } catch(e) { alert("حدث خطأ في الاتصال بالسيرفر"); }
         }
 
         function switchTab(t) {
@@ -166,7 +170,7 @@
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        setInterval(fetchOrders, 10000); 
+        setInterval(fetchOrders, 15000); 
         fetchOrders();
     </script>
 </body>

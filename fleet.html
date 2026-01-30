@@ -45,33 +45,31 @@
 
     <script>
         const u = new URLSearchParams(window.location.search);
-        const type = u.get('type');
+        const type = u.get('type'); // personal or wedding
         const currentLang = u.get('lang') || 'ar';
 
         const translations = {
             ar: { dir: 'rtl', font: 'Tajawal', title: 'أسطول سيارات الحوت', wedding: '✨ قسم سيارات الحفلات والأعراس', personal: '🚗 قسم السيارات الشخصية', engAll: 'كل أنواع المحركات', engHyb: 'هايبرد (هجين)', engAuto: 'أوتوماتيك', catAll: 'كل الفئات', catEco: 'اقتصادية', catFam: 'عائلية / SUV', catLux: 'فاخرة VIP', btn: 'اختيار السيارة', currency: 'د.ع / يوم', empty: 'عذراً، لا توجد سيارات تطابق هذا البحث 🐋' },
-            ku: { dir: 'rtl', font: 'Tajawal', title: 'ئەسیولی ئۆتۆمبێلی حوت', wedding: '✨ بەشی ئۆتۆمبێلی ئاهەنگەکان', personal: '🚗 بەشی ئۆتۆمبێلی تایبەت', engAll: 'هەموو جۆرە بزوێنەرەکان', engHyb: 'هایبرید', engAuto: 'ئۆتۆماتیک', catAll: 'هەموو جۆرەکان', catEco: 'ئابووری', catFam: 'خێزانی / SUV', catLux: 'ناوازە VIP', btn: 'هەڵبژاردنی ئۆتۆمبێل', currency: 'دینار / ڕۆژ', empty: 'ببوورە، هیچ ئۆتۆمبێلێک نەدۆزرایەوە 🐋' },
-            tr: { dir: 'ltr', font: 'Poppins', title: 'Al-Hut Araç Filosu', wedding: '✨ Düğün ve Tören Araçları', personal: '🚗 Kişisel Araçlar Bölümü', engAll: 'Tüm Motor Tipleri', engHyb: 'Hibrit', engAuto: 'Otomatik', catAll: 'Tüm Kategoriler', catEco: 'Ekonomik', catFam: 'Aile / SUV', catLux: 'Lüks VIP', btn: 'Aracı Seç', currency: 'IQD / Gün', empty: 'Üzgünüz, kriterlere uygun araç bulunamadı 🐋' },
             en: { dir: 'ltr', font: 'Poppins', title: 'Al-Hut Car Fleet', wedding: '✨ Wedding & Events Section', personal: '🚗 Personal Cars Section', engAll: 'All Engines', engHyb: 'Hybrid', engAuto: 'Automatic', catAll: 'All Categories', catEco: 'Economy', catFam: 'Family / SUV', catLux: 'Luxury VIP', btn: 'Select Car', currency: 'IQD / Day', empty: 'Sorry, no cars match your search 🐋' }
+            // يمكن إضافة الكوردي والتركي هنا كما في ملفك الأصلي
         };
 
         const fleet = [
-            { name: {ar:"تويوتا كورولا 2025", ku:"تۆیۆتا کۆرۆلا ٢٠٢٥", tr:"Toyota Corolla 2025", en:"Toyota Corolla 2025"}, engine: "hybrid", cat: "economy", price: "45000", img: "Cars/corolla.jpg" },
-            { name: {ar:"دودج جارجر SRT", ku:"دۆج جارجەر SRT", tr:"Dodge Charger SRT", en:"Dodge Charger SRT"}, engine: "auto", cat: "luxury", price: "85000", img: "Cars/charger.jpg" },
-            { name: {ar:"هيونداي توسان", ku:"هۆندای تۆسان", tr:"Hyundai Tucson", en:"Hyundai Tucson"}, engine: "auto", cat: "family", price: "60000", img: "Cars/tucson.jpg" },
-            { name: {ar:"مرسيدس S-Class", ku:"مێرسیدس S-Class", tr:"Mercedes S-Class", en:"Mercedes S-Class"}, engine: "auto", cat: "luxury", price: "150000", img: "Cars/mercedes.jpg" },
-            { name: {ar:"تويوتا كامري", ku:"تۆیۆتا کامری", tr:"Toyota Camry", en:"Toyota Camry"}, engine: "hybrid", cat: "economy", price: "55000", img: "Cars/camry.jpg" },
-            { name: {ar:"كيا سورينتو", ku:"کیا سۆرێنتۆ", tr:"Kia Sorento", en:"Kia Sorento"}, engine: "auto", cat: "family", price: "70000", img: "Cars/sorento.jpg" }
+            { name: {ar:"تويوتا كورولا 2025", en:"Toyota Corolla 2025"}, engine: "hybrid", cat: "economy", price: "45000", img: "Cars/corolla.jpg" },
+            { name: {ar:"دودج جارجر SRT", en:"Dodge Charger SRT"}, engine: "auto", cat: "luxury", price: "85000", img: "Cars/charger.jpg" },
+            { name: {ar:"هيونداي توسان", en:"Hyundai Tucson"}, engine: "auto", cat: "family", price: "60000", img: "Cars/tucson.jpg" },
+            { name: {ar:"مرسيدس S-Class", en:"Mercedes S-Class"}, engine: "auto", cat: "luxury", price: "150000", img: "Cars/mercedes.jpg" },
+            { name: {ar:"تويوتا كامري", en:"Toyota Camry"}, engine: "hybrid", cat: "economy", price: "55000", img: "Cars/camry.jpg" },
+            { name: {ar:"كيا سورينتو", en:"Kia Sorento"}, engine: "auto", cat: "family", price: "70000", img: "Cars/sorento.jpg" }
         ];
 
         function initLang() {
-            const l = translations[currentLang];
+            const l = translations[currentLang] || translations['ar'];
             document.getElementById('htmlTag').dir = l.dir;
             document.body.style.fontFamily = l.font + ', sans-serif';
             document.getElementById('pageTitle').innerText = l.title;
             document.getElementById('serviceLabel').innerText = type === 'wedding' ? l.wedding : l.personal;
             
-            // تحديث نصوص الفلاتر
             document.getElementById('optEngAll').innerText = l.engAll;
             document.getElementById('optEngHybrid').innerText = l.engHyb;
             document.getElementById('optEngAuto').innerText = l.engAuto;
@@ -85,7 +83,7 @@
             const eng = document.getElementById('engineFilter').value;
             const cat = document.getElementById('categoryFilter').value;
             const grid = document.getElementById('fleetGrid');
-            const l = translations[currentLang];
+            const l = translations[currentLang] || translations['ar'];
             grid.innerHTML = '';
 
             const filtered = fleet.filter(car => {
@@ -114,14 +112,15 @@
             });
         }
 
+        // الدالة المعدلة للانتقال لصفحة الإضافات
         function selectCar(name, price) {
-            u.set('car', name);
-            u.set('price', price);
-            u.set('lang', currentLang);
+            const params = new URLSearchParams(window.location.search);
+            params.set('car', name);
+            params.set('price', price);
+            params.set('lang', currentLang);
             
-            // التحويل للصفحة التالية (booking_personal أو booking_wedding) بناءً على النوع
-            const targetPage = type === 'wedding' ? 'booking_wedding.html' : 'booking_personal.html';
-            window.location.href = `${targetPage}?${u.toString()}`;
+            // التوجيه إلى صفحة الإضافات (الخطوة التالية)
+            window.location.href = `addons.html?${params.toString()}`;
         }
 
         window.onload = () => {

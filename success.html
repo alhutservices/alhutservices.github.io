@@ -40,10 +40,9 @@
     <script>
         const u = new URLSearchParams(window.location.search);
         
-        // الرابط الجديد الذي زودتني به
-        const scriptURL = "https://script.google.com/macros/s/AKfycbw8wFETe9wXfHluETDSl9xwSQeuC6-XGXS359TJQ6Io4qThy2gBGj1UT5GPwE4pn-na/exec";
+        // الرابط الجديد النهائي تم تحديثه هنا
+        const scriptURL = "https://script.google.com/macros/s/AKfycbw7jO9V-WQqPfqAzX5u37UcqLQOWpwQqhQlVV9HCMmZJkKhuBIq-R3zhPdrskJc8Isq/exec";
 
-        // خريطة الترجمة لضمان دقة البيانات المرسلة للإكسل (المحافظات الثمانية)
         const translationMap = {
             "Kirkuk": "كركوك", "Kerkük": "كركوك",
             "Baghdad": "بغداد", "Bağdat": "بغداد",
@@ -86,7 +85,7 @@
             }
             document.getElementById('orderIDDisplay').innerText = "#" + randomID;
             
-            // منع تكرار الإرسال عند تحديث الصفحة
+            // إرسال البيانات للسيرفر (POST)
             if (!sessionStorage.getItem('orderSent')) {
                 const data = {
                     order_id: randomID,
@@ -107,13 +106,13 @@
 
                 fetch(scriptURL, {
                     method: 'POST',
-                    mode: 'no-cors',
+                    mode: 'no-cors', // لضمان الإرسال السلس لجوجل سكريبت
                     body: JSON.stringify(data),
                     headers: { 'Content-Type': 'application/json' }
                 }).then(() => {
                     sessionStorage.setItem('orderSent', 'true');
-                    console.log("✅ تم إرسال طلب الزبون إلى إكسل الحوت");
-                }).catch(err => console.error("❌ فشل الإرسال:", err));
+                    console.log("✅ الطلب وصل لعائلة الحوت");
+                }).catch(err => console.error("❌ خطأ إرسال:", err));
             }
         };
     </script>

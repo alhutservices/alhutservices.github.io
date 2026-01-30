@@ -2,103 +2,155 @@
 <html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حجز الأسطول الشخصي | الحوت 🐋</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>إكمال الحجز | الحوت 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f1f5f9; transition: 0.5s; }
+        :root { --main-color: #002349; --bg-soft: #f1f5f9; }
+        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg-soft); transition: 0.5s; }
         .hero-bg { background: linear-gradient(135deg, #002349 0%, #003366 100%); }
         .glass-input { width: 100%; padding: 1rem 1.25rem; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 1.5rem; font-weight: 700; outline: none; transition: 0.3s; }
         .glass-input:focus { border-color: #D4AF37; background: white; transform: translateY(-2px); }
-        .section-card { background: white; border-radius: 3.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08); }
+        .section-card { background: white; border-radius: 3.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08); position: relative; }
         #map { height: 220px; border-radius: 2.5rem; border: 4px solid #f1f5f9; z-index: 1; }
-        .icon-box { width: 40px; height: 40px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #002349; }
+        .gender-btn { flex: 1; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 1.25rem; font-weight: bold; transition: 0.3s; cursor: pointer; text-align: center; background: white; }
+        .gender-btn.active { background: var(--main-color); color: white; border-color: var(--main-color); box-shadow: 0 4px 15px rgba(0, 35, 73, 0.2); }
+        .icon-box { width: 40px; height: 40px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--main-color); }
     </style>
 </head>
 <body class="text-[#002349]">
+
     <header class="hero-bg text-white pt-16 pb-44 text-center relative overflow-hidden">
+        <div class="absolute top-0 right-0 opacity-10 text-[10rem] pointer-events-none">🐋</div>
         <h1 id="pageTitle" class="text-4xl font-black text-[#D4AF37] mb-2">إكمال البيانات</h1>
-        <p id="carSub" class="text-lg opacity-80 font-light italic px-4"></p>
+        <p id="carSub" class="text-lg opacity-80 font-bold px-4"></p>
     </header>
 
     <main class="container mx-auto px-4 -mt-32 relative z-10 pb-20">
-        <div class="section-card p-8 md:p-12 max-w-4xl mx-auto">
-            <div id="formGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="space-y-6">
-                    <div class="flex items-center mb-2"><div class="icon-box"><i class="fas fa-user-tie"></i></div><h3 id="sec1" class="font-black text-xl">المعلومات الشخصية</h3></div>
-                    <input type="text" id="custName" class="glass-input" placeholder="Name">
-                    <input type="tel" id="custPhone" class="glass-input text-left" dir="ltr" placeholder="077XXXXXXXX">
+        <div class="section-card p-8 md:p-12 max-w-4xl mx-auto border-t-8 border-[#D4AF37]">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-5">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="icon-box"><i class="fas fa-user-edit"></i></div>
+                        <h3 id="sec1" class="font-black text-xl">المعلومات الشخصية</h3>
+                    </div>
+                    <input type="text" id="custName" class="glass-input" placeholder="الاسم الكامل">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="tel" id="custPhone" class="glass-input text-left" dir="ltr" placeholder="07xx xxx xxxx">
+                        <input type="number" id="custAge" class="glass-input" placeholder="العمر">
+                    </div>
+                    <div class="flex gap-3">
+                        <div id="maleBtn" onclick="setGender('Male')" class="gender-btn active">👨 ذكر</div>
+                        <div id="femaleBtn" onclick="setGender('Female')" class="gender-btn">👩 أنثى</div>
+                    </div>
                 </div>
-                <div class="space-y-6">
-                    <div class="flex items-center mb-2"><div class="icon-box"><i class="fas fa-id-card"></i></div><h3 id="sec2" class="font-black text-xl">الوثائق القانونية</h3></div>
-                    <input type="text" id="idNumber" class="glass-input" placeholder="ID">
-                    <input type="text" id="drivingLicense" class="glass-input" placeholder="License">
+
+                <div class="space-y-5">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="icon-box"><i class="fas fa-id-card"></i></div>
+                        <h3 id="sec2" class="font-black text-xl">الوثائق القانونية</h3>
+                    </div>
+                    <input type="text" id="idNumber" class="glass-input" placeholder="رقم الهوية / الجواز">
+                    <input type="text" id="drivingLicense" class="glass-input" placeholder="رقم إجازة السوق">
+                    <div class="p-4 bg-amber-50 rounded-2xl border border-amber-100 text-[10px] font-bold text-amber-700">
+                        ⚠️ ملاحظة: يجب إحضار الوثائق الأصلية عند استلام السيارة.
+                    </div>
                 </div>
-                <div class="md:col-span-2 pt-4">
-                    <div class="flex justify-between mb-2"><h3 id="sec3" class="font-black text-xl">موقع التسليم</h3><button onclick="getLocation()" id="btnGPS" class="text-blue-600 font-black text-xs">تحديد موقعي</button></div>
+
+                <div class="md:col-span-2 space-y-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center gap-3">
+                            <div class="icon-box"><i class="fas fa-map-marked-alt"></i></div>
+                            <h3 id="sec3" class="font-black text-xl">موقع التسليم</h3>
+                        </div>
+                        <button onclick="getGPS()" id="btnGPS" class="text-[#002349] font-black text-xs bg-white px-4 py-2 rounded-full border shadow-sm">تحديد موقعي 🛰️</button>
+                    </div>
                     <div id="map"></div>
                 </div>
-                <button onclick="confirmBooking()" class="md:col-span-2 w-full bg-[#002349] text-[#D4AF37] py-6 rounded-[2rem] font-black text-2xl shadow-xl">
-                    <span id="btnSubmit">استمر</span>
+
+                <button onclick="confirmBooking()" class="md:col-span-2 w-full bg-[#002349] text-[#D4AF37] py-6 rounded-[2.5rem] font-black text-2xl shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-4">
+                    <span id="btnSubmit">مراجعة الطلب النهائي</span> <i class="fas fa-chevron-left"></i>
                 </button>
             </div>
         </div>
     </main>
 
     <script>
-        let map, marker;
+        let map, marker, selectedGender = 'Male';
         const u = new URLSearchParams(window.location.search);
         const currentLang = u.get('lang') || 'ar';
+
         const trans = {
-            ar: { dir: 'rtl', font: 'Tajawal', title: 'إكمال بيانات الرحلة', sub: 'طلب حجز:', sec1: 'المعلومات الشخصية', name: 'الاسم الكامل', phone: 'رقم الهاتف', sec2: 'الوثائق القانونية', id: 'رقم الهوية', license: 'رقم الإجازة', sec3: 'موقع التسليم', gps: 'تحديد موقعي 🛰️', submit: 'مراجعة الطلب النهائي', alert: 'يرجى ملء الحقول 🐋' },
-            en: { dir: 'ltr', font: 'Poppins', title: 'Complete Details', sub: 'Booking:', sec1: 'Personal Info', name: 'Full Name', phone: 'Phone', sec2: 'Documents', id: 'ID Number', license: 'License No', sec3: 'Delivery Location', gps: 'Get Location 🛰️', submit: 'Final Review', alert: 'Please fill all fields 🐋' }
+            ar: { dir: 'rtl', title: 'إكمال بيانات الرحلة', sub: 'السيارة:', sec1: 'المعلومات الشخصية', sec2: 'الوثائق القانونية', sec3: 'موقع التسليم والاستلام', name: 'الاسم الكامل', phone: 'رقم الهاتف', age: 'العمر', id: 'رقم الهوية', license: 'رقم الإجازة', gps: 'تحديد موقعي 🛰️', submit: 'مراجعة الطلب النهائي', alert: 'يرجى إكمال جميع الحقول الأساسية 🐋' },
+            ku: { dir: 'rtl', title: 'تەواوکردنی زانیارییەکان', sub: 'ئۆتۆمبێل:', sec1: 'زانیاری کەسی', sec2: 'بەڵگەنامەکان', sec3: 'شوێنی وەرگرتن', name: 'ناوى تەواو', phone: 'ژمارەی مۆبایل', age: 'تەمەن', id: 'ژمارەی ناسنامە', license: 'ژمارەی مۆڵەت', gps: 'دیاریکردنی شوێن 🛰️', submit: 'پێداچوونەوەی کۆتایی', alert: 'تکایە هەموو خانەکان پڕ بکەرەوە 🐋' },
+            // ... يمكن إضافة التركي والإنجليزي بنفس الطريقة
         };
 
         window.onload = function() {
             const l = trans[currentLang] || trans['ar'];
             document.getElementById('htmlTag').dir = l.dir;
-            document.body.style.fontFamily = l.font;
             document.getElementById('pageTitle').innerText = l.title;
-            document.getElementById('sec1').innerText = l.sec1;
+            document.getElementById('carSub').innerText = `${l.sub} ${u.get('car') || ''}`;
             document.getElementById('custName').placeholder = l.name;
             document.getElementById('custPhone').placeholder = l.phone;
-            document.getElementById('sec2').innerText = l.sec2;
+            document.getElementById('custAge').placeholder = l.age;
             document.getElementById('idNumber').placeholder = l.id;
             document.getElementById('drivingLicense').placeholder = l.license;
-            document.getElementById('sec3').innerText = l.sec3;
-            document.getElementById('btnGPS').innerText = l.gps;
             document.getElementById('btnSubmit').innerText = l.submit;
-            document.getElementById('carSub').innerText = `${l.sub} ${u.get('car') || ''}`;
 
-            map = L.map('map').setView([35.4687, 44.3921], 12);
+            // إعداد الخريطة
+            map = L.map('map').setView([33.3152, 44.3661], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-            marker = L.marker([35.4687, 44.3921], {draggable: true}).addTo(map);
+            marker = L.marker([33.3152, 44.3661], {draggable: true}).addTo(map);
+
+            // إضافة مربع البحث
+            L.Control.geocoder({
+                defaultMarkGeocode: false,
+                placeholder: currentLang === 'ar' ? "ابحث عن منطقتك..." : "Search...",
+            }).on('markgeocode', function(e) {
+                map.fitBounds(e.geocode.bbox);
+                marker.setLatLng(e.geocode.center);
+            }).addTo(map);
         };
 
-        function getLocation() { navigator.geolocation.getCurrentPosition(p => { const c=[p.coords.latitude, p.coords.longitude]; map.setView(c,16); marker.setLatLng(c); }); }
+        function setGender(g) {
+            selectedGender = g;
+            document.getElementById('maleBtn').className = g === 'Male' ? 'gender-btn active' : 'gender-btn';
+            document.getElementById('femaleBtn').className = g === 'Female' ? 'gender-btn active' : 'gender-btn';
+        }
+
+        function getGPS() {
+            navigator.geolocation.getCurrentPosition(p => {
+                const c = [p.coords.latitude, p.coords.longitude];
+                map.setView(c, 16); marker.setLatLng(c);
+            });
+        }
 
         function confirmBooking() {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
-            
-            if(!name || !phone) { alert(trans[currentLang].alert); return; }
+            const age = document.getElementById('custAge').value;
 
-            // إعداد البيانات الجديدة
+            if(!name || !phone || !age) { alert(trans[currentLang].alert); return; }
+
             const pos = marker.getLatLng();
-            const googleMapsLink = `https://www.google.com/maps?q=${pos.lat},${pos.lng}`;
-            
             u.set('name', name);
             u.set('phone', phone);
+            u.set('age', age);
+            u.set('gender', selectedGender === 'Male' ? 'ذكر' : 'أنثى');
             u.set('id_no', document.getElementById('idNumber').value);
             u.set('license', document.getElementById('drivingLicense').value);
-            u.set('service', 'تأجير سيارة شخصية'); // نوع الخدمة ثابت هنا
-            u.set('gender', 'Male'); // افتراضي للشخصي
-            u.set('map', googleMapsLink); // رابط الخريطة
-            u.set('lang', currentLang);
+            u.set('map', `https://www.google.com/maps?q=${pos.lat},${pos.lng}`);
+            u.set('service', 'تأجير سيارة شخصية');
 
             window.location.href = `review.html?${u.toString()}`;
         }

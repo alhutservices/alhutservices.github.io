@@ -63,8 +63,8 @@
     </div>
 
     <script>
-        // الرابط الجديد والنهائي الخاص بك
-        const scriptURL = "https://script.google.com/macros/s/AKfycbwlBj0BPa4z3zalacIlPHARGpUiCwhWGwGShzQsuzEE3YDhWme6Rr1vckfdHsAGmCnG/exec";
+        // الرابط الجديد والنهائي الخاص بك (تطبيق الويب المحدث)
+        const scriptURL = "https://script.google.com/macros/s/AKfycbw7HJU42xszDvZDF0l3V3ueO-IA7QwgDmtSTlrhiJ1t7WLCwPmQFfNKUxj_ieLn3p7G/exec";
 
         async function registerOffice() {
             const btn = document.getElementById('loginBtn');
@@ -81,15 +81,18 @@
             btn.innerHTML = 'جاري التحقق من الحساب.. <span class="animate-spin ml-2 inline-block">⏳</span>';
 
             try {
+                // الاتصال بالسكريبت للتحقق من وجود المكتب أو تسجيله كـ "معلق"
                 const response = await fetch(`${scriptURL}?action=checkOfficeStatus&id=${id}&name=${encodeURIComponent(officeName)}&city=${city}&map=${encodeURIComponent(map)}`);
                 const result = await response.json();
 
                 if (result.status === "نشط") {
+                    // إذا كان المكتب مفعلاً من قبل المدير، يتم حفظ بياناته والدخول
                     const officeData = { name: officeName, city: city, id: id, map: map };
                     localStorage.setItem('whale_office_data', JSON.stringify(officeData));
                     window.location.href = 'dashboard.html';
                 } 
                 else if (result.status === "معلق") {
+                    // إذا سجل لأول مرة أو لم يتم تفعيله بعد
                     alert("يا هلا بك! طلب انضمامك قيد المراجعة حالياً. سيتم تفعيل الرادار لك من قبل الإدارة قريباً.");
                     resetBtn(btn);
                 } 

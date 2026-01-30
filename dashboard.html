@@ -51,8 +51,8 @@
     <main class="p-4 max-w-2xl mx-auto space-y-6" id="mainContainer"></main>
 
     <script>
-        // الرابط الجديد المحدث (النهائي)
-        const scriptURL = "https://script.google.com/macros/s/AKfycbwlBj0BPa4z3zalacIlPHARGpUiCwhWGwGShzQsuzEE3YDhWme6Rr1vckfdHsAGmCnG/exec";
+        // الرابط النهائي المحدث والنشط الآن
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzXvDagqt3s1BAStJ2AFb51MJQb5T5xDoDMcUPwVbXoktasNwpfQA8vxrI2luSdLN8P/exec";
         
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new';
@@ -104,10 +104,10 @@
 
                     <div class="bg-slate-50 p-4 rounded-[1.5rem] mb-4 space-y-2 border border-slate-100">
                         <div class="flex justify-between border-b border-white pb-1">
-                            <span class="text-[10px] font-bold text-slate-400">الاسم:</span>
+                            <span class="text-[10px] font-bold text-slate-400">الزبون:</span>
                             <span class="text-[10px] font-black text-slate-800">${o.name}</span>
                         </div>
-                        <div class="flex justify-between border-b border-white pb-1">
+                         <div class="flex justify-between border-b border-white pb-1">
                             <span class="text-[10px] font-bold text-slate-400">الإضافات:</span>
                             <span class="text-[10px] font-black text-rose-500">${o.addons || 'لا يوجد'}</span>
                         </div>
@@ -172,7 +172,7 @@
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        setInterval(fetchOrders, 10000); // تحديث كل 10 ثوانٍ
+        setInterval(fetchOrders, 10000); // تحديث الرادار تلقائياً
         fetchOrders();
     </script>
 </body>

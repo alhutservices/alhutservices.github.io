@@ -53,8 +53,8 @@
     </main>
 
     <script>
-        // تم تحديث الرابط هنا ليرتبط بالسكريبت الجديد O34 الخاص بك
-        const scriptURL = "https://script.google.com/macros/s/AKfycby09szRjInw_jODIknkQ2BnCr9eb4-dNr669UfVw2eZ-XW8NhmIfZvdiHHlAC2mhO34/exec";
+        // الرابط الجديد والموحد h8
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxjkaA9pVrodw8vJcNQnJ2r8yQhIzScsxxj3R_a24Tkyz5V93E0WDwYzyYstI_weXh8/exec";
         
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new';
@@ -72,7 +72,7 @@
                 updateCounts();
             } catch(e) { 
                 console.error("Fetch Error"); 
-                document.getElementById('mainContainer').innerHTML = '<div class="text-center py-10 text-red-400 text-xs">فشل الاتصال بالرادار..</div>';
+                document.getElementById('mainContainer').innerHTML = '<div class="text-center py-10 text-red-400 text-xs">فشل الاتصال بالرادار المحدث..</div>';
             }
         }
 
@@ -103,7 +103,7 @@
                         </div>
                         <div class="text-left">
                             <div class="text-[#D4AF37] font-black text-xl">${o.price || '0'}</div>
-                            <div class="text-[8px] font-bold text-slate-300 uppercase">دينار عراقي</div>
+                            <div class="text-[8px] font-bold text-slate-300 uppercase">د.ع</div>
                         </div>
                     </div>
 
@@ -120,13 +120,13 @@
                             </div>
                         ` : `
                             <div class="py-1 text-center border-t border-dashed border-slate-200 mt-1">
-                                <span class="text-[8px] font-bold text-slate-300 italic">بقية التفاصيل تظهر بعد الاستلام 🔒</span>
+                                <span class="text-[8px] font-bold text-slate-300 italic">التفاصيل تظهر للمستلم فقط 🔒</span>
                             </div>
                         `}
                     </div>
 
                     ${currentTab === 'new' ? `
-                        <button onclick="update('${o.id}', 'claim')" class="w-full btn-gold py-4 rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all alert-pulse">إستلام الطلب الآن ✅</button>
+                        <button onclick="update('${o.id}', 'claim')" class="w-full btn-gold py-4 rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all alert-pulse">إستلام الطلب للعمل ✅</button>
                     ` : `
                         <div class="space-y-2">
                             ${!o.status.includes('✅') ? `
@@ -167,7 +167,7 @@
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        setInterval(fetchOrders, 15000); 
+        setInterval(fetchOrders, 15000); // تحديث الرادار كل 15 ثانية لملاحقة الطلبات
         fetchOrders();
     </script>
 </body>

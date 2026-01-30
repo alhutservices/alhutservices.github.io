@@ -39,13 +39,22 @@
 
     <script>
         const u = new URLSearchParams(window.location.search);
-        // المحرك الخاص بك (Google App Script)
+        // تأكد من وضع رابط السكريبت الخاص بك هنا بعد نشره (Deploy)
         const scriptURL = "https://script.google.com/macros/s/AKfycbxQiq-dn55ZaMfjhOBJzs-YXfrAt_IkcrbfCDhzgIDE3MIB09AGEtRTrCRpa7eCuObK2g/exec";
 
+        // خريطة الترجمة لضمان وصول المحافظات والبيانات بالعربية للإكسل (ليعمل الرادار)
         const translationMap = {
-            "Kirkuk": "كركوك", "Baghdad": "بغداد", "Erbil": "أربيل", "Basra": "البصرة",
-            "Duhok": "دهوك", "Sulaymaniyah": "السليمانية", "Mosul": "الموصل",
-            "Male": "ذكر", "Female": "أنثى"
+            "Kirkuk": "كركوك", "Kerkük": "كركوك",
+            "Baghdad": "بغداد", "Bağdat": "بغداد",
+            "Erbil": "أربيل", 
+            "Basra": "البصرة",
+            "Duhok": "دهوك", 
+            "Sulaymaniyah": "السليمانية", "Slemani": "السليمانية", "Süleymaniye": "السليمانية",
+            "Mosul": "الموصل", "Musul": "الموصل",
+            "Anbar": "الأنبار", "Enbar": "الأنبار",
+            "Diyala": "ديالى",
+            "Male": "ذكر", "Female": "أنثى",
+            "personal": "تأجير شخصي", "wedding": "أعراس ومناسبات", "training": "تعليم قيادة"
         };
 
         function trans(text) { return translationMap[text] || text || "غير محدد"; }
@@ -54,21 +63,22 @@
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#1e293b', '#D4AF37'] });
             
             // 1. التقاط كافة البيانات من الرابط (URL)
-            const city = u.get('city') || u.get('province');
+            const rawCity = u.get('city') || u.get('province');
+            const city = trans(rawCity);
             const car = u.get('car');
             const name = u.get('name');
             const phone = u.get('phone');
             const price = u.get('price');
-            const days = u.get('days') || "1"; // عدد الأيام الجديد
-            const addons = u.get('addons') || "بدون إضافات"; // الإضافات الجديدة
-            const gender = u.get('gender'); 
-            const service = u.get('service');
+            const days = u.get('days') || "1";
+            const addons = u.get('addons') || "بدون إضافات";
+            const gender = trans(u.get('gender')); 
+            const service = trans(u.get('service'));
             const mapLink = u.get('map');
             const nationalID = u.get('id_no') || "غير متوفر"; 
             const age = u.get('age') || "غير محدد";
-            const license = u.get('license') || "غير متوفر"; // رقم الإجازة
+            const license = u.get('license') || "غير متوفر";
 
-            document.getElementById('prov-ar').innerText = trans(city);
+            document.getElementById('prov-ar').innerText = city;
 
             let randomID = sessionStorage.getItem('currentOrderID');
             if (!randomID) {
@@ -77,30 +87,29 @@
             }
             document.getElementById('orderIDDisplay').innerText = "#" + randomID;
             
-            // 2. إرسال البيانات للمحرك إذا لم تكن قد أرسلت في هذه الجلسة
+            // 2. إرسال البيانات للمحرك
             if (!sessionStorage.getItem('orderSent')) {
                 const data = {
-                    timestamp: new Date().toLocaleString(),
+                    timestamp: new Date().toLocaleString('ar-EG'),
                     order_id: randomID,
                     name: name,
                     phone: phone,
-                    province: trans(city),
+                    province: city,      // سيصل دائماً بالعربي للإكسل ليفهمه الرادار
                     car: car,
-                    days: days,           // تم إضافة عدد الأيام
-                    addons: addons,       // تم إضافة الإضافات
-                    total_price: price,   // السعر النهائي
+                    days: days,
+                    addons: addons,
+                    total_price: price,
                     gender: gender,
                     age: age,
                     national_id: nationalID,
-                    license_no: license,  // تم إضافة رقم الإجازة
+                    license_no: license,
                     service: service,
                     location_link: mapLink
                 };
 
-                // إرسال البيانات عبر POST
                 fetch(scriptURL, {
                     method: 'POST',
-                    mode: 'no-cors', // لضمان عدم حدوث مشاكل CORS مع جوجل سكريبت
+                    mode: 'no-cors',
                     body: JSON.stringify(data),
                     headers: { 'Content-Type': 'application/json' }
                 }).then(() => {

@@ -9,11 +9,12 @@
     <style>
         body { font-family: 'Tajawal', sans-serif; }
         .input-focus:focus { border-color: #D4AF37; box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+        .bg-whale { background: radial-gradient(circle at center, #0f172a 0%, #020617 100%); }
     </style>
 </head>
-<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4">
+<body class="bg-whale text-white min-h-screen flex items-center justify-center p-4">
     
-    <div class="max-w-md w-full bg-slate-900 p-8 rounded-[3.5rem] border-b-[10px] border-[#D4AF37] shadow-2xl">
+    <div class="max-w-md w-full bg-slate-900/80 backdrop-blur-xl p-8 rounded-[3.5rem] border-b-[10px] border-[#D4AF37] shadow-2xl border border-white/5">
         <div class="text-center mb-8">
             <div class="text-6xl mb-4 animate-bounce">🐋</div>
             <h2 class="text-3xl font-black mt-2 text-[#D4AF37]">عائلة الحوت</h2>
@@ -23,13 +24,13 @@
         <div class="space-y-4">
             <div class="space-y-2">
                 <label class="text-[10px] font-black uppercase text-[#D4AF37] mr-2 tracking-widest">اسم المكتب التجاري</label>
-                <input id="officeName" type="text" placeholder="مثلاً: مكتب الحوت كركوك" class="w-full p-4 bg-slate-800 rounded-2xl border border-slate-700 outline-none font-bold input-focus transition-all">
+                <input id="officeName" type="text" placeholder="مثلاً: مكتب الحوت كركوك" class="w-full p-4 bg-slate-800/50 rounded-2xl border border-slate-700 outline-none font-bold input-focus transition-all">
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div class="space-y-2">
                     <label class="text-[10px] font-black uppercase text-[#D4AF37] mr-2 tracking-widest">المحافظة</label>
-                    <select id="citySelect" class="w-full p-4 bg-slate-800 rounded-2xl border border-slate-700 outline-none font-bold text-white input-focus transition-all text-sm">
+                    <select id="citySelect" class="w-full p-4 bg-slate-800/50 rounded-2xl border border-slate-700 outline-none font-bold text-white input-focus transition-all text-sm">
                         <option value="">اختر..</option>
                         <option value="بغداد">بغداد</option>
                         <option value="كركوك">كركوك</option>
@@ -43,13 +44,13 @@
                 </div>
                 <div class="space-y-2">
                     <label class="text-[10px] font-black uppercase text-[#D4AF37] mr-2 tracking-widest">رقم الهوية</label>
-                    <input id="idNumber" type="number" placeholder="0000" class="w-full p-4 bg-slate-800 rounded-2xl border border-slate-700 outline-none font-bold text-center input-focus transition-all">
+                    <input id="idNumber" type="number" placeholder="0000" class="w-full p-4 bg-slate-800/50 rounded-2xl border border-slate-700 outline-none font-bold text-center input-focus transition-all">
                 </div>
             </div>
 
             <div class="space-y-2">
                 <label class="text-[10px] font-black uppercase text-[#D4AF37] mr-2 tracking-widest">رابط الخرائط (اختياري)</label>
-                <input id="locationURL" type="url" placeholder="Google Maps Link" class="w-full p-4 bg-slate-800 rounded-2xl border border-slate-700 outline-none font-bold input-focus transition-all text-xs">
+                <input id="locationURL" type="url" placeholder="Google Maps Link" class="w-full p-4 bg-slate-800/50 rounded-2xl border border-slate-700 outline-none font-bold input-focus transition-all text-xs">
             </div>
 
             <button onclick="registerOffice()" id="loginBtn" class="w-full py-5 bg-[#D4AF37] text-slate-950 rounded-2xl font-black text-xl hover:scale-[1.02] active:scale-95 transition-all shadow-[0_10px_30px_rgba(212,175,55,0.3)] mt-6 flex items-center justify-center gap-3">
@@ -61,34 +62,61 @@
     </div>
 
     <script>
-        function registerOffice() {
+        // رابط السكريبت الموحد (يجب وضعه هنا بعد النشر)
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxQiq-dn55ZaMfjhOBJzs-YXfrAt_IkcrbfCDhzgIDE3MIB09AGEtRTrCRpa7eCuObK2g/exec";
+
+        async function registerOffice() {
             const btn = document.getElementById('loginBtn');
             const officeName = document.getElementById('officeName').value.trim();
             const city = document.getElementById('citySelect').value;
             const id = document.getElementById('idNumber').value.trim();
             const map = document.getElementById('locationURL').value.trim();
 
+            // التحقق من الحقول الأساسية
             if(!officeName || !city || !id) {
-                return alert("يرجى إكمال البيانات الأساسية لتفعيل الرادار في محافظتك.");
+                return alert("يا هلا بك، يرجى إكمال جميع الحقول المطلوبة لتفعيل الرادار.");
             }
 
+            // تفعيل حالة التحميل
             btn.disabled = true;
-            btn.innerHTML = 'جاري ربط الرادار.. ⏳';
+            btn.innerHTML = 'جاري التحقق من الحساب.. <span class="animate-spin ml-2 inline-block">⏳</span>';
 
-            // تخزين بيانات المكتب
-            const officeData = {
-                name: officeName,
-                city: city, // ستكون "بغداد"، "كركوك"... الخ
-                id: id,
-                map: map
-            };
+            try {
+                // الاتصال بالسكريبت للتحقق من حالة المكتب (نشط، معلق، محظور)
+                const response = await fetch(`${scriptURL}?action=checkOfficeStatus&id=${id}&name=${encodeURIComponent(officeName)}&city=${city}&map=${encodeURIComponent(map)}`);
+                const result = await response.json();
 
-            localStorage.setItem('whale_office_data', JSON.stringify(officeData));
-            
-            // الانتقال للداشبورد
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 800);
+                if (result.status === "نشط") {
+                    // إذا كان المكتب مفعلاً من قبل الإدارة، اسمح له بالدخول
+                    const officeData = {
+                        name: officeName,
+                        city: city,
+                        id: id,
+                        map: map
+                    };
+                    localStorage.setItem('whale_office_data', JSON.stringify(officeData));
+                    window.location.href = 'dashboard.html';
+                } 
+                else if (result.status === "معلق") {
+                    // إذا كان المكتب جديداً ولم يتم تفعيله بعد
+                    alert("يا هلا بك! طلب انضمامك قيد المراجعة حالياً من قبل الإدارة. سيتم تفعيل الرادار لك قريباً.");
+                    resetBtn(btn);
+                } 
+                else if (result.status === "محظور") {
+                    // إذا تم حظر المكتب من لوحة القائد
+                    alert("عذراً، هذا الحساب معطل حالياً. يرجى التواصل مع إدارة عائلة الحوت.");
+                    resetBtn(btn);
+                }
+            } catch (error) {
+                console.error("Login Error:", error);
+                alert("حدث خطأ في الاتصال بالسيرفر. تأكد من جودة الإنترنت وحاول مجدداً.");
+                resetBtn(btn);
+            }
+        }
+
+        function resetBtn(btn) {
+            btn.disabled = false;
+            btn.innerHTML = 'فتح الرادار 🚀';
         }
     </script>
 </body>

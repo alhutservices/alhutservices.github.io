@@ -15,12 +15,10 @@
         .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #B8962E 100%); color: white; }
         .timer-badge { background: #fee2e2; color: #ef4444; padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 900; }
         
-        /* تأثيرات الألوان الذكية */
         .order-new { border-right: 8px solid #3b82f6; } 
         .order-delayed { border-right: 8px solid #facc15; animation: pulse-yellow 2s infinite; } 
         .order-urgent { border-right: 8px solid #ef4444; animation: pulse-red 1s infinite; } 
         .order-completed { border-right: 8px solid #22c55e; background: rgba(34, 197, 94, 0.05); } 
-        .order-cancel-req { border-right: 8px solid #a855f7; background: rgba(168, 85, 247, 0.05); } 
 
         @keyframes pulse-red { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         @keyframes pulse-yellow { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
@@ -30,9 +28,9 @@
 
     <nav class="sticky top-0 z-50 gold-glass px-6 py-4 flex justify-between items-center">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 btn-gold rounded-xl flex items-center justify-center shadow-lg"><i class="fas fa-whale text-xl"></i></div>
+            <div class="w-10 h-10 btn-gold rounded-xl flex items-center justify-center shadow-lg"><i class="fas fa-whale"></i></div>
             <div>
-                <h1 id="navOfficeName" class="font-black text-xs text-slate-700 italic tracking-tighter">جاري الاتصال..</h1>
+                <h1 id="navOfficeName" class="font-black text-xs text-slate-700">جاري الاتصال..</h1>
                 <p id="navCity" class="text-[9px] font-bold text-[#D4AF37] uppercase tracking-widest"></p>
             </div>
         </div>
@@ -41,11 +39,11 @@
 
     <div class="p-4 grid grid-cols-2 gap-3 max-w-2xl mx-auto text-center">
         <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
-            <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">منجز اليوم</p>
+            <p class="text-[8px] font-black text-slate-400 uppercase">منجز اليوم</p>
             <p id="myCount" class="text-xl font-black text-green-600">0</p>
         </div>
         <div class="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm">
-            <p class="text-[8px] font-black text-slate-400 uppercase tracking-widest">الرادار العام</p>
+            <p class="text-[8px] font-black text-slate-400 uppercase">الرادار العام</p>
             <p id="radarCount" class="text-xl font-black text-[#D4AF37]">0</p>
         </div>
     </div>
@@ -58,7 +56,8 @@
     <main class="p-4 max-w-2xl mx-auto space-y-6" id="mainContainer"></main>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxjkaA9pVrodw8vJcNQnJ2r8yQhIzScsxxj3R_a24Tkyz5V93E0WDwYzyYstI_weXh8/exec";
+        // الرابط الجديد IkluE
+        const scriptURL = "https://script.google.com/macros/s/AKfycbw4__ua1E1SNT0A2DUPlGD7DJ0xnh5kqEPLkbZBMRCZe5FavxOB9lBDFLdtJl5IkluE/exec";
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new';
         let allOrders = [];
@@ -68,8 +67,7 @@
         document.getElementById('navCity').innerText = officeData.city;
 
         function getOrderVisualClass(status, timestamp) {
-            if (status.includes('✅')) return 'order-completed';
-            if (status.includes('إلغاء')) return 'order-cancel-req';
+            if (status.includes('✅') || status.includes('مكتمل')) return 'order-completed';
             const diff = Math.floor((new Date() - new Date(timestamp)) / 60000);
             if (status === "قيد الانتظار") {
                 if (diff > 30) return 'order-urgent';
@@ -79,9 +77,9 @@
             return 'order-new';
         }
 
-        function getTimeAgo(dateString) {
-            if (!dateString) return "الآن";
-            const diff = Math.floor((new Date() - new Date(dateString)) / 60000);
+        function getTimeAgo(ts) {
+            if(!ts) return "الآن";
+            const diff = Math.floor((new Date() - new Date(ts)) / 60000);
             return diff < 1 ? "الآن" : `منذ ${diff} دقيقة`;
         }
 
@@ -90,72 +88,64 @@
                 const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`);
                 const data = await res.json();
                 
-                // تنظيف البيانات ومنع التكرار
+                // منع التكرار بناءً على الـ ID
                 const unique = [];
                 const seen = new Set();
                 data.forEach(o => {
-                    if (!seen.has(o.id)) {
-                        seen.add(o.id);
-                        unique.push(o);
-                    }
+                    if (!seen.has(o.id)) { seen.add(o.id); unique.push(o); }
                 });
 
                 allOrders = unique;
                 renderCards();
                 updateCounts();
-            } catch(e) { console.error("Sync Failure"); }
+            } catch(e) { console.error("Radar Error"); }
         }
 
         function renderCards() {
             const container = document.getElementById('mainContainer');
-            // التصفية بناءً على المحافظة والتبويب
             let list = (currentTab === 'new') 
-                ? allOrders.filter(o => (o.province === officeData.city || o.prov === officeData.city) && o.status === "قيد الانتظار")
-                : allOrders.filter(o => o.claimedBy === officeData.name || o.office === officeData.name);
+                ? allOrders.filter(o => o.prov === officeData.city && o.status === "قيد الانتظار")
+                : allOrders.filter(o => o.office === officeData.name);
 
             if (list.length === 0) {
-                container.innerHTML = `<div class="text-center py-24 opacity-20"><i class="fas fa-radar text-4xl mb-4 block"></i><p class="font-bold text-sm italic">الرادار فارغ حالياً في ${officeData.city}</p></div>`;
+                container.innerHTML = `<div class="text-center py-20 opacity-30 text-sm font-bold italic">الرادار هادئ في ${officeData.city}.. 🌊</div>`;
                 return;
             }
 
             container.innerHTML = list.map(o => {
                 const visualClass = getOrderVisualClass(o.status, o.timestamp);
-                const additions = o.addons || "بدون إضافات";
-
                 return `
-                <div class="order-card p-6 shadow-sm ${visualClass} animate-in fade-in duration-500">
+                <div class="order-card p-6 shadow-sm ${visualClass}">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <span class="timer-badge"><i class="far fa-clock ml-1"></i>${getTimeAgo(o.timestamp)}</span>
-                            <h3 class="text-lg font-black text-[#1e293b] mt-2 tracking-tighter">${o.car}</h3>
+                            <h3 class="text-lg font-black text-[#1e293b] mt-2">${o.car}</h3>
                         </div>
-                        <div class="text-left">
-                            <div class="font-black text-[#D4AF37] text-xl">${o.price}</div>
-                            <span class="text-[8px] font-black text-slate-300 uppercase">دينار عراقي</span>
-                        </div>
+                        <div class="text-left font-black text-[#D4AF37] text-xl">${o.price} <span class="text-[8px] block text-slate-300 italic uppercase">دينار عراقي</span></div>
                     </div>
 
-                    <div class="bg-slate-50 p-4 rounded-3xl mb-5 text-[11px] space-y-2 border border-slate-100">
-                        <div class="flex justify-between border-b border-white pb-1"><span><i class="fas fa-user ml-2 text-slate-400"></i>الزبون:</span><span class="font-black text-slate-700">${o.name}</span></div>
-                        <div class="flex justify-between border-b border-white pb-1"><span><i class="fas fa-calendar-alt ml-2 text-slate-400"></i>المدة:</span><span class="font-black text-orange-600">${o.days} أيام</span></div>
+                    <div class="bg-slate-50 p-4 rounded-2xl mb-4 text-[11px] space-y-2 border border-slate-100">
+                        <div class="flex justify-between border-b border-white pb-1"><span>الزبون:</span><span class="font-black text-slate-700">${o.name}</span></div>
+                        <div class="flex justify-between border-b border-white pb-1"><span>الجنس / العمر:</span><span class="font-black">${o.gen} (${o.age})</span></div>
+                        <div class="flex justify-between border-b border-white pb-1"><span>المدة:</span><span class="font-black text-orange-600">${o.days} أيام</span></div>
                         <div class="pt-2">
-                            <span class="text-[9px] font-black text-slate-400 block mb-1 uppercase tracking-tighter">الإضافات والطلبات الخاصة:</span> 
-                            <span class="text-blue-700 font-bold italic block bg-blue-50/50 p-3 rounded-xl border border-blue-100 shadow-inner">${additions}</span>
+                            <span class="text-slate-400 block mb-1">الإضافات:</span> 
+                            <span class="text-slate-700 font-bold italic block bg-white p-2 rounded-lg border border-slate-200 shadow-sm">${o.addons}</span>
                         </div>
                     </div>
 
                     ${currentTab === 'new' ? `
-                        <button onclick="update('${o.id}', 'claim')" class="w-full btn-gold py-5 rounded-[1.5rem] font-black text-xs shadow-lg active:scale-95 transition-all">إستلام الطلب فوراً ✅</button>
+                        <button onclick="update('${o.id}', 'claim')" class="w-full btn-gold py-4 rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all">إستلام الطلب فوراً ✅</button>
                     ` : `
                         <div class="space-y-3">
                             ${!o.status.includes('✅') ? `
-                                <div class="grid grid-cols-2 gap-3">
-                                    <a href="tel:${o.phone}" class="bg-green-500 text-white py-4 rounded-2xl text-center font-black text-[10px] shadow-md active:scale-95 flex items-center justify-center gap-2"><i class="fas fa-phone"></i> اتصال</a>
-                                    <a href="${o.map || o.location_link}" target="_blank" class="bg-blue-600 text-white py-4 rounded-2xl text-center font-black text-[10px] shadow-md active:scale-95 flex items-center justify-center gap-2"><i class="fas fa-map-marker-alt"></i> الموقع</a>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <a href="tel:${o.phone}" class="bg-green-500 text-white py-4 rounded-2xl text-center font-black text-[10px] shadow-md active:scale-95 flex items-center justify-center gap-1"><i class="fas fa-phone"></i> اتصال</a>
+                                    <a href="${o.map}" target="_blank" class="bg-blue-600 text-white py-4 rounded-2xl text-center font-black text-[10px] shadow-md active:scale-95 flex items-center justify-center gap-1"><i class="fas fa-map-marker-alt"></i> الموقع</a>
                                 </div>
-                                <button onclick="update('${o.id}', 'complete')" class="w-full bg-[#1e293b] text-white py-5 rounded-[1.5rem] font-black text-xs active:scale-95 shadow-lg">إتمام المهمة وتصفية الحساب ✅</button>
+                                <button onclick="update('${o.id}', 'complete')" class="w-full bg-[#1e293b] text-white py-4 rounded-2xl font-black text-xs active:scale-95 shadow-lg">إتمام المهمة ✅</button>
                             ` : `
-                                <div class="bg-green-100 text-green-700 py-5 rounded-[1.5rem] text-center font-black text-xs italic border-2 border-green-200">لقد أنجزت هذا العمل بنجاح 🏆</div>
+                                <div class="bg-green-100 text-green-700 py-4 rounded-2xl text-center font-black text-xs italic border-2 border-green-200">تم الإنجاز بنجاح 🏆</div>
                             `}
                         </div>
                     `}
@@ -164,17 +154,13 @@
         }
 
         async function update(id, act) {
-            if(!confirm("هل أنت متأكد من تنفيذ هذا الإجراء؟")) return;
+            if(!confirm("تأكيد تنفيذ هذا الإجراء؟")) return;
             try {
                 const res = await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
                 const result = await res.json();
-                if(result.success) {
-                    fetchOrders();
-                    if(act === 'claim') alert("مبروك! الطلب الآن في صندوقك العملي.");
-                } else {
-                    alert("عذراً، هذا الطلب تم استلامه من قبل مكتب آخر.");
-                }
-            } catch(e) { alert("فشل الاتصال بالخادم"); }
+                if(result.success) fetchOrders();
+                else alert("تم تحديث الطلب مسبقاً من مكتب آخر");
+            } catch(e) { alert("خطأ في الاتصال"); }
         }
 
         function switchTab(t) {
@@ -186,15 +172,12 @@
 
         function updateCounts() {
             if(!allOrders) return;
-            const myDone = allOrders.filter(o => (o.claimedBy === officeData.name || o.office === officeData.name) && o.status.includes('✅')).length;
-            const radarNow = allOrders.filter(o => (o.province === officeData.city || o.prov === officeData.city) && o.status === "قيد الانتظار").length;
-            document.getElementById('myCount').innerText = myDone;
-            document.getElementById('radarCount').innerText = radarNow;
+            document.getElementById('myCount').innerText = allOrders.filter(o => o.office === officeData.name && o.status.includes('✅')).length;
+            document.getElementById('radarCount').innerText = allOrders.filter(o => o.prov === officeData.city && o.status === "قيد الانتظار").length;
         }
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        // تحديث لحظي كل 5 ثواني
         setInterval(fetchOrders, 5000);
         fetchOrders();
     </script>

@@ -7,12 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-
     <style>
         :root { --main-color: #002349; --bg-soft: #f1f5f9; }
         body { font-family: 'Tajawal', sans-serif; background-color: var(--bg-soft); transition: 0.5s; }
@@ -28,36 +26,20 @@
     </style>
 </head>
 <body class="text-[#002349]">
-
     <header class="hero-bg text-white pt-12 pb-44 text-center relative overflow-hidden">
         <div class="absolute top-0 right-0 opacity-10 text-[10rem] pointer-events-none">🐋</div>
         <h1 id="pageTitle" class="text-3xl font-black text-[#D4AF37] mb-4">إكمال البيانات</h1>
-        
         <div class="flex flex-wrap justify-center gap-3 px-4">
-            <div class="summary-badge">
-                <i class="fas fa-car text-amber-400"></i>
-                <span id="carLabel" class="text-sm font-bold"></span>
-            </div>
-            <div class="summary-badge">
-                <i class="fas fa-calendar-alt text-amber-400"></i>
-                <span id="daysLabel" class="text-sm font-bold"></span>
-            </div>
-            <div class="summary-badge">
-                <i class="fas fa-wallet text-amber-400"></i>
-                <span id="priceLabel" class="text-sm font-bold"></span>
-            </div>
+            <div class="summary-badge"><i class="fas fa-car text-amber-400"></i><span id="carLabel" class="text-sm font-bold"></span></div>
+            <div class="summary-badge"><i class="fas fa-calendar-alt text-amber-400"></i><span id="daysLabel" class="text-sm font-bold"></span></div>
+            <div class="summary-badge"><i class="fas fa-wallet text-amber-400"></i><span id="priceLabel" class="text-sm font-bold"></span></div>
         </div>
     </header>
-
     <main class="container mx-auto px-4 -mt-32 relative z-10 pb-20">
         <div class="section-card p-8 md:p-12 max-w-4xl mx-auto border-t-8 border-[#D4AF37]">
-            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="space-y-5">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="icon-box"><i class="fas fa-user-edit"></i></div>
-                        <h3 id="sec1" class="font-black text-xl">المعلومات الشخصية</h3>
-                    </div>
+                    <div class="flex items-center gap-3 mb-2"><div class="icon-box"><i class="fas fa-user-edit"></i></div><h3 class="font-black text-xl">المعلومات الشخصية</h3></div>
                     <input type="text" id="custName" class="glass-input" placeholder="الاسم الكامل">
                     <div class="grid grid-cols-2 gap-4">
                         <input type="tel" id="custPhone" class="glass-input text-left" dir="ltr" placeholder="07xx xxx xxxx">
@@ -68,47 +50,33 @@
                         <div id="femaleBtn" onclick="setGender('Female')" class="gender-btn">👩 أنثى</div>
                     </div>
                 </div>
-
                 <div class="space-y-5">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="icon-box"><i class="fas fa-id-card"></i></div>
-                        <h3 id="sec2" class="font-black text-xl">الوثائق القانونية</h3>
-                    </div>
+                    <div class="flex items-center gap-3 mb-2"><div class="icon-box"><i class="fas fa-id-card"></i></div><h3 class="font-black text-xl">الوثائق القانونية</h3></div>
                     <input type="text" id="idNumber" class="glass-input" placeholder="رقم الهوية / الجواز">
                     <input type="text" id="drivingLicense" class="glass-input" placeholder="رقم إجازة السوق">
-                    <div class="p-4 bg-amber-50 rounded-2xl border border-amber-100 text-[10px] font-bold text-amber-700">
-                        ⚠️ ملاحظة: يجب إحضار الوثائق الأصلية عند استلام السيارة.
-                    </div>
+                    <div class="p-4 bg-amber-50 rounded-2xl border border-amber-100 text-[10px] font-bold text-amber-700">⚠️ ملاحظة: يجب إحضار الوثائق الأصلية عند استلام السيارة.</div>
                 </div>
-
                 <div class="md:col-span-2 space-y-4">
                     <div class="flex justify-between items-center mb-2">
-                        <div class="flex items-center gap-3">
-                            <div class="icon-box"><i class="fas fa-map-marked-alt"></i></div>
-                            <h3 id="sec3" class="font-black text-xl">موقع التسليم</h3>
-                        </div>
-                        <button onclick="getGPS()" id="btnGPS" class="text-[#002349] font-black text-xs bg-white px-4 py-2 rounded-full border shadow-sm">تحديد موقعي 🛰️</button>
+                        <div class="flex items-center gap-3"><div class="icon-box"><i class="fas fa-map-marked-alt"></i></div><h3 class="font-black text-xl">موقع التسليم</h3></div>
+                        <button onclick="getGPS()" class="text-[#002349] font-black text-xs bg-white px-4 py-2 rounded-full border shadow-sm">تحديد موقعي 🛰️</button>
                     </div>
                     <div id="map"></div>
                 </div>
-
                 <button onclick="confirmBooking()" class="md:col-span-2 w-full bg-[#002349] text-[#D4AF37] py-6 rounded-[2.5rem] font-black text-2xl shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-4">
                     <span id="btnSubmit">مراجعة الطلب النهائي</span> <i class="fas fa-chevron-left"></i>
                 </button>
             </div>
         </div>
     </main>
-
     <script>
         let map, marker, selectedGender = 'Male';
         const u = new URLSearchParams(window.location.search);
         const currentLang = u.get('lang') || 'ar';
-
         const trans = {
-            ar: { dir: 'rtl', title: 'إكمال بيانات الرحلة', sec1: 'المعلومات الشخصية', sec2: 'الوثائق القانونية', sec3: 'موقع التسليم والاستلام', name: 'الاسم الكامل', phone: 'رقم الهاتف', age: 'العمر', id: 'رقم الهوية', license: 'رقم الإجازة', gps: 'تحديد موقعي 🛰️', submit: 'مراجعة الطلب النهائي', alert: 'يرجى إكمال جميع الحقول الأساسية 🐋', unit: 'يوم', curr: 'د.ع' },
-            ku: { dir: 'rtl', title: 'تەواوکردنی زانیارییەکان', sec1: 'زانیاری کەسی', sec2: 'بەڵگەنامەکان', sec3: 'شوێنی وەرگرتن', name: 'ناوى تەواو', phone: 'ژمارەی مۆبایل', age: 'تەمەن', id: 'ژمارەی ناسنامە', license: 'ژمارەی مۆڵەت', gps: 'دیاریکردنی شوێن 🛰️', submit: 'پێداچوونەوەی کۆتایی', alert: 'تکایە هەموو خانەکان پڕ بکەرەوە 🐋', unit: 'ڕۆژ', curr: 'دینار' }
+            ar: { dir: 'rtl', title: 'إكمال بيانات الرحلة', name: 'الاسم الكامل', phone: 'رقم الهاتف', age: 'العمر', id: 'رقم الهوية', license: 'رقم الإجازة', submit: 'مراجعة الطلب النهائي', alert: 'يرجى إكمال جميع الحقول الأساسية 🐋', unit: 'يوم', curr: 'د.ع' },
+            ku: { dir: 'rtl', title: 'تەواوکردنی زانیارییەکان', name: 'ناوى تەواو', phone: 'ژمارەی مۆبایل', age: 'تەمەن', id: 'ژمارەی ناسنامە', license: 'ژمارەی مۆڵەت', submit: 'پێداچوونەوەی کۆتایی', alert: 'تکایە هەموو خانەکان پڕ بکەرەوە 🐋', unit: 'ڕۆژ', curr: 'دینار' }
         };
-
         window.onload = function() {
             const l = trans[currentLang] || trans['ar'];
             document.getElementById('htmlTag').dir = l.dir;
@@ -119,55 +87,32 @@
             document.getElementById('idNumber').placeholder = l.id;
             document.getElementById('drivingLicense').placeholder = l.license;
             document.getElementById('btnSubmit').innerText = l.submit;
-
-            // عرض الملخص العلوي
             document.getElementById('carLabel').innerText = u.get('car') || '...';
             document.getElementById('daysLabel').innerText = `${u.get('days') || 1} ${l.unit}`;
             document.getElementById('priceLabel').innerText = `${parseInt(u.get('price')).toLocaleString()} ${l.curr}`;
-
             map = L.map('map').setView([33.3152, 44.3661], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
             marker = L.marker([33.3152, 44.3661], {draggable: true}).addTo(map);
-
-            L.Control.geocoder({
-                defaultMarkGeocode: false,
-                placeholder: currentLang === 'ar' ? "ابحث عن منطقتك..." : "Search...",
-            }).on('markgeocode', function(e) {
-                map.fitBounds(e.geocode.bbox);
-                marker.setLatLng(e.geocode.center);
-            }).addTo(map);
+            L.Control.geocoder({ defaultMarkGeocode: false, placeholder: currentLang === 'ar' ? "ابحث عن منطقتك..." : "Search...", }).on('markgeocode', function(e) { map.fitBounds(e.geocode.bbox); marker.setLatLng(e.geocode.center); }).addTo(map);
         };
-
         function setGender(g) {
             selectedGender = g;
             document.getElementById('maleBtn').className = g === 'Male' ? 'gender-btn active' : 'gender-btn';
             document.getElementById('femaleBtn').className = g === 'Female' ? 'gender-btn active' : 'gender-btn';
         }
-
-        function getGPS() {
-            navigator.geolocation.getCurrentPosition(p => {
-                const c = [p.coords.latitude, p.coords.longitude];
-                map.setView(c, 16); marker.setLatLng(c);
-            });
-        }
-
+        function getGPS() { navigator.geolocation.getCurrentPosition(p => { const c = [p.coords.latitude, p.coords.longitude]; map.setView(c, 16); marker.setLatLng(c); }); }
         function confirmBooking() {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
             const age = document.getElementById('custAge').value;
-
             if(!name || !phone || !age) { alert(trans[currentLang].alert); return; }
-
             const pos = marker.getLatLng();
-            u.set('name', name);
-            u.set('phone', phone);
-            u.set('age', age);
+            u.set('name', name); u.set('phone', phone); u.set('age', age);
             u.set('gender', selectedGender === 'Male' ? 'ذكر' : 'أنثى');
             u.set('id_no', document.getElementById('idNumber').value);
             u.set('license', document.getElementById('drivingLicense').value);
             u.set('map', `https://www.google.com/maps?q=${pos.lat},${pos.lng}`);
             u.set('service', 'تأجير سيارة شخصية');
-
             window.location.href = `review.html?${u.toString()}`;
         }
     </script>

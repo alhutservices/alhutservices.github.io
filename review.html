@@ -10,59 +10,50 @@
     <style>
         :root { --main: #002349; --accent: #D4AF37; --bg-soft: #f8fafc; }
         body { font-family: 'Tajawal', sans-serif; background-color: var(--bg-soft); transition: background 0.8s ease; }
-        
-        /* تأثيرات البطاقة */
         .glass-card { background: white; border-radius: 3.5rem; box-shadow: 0 40px 100px -20px rgba(0,0,0,0.15); transition: 0.5s; border-top: 15px solid var(--main); }
         .data-row { border-bottom: 1px dashed #e5e7eb; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center; }
         .data-label { color: #94a3b8; font-size: 0.85rem; font-weight: 800; }
-        .data-value { color: var(--main); font-weight: 900; }
-        
-        /* ثيم السعر الديناميكي */
+        .data-value { color: var(--main); font-weight: 900; text-align: left; }
         .price-box { background: var(--main); color: var(--accent); border-radius: 2.5rem; padding: 1.8rem; text-align: center; position: relative; overflow: hidden; }
-        .price-box::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent); animation: shine 4s infinite; }
-        @keyframes shine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
         .btn-main { background: var(--main); color: var(--accent); transition: 0.3s; }
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 30px -5px var(--main); opacity: 0.9; }
+        .btn-main:active { transform: scale(0.95); }
     </style>
 </head>
 <body class="p-4 md:p-10">
 
     <div id="mainCard" class="max-w-lg mx-auto glass-card overflow-hidden">
-        <div id="headerArea" class="p-10 text-center transition-colors duration-700">
-            <div id="mainEmoji" class="text-7xl mb-4 transition-transform duration-500 hover:scale-110 inline-block">📋</div>
-            <h2 id="pageTitle" class="text-3xl font-black mb-2" style="color: var(--main);">مراجعة الطلب</h2>
-            <div id="statusBadge" class="inline-block px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white" style="background: var(--main);">الخطوة النهائية</div>
+        <div id="headerArea" class="p-10 text-center">
+            <div id="mainEmoji" class="text-7xl mb-4">📋</div>
+            <h2 id="pageTitle" class="text-3xl font-black mb-2" style="color: var(--main);">مراجعة التفاصيل</h2>
+            <div id="statusBadge" class="inline-block px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white" style="background: var(--main);">تأكيد أخير قبل الإرسال</div>
         </div>
 
         <div class="px-10 py-2 space-y-1" id="detailsList"></div>
 
         <div class="px-10 py-6">
             <div class="price-box shadow-2xl">
-                <p id="lblTotal" class="text-[11px] font-black opacity-80 mb-1">المبلغ الإجمالي المستحق</p>
+                <p class="text-[11px] font-black opacity-80 mb-1">المبلغ الإجمالي التقريبي</p>
                 <div class="text-4xl font-black tracking-tighter">
-                    <span id="totalVal">0</span> <small class="text-lg" id="currVal">د.ع</small>
+                    <span id="totalVal">0</span> <small class="text-lg">د.ع</small>
                 </div>
-                <div id="daysBadge" class="mt-3 inline-block px-4 py-1 bg-white/10 rounded-lg text-xs font-bold text-white"></div>
+                <div id="daysBadge" class="mt-3 inline-block px-4 py-1 bg-white/10 rounded-lg text-xs font-bold text-white">---</div>
             </div>
         </div>
 
         <div class="p-10 pt-2 space-y-4">
-            <button onclick="confirmAndSubmit()" class="w-full py-6 btn-main rounded-[2rem] font-black text-2xl shadow-xl flex items-center justify-center gap-3 active:scale-95">
-                <span id="btnSubmit">تأكيد الإرسال</span>
+            <button onclick="confirmAndSubmit()" class="w-full py-6 btn-main rounded-[2rem] font-black text-2xl shadow-xl flex items-center justify-center gap-3">
+                <span id="btnSubmit">إرسال للرادار 🛰️</span>
                 <i class="fas fa-paper-plane text-sm"></i>
             </button>
-            <button onclick="window.history.back()" class="w-full text-gray-400 font-black text-sm hover:text-red-500 transition-colors flex items-center justify-center gap-2">
-                <i class="fas fa-undo-alt"></i> <span id="btnEdit">رجوع للتعديل</span>
+            <button onclick="window.history.back()" class="w-full text-gray-400 font-black text-sm hover:text-red-500 transition-colors">
+                <i class="fas fa-undo-alt ml-1"></i> رجوع للتعديل
             </button>
         </div>
     </div>
 
     <script>
         const u = new URLSearchParams(window.location.search);
-        const lang = u.get('lang') || 'ar';
         const type = u.get('type') || 'personal';
-        const car = u.get('car') || '';
 
         const themes = {
             training: { main: '#7c3aed', accent: '#fcd34d', emoji: '🎓', bg: '#f5f3ff' },
@@ -70,62 +61,52 @@
             personal: { main: '#002349', accent: '#D4AF37', emoji: '🚗', bg: '#f8fafc' }
         };
 
-        const i18n = {
-            ar: { title: "مراجعة التفاصيل", submit: "إرسال للرادار 🛰️", edit: "تعديل البيانات", fields: { name: "👤 الاسم", phone: "📞 الهاتف", age: "🎂 العمر", id_no: "🆔 الهوية", city: "📍 المدينة", car: "🚘 الخدمة", addon_name: "✨ الإضافة", map: "🗺️ الموقع" }, loc: "تم تحديد الموقع ✅", curr: "د.ع" },
-            // يمكنك إضافة لغات أخرى هنا
+        const fieldLabels = {
+            name: "👤 الاسم", phone: "📞 الهاتف", age: "🎂 العمر", 
+            id_no: "🆔 الهوية", city: "📍 المدينة", prov: "📍 المدينة",
+            car: "🚘 السيارة", addon_name: "✨ الإضافات", map: "🗺️ الموقع",
+            gender: "🚻 الجنس", license: "🪪 الإجازة"
         };
 
         window.onload = () => {
             const t = themes[type] || themes.personal;
-            const l = i18n[lang] || i18n.ar;
-
-            // تطبيق الثيم التفاعلي
-            const root = document.documentElement;
-            root.style.setProperty('--main', t.main);
-            root.style.setProperty('--accent', t.accent);
+            document.documentElement.style.setProperty('--main', t.main);
+            document.documentElement.style.setProperty('--accent', t.accent);
             document.body.style.backgroundColor = t.bg;
             document.getElementById('mainEmoji').innerText = t.emoji;
 
-            // ترجمة الثوابت
-            document.getElementById('pageTitle').innerText = l.title;
-            document.getElementById('btnSubmit').innerText = l.submit;
-            document.getElementById('btnEdit').innerText = l.edit;
-            document.getElementById('currVal').innerText = l.curr;
-
-            // بناء القائمة ذكياً
             let listHtml = '';
-            const fieldsToShow = ['name', 'phone', 'age', 'id_no', 'city', 'car', 'addon_name', 'map'];
-            
-            fieldsToShow.forEach(key => {
-                let val = u.get(key);
-                if (val && val !== 'null') {
-                    let display = decodeURIComponent(val);
-                    if (key === 'map') display = `<a href="${val}" target="_blank" class="text-blue-600 underline font-black">${l.loc}</a>`;
+            // عرض كل البيانات الموجودة في الرابط تلقائياً
+            u.forEach((value, key) => {
+                if (fieldLabels[key] && value && value !== 'null' && value !== '---') {
+                    let display = value;
+                    if (key === 'map') display = `<span class="text-green-600 font-black">محدد ✅</span>`;
                     
                     listHtml += `
                         <div class="data-row">
-                            <span class="data-label">${l.fields[key] || key}</span>
+                            <span class="data-label">${fieldLabels[key]}</span>
                             <span class="data-value">${display}</span>
                         </div>`;
                 }
             });
             document.getElementById('detailsList').innerHTML = listHtml;
 
-            // الحساب النهائي (أساسي + إضافة)
+            // حساب السعر النهائي
             const p1 = parseInt(u.get('price') || 0);
             const p2 = parseInt(u.get('addon_price') || 0);
-            const total = p1 + p2;
-            document.getElementById('totalVal').innerText = total.toLocaleString();
-
-            const days = u.get('days');
-            document.getElementById('daysBadge').innerText = days ? `${days} أيام` : `${u.get('date') || 'يوم واحد'}`;
+            document.getElementById('totalVal').innerText = (p1 + p2).toLocaleString();
+            
+            const days = u.get('days') || u.get('date');
+            document.getElementById('daysBadge').innerText = days ? `${days} أيام` : `يوم واحد`;
         };
 
         function confirmAndSubmit() {
-            // إضافة المجموع النهائي للرابط قبل الانتقال
             const p1 = parseInt(u.get('price') || 0);
             const p2 = parseInt(u.get('addon_price') || 0);
+            
+            // توحيد مسميات الإضافات والسعر النهائي لصفحة النجاح
             u.set('total_final', p1 + p2);
+            if(u.get('addon_name')) u.set('addons', u.get('addon_name'));
             
             window.location.href = `success.html?${u.toString()}`;
         }

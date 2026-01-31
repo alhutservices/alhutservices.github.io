@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تم بنجاح | عائلة الحوت 🐋✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
@@ -10,128 +10,149 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --main-theme: #002349; --accent-theme: #D4AF37; }
-        body { font-family: 'Tajawal', sans-serif; background: #f8fafc; transition: 0.8s; overflow-x: hidden; }
+        body { font-family: 'Tajawal', sans-serif; background: #f0f4f8; overflow: hidden; }
+        
+        .main-card {
+            background: white;
+            border-radius: 3.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 35, 73, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+
         .bounce-in { animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
         @keyframes bounceIn {
-            0% { opacity: 0; transform: scale(0.3); }
-            100% { opacity: 1; transform: scale(1); }
+            0% { opacity: 0; transform: scale(0.3) translateY(100px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
-        .theme-border { border-top: 15px solid var(--main-theme); }
-        .theme-text { color: var(--main-theme); }
-        .theme-bg { background-color: var(--main-theme); color: var(--accent-theme); }
-        .lang-item { font-size: 0.75rem; font-weight: 700; color: #64748b; background: white; padding: 8px; border-radius: 12px; border: 1px solid #e2e8f0; }
+
+        .success-glow {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 300px; height: 300px; background: var(--main-theme);
+            filter: blur(100px); opacity: 0.1; z-index: -1;
+        }
+
+        .lang-badge { font-size: 0.7rem; font-weight: 800; color: #94a3b8; background: #f8fafc; padding: 6px 12px; border-radius: 1rem; border: 1px solid #f1f5f9; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="success-glow"></div>
     
-    <div id="mainBox" class="max-w-md w-full bg-white rounded-[3.5rem] p-8 text-center shadow-2xl theme-border bounce-in">
+    <div id="mainBox" class="max-w-md w-full main-card p-8 text-center bounce-in border-t-[12px]" style="border-color: var(--main-theme);">
+        
         <div class="flex justify-center mb-2">
-            <dotlottie-player src="https://lottie.host/82823631-f923-4412-bd77-2e9154784411/6vR0FvI7oN.json" background="transparent" speed="1.2" style="width: 140px; height: 140px;" loop autoplay></dotlottie-player>
+            <dotlottie-player src="https://lottie.host/82823631-f923-4412-bd77-2e9154784411/6vR0FvI7oN.json" background="transparent" speed="1.2" style="width: 160px; height: 160px;" loop autoplay></dotlottie-player>
         </div>
 
-        <h1 id="mainGreeting" class="text-3xl font-black mb-1 theme-text">جاري المعالجة...</h1>
-        <h2 id="userNameDisplay" class="text-xl font-black text-[#D4AF37] mb-4">...</h2>
+        <h1 id="mainGreeting" class="text-3xl font-black mb-1" style="color: var(--main-theme);">مبارك الإتمام!</h1>
+        <h2 id="userNameDisplay" class="text-xl font-black mb-4" style="color: var(--accent-theme);">...</h2>
 
-        <div class="space-y-3 mb-6">
-            <p id="successMsg" class="text-slate-600 font-bold text-sm">يتم الآن تأكيد طلبك في <span class="theme-text" id="prov-ar">...</span> 🐋</p>
-            
-            <div class="grid grid-cols-2 gap-2 mt-4">
-                <div class="lang-item">✅ Order Success!</div>
-                <div class="lang-item">✅ Sipariş Başarılı!</div>
-                <div class="lang-item">✅ داواکاری سەرکەوتوو!</div>
-                <div class="lang-item">✅ مبارك الإتمام!</div>
+        <div class="bg-blue-50/50 p-4 rounded-3xl mb-6">
+            <p id="cityBlessing" class="text-blue-900 font-black text-sm leading-relaxed italic">
+                جاري تحضير التحية...
+            </p>
+        </div>
+
+        <p class="text-slate-500 font-bold text-xs px-4 leading-relaxed mb-6">
+            تم استلام طلبك بنجاح، سيقوم <span class="font-black text-blue-600">أقرب مكتب حوت</span> بالتواصل معك هاتفياً لإتمام إجراءات التسليم.
+        </p>
+
+        <div class="bg-slate-50 p-6 rounded-[2.5rem] mb-8 border-2 border-dashed border-slate-200 relative">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">رقم الحجز المرجعي</p>
+            <p id="orderIDDisplay" class="text-2xl font-black tracking-tighter" style="color: var(--main-theme);">#HUT-0000</p>
+            <div id="summaryText" class="text-[10px] font-bold text-green-600 mt-2 flex items-center justify-center gap-1">
+                <i class="fas fa-satellite-dish animate-pulse"></i> تم الربط مع الرادار
             </div>
         </div>
 
-        <div class="bg-slate-50 p-6 rounded-[2.5rem] mb-8 border-2 border-dashed border-slate-200">
-            <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">رقم الحجز المرجعي</p>
-            <p id="orderIDDisplay" class="text-2xl font-black theme-text tracking-tighter">#HUT-0000</p>
-            <div id="summaryText" class="text-[10px] font-bold text-slate-500 mt-2 italic">جاري الاتصال بالرادار...</div>
-        </div>
-
-        <a href="index.html" class="block w-full py-5 theme-bg rounded-2xl font-black text-xl shadow-xl hover:scale-105 transition-all active:scale-95">
+        <a href="index.html" class="block w-full py-5 rounded-2xl font-black text-xl shadow-xl transition-all active:scale-95 text-white" style="background: var(--main-theme);">
             العودة للرئيسية
         </a>
+
+        <div class="flex justify-center gap-2 mt-6 overflow-hidden">
+            <span class="lang-badge">SUCCESS!</span>
+            <span class="lang-badge">سەرکەوتوو بوو!</span>
+            <span class="lang-badge">BAŞARILI!</span>
+        </div>
     </div>
 
     <script>
         const u = new URLSearchParams(window.location.search);
         const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
 
-        // خريطة الترجمة لضمان وصول البيانات للسكريبت باللغة العربية
+        const cityBlessings = {
+            "بغداد": "يرعاك الله في أرض هارون الرشيد بغداد 🏰",
+            "كركوك": "حياك الله في مدينة القلاع والإخاء كركوك 💎",
+            "أربيل": "نورتنا في حضن القلعة الشامخة أربيل 🏔️",
+            "البصرة": "على راسي أهلنا في ثغر العراق الباسم البصرة 🌊",
+            "الموصل": "أهلاً بك في مدينة الحدباء أم الربعين الموصل 🏛️",
+            "السليمانية": "حيا الله أهل الثقافة والجمال في السليمانية ✨",
+            "النجف": "نورتنا في مدينة العلم والعلماء النجف الأشرف 🕌",
+            "كربلاء": "أهلاً بك في مدينة الحسين كربلاء المقدسة 🕊️",
+            "الأنبار": "حي الله أهل الكرم والغيرة في الأنبار 🌴",
+            "default": "يرعاك الله أينما كنت في أرض العراق العظيم 🇮🇶"
+        };
+
         const translationMap = {
             "Kirkuk": "كركوك", "Baghdad": "بغداد", "Erbil": "أربيل", "Basra": "البصرة",
             "Sulaymaniyah": "السليمانية", "Duhok": "دهوك", "Anbar": "الأنبار", "Diyala": "ديالى",
             "Male": "ذكر", "Female": "أنثى",
             "personal": "تأجير شخصي", "wedding": "أعراس ومناسبات", "training": "تعليم قيادة"
         };
+
         function trans(text) { return translationMap[text] || text || "---"; }
 
         window.onload = () => {
-            // 1. توليد رقم طلب فريد
-            let orderID = sessionStorage.getItem('currentOrderID');
-            if (!orderID) {
-                orderID = "HUT-" + Math.floor(1000 + Math.random() * 9000);
-                sessionStorage.setItem('currentOrderID', orderID);
-            }
+            // 1. توليد الهوية البصرية والبيانات
+            let orderID = sessionStorage.getItem('currentOrderID') || "HUT-" + Math.floor(1000 + Math.random() * 9000);
+            sessionStorage.setItem('currentOrderID', orderID);
             document.getElementById('orderIDDisplay').innerText = "#" + orderID;
-
-            // 2. ضبط ثيم الصفحة حسب نوع الخدمة
-            const type = u.get('type') || 'personal';
-            const configs = {
-                training: { color: '#7c3aed', accent: '#fcd34d', greet: 'كفو يا بطل! 💪', msg: 'بدأ تدريبك الاحترافي في', confetti: ['#7c3aed', '#ffffff'] },
-                wedding: { color: '#be185d', accent: '#ffffff', greet: 'ألف مبروك! 💍', msg: 'تم حجز موعد الزفاف في', confetti: ['#be185d', '#ff0000'] },
-                personal: { color: '#002349', accent: '#D4AF37', greet: 'نورتنا يا حوت! 🐋', msg: 'سيارتك بانتظارك في', confetti: ['#002349', '#D4AF37'] }
-            };
-            const config = configs[type] || configs.personal;
-            document.documentElement.style.setProperty('--main-theme', config.color);
-            document.documentElement.style.setProperty('--accent-theme', config.accent);
-            document.getElementById('mainGreeting').innerText = config.greet;
 
             const city = trans(u.get('city') || u.get('province') || u.get('prov'));
             const userName = u.get('name') || "عميلنا العزيز";
-            document.getElementById('prov-ar').innerText = city;
             document.getElementById('userNameDisplay').innerText = userName;
 
-            // 3. منع الإرسال المتكرر عند تحديث الصفحة
-            if (sessionStorage.getItem('orderSent') === 'true') {
-                document.getElementById('summaryText').innerText = "تم تسجيل طلبك مسبقاً في الرادار ✅";
-                return;
-            }
+            // 2. تطبيق العبارة التفاعلية حسب المحافظة
+            const blessing = cityBlessings[city] || cityBlessings["default"];
+            document.getElementById('cityBlessing').innerText = blessing;
 
-            // 4. تجميع البيانات (دقيق جداً لمطابقة أعمدة السكريبت)
-            const data = {
-                order_id: orderID,
-                name: userName,
-                phone: u.get('phone') || "---",
-                province: city,
-                car: u.get('car') || "غير محدد",
-                days: u.get('days') || u.get('date') || "---",
-                // جلب الإضافات بأكثر من احتمال للمسمى
-                addons: u.get('addons') || u.get('addon_name') || "أساسية فقط",
-                total_price: u.get('total_final') || u.get('price') || "0",
-                gender: trans(u.get('gender')),
-                age: u.get('age') || "---",
-                national_id: u.get('id_no') || "---", 
-                license_no: u.get('license') || "---",
-                service: trans(u.get('service') || u.get('type')),
-                location_link: u.get('map') || ""
-            };
-
-            // 5. الإرسال إلى Apps Script بنظام JSON
-            fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors', // لضمان عدم حدوث مشاكل السياسات الأمنية
-                cache: 'no-cache',
-                body: JSON.stringify(data)
-            }).then(() => {
-                sessionStorage.setItem('orderSent', 'true');
-                document.getElementById('summaryText').innerText = "تم تأكيد الحجز في السجلات ✅";
-                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: config.confetti });
-            }).catch(err => {
-                console.error(err);
-                document.getElementById('summaryText').innerText = "فشلت المزامنة اللحظية.. يرجى تصوير الشاشة";
+            // 3. تأثير الاحتفال 🎊 (confetti)
+            const type = u.get('type') || 'personal';
+            const colors = type === 'wedding' ? ['#be185d', '#ff0000', '#ffffff'] : ['#002349', '#D4AF37', '#ffffff'];
+            
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: colors
             });
+
+            // 4. إرسال البيانات للسكريبت (مرة واحدة)
+            if (sessionStorage.getItem('orderSent') !== 'true') {
+                const data = {
+                    order_id: orderID,
+                    name: userName,
+                    phone: u.get('phone') || "---",
+                    province: city,
+                    car: u.get('car') || "غير محدد",
+                    days: u.get('days') || u.get('date') || "---",
+                    addons: u.get('addons') || u.get('addon_name') || "أساسية فقط",
+                    total_price: u.get('total_final') || u.get('price') || "0",
+                    gender: trans(u.get('gender')),
+                    age: u.get('age') || "---",
+                    service: trans(u.get('service') || u.get('type')),
+                    location_link: u.get('map') || ""
+                };
+
+                fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(data)
+                }).then(() => {
+                    sessionStorage.setItem('orderSent', 'true');
+                });
+            }
         };
     </script>
 </body>

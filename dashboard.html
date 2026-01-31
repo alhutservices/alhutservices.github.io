@@ -3,97 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>رادار الحوت | الإدارة الذكية 🐋</title>
+    <title>رادار الحوت | النخبة 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --whale-navy: #002349; --whale-gold: #D4AF37; --bg-main: #fcfdfe; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg-main); color: #1e293b; letter-spacing: -0.01em; }
-        
-        /* نافبار فخم */
-        .glass-nav { 
-            background: linear-gradient(135deg, var(--whale-navy) 0%, #003a7a 100%);
-            border-bottom: 4px solid var(--whale-gold);
-            box-shadow: 0 10px 30px rgba(0, 35, 73, 0.2);
+        :root { --whale-navy: #001a35; --whale-gold: #c5a02d; --soft-gold: #fcf9ee; }
+        body { font-family: 'Tajawal', sans-serif; background: #f4f7fa; color: #1e293b; overflow-x: hidden; }
+
+        /* الهيدر الإبداعي الجديد */
+        .premium-nav {
+            background: linear-gradient(135deg, var(--whale-navy) 0%, #003366 100%);
+            border-radius: 0 0 3rem 3rem;
+            box-shadow: 0 15px 40px rgba(0, 26, 53, 0.25);
+            border-bottom: 5px solid var(--whale-gold);
+            position: relative;
+        }
+        .nav-capsule {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2rem;
+            padding: 1rem 1.5rem;
+        }
+        .whale-avatar {
+            width: 50px; height: 50px;
+            background: white;
+            border-radius: 1.2rem;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            animation: float 3s ease-in-out infinite;
         }
 
-        /* بطاقة الطلب العصرية */
-        .order-card { 
-            background: #ffffff;
-            border-radius: 2.2rem;
-            border: 1px solid rgba(0, 35, 73, 0.05);
-            box-shadow: 0 15px 35px -5px rgba(0, 35, 73, 0.05);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* التبويبات العصرية */
+        .tab-pill {
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 900;
+            font-size: 0.85rem;
+            border-radius: 1.5rem;
+            color: #64748b;
+        }
+        .tab-pill.active {
+            background: var(--whale-navy);
+            color: var(--whale-gold);
+            transform: scale(1.08);
+            box-shadow: 0 10px 20px rgba(0, 26, 53, 0.15);
+        }
+
+        /* بطاقة الحوت الملكية */
+        .whale-card {
+            background: white;
+            border-radius: 2.5rem;
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: 0.5s;
             position: relative;
             overflow: hidden;
         }
-        .order-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(0, 35, 73, 0.12); }
-
-        /* شريط الوقت الذكي */
-        .time-indicator { position: absolute; left: 0; top: 0; bottom: 0; width: 6px; }
-        .bg-safe { background: #10b981; }
-        .bg-warn { background: #f59e0b; }
-        .bg-danger { background: #ef4444; box-shadow: 0 0 15px #ef4444; }
-
-        /* التبويبات الكريستالية */
-        .tabs-container { background: rgba(0, 35, 73, 0.03); border: 1px solid rgba(0, 35, 73, 0.05); }
-        .tab-btn { transition: 0.4s; font-weight: 800; border-radius: 1.2rem; }
-        .tab-active { 
-            background: white !important; 
-            color: var(--whale-navy) !important;
-            box-shadow: 0 8px 20px rgba(0, 35, 73, 0.1);
-            transform: scale(1.05);
+        .whale-card:hover { transform: translateY(-10px); box-shadow: 0 30px 60px -15px rgba(0, 35, 73, 0.15); }
+        
+        .side-accent {
+            position: absolute; right: 0; top: 0; bottom: 0; width: 8px;
+            border-radius: 0 10px 10px 0;
         }
 
-        /* الأزرار */
-        .btn-luxury { 
-            background: var(--whale-navy);
-            color: var(--whale-gold);
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 20px -5px rgba(0, 35, 73, 0.3);
-            transition: 0.3s;
+        /* مؤشر النبض الحي */
+        .live-pulse {
+            width: 8px; height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+            animation: pulse-green 2s infinite;
         }
-        .btn-luxury:active { transform: scale(0.96); }
 
-        /* أنيميشن النبض للطلبات المتأخرة */
-        .pulse-late { animation: pulse-border 2s infinite; }
-        @keyframes pulse-border {
-            0% { border-color: rgba(239, 68, 68, 0.2); }
-            50% { border-color: rgba(239, 68, 68, 0.8); }
-            100% { border-color: rgba(239, 68, 68, 0.2); }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+
+        .price-tag {
+            background: var(--soft-gold);
+            color: #8a6d1a;
+            padding: 0.5rem 1rem;
+            border-radius: 1.2rem;
+            border: 1px solid rgba(197, 160, 45, 0.2);
+            font-weight: 900;
         }
     </style>
 </head>
-<body class="min-h-screen pb-20">
+<body class="min-h-screen">
 
     <audio id="radarSound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
 
-    <nav class="glass-nav sticky top-0 z-50 px-6 py-5 flex justify-between items-center rounded-b-[2.5rem]">
-        <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center border border-white/20 backdrop-blur-md">
-                <i class="fas fa-whale text-2xl text-white"></i>
-            </div>
-            <div>
-                <h1 id="navOfficeName" class="text-white font-black text-base tracking-tight mb-0.5">...</h1>
-                <div class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 bg-green-400 rounded-full animate-ping"></span>
-                    <p id="navCity" class="text-white/70 text-[10px] font-black uppercase tracking-[0.2em]"></p>
+    <header class="premium-nav px-6 pt-8 pb-12">
+        <div class="max-w-2xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="whale-avatar">
+                    <span class="text-3xl">🐋</span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h2 id="navOfficeName" class="text-white font-black text-lg leading-tight">جاري التحميل...</h2>
+                        <span class="live-pulse"></span>
+                    </div>
+                    <p id="navCity" class="text-white/50 text-[10px] font-bold uppercase tracking-widest mt-1"></p>
                 </div>
             </div>
+            <button onclick="logout()" class="w-12 h-12 flex items-center justify-center bg-red-500/20 text-red-400 rounded-2xl hover:bg-red-500 hover:text-white transition-all shadow-lg">
+                <i class="fas fa-power-off text-xl"></i>
+            </button>
         </div>
-        <button onclick="logout()" class="w-11 h-11 flex items-center justify-center text-red-100 bg-white/10 rounded-2xl hover:bg-red-500 transition-all shadow-lg">
-            <i class="fas fa-sign-out-alt"></i>
-        </button>
-    </nav>
+    </header>
 
-    <div class="sticky top-24 z-40 p-1.5 max-w-2xl mx-auto tabs-container backdrop-blur-xl rounded-[1.8rem] mt-6 mx-4 flex gap-1">
-        <button onclick="switchTab('new')" id="tabNew" class="flex-1 py-3.5 tab-btn tab-active text-slate-500">الجديدة 📡</button>
-        <button onclick="switchTab('mine')" id="tabMine" class="flex-1 py-3.5 tab-btn text-slate-500">المستلمة 📦</button>
-        <button onclick="switchTab('done')" id="tabDone" class="flex-1 py-3.5 tab-btn text-slate-500">الأرشيف ✅</button>
+    <div class="max-w-2xl mx-auto -mt-8 px-4">
+        <div class="bg-white/80 backdrop-blur-xl p-2 rounded-[2rem] flex gap-1 shadow-xl border border-white">
+            <button onclick="switchTab('new')" id="tabNew" class="flex-1 py-4 tab-pill active">الرادار 📡</button>
+            <button onclick="switchTab('mine')" id="tabMine" class="flex-1 py-4 tab-pill">التنفيذ 📦</button>
+            <button onclick="switchTab('done')" id="tabDone" class="flex-1 py-4 tab-pill text-slate-400 font-bold">الأرشيف ✅</button>
+        </div>
     </div>
 
-    <main id="mainContainer" class="p-5 max-w-2xl mx-auto space-y-8 mt-4"></main>
+    <main id="mainContainer" class="p-4 max-w-2xl mx-auto space-y-6 mt-6"></main>
 
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
@@ -102,7 +130,7 @@
 
         if(!officeData) window.location.href = 'login.html';
         document.getElementById('navOfficeName').innerText = officeData.name;
-        document.getElementById('navCity').innerText = officeData.city;
+        document.getElementById('navCity').innerText = `📍 ${officeData.city} | نظام الحوت`;
 
         async function fetchOrders() {
             try {
@@ -121,11 +149,11 @@
             setTimeout(() => { s.pause(); }, 5000);
         }
 
-        function getStatusTheme(timestamp) {
+        function getTheme(timestamp) {
             const diff = Math.floor((new Date() - new Date(timestamp)) / 60000);
-            if (diff < 10) return { color: 'bg-safe', text: `منذ ${diff} د`, pulse: '' };
-            if (diff < 20) return { color: 'bg-warn', text: `تأخير ${diff} د`, pulse: '' };
-            return { color: 'bg-danger', text: `حرج: ${diff} د`, pulse: 'pulse-late' };
+            if (diff < 10) return { accent: '#10b981', label: 'حالة ممتازة', icon: 'fa-check-double', pulse: '' };
+            if (diff < 20) return { accent: '#f59e0b', label: 'تحذير تأخير', icon: 'fa-exclamation-triangle', pulse: '' };
+            return { accent: '#ef4444', label: 'تأخير حرج جداً', icon: 'fa-fire-alt', pulse: 'animate-pulse' };
         }
 
         function renderCards() {
@@ -137,106 +165,103 @@
             else if(currentTab === 'done') list = allOrders.filter(o => o.office === officeData.name && (o.status.includes('✅') || o.status.includes('⚠️')));
 
             if(list.length === 0) {
-                container.innerHTML = `<div class="text-center py-24 opacity-10 font-black"><i class="fas fa-radar text-7xl mb-4"></i><p>بانتظار طلبات جديدة...</p></div>`;
+                container.innerHTML = `<div class="text-center py-20 opacity-20"><span class="text-7xl mb-4 block">🌊</span><p class="font-black text-sm uppercase tracking-widest">لا توجد أمواج حالياً</p></div>`;
                 return;
             }
 
             container.innerHTML = list.map(o => {
-                const theme = getStatusTheme(o.timestamp);
+                const config = getTheme(o.timestamp);
+                const diff = Math.floor((new Date() - new Date(o.timestamp)) / 60000);
 
                 if(currentTab === 'new') {
                     return `
-                    <div class="order-card p-7 ${theme.pulse}">
-                        <div class="time-indicator ${theme.color}"></div>
+                    <div class="whale-card p-6 border-b-4" style="border-color: ${config.accent}">
                         <div class="flex justify-between items-start mb-6">
-                            <div>
-                                <span class="${theme.color.replace('bg-', 'text-')} text-[10px] font-black uppercase tracking-widest block mb-2">${theme.text}</span>
-                                <h3 class="text-2xl font-black text-slate-800">${o.name}</h3>
-                                <div class="flex items-center gap-2 mt-2">
-                                    <span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-lg text-[9px] font-black italic border border-blue-100">${o.service || 'تأجير شخصي'}</span>
-                                    <span class="text-slate-400 text-[9px] font-bold"><i class="far fa-clock"></i> ${o.timestamp.split('T')[0]}</span>
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-xl shadow-inner">👤</div>
+                                <div>
+                                    <h3 class="text-xl font-black text-slate-800">${o.name}</h3>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <i class="fas ${config.icon}" style="color: ${config.accent}"></i>
+                                        <span class="text-[10px] font-black uppercase" style="color: ${config.accent}">${config.label} (${diff} د)</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="text-left">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase">المبلغ الإجمالي</p>
-                                <span class="text-2xl font-black text-blue-900 tracking-tighter">${Number(o.price).toLocaleString()}</span>
-                                <span class="text-[10px] font-black text-slate-300">د.ع</span>
+                            <div class="price-tag text-center">
+                                <span class="text-xs font-bold block opacity-60">السعر</span>
+                                <span class="text-lg">${Number(o.price).toLocaleString()}</span>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-4 mb-6">
-                            <div class="bg-slate-50 p-4 rounded-3xl border border-slate-100">
-                                <p class="text-[9px] text-slate-400 font-black uppercase mb-1">النوع</p>
-                                <p class="text-xs font-black text-slate-700">${o.car}</p>
+                        
+                        <div class="grid grid-cols-2 gap-3 mb-6">
+                            <div class="bg-slate-50/80 p-4 rounded-3xl border border-slate-100">
+                                <p class="text-[8px] font-black text-slate-400 uppercase mb-1">السيارة المطلوبة</p>
+                                <p class="text-xs font-black text-slate-700">🚗 ${o.car}</p>
                             </div>
-                            <div class="bg-slate-50 p-4 rounded-3xl border border-slate-100">
-                                <p class="text-[9px] text-slate-400 font-black uppercase mb-1">الفترة</p>
-                                <p class="text-xs font-black text-slate-700">${o.days} أيام</p>
+                            <div class="bg-slate-50/80 p-4 rounded-3xl border border-slate-100">
+                                <p class="text-[8px] font-black text-slate-400 uppercase mb-1">فترة الحجز</p>
+                                <p class="text-xs font-black text-slate-700">📅 ${o.days} أيام</p>
                             </div>
                         </div>
-                        <button onclick="update('${o.id}', 'claim')" class="w-full py-5 btn-luxury font-black text-sm tracking-wide flex items-center justify-center gap-3">
-                            استلام المهمة الآن <i class="fas fa-arrow-left text-xs"></i>
-                        </button>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-slate-50">
+                            <span class="text-[9px] font-bold text-slate-400 italic">🕒 طلب في: ${o.timestamp}</span>
+                            <button onclick="update('${o.id}', 'claim')" class="bg-slate-900 text-[#D4AF37] px-8 py-4 rounded-2xl font-black text-xs shadow-xl active:scale-95 transition-all">استلام <i class="fas fa-chevron-left mr-2"></i></button>
+                        </div>
                     </div>`;
                 }
 
                 if(currentTab === 'mine') {
                     return `
-                    <div class="order-card p-7 border-t-8 border-yellow-500 shadow-2xl">
-                        <div class="flex justify-between items-center mb-8 pb-4 border-bottom-dashed border-slate-100">
-                            <h3 class="text-2xl font-black text-blue-900">${o.car}</h3>
-                            <span class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-2xl text-[10px] font-black">رقم الطلب #${o.id}</span>
+                    <div class="whale-card p-8 ring-4 ring-[#001a35]/5">
+                        <div class="side-accent bg-blue-500"></div>
+                        <div class="flex justify-between items-center mb-8">
+                            <div><p class="text-[10px] font-black text-blue-500 mb-1">رقم الطلب #${o.id}</p><h3 class="text-2xl font-black text-slate-800">${o.car}</h3></div>
+                            <a href="tel:${o.phone}" class="w-14 h-14 bg-green-500 text-white rounded-2xl flex items-center justify-center text-xl shadow-lg shadow-green-200 animate-bounce"><i class="fas fa-phone-alt"></i></a>
                         </div>
-                        <div class="grid grid-cols-2 gap-4 mb-6">
-                            <div class="p-4 bg-slate-50 rounded-3xl"><p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">العميل</p><p class="font-black text-slate-700 text-sm">${o.name}</p></div>
-                            <div class="p-4 bg-slate-50 rounded-3xl"><p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">الهاتف</p><p class="font-black text-slate-700 text-sm">${o.phone}</p></div>
+                        <div class="grid grid-cols-2 gap-3 mb-6">
+                            <div class="p-4 bg-slate-50 rounded-2xl"><p class="text-[8px] font-black text-slate-400 uppercase mb-1">العميل</p><p class="font-black text-sm">${o.name}</p></div>
+                            <div class="p-4 bg-slate-50 rounded-2xl"><p class="text-[8px] font-black text-slate-400 uppercase mb-1">الخدمة</p><p class="font-black text-sm">${o.service || 'تأجير'}</p></div>
                         </div>
-                        <div class="bg-blue-50/50 p-5 rounded-[2rem] border border-blue-100/50 mb-6">
-                             <p class="text-[9px] font-black text-blue-400 uppercase mb-2">الإضافات والخدمات</p>
-                             <p class="text-xs font-bold text-blue-900">${o.addons || 'لا توجد إضافات'}</p>
+                        <div class="bg-indigo-900 text-indigo-100 p-5 rounded-3xl mb-6">
+                             <p class="text-[8px] font-black uppercase mb-1 opacity-50">التفاصيل والإضافات</p>
+                             <p class="text-xs font-bold leading-relaxed">${o.addons || 'لا توجد ملاحظات إضافية'}</p>
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <a href="tel:${o.phone}" class="bg-green-500 text-white py-4 rounded-2xl text-center font-black text-xs shadow-lg shadow-green-100"><i class="fas fa-phone-alt ml-1"></i> اتصال</a>
-                            <a href="${o.map}" target="_blank" class="bg-blue-600 text-white py-4 rounded-2xl text-center font-black text-xs shadow-lg shadow-blue-100"><i class="fas fa-map-marked-alt ml-1"></i> الموقع</a>
-                            <button onclick="update('${o.id}', 'complete')" class="col-span-2 bg-blue-950 text-white py-5 rounded-2xl font-black text-sm mt-2 shadow-xl hover:bg-black transition-all">تأكيد الإتمام والاستلام ✅</button>
-                            <button onclick="update('${o.id}', 'cancelRequest')" class="col-span-2 text-red-400 text-[10px] font-bold py-2 mt-2">إلغاء الطلبية ⚠️</button>
+                        <div class="flex gap-2">
+                            <a href="${o.map}" target="_blank" class="flex-1 bg-blue-100 text-blue-700 py-5 rounded-2xl text-center font-black text-xs">عرض الخارطة 🗺️</a>
+                            <button onclick="update('${o.id}', 'complete')" class="flex-[2] bg-slate-900 text-white py-5 rounded-2xl font-black text-xs">تأكيد التسليم والقبض ✅</button>
                         </div>
                     </div>`;
                 }
 
                 if(currentTab === 'done') {
                     return `
-                    <div class="order-card p-6 flex justify-between items-center opacity-70">
+                    <div class="whale-card p-5 flex justify-between items-center bg-white/50 border-dashed border-2 border-slate-200">
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-2xl ${o.status.includes('✅') ? 'bg-green-50 text-green-500' : 'bg-red-50 text-red-500'} flex items-center justify-center border border-white">
+                            <div class="w-10 h-10 rounded-full ${o.status.includes('✅') ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'} flex items-center justify-center text-xs">
                                 <i class="fas ${o.status.includes('✅') ? 'fa-check' : 'fa-times'}"></i>
                             </div>
-                            <div>
-                                <h3 class="font-black text-slate-700 text-sm">${o.name}</h3>
-                                <p class="text-[9px] text-slate-400 font-bold tracking-widest uppercase">${o.timestamp}</p>
-                            </div>
+                            <div><h3 class="font-black text-slate-700 text-xs">${o.name}</h3><p class="text-[8px] font-bold text-slate-400">${o.timestamp}</p></div>
                         </div>
-                        <div class="text-left">
-                            <p class="font-black text-slate-900 text-sm">${Number(o.price).toLocaleString()} د.ع</p>
-                            <span class="text-[8px] font-black ${o.status.includes('✅') ? 'text-green-500' : 'text-red-500'} uppercase">${o.status}</span>
-                        </div>
+                        <div class="text-left"><p class="font-black text-slate-900 text-sm">${Number(o.price).toLocaleString()} د.ع</p></div>
                     </div>`;
                 }
             }).reverse().join('');
         }
 
         async function update(id, act) {
-            if(!confirm("هل تود تنفيذ هذا الإجراء؟")) return;
+            if(!confirm("تأكيد العملية؟")) return;
             try {
                 const res = await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
                 const result = await res.json();
                 if(result.success) fetchOrders();
-            } catch(e) { alert("خطأ في الاتصال"); }
+            } catch(e) { alert("خطأ!"); }
         }
 
         function switchTab(t) {
             currentTab = t;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
-            document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('tab-active');
+            document.querySelectorAll('.tab-pill').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active');
             renderCards();
         }
 

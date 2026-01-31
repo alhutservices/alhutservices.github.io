@@ -63,7 +63,6 @@
             const container = document.getElementById('mainContainer');
             let list = [];
             
-            // 1. تصفية البيانات بناءً على الحالة والمكتب (متوافق مع Apps Script)
             if(currentTab === 'new') list = allOrders.filter(o => o.prov === officeData.city && o.status === "قيد الانتظار");
             else if(currentTab === 'mine') list = allOrders.filter(o => o.office === officeData.name && !o.status.includes('✅') && !o.status.includes('⚠️'));
             else if(currentTab === 'done') list = allOrders.filter(o => o.office === officeData.name && (o.status.includes('✅') || o.status.includes('⚠️')));
@@ -74,10 +73,8 @@
             }
 
             container.innerHTML = list.map(o => {
-                // منطق عرض السيارة حسب نوع الخدمة
                 const isCarService = o.service?.includes('شخصي') || o.service?.includes('أعراس') || !o.service;
 
-                // الحالة الأولى: الرادار (معلومات أساسية قبل الاستلام)
                 if(currentTab === 'new') {
                     return `
                     <div class="order-card p-6 shadow-md border-r-[8px] border-blue-500">
@@ -100,7 +97,6 @@
                     </div>`;
                 }
 
-                // الحالة الثانية: التنفيذ (كل المعلومات بلا استثناء)
                 if(currentTab === 'mine') {
                     return `
                     <div class="order-card p-6 shadow-xl ring-2 ring-blue-500/5 border-r-[8px] border-yellow-500">
@@ -113,11 +109,9 @@
                             <div class="bg-slate-50 p-3 rounded-xl"><p class="text-[8px] text-slate-400 font-bold uppercase">الهاتف</p><p class="text-xs font-black text-slate-700">${o.phone}</p></div>
                         </div>
                         <div class="bg-slate-100/50 p-3 rounded-xl mb-4 flex flex-wrap gap-2">
-                            <span class="info-badge">الهوية: ${o.national_id || o.id_no || '---'}</span>
                             <span class="info-badge">العمر: ${o.age || '--'} سنة</span>
                             <span class="info-badge">الجنس: ${o.gen || '--'}</span>
                             <span class="info-badge">الخدمة: ${o.service || '--'}</span>
-                            <span class="info-badge">الإجازة: ${o.license_no || '--'}</span>
                         </div>
                         <div class="bg-indigo-50 p-3 rounded-xl mb-4 border border-indigo-100">
                             <p class="text-[8px] text-indigo-400 font-bold mb-1 uppercase">الإضافات والخدمات:</p>
@@ -132,7 +126,6 @@
                     </div>`;
                 }
 
-                // الحالة الثالثة: الأرشيف (ملخص فقط)
                 if(currentTab === 'done') {
                     return `
                     <div class="order-card p-5 opacity-80 border-r-[8px] ${o.status.includes('✅') ? 'border-green-500' : 'border-red-500'}">
@@ -169,8 +162,6 @@
         }
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
-
-        // التحديث التلقائي كل 10 ثوانٍ
         setInterval(fetchOrders, 10000);
         fetchOrders();
     </script>

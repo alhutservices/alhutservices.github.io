@@ -10,63 +10,31 @@
     <style>
         :root { --main: #002349; --accent: #D4AF37; }
         body { font-family: 'Tajawal', sans-serif; background-color: #f0f4f8; overflow-x: hidden; }
-        
-        .main-card {
-            background: white; border-radius: 3.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 35, 73, 0.15);
-            border-top: 12px solid var(--main);
-            animation: slideUp 0.6s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .info-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;
-        }
-
-        .info-item {
-            background: #f8fafc; padding: 0.75rem; border-radius: 1.2rem;
-            border: 1px solid #edf2f7; display: flex; flex-direction: column;
-        }
-
+        .main-card { background: white; border-radius: 3.5rem; box-shadow: 0 25px 50px -12px rgba(0, 35, 73, 0.15); border-top: 12px solid var(--main); animation: slideUp 0.6s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+        .info-item { background: #f8fafc; padding: 0.75rem; border-radius: 1.2rem; border: 1px solid #edf2f7; display: flex; flex-direction: column; }
         .info-label { color: #94a3b8; font-size: 0.65rem; font-weight: 800; margin-bottom: 2px; }
         .info-value { color: var(--main); font-size: 0.85rem; font-weight: 900; }
-
-        .price-summary {
-            background: var(--main); color: var(--accent);
-            border-radius: 2.5rem; padding: 1.5rem;
-            position: relative; overflow: hidden;
-        }
-
-        .btn-confirm {
-            background: var(--main); color: white;
-            box-shadow: 0 15px 30px rgba(0, 35, 73, 0.3);
-            transition: 0.3s;
-        }
+        .price-summary { background: var(--main); color: var(--accent); border-radius: 2.5rem; padding: 1.5rem; position: relative; overflow: hidden; }
+        .btn-confirm { background: var(--main); color: white; box-shadow: 0 15px 30px rgba(0, 35, 73, 0.3); transition: 0.3s; }
         .btn-confirm:active { transform: scale(0.96); }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
 
     <div id="mainBox" class="max-w-md w-full main-card p-6 md:p-8">
-        
         <div class="text-center mb-6">
             <div id="mainEmoji" class="text-5xl mb-2">📋</div>
             <h1 id="pageTitle" class="text-2xl font-black" style="color: var(--main);">مراجعة الطلب</h1>
             <p id="pageSub" class="text-slate-400 text-[10px] font-bold tracking-widest uppercase">Review Details</p>
         </div>
 
-        <div id="detailsGrid" class="info-grid mb-6">
-            </div>
+        <div id="detailsGrid" class="info-grid mb-6"></div>
 
         <div class="price-summary text-center shadow-xl mb-6">
-            <p id="totalLabel" class="text-[10px] font-black opacity-70 uppercase mb-1">إجمالي المبلغ التقريبي</p>
-            <div class="text-3xl font-black">
-                <span id="totalVal">0</span> <small class="text-sm font-bold" id="currLabel">د.ع</small>
-            </div>
+            <p id="totalLabel" class="text-[10px] font-black opacity-70 uppercase mb-1">إجمالي المبلغ</p>
+            <div class="text-3xl font-black"><span id="totalVal">0</span> <small class="text-sm font-bold" id="currLabel">د.ع</small></div>
         </div>
 
         <div class="space-y-3">
@@ -74,9 +42,8 @@
                 <span id="btnSubmit">تأكيد وطلب</span>
                 <i class="fas fa-check-circle"></i>
             </button>
-            
             <button onclick="window.history.back()" class="w-full text-slate-400 font-black text-xs hover:text-red-500 transition-all">
-                <i class="fas fa-edit ml-1"></i> <span id="btnBack">تعديل البيانات</span>
+                <i class="fas fa-edit ml-1"></i> <span id="btnBack">تعديل</span>
             </button>
         </div>
     </div>
@@ -103,10 +70,22 @@
                 fields: { name: "İsim", phone: "Telefon", age: "Yaş", city: "Şehir", prov: "Şehir", car: "Araç", addons: "Ekstralar", addon_name: "Ekstralar", days: "Gün", gender: "Cinsiyet", license: "Ehliyet" } }
         };
 
-        const toScriptMap = {
+        // قاموس الترجمة العكسية الشامل (من كل اللغات إلى العربية الموحدة للسكريبت)
+        const reverseTranslate = {
+            // المدن والمحافظات
             "Kirkuk": "كركوك", "Kerkük": "كركوك", "کەرکوک": "كركوك",
             "Baghdad": "بغداد", "Bağdat": "بغداد", "بەغدا": "بغداد",
-            "personal": "تأجير شخصي", "wedding": "أعراس ومناسبات", "training": "تعليم قيادة",
+            "Erbil": "أربيل", "هەولێر": "أربيل",
+            "Basra": "البصرة", "Basra": "البصرة", "بەسرە": "البصرة",
+            "Sulaymaniyah": "السليمانية", "Süleymaniye": "السليمانية", "سلێمانی": "السليمانية",
+            // الإضافات (Addons)
+            "Basic Course (3 Days)": "كورس أساسي (3 أيام)", "کۆرسی سەرەکی (3 ڕۆژ)": "كورس أساسي (3 أيام)", "Temel Kurs (3 Gün)": "كورس أساسي (3 أيام)",
+            "Gold Course (5 Days)": "كورس ذهبي (5 أيام)", "کۆرسی زێڕین (5 ڕۆژ)": "كورس ذهبي (5 أيام)", "Altın Kurs (5 Gün)": "كورس ذهبي (5 أيام)",
+            "Natural Flowers Pack": "باقة الزهور الطبيعية", "پاکێجی گوڵی سروشتی": "باقة الزهور الطبيعية", "Doğal Çiçek Paketi": "باقة الزهور الطبيعية",
+            "Royal Convoy Pack": "باقة الموكب الملكي", "پاکێجی کاروانی شاهانە": "باقة الموكب الملكي", "Kraliyet Konvoyu": "باقة الموكب الملكي",
+            "Full Whale Insurance": "تأمين الحوت الشامل", "دڵنیایی گشتگیری حوت": "تأمين الحوت الشامل", "Tam Whale Sigortası": "تأمين الحوت الشامل",
+            "No Addons": "بدون إضافات", "بێ زیادکراو": "بدون إضافات", "Ek ميزة Yok": "بدون إضافات",
+            // الجنس
             "Male": "ذكر", "Erkek": "ذكر", "نێر": "ذكر",
             "Female": "أنثى", "Kadın": "أنثى", "مێ": "أنثى"
         };
@@ -114,7 +93,6 @@
         window.onload = () => {
             const t = configs[type] || configs.personal;
             const ui = uiContent[lang] || uiContent.ar;
-            
             document.documentElement.style.setProperty('--main', t.main);
             document.documentElement.style.setProperty('--accent', t.accent);
             document.getElementById('mainEmoji').innerText = t.emoji;
@@ -126,35 +104,28 @@
             document.getElementById('htmlTag').dir = (lang === 'en' || lang === 'tr') ? 'ltr' : 'rtl';
 
             let gridHtml = '';
-            // عرض المعلومات بشكل مصفوفة مرتبة
             Object.keys(ui.fields).forEach(key => {
                 let val = u.get(key);
                 if (val && val !== 'null' && val !== '---') {
-                    gridHtml += `
-                        <div class="info-item">
-                            <span class="info-label">${ui.fields[key]}</span>
-                            <span class="info-value">${val}</span>
-                        </div>`;
+                    gridHtml += `<div class="info-item"><span class="info-label">${ui.fields[key]}</span><span class="info-value">${val}</span></div>`;
                 }
             });
             document.getElementById('detailsGrid').innerHTML = gridHtml;
-
-            // حساب السعر
-            const p1 = parseInt(u.get('price') || 0);
-            const p2 = parseInt(u.get('addon_price') || 0);
-            document.getElementById('totalVal').innerText = (p1 + p2).toLocaleString();
+            document.getElementById('totalVal').innerText = (parseInt(u.get('price') || 0) + parseInt(u.get('addon_price') || 0)).toLocaleString();
         };
 
         function confirmAndSubmit() {
-            const p1 = parseInt(u.get('price') || 0);
-            const p2 = parseInt(u.get('addon_price') || 0);
+            // المترجم العكسي الصامت لكل القيم التي تحتاج ترجمة قبل الإرسال للرادار
+            const fieldsToTranslate = ['city', 'prov', 'addon_name', 'addons', 'gender'];
             
-            u.set('total_final', p1 + p2);
-            
-            // المترجم الصامت قبل الانتقال لصفحة النجاح
-            if (u.has('city')) u.set('city', toScriptMap[u.get('city')] || u.get('city'));
-            if (u.has('gender')) u.set('gender', toScriptMap[u.get('gender')] || u.get('gender'));
-            
+            fieldsToTranslate.forEach(field => {
+                const currentVal = u.get(field);
+                if (currentVal && reverseTranslate[currentVal]) {
+                    u.set(field, reverseTranslate[currentVal]);
+                }
+            });
+
+            u.set('total_final', parseInt(u.get('price') || 0) + parseInt(u.get('addon_price') || 0));
             window.location.href = `success.html?${u.toString()}`;
         }
     </script>

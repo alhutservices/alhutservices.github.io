@@ -6,7 +6,7 @@
     <title>مراجعة الطلب | الحوت 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --brand-color: #002349; }
         body { font-family: 'Tajawal', sans-serif; background-color: #f1f5f9; transition: 0.5s; }
@@ -27,8 +27,7 @@
             <p id="pageSub" class="text-xs text-slate-400 font-bold mt-1 uppercase">الخطوة الأخيرة قبل التأكيد</p>
         </div>
 
-        <div class="px-8 py-4 space-y-1" id="detailsList">
-            </div>
+        <div class="px-8 py-4 space-y-1" id="detailsList"></div>
 
         <div class="px-8 pb-4">
             <div class="price-box shadow-xl" id="priceContainer">
@@ -52,29 +51,31 @@
     <script>
         const u = new URLSearchParams(window.location.search);
         const currentLang = u.get('lang') || 'ar';
-        const serviceType = u.get('type') || ''; // نوع الخدمة الأساسي من الرئيسية
-        const selectedAddon = u.get('service') || u.get('car') || ''; // اسم الخدمة المختارة
+        const serviceType = u.get('type') || ''; 
+        const selectedCar = u.get('car') || '';
 
         const trans = {
-            ar: { title:'مراجعة الطلب', btn:'تأكيد وإرسال الطلب', edit:'تعديل البيانات', name:'👤 الاسم', phone:'📞 الهاتف', age:'🎂 العمر', gender:'👫 الجنس', service:'🛠️ الخدمة المختار', city:'📍 المدينة', addons:'✨ الإضافات', days:'📅 المدة', unit:'أيام', priceLabel:'المبلغ الإجمالي', map:'🗺️ الموقع الجغرافي', id_no:'🆔 الهوية/الجواز' },
-            en: { title:'Review Order', btn:'Confirm & Send', edit:'Edit Data', name:'👤 Name', phone:'📞 Phone', age:'🎂 Age', gender:'👫 Gender', service:'🛠️ Service', city:'📍 City', addons:'✨ Add-ons', days:'📅 Duration', unit:'Days', priceLabel:'Total Amount', map:'🗺️ Location', id_no:'🆔 ID/Passport' },
-            ku: { title:'پێداچوونەوە', btn:'تەواوکردن و ناردن', edit:'دەستکاری', name:'👤 ناو', phone:'📞 مۆبایل', age:'🎂 تەمەن', gender:'👫 ڕەگەز', service:'🛠️ خزمەتگوزاری', city:'📍 شار', addons:'✨ زیادکراوەکان', days:'📅 ماوە', unit:'ڕۆژ', priceLabel:'کۆی گشتی', map:'🗺️ شوێن', id_no:'🆔 ناسنامە' },
-            tr: { title:'Siparişi İncele', btn:'Onayla ve Gönder', edit:'Verileri Düzenle', name:'👤 İsim', phone:'📞 Telefon', age:'🎂 Yaş', gender:'👫 Cinsiyet', service:'🛠️ Hizmet', city:'📍 Şehir', addons:'✨ Ekstralar', days:'📅 Süre', unit:'Gün', priceLabel:'Toplam Tutar', map:'🗺️ Konum', id_no:'🆔 Kimlik No' }
+            ar: { title:'مراجعة الطلب', btn:'تأكيد وإرسال الطلب', edit:'تعديل البيانات', name:'👤 الاسم', phone:'📞 الهاتف', age:'🎂 العمر', gender:'👫 الجنس', service:'🛠️ الخدمة', city:'📍 المدينة', days:'📅 المدة', unit:'أيام', priceLabel:'المبلغ الإجمالي', map:'🗺️ الموقع', id_no:'🆔 الهوية/الجواز', curr:'د.ع', locTxt:'تم تحديد الموقع 📍' },
+            en: { title:'Review Order', btn:'Confirm & Send', edit:'Edit Data', name:'👤 Name', phone:'📞 Phone', age:'🎂 Age', gender:'👫 Gender', service:'🛠️ Service', city:'📍 City', days:'📅 Duration', unit:'Days', priceLabel:'Total Amount', map:'🗺️ Location', id_no:'🆔 ID/Passport', curr:'IQD', locTxt:'Location Selected 📍' },
+            ku: { title:'پێداچوونەوە', btn:'تەواوکردن و ناردن', edit:'دەستکاری', name:'👤 ناو', phone:'📞 مۆبایل', age:'🎂 تەمەن', gender:'👫 ڕەگەز', service:'🛠️ خزمەتگوزاری', city:'📍 شار', days:'📅 ماوە', unit:'ڕۆژ', priceLabel:'کۆی گشتی', map:'🗺️ شوێن', id_no:'🆔 ناسنامە', curr:'دینار', locTxt:'شوێن دیاریکراوە 📍' },
+            tr: { title:'Siparişi İncele', btn:'Onayla ve Gönder', edit:'Verileri Düzenle', name:'👤 İsim', phone:'📞 Telefon', age:'🎂 Yaş', gender:'👫 Cinsiyet', service:'🛠️ Hizmet', city:'📍 Şehir', days:'📅 Süre', unit:'Gün', priceLabel:'Toplam Tutar', map:'🗺️ Konum', id_no:'🆔 Kimlik No', curr:'IQD', locTxt:'Konum Seçildi 📍' }
         };
 
         window.onload = () => {
             const l = trans[currentLang] || trans['ar'];
-            const root = document.documentElement;
+            document.getElementById('htmlTag').dir = l.dir;
+            document.body.style.fontFamily = (l.dir === 'rtl' ? 'Tajawal' : 'Poppins') + ', sans-serif';
 
-            // --- نظام الذكاء الاصطناعي لتحديد الثيم ---
-            if(serviceType === 'training' || selectedAddon.includes('كورس')) {
-                root.style.setProperty('--brand-color', '#7c3aed'); // بنفسجي للتدريب
+            // --- الثيم الديناميكي ---
+            const root = document.documentElement;
+            if(serviceType === 'training' || selectedCar.includes('كورس')) {
+                root.style.setProperty('--brand-color', '#7c3aed');
                 document.getElementById('serviceEmoji').innerText = '🎓';
-            } else if(serviceType === 'wedding' || selectedAddon.includes('زفاف')) {
-                root.style.setProperty('--brand-color', '#db2777'); // وردي للأعراس
+            } else if(serviceType === 'wedding' || selectedCar.includes('زفاف')) {
+                root.style.setProperty('--brand-color', '#db2777');
                 document.getElementById('serviceEmoji').innerText = '💍';
             } else {
-                root.style.setProperty('--brand-color', '#002349'); // كحلي للشخصي
+                root.style.setProperty('--brand-color', '#002349');
                 document.getElementById('serviceEmoji').innerText = '🚗';
             }
 
@@ -82,50 +83,49 @@
             document.getElementById('btnText').innerText = l.btn;
             document.getElementById('btnEdit').innerText = l.edit;
             document.getElementById('lblFinalPrice').innerText = l.priceLabel;
+            document.getElementById('currVal').innerText = l.curr;
 
-            // --- بناء قائمة البيانات بذكاء ---
+            // --- عرض البيانات ---
             let html = '';
-            const fields = [
+            // مصفوفة الحقول لضمان الترتيب
+            const displayFields = [
                 {k: 'name', l: l.name},
                 {k: 'phone', l: l.phone},
                 {k: 'age', l: l.age},
                 {k: 'gender', l: l.gender},
                 {k: 'id_no', l: l.id_no},
                 {k: 'city', l: l.city},
-                {k: 'province', l: l.city}, // دعم للمسمى البديل
-                {k: 'service', l: l.service},
-                {k: 'car', l: l.car},
+                {k: 'car', l: l.service},
                 {k: 'map', l: l.map}
             ];
 
-            fields.forEach(item => {
+            displayFields.forEach(item => {
                 let val = u.get(item.k);
                 if(val && val !== '---' && val !== 'null') {
+                    let displayVal = decodeURIComponent(val);
                     if(item.k === 'map') {
-                        val = `<a href="${val}" target="_blank" class="text-blue-500 underline">تم تحديد الموقع 📍</a>`;
+                        displayVal = `<a href="${val}" target="_blank" class="text-blue-500 underline font-black">${l.locTxt}</a>`;
                     }
-                    html += `<div class="data-row"><span class="data-label">${item.l}</span><span class="data-value">${decodeURIComponent(val)}</span></div>`;
+                    html += `<div class="data-row"><span class="data-label">${item.l}</span><span class="data-value">${displayVal}</span></div>`;
                 }
             });
-
             document.getElementById('detailsList').innerHTML = html;
             
             // --- السعر والمدة ---
             const price = u.get('price') || '0';
-            const cleanPrice = price.replace(/[^0-9]/g, '');
+            const cleanPrice = price.toString().replace(/[^0-9]/g, '');
             document.getElementById('totalVal').innerText = cleanPrice ? parseInt(cleanPrice).toLocaleString() : price;
             
             const days = u.get('days');
-            if(days) {
+            if(days && days !== 'null') {
                 document.getElementById('extraInfo').innerText = `${days} ${l.unit}`;
             } else {
-                // إذا كان كورس تعليم نظهر التاريخ والوقت بدلاً من عدد الأيام
                 document.getElementById('extraInfo').innerText = `📅 ${u.get('date') || ''} | ⏰ ${u.get('time') || ''}`;
             }
         };
 
         function confirmAndSubmit() {
-            // توجيه لصفحة النجاح مع كامل البيانات
+            // نمرر كل البيانات لصفحة النجاح، وهناك سيتم الإرسال الفعلي للرادار
             window.location.href = `success.html?${u.toString()}`;
         }
     </script>

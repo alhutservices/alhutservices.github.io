@@ -3,107 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مراجعة الطلب الملكي | الحوت 🐋</title>
+    <title>مراجعة الطلب | الحوت 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --brand-color: #002349; --accent: #D4AF37; }
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; overflow-x: hidden; }
+        :root { --main: #002349; --accent: #D4AF37; --bg-soft: #f8fafc; }
+        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg-soft); transition: background 0.8s ease; }
         
-        /* تأثير البطاقة العائمة */
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.95); 
-            backdrop-filter: blur(10px); 
-            border-radius: 3.5rem; 
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 40px 100px -20px rgba(0,35,73,0.15);
-        }
-
-        .data-row { 
-            background: #fdfdfd; 
-            padding: 1rem 1.25rem; 
-            border-radius: 1.5rem; 
-            margin-bottom: 0.75rem;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            border: 1px solid #f1f5f9;
-        }
-
-        .price-breakdown {
-            background: linear-gradient(135deg, var(--brand-color) 0%, #00152b 100%);
-            color: white;
-            border-radius: 2.5rem;
-            padding: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .price-breakdown::before {
-            content: '🐋';
-            position: absolute;
-            right: -20px;
-            bottom: -10px;
-            font-size: 5rem;
-            opacity: 0.05;
-        }
-
-        /* أنيميشن الأرقام */
-        .count-up { transition: all 2s ease-out; }
+        /* تأثيرات البطاقة */
+        .glass-card { background: white; border-radius: 3.5rem; box-shadow: 0 40px 100px -20px rgba(0,0,0,0.15); transition: 0.5s; border-top: 15px solid var(--main); }
+        .data-row { border-bottom: 1px dashed #e5e7eb; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center; }
+        .data-label { color: #94a3b8; font-size: 0.85rem; font-weight: 800; }
+        .data-value { color: var(--main); font-weight: 900; }
         
-        .shimmer {
-            background: linear-gradient(90deg, transparent, rgba(212,175,55,0.2), transparent);
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite;
-        }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        /* ثيم السعر الديناميكي */
+        .price-box { background: var(--main); color: var(--accent); border-radius: 2.5rem; padding: 1.8rem; text-align: center; position: relative; overflow: hidden; }
+        .price-box::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent); animation: shine 4s infinite; }
+        @keyframes shine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+        .btn-main { background: var(--main); color: var(--accent); transition: 0.3s; }
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 30px -5px var(--main); opacity: 0.9; }
     </style>
 </head>
 <body class="p-4 md:p-10">
 
-    <div id="mainCard" class="max-w-xl mx-auto glass-card overflow-hidden transition-all duration-700">
-        
-        <div class="p-10 text-center relative">
-            <div id="serviceEmoji" class="text-7xl mb-4 transform transition-transform hover:scale-110 duration-500">📋</div>
-            <h2 id="pageTitle" class="text-3xl font-black mb-1" style="color: var(--brand-color);">تأكيد الحجز</h2>
-            <div class="inline-block px-4 py-1 bg-amber-100 text-amber-700 rounded-full text-[10px] font-black tracking-widest uppercase">
-                Order ID: <span id="tempID">---</span>
+    <div id="mainCard" class="max-w-lg mx-auto glass-card overflow-hidden">
+        <div id="headerArea" class="p-10 text-center transition-colors duration-700">
+            <div id="mainEmoji" class="text-7xl mb-4 transition-transform duration-500 hover:scale-110 inline-block">📋</div>
+            <h2 id="pageTitle" class="text-3xl font-black mb-2" style="color: var(--main);">مراجعة الطلب</h2>
+            <div id="statusBadge" class="inline-block px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white" style="background: var(--main);">الخطوة النهائية</div>
+        </div>
+
+        <div class="px-10 py-2 space-y-1" id="detailsList"></div>
+
+        <div class="px-10 py-6">
+            <div class="price-box shadow-2xl">
+                <p id="lblTotal" class="text-[11px] font-black opacity-80 mb-1">المبلغ الإجمالي المستحق</p>
+                <div class="text-4xl font-black tracking-tighter">
+                    <span id="totalVal">0</span> <small class="text-lg" id="currVal">د.ع</small>
+                </div>
+                <div id="daysBadge" class="mt-3 inline-block px-4 py-1 bg-white/10 rounded-lg text-xs font-bold text-white"></div>
             </div>
         </div>
 
-        <div class="px-8 space-y-2" id="detailsList"></div>
-
-        <div class="p-8">
-            <div class="price-breakdown shadow-2xl">
-                <div class="space-y-3 opacity-80 text-xs font-bold border-b border-white/10 pb-4 mb-4">
-                    <div class="flex justify-between">
-                        <span id="lblBase">السعر الأساسي</span>
-                        <span><span id="baseVal">0</span> <small id="c1">د.ع</small></span>
-                    </div>
-                    <div class="flex justify-between text-amber-400">
-                        <span id="lblAddon">الإضافات الاختيارية</span>
-                        <span>+ <span id="addonVal">0</span> <small id="c2">د.ع</small></span>
-                    </div>
-                </div>
-                <div class="flex justify-between items-end">
-                    <div>
-                        <p id="lblTotal" class="text-[10px] uppercase font-black text-amber-500 mb-1">المبلغ النهائي المستحق</p>
-                        <div class="text-4xl font-black text-white"><span id="totalVal">0</span> <small class="text-sm font-light text-amber-200" id="c3">د.ع</small></div>
-                    </div>
-                    <div id="daysBadge" class="bg-white/10 px-4 py-2 rounded-xl text-xs font-black backdrop-blur-md"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="p-8 pt-0 space-y-4">
-            <button onclick="confirmAndSubmit()" class="w-full py-6 bg-[#002349] text-[#D4AF37] rounded-[2rem] font-black text-2xl shadow-xl hover:shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-4 group">
-                <span id="btnText">تأكيد وإرسال</span>
-                <i class="fas fa-paper-plane group-hover:translate-x-[-10px] transition-transform"></i>
+        <div class="p-10 pt-2 space-y-4">
+            <button onclick="confirmAndSubmit()" class="w-full py-6 btn-main rounded-[2rem] font-black text-2xl shadow-xl flex items-center justify-center gap-3 active:scale-95">
+                <span id="btnSubmit">تأكيد الإرسال</span>
+                <i class="fas fa-paper-plane text-sm"></i>
             </button>
-            
-            <button onclick="window.history.back()" class="w-full py-2 text-slate-400 font-bold text-sm flex items-center justify-center gap-2 hover:text-red-500 transition-colors">
-                <i class="fas fa-undo-alt"></i> <span id="btnEdit">هل تريد تعديل شيء؟</span>
+            <button onclick="window.history.back()" class="w-full text-gray-400 font-black text-sm hover:text-red-500 transition-colors flex items-center justify-center gap-2">
+                <i class="fas fa-undo-alt"></i> <span id="btnEdit">رجوع للتعديل</span>
             </button>
         </div>
     </div>
@@ -111,92 +61,72 @@
     <script>
         const u = new URLSearchParams(window.location.search);
         const lang = u.get('lang') || 'ar';
-        const type = u.get('type') || '';
+        const type = u.get('type') || 'personal';
         const car = u.get('car') || '';
 
-        const trans = {
-            ar: { base:'السعر الأساسي', addon:'الإضافات', total:'المبلغ النهائي', unit:'أيام', edit:'تعديل البيانات', name:'الاسم الكامل', phone:'رقم الهاتف', car:'الخدمة/السيارة', loc:'الموقع المختار 📍', curr:'د.ع' },
-            ku: { base:'نرخی بنەڕەتی', addon:'زیادکراوەکان', total:'کۆی گشتی', unit:'ڕۆژ', edit:'دەستکاری', name:'ناوی تەواو', phone:'مۆبایل', car:'خزمەتگوزاری', loc:'شوێن دیاریکراوە 📍', curr:'دینار' },
-            en: { base:'Base Price', addon:'Add-ons', total:'Final Total', unit:'Days', edit:'Edit Order', name:'Full Name', phone:'Phone Number', car:'Service/Car', loc:'Location Set 📍', curr:'IQD' }
+        const themes = {
+            training: { main: '#7c3aed', accent: '#fcd34d', emoji: '🎓', bg: '#f5f3ff' },
+            wedding: { main: '#be185d', accent: '#ffffff', emoji: '💍', bg: '#fff1f2' },
+            personal: { main: '#002349', accent: '#D4AF37', emoji: '🚗', bg: '#f8fafc' }
+        };
+
+        const i18n = {
+            ar: { title: "مراجعة التفاصيل", submit: "إرسال للرادار 🛰️", edit: "تعديل البيانات", fields: { name: "👤 الاسم", phone: "📞 الهاتف", age: "🎂 العمر", id_no: "🆔 الهوية", city: "📍 المدينة", car: "🚘 الخدمة", addon_name: "✨ الإضافة", map: "🗺️ الموقع" }, loc: "تم تحديد الموقع ✅", curr: "د.ع" },
+            // يمكنك إضافة لغات أخرى هنا
         };
 
         window.onload = () => {
-            const l = trans[lang] || trans['ar'];
-            document.getElementById('htmlTag').dir = (lang === 'en') ? 'ltr' : 'rtl';
-            
-            // ثيم ذكي
+            const t = themes[type] || themes.personal;
+            const l = i18n[lang] || i18n.ar;
+
+            // تطبيق الثيم التفاعلي
             const root = document.documentElement;
-            if(type === 'training' || car.includes('كورس')) {
-                root.style.setProperty('--brand-color', '#7c3aed'); document.getElementById('serviceEmoji').innerText = '🎓';
-            } else if(type === 'wedding' || car.includes('زفاف')) {
-                root.style.setProperty('--brand-color', '#db2777'); document.getElementById('serviceEmoji').innerText = '💍';
-            }
+            root.style.setProperty('--main', t.main);
+            root.style.setProperty('--accent', t.accent);
+            document.body.style.backgroundColor = t.bg;
+            document.getElementById('mainEmoji').innerText = t.emoji;
 
-            // توليد ID عشوائي للرقي
-            document.getElementById('tempID').innerText = 'WH-' + Math.floor(Math.random() * 9000 + 1000);
+            // ترجمة الثوابت
+            document.getElementById('pageTitle').innerText = l.title;
+            document.getElementById('btnSubmit').innerText = l.submit;
+            document.getElementById('btnEdit').innerText = l.edit;
+            document.getElementById('currVal').innerText = l.curr;
 
-            // عرض البيانات الأساسية
-            const fields = [
-                {k:'name', i:'user', l:l.name},
-                {k:'phone', i:'phone', l:l.phone},
-                {k:'car', i:'star', l:l.car},
-                {k:'addon_name', i:'plus-circle', l:l.addon},
-                {k:'map', i:'map-marker-alt', l:l.loc}
-            ];
-
-            let html = '';
-            fields.forEach(f => {
-                let val = u.get(f.k);
-                if(val && val !== 'null') {
-                    let display = (f.k === 'map') ? `<a href="${val}" target="_blank" class="text-blue-500 font-black underline">${l.loc}</a>` : decodeURIComponent(val);
-                    html += `<div class="data-row">
-                        <span class="text-[10px] font-black text-slate-400 uppercase"><i class="fas fa-${f.i} ml-2"></i> ${f.l}</span>
-                        <span class="font-black text-sm" style="color: var(--brand-color)">${display}</span>
-                    </div>`;
+            // بناء القائمة ذكياً
+            let listHtml = '';
+            const fieldsToShow = ['name', 'phone', 'age', 'id_no', 'city', 'car', 'addon_name', 'map'];
+            
+            fieldsToShow.forEach(key => {
+                let val = u.get(key);
+                if (val && val !== 'null') {
+                    let display = decodeURIComponent(val);
+                    if (key === 'map') display = `<a href="${val}" target="_blank" class="text-blue-600 underline font-black">${l.loc}</a>`;
+                    
+                    listHtml += `
+                        <div class="data-row">
+                            <span class="data-label">${l.fields[key] || key}</span>
+                            <span class="data-value">${display}</span>
+                        </div>`;
                 }
             });
-            document.getElementById('detailsList').innerHTML = html;
+            document.getElementById('detailsList').innerHTML = listHtml;
 
-            // الحسابات والأنيميشن
+            // الحساب النهائي (أساسي + إضافة)
             const p1 = parseInt(u.get('price') || 0);
             const p2 = parseInt(u.get('addon_price') || 0);
             const total = p1 + p2;
+            document.getElementById('totalVal').innerText = total.toLocaleString();
 
-            animateValue("baseVal", 0, p1, 1000);
-            animateValue("addonVal", 0, p2, 1000);
-            animateValue("totalVal", 0, total, 1500);
-
-            document.getElementById('daysBadge').innerText = (u.get('days') || '1') + ' ' + l.unit;
-            document.getElementById('btnEdit').innerText = l.edit;
-            document.getElementById('lblBase').innerText = l.base;
-            document.getElementById('lblAddon').innerText = l.addon;
-            document.getElementById('lblTotal').innerText = l.total;
-            document.getElementById('c1').innerText = l.curr;
-            document.getElementById('c2').innerText = l.curr;
-            document.getElementById('c3').innerText = l.curr;
+            const days = u.get('days');
+            document.getElementById('daysBadge').innerText = days ? `${days} أيام` : `${u.get('date') || 'يوم واحد'}`;
         };
 
-        function animateValue(id, start, end, duration) {
-            let obj = document.getElementById(id);
-            let range = end - start;
-            let current = start;
-            let increment = end > start ? Math.ceil(range / (duration / 16)) : -1;
-            let step = function() {
-                current += increment;
-                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
-                    obj.innerText = end.toLocaleString();
-                } else {
-                    obj.innerText = current.toLocaleString();
-                    requestAnimationFrame(step);
-                }
-            };
-            requestAnimationFrame(step);
-        }
-
         function confirmAndSubmit() {
+            // إضافة المجموع النهائي للرابط قبل الانتقال
             const p1 = parseInt(u.get('price') || 0);
             const p2 = parseInt(u.get('addon_price') || 0);
             u.set('total_final', p1 + p2);
+            
             window.location.href = `success.html?${u.toString()}`;
         }
     </script>

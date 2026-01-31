@@ -96,7 +96,7 @@
                 timeAlert: 'Çalışma saatleri 08:00 - 23:00 arasıdır 🐋', pastTimeAlert: 'Geçmiş bir zamanı seçemezsiniz!',
                 morning: 'Günaydın', day: 'İyi günler', evening: 'İyi akşamlar',
                 services: { placeholder: '-- Hizmet Seçin --', personal: '🚗 Araç Kiralama', wedding: '🎁 Düğün Araçları', training: '🎓 Sürüş Eğitimi' },
-                cities: { 'كركوك': 'Kerkük 💎', 'بغداد': 'Baغdaت 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Süleymaniye 🌲', 'الموصل': 'Musul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Enbar 🌴', 'ديالى': 'Diyala 🍊' },
+                cities: { 'كركوك': 'Kerkük 💎', 'بغداد': 'Bağdat 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Süleymaniye 🌲', 'الموصل': 'Musul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Enbar 🌴', 'ديالى': 'Diyala 🍊' },
                 msgs: { 'كركوك': 'Selam Kerkük.. Al-Hut yanınızda 💎', 'بغداد': 'Bağdat\'a hoş geldiniz.. 🏰', 'أربيل': 'Erbil\'e hoş geldiniz.. 🏔️', 'السليمانية': 'Güzel Süleymaniye.. 🌲', 'الموصل': 'Selam Musul.. 🏹', 'البصرة': 'Basra\'ya selamlar.. ⚓', 'الأنبار': 'Enbar\'a hoş geldiniz.. 🌴', 'ديالى': 'Diyala\'ya selamlar.. 🍊' }
             },
             en: {
@@ -176,12 +176,13 @@
                 return;
             }
 
-            // التحويل الذكي حسب الخدمة
-            let targetPage = "fleet.html"; // الافتراضي
+            // التعديل الجوهري لضمان التحويل لصفحة الاضافات عند اختيار التدريب
+            let targetPage = "fleet.html"; 
             if (service === "training") {
-                targetPage = "training.html"; // صفحة التعليم
+                targetPage = "addons.html"; 
             }
 
+            // نقل كافة المعلومات في الرابط لكي تستلمها صفحة الاضافات
             window.location.href = `${targetPage}?type=${service}&lang=${currentLang}&date=${date}&time=${time}&city=${city}`;
         }
 

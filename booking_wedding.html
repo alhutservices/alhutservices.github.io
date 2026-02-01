@@ -9,65 +9,144 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <style>
-        :root { --main-gold: #D4AF37; --wedding-pink: #be185d; }
-        body { font-family: 'Tajawal', sans-serif; background-color: #fffafb; transition: 0.5s; }
-        .wedding-header { background: linear-gradient(135deg, #002349 0%, #be185d 100%); }
-        .glass-input { width: 100%; padding: 1.1rem; background: white; border: 2px solid #f1e4bc; border-radius: 1.5rem; font-weight: 700; outline: none; transition: 0.3s; }
-        .glass-input:focus { border-color: var(--wedding-pink); box-shadow: 0 0 15px rgba(190, 24, 93, 0.1); }
-        .wedding-card { background: white; border-radius: 3.5rem; box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.1); border-top: 10px solid var(--main-gold); }
-        #map { height: 250px; border-radius: 2.5rem; border: 4px solid #fffaf0; z-index: 1; }
-        .gender-btn { flex: 1; padding: 1rem; border: 2px solid #f1e4bc; border-radius: 1.25rem; font-weight: bold; transition: 0.3s; cursor: pointer; text-align: center; }
-        .gender-btn.active { background: var(--wedding-pink); color: white; border-color: var(--wedding-pink); }
+        body { font-family: 'Tajawal', sans-serif; background-color: #fffafb; transition: 0.5s; overflow-x: hidden; }
+        
+        /* الهيدر المتكيف بنمط الزفاف */
+        .hero-bg { 
+            background: linear-gradient(135deg, #002349 0%, #be185d 100%); 
+            transition: 1s; position: relative; padding-top: 4rem; padding-bottom: 12rem;
+            overflow: hidden; border-bottom: 6px solid #D4AF37;
+        }
+
+        .dynamic-pattern {
+            position: absolute; inset: 0; opacity: 0.15; pointer-events: none;
+            background-repeat: repeat; animation: bgMove 50s linear infinite;
+        }
+        @keyframes bgMove { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
+        
+        .city-overlay { position: absolute; inset: 0; opacity: 0.6; transition: 1s; pointer-events: none; }
+
+        /* البطاقة الملكية */
+        .wedding-card { 
+            background: rgba(255, 255, 255, 0.98); 
+            backdrop-filter: blur(15px);
+            border-radius: 4rem; 
+            box-shadow: 0 40px 80px rgba(190, 24, 93, 0.15);
+            position: relative; z-index: 20;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .glass-input { 
+            width: 100%; padding: 1.2rem; background: #fffbff; 
+            border: 2px solid #f1e4bc; border-radius: 1.5rem; 
+            font-weight: 700; outline: none; transition: 0.3s; color: #002349;
+        }
+        .glass-input:focus { border-color: #be185d; transform: translateY(-2px); box-shadow: 0 10px 25px rgba(190, 24, 93, 0.1); }
+
+        #map { height: 250px; border-radius: 2.5rem; border: 4px solid #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+
+        /* أزرار العريس والعروس */
+        .gender-btn { 
+            flex: 1; padding: 1.2rem; border: 2px solid #f1e4bc; border-radius: 1.5rem; 
+            font-weight: 900; transition: 0.4s; cursor: pointer; text-align: center; background: white; 
+        }
+        .gender-btn.active { background: #be185d; color: white; border-color: #be185d; transform: scale(1.05); box-shadow: 0 10px 20px rgba(190, 24, 93, 0.3); }
+
+        .royal-summary {
+            background: linear-gradient(to bottom, #fff9f0, #fff);
+            border: 1px dashed #D4AF37;
+            border-radius: 2.5rem;
+        }
+
+        .btn-confirm { 
+            background: linear-gradient(135deg, #D4AF37 0%, #b8962d 100%);
+            color: white; font-weight: 900; 
+            border-radius: 2.5rem; transition: 0.4s;
+        }
+        .btn-confirm:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4); }
+
+        .label-text { font-weight: 900; font-size: 0.85rem; color: #be185d; margin-bottom: 0.5rem; margin-right: 0.5rem; display: block; }
     </style>
 </head>
 <body class="text-[#002349]">
-    <header class="wedding-header text-white pt-16 pb-44 text-center relative overflow-hidden">
-        <div class="absolute top-0 left-0 opacity-10 text-[10rem] pointer-events-none">💍</div>
-        <h1 id="pageTitle" class="text-4xl font-black text-white mb-2">مبارك لكما!</h1>
-        <p id="pageSub" class="text-lg opacity-90 px-4 font-bold"></p>
+
+    <header class="hero-bg text-white text-center">
+        <div id="cityOverlay" class="city-overlay"></div>
+        <div id="patternBox" class="dynamic-pattern"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-6xl mb-4 animate-bounce">💍</div>
+            <h1 id="pageTitle" class="text-4xl md:text-6xl font-black text-white mb-2 drop-shadow-lg">مبارك لكما!</h1>
+            <p id="pageSub" class="text-xl font-bold opacity-90"></p>
+        </div>
     </header>
 
-    <main class="container mx-auto px-4 -mt-32 relative z-10 pb-20">
+    <main class="container mx-auto px-4 -mt-28 relative z-20 pb-20">
         <div class="wedding-card p-8 md:p-12 max-w-4xl mx-auto">
+            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div class="space-y-5">
-                    <h3 class="font-black text-xl text-[#b8962d] flex items-center gap-2">
-                        <i class="fas fa-heart"></i> <span id="secTitle">معلومات العريس / العروس</span>
-                    </h3>
-                    <input type="text" id="custName" class="glass-input" placeholder="الاسم الكامل">
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="tel" id="custPhone" class="glass-input text-left" dir="ltr" placeholder="07xx xxx xxxx">
-                        <input type="number" id="custAge" class="glass-input" placeholder="العمر">
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-rose-100 p-3 rounded-2xl text-[#be185d]"><i class="fas fa-heart text-xl"></i></div>
+                        <h3 class="font-black text-2xl" id="secTitle">بيانات أصحاب الفرح</h3>
                     </div>
-                    <div class="flex gap-3">
-                        <div id="maleBtn" onclick="setGender('Male')" class="gender-btn active">👨 <span id="txtGroom">عريس</span></div>
-                        <div id="femaleBtn" onclick="setGender('Female')" class="gender-btn">👩 <span id="txtBride">عروس</span></div>
+
+                    <div>
+                        <label class="label-text">الاسم الكامل</label>
+                        <input type="text" id="custName" class="glass-input" placeholder="اكتب اسمك هنا">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="label-text">رقم التواصل</label>
+                            <input type="tel" id="custPhone" class="glass-input text-left" dir="ltr" placeholder="07xx xxx xxxx">
+                        </div>
+                        <div>
+                            <label class="label-text">العمر</label>
+                            <input type="number" id="custAge" class="glass-input" placeholder="25">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="label-text">صاحب الحجز</label>
+                        <div class="flex gap-4">
+                            <div id="maleBtn" onclick="setGender('Male')" class="gender-btn active">👨 <span id="txtGroom">عريس</span></div>
+                            <div id="femaleBtn" onclick="setGender('Female')" class="gender-btn">👩 <span id="txtBride">عروس</span></div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="space-y-5">
-                    <h3 class="font-black text-xl text-[#b8962d] flex items-center gap-2">
-                        <i class="fas fa-star"></i> <span id="secRoyal">تفاصيل الحجز الملكي</span>
-                    </h3>
-                    <div class="bg-rose-50 p-6 rounded-[2.5rem] border border-rose-100 relative">
-                        <div id="summary" class="text-sm font-black space-y-2 text-rose-900"></div>
-                        <div class="absolute -top-3 -right-3 text-3xl">✨</div>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-amber-100 p-3 rounded-2xl text-amber-600"><i class="fas fa-crown text-xl"></i></div>
+                        <h3 class="font-black text-2xl" id="secRoyal">الحجز الملكي</h3>
+                    </div>
+
+                    <div class="royal-summary p-8 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-2 opacity-10 text-4xl">✨</div>
+                        <div id="summary" class="space-y-4 relative z-10">
+                            </div>
+                    </div>
+
+                    <div class="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-center">
+                        <p class="text-sm font-bold text-amber-800 italic">"ليلة العمر تستحق الأفضل، والحوت يضمن لكم التميز" ✨</p>
                     </div>
                 </div>
 
                 <div class="md:col-span-2 space-y-4">
                     <div class="flex justify-between items-center px-2">
-                        <h3 class="font-black text-xl text-[#b8962d]" id="secMap">موقع انطلاق الموكب</h3>
-                        <button onclick="getGPS()" class="text-rose-600 font-black text-xs bg-rose-50 px-4 py-2 rounded-full border border-rose-100 shadow-sm" id="btnGPS">تحديد موقعي 🛰️</button>
+                        <div class="flex items-center gap-3">
+                            <div class="bg-slate-100 p-3 rounded-2xl text-slate-600"><i class="fas fa-map-marked-alt text-xl"></i></div>
+                            <h3 class="font-black text-2xl" id="secMap">موقع انطلاق الموكب</h3>
+                        </div>
+                        <button onclick="getGPS()" class="text-rose-600 font-black text-sm bg-rose-50 px-5 py-3 rounded-2xl border border-rose-100 shadow-sm hover:bg-rose-100 transition-all" id="btnGPS">تحديد موقعي 🛰️</button>
                     </div>
                     <div id="map"></div>
                 </div>
 
-                <button onclick="confirmWedding()" class="md:col-span-2 w-full bg-gradient-to-r from-[#D4AF37] to-[#b8962d] text-white py-6 rounded-[2.5rem] font-black text-2xl shadow-xl transition-all active:scale-95 hover:shadow-2xl">
-                    <span id="btnSubmit">تأكيد حجز ليلة العمر</span>
+                <button onclick="confirmWedding()" class="btn-confirm md:col-span-2 w-full py-6 text-2xl shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-4">
+                    <span id="btnSubmit">تأكيد حجز ليلة العمر</span> <i class="fas fa-magic"></i>
                 </button>
             </div>
         </div>
@@ -77,47 +156,39 @@
         let map, marker, selectedGender = 'Male';
         const u = new URLSearchParams(window.location.search);
         const currentLang = u.get('lang') || 'ar';
+        const city = u.get('city') || 'كركوك';
 
+        const styleColor = { 'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 'الأنبار': '#ef6c00', 'ديالى': '#558b2f' };
+        
         const trans = {
-            ar: { dir: 'rtl', font: 'Tajawal', title: 'مبارك لكما! 💍', sub: 'يومكم الكبير يبدأ هنا', secTitle: 'معلومات العريس / العروس', secRoyal: 'تفاصيل الحجز الملكي', secMap: 'موقع انطلاق الموكب', btnGPS: 'تحديد موقعي 🛰️', groom: 'عريس', bride: 'عروس', name: 'الاسم الكامل', phone: 'رقم الهاتف', age: 'العمر', car: 'السيارة:', days: 'المدة:', price: 'المجموع:', submit: 'تأكيد حجز ليلة العمر', alert: 'يرجى إكمال البيانات 🐋💍', unit: 'يوم', curr: 'د.ع', search: 'ابحث عن موقع الحفل...' },
-            ku: { dir: 'rtl', font: 'Tajawal', title: 'پیرۆزە! 💍', sub: 'ڕۆژی گەورەتان لێرەوە دەست پێدەکات', secTitle: 'زانیاری زاوا / بووک', secRoyal: 'وردەکاری حیجزی شاهانە', secMap: 'شوێنی دەستپێکی کاروان', btnGPS: 'دیاریکردنی شوێنم 🛰️', groom: 'زاوا', bride: 'بووک', name: 'ناوی تەواو', phone: 'ژمارەی مۆبایل', age: 'تەمەن', car: 'ئۆتۆمبێل:', days: 'ماوە:', price: 'کۆی گشتی:', submit: 'پشتڕاستکردنەوەی لایف نایت', alert: 'تکایە زانیارییەکان تەواو بکە 🐋💍', unit: 'ڕۆژ', curr: 'دینار', search: 'گەڕان بۆ شوێنی ئاهەنگ...' },
-            tr: { dir: 'ltr', font: 'Poppins', title: 'Tebrikler! 💍', sub: 'Büyük gününüz burada başlıyor', secTitle: 'Gelin / Damat Bilgileri', secRoyal: 'Kraliyet Rezervasyon Detayları', secMap: 'Konvoy Başlangıç Noktası', btnGPS: 'Konumumu Belirle 🛰️', groom: 'Damat', bride: 'Gelin', name: 'Ad Soyad', phone: 'Telefon No', age: 'Yaş', car: 'Araç:', days: 'Süre:', price: 'Toplam:', submit: 'Hayatınızın Gecesini Onaylayın', alert: 'Lütfen bilgileri doldurun 🐋💍', unit: 'Gün', curr: 'IQD', search: 'Tören yerini ara...' },
-            en: { dir: 'ltr', font: 'Poppins', title: 'Congratulations! 💍', sub: 'Your big day starts here', secTitle: 'Groom / Bride Information', secRoyal: 'Royal Booking Details', secMap: 'Convoy Starting Point', btnGPS: 'Get My GPS 🛰️', groom: 'Groom', bride: 'Bride', name: 'Full Name', phone: 'Phone Number', age: 'Age', car: 'Car:', days: 'Duration:', price: 'Total:', submit: 'Confirm the Night of Your Life', alert: 'Please fill the details 🐋💍', unit: 'Day', curr: 'IQD', search: 'Search ceremony location...' }
+            ar: { sub: 'يومكم الكبير يبدأ هنا', car: 'سيارة الزفاف:', days: 'مدة الحجز:', price: 'المجموع الملكي:', unit: 'يوم', curr: 'د.ع', alert: 'يرجى إكمال البيانات لضمان الحجز 💍' },
+            ku: { sub: 'ڕۆژی گەورەتان لێرەوە دەست پێدەکات', car: 'ئۆتۆمبێلی زاوا:', days: 'ماوەی حیجز:', price: 'کۆی گشتی شاهانە:', unit: 'ڕۆژ', curr: 'دینار', alert: 'تکایە زانیارییەکان تەواو بکە 💍' }
         };
 
         window.onload = function() {
             const l = trans[currentLang] || trans['ar'];
-            document.getElementById('htmlTag').dir = l.dir;
-            document.body.style.fontFamily = l.font + ', sans-serif';
             
-            document.getElementById('pageTitle').innerText = l.title;
+            // تطبيق هوية المدينة
+            document.getElementById('cityOverlay').style.backgroundColor = styleColor[city] || '#002349';
+            document.getElementById('patternBox').style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text y="50" x="10" font-size="30">💍</text><text y="90" x="50" font-size="30">✨</text></svg>')`;
+
             document.getElementById('pageSub').innerText = l.sub;
-            document.getElementById('secTitle').innerText = l.secTitle;
-            document.getElementById('secRoyal').innerText = l.secRoyal;
-            document.getElementById('secMap').innerText = l.secMap;
-            document.getElementById('btnGPS').innerText = l.btnGPS;
-            document.getElementById('txtGroom').innerText = l.groom;
-            document.getElementById('txtBride').innerText = l.bride;
-            document.getElementById('btnSubmit').innerText = l.submit;
-
-            document.getElementById('custName').placeholder = l.name;
-            document.getElementById('custPhone').placeholder = l.phone;
-            document.getElementById('custAge').placeholder = l.age;
-
-            let carName = u.get('car') || 'سيارة زفاف';
+            
+            // بيانات الحجز
+            let carName = u.get('car') || 'Luxury Wedding Car';
             let daysNum = u.get('days') || 1;
             let totalPrice = u.get('price') || 0;
 
             document.getElementById('summary').innerHTML = `
-                <div class="flex justify-between border-b border-rose-100 pb-2"><span>${l.car}</span> <span>${carName}</span></div>
-                <div class="flex justify-between border-b border-rose-100 py-2"><span>${l.days}</span> <span>${daysNum} ${l.unit}</span></div>
-                <div class="flex justify-between pt-2 text-rose-700 font-black text-lg"><span>${l.price}</span> <span>${parseInt(totalPrice).toLocaleString()} ${l.curr}</span></div>
+                <div class="flex justify-between border-b border-amber-100 pb-2"><span class="font-bold opacity-60">${l.car}</span> <span class="font-black">${carName}</span></div>
+                <div class="flex justify-between border-b border-amber-100 pb-2"><span class="font-bold opacity-60">${l.days}</span> <span class="font-black">${daysNum} ${l.unit}</span></div>
+                <div class="flex justify-between pt-2 text-rose-700 font-black text-xl"><span>${l.price}</span> <span>${parseInt(totalPrice).toLocaleString()} ${l.curr}</span></div>
             `;
 
+            // الخريطة
             map = L.map('map').setView([33.3152, 44.3661], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
             marker = L.marker([33.3152, 44.3661], {draggable: true}).addTo(map);
-            L.Control.geocoder({ defaultMarkGeocode: false, placeholder: l.search }).on('markgeocode', function(e) { map.setView(e.geocode.center, 15); marker.setLatLng(e.geocode.center); }).addTo(map);
         };
 
         function setGender(g) {
@@ -129,30 +200,22 @@
         function getGPS() { 
             navigator.geolocation.getCurrentPosition(p => { 
                 const c = [p.coords.latitude, p.coords.longitude]; 
-                map.setView(c, 16); 
-                marker.setLatLng(c); 
+                map.setView(c, 16); marker.setLatLng(c); 
             }); 
         }
 
         function confirmWedding() {
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
-            const age = document.getElementById('custAge').value;
-            const l = trans[currentLang] || trans['ar'];
-
-            if(!name || !phone || !age) { alert(l.alert); return; }
+            if(!name || !phone) { alert(trans[currentLang].alert); return; }
             
             const pos = marker.getLatLng();
-            const params = new URLSearchParams(window.location.search);
+            u.set('name', name); u.set('phone', phone); u.set('age', document.getElementById('custAge').value);
+            u.set('gender', selectedGender === 'Male' ? 'عريس' : 'عروس');
+            u.set('service', 'حجز سيارة زفاف');
+            u.set('map', `https://www.google.com/maps?q=${pos.lat},${pos.lng}`);
             
-            params.set('name', name); 
-            params.set('phone', phone); 
-            params.set('age', age);
-            params.set('gender', selectedGender === 'Male' ? l.groom : l.bride);
-            params.set('service', currentLang === 'ar' ? 'حجز سيارة زفاف' : 'Wedding Car Booking');
-            params.set('map', `https://www.google.com/maps?q=${pos.lat},${pos.lng}`);
-            
-            window.location.href = `review.html?${params.toString()}`;
+            window.location.href = `review.html?${u.toString()}`;
         }
     </script>
 </body>

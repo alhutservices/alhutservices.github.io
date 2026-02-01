@@ -90,9 +90,7 @@
                     </div>
                     <div class="p-5 bg-indigo-50 rounded-[2rem] border border-indigo-100 flex gap-3 items-start">
                         <span class="text-2xl">💡</span>
-                        <p class="text-[12px] font-bold text-indigo-800 leading-relaxed">
-                            سيتم التواصل معك لتحديد موعد البدء بعد مراجعة بياناتك رسمياً.
-                        </p>
+                        <p id="tipText" class="text-[12px] font-bold text-indigo-800 leading-relaxed">---</p>
                     </div>
                 </div>
 
@@ -118,24 +116,44 @@
         let map, marker, selectedGender = 'Male';
         const p = new URLSearchParams(window.location.search);
         const lang = p.get('lang') || 'ar';
-        const city = p.get('city') || 'بغداد';
+        const city = p.get('city') || 'كركوك';
 
         const data = {
             ar: {
                 title: "كورس تعليم قيادة", lblN: "اسم المتدرب الكامل", lblP: "رقم الهاتف", 
-                lblA: "العمر", lblI: "رقم الهوية / الجواز", lblG: "الجنس",
-                male: "👨 ذكر", female: "👩 أنثى", lblM: "موقع السكن التقريبي", gps: "تحديد موقعي 🛰️",
-                review: "مراجعة الطلب", alert: "يرجى إكمال جميع الحقول 🐋", mapP: "ابحث عن منطقة...", curr: "د.ع"
+                lblA: "العمر", lblI: "رقم الهوية / الجواز", lblG: "الجنس", male: "👨 ذكر", female: "👩 أنثى",
+                lblM: "موقع السكن التقريبي", gps: "تحديد موقعي 🛰️", review: "مراجعة الطلب", 
+                alert: "يرجى إكمال جميع الحقول 🐋", mapP: "ابحث عن منطقة...", curr: "د.ع",
+                tip: "سيتم التواصل معك لتحديد موعد البدء بعد مراجعة بياناتك رسمياً."
             },
             ku: {
                 title: "کۆرسی فێربوون", lblN: "ناوی تەواوی فێرخواز", lblP: "ژمارەی مۆبایل", 
-                lblA: "تەمەن", lblI: "ژمارەی ناسنامە", lblG: "ڕەگەز",
-                male: "👨 نێر", female: "👩 مێ", lblM: "شوێنی نیشتەجێبوون", gps: "دیاریکردنی شوێن 🛰️",
-                review: "پێداچوونەوە", alert: "تکایە هەموو خانەکان پڕبکەرەوە 🐋", mapP: "بگەڕێ...", curr: "د.ع"
+                lblA: "تەمەن", lblI: "ژمارەی ناسنامە", lblG: "ڕەگەز", male: "👨 نێر", female: "👩 مێ",
+                lblM: "شوێنی نیشتەجێبوون", gps: "دیاریکردنی شوێن 🛰️", review: "پێداچوونەوە", 
+                alert: "تکایە هەموو خانەکان پڕبکەرەوە 🐋", mapP: "بگەڕێ...", curr: "د.ع",
+                tip: "دوای پێداچوونەوەی زانیارییەکانت پەیوەندیت پێوە دەکەین بۆ دەستپێکردن."
+            },
+            tr: {
+                title: "Sürüş Kursu", lblN: "Öğrencinin Tam Adı", lblP: "Telefon Numarası", 
+                lblA: "Yaş", lblI: "Kimlik / Pasaport No", lblG: "Cinsiyet", male: "👨 Erkek", female: "👩 Kadın",
+                lblM: "Yaklaşık Adres", gps: "Konumumu Bul 🛰️", review: "Siparişi İncele", 
+                alert: "Lütfen tüm alanları doldurun 🐋", mapP: "Bölge ara...", curr: "IQD",
+                tip: "Bilgileriniz incelendikten sonra başlama tarihi için sizinle iletişime geçilecektir."
+            },
+            en: {
+                title: "Driving Course", lblN: "Student Full Name", lblP: "Phone Number", 
+                lblA: "Age", lblI: "ID / Passport No", lblG: "Gender", male: "👨 Male", female: "👩 Female",
+                lblM: "Approximate Location", gps: "Get Location 🛰️", review: "Review Request", 
+                alert: "Please fill in all fields 🐋", mapP: "Search area...", curr: "IQD",
+                tip: "We will contact you to schedule the start date after reviewing your details."
             }
         };
 
-        const styleColor = { 'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 'الأنبار': '#ef6c00', 'ديالى': '#558b2f' };
+        const styleColor = { 
+            'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 
+            'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 
+            'الأنبار': '#ef6c00', 'ديالى': '#558b2f' 
+        };
 
         window.onload = function() {
             const l = data[lang] || data['ar'];
@@ -152,13 +170,14 @@
             document.getElementById('femaleBtn').innerText = l.female;
             document.getElementById('mapTitle').innerText = l.lblM;
             document.getElementById('gpsBtn').innerText = l.gps;
+            document.getElementById('tipText').innerText = l.tip;
             document.getElementById('reviewBtnText').innerText = l.review;
             document.getElementById('btnIcon').className = `fas fa-chevron-${isRtl ? 'left' : 'right'}`;
 
             document.getElementById('cityOverlay').style.backgroundColor = styleColor[city] || '#002349';
             document.getElementById('courseLabel').innerText = p.get('addon_display') || '---';
             document.getElementById('cityLabel').innerText = city;
-            document.getElementById('priceLabel').innerText = (p.get('addon_price') || '0') + ` ${l.curr}`;
+            document.getElementById('priceLabel').innerText = (p.get('addon_price') || '0').toLocaleString() + ` ${l.curr}`;
 
             map = L.map('map').setView([33.3152, 44.3661], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);

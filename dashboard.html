@@ -1,218 +1,200 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlTag">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شركة الحوت 🐋 | Al-Hut Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>رادار الحوت | النسخة المطورة 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f0f2f5; transition: 0.5s; overflow-x: hidden; }
-        .hero-bg { background: linear-gradient(135deg, #002349 0%, #004d99 100%); transition: 1s; position: relative; padding-top: 5rem; padding-bottom: 16rem; overflow: hidden; }
-        .map-pattern { position: absolute; inset: 0; opacity: 0.25; pointer-events: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><text y="60" x="10" font-size="45">🗺️</text></svg>'); background-repeat: repeat; animation: bgMove 40s linear infinite; }
-        @keyframes bgMove { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
-        .brand-text-style { font-weight: 900; line-height: 1.2; color: white; }
-        .whale-left-container { display: flex; flex-direction: column; align-items: center; justify-content: center; animation: floating 4s ease-in-out infinite; }
-        .whale-emoji { font-size: 6rem; line-height: 1; filter: drop-shadow(0 15px 20px rgba(0,0,0,0.4)); }
-        .whale-text-white { font-size: 4rem; font-weight: 900; color: white; margin-top: -10px; }
-        @keyframes floating { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-25px) rotate(5deg); } }
-        .glass-box { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.4); transform: translateY(-180px); border-radius: 3.5rem; position: relative; z-index: 30; }
-        .smart-input { width: 100%; padding: 1.1rem; background-color: rgba(241, 245, 249, 0.95); border: 2px solid transparent; border-radius: 1.5rem; font-weight: 700; color: #002349; outline: none; transition: 0.3s; }
-        .smart-input:focus { background-color: #fff; border-color: #D4AF37; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
-        .lang-btn { background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 14px; font-size: 0.9rem; color: white; cursor: pointer; transition: 0.3s; font-weight: 900; }
-        .lang-btn:hover { background: #D4AF37; color: #002349; transform: scale(1.1); }
-        .city-overlay { position: absolute; inset: 0; opacity: 0.65; transition: 1s; pointer-events: none; }
-        @media (max-width: 768px) { .glass-box { transform: translateY(-130px); margin: 0 10px; } .hero-bg { padding-bottom: 14rem; } .whale-emoji { font-size: 4rem; } .whale-text-white { font-size: 2.5rem; } .header-flex { flex-direction: column; text-align: center; } }
+        :root { --whale-navy: #001a35; --whale-gold: #c5a02d; }
+        body { font-family: 'Tajawal', sans-serif; background: #f4f7fa; color: #1e293b; }
+        .premium-nav { background: linear-gradient(135deg, var(--whale-navy) 0%, #003366 100%); border-radius: 0 0 3rem 3rem; border-bottom: 5px solid var(--whale-gold); }
+        .tab-pill { transition: 0.4s; font-weight: 900; font-size: 0.85rem; border-radius: 1.5rem; color: #64748b; }
+        .tab-pill.active { background: var(--whale-navy); color: var(--whale-gold); transform: scale(1.05); }
+        .whale-card { background: white; border-radius: 2.5rem; transition: 0.4s; position: relative; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); }
+        .info-box { background: #f8fafc; padding: 15px; border-radius: 1.5rem; text-align: center; }
+        .info-label { font-size: 10px; font-weight: 900; color: #94a3b8; margin-bottom: 4px; display: block; }
+        .gender-tag { font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 8px; }
+        .gender-male { background: #eff6ff; color: #1d4ed8; }
+        .gender-female { background: #fdf2f8; color: #be185d; }
+        .price-text { color: #c5a02d; font-weight: 900; }
     </style>
 </head>
-<body class="text-[#002349]">
+<body class="min-h-screen">
 
-    <div class="absolute top-6 left-0 right-0 z-50 flex justify-center gap-2">
-        <button onclick="changeLang('ar')" class="lang-btn">العربية</button>
-        <button onclick="changeLang('ku')" class="lang-btn">کوردی</button>
-        <button onclick="changeLang('tr')" class="lang-btn">Türkçe</button>
-        <button onclick="changeLang('en')" class="lang-btn">English</button>
-    </div>
+    <audio id="radarSound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
 
-    <header id="mainHero" class="hero-bg text-white relative">
-        <div id="cityOverlay" class="city-overlay"></div>
-        <div class="map-pattern"></div>
-        <div class="container mx-auto px-6 flex justify-between items-center relative z-10 header-flex">
-            <div class="text-right">
-                <h1 class="text-5xl md:text-7xl brand-text-style mb-4" id="brandName">استئجار سيارة<br>تناسب جميع<br>أنواع الرحلات</h1>
-                <p id="dynamicGreeting" class="text-xl md:text-2xl font-black transition-all duration-500 drop-shadow-lg text-white/90 mb-2 h-8"></p>
-                <p id="subGreeting" class="text-lg md:text-xl font-bold text-[#D4AF37]">سيارات رائعة بأسعار رائعة</p>
+    <header class="premium-nav px-6 pt-8 pb-12">
+        <div class="max-w-2xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="bg-white p-3 rounded-2xl shadow-lg text-2xl">🐋</div>
+                <div>
+                    <h2 id="navOfficeName" class="text-white font-black text-lg">...</h2>
+                    <p id="navCity" class="text-white/50 text-[10px] font-bold tracking-widest uppercase mt-1"></p>
+                </div>
             </div>
-            <div class="whale-left-container">
-                <div class="whale-emoji">🐋</div>
-                <div class="whale-text-white" id="whaleTitle">الحـوت</div>
-            </div>
+            <button onclick="logout()" class="w-12 h-12 flex items-center justify-center bg-red-500/20 text-red-400 rounded-2xl"><i class="fas fa-power-off"></i></button>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 relative z-20">
-        <div class="glass-box p-8 md:p-12 max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
-                <div class="md:col-span-2 space-y-2 text-right">
-                    <label class="block text-sm font-black text-slate-500 mr-2 uppercase" id="labelCity">المدينة</label>
-                    <select id="citySelect" onchange="adaptToCity()" class="smart-input appearance-none cursor-pointer"></select>
-                </div>
-                <div class="md:col-span-3 space-y-2 text-right">
-                    <label class="block text-sm font-black text-slate-500 mr-2 uppercase" id="labelService">الخدمة المطلوبة</label>
-                    <select id="mainService" class="smart-input appearance-none text-sm cursor-pointer"></select>
-                </div>
-                <div class="md:col-span-2 space-y-2 text-right">
-                    <label class="block text-sm font-black text-slate-500 mr-2" id="labelDate">التاريخ</label>
-                    <input type="date" id="dateInput" class="smart-input">
-                </div>
-                <div class="md:col-span-1 space-y-2 text-right">
-                    <label class="block text-[10px] font-black text-slate-500 mr-1 uppercase" id="labelDays">الأيام</label>
-                    <select id="rentalDays" class="smart-input appearance-none cursor-pointer">
-                        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-                        <option value="4">4</option><option value="5">5</option><option value="7">7</option>
-                        <option value="30">30</option>
-                    </select>
-                </div>
-                <div class="md:col-span-1 space-y-2 text-right">
-                    <label class="block text-[10px] font-black text-slate-500 mr-1 uppercase" id="labelTime">الوقت</label>
-                    <input type="time" id="timeInput" class="smart-input" onchange="validateTime()">
-                </div>
-                <div class="md:col-span-3">
-                    <button id="submitBtn" onclick="startBooking()" class="w-full bg-[#D4AF37] text-[#002349] py-4 rounded-2xl font-black text-2xl shadow-2xl hover:bg-[#b8962d] transform transition-all active:scale-95 flex items-center justify-center gap-2">
-                        <span id="btnText">استمر الآن</span> <i id="btnIcon" class="fas fa-arrow-left"></i>
-                    </button>
-                </div>
-            </div>
+    <div class="max-w-2xl mx-auto -mt-8 px-4">
+        <div class="bg-white/90 backdrop-blur-xl p-2 rounded-[2rem] flex gap-1 shadow-xl">
+            <button onclick="switchTab('new')" id="tabNew" class="flex-1 py-4 tab-pill active">الرادار 📡</button>
+            <button onclick="switchTab('mine')" id="tabMine" class="flex-1 py-4 tab-pill">التنفيذ 📦</button>
+            <button onclick="switchTab('done')" id="tabDone" class="flex-1 py-4 tab-pill">الأرشيف ✅</button>
         </div>
+    </div>
 
-        <section class="max-w-6xl mx-auto -mt-24 pb-20">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="bg-white p-8 rounded-[3rem] shadow-2xl border border-gray-100">
-                    <div class="w-16 h-16 bg-blue-50 text-[#002349] rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-bolt"></i></div>
-                    <h3 class="text-xl font-black mb-3" id="f1_t">حجز لحظي</h3>
-                    <p class="text-sm text-slate-500 font-bold" id="f1_d">احجز سيارتك بضغطة زر واحصل على التأكيد الفوري.</p>
-                </div>
-                <div class="bg-white p-8 rounded-[3rem] shadow-2xl border border-gray-100">
-                    <div class="w-16 h-16 bg-amber-50 text-[#D4AF37] rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-shield-check"></i></div>
-                    <h3 class="text-xl font-black mb-3" id="f2_t">ثقة وأمان</h3>
-                    <p class="text-sm text-slate-500 font-bold" id="f2_d">المنصة الإلكترونية الوحيدة التي تضمن حقوقك بالكامل.</p>
-                </div>
-                <div class="bg-white p-8 rounded-[3rem] shadow-2xl border border-gray-100">
-                    <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-star"></i></div>
-                    <h3 class="text-xl font-black mb-3" id="f3_t">أسعار تنافسية</h3>
-                    <p class="text-sm text-slate-500 font-bold" id="f3_d">أفضل الأسعار المباشرة من المكاتب دون عمولات مخفية.</p>
-                </div>
-            </div>
-        </section>
-    </main>
+    <main id="mainContainer" class="p-4 max-w-2xl mx-auto space-y-6 mt-6"></main>
 
     <script>
-        let currentLang = 'ar';
-        const data = {
-            ar: {
-                dir: 'rtl', font: 'Tajawal', whale: 'الحـوت', brand: 'استئجار سيارة<br>تناسب جميع<br>أنواع الرحلات',
-                subGreet: 'سيارات رائعة بأسعار رائعة من أكبر الشركات', labelCity: 'المدينة', labelService: 'الخدمة المطلوبة',
-                labelDate: 'التاريخ', labelTime: 'الوقت', labelDays: 'الأيام', btnText: 'استمر الآن', alert: 'يرجى ملء جميع الحقول 🐋',
-                morning: 'صباح الخير', day: 'طاب يومك', evening: 'مساء الخير',
-                services: { placeholder: '-- اختر الخدمة --', personal: '🚗 تأجير سيارة شخصية', wedding: '🎁 سيارات أعراس ومناسبات', training: '🎓 تعليم قيادة (مدربين)' },
-                cities: { 'كركوك': 'كركوك 💎', 'بغداد': 'بغداد 🏰', 'أربيل': 'أربيل 🏔️', 'السليمانية': 'السليمانية 🌲', 'الموصل': 'الموصل 🏹', 'البصرة': 'البصرة ⚓', 'الأنبار': 'الأنبار 🌴', 'ديالى': 'ديالى 🍊' },
-                msgs: { 'كركوك': 'أهلاً بكم في كركوك..', 'بغداد': 'أهلاً بكم في بغداد..', 'أربيل': 'بخير ببن لـ أربيل..', 'السليمانية': 'سليماني جوان..', 'الموصل': 'أهلاً بالموصل الحدباء..', 'البصرة': 'حي الله أهلنا بالبصرة', 'الأنبار': 'أهلاً بالأنبار العزيزة..', 'ديالى': 'نورتم ديالى..' }
-            },
-            ku: {
-                dir: 'rtl', font: 'Tajawal', whale: 'ئەلحووت', brand: 'ئۆتۆمبێلێک بەکرێ بگرە<br>بۆ هەموو جۆرە<br>گەشتەکان',
-                subGreet: 'ئۆتۆمبێلی نایاب بە نرخێکی گونجاو لە گەورەترین کۆمپانیاکان', labelCity: 'شار', labelService: 'خزمەتگوزاری',
-                labelDate: 'بەروار', labelTime: 'کات', labelDays: 'ڕۆژ', btnText: 'بەردەوام بە', alert: 'تکایە خانەکان پڕبکەرەوە 🐋',
-                morning: 'بەیانیت باش', day: 'ڕۆژت باش', evening: 'ئێوارەت باش',
-                services: { placeholder: '-- خزمەتگوزاری هەڵبژێرە --', personal: '🚗 بەکرێگرتنی ئۆتۆمبێل', wedding: '🎁 ئۆتۆمبێلی زەماوەند', training: '🎓 فێربوونی شۆفێری' },
-                cities: { 'كركوك': 'کەرکوک 💎', 'بغداد': 'بەغداد 🏰', 'أربيل': 'هەولێر 🏔️', 'السليمانية': 'سلێمانی 🌲', 'الموصل': 'مووسڵ 🏹', 'البصرة': 'بەسرە ⚓', 'الأنبار': 'ئەنبار 🌴', 'ديالى': 'دیالە 🍊' },
-                msgs: { 'كركوك': 'بەخێربێن بۆ کەرکوک..', 'بغداد': 'سڵاو لە بەغداد..', 'أربيل': 'بەخێربێن بۆ هەولێر..', 'السليمانية': 'سلێمانی جوان..', 'الموصل': 'سڵاو بۆ مووسڵ..', 'البصرة': 'سڵاو بۆ بەسرە..', 'الأنبار': 'سڵاو بۆ ئەنبار..', 'ديالى': 'سڵاو بۆ دیالە..' }
-            },
-            tr: {
-                dir: 'ltr', font: 'Poppins', whale: 'AL-HUT', brand: 'Her türlü geziye<br>uygun araç<br>kiralayın',
-                subGreet: 'Harika arabalar, harika fiyatlar', labelCity: 'City', labelService: 'Service',
-                labelDate: 'Date', labelTime: 'Time', labelDays: 'Days', btnText: 'Continue', alert: 'Fill fields 🐋',
-                morning: 'Günaydın', day: 'İyi günler', evening: 'İyi akşamlar',
-                services: { placeholder: '-- Service --', personal: '🚗 Rental', wedding: '🎁 Wedding', training: '🎓 Training' },
-                cities: { 'كركوك': 'Kerkük 💎', 'بغداد': 'Bağdat 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Süleymaniye 🌲', 'الموصل': 'Musul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Enbar 🌴', 'ديالى': 'Diyala 🍊' },
-                msgs: { 'كركوك': 'Selam Kerkük..', 'بغداد': 'Selam Bağdat..' }
-            },
-            en: {
-                dir: 'ltr', font: 'Poppins', whale: 'AL-HUT', brand: 'Rent a car<br>that fits all<br>trips',
-                subGreet: 'Great cars at great prices', labelCity: 'City', labelService: 'Service',
-                labelDate: 'Date', labelTime: 'Time', labelDays: 'Days', btnText: 'Continue', alert: 'Fill fields 🐋',
-                morning: 'Good Morning', day: 'Good Day', evening: 'Good Evening',
-                services: { placeholder: '-- Select --', personal: '🚗 Rental', wedding: '🎁 Wedding', training: '🎓 Lessons' },
-                cities: { 'كركوك': 'Kirkuk 💎', 'بغداد': 'Baghdad 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Slemani 🌲', 'الموصل': 'Mosul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Anbar 🌴', 'ديالى': 'Diyala 🍊' },
-                msgs: { 'كركوك': 'Welcome to Kirkuk..', 'بغداد': 'Welcome to Baghdad..' }
+        const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
+        const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
+        let currentTab = 'new', allOrders = [];
+
+        if(!officeData) window.location.href = 'login.html';
+        document.getElementById('navOfficeName').innerText = officeData.name;
+        document.getElementById('navCity').innerText = `📍 ${officeData.city}`;
+
+        async function fetchOrders() {
+            try {
+                const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`);
+                allOrders = await res.json();
+                renderCards();
+            } catch(e) { console.error("Fetch Error"); }
+        }
+
+        function renderCards() {
+            const container = document.getElementById('mainContainer');
+            let list = [];
+            
+            if(currentTab === 'new') {
+                list = allOrders.filter(o => {
+                    const orderProvince = (o.province || o.prov || "").toString().trim();
+                    const officeCity = (officeData.city || "").toString().trim();
+                    return orderProvince === officeCity && o.status === "قيد الانتظار";
+                });
             }
-        };
+            else if(currentTab === 'mine') {
+                list = allOrders.filter(o => o.office === officeData.name && o.status === "تم الاستلام");
+            }
+            else if(currentTab === 'done') {
+                list = allOrders.filter(o => o.office === officeData.name && (o.status.includes('✅') || o.status.includes('⚠️')));
+            }
 
-        function changeLang(lang) {
-            currentLang = lang;
-            const l = data[lang];
-            document.getElementById('htmlTag').dir = l.dir;
-            document.body.style.fontFamily = l.font + ', sans-serif';
-            document.getElementById('brandName').innerHTML = l.brand;
-            document.getElementById('whaleTitle').innerText = l.whale;
-            document.getElementById('subGreeting').innerText = l.subGreet;
-            document.getElementById('labelCity').innerText = l.labelCity;
-            document.getElementById('labelService').innerText = l.labelService;
-            document.getElementById('labelDate').innerText = l.labelDate;
-            document.getElementById('labelTime').innerText = l.labelTime;
-            document.getElementById('labelDays').innerText = l.labelDays;
-            document.getElementById('btnText').innerText = l.btnText;
-            document.getElementById('btnIcon').className = `fas fa-arrow-${l.dir === 'rtl' ? 'left' : 'right'}`;
-            
-            const citySelect = document.getElementById('citySelect');
-            citySelect.innerHTML = Object.entries(l.cities).map(([key, val]) => `<option value="${key}">${val}</option>`).join('');
-            
-            const serviceSelect = document.getElementById('mainService');
-            serviceSelect.innerHTML = `<option value="">${l.services.placeholder}</option><option value="personal">${l.services.personal}</option><option value="wedding">${l.services.wedding}</option><option value="training">${l.services.training}</option>`;
-            adaptToCity();
+            if(list.length === 0) {
+                container.innerHTML = `<div class="text-center py-20 opacity-20 font-black">لا توجد طلبات حالياً في ${officeData.city}</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map(o => {
+                const name = o.name || "---";
+                const car = o.car || "---";
+                const gender = o.gender || o.gen || "---";
+                const isFemale = gender === 'أنثى' || gender === 'Female';
+                const genderIcon = isFemale ? '👩' : '👨';
+                const genderClass = isFemale ? 'gender-female' : 'gender-male';
+                const priceValue = o.total_price || o.price || 0;
+                const formattedPrice = Number(priceValue).toLocaleString() + " د.ع";
+                const orderId = o.order_id || o.id;
+                const phone = o.phone || "";
+
+                // --- 1. عرض الرادار ---
+                if(currentTab === 'new') {
+                    return `
+                    <div class="whale-card p-6 border-b-4 border-blue-500 shadow-md">
+                        <h3 class="text-xl font-black text-slate-800 mb-2">${car}</h3>
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-xs font-bold text-slate-500"><i class="fas fa-user"></i> ${name}</span>
+                            <span class="gender-tag ${genderClass}">${genderIcon} ${gender}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="bg-slate-50 p-3 rounded-2xl"><span class="info-label">عدد الأيام</span><p class="text-sm font-black">${o.days} أيام</p></div>
+                            <div class="bg-slate-50 p-3 rounded-2xl"><span class="info-label">السعر الإجمالي</span><p class="text-sm font-black price-text">${formattedPrice}</p></div>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-2xl mb-6">
+                            <span class="info-label text-blue-400">الإضافات Addons</span>
+                            <p class="text-xs font-bold text-blue-900">${o.addons || 'لا توجد إضافات'}</p>
+                        </div>
+                        <button onclick="update('${orderId}', 'claim')" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-sm active:scale-95 transition-all">استلام الطلبية الآن ⚡</button>
+                    </div>`;
+                }
+
+                // --- 2. عرض التنفيذ (بعد الاستلام) مع زر الاتصال السريع ---
+                if(currentTab === 'mine') {
+                    return `
+                    <div class="whale-card p-8 border-t-8 border-blue-900 shadow-xl">
+                        <h3 class="text-2xl font-black text-slate-800 mb-1 text-center">${car}</h3>
+                        <p class="text-xs font-black text-blue-600 mb-6 text-center">رقم الطلب #${orderId}</p>
+
+                        <div class="bg-slate-50 p-5 rounded-3xl mb-4 text-center">
+                            <span class="info-label">الاسم الكامل</span>
+                            <p class="font-black text-xl text-slate-800">${name}</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="info-box"><span class="info-label">رقم الهاتف</span><p class="font-black text-slate-800">${phone}</p></div>
+                            <div class="info-box"><span class="info-label">السعر الكلي</span><p class="font-black price-text">${formattedPrice}</p></div>
+                            <div class="info-box"><span class="info-label">الجنس</span><p class="font-black text-slate-800">${genderIcon} ${gender}</p></div>
+                            <div class="info-box"><span class="info-label">مدة الإيجار</span><p class="font-black text-slate-800">${o.days} أيام</p></div>
+                        </div>
+                        
+                        <div class="bg-indigo-900 text-white p-5 rounded-3xl mb-6 shadow-lg text-center">
+                             <span class="info-label text-indigo-300">الإضافات والملاحظات:</span>
+                             <p class="text-xs font-bold">${o.addons || 'لا توجد إضافات'}</p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex gap-2">
+                                <a href="tel:${phone}" class="flex-1 bg-green-500 text-white py-4 rounded-2xl text-center font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-green-200">اتصال 📞</a>
+                                <a href="${o.location_link || o.map}" target="_blank" class="flex-1 bg-blue-100 text-blue-700 py-4 rounded-2xl text-center font-black text-xs flex items-center justify-center gap-2">الموقع 📍</a>
+                            </div>
+                            <button onclick="update('${orderId}', 'complete')" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-all">تأكيد تسليم السيارة للزبون ✅</button>
+                            <button onclick="update('${orderId}', 'cancelRequest')" class="w-full text-red-500 bg-red-50 py-3 rounded-2xl font-black text-[11px] border border-dashed border-red-200">طلب إلغاء أو تحويل ⚠️</button>
+                        </div>
+                    </div>`;
+                }
+
+                // --- 3. عرض الأرشيف ---
+                if(currentTab === 'done') {
+                    return `
+                    <div class="whale-card p-5 flex justify-between items-center opacity-70">
+                        <div>
+                            <h3 class="font-black text-slate-700 text-sm">${name}</h3>
+                            <p class="text-[10px] text-slate-400">${o.date || o.timestamp || ''}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-black text-xs text-slate-800">${car}</p>
+                            <p class="font-black text-[11px] price-text">${formattedPrice}</p>
+                            <p class="text-[9px] font-bold ${o.status.includes('✅') ? 'text-green-500' : 'text-red-500'}">${o.status}</p>
+                        </div>
+                    </div>`;
+                }
+            }).reverse().join('');
         }
 
-        function adaptToCity() {
-            const city = document.getElementById('citySelect').value;
-            const greet = document.getElementById('dynamicGreeting');
-            const overlay = document.getElementById('cityOverlay');
-            const l = data[currentLang];
-            const hour = new Date().getHours();
-            let timeText = hour < 12 ? l.morning : (hour < 18 ? l.day : l.evening);
-            const styleColor = { 'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 'الأنبار': '#ef6c00', 'ديالى': '#558b2f' };
-            
-            greet.style.opacity = 0;
-            setTimeout(() => {
-                greet.innerText = `${timeText}.. ${l.msgs[city] || ''}`;
-                greet.style.opacity = 1;
-                overlay.style.backgroundColor = styleColor[city] || '#002349';
-            }, 300);
+        async function update(id, act) {
+            if(!confirm("هل أنت متأكد من تنفيذ هذه العملية؟")) return;
+            try {
+                const res = await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
+                const result = await res.json();
+                if(result.success) fetchOrders();
+            } catch(e) { alert("حدث خطأ في الاتصال بالسيرفر"); }
         }
 
-        function validateTime() {
-            const timeInput = document.getElementById('timeInput');
-            if (!timeInput.value) return;
-            const hour = parseInt(timeInput.value.split(':')[0]);
-            if (hour < 8 || hour >= 23) { alert('أوقات العمل 8 ص - 11 م 🐋'); timeInput.value = ""; return; }
+        function switchTab(t) {
+            currentTab = t;
+            document.querySelectorAll('.tab-pill').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active');
+            renderCards();
         }
 
-        function startBooking() {
-            const service = document.getElementById('mainService').value;
-            const date = document.getElementById('dateInput').value;
-            const time = document.getElementById('timeInput').value;
-            const city = document.getElementById('citySelect').value;
-            const days = document.getElementById('rentalDays').value;
-            if(!service || !date || !time) { alert(data[currentLang].alert); return; }
-            let targetPage = (service === "training") ? "addons.html" : "fleet.html";
-            window.location.href = `${targetPage}?type=${service}&lang=${currentLang}&date=${date}&time=${time}&city=${city}&days=${days}`;
-        }
-
-        window.onload = () => {
-            const dateInput = document.getElementById('dateInput');
-            dateInput.min = new Date().toISOString().split('T')[0];
-            dateInput.value = dateInput.min;
-            changeLang('ar');
-        }
+        function logout() { localStorage.clear(); window.location.href = 'login.html'; }
+        
+        setInterval(fetchOrders, 10000);
+        fetchOrders();
     </script>
 </body>
 </html>

@@ -1,95 +1,125 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تم بنجاح | عائلة الحوت 🐋✨</title>
+    <title id="docTitle">تم بنجاح | عائلة الحوت 🐋✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root { --main-theme: #002349; --accent-theme: #D4AF37; }
-        body { font-family: 'Tajawal', sans-serif; background: #f0f4f8; overflow: hidden; }
-        .main-card { background: white; border-radius: 3.5rem; box-shadow: 0 25px 50px -12px rgba(0, 35, 73, 0.2); position: relative; z-index: 10; }
+        body { font-family: 'Tajawal', 'Poppins', sans-serif; background: #f0f4f8; overflow: hidden; }
+        .main-card { background: white; border-radius: 3.5rem; box-shadow: 0 25px 50px -12px rgba(0, 35, 73, 0.2); position: relative; z-index: 10; border-top: 12px solid var(--main-theme); }
         .bounce-in { animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
         @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.3) translateY(100px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
 
-    <div id="mainBox" class="max-w-md w-full main-card p-8 text-center bounce-in border-t-[12px]" style="border-color: var(--main-theme);">
+    <div id="mainBox" class="max-w-md w-full main-card p-8 text-center bounce-in">
         
         <div class="flex justify-center mb-2">
             <dotlottie-player src="https://lottie.host/82823631-f923-4412-bd77-2e9154784411/6vR0FvI7oN.json" background="transparent" speed="1.2" style="width: 160px; height: 140px;" loop autoplay></dotlottie-player>
         </div>
 
-        <h1 id="mainGreeting" class="text-3xl font-black mb-1" style="color: var(--main-theme);">مبارك الإتمام!</h1>
+        <h1 id="mainGreeting" class="text-3xl font-black mb-1" style="color: var(--main-theme);">---</h1>
         <h2 id="userNameDisplay" class="text-xl font-black mb-4" style="color: var(--accent-theme);">...</h2>
 
         <div class="bg-blue-50/50 p-4 rounded-3xl mb-6">
-            <p id="cityBlessing" class="text-blue-900 font-black text-sm leading-relaxed italic">جاري تأكيد حجزك في أرض الحوت...</p>
+            <p id="statusMsg" class="text-blue-900 font-black text-sm leading-relaxed italic">---</p>
         </div>
 
-        <p id="subInstruction" class="text-slate-500 font-bold text-xs px-4 leading-relaxed mb-6">سيقوم فريق الحوت بالتواصل معك قريباً.</p>
+        <p id="subInstruction" class="text-slate-500 font-bold text-xs px-4 leading-relaxed mb-6">---</p>
 
         <div class="bg-slate-50 p-6 rounded-[2.5rem] mb-8 border-2 border-dashed border-slate-200">
             <p id="orderLabel" class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">REFERENCE NUMBER</p>
             <p id="orderIDDisplay" class="text-2xl font-black tracking-tighter" style="color: var(--main-theme);">#HUT-0000</p>
             <div id="summaryText" class="text-[10px] font-bold text-green-600 mt-2 flex items-center justify-center gap-1">
-                <i class="fas fa-satellite-dish animate-pulse"></i> تم الربط بنجاح
+                <i class="fas fa-satellite-dish animate-pulse"></i> <span id="syncText">---</span>
             </div>
         </div>
 
         <a id="backBtn" href="index.html" class="block w-full py-5 rounded-2xl font-black text-xl shadow-xl transition-all active:scale-95 text-white" style="background: var(--main-theme);">
-            العودة للرئيسية
+            ---
         </a>
     </div>
 
     <script>
         const u = new URLSearchParams(window.location.search);
-        const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec"; 
         const lang = u.get('lang') || 'ar';
+        const type = u.get('type') || 'personal';
+        const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
+
+        const configs = {
+            training: { main: '#7c3aed', accent: '#6d28d9' },
+            wedding: { main: '#be185d', accent: '#9d174d' },
+            personal: { main: '#002349', accent: '#D4AF37' }
+        };
+
+        const content = {
+            ar: { 
+                greet: "مبارك الإتمام!", status: "جاري تأكيد حجزك في أرض الحوت...", sub: "سيقوم فريق الحوت بالتواصل معك قريباً.", sync: "تم الربط بنجاح", back: "العودة للرئيسية", welcome: "عميلنا العزيز"
+            },
+            ku: { 
+                greet: "پیرۆزە!", status: "داواکارییەکەت لە زەوی حوت تۆمارکرا...", sub: "تیمی حوت بەم زوانە پەیوەندیت پێوە دەکەن.", sync: "بەسەرکەوتوویی بەستراوەتەوە", back: "گەڕانەوە بۆ سەرەتا", welcome: "کڕیاری بەڕێز"
+            },
+            tr: { 
+                greet: "Tebrikler!", status: "Rezervasyonunuz Whale Land'de onaylanıyor...", sub: "Whale ekibi yakında sizinle iletişime geçecektir.", sync: "Bağlantı Başarılı", back: "Ana Sayfaya Dön", welcome: "Değerli Müşterimiz"
+            },
+            en: { 
+                greet: "Success!", status: "Your booking is being confirmed in Whale Land...", sub: "The Whale team will contact you shortly.", sync: "Synced Successfully", back: "Back to Home", welcome: "Dear Customer"
+            }
+        };
 
         window.onload = () => {
-            // توليد رقم الطلب أو استعادته
-            let orderID = sessionStorage.getItem('currentOrderID') || "HUT-" + Math.floor(1000 + Math.random() * 9000);
-            sessionStorage.setItem('currentOrderID', orderID);
-            document.getElementById('orderIDDisplay').innerText = "#" + orderID;
-            document.getElementById('userNameDisplay').innerText = u.get('name') || "عميلنا العزيز";
+            const c = configs[type] || configs.personal;
+            const l = content[lang] || content.ar;
+            const isRtl = (lang === 'ar' || lang === 'ku');
 
-            // إطلاق الاحتفال
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#002349', '#D4AF37'] });
+            document.documentElement.style.setProperty('--main-theme', c.main);
+            document.documentElement.style.setProperty('--accent-theme', c.accent);
+            document.getElementById('htmlTag').dir = isRtl ? 'rtl' : 'ltr';
+
+            // تعبئة النصوص
+            document.getElementById('mainGreeting').innerText = l.greet;
+            document.getElementById('statusMsg').innerText = l.status;
+            document.getElementById('subInstruction').innerText = l.sub;
+            document.getElementById('syncText').innerText = l.sync;
+            document.getElementById('backBtn').innerText = l.back;
+            document.getElementById('userNameDisplay').innerText = u.get('name') || l.welcome;
+
+            let orderID = "HUT-" + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('orderIDDisplay').innerText = "#" + orderID;
+
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [c.main, c.accent] });
 
             // إرسال البيانات للـ Google Sheet
-            if (sessionStorage.getItem('orderSent') !== 'true') {
-                const payload = {
-                    order_id: orderID,
-                    name: u.get('name'),
-                    phone: u.get('phone'),
-                    province: u.get('province') || u.get('city'),
-                    car: u.get('car'),
-                    days: u.get('days') || "---",
-                    addons: u.get('addon_display') || "بدون إضافات",
-                    total_price: u.get('total_final'),
-                    gender: u.get('gender') || "---",
-                    service: u.get('service') || "تأجير عام",
-                    location_link: u.get('location_link') || "---",
-                    national_id: u.get('national_id') || "---",
-                    age: u.get('age') || "---"
-                };
+            const payload = {
+                order_id: orderID,
+                name: u.get('name'),
+                phone: u.get('phone'),
+                province: u.get('province') || u.get('city'),
+                car: u.get('car'),
+                days: u.get('days') || "---",
+                addons: u.get('addon_display') || "None",
+                total_price: u.get('total_final'),
+                gender: u.get('gender') || "---",
+                service: u.get('service') || "General",
+                location_link: u.get('location_link') || "---",
+                national_id: u.get('national_id') || "---",
+                age: u.get('age') || "---"
+            };
 
-                fetch(scriptURL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify(payload)
-                })
-                .then(() => {
-                    sessionStorage.setItem('orderSent', 'true');
-                    console.log("Data Sent Successfully to Whale Radar");
-                })
-                .catch(err => console.error("Whale Radar Error:", err));
-            }
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(payload)
+            }).then(() => {
+                console.log("Data Sent to Whale Database.");
+            });
         };
     </script>
 </body>

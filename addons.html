@@ -52,58 +52,56 @@
         const type = u.get('type') || 'personal';
         const lang = u.get('lang') || 'ar';
         const city = u.get('city') || 'بغداد';
-        let choice = { name: '', price: 0, internalName: '' };
+        let choice = { name: '', price: 0 };
 
         const styleColor = { 'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 'الأنبار': '#ef6c00', 'ديالى': '#558b2f' };
-        const serviceIcons = { 'personal': '🚗', 'wedding': '🎁', 'training': '🎓' };
-
+        
         const content = {
             ar: {
-                training: { title: "باقات التدريب", sub: "اختر المستوى لضمان النجاح", opts: [{ n: "كورس أساسي (3 أيام)", d: "تعلم أساسيات القيادة", p: 100000, i: "🥉" }, { n: "كورس ذهبي (5 أيام)", d: "تدريب مكثف وذكي", p: 150000, i: "🥇" }] },
-                wedding: { title: "باقات الزفاف", sub: "اجعل مناسبتك ملكية", opts: [{ n: "باقة الزهور الطبيعية", d: "تنسيق بزهور فريش", p: 75000, i: "💐" }, { n: "باقة الموكب الملكي", d: "تزيين + سائق بروتوكول", p: 125000, i: "👑" }] },
-                personal: { title: "إضافات الحوت", sub: "خصص تجربة قيادتك", opts: [{ n: "تأمين شامل", d: "حماية ضد كافة الحوادث", p: 25000, i: "🛡️" }, { n: "بدون إضافات", d: "المواصفات القياسية", p: 0, i: "🚗" }] },
+                training: { title: "باقات التدريب", sub: "اختر المستوى المناسب لك", opts: [{ n: "كورس أساسي (3 أيام)", d: "تعلم أساسيات القيادة", p: 100000, i: "🥉" }, { n: "كورس ذهبي (5 أيام)", d: "تدريب مكثف وشامل", p: 150000, i: "🥇" }] },
+                wedding: { title: "باقات الزفاف", sub: "اجعل ليلتك لا تُنسى", opts: [{ n: "باقة الزهور الطبيعية", d: "تنسيق ورد فريش", p: 75000, i: "💐" }, { n: "باقة الموكب الملكي", d: "تزيين كامل + سائق", p: 125000, i: "👑" }] },
+                personal: { title: "إضافات الحوت", sub: "خصص رحلتك كما تحب", opts: [{ n: "تأمين شامل", d: "حماية كاملة من الحوادث", p: 25000, i: "🛡️" }, { n: "بدون إضافات", d: "المواصفات القياسية", p: 0, i: "🚗" }] },
                 btn: "تأكيد ومتابعة", free: "مجاني", curr: "د.ع"
             },
             ku: {
-                training: { title: "پاکێجەکانی ڕاهێنان", sub: "ئاستی لێهاتوویی هەڵبژێرە", opts: [{ n: "کۆرسی سەرەکی (3 ڕۆژ)", d: "بنەماکانی لێخوڕین", p: 100000, i: "🥉" }, { n: "کۆرسی زێڕین (5 ڕۆژ)", d: "ڕاهێنانی چڕ", p: 150000, i: "🥇" }] },
-                wedding: { title: "پاکێجەکانی هاوسەرگیری", sub: "بۆنەکەت شاهانە بکە", opts: [{ n: "پاکێجی گوڵی سروشتی", d: "ڕازاندنەوە بە گوڵی فرێش", p: 75000, i: "💐" }, { n: "پاکێجی کاروانی شاهانە", d: "ڕازاندنەوە + شۆفێری تایبەت", p: 125000, i: "👑" }] },
-                personal: { title: "زیادکراوەکانی حوت", sub: "لێخوڕینەکەت تەرخان بکە", opts: [{ n: "دڵنیایی گشتگیر", d: "پاراستن لە هەموو ڕووداوەکان", p: 25000, i: "🛡️" }, { n: "بێ زیادکراو", d: "تایبەتمەندی ستاندارد", p: 0, i: "🚗" }] },
-                btn: "پشتڕاستکردنەوە", free: "بێ بەرامبەر", curr: "د.ع"
+                training: { title: "پاکێجەکانی ڕاهێنان", sub: "ئاستی گونجاو هەڵبژێرە", opts: [{ n: "کۆرسی سەرەکی (3 ڕۆژ)", d: "بنەماکانی لێخوڕین", p: 100000, i: "🥉" }, { n: "کۆرسی زێڕین (5 ڕۆژ)", d: "ڕاهێنانی چڕوپڕ", p: 150000, i: "🥇" }] },
+                wedding: { title: "پاکێجەکانی هاوسەرگیری", sub: "شەوەکەت بکە بە یادگاری", opts: [{ n: "پاکێجی گوڵی سروشتی", d: "ڕازاندنەوە بە گوڵی فرێش", p: 75000, i: "💐" }, { n: "پاکێجی کاروانی شاهانە", d: "ڕازاندنەوە + شۆفێر", p: 125000, i: "👑" }] },
+                personal: { title: "زیادکراوەکانی حوت", sub: "گەشتەکەت تایبەت بکە", opts: [{ n: "دڵنیایی گشتگیر", d: "پاراستن لە ڕووداوەکان", p: 25000, i: "🛡️" }, { n: "بێ زیادکراو", d: "تایبەتمەندی ستاندارد", p: 0, i: "🚗" }] },
+                btn: "بەردەوام بە", free: "بێ بەرامبەر", curr: "د.ع"
             },
             tr: {
-                training: { title: "Eğitim Paketleri", sub: "Seviyenizi seçin", opts: [{ n: "Temel Kurs", d: "Sürüş temelleri", p: 100000, i: "🥉" }, { n: "Altın Kurs", d: "Yoğun eğitim", p: 150000, i: "🥇" }] },
-                wedding: { title: "Düğün Paketleri", sub: "Kraliyet seçimi", opts: [{ n: "Çiçek Paketi", d: "Taze çiçek süsleme", p: 75000, i: "💐" }, { n: "Kraliyet Konvoyu", d: "Süsleme + Şoför", p: 125000, i: "👑" }] },
-                personal: { title: "Whale Ekstraları", sub: "Sürüşü özelleştir", opts: [{ n: "Tam Sigorta", d: "Kaza koruması", p: 25000, i: "🛡️" }, { n: "Ekstra Yok", d: "Standart", p: 0, i: "🚗" }] },
+                training: { title: "Eğitim Paketleri", sub: "Seviyenizi seçin", opts: [{ n: "Temel Kurs (3 Gün)", d: "Sürüş temelleri", p: 100000, i: "🥉" }, { n: "Altın Kurs (5 Gün)", d: "Yoğun eğitim", p: 150000, i: "🥇" }] },
+                wedding: { title: "Düğün Paketleri", sub: "Gecenizi unutulmaz kılın", opts: [{ n: "Çiçek Paketi", d: "Taze çiçek süsleme", p: 75000, i: "💐" }, { n: "Kraliyet Konvoyu", d: "Süsleme + Şoför", p: 125000, i: "👑" }] },
+                personal: { title: "Whale Ekstraları", sub: "Sürüşünüzü özelleştirin", opts: [{ n: "Tam Sigorta", d: "Kaza koruması", p: 25000, i: "🛡️" }, { n: "Ekstra Yok", d: "Standart", p: 0, i: "🚗" }] },
                 btn: "Devam Et", free: "Ücretsiz", curr: "IQD"
             },
             en: {
-                training: { title: "Training Packages", sub: "Choose your level", opts: [{ n: "Basic Course", d: "Driving basics", p: 100000, i: "🥉" }, { n: "Golden Course", d: "Intensive training", p: 150000, i: "🥇" }] },
-                wedding: { title: "Wedding Packages", sub: "Make it royal", opts: [{ n: "Flowers Bundle", d: "Natural decoration", p: 75000, i: "💐" }, { n: "Royal Convoy", d: "Decoration + Driver", p: 125000, i: "👑" }] },
-                personal: { title: "Whale Add-ons", sub: "Customize your drive", opts: [{ n: "Full Insurance", d: "Full protection", p: 25000, i: "🛡️" }, { n: "No Add-ons", d: "Standard", p: 0, i: "🚗" }] },
-                btn: "Confirm & Continue", free: "Free", curr: "IQD"
+                training: { title: "Training Packages", sub: "Choose your level", opts: [{ n: "Basic Course (3 Days)", d: "Driving basics", p: 100000, i: "🥉" }, { n: "Golden Course (5 Days)", d: "Full training", p: 150000, i: "🥇" }] },
+                wedding: { title: "Wedding Packages", sub: "Make it a royal night", opts: [{ n: "Flowers Bundle", d: "Fresh decoration", p: 75000, i: "💐" }, { n: "Royal Convoy", d: "Decoration + Driver", p: 125000, i: "👑" }] },
+                personal: { title: "Whale Add-ons", sub: "Customize your trip", opts: [{ n: "Full Insurance", d: "Accident protection", p: 25000, i: "🛡️" }, { n: "No Add-ons", d: "Standard", p: 0, i: "🚗" }] },
+                btn: "Continue", free: "Free", curr: "IQD"
             }
         };
 
         function init() {
             const l = content[lang] || content['ar'];
-            const config = l[type];
+            const config = l[type] || l['personal'];
             const isRtl = (lang === 'ar' || lang === 'ku');
+            
             document.getElementById('htmlTag').dir = isRtl ? 'rtl' : 'ltr';
             document.getElementById('pageHeader').innerText = config.title;
             document.getElementById('pageSub').innerText = config.sub;
             document.getElementById('btnText').innerText = l.btn;
             document.getElementById('btnIcon').className = `fas fa-chevron-${isRtl ? 'left' : 'right'}`;
             document.getElementById('cityOverlay').style.backgroundColor = styleColor[city] || '#002349';
-            const icon = serviceIcons[type] || '🚗';
-            document.getElementById('patternBox').style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><text y="60" x="10" font-size="45">${icon}</text></svg>')`;
 
             const grid = document.getElementById('optionsGrid');
             grid.innerHTML = config.opts.map((opt, idx) => `
-                <div onclick="select(${idx}, '${opt.n}', ${opt.p}, '${content.ar[type].opts[idx].n}')" id="card-${idx}" class="option-card p-10 cursor-pointer relative">
+                <div onclick="select(${idx}, '${opt.n}', ${opt.p})" id="card-${idx}" class="option-card p-10 cursor-pointer relative">
                     <div class="check-mark"><i class="fas fa-check"></i></div>
                     <div class="flex flex-col items-center text-center">
-                        <div class="text-7xl mb-6 drop-shadow-md">${opt.i}</div>
-                        <h3 class="text-2xl font-black mb-4 text-slate-800">${opt.n}</h3>
+                        <div class="text-7xl mb-6">${opt.i}</div>
+                        <h3 class="text-2xl font-black mb-4">${opt.n}</h3>
                         <p class="text-slate-500 font-bold text-sm mb-8 leading-relaxed">${opt.d}</p>
                         <div class="price-label text-lg">${opt.p === 0 ? l.free : opt.p.toLocaleString() + ' ' + l.curr}</div>
                     </div>
@@ -111,27 +109,25 @@
             `).join('');
         }
 
-        function select(idx, name, price, internal) {
-            choice = { name, price, internalName: internal };
+        function select(idx, name, price) {
+            choice = { name, price };
             document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
             document.getElementById(`card-${idx}`).classList.add('active');
             document.getElementById('nextBtn').disabled = false;
         }
 
         function proceed() {
-            // تحديد الصفحة التالية بناءً على نوع الخدمة
-            let next = "";
-            if(type === 'training') next = "booking_training.html";
-            else if(type === 'wedding') next = "booking_wedding.html";
-            else next = "booking_personal.html";
+            // التوجيه الذكي مع الحفاظ على كل بيانات الرابط
+            let target = "fleet.html"; // الافتراضي للشخصي
+            if (type === 'training') target = "training.html";
+            else if (type === 'wedding') target = "wedding.html";
 
-            // إضافة بيانات الإضافة للرابط الحالي
-            u.set('addon_name', choice.internalName); // الاسم البرمجي للإضافة
-            u.set('addon_display', choice.name);      // الاسم المعروض للزبون
-            u.set('addon_price', choice.price);       // سعر الإضافة
+            u.set('addon_display', choice.name);
+            u.set('addon_price', choice.price);
             
-            window.location.href = `${next}?${u.toString()}`;
+            window.location.href = `${target}?${u.toString()}`;
         }
+
         window.onload = init;
     </script>
 </body>

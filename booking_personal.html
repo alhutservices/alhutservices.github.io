@@ -139,17 +139,36 @@
                 warn: "ئاگاداری: پێویستە بەڵگەنامە ئەسڵییەکان لەگەڵ خۆت بهێنیت كاتی وەرگرتنی ئۆتۆمبێل.",
                 map: "شوێنی وەرگرتن", gps: "دیاریکردنی شوێنەکەم 🛰️", review: "پێداچوونەوەی داواکاری",
                 alert: "تکایە زانیارییەکان تەواو بکە 🐋", mapP: "بگەڕێ بۆ شوێنێک...", curr: "د.ع", day: "ڕۆژ"
+            },
+            tr: {
+                title: "Rezervasyon Tamamlama", personal: "Kişisel Bilgiler", docs: "Gerekli Belgeler",
+                lblN: "Tam Ad Soyad", lblP: "Telefon Numarası", lblA: "Yaş", lblG: "Cinsiyet",
+                lblID: "T.C. Kimlik / Pasaport", lblL: "Ehliyet Numarası", male: "👨 Erkek", female: "👩 Kadın",
+                warn: "Uyarı: Aracı teslim alırken orijinal belgeleri yanınızda bulundurmalısınız.",
+                map: "Teslimat Konumu", gps: "Konumumu Bul 🛰️", review: "Siparişi İncele",
+                alert: "Lütfen tüm zorunlu alanları doldurun 🐋", mapP: "Bölge veya sokak ara...", curr: "IQD", day: "Gün"
+            },
+            en: {
+                title: "Complete Booking", personal: "Personal Information", docs: "Required Documents",
+                lblN: "Full Name", lblP: "Phone Number", lblA: "Age", lblG: "Gender",
+                lblID: "National ID / Passport", lblL: "Driving License No", male: "👨 Male", female: "👩 Female",
+                warn: "Note: Original documents must be presented upon car pickup.",
+                map: "Delivery Location", gps: "Get My Location 🛰️", review: "Review Order",
+                alert: "Please fill in all required fields 🐋", mapP: "Search area or street...", curr: "IQD", day: "Day"
             }
         };
 
-        const styleColor = { 'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 'الأنبار': '#ef6c00', 'ديالى': '#558b2f' };
+        const styleColor = { 
+            'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 
+            'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 
+            'الأنبار': '#ef6c00', 'ديالى': '#558b2f' 
+        };
 
         window.onload = function() {
             const l = data[lang] || data['ar'];
             const isRtl = (lang === 'ar' || lang === 'ku');
             document.getElementById('htmlTag').dir = isRtl ? 'rtl' : 'ltr';
 
-            // تعبئة النصوص
             document.getElementById('pageTitle').innerText = l.title;
             document.getElementById('personalInfoTitle').innerText = l.personal;
             document.getElementById('docsTitle').innerText = l.docs;
@@ -172,7 +191,6 @@
             document.getElementById('dateLabel').innerText = u.get('date') || '---';
             document.getElementById('daysLabel').innerText = `${days} ${l.day}`;
 
-            // تهيئة الخريطة
             map = L.map('map').setView([33.3152, 44.3661], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
             marker = L.marker([33.3152, 44.3661], {draggable: true}).addTo(map);
@@ -207,13 +225,13 @@
             
             if(!name || !phone || !id_no) { alert(l.alert); return; }
             
-            // توليد رقم طلب فريد
             const orderId = "HUT-" + Math.floor(1000 + Math.random() * 9000);
-            
             const pos = marker.getLatLng();
-            const carPrice = parseInt(u.get('price') || 0);
+            
+            // حساب السعر النهائي بدقة (سعر السيارة + سعر الإضافة) * عدد الأيام
+            const carPrice = parseInt(u.get('basePrice') || 0);
             const addonPrice = parseInt(u.get('addon_price') || 0);
-            const finalTotal = (carPrice + addonPrice) * days; // السعر الكلي الصحيح
+            const finalTotal = (carPrice + addonPrice) * days;
 
             u.set('order_id', orderId);
             u.set('name', name);

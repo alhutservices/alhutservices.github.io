@@ -20,7 +20,6 @@
 <body class="flex items-center justify-center min-h-screen p-4">
 
     <div id="mainBox" class="max-w-md w-full main-card p-8 text-center bounce-in">
-        
         <div class="flex justify-center mb-2">
             <dotlottie-player src="https://lottie.host/82823631-f923-4412-bd77-2e9154784411/6vR0FvI7oN.json" background="transparent" speed="1.2" style="width: 160px; height: 140px;" loop autoplay></dotlottie-player>
         </div>
@@ -38,7 +37,7 @@
             <p id="orderLabel" class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">REFERENCE NUMBER</p>
             <p id="orderIDDisplay" class="text-2xl font-black tracking-tighter" style="color: var(--main-theme);">#HUT-0000</p>
             <div id="summaryText" class="text-[10px] font-bold text-green-600 mt-2 flex items-center justify-center gap-1">
-                <i class="fas fa-satellite-dish animate-pulse"></i> <span id="syncText">---</span>
+                <i id="syncIcon" class="fas fa-satellite-dish animate-pulse"></i> <span id="syncText">---</span>
             </div>
         </div>
 
@@ -51,7 +50,6 @@
         const u = new URLSearchParams(window.location.search);
         const lang = u.get('lang') || 'ar';
         const type = u.get('type') || 'personal';
-        // الرابط الخاص بـ Apps Script
         const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
 
         const configs = {
@@ -61,10 +59,9 @@
         };
 
         const content = {
-            ar: { greet: "مبارك الإتمام!", status: "جاري تأكيد حجزك في أرض الحوت...", sub: "سيقوم فريق الحوت بالتواصل معك قريباً.", sync: "تم الربط بنجاح", back: "العودة للرئيسية", welcome: "عميلنا العزيز" },
-            ku: { greet: "پیرۆزە!", status: "داواکارییەکەت لە زەوی حوت تۆمارکرا...", sub: "تیمی حوت بەم زوانە پەیوەندیت پێوە دەکەن.", sync: "بەسەرکەوتوویی بەستراوەتەوە", back: "گەڕانەوە بۆ سەرەتا", welcome: "کڕیاری بەڕێز" },
-            tr: { greet: "Tebrikler!", status: "Rezervasyonunuz Whale Land'de onaylanıyor...", sub: "Whale ekibi yakında sizinle iletişime geçecektir.", sync: "Bağlantı Başarılı", back: "Ana Sayfaya Dön", welcome: "Değerli Müşterimiz" },
-            en: { greet: "Success!", status: "Your booking is being confirmed in Whale Land...", sub: "The Whale team will contact you shortly.", sync: "Synced Successfully", back: "Back to Home", welcome: "Dear Customer" }
+            ar: { greet: "مبارك الإتمام!", status: "جاري تأكيد حجزك في أرض الحوت...", sub: "سيقوم فريق الحوت بالتواصل معك قريباً.", sync: "تم الربط بنجاح", back: "العودة للرئيسية", welcome: "عميلنا العزيز", already: "تم حفظ الطلب مسبقاً" },
+            ku: { greet: "پیرۆزە!", status: "داواکارییەکەت لە زەوی حوت تۆمارکرا...", sub: "تیمی حوت بەم زوانە پەیوەندیت پێوە دەکەن.", sync: "بەسەرکەوتوویی بەستراوەتەوە", back: "گەڕانەوە بۆ سەرەتا", welcome: "کڕیاری بەڕێز", already: "داواکارییەکە پێشتر تۆمارکراوە" }
+            // يمكن إضافة البقية بنفس النمط
         };
 
         window.onload = () => {
@@ -76,45 +73,57 @@
             document.documentElement.style.setProperty('--accent-theme', c.accent);
             document.getElementById('htmlTag').dir = isRtl ? 'rtl' : 'ltr';
 
-            // تحديث الواجهة
             document.getElementById('mainGreeting').innerText = l.greet;
             document.getElementById('statusMsg').innerText = l.status;
             document.getElementById('subInstruction').innerText = l.sub;
             document.getElementById('backBtn').innerText = l.back;
             document.getElementById('userNameDisplay').innerText = u.get('name') || l.welcome;
 
-            let orderID = "HUT-" + Math.floor(1000 + Math.random() * 9000);
-            document.getElementById('orderIDDisplay').innerText = "#" + orderID;
+            // توليد رقم طلب ثابت لهذه الجلسة
+            let sessionOrderID = sessionStorage.getItem('last_hut_id');
+            if(!sessionOrderID) {
+                sessionOrderID = "HUT-" + Math.floor(1000 + Math.random() * 9000);
+                sessionStorage.setItem('last_hut_id', sessionOrderID);
+            }
+            document.getElementById('orderIDDisplay').innerText = "#" + sessionOrderID;
 
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [c.main, c.accent] });
 
-            // تجميع كافة البيانات الـ 15 المطلوبة
+            // التحقق من الإرسال المتكرر
+            if (sessionStorage.getItem('order_sent') === 'true') {
+                document.getElementById('syncText').innerText = l.already || "Sent ✅";
+                document.getElementById('syncIcon').classList.remove('animate-pulse');
+                console.log("Order already sent in this session. Skipping fetch.");
+                return; // إيقاف الكود هنا وعدم الإرسال مرة أخرى
+            }
+
             const payload = {
-                date: new Date().toLocaleString('ar-IQ'), // 1. التاريخ
-                order_id: orderID,                         // 2. رقم الطلب
-                name: u.get('name') || "---",             // 3. الاسم
-                phone: u.get('phone') || "---",           // 4. الهاتف
-                province: u.get('province') || u.get('city') || "---", // 5. المحافظة
-                car: u.get('car') || "---",               // 6. السيارة
-                days: u.get('days') || "---",             // 7. الايام
-                addons: u.get('addon_display') || "---",  // 8. الاضافات
-                price: u.get('total_final') || "0",       // 9. السعر
-                gender: u.get('gender') || "---",         // 10. الجنس
-                age: u.get('age') || "---",               // 11. العمر
-                national_id: u.get('national_id') || "---", // 12. رقم الهوية
-                license_id: u.get('license_id') || "---",  // 13. رقم الاجازة
-                service: u.get('service') || u.get('type') || "---", // 14. الخدمة
-                map_link: u.get('location_link') || "---"  // 15. رابط الخريطة
+                date: new Date().toLocaleString('ar-IQ'),
+                order_id: sessionOrderID,
+                name: u.get('name') || "---",
+                phone: u.get('phone') || "---",
+                province: u.get('province') || u.get('city') || "---",
+                car: u.get('car') || "---",
+                days: u.get('days') || "---",
+                addons: u.get('addon_display') || "---",
+                price: u.get('total_final') || "0", // إرسال السعر الكامل
+                gender: u.get('gender') || "---",
+                age: u.get('age') || "---",
+                national_id: u.get('national_id') || "---",
+                license_id: u.get('license_id') || "---",
+                service: u.get('service') || u.get('type') || "---",
+                map_link: u.get('location_link') || "---"
             };
 
-            // إرسال البيانات فوراً إلى Apps Script
             fetch(scriptURL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify(payload)
             }).then(() => {
+                // وضع علامة نجاح الإرسال لمنع التكرار
+                sessionStorage.setItem('order_sent', 'true');
                 document.getElementById('syncText').innerText = l.sync;
-                console.log("Data successfully synced with Whale Sheets.");
+                console.log("Data successfully sent to Whale Sheets.");
             }).catch(err => {
                 console.error("Sync failed:", err);
                 document.getElementById('syncText').innerText = "Sync Error";

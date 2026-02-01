@@ -28,8 +28,7 @@
         <div class="text-center mb-6">
             <div id="mainEmoji" class="text-5xl mb-2">📋</div>
             <h1 id="pageTitle" class="text-2xl font-black" style="color: var(--main);">---</h1>
-            <p id="pageSub" class="text-slate-400 text-[10px] font-bold tracking-widest uppercase italic">Order Verification</p>
-        </div>
+            <p id="orderIdText" class="text-accent text-sm font-bold mt-1"></p> </div>
 
         <div id="detailsGrid" class="info-grid mb-4"></div>
 
@@ -59,29 +58,22 @@
         const u = new URLSearchParams(window.location.search);
         const type = u.get('type') || 'personal';
         const lang = u.get('lang') || 'ar';
+        const days = parseInt(u.get('days') || '1');
 
         const configs = {
-            training: { main: '#7c3aed', accent: '#ffffff', emoji: '🎓' },
-            wedding: { main: '#be185d', accent: '#ffffff', emoji: '💍' },
+            training: { main: '#7c3aed', accent: '#D4AF37', emoji: '🎓' },
+            wedding: { main: '#be185d', accent: '#D4AF37', emoji: '💍' },
             personal: { main: '#002349', accent: '#D4AF37', emoji: '🚗' }
         };
 
         const uiContent = {
             ar: { 
-                title: "مراجعة التفاصيل", total: "إجمالي المبلغ التقريبي", btn: "تأكيد وإرسال الطلب", back: "رجوع للتعديل", curr: "د.ع", map: "عرض الموقع المختار",
-                fields: { name: "الاسم", phone: "الهاتف", age: "العمر", province: "المدينة", car: "الخدمة/السيارة", addon_display: "الإضافات", date: "التاريخ", gender: "الجنس", license_no: "رقم الإجازة", national_id: "رقم الهوية" } 
+                title: "مراجعة التفاصيل", total: "إجمالي المبلغ", btn: "تأكيد وإرسال الطلب", back: "رجوع للتعديل", curr: "د.ع", map: "عرض الموقع المختار",
+                fields: { name: "الاسم", phone: "الهاتف", province: "المدينة", car: "الخدمة/السيارة", date: "التاريخ", gender: "الجنس", days: "عدد الأيام" } 
             },
             ku: { 
-                title: "پیاچوونەوەی وردەکارییەکان", total: "کۆی گشتی خەمڵێنراو", btn: "پشتڕاستکردنەوە و ناردن", back: "گەڕانەوە بۆ دەستکاری", curr: "د.ع", map: "بینینی شوێن لەسەر نەخشە",
-                fields: { name: "ناو", phone: "تەلەفۆن", age: "تەمەن", province: "شار", car: "ئۆتۆمبێل/خزمەتگوزاری", addon_display: "زیادکراوەکان", date: "بەروار", gender: "ڕەگەز", license_no: "ژ. مۆڵەت", national_id: "ژ. ناسنامە" } 
-            },
-            tr: { 
-                title: "Detayları İncele", total: "Tahmini Toplam Tutar", btn: "Onayla ve Gönder", back: "Düzenlemek İçin Geri Dön", curr: "IQD", map: "Haritada Görüntüle",
-                fields: { name: "Ad Soyad", phone: "Telefon", age: "Yaş", province: "Şehir", car: "Araç/Servis", addon_display: "Ekstralar", date: "Tarih", gender: "Cinsiyet", license_no: "Ehliyet No", national_id: "Kimlik No" } 
-            },
-            en: { 
-                title: "Review Details", total: "Approximate Total Amount", btn: "Confirm & Send Order", back: "Back to Edit", curr: "IQD", map: "View Location on Map",
-                fields: { name: "Full Name", phone: "Phone", age: "Age", province: "City", car: "Car/Service", addon_display: "Add-ons", date: "Date", gender: "Gender", license_no: "License No", national_id: "ID Number" } 
+                title: "پیاچوونەوە", total: "کۆی گشتی", btn: "ناردنی داواکاری", back: "گەڕانەوە", curr: "د.ع", map: "بینینی شوێن",
+                fields: { name: "ناو", phone: "تەلەفۆن", province: "شار", car: "ئۆتۆمبێل", date: "بەروار", gender: "ڕەگەز", days: "ڕۆژ" } 
             }
         };
 
@@ -100,21 +92,27 @@
             document.getElementById('currLabel').innerText = ui.curr;
             document.getElementById('mapText').innerText = ui.map;
             document.getElementById('htmlTag').dir = isRtl ? 'rtl' : 'ltr';
+            
+            // عرض رقم الطلب للطمأنينة
+            if(u.get('order_id')) {
+                document.getElementById('orderIdText').innerText = `#${u.get('order_id')}`;
+            }
 
             let gridHtml = '';
             Object.keys(ui.fields).forEach(key => {
                 let val = u.get(key);
-                if (val && val !== 'null' && val !== '---' && val !== 'undefined') {
+                if (val && val !== 'null' && val !== '---') {
                     gridHtml += `<div class="info-item"><span class="info-label">${ui.fields[key]}</span><span class="info-value">${val}</span></div>`;
                 }
             });
             document.getElementById('detailsGrid').innerHTML = gridHtml;
 
-            // حساب السعر النهائي
+            // حساب السعر النهائي بدقة (السعر + الإضافات) * الأيام
             const price = parseInt(u.get('price') || 0);
             const addonPrice = parseInt(u.get('addon_price') || 0);
-            const total = price + addonPrice;
+            const total = (price + addonPrice) * days;
             document.getElementById('totalVal').innerText = total.toLocaleString();
+            u.set('total_final', total); // تخزينه للإرسال
 
             if (u.get('location_link')) {
                 document.getElementById('locationPreview').classList.remove('hidden');
@@ -123,11 +121,7 @@
         };
 
         function confirmAndSubmit() {
-            // نقوم بتمرير كافة البيانات إلى صفحة النجاح أو معالج البيانات
-            const finalPrice = parseInt(u.get('price') || 0) + parseInt(u.get('addon_price') || 0);
-            u.set('total_final', finalPrice);
-            
-            // التوجيه إلى صفحة النجاح (التي ستقوم بإرسال البيانات فعلياً للسكريبت)
+            // التوجيه إلى صفحة النجاح التي تحتوي على سكريبت الإرسال الفعلي
             window.location.href = `success.html?${u.toString()}`;
         }
     </script>

@@ -14,35 +14,39 @@
             background: linear-gradient(135deg, #002349 0%, #004d99 100%); 
             transition: 1s; 
             position: relative; 
-            padding-top: 6rem;
+            padding-top: 7rem;
             padding-bottom: 18rem;
             overflow: hidden;
         }
 
         .map-pattern {
-            position: absolute; inset: 0; opacity: 0.2; pointer-events: none;
+            position: absolute; inset: 0; opacity: 0.15; pointer-events: none;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><text y="60" x="10" font-size="45">🗺️</text></svg>');
             background-repeat: repeat; animation: bgMove 40s linear infinite;
         }
         @keyframes bgMove { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
 
-        .brand-wave {
-            background: linear-gradient(to right, #D4AF37, #4fc3f7, #ffffff, #D4AF37);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: waveText 3s linear infinite;
-            font-weight: 900;
-            line-height: 1.2;
+        /* ستايل شعار الحوت على اليسار */
+        .whale-brand-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            animation: floating 4s ease-in-out infinite;
         }
-        @keyframes waveText { to { background-position: 200% center; } }
+        .whale-brand-emoji { font-size: 6rem; line-height: 1; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3)); }
+        .whale-brand-text { font-size: 4rem; font-weight: 900; margin-top: -10px; letter-spacing: -2px; }
 
-        .whale-left { 
-            font-size: 5rem; 
-            animation: floating 4s ease-in-out infinite; 
-            filter: drop-shadow(0 15px 20px rgba(0,0,0,0.4));
+        .brand-wave {
+            color: white;
+            font-weight: 900;
+            line-height: 1.3;
+            max-width: 600px;
         }
-        @keyframes floating { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-25px) rotate(5deg); } }
+
+        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
         .glass-box {
             background: rgba(255, 255, 255, 0.95);
@@ -60,18 +64,19 @@
             border: 2px solid transparent; border-radius: 1.5rem; 
             font-weight: 700; color: #002349; outline: none; transition: 0.3s; 
         }
-        .smart-input:focus { background-color: #fff; border-color: #D4AF37; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+        .smart-input:focus { border-color: #D4AF37; background: white; }
 
-        .lang-btn { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 12px; font-size: 0.85rem; color: white; cursor: pointer; transition: 0.3s; font-weight: 900; }
-        .lang-btn:hover { background: #D4AF37; color: #002349; transform: scale(1.1); }
-        
-        .city-overlay { position: absolute; inset: 0; opacity: 0.65; transition: 1s; pointer-events: none; }
-        
+        .lang-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 12px; color: white; font-weight: 900; cursor: pointer; transition: 0.3s; }
+        .lang-btn:hover { background: #D4AF37; color: #002349; }
+
         @media (max-width: 768px) {
-            .glass-box { transform: translateY(-130px); margin: 0 10px; }
-            .hero-bg { padding-bottom: 14rem; padding-top: 5rem; }
-            .brand-wave { font-size: 2.2rem; }
-            .whale-left { display: none; }
+            .hero-bg { padding-top: 5rem; padding-bottom: 14rem; }
+            .brand-wave { font-size: 2.3rem; text-align: center; margin: 0 auto; }
+            .whale-brand-container { margin-top: 2rem; }
+            .whale-brand-emoji { font-size: 4rem; }
+            .whale-brand-text { font-size: 2.5rem; }
+            .header-flex { flex-direction: column; text-align: center; }
+            .glass-box { transform: translateY(-130px); }
         }
     </style>
 </head>
@@ -80,74 +85,61 @@
     <div class="absolute top-6 left-0 right-0 z-50 flex justify-center gap-2">
         <button onclick="changeLang('ar')" class="lang-btn">العربية</button>
         <button onclick="changeLang('ku')" class="lang-btn">کوردی</button>
-        <button onclick="changeLang('tr')" class="lang-btn">Türkçe</button>
-        <button onclick="changeLang('en')" class="lang-btn">English</button>
+        <button onclick="changeLang('en')" class="lang-btn">EN</button>
     </div>
 
-    <header id="mainHero" class="hero-bg text-white relative">
-        <div id="cityOverlay" class="city-overlay"></div>
+    <header class="hero-bg text-white relative">
+        <div id="cityOverlay" class="absolute inset-0 opacity-60 transition-all duration-1000"></div>
         <div class="map-pattern"></div>
         
-        <div class="container mx-auto px-6 flex justify-between items-center relative z-10">
-            <div class="text-right max-w-3xl">
-                <h1 class="text-4xl md:text-6xl brand-wave mb-6" id="brandName">
-                    استأجر سيارة تناسب جميع أنواع الرحلات
-                </h1>
-                <p id="dynamicGreeting" class="text-lg md:text-2xl font-bold text-white/90 drop-shadow-lg leading-relaxed mb-4">
-                    سيارات رائعة بأسعار رائعة من أكبر شركات تأجير السيارات
-                </p>
-                <p id="cityStatus" class="text-sm md:text-lg font-black text-[#D4AF37] opacity-80"></p>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-10 header-flex">
+                
+                <div class="text-right order-1 md:order-1">
+                    <h1 class="text-5xl md:text-7xl brand-wave mb-6" id="brandName">
+                        استئجار سيارة<br>تناسب جميع<br>أنواع الرحلات
+                    </h1>
+                    <p id="dynamicGreeting" class="text-xl md:text-2xl font-bold text-white/90 drop-shadow-lg mb-2">
+                        سيارات رائعة بأسعار رائعة من أكبر شركات تأجير السيارات
+                    </p>
+                    <p id="cityStatus" class="text-lg font-black text-[#D4AF37] tracking-widest"></p>
+                </div>
+
+                <div class="whale-brand-container order-2 md:order-2">
+                    <div class="whale-brand-emoji">🐋</div>
+                    <div class="whale-brand-text">الحوت</div>
+                </div>
+
             </div>
-            <div class="whale-left" id="whaleIcon">🐋</div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 relative z-20">
         <div class="glass-box p-8 md:p-10 max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
-                <div class="md:col-span-2 space-y-2 text-right">
-                    <label class="block text-sm font-black text-slate-500 mr-2 uppercase" id="labelCity">المدينة</label>
-                    <select id="citySelect" onchange="adaptToCity()" class="smart-input appearance-none cursor-pointer"></select>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                <div class="md:col-span-2 space-y-2">
+                    <label class="block text-xs font-black text-slate-400 mr-2" id="labelCity">المدينة</label>
+                    <select id="citySelect" onchange="adaptToCity()" class="smart-input"></select>
                 </div>
-                <div class="md:col-span-3 space-y-2 text-right">
-                    <label class="block text-sm font-black text-slate-500 mr-2 uppercase" id="labelService">الخدمة المطلوبة</label>
-                    <select id="mainService" class="smart-input appearance-none text-sm cursor-pointer"></select>
+                <div class="md:col-span-3 space-y-2">
+                    <label class="block text-xs font-black text-slate-400 mr-2" id="labelService">الخدمة المطلوبة</label>
+                    <select id="mainService" class="smart-input"></select>
                 </div>
-                <div class="md:col-span-2 space-y-2 text-right">
-                    <label class="block text-sm font-black text-slate-500 mr-2" id="labelDate">التاريخ</label>
+                <div class="md:col-span-2 space-y-2">
+                    <label class="block text-xs font-black text-slate-400 mr-2" id="labelDate">التاريخ</label>
                     <input type="date" id="dateInput" class="smart-input">
                 </div>
-                <div class="md:col-span-2 space-y-2 text-right">
-                    <label class="block text-sm font-black text-slate-500 mr-2" id="labelTime">الوقت</label>
+                <div class="md:col-span-2 space-y-2">
+                    <label class="block text-xs font-black text-slate-400 mr-2" id="labelTime">الوقت</label>
                     <input type="time" id="timeInput" class="smart-input" onchange="validateTime()">
                 </div>
                 <div class="md:col-span-3">
-                    <button id="submitBtn" onclick="startBooking()" class="w-full bg-[#D4AF37] text-[#002349] py-4 rounded-2xl font-black text-2xl shadow-2xl hover:bg-[#b8962d] transform transition-all active:scale-95 flex items-center justify-center gap-2">
-                        <span id="btnText">ابحث الآن</span> <i id="btnIcon" class="fas fa-search"></i>
+                    <button onclick="startBooking()" class="w-full bg-[#D4AF37] text-[#002349] py-4 rounded-2xl font-black text-2xl shadow-xl hover:scale-[1.02] transition-all active:scale-95">
+                        <span id="btnText">ابحث الآن</span>
                     </button>
                 </div>
             </div>
         </div>
-
-        <section class="max-w-6xl mx-auto -mt-24 pb-20">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="bg-white p-8 rounded-[3rem] shadow-2xl border border-gray-100">
-                    <div class="w-16 h-16 bg-blue-50 text-[#002349] rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-bolt"></i></div>
-                    <h3 class="text-xl font-black mb-3" id="f1_t">حجز لحظي</h3>
-                    <p class="text-sm text-slate-500 font-bold" id="f1_d">اختر سيارتك واحصل على تأكيد فوري ومباشر.</p>
-                </div>
-                <div class="bg-white p-8 rounded-[3rem] shadow-2xl border border-gray-100">
-                    <div class="w-16 h-16 bg-amber-50 text-[#D4AF37] rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-shield-check"></i></div>
-                    <h3 class="text-xl font-black mb-3" id="f2_t">ثقة وأمان</h3>
-                    <p class="text-sm text-slate-500 font-bold" id="f2_d">نتعامل مع أفضل وأكبر شركات التأجير في العراق.</p>
-                </div>
-                <div class="bg-white p-8 rounded-[3rem] shadow-2xl border border-gray-100">
-                    <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-tags"></i></div>
-                    <h3 class="text-xl font-black mb-3" id="f3_t">أفضل الأسعار</h3>
-                    <p class="text-sm text-slate-500 font-bold" id="f3_d">نضمن لك السعر الأقل والخدمة الأفضل دائماً.</p>
-                </div>
-            </div>
-        </section>
     </main>
 
     <script>
@@ -155,52 +147,20 @@
         const data = {
             ar: {
                 dir: 'rtl', font: 'Tajawal', 
-                brand: 'استأجر سيارة تناسب جميع أنواع الرحلات',
+                brand: 'استئجار سيارة<br>تناسب جميع<br>أنواع الرحلات',
                 greeting: 'سيارات رائعة بأسعار رائعة من أكبر شركات تأجير السيارات',
-                labelCity: 'المدينة', labelService: 'الخدمة المطلوبة',
-                labelDate: 'التاريخ', labelTime: 'الوقت', btnText: 'ابحث الآن', alert: 'يرجى ملء جميع الحقول 🐋',
+                labelCity: 'المدينة', labelService: 'الخدمة',
+                labelDate: 'التاريخ', labelTime: 'الوقت', btnText: 'ابحث الآن',
                 services: { placeholder: '-- اختر الخدمة --', personal: '🚗 تأجير سيارة شخصية', wedding: '🎁 سيارات أعراس ومناسبات', training: '🎓 تعليم قيادة (مدربين)' },
-                cities: { 'كركوك': 'كركوك 💎', 'بغداد': 'بغداد 🏰', 'أربيل': 'أربيل 🏔️', 'السليمانية': 'السليمانية 🌲', 'الموصل': 'الموصل 🏹', 'البصرة': 'البصرة ⚓', 'الأنبار': 'الأنبار 🌴', 'ديالى': 'ديالى 🍊' },
-                msgs: { 'كركوك': 'متوفرة الآن في كركوك', 'بغداد': 'متوفرة الآن في بغداد', 'أربيل': 'متوفرة الآن في أربيل', 'السليمانية': 'متوفرة الآن في السليمانية', 'الموصل': 'متوفرة الآن في الموصل', 'البصرة': 'متوفرة الآن في البصرة', 'الأنبار': 'متوفرة الآن في الأنبار', 'ديالى': 'متوفرة الآن في ديالى' }
-            },
-            ku: {
-                dir: 'rtl', font: 'Tajawal', 
-                brand: 'ئۆتۆمبێلێک بەکرێ بگرە کە گونجاو بێت بۆ هەموو گەشتەکان',
-                greeting: 'ئۆتۆمبێلی نایاب بە نرخێکی نایاب لە گەورەترین کۆمپانیاکانی بەکرێگرتن',
-                labelCity: 'شار', labelService: 'خزمەتگوزاری',
-                labelDate: 'بەروار', labelTime: 'کات', btnText: 'بگەڕێ ئێستا', alert: 'تکایە خانەکان پڕبکەرەوە 🐋',
-                services: { placeholder: '-- خزمەتگوزاری هەڵبژێرە --', personal: '🚗 بەکرێگرتنی ئۆتۆمبێل', wedding: '🎁 ئۆتۆمبێلی زەماوەند', training: '🎓 فێربوونی شۆفێری' },
-                cities: { 'كركوك': 'کەرکوک 💎', 'بغداد': 'بەغداد 🏰', 'أربيل': 'هەولێر 🏔️', 'السليمانية': 'سلێمانی 🌲', 'الموصل': 'مووسڵ 🏹', 'البصرة': 'بەسرە ⚓', 'الأنبار': 'ئەنبار 🌴', 'ديالى': 'دیالە 🍊' },
-                msgs: { 'كركوك': 'ئێستا لە کەرکوک بەردەستە', 'بغداد': 'ئێستا لە بەغداد بەردەستە', 'أربيل': 'ئێستا لە هەولێر بەردەستە' }
-            },
-            en: {
-                dir: 'ltr', font: 'Poppins', 
-                brand: 'Rent a car that fits all types of trips',
-                greeting: 'Great cars at great prices from the biggest rental companies',
-                labelCity: 'City', labelService: 'Service',
-                labelDate: 'Date', labelTime: 'Time', btnText: 'Search Now', alert: 'Fill all fields 🐋',
-                services: { placeholder: '-- Select Service --', personal: '🚗 Personal Rental', wedding: '🎁 Wedding Cars', training: '🎓 Driving Training' },
-                cities: { 'كركوك': 'Kirkuk 💎', 'بغداد': 'Baghdad 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Slemani 🌲', 'الموصل': 'Mosul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Anbar 🌴', 'ديالى': 'Diyala 🍊' },
-                msgs: { 'كركوك': 'Available in Kirkuk now', 'بغداد': 'Available in Baghdad now', 'أربيل': 'Available in Erbil now' }
-            },
-            tr: {
-                dir: 'ltr', font: 'Poppins', 
-                brand: 'Her türlü yolculuğa uygun bir araç kiralayın',
-                greeting: 'En büyük kiralama şirketlerinden harika fiyatlara harika arabalar',
-                labelCity: 'Şehir', labelService: 'Hizmet',
-                labelDate: 'Tarih', labelTime: 'Saat', btnText: 'Şimdi Ara', alert: 'Alanları doldurun 🐋',
-                services: { placeholder: '-- Hizmet Seç --', personal: '🚗 Araç Kiralama', wedding: '🎁 Düğün Arabaları', training: '🎓 Sürüş Eğitimi' },
-                cities: { 'كركوك': 'Kerkük 💎', 'بغداد': 'Bağdat 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Süleymaniye 🌲', 'الموصل': 'Musul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Enbar 🌴', 'ديالى': 'Diyala 🍊' },
-                msgs: { 'كركوك': 'Şu an Kerkük\'te mevcut', 'بغداد': 'Şu an Bağdat\'ta mevcut' }
+                cities: { 'كركوك': 'كركوك 💎', 'بغداد': 'بغداد 🏰', 'أربيل': 'أربيل 🏔️', 'السليمانية': 'السليمانية 🌲' },
+                msgs: { 'كركوك': 'متوفرة الآن في كركوك', 'بغداد': 'متوفرة الآن في بغداد' }
             }
         };
 
         function changeLang(lang) {
-            currentLang = lang;
-            const l = data[lang];
-            document.getElementById('htmlTag').dir = l.dir;
-            document.body.style.fontFamily = l.font + ', sans-serif';
-            document.getElementById('brandName').innerText = l.brand;
+            // ملاحظة: قمت بتثبيت العربية بناءً على طلبك لشكل النص
+            const l = data['ar']; 
+            document.getElementById('brandName').innerHTML = l.brand;
             document.getElementById('dynamicGreeting').innerText = l.greeting;
             document.getElementById('labelCity').innerText = l.labelCity;
             document.getElementById('labelService').innerText = l.labelService;
@@ -209,8 +169,7 @@
             document.getElementById('btnText').innerText = l.btnText;
             
             const citySelect = document.getElementById('citySelect');
-            const currentCity = citySelect.value || 'كركوك';
-            citySelect.innerHTML = Object.entries(l.cities).map(([key, val]) => `<option value="${key}" ${key === currentCity ? 'selected' : ''}>${val}</option>`).join('');
+            citySelect.innerHTML = Object.entries(l.cities).map(([key, val]) => `<option value="${key}">${val}</option>`).join('');
             
             const serviceSelect = document.getElementById('mainService');
             serviceSelect.innerHTML = `<option value="">${l.services.placeholder}</option><option value="personal">${l.services.personal}</option><option value="wedding">${l.services.wedding}</option><option value="training">${l.services.training}</option>`;
@@ -221,38 +180,20 @@
             const city = document.getElementById('citySelect').value;
             const status = document.getElementById('cityStatus');
             const overlay = document.getElementById('cityOverlay');
-            const l = data[currentLang];
-            const styleColor = { 'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 'الأنبار': '#ef6c00', 'ديالى': '#558b2f' };
-            
-            status.style.opacity = 0;
-            setTimeout(() => {
-                status.innerText = l.msgs[city] || '';
-                status.style.opacity = 1;
-                overlay.style.backgroundColor = styleColor[city] || '#002349';
-            }, 300);
-        }
-
-        function validateTime() {
-            const timeInput = document.getElementById('timeInput');
-            if (!timeInput.value) return;
-            const hour = parseInt(timeInput.value.split(':')[0]);
-            if (hour < 8 || hour >= 23) { alert('أوقات الحجز المتاحة: 8 ص - 11 م 🐋'); timeInput.value = ""; return; }
+            const styleColor = { 'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'السليمانية': '#6a1b9a' };
+            status.innerText = data['ar'].msgs[city] || '';
+            overlay.style.backgroundColor = styleColor[city] || '#002349';
         }
 
         function startBooking() {
             const service = document.getElementById('mainService').value;
-            const date = document.getElementById('dateInput').value;
-            const time = document.getElementById('timeInput').value;
-            const city = document.getElementById('citySelect').value;
-            if(!service || !date || !time) { alert(data[currentLang].alert); return; }
-            let targetPage = (service === "training") ? "addons.html" : "fleet.html";
-            window.location.href = `${targetPage}?type=${service}&lang=${currentLang}&date=${date}&time=${time}&city=${city}`;
+            if(!service) { alert("يرجى اختيار الخدمة 🐋"); return; }
+            window.location.href = `fleet.html?type=${service}&city=${document.getElementById('citySelect').value}`;
         }
 
         window.onload = () => {
             const dateInput = document.getElementById('dateInput');
-            dateInput.min = new Date().toISOString().split('T')[0];
-            dateInput.value = dateInput.min;
+            dateInput.value = new Date().toISOString().split('T')[0];
             changeLang('ar');
         }
     </script>

@@ -51,6 +51,7 @@
         const u = new URLSearchParams(window.location.search);
         const lang = u.get('lang') || 'ar';
         const type = u.get('type') || 'personal';
+        // الرابط الخاص بـ Apps Script
         const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
 
         const configs = {
@@ -60,18 +61,10 @@
         };
 
         const content = {
-            ar: { 
-                greet: "مبارك الإتمام!", status: "جاري تأكيد حجزك في أرض الحوت...", sub: "سيقوم فريق الحوت بالتواصل معك قريباً.", sync: "تم الربط بنجاح", back: "العودة للرئيسية", welcome: "عميلنا العزيز"
-            },
-            ku: { 
-                greet: "پیرۆزە!", status: "داواکارییەکەت لە زەوی حوت تۆمارکرا...", sub: "تیمی حوت بەم زوانە پەیوەندیت پێوە دەکەن.", sync: "بەسەرکەوتوویی بەستراوەتەوە", back: "گەڕانەوە بۆ سەرەتا", welcome: "کڕیاری بەڕێز"
-            },
-            tr: { 
-                greet: "Tebrikler!", status: "Rezervasyonunuz Whale Land'de onaylanıyor...", sub: "Whale ekibi yakında sizinle iletişime geçecektir.", sync: "Bağlantı Başarılı", back: "Ana Sayfaya Dön", welcome: "Değerli Müşterimiz"
-            },
-            en: { 
-                greet: "Success!", status: "Your booking is being confirmed in Whale Land...", sub: "The Whale team will contact you shortly.", sync: "Synced Successfully", back: "Back to Home", welcome: "Dear Customer"
-            }
+            ar: { greet: "مبارك الإتمام!", status: "جاري تأكيد حجزك في أرض الحوت...", sub: "سيقوم فريق الحوت بالتواصل معك قريباً.", sync: "تم الربط بنجاح", back: "العودة للرئيسية", welcome: "عميلنا العزيز" },
+            ku: { greet: "پیرۆزە!", status: "داواکارییەکەت لە زەوی حوت تۆمارکرا...", sub: "تیمی حوت بەم زوانە پەیوەندیت پێوە دەکەن.", sync: "بەسەرکەوتوویی بەستراوەتەوە", back: "گەڕانەوە بۆ سەرەتا", welcome: "کڕیاری بەڕێز" },
+            tr: { greet: "Tebrikler!", status: "Rezervasyonunuz Whale Land'de onaylanıyor...", sub: "Whale ekibi yakında sizinle iletişime geçecektir.", sync: "Bağlantı Başarılı", back: "Ana Sayfaya Dön", welcome: "Değerli Müşterimiz" },
+            en: { greet: "Success!", status: "Your booking is being confirmed in Whale Land...", sub: "The Whale team will contact you shortly.", sync: "Synced Successfully", back: "Back to Home", welcome: "Dear Customer" }
         };
 
         window.onload = () => {
@@ -83,11 +76,10 @@
             document.documentElement.style.setProperty('--accent-theme', c.accent);
             document.getElementById('htmlTag').dir = isRtl ? 'rtl' : 'ltr';
 
-            // تعبئة النصوص
+            // تحديث الواجهة
             document.getElementById('mainGreeting').innerText = l.greet;
             document.getElementById('statusMsg').innerText = l.status;
             document.getElementById('subInstruction').innerText = l.sub;
-            document.getElementById('syncText').innerText = l.sync;
             document.getElementById('backBtn').innerText = l.back;
             document.getElementById('userNameDisplay').innerText = u.get('name') || l.welcome;
 
@@ -96,29 +88,36 @@
 
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [c.main, c.accent] });
 
-            // إرسال البيانات للـ Google Sheet
+            // تجميع كافة البيانات الـ 15 المطلوبة
             const payload = {
-                order_id: orderID,
-                name: u.get('name'),
-                phone: u.get('phone'),
-                province: u.get('province') || u.get('city'),
-                car: u.get('car'),
-                days: u.get('days') || "---",
-                addons: u.get('addon_display') || "None",
-                total_price: u.get('total_final'),
-                gender: u.get('gender') || "---",
-                service: u.get('service') || "General",
-                location_link: u.get('location_link') || "---",
-                national_id: u.get('national_id') || "---",
-                age: u.get('age') || "---"
+                date: new Date().toLocaleString('ar-IQ'), // 1. التاريخ
+                order_id: orderID,                         // 2. رقم الطلب
+                name: u.get('name') || "---",             // 3. الاسم
+                phone: u.get('phone') || "---",           // 4. الهاتف
+                province: u.get('province') || u.get('city') || "---", // 5. المحافظة
+                car: u.get('car') || "---",               // 6. السيارة
+                days: u.get('days') || "---",             // 7. الايام
+                addons: u.get('addon_display') || "---",  // 8. الاضافات
+                price: u.get('total_final') || "0",       // 9. السعر
+                gender: u.get('gender') || "---",         // 10. الجنس
+                age: u.get('age') || "---",               // 11. العمر
+                national_id: u.get('national_id') || "---", // 12. رقم الهوية
+                license_id: u.get('license_id') || "---",  // 13. رقم الاجازة
+                service: u.get('service') || u.get('type') || "---", // 14. الخدمة
+                map_link: u.get('location_link') || "---"  // 15. رابط الخريطة
             };
 
+            // إرسال البيانات فوراً إلى Apps Script
             fetch(scriptURL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify(payload)
             }).then(() => {
-                console.log("Data Sent to Whale Database.");
+                document.getElementById('syncText').innerText = l.sync;
+                console.log("Data successfully synced with Whale Sheets.");
+            }).catch(err => {
+                console.error("Sync failed:", err);
+                document.getElementById('syncText').innerText = "Sync Error";
             });
         };
     </script>

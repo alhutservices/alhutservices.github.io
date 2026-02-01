@@ -48,10 +48,9 @@
 
     <script>
         const u = new URLSearchParams(window.location.search);
-        const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec"; //
+        const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec"; 
         const lang = u.get('lang') || 'ar';
 
-        // 1. نظام القواميس (عرض للزبون vs إرسال للسكريبت)
         const uiContent = {
             ar: { greet: "مبارك الإتمام!", sub: "سيقوم أقرب مكتب حوت بالتواصل معك هاتفياً لإتمام إجراءات التسليم.", btn: "العودة للرئيسية", orderL: "رقم الحجز المرجعي" },
             ku: { greet: "پیرۆزە!", sub: "نزیکترین ئۆفیسی حوت پەیوەندیت پێوە دەکات بۆ تەواوکردنی ڕێکارەکانی ڕادەستکردن.", btn: "بگەڕێوە سەرەکی", orderL: "ژمارەی تەرخانکردن" },
@@ -59,23 +58,40 @@
             tr: { greet: "Tebrikler!", sub: "En yakın Whale ofisi, teslimat işlemlerini tamamlamak için sizinle telefonla iletişime geçecektir.", btn: "Ana Sayfaya Dön", orderL: "REFERANS NUMARASI" }
         };
 
-        const cityBlessings = {
-            "بغداد": "يرعاك الله في أرض هارون الرشيد بغداد 🏰",
-            "كركوك": "حياك الله في مدينة القلاع والإخاء كركوك 💎",
-            "البصرة": "على راسي أهلنا في ثغر العراق الباسم البصرة 🌊",
-            "أربيل": "نورتنا في حضن القلعة الشامخة أربيل 🏔️",
-            "default": "يرعاك الله أينما كنت في أرض العراق العظيم 🇮🇶"
+        // نظام المباركات المترجم حسب المحافظة واللغة
+        const blessingsByLang = {
+            ar: {
+                "بغداد": "يرعاك الله في أرض هارون الرشيد بغداد 🏰",
+                "كركوك": "حياك الله في مدينة القلاع والإخاء كركوك 💎",
+                "أربيل": "نورتنا في حضن القلعة الشامخة أربيل 🏔️",
+                "البصرة": "على راسي أهلنا في ثغر العراق الباسم البصرة 🌊",
+                "default": "يرعاك الله أينما كنت في أرض العراق العظيم 🇮🇶"
+            },
+            ku: {
+                "بغداد": "خوا بتپارێزێت لە خاکی هارون ڕەشید بەغدا 🏰",
+                "كركوك": "بەخێر بێیت بۆ شاری قەڵا و برایەتی کەرکوک 💎",
+                "أربيل": "بەخێر بێیت بۆ هەولێری پایتەخت 🏔️",
+                "default": "خوا لە هەر کوێیەک بیت بتپارێزێت 🇮🇶"
+            },
+            en: {
+                "بغداد": "May God protect you in the land of Harun al-Rashid, Baghdad 🏰",
+                "كركوك": "Welcome to the city of castles and brotherhood, Kirkuk 💎",
+                "أربيل": "Welcome to the shadow of the majestic Erbil Citadel 🏔️",
+                "default": "May God protect you wherever you are in Iraq 🇮🇶"
+            },
+            tr: {
+                "بغداد": "Harun Reşid'in diyarı Bağdat'ta Allah seni korusun 🏰",
+                "كركوك": "Kaleler ve kardeşlik şehri Kerkük'e hoş geldiniz 💎",
+                "أربيل": "Görkemli Erbil Kalesi'nin gölgesine hoş geldiniz 🏔️",
+                "default": "Irak'ın neresinde olursanız olun Allah sizi korusun 🇮🇶"
+            }
         };
 
-        // خريطة الترجمة العكسية (لإرسالها للسكريبت باللغة الموحدة)
         const toScriptMap = {
-            // المحافظات
             "Kirkuk": "كركوك", "Kerkük": "كركوك", "کەرکوک": "كركوك",
             "Baghdad": "بغداد", "Bağdat": "بغداد", "بەغدا": "بغداد",
-            "Erbil": "أربيل", "Erbil": "أربيل", "هەولێر": "أربيل",
-            // الخدمات
-            "personal": "تأجير شخصي", "wedding": "أعراس ومناسبات", "training": "تعليم قيادة",
-            // الجنس
+            "Erbil": "أربيل", "هەولێر": "أربيل",
+            "Basra": "البصرة", "بەسرە": "البصرة",
             "Male": "ذكر", "Erkek": "ذكر", "نێر": "ذكر",
             "Female": "أنثى", "Kadın": "أنثى", "مێ": "أنثى"
         };
@@ -83,7 +99,6 @@
         function translateToScript(val) { return toScriptMap[val] || val || "---"; }
 
         window.onload = () => {
-            // ضبط واجهة المستخدم بلغة الزبون
             const ui = uiContent[lang] || uiContent.ar;
             document.getElementById('mainGreeting').innerText = ui.greet;
             document.getElementById('subInstruction').innerText = ui.sub;
@@ -97,19 +112,21 @@
 
             const rawCity = u.get('city') || u.get('prov') || "بغداد";
             const scriptCity = translateToScript(rawCity);
-            document.getElementById('cityBlessing').innerText = cityBlessings[scriptCity] || cityBlessings["default"];
+            
+            // اختيار المباركة باللغة والمدينة الصحيحة
+            const langBlessings = blessingsByLang[lang] || blessingsByLang.ar;
+            document.getElementById('cityBlessing').innerText = langBlessings[scriptCity] || langBlessings["default"];
+            
             document.getElementById('userNameDisplay').innerText = u.get('name') || "...";
 
-            // تأثير الاحتفال 🎊
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#002349', '#D4AF37'] });
 
-            // إرسال البيانات بلغة السكريبت (العربية الموحدة)
             if (sessionStorage.getItem('orderSent') !== 'true') {
                 const data = {
                     order_id: orderID,
                     name: u.get('name'),
                     phone: u.get('phone'),
-                    province: scriptCity, // ترسل كـ "كركوك" مهما كانت لغة الواجهة
+                    province: scriptCity,
                     car: u.get('car'),
                     days: u.get('days') || u.get('date'),
                     addons: u.get('addon_name') || "أساسية",

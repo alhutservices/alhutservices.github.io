@@ -40,24 +40,19 @@
         .time-warn { background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; }
         .time-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fee2e2; animation: pulse-red 2s infinite; }
 
-        @keyframes pulse-red {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.2); }
-            70% { transform: scale(1.03); box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
-            100% { transform: scale(1); }
-        }
-
         .price-tag { background: var(--soft-gold); color: #8a6d1a; padding: 0.5rem 1rem; border-radius: 1.2rem; border: 1px solid rgba(197, 160, 45, 0.2); font-weight: 900; }
         
         .addons-box { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 1.5rem; padding: 12px; }
         .addons-label { font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; display: block; }
 
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         .btn-transfer { background: #fff1f2; color: #e11d48; border: 1.5px dashed #fecdd3; transition: 0.3s; }
         
-        /* وسوم الجنس */
         .gender-tag { font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 4px; }
         .gender-male { background: #eff6ff; color: #1d4ed8; }
         .gender-female { background: #fdf2f8; color: #be185d; }
+
+        .locked-info { filter: blur(4px); user-select: none; pointer-events: none; opacity: 0.6; }
+        .info-label { font-size: 10px; font-weight: 900; color: #94a3b8; text-transform: uppercase; margin-bottom: 2px; display: block; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -111,6 +106,8 @@
             try {
                 const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`);
                 allOrders = await res.json();
+                
+                // الرادار: الطلبات التي في مدينة المكتب وحالتها قيد الانتظار
                 const newOrders = allOrders.filter(o => o.prov === officeData.city && o.status === "قيد الانتظار");
                 if (newOrders.length > lastOrderCount) playAlarm();
                 lastOrderCount = newOrders.length;
@@ -129,7 +126,7 @@
             let list = [];
             
             if(currentTab === 'new') list = allOrders.filter(o => o.prov === officeData.city && o.status === "قيد الانتظار");
-            else if(currentTab === 'mine') list = allOrders.filter(o => o.office === officeData.name && !o.status.includes('✅') && !o.status.includes('⚠️'));
+            else if(currentTab === 'mine') list = allOrders.filter(o => o.office === officeData.name && o.status === "تم الاستلام");
             else if(currentTab === 'done') list = allOrders.filter(o => o.office === officeData.name && (o.status.includes('✅') || o.status.includes('⚠️')));
 
             if(list.length === 0) {
@@ -139,13 +136,12 @@
 
             container.innerHTML = list.map(o => {
                 const timerHtml = getTimeCounter(o.timestamp);
-                
-                // تحديد أيقونة وستايل الجنس
                 const isFemale = o.gender === 'أنثى' || o.gender === 'Female';
                 const genderIcon = isFemale ? '👩' : '👨';
                 const genderClass = isFemale ? 'gender-female' : 'gender-male';
                 const genderText = o.gender || '---';
 
+                // --- حالة الرادار (قبل الاستلام): معلومات محدودة ---
                 if(currentTab === 'new') {
                     return `
                     <div class="whale-card p-6 border-b-4 border-blue-500">
@@ -153,7 +149,7 @@
                             ${timerHtml}
                             <div class="price-tag"><span class="text-lg">${Number(o.price).toLocaleString()}</span></div>
                         </div>
-                        <h3 class="text-xl font-black text-slate-800 mb-2">${o.car}</h3>
+                        <h3 class="text-xl font-black text-slate-800 mb-2">${o.car || o.service}</h3>
                         
                         <div class="flex items-center gap-3 mb-4">
                             <p class="text-[10px] font-bold text-slate-400 flex items-center gap-1"><i class="fas fa-user-circle"></i> ${o.name}</p>
@@ -166,13 +162,19 @@
                         </div>
 
                         <div class="grid grid-cols-2 gap-3 mb-6">
-                            <div class="bg-slate-50 p-3 rounded-2xl"><p class="text-[8px] font-black text-slate-400 uppercase mb-1">المدة</p><p class="text-xs font-black">${o.days} أيام</p></div>
-                            <div class="bg-slate-50 p-3 rounded-2xl"><p class="text-[8px] font-black text-slate-400 uppercase mb-1">الموعد</p><p class="text-xs font-black tracking-tighter">${o.timestamp.split('T')[0]}</p></div>
+                            <div class="bg-slate-50 p-3 rounded-2xl"><p class="info-label">المدة</p><p class="text-xs font-black">${o.days} أيام</p></div>
+                            <div class="bg-slate-50 p-3 rounded-2xl"><p class="info-label">الجنس</p><p class="text-xs font-black">${genderText}</p></div>
                         </div>
+
+                        <div class="bg-slate-100 p-3 rounded-2xl mb-4 text-center border border-dashed border-slate-300">
+                             <p class="text-[9px] font-black text-slate-500 uppercase">🔒 المعلومات الحساسة تظهر بعد استلام الطلب</p>
+                        </div>
+
                         <button onclick="update('${o.id}', 'claim')" class="w-full bg-slate-900 text-[#D4AF37] py-4 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-all">استلام الطلبية الآن ⚡</button>
                     </div>`;
                 }
 
+                // --- حالة التنفيذ (بعد الاستلام): معلومات كاملة ---
                 if(currentTab === 'mine') {
                     return `
                     <div class="whale-card p-8 border-t-8 border-blue-900">
@@ -180,28 +182,41 @@
                             ${timerHtml}
                             <a href="tel:${o.phone}" class="w-12 h-12 bg-green-500 text-white rounded-2xl flex items-center justify-center shadow-lg animate-bounce"><i class="fas fa-phone-alt"></i></a>
                         </div>
-                        <h3 class="text-2xl font-black text-slate-800 mb-1">${o.car}</h3>
+                        
+                        <h3 class="text-2xl font-black text-slate-800 mb-1">${o.car || o.service}</h3>
                         <p class="text-xs font-black text-blue-600 mb-6 tracking-widest">رقم الطلب #${o.id}</p>
 
-                        <div class="flex gap-3 mb-4">
-                            <div class="bg-slate-50 p-5 rounded-3xl flex-[3]">
-                                <p class="text-[9px] font-black text-slate-400 uppercase mb-1">العميل</p>
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-slate-50 p-4 rounded-3xl col-span-2">
+                                <span class="info-label">الاسم الكامل</span>
                                 <p class="font-black text-lg text-slate-800">${o.name}</p>
                             </div>
-                            <div class="bg-slate-50 p-5 rounded-3xl flex-1 text-center">
-                                <p class="text-[9px] font-black text-slate-400 uppercase mb-1">الجنس</p>
-                                <p class="text-xl">${genderIcon}</p>
+                            <div class="bg-slate-50 p-4 rounded-3xl">
+                                <span class="info-label">رقم الهاتف</span>
+                                <p class="font-black text-slate-800">${o.phone}</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-3xl">
+                                <span class="info-label">العمر</span>
+                                <p class="font-black text-slate-800">${o.age || 'غير محدد'} سنة</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-3xl">
+                                <span class="info-label">رقم الهوية / الجواز</span>
+                                <p class="font-black text-slate-800 text-xs">${o.national_id || '---'}</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-3xl">
+                                <span class="info-label">رقم الإجازة</span>
+                                <p class="font-black text-slate-800 text-xs">${o.license_no || '---'}</p>
                             </div>
                         </div>
                         
                         <div class="bg-indigo-900 text-indigo-50 p-5 rounded-3xl mb-6 shadow-lg shadow-indigo-100">
                              <span class="text-[8px] font-black uppercase opacity-50 mb-2 block">الطلبات الخاصة والإضافات:</span>
-                             <p class="text-xs font-bold leading-relaxed">${o.addons || 'توصيل عادي - لا توجد إضافات'}</p>
+                             <p class="text-xs font-bold leading-relaxed">${o.addons || 'لا توجد إضافات'}</p>
                         </div>
 
                         <div class="space-y-3">
                             <div class="flex gap-2">
-                                <a href="${o.map}" target="_blank" class="flex-1 bg-blue-100 text-blue-700 py-4 rounded-2xl text-center font-black text-xs flex items-center justify-center gap-2">الموقع 📍</a>
+                                <a href="${o.map}" target="_blank" class="flex-1 bg-blue-100 text-blue-700 py-4 rounded-2xl text-center font-black text-xs flex items-center justify-center gap-2">موقع الزبون 📍</a>
                                 <button onclick="update('${o.id}', 'complete')" class="flex-[2] bg-slate-900 text-white py-4 rounded-2xl font-black text-xs">تأكيد التسليم ✅</button>
                             </div>
                             <button onclick="update('${o.id}', 'cancelRequest')" class="w-full btn-transfer py-3 rounded-2xl font-black text-[11px]">طلب إلغاء أو تحويل ⚠️</button>
@@ -209,6 +224,7 @@
                     </div>`;
                 }
 
+                // --- حالة الأرشيف ---
                 if(currentTab === 'done') {
                     return `
                     <div class="whale-card p-5 flex justify-between items-center opacity-70 grayscale-[0.5]">
@@ -244,11 +260,9 @@
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        // تحديث تلقائي كل 10 ثواني
         setInterval(fetchOrders, 10000);
         fetchOrders();
 
-        // تفعيل الصوت بعد أول نقرة للمستخدم (بسبب سياسات المتصفح)
         document.body.addEventListener('click', () => {
             const s = document.getElementById('radarSound');
             s.play().then(() => { s.pause(); }).catch(e => {});

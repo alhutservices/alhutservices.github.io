@@ -26,7 +26,6 @@
         }
         @keyframes bgMove { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
 
-        /* الشعار الضخم على اليسار */
         .whale-left-container {
             display: flex;
             flex-direction: column;
@@ -40,7 +39,7 @@
         @keyframes floating { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-20px) rotate(2deg); } }
 
         .glass-box {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.5);
             box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.4);
@@ -55,126 +54,142 @@
             border: 2px solid transparent; border-radius: 1.5rem; 
             font-weight: 700; color: #002349; outline: none; transition: 0.3s; 
         }
-        .smart-input:focus { background-color: #fff; border-color: #D4AF37; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+        .smart-input:focus { background-color: #fff; border-color: #D4AF37; }
 
-        .lang-btn { background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 14px; font-size: 0.9rem; color: white; cursor: pointer; transition: 0.3s; font-weight: 900; }
-        .lang-btn:hover { background: #D4AF37; color: #002349; transform: scale(1.1); }
-        
+        .lang-btn { background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); padding: 8px 16px; border-radius: 12px; font-size: 0.85rem; color: white; cursor: pointer; transition: 0.3s; font-weight: 900; }
+        .lang-btn:hover { background: #D4AF37; color: #002349; }
+
         @media (max-width: 768px) {
             .glass-box { transform: translateY(-130px); margin: 0 10px; }
             .hero-bg { padding-bottom: 14rem; }
             .whale-emoji { font-size: 4rem; }
             .whale-text-white { font-size: 2.5rem; }
+            .header-flex { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body class="text-[#002349]">
 
-    <div class="absolute top-6 left-0 right-0 z-50 flex justify-center gap-3">
+    <div class="absolute top-6 left-0 right-0 z-50 flex justify-center gap-2">
         <button onclick="changeLang('ar')" class="lang-btn">العربية</button>
         <button onclick="changeLang('ku')" class="lang-btn">کوردی</button>
+        <button onclick="changeLang('tr')" class="lang-btn">Türkçe</button>
         <button onclick="changeLang('en')" class="lang-btn">English</button>
     </div>
 
     <header id="mainHero" class="hero-bg text-white relative">
-        <div id="cityOverlay" class="absolute inset-0 opacity-60 pointer-events-none transition-all duration-1000"></div>
+        <div id="cityOverlay" class="absolute inset-0 opacity-60 transition-all duration-1000"></div>
         <div class="map-pattern"></div>
         
-        <div class="container mx-auto px-6 flex justify-between items-center relative z-10">
+        <div class="container mx-auto px-6 flex justify-between items-center relative z-10 header-flex">
             <div class="text-right">
-                <h1 class="text-5xl md:text-7xl font-black text-white leading-tight mb-6" id="brandName">
-                    استئجار سيارة<br>
-                    تناسب جميع<br>
-                    أنواع الرحلات
+                <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-6" id="brandTitle">
+                    استئجار سيارة<br>تناسب جميع<br>أنواع الرحلات
                 </h1>
-                <p id="dynamicGreeting" class="text-xl md:text-2xl font-bold text-white/90 drop-shadow-lg mb-4">
+                <p id="dynamicGreeting" class="text-lg md:text-2xl font-bold text-white/90 drop-shadow-lg mb-2">
                     سيارات رائعة بأسعار رائعة من أكبر شركات تأجير السيارات
                 </p>
-                <p id="cityStatus" class="text-lg font-black text-[#D4AF37] opacity-80"></p>
+                <p id="cityStatus" class="text-md font-black text-[#D4AF37]"></p>
             </div>
 
             <div class="whale-left-container">
                 <div class="whale-emoji">🐋</div>
-                <div class="whale-text-white">الحوت</div>
+                <div id="whaleBrandName" class="whale-text-white">الحوت</div>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 relative z-20">
-        <div class="glass-box p-8 md:p-12 max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
+        <div class="glass-box p-8 md:p-10 max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                 <div class="md:col-span-2 space-y-2 text-right">
-                    <label class="block text-sm font-black text-slate-500 mr-2 uppercase" id="labelCity">المدينة</label>
-                    <select id="citySelect" onchange="adaptToCity()" class="smart-input cursor-pointer"></select>
+                    <label class="block text-xs font-black text-slate-500 mr-2" id="labelCity">المدينة</label>
+                    <select id="citySelect" onchange="adaptToCity()" class="smart-input appearance-none"></select>
                 </div>
                 <div class="md:col-span-3 space-y-2 text-right">
-                    <label class="block text-sm font-black text-slate-500 mr-2 uppercase" id="labelService">الخدمة المطلوبة</label>
-                    <select id="mainService" class="smart-input text-sm cursor-pointer"></select>
+                    <label class="block text-xs font-black text-slate-500 mr-2" id="labelService">الخدمة المطلوبة</label>
+                    <select id="mainService" class="smart-input appearance-none"></select>
                 </div>
                 <div class="md:col-span-2 space-y-2 text-right">
-                    <label class="block text-sm font-black text-slate-500 mr-2" id="labelDate">التاريخ</label>
+                    <label class="block text-xs font-black text-slate-500 mr-2" id="labelDate">التاريخ</label>
                     <input type="date" id="dateInput" class="smart-input">
                 </div>
                 <div class="md:col-span-2 space-y-2 text-right">
-                    <label class="block text-sm font-black text-slate-500 mr-2" id="labelTime">الوقت</label>
-                    <input type="time" id="timeInput" class="smart-input" onchange="validateTime()">
+                    <label class="block text-xs font-black text-slate-500 mr-2" id="labelTime">الوقت</label>
+                    <input type="time" id="timeInput" class="smart-input">
                 </div>
                 <div class="md:col-span-3">
-                    <button id="submitBtn" onclick="startBooking()" class="w-full bg-[#D4AF37] text-[#002349] py-4 rounded-2xl font-black text-2xl shadow-2xl hover:bg-[#b8962d] transform transition-all active:scale-95 flex items-center justify-center gap-2">
-                        <span id="btnText">استمر الآن</span> <i id="btnIcon" class="fas fa-search"></i>
+                    <button id="submitBtn" onclick="startBooking()" class="w-full bg-[#D4AF37] text-[#002349] py-4 rounded-2xl font-black text-xl shadow-xl hover:scale-[1.02] transition-all">
+                        <span id="btnText">استمر الآن</span>
                     </button>
                 </div>
             </div>
         </div>
-
-        <section class="max-w-6xl mx-auto -mt-24 pb-20">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div class="bg-white p-8 rounded-[3rem] shadow-2xl border border-gray-100">
-                    <div class="w-16 h-16 bg-blue-50 text-[#002349] rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-bolt"></i></div>
-                    <h3 class="text-xl font-black mb-3">حجز لحظي</h3>
-                    <p class="text-sm text-slate-500 font-bold">احجز سيارتك بضغطة زر واحصل على التأكيد الفوري.</p>
-                </div>
-                <div class="bg-white p-8 rounded-[3rem] shadow-2xl border border-gray-100">
-                    <div class="w-16 h-16 bg-amber-50 text-[#D4AF37] rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-shield-check"></i></div>
-                    <h3 class="text-xl font-black mb-3">ثقة وأمان</h3>
-                    <p class="text-sm text-slate-500 font-bold">المنصة الإلكترونية الوحيدة التي تضمن حقوقك بالكامل.</p>
-                </div>
-                <div class="bg-white p-8 rounded-[3rem] shadow-2xl border border-gray-100">
-                    <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6"><i class="fas fa-star"></i></div>
-                    <h3 class="text-xl font-black mb-3">أسعار تنافسية</h3>
-                    <p class="text-sm text-slate-500 font-bold">أفضل الأسعار المباشرة من المكاتب دون عمولات مخفية.</p>
-                </div>
-            </div>
-        </section>
     </main>
 
     <script>
         let currentLang = 'ar';
         const data = {
             ar: {
-                dir: 'rtl', font: 'Tajawal', 
+                dir: 'rtl', font: 'Tajawal', whale: 'الحوت',
                 brand: 'استئجار سيارة<br>تناسب جميع<br>أنواع الرحلات',
-                labelCity: 'المدينة', labelService: 'الخدمة المطلوبة',
-                labelDate: 'التاريخ', labelTime: 'الوقت', btnText: 'استمر الآن',
                 greeting: 'سيارات رائعة بأسعار رائعة من أكبر شركات تأجير السيارات',
+                labelCity: 'المدينة', labelService: 'الخدمة المطلوبة', labelDate: 'التاريخ', labelTime: 'الوقت', btnText: 'استمر الآن',
                 services: { placeholder: '-- اختر الخدمة --', personal: '🚗 تأجير سيارة شخصية', wedding: '🎁 سيارات أعراس ومناسبات', training: '🎓 تعليم قيادة (مدربين)' },
-                cities: { 'كركوك': 'كركوك 💎', 'بغداد': 'بغداد 🏰', 'أربيل': 'أربيل 🏔️', 'السليمانية': 'السليمانية 🌲' },
-                msgs: { 'كركوك': 'متوفر الآن في كركوك', 'بغداد': 'متوفر الآن في بغداد' }
+                cities: { 'البصرة': 'البصرة ⚓', 'بغداد': 'بغداد 🏰', 'أربيل': 'أربيل 🏔️', 'كركوك': 'كركوك 💎' },
+                msgs: { 'البصرة': 'حي الله أهلنا بالبصرة ⚓', 'بغداد': 'أهلاً بكم في بغداد 🏰' }
+            },
+            ku: {
+                dir: 'rtl', font: 'Tajawal', whale: 'ئەلحووت',
+                brand: 'ئۆتۆمبێلێک بەکرێ بگرە<br>بۆ هەموو جۆرە<br>گەشتەکان',
+                greeting: 'ئۆتۆمبێلی نایاب بە نرخێکی گونجاو لە گەورەترین کۆمپانیاکان',
+                labelCity: 'شار', labelService: 'خزمەتگوزاری', labelDate: 'بەروار', labelTime: 'کات', btnText: 'بەردەوام بە',
+                services: { placeholder: '-- خزمەتگوزاری هەڵبژێرە --', personal: '🚗 بەکرێگرتنی ئۆتۆمبێل', wedding: '🎁 ئۆتۆمبێلی زەماوەند', training: '🎓 فێربوونی شۆفێری' },
+                cities: { 'البصرة': 'بەسرە ⚓', 'بغداد': 'بەغداد 🏰', 'أربيل': 'هەولێر 🏔️', 'كركوك': 'کەرکوک 💎' },
+                msgs: { 'البصرة': 'بەخێربێن بۆ بەسرە ⚓', 'أربيل': 'بەخێربێن بۆ هەولێر 🏔️' }
+            },
+            tr: {
+                dir: 'ltr', font: 'Poppins', whale: 'AL-HUT',
+                brand: 'Her türlü geziye<br>uygun araç<br>kiralayın',
+                greeting: 'En büyük şirketlerden harika fiyatlara harika arabalar',
+                labelCity: 'Şehir', labelService: 'Hizmet', labelDate: 'Tarih', labelTime: 'Saat', btnText: 'Devam Et',
+                services: { placeholder: '-- Hizmet Seç --', personal: '🚗 Araç Kiralama', wedding: '🎁 Düğün Arabaları', training: '🎓 Sürüş Eğitimi' },
+                cities: { 'البصرة': 'Basra ⚓', 'بغداد': 'Bağdat 🏰', 'أربيل': 'Erbil 🏔️', 'كركوك': 'Kerkük 💎' },
+                msgs: { 'البصرة': 'Basra\'ya hoş geldiniz ⚓' }
+            },
+            en: {
+                dir: 'ltr', font: 'Poppins', whale: 'AL-HUT',
+                brand: 'Rent a car<br>that fits all<br>types of trips',
+                greeting: 'Great cars at great prices from top rental companies',
+                labelCity: 'City', labelService: 'Service', labelDate: 'Date', labelTime: 'Time', btnText: 'Continue',
+                services: { placeholder: '-- Select Service --', personal: '🚗 Personal Rental', wedding: '🎁 Wedding Cars', training: '🎓 Driving Lessons' },
+                cities: { 'البصرة': 'Basra ⚓', 'بغداد': 'Baghdad 🏰', 'أربيل': 'Erbil 🏔️', 'كركوك': 'Kirkuk 💎' },
+                msgs: { 'البصرة': 'Welcome to Basra ⚓' }
             }
         };
 
         function changeLang(lang) {
-            const l = data['ar']; // اعتماد العربية للتصميم المطلوب
-            document.getElementById('brandName').innerHTML = l.brand;
+            currentLang = lang;
+            const l = data[lang];
+            document.getElementById('htmlTag').dir = l.dir;
+            document.body.style.fontFamily = l.font + ', sans-serif';
+            document.getElementById('brandTitle').innerHTML = l.brand;
+            document.getElementById('whaleBrandName').innerText = l.whale;
+            document.getElementById('dynamicGreeting').innerText = l.greeting;
             document.getElementById('labelCity').innerText = l.labelCity;
             document.getElementById('labelService').innerText = l.labelService;
+            document.getElementById('labelDate').innerText = l.labelDate;
+            document.getElementById('labelTime').innerText = l.labelTime;
             document.getElementById('btnText').innerText = l.btnText;
             
             const citySelect = document.getElementById('citySelect');
             citySelect.innerHTML = Object.entries(l.cities).map(([key, val]) => `<option value="${key}">${val}</option>`).join('');
             
             const serviceSelect = document.getElementById('mainService');
-            serviceSelect.innerHTML = `<option value="">${l.services.placeholder}</option><option value="personal">${l.services.personal}</option><option value="wedding">${l.services.wedding}</option><option value="training">${l.services.training}</option>`;
+            serviceSelect.innerHTML = `<option value="">${l.services.placeholder}</option>
+                <option value="personal">${l.services.personal}</option>
+                <option value="wedding">${l.services.wedding}</option>
+                <option value="training">${l.services.training}</option>`;
             adaptToCity();
         }
 
@@ -182,29 +197,25 @@
             const city = document.getElementById('citySelect').value;
             const status = document.getElementById('cityStatus');
             const overlay = document.getElementById('cityOverlay');
-            const styleColor = { 'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'السليمانية': '#6a1b9a' };
-            status.innerText = data['ar'].msgs[city] || '';
+            const styleColor = { 'البصرة': '#0277bd', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'كركوك': '#004d40' };
+            status.innerText = data[currentLang].msgs[city] || '';
             overlay.style.backgroundColor = styleColor[city] || '#002349';
-        }
-
-        function validateTime() {
-            const timeInput = document.getElementById('timeInput');
-            const hour = parseInt(timeInput.value.split(':')[0]);
-            if (hour < 8 || hour >= 23) { alert('أوقات العمل 8 ص - 11 م 🐋'); timeInput.value = ""; }
         }
 
         function startBooking() {
             const service = document.getElementById('mainService').value;
             const date = document.getElementById('dateInput').value;
             const time = document.getElementById('timeInput').value;
-            if(!service || !date || !time) { alert("يرجى ملء كافة الحقول 🐋"); return; }
-            window.location.href = `fleet.html?type=${service}&city=${document.getElementById('citySelect').value}`;
+            const city = document.getElementById('citySelect').value;
+            
+            if(!service || !date || !time) { alert("Please fill all fields"); return; }
+            
+            // التوجيه إلى صفحة الأسطول مع تمرير البيانات المتوافقة مع سكريبت قوقل
+            window.location.href = `fleet.html?type=${service}&city=${city}&date=${date}&time=${time}&lang=${currentLang}`;
         }
 
         window.onload = () => {
-            const dateInput = document.getElementById('dateInput');
-            dateInput.min = new Date().toISOString().split('T')[0];
-            dateInput.value = dateInput.min;
+            document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
             changeLang('ar');
         }
     </script>

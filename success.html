@@ -59,10 +59,10 @@
         };
 
         const content = {
-            ar: { greet: "تم الحجز بنجاح!", status: "تم إرسال بياناتك إلى خوادم الحوت...", sub: "سيقوم فريق الدعم الفني بالتواصل معك خلال دقائق.", sync: "تم المزامنة مع السجل الرقمي", back: "العودة للرئيسية", welcome: "عميلنا العزيز", already: "تم الحفظ مسبقاً", syncing: "جاري الحفظ..." },
-            ku: { greet: "سەرکەوتوو بوو!", status: "زانیارییەکانت نێردرا بۆ سێرڤەری حوت...", sub: "تیمی پشتگیری لە ماوەی چەند خولەکێکدا پەیوەندیت پێوە دەکەین.", sync: "زانیارییەکان پارێزراون", back: "گەڕانەوە بۆ سەرەتا", welcome: "کڕیاری بەڕێز", already: "پێشتر نێردراوە", syncing: "خەریکی پاراستنە..." },
-            tr: { greet: "Rezervasyon Başarılı!", status: "Verileriniz Al-Hut sunucularına gönderildi...", sub: "Destek ekibimiz birkaç dakika içinde sizinle iletişime geçecektir.", sync: "Dijital kayda senkronize edildi", back: "Ana Sayfaya Dön", welcome: "Değerli Müşterimiz", already: "Zaten kaydedildi", syncing: "Kaydediliyor..." },
-            en: { greet: "Booking Successful!", status: "Your data has been sent to Al-Hut servers...", sub: "Our support team will contact you within minutes.", sync: "Synchronized with digital record", back: "Back to Home", welcome: "Valued Customer", already: "Already saved", syncing: "Saving now..." }
+            ar: { greet: "تم الحجز بنجاح!", status: "تم إرسال بياناتك إلى خوادم الحوت...", sub: "سيقوم فريق الدعم الفني بالتواصل معك خلال دقائق.", sync: "تم المزامنة مع السجل الرقمي", back: "العودة للرئيسية", welcome: "عميلنا العزيز", already: "تم الحفظ مسبقاً ✅", syncing: "جاري الحفظ..." },
+            ku: { greet: "سەرکەوتوو بوو!", status: "زانیارییەکانت نێردرا بۆ سێرڤەری حوت...", sub: "تیمی پشتگیری لە ماوەی چەند خولەکێکدا پەیوەندیت پێوە دەکەین.", sync: "زانیارییەکان پارێزراون", back: "گەڕانەوە بۆ سەرەتا", welcome: "کڕیاری بەڕێز", already: "پێشتر نێردراوە ✅", syncing: "خەریکی پاراستنە..." },
+            tr: { greet: "Rezervasyon Başarılı!", status: "Verileriniz Al-Hut sunucularına gönderildi...", sub: "Destek ekibimiz birkaç dakika içinde sizinle iletişime geçecektir.", sync: "Dijital kayda senkronize edildi", back: "Ana Sayfaya Dön", welcome: "Değerli Müşterimiz", already: "Zaten kaydedildi ✅", syncing: "Kaydediliyor..." },
+            en: { greet: "Booking Successful!", status: "Your data has been sent to Al-Hut servers...", sub: "Our support team will contact you within minutes.", sync: "Synchronized with digital record", back: "Back to Home", welcome: "Valued Customer", already: "Already saved ✅", syncing: "Saving now..." }
         };
 
         window.onload = () => {
@@ -81,13 +81,18 @@
             document.getElementById('syncText').innerText = l.syncing;
             document.getElementById('userNameDisplay').innerText = u.get('name') || l.welcome;
 
-            let finalOrderID = u.get('order_id') || "HUT-" + Math.floor(1000 + Math.random() * 9000);
+            // توليد معرف ثابت للطلب بناءً على بيانات العميل لمنع التكرار حتى لو لم يأتِ ID من الرابط
+            let orderSeed = u.get('phone') + u.get('car') + u.get('total_price');
+            let finalOrderID = u.get('order_id') || "HUT-" + btoa(orderSeed).substring(0, 6).toUpperCase();
             document.getElementById('orderIDDisplay').innerText = "#" + finalOrderID;
 
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [c.main, c.accent] });
 
-            if (sessionStorage.getItem('sent_' + finalOrderID)) {
+            // الفحص الجوهري: إذا تم الإرسال في هذه الجلسة، لا تكرر الـ fetch
+            if (sessionStorage.getItem('order_sent_' + finalOrderID)) {
+                console.log("Order already sent in this session.");
                 document.getElementById('syncText').innerText = l.already;
+                document.getElementById('syncIcon').className = "fas fa-check-double text-green-500";
                 document.getElementById('syncIcon').classList.remove('animate-pulse');
                 return;
             }
@@ -110,17 +115,23 @@
                 date: new Date().toLocaleString('en-GB')
             };
 
+            // وضع علامة "جاري الإرسال" لمنع النقرات المزدوجة السريعة جداً
+            sessionStorage.setItem('order_sent_' + finalOrderID, 'pending');
+
             fetch(scriptURL, {
                 method: 'POST',
                 mode: 'no-cors',
                 cache: 'no-cache',
                 body: JSON.stringify(payload)
             }).then(() => {
-                sessionStorage.setItem('sent_' + finalOrderID, 'true');
+                // تأكيد الإرسال بنجاح في ذاكرة المتصفح
+                sessionStorage.setItem('order_sent_' + finalOrderID, 'true');
                 document.getElementById('syncText').innerText = l.sync;
                 document.getElementById('syncIcon').className = "fas fa-check-double text-green-500";
+                document.getElementById('syncIcon').classList.remove('animate-pulse');
             }).catch(err => {
-                document.getElementById('syncText').innerText = "Sync Error";
+                sessionStorage.removeItem('order_sent_' + finalOrderID); // السماح بالمحاولة مرة أخرى في حال الفشل الحقيقي
+                document.getElementById('syncText').innerText = "Sync Error - Retry Refresh";
             });
         };
     </script>

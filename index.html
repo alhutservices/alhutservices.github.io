@@ -19,7 +19,7 @@
         @keyframes bgMove { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
         .brand-text-style { font-weight: 900; line-height: 1.2; color: white; }
         .whale-left-container { display: flex; flex-direction: column; align-items: center; justify-content: center; animation: floating 4s ease-in-out infinite; }
-        .whale-emoji { font-size: 6rem; line-height: 1; filter: drop-shadow(0(0,0,0,0.4)); }
+        .whale-emoji { font-size: 6rem; line-height: 1; filter: drop-shadow(0 15px 20px rgba(0,0,0,0.4)); }
         .whale-text-white { font-size: 4rem; font-weight: 900; color: white; margin-top: -10px; }
         @keyframes floating { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-25px) rotate(5deg); } }
         .glass-box { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.4); transform: translateY(-180px); border-radius: 3.5rem; position: relative; z-index: 30; }
@@ -29,9 +29,8 @@
         .lang-btn:hover { background: #D4AF37; color: #002349; transform: scale(1.1); }
         .city-overlay { position: absolute; inset: 0; opacity: 0.65; transition: 1s; pointer-events: none; }
         #daysWrapper { transition: all 0.4s ease; overflow: hidden; }
-        .hidden-field { max-width: 0; opacity: 0; transform: scaleX(0); margin: 0; padding: 0; pointer-events: none; }
-        .show-field { max-width: 500px; opacity: 1; transform: scaleX(1); }
-        .seo-section { font-size: 1px; color: transparent; position: absolute; }
+        .hidden-field { max-width: 0; opacity: 0; transform: scaleX(0); margin: 0; padding: 0; pointer-events: none; visibility: hidden; }
+        .show-field { max-width: 500px; opacity: 1; transform: scaleX(1); visibility: visible; }
         @media (max-width: 768px) {
             .glass-box { transform: translateY(-130px); margin: 0 10px; }
             .hero-bg { padding-bottom: 14rem; }
@@ -56,10 +55,10 @@
         <div class="container mx-auto px-6 flex justify-between items-center relative z-10 header-flex">
             <div class="text-right">
                 <h1 class="text-5xl md:text-7xl brand-text-style mb-4" id="brandName">
-                    استأجر سيارة<br>قريبة منك تناسب<br>رحلتك
+                    استأجر سيارة<br>أو تعلم السياقة<br>بأفضل الأسعار
                 </h1>
                 <p id="dynamicGreeting" class="text-xl md:text-2xl font-black transition-all duration-500 drop-shadow-lg text-white/90 mb-2 h-8"></p>
-                <p id="subGreeting" class="text-lg md:text-xl font-bold text-[#D4AF37]">أفضل موقع لتأجير السيارات وتعليم السياقة</p>
+                <p id="subGreeting" class="text-lg md:text-xl font-bold text-[#D4AF37]">أفضل منصة في العراق</p>
             </div>
             <div class="whale-left-container">
                 <div class="whale-emoji">🐋</div>
@@ -122,49 +121,46 @@
                 faqs: [
                     {q: 'أين تتوفر مكاتب الحوت لتأجير السيارات؟', a: 'خدماتنا تغطي كركوك، بغداد، أربيل، السليمانية، الموصل، ديالى، الأنبار، والبصرة. نحن الخيار الأول لتأجير السيارات في العراق.'},
                     {q: 'هل يوجد مكتب تعليم قيادة في كركوك أو بغداد؟', a: 'نعم، نوفر أرخص مكاتب تعليم السياقة في كركوك وبغداد وديالى والموصل مع مدربين ذوي كفاءة عالية.'},
-                    {q: 'كيف يمكنني حجز سيارة في أربيل أو البصرة؟', a: 'يمكنك الحجز مباشرة عبر الموقع واختيار المدينة (أربيل، البصرة، أو الأنبار) وتحديد الوقت والتاريخ بسهولة.'}
+                    {q: 'كيف يمكنني حجز سيارة في أربيل أو البصرة؟', a: 'يمكنك الحجز مباشرة عبر الموقع واختيار المدينة وتحديد الوقت والتاريخ بسهولة.'}
                 ],
                 services: { placeholder: '-- اختر الخدمة --', personal: '🚗 تأجير سيارة شخصية', wedding: '🎁 سيارات أعراس', training: '🎓 تعليم قيادة' },
                 cities: { 'كركوك': 'كركوك 💎', 'بغداد': 'بغداد 🏰', 'أربيل': 'أربيل 🏔️', 'السليمانية': 'السليمانية 🌲', 'الموصل': 'الموصل 🏹', 'البصرة': 'البصرة ⚓', 'الأنبار': 'الأنبار 🌴', 'ديالى': 'ديالى 🍊' },
-                msgs: { 'كركوك': 'أفضل مكاتب كركوك..', 'بغداد': 'أهلاً بك في بغداد..', 'أربيل': 'خدماتنا في أربيل..' }
+                msgs: { 'كركوك': 'أفضل مكاتب كركوك..', 'بغداد': 'أهلاً بك في بغداد..', 'أربيل': 'خدماتنا في أربيل..', 'السليمانية': 'جمال السليمانية..', 'الموصل': 'عراقة الموصل..', 'البصرة': 'بصرتنا الفيحاء..', 'الأنبار': 'كرم الأنبار..', 'ديالى': 'ديالى البرتقال..' }
             },
             ku: {
                 dir: 'rtl', font: 'Tajawal', whale: 'ئەلحووت', brand: 'ئۆتۆمبێل بەکرێ بگرە<br>یان فێری شۆفێری بە', subGreet: 'باشترین شوێن بۆ فێربوونی شۆفێری',
                 labelCity: 'شار', labelService: 'خزمەتگوزاری', labelDays: 'ڕۆژەکان', labelDate: 'بەروار', labelTime: 'کات', btnText: 'بەردەوام بە', alert: 'تکایە خانەکان پڕبکەرەوە 🐋',
                 whyTitle: 'بۆچی ئەلحووت باشترینە لە عێراق؟',
-                whyDesc: 'ئێمە لە (کەرکوک، بەغداد، هەولێر، سلێمانی، مووسڵ، دیالە، ئەنبار، و بەسرە) خزمەتگوزاری پێشکەش دەکەین.',
+                whyDesc: 'ئێمە لە کەرکوک، هەولێر، سلێمانی، بەغداد و هەموو شارەکان ئامادەین.',
                 faqTitle: 'پسیارە باوەکان',
                 faqs: [
-                    {q: 'نوسینگەی ئەلحووت لە کام شارانە هەیە؟', a: 'لە کەرکوک، هەولێر، سلێمانی، بەغداد و هەموو شارەکانی تری عێراق ئامادەین.'},
-                    {q: 'فێربوونی شۆفێری لە کەرکوک هەیە؟', a: 'بەڵێ، باشترین و هەرزانترین نوسینگەی فێربوونی شۆفێریمان هەیە لە کەرکوک و هەولێر.'}
+                    {q: 'نوسینگەی ئەلحووت لە کام شارانە هەیە؟', a: 'لە کەرکوک، هەولێر، سلێمانی، بەغداد و هەموو شارەکانی تری عێراق ئامادەین.'}
                 ],
                 services: { placeholder: '-- خزمەتگوزاری --', personal: '🚗 بەکرێگرتن', wedding: '🎁 زەماوەند', training: '🎓 فێربوونی شۆفێری' },
-                cities: { 'كركوك': 'کەرکوک 💎', 'بغداد': 'بەغداد 🏰', 'أربيل': 'هەولێر 🏔️', 'السليمانية': 'سلێمانی 🌲', 'الموصل': 'مووسڵ 🏹', 'البصرة': 'بەسرە ⚓', 'الأنبار': 'ئەنبار 🌴', 'ديالى': 'دیالە 🍊' }
+                cities: { 'كركوك': 'کەرکوک 💎', 'بغداد': 'بەغداد 🏰', 'أربيل': 'هەولێر 🏔️', 'السليمانية': 'سلێمانی 🌲', 'الموصل': 'مووسڵ 🏹', 'البصرة': 'بەسرە ⚓', 'الأنبار': 'ئەنبار 🌴', 'ديالى': 'دیالە 🍊' },
+                msgs: { 'كركوك': 'کەرکوک..', 'أربيل': 'هەولێر..', 'بغداد': 'بەغداد..' }
             },
             tr: {
-                dir: 'ltr', font: 'Poppins', whale: 'AL-HUT', brand: 'Araç Kiralama<br>ve Ehliyet Kursu', subGreet: 'Irak\'ın en iyi kiralama sitesi',
+                dir: 'ltr', font: 'Poppins', whale: 'AL-HUT', brand: 'Araç Kiralama<br>ve Ehliyet Kursu', subGreet: 'Irak\'ın en iyi sitesi',
                 labelCity: 'City', labelService: 'Service', labelDays: 'Days', labelDate: 'Date', labelTime: 'Time', btnText: 'Continue', alert: 'Fill fields 🐋',
-                whyTitle: 'Neden Al-Hut Platformu?',
-                whyDesc: 'Kerkük, Bağdat, Erbil, Süleymaniye, Musul, Diyala, Enbar ve Basra\'da hizmet vermekteyiz.',
+                whyTitle: 'Neden Al-Hut?',
+                whyDesc: 'Kerkük, Bağdat, Erbil ve tüm Irak\'ta hizmetinizdeyiz.',
                 faqTitle: 'Sıkça Sorulan Sorular',
-                faqs: [
-                    {q: 'Hangi şehirlerde araç kiralayabilirim?', a: 'Kerkük, Bağdat, Erbil, Süleymaniye, Musul ve tüm Irak şehirlerinde yanınızdayız.'}
-                ],
+                faqs: [{q: 'Neredeyiz?', a: 'Kerkük, Bağdat ve Erbil başta olmak üzere tüm Irak.'}],
                 services: { placeholder: '-- Service --', personal: '🚗 Rental', wedding: '🎁 Wedding', training: '🎓 Driving School' },
-                cities: { 'كركوك': 'Kerkük 💎', 'بغداد': 'Bağdat 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Süleymaniye 🌲', 'الموصل': 'Musul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Enbar 🌴', 'ديالى': 'Diyala 🍊' }
+                cities: { 'كركوك': 'Kerkük 💎', 'بغداد': 'Bağdat 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Süleymaniye 🌲', 'الموصل': 'Musul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Enbar 🌴', 'ديالى': 'Diyala 🍊' },
+                msgs: { 'كركوك': 'Kerkük..', 'بغداد': 'Bağdat..' }
             },
             en: {
-                dir: 'ltr', font: 'Poppins', whale: 'AL-HUT', brand: 'Car Rental<br>& Driving School', subGreet: 'Best car rental in Iraq',
+                dir: 'ltr', font: 'Poppins', whale: 'AL-HUT', brand: 'Car Rental<br>& Driving School', subGreet: 'Best in Iraq',
                 labelCity: 'City', labelService: 'Service', labelDays: 'Days', labelDate: 'Date', labelTime: 'Time', btnText: 'Continue', alert: 'Fill fields 🐋',
-                whyTitle: 'Why Al-Hut is the Best in Iraq?',
-                whyDesc: 'We provide car rental and driving lessons in Kirkuk, Baghdad, Erbil, Sulaymaniyah, Mosul, Diyala, Anbar, and Basra.',
-                faqTitle: 'Frequently Asked Questions',
-                faqs: [
-                    {q: 'Where is Al-Hut available?', a: 'We operate in Kirkuk, Baghdad, Erbil, Mosul, Basra and all major Iraqi cities.'},
-                    {q: 'Do you offer driving lessons?', a: 'Yes, we have the best driving schools in Kirkuk and Baghdad.'}
-                ],
+                whyTitle: 'Why Al-Hut?',
+                whyDesc: 'Best car rental and driving training in Iraq.',
+                faqTitle: 'FAQs',
+                faqs: [{q: 'Locations?', a: 'Baghdad, Kirkuk, Erbil and more.'}],
                 services: { placeholder: '-- Select --', personal: '🚗 Rental', wedding: '🎁 Wedding', training: '🎓 Driving Training' },
-                cities: { 'كركوك': 'Kirkuk 💎', 'بغداد': 'Baghdad 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Sulaymaniyah 🌲', 'الموصل': 'Mosul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Anbar 🌴', 'ديالى': 'Diyala 🍊' }
+                cities: { 'كركوك': 'Kirkuk 💎', 'بغداد': 'Baghdad 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Sulaymaniyah 🌲', 'الموصل': 'Mosul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Anbar 🌴', 'ديالى': 'Diyala 🍊' },
+                msgs: { 'كركوك': 'Kirkuk..', 'بغداد': 'Baghdad..' }
             }
         };
 
@@ -185,8 +181,8 @@
             document.getElementById('whyTitle').innerText = l.whyTitle;
             document.getElementById('whyDesc').innerText = l.whyDesc;
             document.getElementById('faqTitle').innerText = l.faqTitle;
-            
-            // تحديث الأسئلة الشائعة ديناميكياً
+            document.getElementById('btnIcon').className = `fas fa-arrow-${l.dir === 'rtl' ? 'left' : 'right'}`;
+
             const faqContainer = document.getElementById('faqContainer');
             faqContainer.style.textAlign = l.dir === 'rtl' ? 'right' : 'left';
             faqContainer.innerHTML = l.faqs.map(f => `
@@ -210,8 +206,9 @@
             const greet = document.getElementById('dynamicGreeting');
             const l = data[currentLang];
             const hour = new Date().getHours();
-            let timeText = hour < 12 ? l.morning : (hour < 18 ? l.day : l.evening);
-            greet.innerText = `${timeText}.. ${l.msgs ? (l.msgs[city] || city) : city}`;
+            let timeBase = hour < 12 ? (l.morning || "صباح الخير") : (hour < 18 ? (l.day || "طاب يومك") : (l.evening || "مساء الخير"));
+            let cityMsg = (l.msgs && l.msgs[city]) ? l.msgs[city] : city;
+            greet.innerText = `${timeBase}.. ${cityMsg}`;
         }
 
         function checkService() {
@@ -240,10 +237,16 @@
             const city = document.getElementById('citySelect').value;
             const days = document.getElementById('daysInput').value;
             if(!service || !date || !time) { alert(data[currentLang].alert); return; }
-            window.location.href = `fleet.html?type=${service}&lang=${currentLang}&city=${city}`;
+            
+            // تصحيح مسار التوجيه بناءً على الخدمة
+            let targetPage = (service === "training") ? "addons.html" : "fleet.html";
+            window.location.href = `${targetPage}?type=${service}&lang=${currentLang}&date=${date}&time=${time}&city=${city}&days=${days}`;
         }
 
         window.onload = () => {
+            const dateInput = document.getElementById('dateInput');
+            dateInput.min = new Date().toISOString().split('T')[0];
+            dateInput.value = dateInput.min;
             changeLang('ar');
         }
     </script>

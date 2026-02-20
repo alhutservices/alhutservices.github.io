@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>منصة الحوت | تأجير سيارات وتعليم سياقة في العراق</title>
-    <meta name="description" content="أرخص وأفضل منصة لتأجير السيارات وتدريب السياقة في بغداد، كركوك، أربيل وكافة مدن العراق. سيارات أعراس، تدريب نساء، وأحدث السيارات.">
-    <meta name="keywords" content="سيارات للايجار، سياقة العراق، أرخص مكتب سياقة، أفضل تأجير سيارات، بغداد، كركوك، أربيل، البصرة، الموصل، السليمانية، الأنبار، ديالى">
+    <title>منصة الحوت | أرخص تأجير سيارات وأفضل تدريب قيادة في العراق</title>
+    <meta name="description" content="منصة الحوت: الخيار الأول لـ تأجير سيارات في بغداد، كركوك، أربيل، وكافة مدن العراق. أرخص الأسعار، أفضل تدريب قيادة للنساء، وأحدث سيارات الأعراس.">
+    <meta name="keywords" content="سيارات للايجار، موقع للايجار، سيارات للايجار في العراق، موقع الحوت للسيارات، سيارات للايجار في بغداد، افضل موقع لتاجير السيارات في العراق، مكتب لتاجير السيارات في البصرة، افضل مكتب لتاجير السيارات في كركوك، ارخص موقع لتاجير السيارات، افضل موقع لتدريب السياقة، افضل مكتب لتدريب النساء على السياقة، ارخص مكتب لتدريب النساء على السياقة، اقرب مكتب لتدريب السياقة، افضل مكتب لتعليم القيادة، Rent a car Iraq, Baghdad car rental, Erbil car hire, فێربوونی شۆفێری, Irak araç kiralama">
     
     <link rel="icon" type="image/png" href="Cars/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,21 +14,88 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; transition: 0.5s; }
-        .hero-bg { background: linear-gradient(135deg, #002349 0%, #004d99 100%); position: relative; padding: 6rem 0 18rem 0; overflow: hidden; }
-        .glass-box { background: white; box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.2); transform: translateY(-150px); border-radius: 2.5rem; position: relative; z-index: 30; border: 1px solid #e2e8f0; }
-        .smart-input { width: 100%; padding: 1.1rem 1rem; background: #f1f5f9; border: 2px solid transparent; border-radius: 1.2rem; font-weight: 700; outline: none; transition: 0.3s; color: #002349; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; transition: 0.5s; overflow-x: hidden; }
+        
+        /* التفاعل البصري للهيدر */
+        .hero-bg { 
+            background: linear-gradient(135deg, #002349 0%, #004d99 100%); 
+            position: relative; 
+            padding: 6rem 0 18rem 0; 
+            overflow: hidden; 
+        }
+
+        /* نمط الخريطة المتحرك في الخلفية */
+        .map-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: 0.15;
+            pointer-events: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text y="40" x="10" font-size="20">📍</text><text y="80" x="50" font-size="18">🗺️</text></svg>');
+            background-repeat: repeat;
+            animation: bgMove 40s linear infinite;
+        }
+
+        @keyframes bgMove {
+            from { background-position: 0 0; }
+            to { background-position: 1000px 1000px; }
+        }
+
+        #cityOverlay {
+            transition: background-color 1s ease-in-out;
+        }
+
+        .glass-box { 
+            background: white; 
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.2); 
+            transform: translateY(-150px); 
+            border-radius: 2.5rem; 
+            position: relative; 
+            z-index: 30; 
+            border: 1px solid #e2e8f0; 
+        }
+
+        .smart-input { 
+            width: 100%; 
+            padding: 1.1rem 1rem; 
+            background: #f1f5f9; 
+            border: 2px solid transparent; 
+            border-radius: 1.2rem; 
+            font-weight: 700; 
+            outline: none; 
+            transition: 0.3s; 
+            color: #002349; 
+        }
+
         .smart-input:focus { border-color: #D4AF37; background: #fff; }
-        .lang-btn { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; }
+
+        .lang-btn { 
+            background: rgba(255,255,255,0.1); 
+            padding: 8px 15px; 
+            border-radius: 12px; 
+            color: white; 
+            font-weight: 900; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            transition: 0.3s; 
+            font-size: 0.85rem;
+        }
+
         .lang-active { background: #D4AF37 !important; color: #002349 !important; border-color: #D4AF37; }
+
         .hidden-field { display: none; }
+
         [dir="rtl"] .text-start-custom { text-align: right; }
         [dir="ltr"] .text-start-custom { text-align: left; }
+
+        .whale-float { animation: floating 4s ease-in-out infinite; }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
     </style>
 </head>
 <body>
 
-    <div class="fixed top-6 left-0 right-0 z-[100] flex justify-center gap-2">
+    <div class="fixed top-6 left-0 right-0 z-[100] flex justify-center gap-2 px-4">
         <button onclick="changeLang('ar')" id="btn-ar" class="lang-btn">العربية</button>
         <button onclick="changeLang('ku')" id="btn-ku" class="lang-btn">کوردی</button>
         <button onclick="changeLang('tr')" id="btn-tr" class="lang-btn">Türkçe</button>
@@ -36,15 +103,17 @@
     </div>
 
     <header class="hero-bg text-white">
-        <div id="cityOverlay" class="absolute inset-0 opacity-40 transition-all duration-1000"></div>
+        <div id="cityOverlay" class="absolute inset-0 opacity-50"></div>
+        <div class="map-pattern"></div>
+        
         <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
             <div class="text-start-custom w-full">
                 <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight" id="brandName"></h1>
-                <p id="dynamicGreeting" class="text-xl md:text-2xl font-bold opacity-90 mb-2"></p>
+                <p id="dynamicGreeting" class="text-xl md:text-2xl font-bold opacity-90 mb-2 h-8"></p>
                 <p id="subGreeting" class="text-lg font-bold text-[#D4AF37]"></p>
             </div>
-            <div class="text-center animate-pulse">
-                <div class="text-8xl">🐋</div>
+            <div class="text-center whale-float">
+                <div class="text-8xl drop-shadow-2xl">🐋</div>
                 <div class="text-3xl font-black mt-2" id="whaleTitle"></div>
             </div>
         </div>
@@ -70,8 +139,8 @@
                     <input type="number" id="daysInput" class="smart-input" value="1" min="1">
                 </div>
                 <div class="md:col-span-2">
-                    <button onclick="startBooking()" class="w-full bg-[#002349] text-white py-4 rounded-xl font-black text-xl hover:bg-[#D4AF37] hover:text-[#002349] transition-all">
-                        <span id="btnText"></span>
+                    <button onclick="startBooking()" class="w-full bg-[#002349] text-white py-4 rounded-xl font-black text-xl hover:bg-[#D4AF37] hover:text-[#002349] transition-all flex items-center justify-center gap-2">
+                        <span id="btnText"></span> <i class="fas fa-arrow-left transition-transform" id="btnIcon"></i>
                     </button>
                 </div>
             </div>
@@ -88,45 +157,46 @@
         
         const translations = {
             ar: {
-                dir: 'rtl', whale: 'الحوت', brand: 'أرخص تأجير سيارات<br>وأفضل تدريب قيادة', subGreet: 'الخيار الأول في العراق',
-                labelCity: 'المدينة', labelService: 'نوع الخدمة', labelDate: 'التاريخ', labelDays: 'عدد الأيام', btnText: 'استمر الآن',
-                faqTitle: 'الأسئلة الشائعة',
+                dir: 'rtl', whale: 'الحوت', brand: 'أرخص تأجير سيارات<br>وأفضل تدريب قيادة', subGreet: 'أحسن منصة خدمات في العراق لعام 2026',
+                labelCity: 'المدينة (أقرب مكتب)', labelService: 'نوع الخدمة', labelDate: 'التاريخ', labelDays: 'عدد الأيام', btnText: 'استمر الآن',
+                faqTitle: 'الأسئلة الشائعة حول خدماتنا',
                 faqs: [
-                    {q: 'لماذا الحوت؟', a: 'لأننا نجمع أرخص وأفضل المكاتب في مكان واحد.'},
-                    {q: 'هل يوجد تدريب للنساء؟', a: 'نعم، نوفر أفضل المدربات المحترفات في مدينتك.'}
+                    {q: 'أين أجد أرخص مكتب تأجير سيارات؟', a: 'منصة الحوت تقارن لك الأسعار في بغداد وكركوك لتعطيك أفضل سعر.'},
+                    {q: 'هل يتوفر تدريب قيادة للنساء؟', a: 'نعم، نحن أفضل مكتب لتدريب النساء على السياقة مع أمهر المدربات.'},
+                    {q: 'كيف أجد أقرب مكتب سياقة؟', a: 'بمجرد اختيار مدينتك، سنظهر لك أحسن المكاتب القريبة من موقعك.'}
                 ],
-                services: { placeholder: '-- اختر الخدمة --', personal: '🚗 تأجير سيارات', wedding: '🎁 سيارات أعراس', training: '🎓 تعليم سياقة' },
+                services: { placeholder: '-- اختر الخدمة --', personal: '🚗 تأجير سيارات (الأرخص)', wedding: '🎁 سيارات أعراس (الأفضل)', training: '🎓 تعليم سياقة (الأحسن)' },
                 cityNames: { 'كركوك': 'كركوك 💎', 'بغداد': 'بغداد 🏰', 'أربيل': 'أربيل 🏔️', 'السليمانية': 'السليمانية 🌲', 'الموصل': 'الموصل 🏹', 'البصرة': 'البصرة ⚓', 'الأنبار': 'الأنبار 🌴', 'ديالى': 'ديالى 🍊' }
             },
             ku: {
-                dir: 'rtl', whale: 'ئەلحووت', brand: 'هەرزانترین بەکرێگرتن<br>باشترین فێربوونی شۆفێری', subGreet: 'هەڵبژاردەی یەکەم لە عێراق',
-                labelCity: 'شار', labelService: 'جۆری خزمەتگوزاری', labelDate: 'بەروار', labelDays: 'ڕۆژەکان', btnText: 'بەردەوام بە',
+                dir: 'rtl', whale: 'ئەلحووت', brand: 'هەرزانترین بەکرێگرتن<br>باشترین فێربوونی شۆفێری', subGreet: 'هەڵبژاردەی یەکەم لە هەموو عێراق',
+                labelCity: 'شار', labelService: 'خزمەتگوزاری', labelDate: 'بەروار', labelDays: 'ڕۆژەکان', btnText: 'بەردەوام بە',
                 faqTitle: 'پسیارە باوەکان',
                 faqs: [
-                    {q: 'بۆچی ئەلحووت؟', a: 'چونکە ئێمە باشترین و هەرزانترین نووسینگەکان کۆدەکەینەوە.'},
-                    {q: 'فێربوونی شۆفێری بۆ ئافرەتان هەیە؟', a: 'بەڵێ، باشترین ڕاهێنەری شارەزامان هەیە.'}
+                    {q: 'بۆچی ئەلحووت باشترینە؟', a: 'چونکە هەرزانترین نرخ و باشترین جۆر کۆدەکەینەوە.'},
+                    {q: 'فێربوونی شۆفێری بۆ ئافرەتان هەیە؟', a: 'بەڵێ، باشترین ڕاهێنەری شارەزامان هەیە لە شارەکەت.'}
                 ],
                 services: { placeholder: '-- خزمەتگوزاری --', personal: '🚗 بەکرێگرتنی سەیارە', wedding: '🎁 سەیارەی زەماوەند', training: '🎓 فێربوونی شۆفێری' },
                 cityNames: { 'كركوك': 'کەرکوک 💎', 'بغداد': 'بەغداد 🏰', 'أربيل': 'هەولێر 🏔️', 'السليمانية': 'سلێمانی 🌲', 'الموصل': 'مووسڵ 🏹', 'البصرة': 'بەسرە ⚓', 'الأنبار': 'ئەنبار 🌴', 'ديالى': 'دیالە 🍊' }
             },
             tr: {
-                dir: 'ltr', whale: 'AL-HUT', brand: 'En Ucuz Araç Kiralama<br>En İyi Ehliyet Kursu', subGreet: 'Irak\'ın Bir Numaralı Platformu',
-                labelCity: 'Şehir', labelService: 'Hizmet Türü', labelDate: 'Tarih', labelDays: 'Gün Sayısı', btnText: 'Devam Et',
+                dir: 'ltr', whale: 'AL-HUT', brand: 'En Ucuz Araç Kiralama<br>En İyi Ehliyet Kursu', subGreet: 'Irak\'ın 1 Numaralı Platformu',
+                labelCity: 'Şehir', labelService: 'Hizmet', labelDate: 'Tarih', labelDays: 'Gün', btnText: 'Devam Et',
                 faqTitle: 'Sıkça Sorulan Sorular',
                 faqs: [
-                    {q: 'Neden Al-Hut?', a: 'Çünkü en ucuz ve en iyi acenteleri tek çatı altında topluyoruz.'},
-                    {q: 'Bayan eğitmen var mı?', a: 'Evet, şehrinizdeki en profesyonel bayan eğitmenleri sağlıyoruz.'}
+                    {q: 'En ucuz araç nerede?', a: 'Al-Hut, Bağdat ve Kerkük\'te size en iyi fiyatları sunar.'},
+                    {q: 'Bayan eğitmen var mı?', a: 'Evet, en profesyonel bayan eğitmenlerle çalışıyoruz.'}
                 ],
                 services: { placeholder: '-- Hizmet Seç --', personal: '🚗 Araç Kiralama', wedding: '🎁 Düğün Arabası', training: '🎓 Ehliyet Kursu' },
                 cityNames: { 'كركوك': 'Kerkük 💎', 'بغداد': 'Bağdat 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Süleymaniye 🌲', 'الموصل': 'Musul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Anbar 🌴', 'ديالى': 'Diyala 🍊' }
             },
             en: {
-                dir: 'ltr', whale: 'AL-HUT', brand: 'Cheapest Car Rental<br>& Best Driving School', subGreet: 'The #1 Platform in Iraq',
-                labelCity: 'City', labelService: 'Service Type', labelDate: 'Date', labelDays: 'Days', btnText: 'Continue',
-                faqTitle: 'Frequently Asked Questions',
+                dir: 'ltr', whale: 'AL-HUT', brand: 'Cheapest Car Rental<br>& Best Driving School', subGreet: 'The Best Choice in Iraq 2026',
+                labelCity: 'City', labelService: 'Service', labelDate: 'Date', labelDays: 'Days', btnText: 'Continue',
+                faqTitle: 'General FAQ',
                 faqs: [
-                    {q: 'Why Al-Hut?', a: 'We bring the best and cheapest agencies into one place.'},
-                    {q: 'Is there training for women?', a: 'Yes, we provide the best female professional instructors.'}
+                    {q: 'Why choose Al-Hut?', a: 'We provide the cheapest and best services in one place.'},
+                    {q: 'Is there training for ladies?', a: 'Yes, we have the best professional female instructors.'}
                 ],
                 services: { placeholder: '-- Select Service --', personal: '🚗 Car Rental', wedding: '🎁 Wedding Cars', training: '🎓 Driving School' },
                 cityNames: { 'كركوك': 'Kirkuk 💎', 'بغداد': 'Baghdad 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Sulaymaniyah 🌲', 'الموصل': 'Mosul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Anbar 🌴', 'ديالى': 'Diyala 🍊' }
@@ -139,11 +209,9 @@
             document.getElementById('htmlTag').lang = lang;
             document.body.style.fontFamily = (lang === 'en' || lang === 'tr') ? 'Poppins' : 'Tajawal';
             
-            // Buttons Highlight
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('lang-active'));
             document.getElementById('btn-' + lang).classList.add('lang-active');
 
-            // Text Update
             document.getElementById('brandName').innerHTML = l.brand;
             document.getElementById('whaleTitle').innerText = l.whale;
             document.getElementById('subGreeting').innerText = l.subGreet;
@@ -153,8 +221,10 @@
             document.getElementById('labelDays').innerText = l.labelDays;
             document.getElementById('btnText').innerText = l.btnText;
             document.getElementById('faqTitle').innerText = l.faqTitle;
+            
+            // Icon direction
+            document.getElementById('btnIcon').style.transform = l.dir === 'rtl' ? 'rotate(0deg)' : 'rotate(180deg)';
 
-            // Selects Update
             const citySelect = document.getElementById('citySelect');
             const currentC = citySelect.value || 'كركوك';
             citySelect.innerHTML = citiesList.map(c => `<option value="${c}" ${c===currentC?'selected':''}>${l.cityNames[c]}</option>`).join('');
@@ -167,9 +237,8 @@
                 <option value="training">${l.services.training}</option>
             `;
 
-            // FAQ Update
             document.getElementById('faqContainer').innerHTML = l.faqs.map(f => `
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-r-4 border-[#D4AF37]">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-${l.dir==='rtl'?'r':'l'}-4 border-[#D4AF37]">
                     <h3 class="font-black text-lg text-[#002349] mb-2">${f.q}</h3>
                     <p class="text-slate-600">${f.a}</p>
                 </div>
@@ -180,12 +249,24 @@
 
         function adaptToCity() {
             const city = document.getElementById('citySelect').value;
-            const colors = { 'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'البصرة': '#01579b' };
+            const colors = { 
+                'كركوك': '#0d9488', 'بغداد': '#1e3a8a', 'أربيل': '#15803d', 
+                'السليمانية': '#7e22ce', 'الموصل': '#374151', 'البصرة': '#0369a1', 
+                'الأنبار': '#b45309', 'ديالى': '#65a30d' 
+            };
+            
             document.getElementById('cityOverlay').style.backgroundColor = colors[city] || '#002349';
             
             const greetings = { ar: 'أهلاً بك في', ku: 'بەخێربێیت بۆ', tr: 'Hoş geldiniz', en: 'Welcome to' };
             const lang = document.getElementById('htmlTag').lang;
-            document.getElementById('dynamicGreeting').innerText = `${greetings[lang]} ${city}`;
+            const l = translations[lang] || translations['ar'];
+            
+            const greetEl = document.getElementById('dynamicGreeting');
+            greetEl.style.opacity = 0;
+            setTimeout(() => {
+                greetEl.innerText = `${greetings[lang]} ${l.cityNames[city].split(' ')[0]}`;
+                greetEl.style.opacity = 1;
+            }, 200);
         }
 
         function checkService() {
@@ -195,8 +276,10 @@
         }
 
         function startBooking() {
-            // Logic for redirect
-            alert("Redirecting to Fleet...");
+            const svc = document.getElementById('mainService').value;
+            const city = document.getElementById('citySelect').value;
+            if(!svc) return alert("يرجى اختيار الخدمة أولاً 🐋");
+            window.location.href = `fleet.html?type=${svc}&city=${city}&lang=${document.getElementById('htmlTag').lang}`;
         }
 
         window.onload = () => changeLang('ar');

@@ -1,8 +1,24 @@
+# 🐋 Al-Hut Car Rental Platform - Robots.txt
+# Optimized for Google, Bing, and Local Search in Iraq
+
 User-agent: *
 Allow: /
+Allow: /index.html
+Allow: /fleet.html
+Allow: /addons.html
+
+# منع أرشفة الصفحات الإدارية أو صفحات النظام لزيادة الخصوصية والأمان
 Disallow: /login.html
 Disallow: /dashboard.html
+Disallow: /admin/
+Disallow: /config/
 
-# رابط خريطة الموقع لسهولة الوصول إليها
+# منع أرشفة نتائج البحث الداخلية لتجنب المحتوى المكرر
+Disallow: /*?s=
+Disallow: /*&search=
+
+# تحسين سرعة الأرشفة بتوجيه الروبوتات للملفات الأساسية
 Sitemap: https://alhutservices.github.io/sitemap.xml
 
+# رسالة ودية لعناكب البحث
+# "Welcome to the Whale Platform - The Best Car Rental in Iraq"

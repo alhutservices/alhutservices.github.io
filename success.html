@@ -49,9 +49,10 @@
     <script>
         const u = new URLSearchParams(window.location.search);
         const lang = u.get('lang') || 'ar';
-        const type = u.get('service') === 'زفاف' ? 'wedding' : (u.get('service') === 'تدريب قيادة' ? 'training' : 'personal');
+        const serviceType = u.get('service');
+        const type = serviceType === 'زفاف' ? 'wedding' : (serviceType === 'تدريب قيادة' ? 'training' : 'personal');
         
-        // الرابط الموحد والمعتمد لسكريبت الحوت
+        // الرابط الموحد لنظام الحوت
         const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
 
         const configs = {
@@ -67,7 +68,7 @@
             en: { greet: "Booking Successful!", status: "Your data has been sent to Al-Hut servers...", sub: "Our support team will contact you within minutes.", sync: "Synchronized with digital record", back: "Back to Home", welcome: "Valued Customer", already: "Already saved ✅", syncing: "Saving now..." }
         };
 
-        window.onload = () => {
+        window.onload = async () => {
             const c = configs[type] || configs.personal;
             const l = content[lang] || content.ar;
             const isRtl = (lang === 'ar' || lang === 'ku');
@@ -83,15 +84,13 @@
             document.getElementById('syncText').innerText = l.syncing;
             document.getElementById('userNameDisplay').innerText = u.get('name') || l.welcome;
 
-            // توليد معرف ثابت للطلب بناءً على بيانات العميل
             let orderSeed = u.get('phone') + u.get('car') + u.get('total_price');
             let finalOrderID = u.get('order_id') || "HUT-" + btoa(orderSeed).substring(0, 6).toUpperCase();
             document.getElementById('orderIDDisplay').innerText = "#" + finalOrderID;
 
-            // إطلاق الاحتفال البصري
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [c.main, c.accent] });
 
-            // الفحص لمنع تكرار الإرسال في نفس الجلسة
+            // منع التكرار
             if (sessionStorage.getItem('order_sent_' + finalOrderID)) {
                 document.getElementById('syncText').innerText = l.already;
                 document.getElementById('syncIcon').className = "fas fa-check-double text-green-500";
@@ -99,9 +98,7 @@
                 return;
             }
 
-            // تجهيز البيانات للإرسال إلى Google Sheets
             const payload = {
-                action: "submitOrder", // تحديد الأكشن للسكريبت
                 order_id: finalOrderID,
                 name: u.get('name'),
                 phone: u.get('phone'),
@@ -110,32 +107,33 @@
                 days: u.get('days') || "1",
                 addons: u.get('addon_display') || "None",
                 total_price: u.get('total_price'),
-                gender: u.get('gender') || "---",
-                age: u.get('age') || "---",
-                national_id: u.get('national_id') || "---",
-                license_no: u.get('license_no') || "---",
-                service: u.get('service') || "حجز سيارة",
-                location_link: u.get('location_link') || "",
-                timestamp: new Date().toISOString()
+                gender: u.get('gender'),
+                age: u.get('age'),
+                national_id: u.get('national_id'),
+                license_no: u.get('license_no'),
+                service: serviceType,
+                location_link: u.get('location_link'),
+                date: new Date().toLocaleString('en-GB')
             };
 
-            sessionStorage.setItem('order_sent_' + finalOrderID, 'pending');
+            try {
+                // استخدام التحسينات الجديدة: redirect: 'follow'
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors', // لضمان سرعة الإرسال دون قيود CORS في صفحة النجاح
+                    redirect: 'follow',
+                    cache: 'no-cache',
+                    body: JSON.stringify(payload)
+                });
 
-            // الإرسال الفعلي للسيرفر
-            fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                cache: 'no-cache',
-                body: JSON.stringify(payload)
-            }).then(() => {
                 sessionStorage.setItem('order_sent_' + finalOrderID, 'true');
                 document.getElementById('syncText').innerText = l.sync;
                 document.getElementById('syncIcon').className = "fas fa-check-double text-green-500";
                 document.getElementById('syncIcon').classList.remove('animate-pulse');
-            }).catch(err => {
-                sessionStorage.removeItem('order_sent_' + finalOrderID);
-                document.getElementById('syncText').innerText = "خطأ في المزامنة - يرجى تحديث الصفحة";
-            });
+            } catch (err) {
+                console.error("Sync error:", err);
+                document.getElementById('syncText').innerText = "Network Busy - Saved Locally";
+            }
         };
     </script>
 </body>

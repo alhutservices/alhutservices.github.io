@@ -134,7 +134,8 @@
     <main id="mainContainer" class="p-4 max-w-2xl mx-auto space-y-5 mt-4 pb-20"></main>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
+        // الرابط الجديد الذي زودتني به
+        const scriptURL = "https://script.google.com/macros/s/AKfycbyVwGAVebQY8TJa_hd58eEsHrK7eYZ0iH68gmQrpGMkiYM7SvLWQkuGL9UD1kqHWq7z/exec";
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new', allOrders = [], lastKnownNewOrders = -1;
 
@@ -144,7 +145,7 @@
 
         async function fetchOrders() {
             try {
-                // إضافة redirect: 'follow' لحل مشكلة فشل الاتصال مع جوجل سكريبت
+                // استخدام redirect: 'follow' لضمان عبور طلبات جوجل
                 const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`, {
                     method: 'GET',
                     redirect: 'follow'
@@ -157,15 +158,15 @@
                 renderCards();
             } catch(e) { 
                 console.error("خطأ في جلب بيانات الرادار:", e);
-                // محاولة أخرى بعد 5 ثواني في حال الفشل
-                setTimeout(fetchOrders, 5000);
+                // محاولة أخرى بعد 10 ثواني في حال الفشل لضمان استقرار الخدمة
+                setTimeout(fetchOrders, 10000);
             }
         }
 
         function checkNewOrdersAlert() {
+            const officeCity = (officeData.city || "").toString().trim();
             const myNewOrders = allOrders.filter(o => {
                 const orderProvince = (o.province || o.prov || "").toString().trim();
-                const officeCity = (officeData.city || "").toString().trim();
                 return orderProvince === officeCity && (o.status === "قيد الانتظار" || o.status === "طلب جديد");
             }).length;
 
@@ -310,19 +311,16 @@
             renderCards();
         }
 
-        // طلب إذن التنبيهات
         if ("Notification" in window) {
             Notification.requestPermission();
         }
 
-        // منع الشاشة من الإغلاق (WakeLock)
         if ('wakeLock' in navigator) {
             navigator.wakeLock.request('screen').catch(e => {});
         }
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        // جلب البيانات كل 15 ثانية
         setInterval(fetchOrders, 15000);
         fetchOrders();
 

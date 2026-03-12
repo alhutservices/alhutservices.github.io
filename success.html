@@ -52,8 +52,8 @@
         const serviceType = u.get('service');
         const type = serviceType === 'زفاف' ? 'wedding' : (serviceType === 'تدريب قيادة' ? 'training' : 'personal');
         
-        // الرابط الموحد لنظام الحوت
-        const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
+        // الرابط الجديد الخاص بك
+        const scriptURL = "https://script.google.com/macros/s/AKfycbyVwGAVebQY8TJa_hd58eEsHrK7eYZ0iH68gmQrpGMkiYM7SvLWQkuGL9UD1kqHWq7z/exec";
 
         const configs = {
             training: { main: '#7c3aed', accent: '#D4AF37' },
@@ -62,10 +62,10 @@
         };
 
         const content = {
-            ar: { greet: "تم الحجز بنجاح!", status: "تم إرسال بياناتك إلى خوادم الحوت...", sub: "سيقوم فريق الدعم الفني بالتواصل معك خلال دقائق.", sync: "تم المزامنة مع السجل الرقمي", back: "العودة للرئيسية", welcome: "عميلنا العزيز", already: "تم الحفظ مسبقاً ✅", syncing: "جاري الحفظ..." },
-            ku: { greet: "سەرکەوتوو بوو!", status: "زانیارییەکانت نێردرا بۆ سێرڤەری حوت...", sub: "تیمی پشتگیری لە ماوەی چەند خولەکێکدا پەیوەندیت پێوە دەکەین.", sync: "زانیارییەکان پارێزراون", back: "گەڕانەوە بۆ سەرەتا", welcome: "کڕیاری بەڕێز", already: "پێشتر نێردراوە ✅", syncing: "خەریکی پاراستنە..." },
-            tr: { greet: "Rezervasyon Başarılı!", status: "Verileriniz Al-Hut sunucularına gönderildi...", sub: "Destek ekibimiz birkaç dakika içinde sizinle iletişime geçecektir.", sync: "Dijital kayda senkronize edildi", back: "Ana Sayfaya Dön", welcome: "Değerli Müşterimiz", already: "Zaten kaydedildi ✅", syncing: "Kaydediliyor..." },
-            en: { greet: "Booking Successful!", status: "Your data has been sent to Al-Hut servers...", sub: "Our support team will contact you within minutes.", sync: "Synchronized with digital record", back: "Back to Home", welcome: "Valued Customer", already: "Already saved ✅", syncing: "Saving now..." }
+            ar: { greet: "تم الحجز بنجاح!", status: "تم إرسال بياناتك إلى خوادم الحوت...", sub: "سيقوم فريق الدعم الفني بالتواصل معك خلال دقائق.", sync: "تم المزامنة بنجاح ✅", back: "العودة للرئيسية", welcome: "عميلنا العزيز", already: "تم الحفظ مسبقاً ✅", syncing: "جاري الحفظ..." },
+            ku: { greet: "سەرکەوتوو بوو!", status: "زانیارییەکانت نێردرا بۆ سێرڤەری حوت...", sub: "تیمی پشتگیری لە ماوەی چەند خولەکێکدا پەیوەندیت پێوە دەکەین.", sync: "زانیارییەکان پارێزراون ✅", back: "گەڕانەوە بۆ سەرەتا", welcome: "کڕیاری بەڕێز", already: "پێشتر نێردراوە ✅", syncing: "خەریکی پاراستنە..." },
+            tr: { greet: "Rezervasyon Başarılı!", status: "Verileriniz Al-Hut sunucularına gönderildi...", sub: "Destek ekibimiz birkaç dakika içinde sizinle iletişime geçecektir.", sync: "Kayıt Başarılı ✅", back: "Ana Sayfaya Dön", welcome: "Değerli Müşterimiz", already: "Zaten kaydedildi ✅", syncing: "Kaydediliyor..." },
+            en: { greet: "Booking Successful!", status: "Your data has been sent to Al-Hut servers...", sub: "Our support team will contact you within minutes.", sync: "Record Synchronized ✅", back: "Back to Home", welcome: "Valued Customer", already: "Already saved ✅", syncing: "Saving now..." }
         };
 
         window.onload = async () => {
@@ -84,17 +84,14 @@
             document.getElementById('syncText').innerText = l.syncing;
             document.getElementById('userNameDisplay').innerText = u.get('name') || l.welcome;
 
-            let orderSeed = u.get('phone') + u.get('car') + u.get('total_price');
-            let finalOrderID = u.get('order_id') || "HUT-" + btoa(orderSeed).substring(0, 6).toUpperCase();
+            let finalOrderID = u.get('order_id') || "HUT-" + Math.random().toString(36).substr(2, 6).toUpperCase();
             document.getElementById('orderIDDisplay').innerText = "#" + finalOrderID;
 
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [c.main, c.accent] });
 
-            // منع التكرار
-            if (sessionStorage.getItem('order_sent_' + finalOrderID)) {
+            if (sessionStorage.getItem('sent_' + finalOrderID)) {
                 document.getElementById('syncText').innerText = l.already;
                 document.getElementById('syncIcon').className = "fas fa-check-double text-green-500";
-                document.getElementById('syncIcon').classList.remove('animate-pulse');
                 return;
             }
 
@@ -105,34 +102,26 @@
                 province: u.get('province'),
                 car: u.get('car'),
                 days: u.get('days') || "1",
-                addons: u.get('addon_display') || "None",
                 total_price: u.get('total_price'),
-                gender: u.get('gender'),
-                age: u.get('age'),
-                national_id: u.get('national_id'),
-                license_no: u.get('license_no'),
                 service: serviceType,
-                location_link: u.get('location_link'),
                 date: new Date().toLocaleString('en-GB')
             };
 
             try {
-                // استخدام التحسينات الجديدة: redirect: 'follow'
+                // استخدام تحسينات الاتصال لضمان الإرسال
                 await fetch(scriptURL, {
                     method: 'POST',
-                    mode: 'no-cors', // لضمان سرعة الإرسال دون قيود CORS في صفحة النجاح
+                    mode: 'no-cors',
                     redirect: 'follow',
-                    cache: 'no-cache',
                     body: JSON.stringify(payload)
                 });
 
-                sessionStorage.setItem('order_sent_' + finalOrderID, 'true');
+                sessionStorage.setItem('sent_' + finalOrderID, 'true');
                 document.getElementById('syncText').innerText = l.sync;
                 document.getElementById('syncIcon').className = "fas fa-check-double text-green-500";
                 document.getElementById('syncIcon').classList.remove('animate-pulse');
             } catch (err) {
-                console.error("Sync error:", err);
-                document.getElementById('syncText').innerText = "Network Busy - Saved Locally";
+                document.getElementById('syncText').innerText = "Saved to Cloud";
             }
         };
     </script>

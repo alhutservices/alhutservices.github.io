@@ -16,9 +16,8 @@
         .glass-card { background: rgba(13, 17, 23, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         .whale-input { width: 100%; padding: 1.1rem 3.5rem 1.1rem 1.1rem; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; color: white; transition: 0.4s; }
         .whale-input:focus { border-color: var(--whale-gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); outline: none; }
-        .trading-btn { background: var(--whale-gold); color: #000; font-weight: 900; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%); transition: 0.3s; cursor: pointer; }
+        .trading-btn { background: var(--whale-gold); color: #000; font-weight: 900; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%); transition: 0.3s; }
         .trading-btn:hover { transform: scale(1.02); filter: brightness(1.1); }
-        select.whale-input option { background: #010409; color: white; }
     </style>
 </head>
 <body class="flex items-center justify-center p-4">
@@ -71,55 +70,55 @@
     </div>
 
     <script>
-        // الرابط الموحد المعتمد
+        // الرابط المحدث الخاص بك
         const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
 
         async function registerOffice() {
             const btn = document.getElementById('loginBtn');
-            const officeName = document.getElementById('officeName').value.trim();
-            const city = document.getElementById('citySelect').value;
-            const id = document.getElementById('idNumber').value.trim();
+            const data = {
+                name: document.getElementById('officeName').value.trim(),
+                city: document.getElementById('citySelect').value,
+                id: document.getElementById('idNumber').value.trim()
+            };
 
-            if(!officeName || !id || !city) {
-                return alert("يرجى إكمال كافة البيانات للدخول إلى الرادار.");
+            if(!data.name || !data.id || !data.city) {
+                return alert("يا حوت! أدخل كامل بياناتك.");
             }
             
             btn.disabled = true; 
-            btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> جاري التحقق...`;
+            btn.innerHTML = `<i class="fas fa-sync fa-spin"></i> جاري التحقق...`;
 
             try {
-                // استعلام التحقق من الحالة
-                const query = `?action=checkOfficeStatus&id=${id}&name=${encodeURIComponent(officeName)}&city=${encodeURIComponent(city)}&map=#`;
-                const res = await fetch(scriptURL + query);
+                // إضافة timestamp لمنع الـ Cache
+                const finalURL = `${scriptURL}?action=checkOfficeStatus&id=${data.id}&name=${encodeURIComponent(data.name)}&city=${encodeURIComponent(data.city)}&t=${Date.now()}`;
+                
+                // التطوير هنا: إضافة redirect: 'follow' لحل مشكلة فشل الاتصال
+                const res = await fetch(finalURL, {
+                    method: 'GET',
+                    redirect: 'follow' 
+                });
+
+                // التحقق مما إذا كان الرد ناجحاً
+                if (!res.ok) throw new Error('Network response was not ok');
+                
                 const result = await res.json();
 
                 if (result.status === "نشط") {
-                    // تخزين البيانات محلياً للمكتب للدخول المستمر
-                    localStorage.setItem('whale_office_data', JSON.stringify({
-                        name: officeName,
-                        city: city,
-                        id: id
-                    }));
+                    localStorage.setItem('whale_office_data', JSON.stringify(data));
                     window.location.href = 'dashboard.html';
                 } else if (result.status === "محظور") {
-                    alert("⚠️ هذا الحساب محظور من قبل الإدارة العليا.");
-                } else if (result.status === "غير موجود") {
-                    alert("❌ البيانات غير صحيحة، يرجى التأكد من الكود واسم المكتب.");
+                    alert("⚠️ الدخول مرفوض. هذا الحساب محظور.");
                 } else {
-                    alert("⏳ الحساب قيد المراجعة، يرجى انتظار تفعيل الحساب من قبل المدير.");
+                    alert("⏳ الحساب قيد المراجعة أو البيانات غير صحيحة.");
                 }
             } catch (e) {
-                alert("❌ فشل الاتصال بخادم الحوت.. تأكد من الإنترنت.");
+                console.error("Fetch Error:", e);
+                alert("❌ فشل الاتصال بخادم الحوت. تأكد من جودة الإنترنت أو إعدادات السكريبت.");
             } finally {
                 btn.disabled = false; 
                 btn.innerText = "تفعيل الرادار";
             }
         }
-
-        // تسجيل الدخول عند ضغط Enter
-        document.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') registerOffice();
-        });
     </script>
 </body>
 </html>

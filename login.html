@@ -70,8 +70,8 @@
     </div>
 
     <script>
-        // الرابط المحدث الخاص بك
-        const scriptURL = "https://script.google.com/macros/s/AKfycbznxCVbF350cer5qcXlIROrNmmnf5993r9-AoLbNKqb8YfVNhhT3rREefD7dbK6RFIH/exec";
+        // الرابط الجديد الموحد لمنظومة الحوت
+        const scriptURL = "https://script.google.com/macros/s/AKfycbyVwGAVebQY8TJa_hd58eEsHrK7eYZ0iH68gmQrpGMkiYM7SvLWQkuGL9UD1kqHWq7z/exec";
 
         async function registerOffice() {
             const btn = document.getElementById('loginBtn');
@@ -89,17 +89,15 @@
             btn.innerHTML = `<i class="fas fa-sync fa-spin"></i> جاري التحقق...`;
 
             try {
-                // إضافة timestamp لمنع الـ Cache
+                // استخدام الرابط الجديد مع تتبع التوجيهات
                 const finalURL = `${scriptURL}?action=checkOfficeStatus&id=${data.id}&name=${encodeURIComponent(data.name)}&city=${encodeURIComponent(data.city)}&t=${Date.now()}`;
                 
-                // التطوير هنا: إضافة redirect: 'follow' لحل مشكلة فشل الاتصال
                 const res = await fetch(finalURL, {
                     method: 'GET',
-                    redirect: 'follow' 
+                    redirect: 'follow' // أساسي لنجاح الاتصال مع جوجل
                 });
 
-                // التحقق مما إذا كان الرد ناجحاً
-                if (!res.ok) throw new Error('Network response was not ok');
+                if (!res.ok) throw new Error('فشل في الاتصال بالخادم');
                 
                 const result = await res.json();
 
@@ -112,8 +110,8 @@
                     alert("⏳ الحساب قيد المراجعة أو البيانات غير صحيحة.");
                 }
             } catch (e) {
-                console.error("Fetch Error:", e);
-                alert("❌ فشل الاتصال بخادم الحوت. تأكد من جودة الإنترنت أو إعدادات السكريبت.");
+                console.error("Login Error:", e);
+                alert("❌ فشل الاتصال بخادم الحوت. تأكد من إعدادات النشر 'Anyone' وتحديث الرابط.");
             } finally {
                 btn.disabled = false; 
                 btn.innerText = "تفعيل الرادار";

@@ -61,6 +61,8 @@
             </div>
         </div>
         <div id="fleetGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto"></div>
+        
+        <p class="text-center mt-12 text-slate-500 font-bold text-sm px-4" id="availabilityNote"></p>
     </main>
 
     <script>
@@ -79,19 +81,20 @@
         };
         
         const translations = {
-            ar: { dir: 'rtl', font: 'Tajawal', title: 'أسطول سيارات الحوت', wedding: '✨ سيارات الأعراس في ' + city, personal: '🚗 السيارات المتوفرة في ' + city, engAll: 'كل المحركات', engHyb: 'هايبرد', engAuto: 'أوتوماتيك', catAll: 'كل الفئات', catEco: 'اقتصادية', catFam: 'عائلية', catLux: 'فاخرة VIP', btn: 'اختيار السيارة', currency: 'د.ع / يوم', empty: 'لا توجد نتائج في هذه المدينة 🐋' },
-            ku: { dir: 'rtl', font: 'Tajawal', title: 'ئەلحووت فلێت', wedding: '✨ ئۆتۆمبێلی زەماوەند', personal: '🚗 ئۆتۆمبێلی کەسی', engAll: 'هەموو بزوێنەرەکان', engHyb: 'هایبرید', engAuto: 'ئۆتۆماتیک', catAll: 'هەموو جۆرەکان', catEco: 'ئابووری', catFam: 'خێزانی', catLux: 'ناوازە VIP', btn: 'هەڵبژاردن', currency: 'د.ع / ڕۆژ', empty: 'نەدۆزرایەوە 🐋' },
-            tr: { dir: 'ltr', font: 'Poppins', title: 'Al-Hut Fleet', wedding: '✨ Wedding Cars in ' + city, personal: '🚗 Personal Cars in ' + city, engAll: 'All Engines', engHyb: 'Hybrid', engAuto: 'Automatic', catAll: 'All Categories', catEco: 'Economy', catFam: 'Family/SUV', catLux: 'Luxury VIP', btn: 'Select Car', currency: 'IQD / Day', empty: 'No cars found 🐋' },
-            en: { dir: 'ltr', font: 'Poppins', title: 'Al-Hut Fleet', wedding: '✨ Wedding Section in ' + city, personal: '🚗 Personal Section in ' + city, engAll: 'All Engines', engHyb: 'Hybrid', engAuto: 'Automatic', catAll: 'All Categories', catEco: 'Economy', catFam: 'Family/SUV', catLux: 'Luxury VIP', btn: 'Select Car', currency: 'IQD / Day', empty: 'No cars found 🐋' }
+            ar: { dir: 'rtl', font: 'Tajawal', title: 'أسطول سيارات الحوت', wedding: '✨ سيارات الأعراس في ' + city, personal: '🚗 السيارات المتوفرة في ' + city, engAll: 'كل المحركات', engHyb: 'هايبرد', engAuto: 'أوتوماتيك', catAll: 'كل الفئات', catEco: 'اقتصادية', catFam: 'عائلية', catLux: 'فاخرة VIP', btn: 'اختيار السيارة', currency: 'د.ع / يوم', empty: 'لا توجد نتائج في هذه المدينة 🐋', modelTag: 'موديل 2020 - 2025', colorNote: 'اللون والموديل حسب المتوفر', footerNote: '* جميع الصور تقريبية، اللون والموديل يعتمدان على التوفر لحظة التجهيز.' },
+            ku: { dir: 'rtl', font: 'Tajawal', title: 'ئەلحووت فلێت', wedding: '✨ ئۆتۆمبێلی زەماوەند', personal: '🚗 ئۆتۆمبێلی کەسی', engAll: 'هەموو بزوێنەرەکان', engHyb: 'هایبرید', engAuto: 'ئۆتۆماتیک', catAll: 'هەموو جۆرەکان', catEco: 'ئابووری', catFam: 'خێزانی', catLux: 'ناوازە VIP', btn: 'هەڵبژاردن', currency: 'د.ع / ڕۆژ', empty: 'نەدۆزرایەوە 🐋', modelTag: 'مۆدێل ٢٠٢٠ - ٢٠٢٥', colorNote: 'ڕەنگ و مۆدێل بەپێی بەردەستبوون', footerNote: '* وێنەکان تەنها بۆ نیشاندانن، ڕەنگ و مۆدێل بەپێی بەردەستبوونە.' },
+            tr: { dir: 'ltr', font: 'Poppins', title: 'Al-Hut Fleet', wedding: '✨ Wedding Cars in ' + city, personal: '🚗 Personal Cars in ' + city, engAll: 'All Engines', engHyb: 'Hybrid', engAuto: 'Automatic', catAll: 'All Categories', catEco: 'Economy', catFam: 'Family/SUV', catLux: 'Luxury VIP', btn: 'Select Car', currency: 'IQD / Day', empty: 'No cars found 🐋', modelTag: 'Model 2020 - 2025', colorNote: 'Subject to availability', footerNote: '* Images are for illustrative purposes. Color and model depend on availability.' },
+            en: { dir: 'ltr', font: 'Poppins', title: 'Al-Hut Fleet', wedding: '✨ Wedding Section in ' + city, personal: '🚗 Personal Section in ' + city, engAll: 'All Engines', engHyb: 'Hybrid', engAuto: 'Automatic', catAll: 'All Categories', catEco: 'Economy', catFam: 'Family/SUV', catLux: 'Luxury VIP', btn: 'Select Car', currency: 'IQD / Day', empty: 'No cars found 🐋', modelTag: 'Model 2020 - 2025', colorNote: 'Subject to availability', footerNote: '* All images are representative. Actual color and model may vary based on availability.' }
         };
 
+        // تم إضافة (أو ما يماثلها) لأسماء السيارات لتكون مطابقة للمعايير العالمية
         const fleet = [
-            { name: {ar:"تويوتا كورولا 2025", ku:"تۆیۆتا کۆرۆلا ٢٠٢٥", tr:"Toyota Corolla 2025", en:"Toyota Corolla 2025"}, engine: "hybrid", cat: "economy", price: "45000", img: "Cars/corolla.jpg" },
-            { name: {ar:"دودج جارجر SRT", ku:"دۆج جارجەر SRT", tr:"Dodge Charger SRT", en:"Dodge Charger SRT"}, engine: "auto", cat: "luxury", price: "85000", img: "Cars/charger.jpg" },
-            { name: {ar:"هيونداي توسان", ku:"هیۆندای تۆسۆن", tr:"Hyundai Tucson", en:"Hyundai Tucson"}, engine: "auto", cat: "family", price: "60000", img: "Cars/tucson.jpg" },
-            { name: {ar:"مرسيدس S-Class", ku:"مێرسیدس S-Class", tr:"Mercedes S-Class", en:"Mercedes S-Class"}, engine: "auto", cat: "luxury", price: "150000", img: "Cars/mercedes.jpg" },
-            { name: {ar:"تويوتا كامري", ku:"تۆیۆتا کامری", tr:"Toyota Camry", en:"Toyota Camry"}, engine: "hybrid", cat: "economy", price: "55000", img: "Cars/camry.jpg" },
-            { name: {ar:"كيا سورينتو", ku:"کیا سۆرێنتۆ", tr:"Kia Sorento", en:"Kia Sorento"}, engine: "auto", cat: "family", price: "70000", img: "Cars/sorento.jpg" }
+            { name: {ar:"تويوتا كورولا (أو ما يماثلها)", ku:"تۆیۆتا کۆرۆلا", tr:"Toyota Corolla (or similar)", en:"Toyota Corolla (or similar)"}, engine: "hybrid", cat: "economy", price: "45000", img: "Cars/corolla.jpg" },
+            { name: {ar:"دودج جارجر (أو ما يماثلها)", ku:"دۆج جارجەر", tr:"Dodge Charger (or similar)", en:"Dodge Charger (or similar)"}, engine: "auto", cat: "luxury", price: "85000", img: "Cars/charger.jpg" },
+            { name: {ar:"هيونداي توسان (أو ما يماثلها)", ku:"هیۆندای تۆسۆن", tr:"Hyundai Tucson (or similar)", en:"Hyundai Tucson (or similar)"}, engine: "auto", cat: "family", price: "60000", img: "Cars/tucson.jpg" },
+            { name: {ar:"مرسيدس S-Class (أو ما يماثلها)", ku:"مێرسیدس S-Class", tr:"Mercedes S-Class (or similar)", en:"Mercedes S-Class (or similar)"}, engine: "auto", cat: "luxury", price: "150000", img: "Cars/mercedes.jpg" },
+            { name: {ar:"تويوتا كامري (أو ما يماثلها)", ku:"تۆیۆتا کامری", tr:"Toyota Camry (or similar)", en:"Toyota Camry (or similar)"}, engine: "hybrid", cat: "economy", price: "55000", img: "Cars/camry.jpg" },
+            { name: {ar:"كيا سورينتو (أو ما يماثلها)", ku:"کیا سۆرێنتۆ", tr:"Kia Sorento (or similar)", en:"Kia Sorento (or similar)"}, engine: "auto", cat: "family", price: "70000", img: "Cars/sorento.jpg" }
         ];
 
         function initLang() {
@@ -101,6 +104,8 @@
             document.getElementById('pageTitle').innerText = l.title;
             document.getElementById('serviceLabel').innerText = type === 'wedding' ? l.wedding : l.personal;
             document.getElementById('cityOverlay').style.backgroundColor = styleColor[city] || '#002349';
+            document.getElementById('availabilityNote').innerText = l.footerNote;
+            
             const icon = type === 'wedding' ? '🎁' : '🚗';
             document.getElementById('patternBox').style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><text y="60" x="10" font-size="45">${icon}</text></svg>')`;
             
@@ -128,14 +133,23 @@
 
             filtered.forEach(car => {
                 const carName = car.name[currentLang] || car.name['ar'];
-                // هنا أضفنا Alt Text ذكي لكل صورة لزيادة قوة الـ SEO
                 const seoAlt = `تأجير ${carName} في ${city} - منصة الحوت`;
                 
                 grid.innerHTML += `
                     <article class="car-card p-5">
                         <img src="${car.img}" alt="${seoAlt}" title="${seoAlt}" class="w-full h-56 object-cover rounded-[2.5rem] mb-5 shadow-inner" onerror="this.src='https://via.placeholder.com/400x250?text=Al-Hut+${carName}'">
                         <div class="px-2 ${l.dir === 'rtl' ? 'text-right' : 'text-left'}">
-                            <h3 class="text-2xl font-black mb-3 text-slate-800">${carName}</h3>
+                            <h3 class="text-2xl font-black mb-1 text-slate-800">${carName}</h3>
+                            
+                            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                                <span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-lg">
+                                    <i class="fas fa-calendar-alt"></i> ${l.modelTag}
+                                </span>
+                                <span class="text-[10px] text-[#D4AF37] font-black uppercase">
+                                    ${l.colorNote}
+                                </span>
+                            </div>
+
                             <div class="price-badge text-lg mb-6">${parseInt(car.price).toLocaleString()} ${l.currency}</div>
                             <button onclick="selectCar('${carName}', '${car.price}')" class="btn-select py-4 text-xl shadow-lg active:scale-95">
                                 ${l.btn}

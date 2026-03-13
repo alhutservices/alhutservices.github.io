@@ -241,9 +241,9 @@
                 return alert(lang === 'ar' ? "يرجى ملء جميع الحقول 🐋" : "Please fill all fields");
             }
 
-            // المنطق الجديد: التحويل بناءً على نوع الخدمة
+            // تم تعديل التوجيه هنا حصراً بناءً على طلبك
             if (svc === 'training') {
-                window.location.href = `training.html?city=${encodeURIComponent(city)}&date=${date}&time=${time}&lang=${lang}`;
+                window.location.href = `addons.html?type=${svc}&city=${encodeURIComponent(city)}&date=${date}&time=${time}&lang=${lang}`;
             } else {
                 window.location.href = `fleet.html?type=${svc}&city=${encodeURIComponent(city)}&date=${date}&time=${time}&days=${days}&lang=${lang}`;
             }

@@ -135,7 +135,7 @@
 
     <script>
         // الرابط الجديد الذي زودتني به
-        const scriptURL = "https://script.google.com/macros/s/AKfycbyVwGAVebQY8TJa_hd58eEsHrK7eYZ0iH68gmQrpGMkiYM7SvLWQkuGL9UD1kqHWq7z/exec";
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new', allOrders = [], lastKnownNewOrders = -1;
 
@@ -145,7 +145,6 @@
 
         async function fetchOrders() {
             try {
-                // استخدام redirect: 'follow' لضمان عبور طلبات جوجل
                 const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`, {
                     method: 'GET',
                     redirect: 'follow'
@@ -158,7 +157,6 @@
                 renderCards();
             } catch(e) { 
                 console.error("خطأ في جلب بيانات الرادار:", e);
-                // محاولة أخرى بعد 10 ثواني في حال الفشل لضمان استقرار الخدمة
                 setTimeout(fetchOrders, 10000);
             }
         }
@@ -181,13 +179,6 @@
             sound.play().catch(e => console.log("الصوت يحتاج تفاعل"));
             document.body.classList.add('new-order-alert');
             document.getElementById('stopAlarmBtn').style.display = 'flex';
-            
-            if ("Notification" in window && Notification.permission === "granted") {
-                new Notification("🐋 رادار الحوت", {
-                    body: "طلبية جديدة وصلت لمدينتك!",
-                    icon: "https://cdn-icons-png.flaticon.com/512/2040/2040523.png"
-                });
-            }
         }
 
         function stopAlert() {
@@ -201,7 +192,6 @@
         function renderCards() {
             const container = document.getElementById('mainContainer');
             let list = [];
-            
             const officeCity = (officeData.city || "").toString().trim();
 
             if(currentTab === 'new') {
@@ -214,7 +204,7 @@
                 list = allOrders.filter(o => o.office === officeData.name && o.status === "تم الاستلام");
             }
             else if(currentTab === 'done') {
-                list = allOrders.filter(o => o.office === officeData.name && (o.status.includes('✅') || o.status.includes('⚠️')));
+                list = allOrders.filter(o => o.office === officeData.name && ((o.status || "").includes('✅') || (o.status || "").includes('⚠️')));
             }
 
             if(list.length === 0) {
@@ -301,7 +291,7 @@
                 } else {
                     alert("فشل التحديث: " + (result.message || "خطأ غير معروف"));
                 }
-            } catch(e) { alert("خطأ في الاتصال بالسيرفر"); }
+            } catch(e) { alert("خطأ في الاتصال.. تأكد من توفر مساحة في Drive"); }
         }
 
         function switchTab(t) {
@@ -311,17 +301,9 @@
             renderCards();
         }
 
-        if ("Notification" in window) {
-            Notification.requestPermission();
-        }
-
-        if ('wakeLock' in navigator) {
-            navigator.wakeLock.request('screen').catch(e => {});
-        }
-
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        setInterval(fetchOrders, 15000);
+        setInterval(fetchOrders, 20000);
         fetchOrders();
 
         window.onclick = () => { document.getElementById('radarSound').load(); };

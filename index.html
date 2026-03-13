@@ -234,8 +234,19 @@
             const city = document.getElementById('citySelect').value;
             const date = document.getElementById('dateInput').value;
             const time = document.getElementById('timeInput').value;
-            if(!svc || !date || !time) return alert(document.getElementById('htmlTag').lang === 'ar' ? "يرجى ملء جميع الحقول 🐋" : "Please fill all fields");
-            window.location.href = `fleet.html?type=${svc}&city=${city}&date=${date}&time=${time}&lang=${document.getElementById('htmlTag').lang}`;
+            const days = document.getElementById('daysInput').value || "1";
+            const lang = document.getElementById('htmlTag').lang;
+
+            if(!svc || !date || !time) {
+                return alert(lang === 'ar' ? "يرجى ملء جميع الحقول 🐋" : "Please fill all fields");
+            }
+
+            // المنطق الجديد: التحويل بناءً على نوع الخدمة
+            if (svc === 'training') {
+                window.location.href = `training.html?city=${encodeURIComponent(city)}&date=${date}&time=${time}&lang=${lang}`;
+            } else {
+                window.location.href = `fleet.html?type=${svc}&city=${encodeURIComponent(city)}&date=${date}&time=${time}&days=${days}&lang=${lang}`;
+            }
         }
 
         window.onload = () => {
@@ -247,3 +258,4 @@
     </script>
 </body>
 </html>
+

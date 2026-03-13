@@ -16,8 +16,9 @@
         .glass-card { background: rgba(13, 17, 23, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(212, 175, 55, 0.2); box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         .whale-input { width: 100%; padding: 1.1rem 3.5rem 1.1rem 1.1rem; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; color: white; transition: 0.4s; }
         .whale-input:focus { border-color: var(--whale-gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); outline: none; }
-        .trading-btn { background: var(--whale-gold); color: #000; font-weight: 900; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%); transition: 0.3s; }
+        .trading-btn { background: var(--whale-gold); color: #000; font-weight: 900; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%); transition: 0.3s; cursor: pointer; }
         .trading-btn:hover { transform: scale(1.02); filter: brightness(1.1); }
+        .trading-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     </style>
 </head>
 <body class="flex items-center justify-center p-4">
@@ -70,18 +71,16 @@
     </div>
 
     <script>
-        // الرابط الجديد الموحد لمنظومة الحوت
-        const scriptURL = "https://script.google.com/macros/s/AKfycbyVwGAVebQY8TJa_hd58eEsHrK7eYZ0iH68gmQrpGMkiYM7SvLWQkuGL9UD1kqHWq7z/exec";
+        // الرابط الجديد لمنظومة الحوت
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
 
         async function registerOffice() {
             const btn = document.getElementById('loginBtn');
-            const data = {
-                name: document.getElementById('officeName').value.trim(),
-                city: document.getElementById('citySelect').value,
-                id: document.getElementById('idNumber').value.trim()
-            };
+            const officeName = document.getElementById('officeName').value.trim();
+            const city = document.getElementById('citySelect').value;
+            const id = document.getElementById('idNumber').value.trim();
 
-            if(!data.name || !data.id || !data.city) {
+            if(!officeName || !id || !city) {
                 return alert("يا حوت! أدخل كامل بياناتك.");
             }
             
@@ -89,34 +88,37 @@
             btn.innerHTML = `<i class="fas fa-sync fa-spin"></i> جاري التحقق...`;
 
             try {
-                // استخدام الرابط الجديد مع تتبع التوجيهات
-                const finalURL = `${scriptURL}?action=checkOfficeStatus&id=${data.id}&name=${encodeURIComponent(data.name)}&city=${encodeURIComponent(data.city)}&t=${Date.now()}`;
+                // إضافة متغير زمن t لمنع المتصفح من جلب نسخة قديمة (Cache)
+                const finalURL = `${scriptURL}?action=checkOfficeStatus&id=${id}&name=${encodeURIComponent(officeName)}&city=${encodeURIComponent(city)}&t=${Date.now()}`;
                 
                 const res = await fetch(finalURL, {
                     method: 'GET',
-                    redirect: 'follow' // أساسي لنجاح الاتصال مع جوجل
+                    redirect: 'follow' 
                 });
 
-                if (!res.ok) throw new Error('فشل في الاتصال بالخادم');
-                
                 const result = await res.json();
 
                 if (result.status === "نشط") {
-                    localStorage.setItem('whale_office_data', JSON.stringify(data));
+                    localStorage.setItem('whale_office_data', JSON.stringify({name: officeName, city: city, id: id}));
                     window.location.href = 'dashboard.html';
                 } else if (result.status === "محظور") {
-                    alert("⚠️ الدخول مرفوض. هذا الحساب محظور.");
+                    alert("⚠️ هذا الحساب محظور من قبل الإدارة.");
                 } else {
-                    alert("⏳ الحساب قيد المراجعة أو البيانات غير صحيحة.");
+                    alert("⏳ الحساب قيد المراجعة أو البيانات غير مطابقة.");
                 }
             } catch (e) {
-                console.error("Login Error:", e);
-                alert("❌ فشل الاتصال بخادم الحوت. تأكد من إعدادات النشر 'Anyone' وتحديث الرابط.");
+                console.error(e);
+                alert("❌ فشل الاتصال بخادم الحوت.. تأكد من مساحة التخزين في جوجل درايف.");
             } finally {
                 btn.disabled = false; 
                 btn.innerText = "تفعيل الرادار";
             }
         }
+
+        // تسجيل الدخول بالضغط على Enter
+        document.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') registerOffice();
+        });
     </script>
 </body>
 </html>

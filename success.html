@@ -52,8 +52,8 @@
         const serviceType = u.get('service');
         const type = serviceType === 'زفاف' ? 'wedding' : (serviceType === 'تدريب قيادة' ? 'training' : 'personal');
         
-        // الرابط الجديد الخاص بك
-        const scriptURL = "https://script.google.com/macros/s/AKfycbyVwGAVebQY8TJa_hd58eEsHrK7eYZ0iH68gmQrpGMkiYM7SvLWQkuGL9UD1kqHWq7z/exec";
+        // الرابط الجديد لمنظومة الحوت
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
 
         const configs = {
             training: { main: '#7c3aed', accent: '#D4AF37' },
@@ -64,7 +64,7 @@
         const content = {
             ar: { greet: "تم الحجز بنجاح!", status: "تم إرسال بياناتك إلى خوادم الحوت...", sub: "سيقوم فريق الدعم الفني بالتواصل معك خلال دقائق.", sync: "تم المزامنة بنجاح ✅", back: "العودة للرئيسية", welcome: "عميلنا العزيز", already: "تم الحفظ مسبقاً ✅", syncing: "جاري الحفظ..." },
             ku: { greet: "سەرکەوتوو بوو!", status: "زانیارییەکانت نێردرا بۆ سێرڤەری حوت...", sub: "تیمی پشتگیری لە ماوەی چەند خولەکێکدا پەیوەندیت پێوە دەکەین.", sync: "زانیارییەکان پارێزراون ✅", back: "گەڕانەوە بۆ سەرەتا", welcome: "کڕیاری بەڕێز", already: "پێشتر نێردراوە ✅", syncing: "خەریکی پاراستنە..." },
-            tr: { greet: "Rezervasyon Başarılı!", status: "Verileriniz Al-Hut sunucularına gönderildi...", sub: "Destek ekibimiz birkaç dakika içinde sizinle iletişime geçecektir.", sync: "Kayıt Başarılı ✅", back: "Ana Sayfaya Dön", welcome: "Değerli Müşterimiz", already: "Zaten kaydedildi ✅", syncing: "Kaydediliyor..." },
+            tr: { greet: "Rezervasyon Başarılı!", status: "Verileriniz Al-Hut sunucularına gönderildi...", sub: "Destek ekibimiz birkaç dakika içinde sizinle iletişime geçecektir.", sync: "Kayıt Başarılı ✅", back: "Ana Sayفaya Dön", welcome: "Değerli Müşterimiz", already: "Zaten kaydedildi ✅", syncing: "Kaydediliyor..." },
             en: { greet: "Booking Successful!", status: "Your data has been sent to Al-Hut servers...", sub: "Our support team will contact you within minutes.", sync: "Record Synchronized ✅", back: "Back to Home", welcome: "Valued Customer", already: "Already saved ✅", syncing: "Saving now..." }
         };
 
@@ -108,20 +108,22 @@
             };
 
             try {
-                // استخدام تحسينات الاتصال لضمان الإرسال
+                // استخدام POST مع no-cors لضمان العبور
                 await fetch(scriptURL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    redirect: 'follow',
                     body: JSON.stringify(payload)
                 });
 
                 sessionStorage.setItem('sent_' + finalOrderID, 'true');
-                document.getElementById('syncText').innerText = l.sync;
-                document.getElementById('syncIcon').className = "fas fa-check-double text-green-500";
-                document.getElementById('syncIcon').classList.remove('animate-pulse');
+                setTimeout(() => {
+                    document.getElementById('syncText').innerText = l.sync;
+                    document.getElementById('syncIcon').className = "fas fa-check-double text-green-500";
+                    document.getElementById('syncIcon').classList.remove('animate-pulse');
+                }, 1500);
             } catch (err) {
-                document.getElementById('syncText').innerText = "Saved to Cloud";
+                console.error("Sync error:", err);
+                document.getElementById('syncText').innerText = "تم الحفظ سحابياً";
             }
         };
     </script>

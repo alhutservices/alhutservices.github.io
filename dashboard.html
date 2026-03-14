@@ -8,136 +8,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { 
-            --whale-navy: #0f172a; 
-            --whale-gold: #d4af37; 
-            --soft-white: #ffffff;
-            --bg-light: #f8fafc;
-        }
-
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background: var(--bg-light); 
-            color: #1e293b; 
-            transition: background 0.3s; 
-        }
-
-        .premium-nav { 
-            background: white; 
-            border-radius: 0 0 2.5rem 2.5rem; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .tab-pill { 
-            transition: 0.4s; 
-            font-weight: 700; 
-            font-size: 0.9rem; 
-            border-radius: 1rem; 
-            color: #94a3b8; 
-            position: relative;
-        }
-        .tab-pill.active { 
-            background: var(--whale-navy); 
-            color: white; 
-            box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.2);
-        }
-
-        .whale-card { 
-            background: white; 
-            border-radius: 2rem; 
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s; 
-            border: 1px solid #f1f5f9;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-        }
-        .whale-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.08);
-        }
-
-        .info-box { 
-            background: #f8fafc; 
-            border: 1px solid #eff6ff;
-            padding: 12px; 
-            border-radius: 1.2rem; 
-            text-align: center; 
-        }
-
-        .price-text { color: #059669; font-weight: 900; }
-
-        .btn-primary {
-            background: var(--whale-navy);
-            color: white;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
-        }
-        
-        .btn-call {
-            background: #10b981;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-        }
-
+        :root { --whale-navy: #0f172a; --whale-gold: #d4af37; --bg-light: #f8fafc; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg-light); color: #1e293b; }
+        .premium-nav { background: white; border-radius: 0 0 2.5rem 2.5rem; border-bottom: 1px solid #f1f5f9; }
+        .tab-pill { transition: 0.4s; font-weight: 700; border-radius: 1rem; color: #94a3b8; }
+        .tab-pill.active { background: var(--whale-navy); color: white; }
+        .whale-card { background: white; border-radius: 2rem; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+        .info-box { background: #f8fafc; padding: 12px; border-radius: 1.2rem; text-align: center; }
+        .btn-cancel-request { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.1); }
         .new-order-alert { animation: pulse-alert 1.5s infinite; }
-        @keyframes pulse-alert { 
-            0% { background: #f8fafc; } 50% { background: #eff6ff; } 100% { background: #f8fafc; } 
-        }
-        
-        #stopAlarmBtn { 
-            display: none; position: fixed; bottom: 30px; left: 50%; 
-            transform: translateX(-50%); z-index: 100; 
-            box-shadow: 0 15px 35px rgba(239, 68, 68, 0.3); 
-        }
-
-        .label-tiny {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 800;
-            color: #94a3b8;
-            margin-bottom: 2px;
-            display: block;
-        }
+        @keyframes pulse-alert { 0% { background: #f8fafc; } 50% { background: #eff6ff; } 100% { background: #f8fafc; } }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen pb-20">
 
     <audio id="radarSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock_ringing_rising.ogg" preload="auto" loop></audio>
 
-    <button id="stopAlarmBtn" onclick="stopAlert()" class="bg-red-500 text-white px-10 py-5 rounded-2xl font-black flex items-center gap-3 animate-bounce">
-        <i class="fas fa-bell-slash"></i> إيقاف صوت الرادار 🐋
-    </button>
-
-    <header class="premium-nav px-6 py-6 mb-10">
+    <header class="premium-nav px-6 py-6 mb-6">
         <div class="max-w-2xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-slate-900 flex items-center justify-center rounded-2xl shadow-xl shadow-slate-200">
-                    <span class="text-2xl">🐋</span>
-                </div>
+                <div class="text-3xl">🐋</div>
                 <div>
-                    <h2 id="navOfficeName" class="text-slate-900 font-black text-xl tracking-tight">...</h2>
-                    <p id="navCity" class="text-blue-500 font-bold text-[11px] uppercase tracking-tighter"></p>
+                    <h2 id="navOfficeName" class="font-black text-xl">...</h2>
+                    <p id="navCity" class="text-blue-500 font-bold text-[11px]"></p>
                 </div>
             </div>
-            <button onclick="logout()" class="w-12 h-12 flex items-center justify-center bg-slate-50 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-colors">
-                <i class="fas fa-sign-out-alt"></i>
-            </button>
+            <button onclick="logout()" class="text-slate-400 hover:text-red-500"><i class="fas fa-sign-out-alt text-xl"></i></button>
         </div>
     </header>
 
-    <div class="max-w-xl mx-auto px-4 sticky top-6 z-50">
-        <div class="bg-white/80 backdrop-blur-md p-1.5 rounded-2xl flex gap-1 shadow-2xl shadow-slate-200 border border-white">
+    <div class="max-w-xl mx-auto px-4 sticky top-4 z-50">
+        <div class="bg-white/90 backdrop-blur p-1.5 rounded-2xl flex gap-1 shadow-xl border border-white">
             <button onclick="switchTab('new')" id="tabNew" class="flex-1 py-3 tab-pill active">الرادار 📡</button>
-            <button onclick="switchTab('mine')" id="tabMine" class="flex-1 py-3 tab-pill text-slate-400">التنفيذ 📦</button>
-            <button onclick="switchTab('done')" id="tabDone" class="flex-1 py-3 tab-pill text-slate-400">الأرشيف ✅</button>
+            <button onclick="switchTab('mine')" id="tabMine" class="flex-1 py-3 tab-pill">التنفيذ 📦</button>
+            <button onclick="switchTab('done')" id="tabDone" class="flex-1 py-3 tab-pill">الأرشيف ✅</button>
         </div>
     </div>
 
-    <main id="mainContainer" class="p-4 max-w-2xl mx-auto space-y-5 mt-4 pb-20"></main>
+    <main id="mainContainer" class="p-4 max-w-2xl mx-auto space-y-5 mt-4"></main>
 
     <script>
-        // الرابط الجديد الذي زودتني به
         const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
-        let currentTab = 'new', allOrders = [], lastKnownNewOrders = -1;
+        let currentTab = 'new', allOrders = [];
 
         if(!officeData) window.location.href = 'login.html';
         document.getElementById('navOfficeName').innerText = officeData.name;
@@ -145,169 +58,79 @@
 
         async function fetchOrders() {
             try {
-                const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`, {
-                    method: 'GET',
-                    redirect: 'follow'
-                });
-                
-                if (!res.ok) throw new Error('Network error');
-                
+                const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`);
                 allOrders = await res.json();
-                checkNewOrdersAlert();
                 renderCards();
-            } catch(e) { 
-                console.error("خطأ في جلب بيانات الرادار:", e);
-                setTimeout(fetchOrders, 10000);
-            }
-        }
-
-        function checkNewOrdersAlert() {
-            const officeCity = (officeData.city || "").toString().trim();
-            const myNewOrders = allOrders.filter(o => {
-                const orderProvince = (o.province || o.prov || "").toString().trim();
-                return orderProvince === officeCity && (o.status === "قيد الانتظار" || o.status === "طلب جديد");
-            }).length;
-
-            if (lastKnownNewOrders !== -1 && myNewOrders > lastKnownNewOrders) {
-                playAlert();
-            }
-            lastKnownNewOrders = myNewOrders;
-        }
-
-        function playAlert() {
-            const sound = document.getElementById('radarSound');
-            sound.play().catch(e => console.log("الصوت يحتاج تفاعل"));
-            document.body.classList.add('new-order-alert');
-            document.getElementById('stopAlarmBtn').style.display = 'flex';
-        }
-
-        function stopAlert() {
-            const sound = document.getElementById('radarSound');
-            sound.pause();
-            sound.currentTime = 0;
-            document.body.classList.remove('new-order-alert');
-            document.getElementById('stopAlarmBtn').style.display = 'none';
+            } catch(e) { console.error("خطأ رادار:", e); }
         }
 
         function renderCards() {
             const container = document.getElementById('mainContainer');
-            let list = [];
-            const officeCity = (officeData.city || "").toString().trim();
+            const officeCity = officeData.city.trim();
+            
+            let list = allOrders.filter(o => {
+                const status = (o.status || "");
+                if(currentTab === 'new') return (o.prov === officeCity || o.province === officeCity) && (status.includes("جديد") || status.includes("الانتظار"));
+                if(currentTab === 'mine') return o.office === officeData.name && status === "تم الاستلام";
+                if(currentTab === 'done') return o.office === officeData.name && (status.includes("✅") || status.includes("⚠️"));
+            });
 
-            if(currentTab === 'new') {
-                list = allOrders.filter(o => {
-                    const orderProvince = (o.province || o.prov || "").toString().trim();
-                    return orderProvince === officeCity && (o.status === "قيد الانتظار" || o.status === "طلب جديد");
-                });
-            }
-            else if(currentTab === 'mine') {
-                list = allOrders.filter(o => o.office === officeData.name && o.status === "تم الاستلام");
-            }
-            else if(currentTab === 'done') {
-                list = allOrders.filter(o => o.office === officeData.name && ((o.status || "").includes('✅') || (o.status || "").includes('⚠️')));
-            }
-
-            if(list.length === 0) {
-                container.innerHTML = `<div class="text-center py-24 opacity-30 font-black text-slate-400">لا يوجد بيانات في هذا القسم</div>`;
+            if(!list.length) {
+                container.innerHTML = `<div class="text-center py-20 opacity-30 font-bold">لا توجد بيانات حالياً</div>`;
                 return;
             }
 
-            container.innerHTML = list.map(o => {
-                const name = o.name || "عميل حوت";
-                const car = o.car || "سيارة غير محددة";
-                const priceValue = o.total_price || o.price || 0;
-                const formattedPrice = Number(priceValue).toLocaleString() + " د.ع";
-                const orderId = o.id || o.order_id;
-                const phone = o.phone || "07XXXXXXXX";
+            container.innerHTML = list.map(o => `
+                <div class="whale-card p-6 relative">
+                    <div class="flex justify-between mb-4">
+                        <h3 class="text-lg font-black">${o.car}</h3>
+                        <span class="text-[10px] font-bold text-slate-400">${o.id}</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-5">
+                        <div class="info-box"><p class="text-[10px] text-slate-400">الزبون</p><p class="font-bold text-xs">${o.name}</p></div>
+                        <div class="info-box"><p class="text-[10px] text-slate-400">السعر</p><p class="font-bold text-xs text-green-600">${Number(o.price).toLocaleString()} د.ع</p></div>
+                    </div>
 
-                if(currentTab === 'new') {
-                    return `
-                    <div class="whale-card p-6">
-                        <div class="flex justify-between items-start mb-6 text-right">
-                            <div>
-                                <h3 class="text-xl font-black text-slate-800 mb-2">${car}</h3>
-                                <div class="flex items-center gap-2 text-slate-400 text-xs">
-                                    <i class="far fa-user"></i> <span>${name}</span>
-                                </div>
+                    ${currentTab === 'new' ? 
+                        `<button onclick="update('${o.id}', 'claim')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold">استلام الطلب ⚡</button>` : 
+                      currentTab === 'mine' ? 
+                        `<div class="space-y-2">
+                            <div class="flex gap-2">
+                                <a href="tel:${o.phone}" class="flex-1 bg-green-500 text-white py-3 rounded-xl text-center font-bold text-xs">اتصال 📞</a>
+                                <a href="${o.map}" target="_blank" class="flex-1 bg-blue-100 text-blue-600 py-3 rounded-xl text-center font-bold text-xs">الموقع 📍</a>
                             </div>
-                            <span class="bg-blue-50 text-blue-600 text-[9px] font-black px-3 py-1.5 rounded-lg">رادار حي 📡</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 mb-6 text-right">
-                            <div class="info-box"><span class="label-tiny">المدة</span><p class="text-sm font-black">${o.days || 1} أيام</p></div>
-                            <div class="info-box"><span class="label-tiny">المبلغ</span><p class="text-sm font-black price-text">${formattedPrice}</p></div>
-                        </div>
-                        <button onclick="update('${orderId}', 'claim')" class="w-full btn-primary py-4 rounded-2xl font-black text-sm active:scale-95 transition-all">استلام التنفيذ الآن ⚡</button>
-                    </div>`;
-                }
-
-                if(currentTab === 'mine') {
-                    return `
-                    <div class="whale-card p-8 border-t-4 border-slate-900">
-                        <div class="text-center mb-6">
-                            <p class="text-[10px] font-black text-blue-500 mb-1 uppercase">بيانات الاتصال</p>
-                            <h3 class="text-2xl font-black text-slate-900">${car}</h3>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 mb-6 text-right">
-                            <div class="info-box"><span class="label-tiny">الهاتف</span><p class="font-black text-xs">${phone}</p></div>
-                            <div class="info-box"><span class="label-tiny">الزبون</span><p class="font-black text-xs">${name}</p></div>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="flex gap-3">
-                                <a href="tel:${phone}" class="flex-1 btn-call text-white py-4 rounded-2xl text-center font-black text-xs flex items-center justify-center gap-2">اتصال 📞</a>
-                                <a href="${o.location_link || '#'}" target="_blank" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl text-center font-black text-xs flex items-center justify-center gap-2">الموقع 📍</a>
-                            </div>
-                            <button onclick="update('${orderId}', 'complete')" class="w-full btn-primary py-5 rounded-2xl font-black text-sm mt-2">تأكيد تسليم السيارة ✅</button>
-                        </div>
-                    </div>`;
-                }
-
-                if(currentTab === 'done') {
-                    return `
-                    <div class="whale-card p-4 flex justify-between items-center opacity-70">
-                        <div class="flex items-center gap-3 text-right">
-                            <div class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-green-500">✅</div>
-                            <div>
-                                <h3 class="font-black text-slate-800 text-xs">${name}</h3>
-                                <p class="text-[9px] text-slate-400 font-bold uppercase">${o.status}</p>
-                            </div>
-                        </div>
-                        <div class="text-left"><p class="font-black text-[10px] text-slate-600">${car}</p></div>
-                    </div>`;
-                }
-            }).reverse().join('');
+                            <button onclick="update('${o.id}', 'complete')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold">تم التسليم بنجاح ✅</button>
+                            <button onclick="update('${o.id}', 'cancelRequest')" class="w-full btn-cancel-request py-3 rounded-xl font-bold text-[11px]">طلب إلغاء الطلبية ⚠️</button>
+                        </div>` : 
+                        `<div class="text-center p-2 bg-slate-50 rounded-lg text-[10px] font-bold text-slate-500">${o.status}</div>`
+                    }
+                </div>
+            `).reverse().join('');
         }
 
         async function update(id, act) {
-            if(!confirm("تأكيد إجراء هذه العملية في نظام الحوت؟")) return;
+            if(!confirm("تأكيد الإجراء؟")) return;
             try {
-                const res = await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`, {
-                    method: 'GET',
-                    redirect: 'follow'
-                });
+                // الربط مع السكريبت: نرسل id و action و office
+                const res = await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
                 const result = await res.json();
-                if(result.success) {
-                    stopAlert();
-                    fetchOrders();
-                } else {
-                    alert("فشل التحديث: " + (result.message || "خطأ غير معروف"));
-                }
-            } catch(e) { alert("خطأ في الاتصال.. تأكد من توفر مساحة في Drive"); }
+                if(result.success) fetchOrders();
+                else alert("خطأ: " + result.message);
+            } catch(e) { alert("فشل الاتصال بالسيستم"); }
         }
 
         function switchTab(t) {
             currentTab = t;
-            document.querySelectorAll('.tab-pill').forEach(b => b.classList.remove('active', 'text-slate-400'));
+            document.querySelectorAll('.tab-pill').forEach(b => b.classList.remove('active'));
             document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('active');
             renderCards();
         }
 
         function logout() { localStorage.clear(); window.location.href = 'login.html'; }
         
-        setInterval(fetchOrders, 20000);
+        setInterval(fetchOrders, 30000);
         fetchOrders();
-
-        window.onclick = () => { document.getElementById('radarSound').load(); };
     </script>
 </body>
 </html>
-

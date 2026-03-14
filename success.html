@@ -15,36 +15,13 @@
     <style>
         :root { --main-theme: #002349; --accent-theme: #D4AF37; }
         body { font-family: 'Tajawal', sans-serif; background: #f0f4f8; overflow-x: hidden; }
-        
-        /* الكرت الرئيسي */
         .main-card { background: #ffffff !important; border-radius: 3.5rem; position: relative; z-index: 10; border-top: 12px solid var(--main-theme); }
-
-        /* تصميم التذكرة */
-        .ticket-design {
-            background: #ffffff !important;
-            position: relative;
-            border: 2px dashed #cbd5e1;
-            border-radius: 1.5rem;
-        }
-        .ticket-design::before, .ticket-design::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 26px;
-            height: 26px;
-            background: #f0f4f8; 
-            border-radius: 50%;
-            transform: translateY(-50%);
-            border: 2px dashed #cbd5e1;
-            z-index: 5;
-        }
+        .ticket-design { background: #ffffff !important; position: relative; border: 2px dashed #cbd5e1; border-radius: 1.5rem; }
+        .ticket-design::before, .ticket-design::after { content: ''; position: absolute; top: 50%; width: 26px; height: 26px; background: #f0f4f8; border-radius: 50%; transform: translateY(-50%); border: 2px dashed #cbd5e1; z-index: 5; }
         .ticket-design::before { left: -15px; border-left: none; }
         .ticket-design::after { right: -15px; border-right: none; }
-
-        /* أنيميشن الدخول */
         .bounce-in { animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
         @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.3); } 100% { opacity: 1; transform: scale(1); } }
-        
         .btn-download { background: rgba(212, 175, 55, 0.1); color: #b8962d; border: 1px solid rgba(212, 175, 55, 0.3); }
         .no-capture { display: none !important; }
     </style>
@@ -115,37 +92,44 @@
 
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-            // إرسال البيانات للـ Google Sheet
+            // استلام إحداثيات الموقع المرسلة من صفحة الحجز
+            const lat = u.get('lat');
+            const lng = u.get('lng');
+            let locationURL = "#";
+
+            if (lat && lng) {
+                locationURL = `https://www.google.com/maps?q=${lat},${lng}`;
+            }
+
+            // إرسال البيانات للـ Google Sheet بالصيغة المتوافقة مع السكريبت الخاص بك
             try {
-                await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({
-                    order_id: finalOrderID,
-                    name: u.get('name'),
-                    phone: u.get('phone'),
-                    car: u.get('car'),
-                    service: service,
-                    date: new Date().toLocaleString('en-GB')
-                })});
+                await fetch(scriptURL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    body: JSON.stringify({
+                        order_id: finalOrderID,
+                        name: u.get('name'),
+                        phone: u.get('phone'),
+                        car: u.get('car'),
+                        service: service,
+                        location_link: locationURL, // المتغير المسؤول عن زر الموقع
+                        province: u.get('province') || u.get('prov') || "غير محدد",
+                        date: new Date().toLocaleString('en-GB')
+                    })
+                });
             } catch (e) { console.log("Saved"); }
         };
 
         async function downloadTicket() {
             const btn = event.currentTarget;
             btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> جاري الحفظ...';
-            
             const area = document.getElementById('captureArea');
             const actions = document.getElementById('actionButtons');
-
             area.classList.remove('bounce-in'); 
             actions.classList.add('no-capture');
-
             setTimeout(async () => {
                 try {
-                    const canvas = await html2canvas(area, {
-                        backgroundColor: "#f0f4f8",
-                        scale: 2,
-                        useCORS: true
-                    });
-                    
+                    const canvas = await html2canvas(area, { backgroundColor: "#f0f4f8", scale: 2, useCORS: true });
                     const link = document.createElement('a');
                     link.download = `Hut-Ticket-${document.getElementById('orderIDDisplay').innerText}.png`;
                     link.href = canvas.toDataURL("image/png");

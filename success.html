@@ -6,92 +6,118 @@
     <title id="docTitle">تم بنجاح | عائلة الحوت 🐋✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
         :root { --main-theme: #002349; --accent-theme: #D4AF37; }
-        body { font-family: 'Tajawal', 'Poppins', sans-serif; background: #f0f4f8; overflow-x: hidden; }
+        body { font-family: 'Tajawal', sans-serif; background: #f0f4f8; overflow-x: hidden; }
+        
+        /* الكرت الرئيسي */
         .main-card { background: white; border-radius: 3.5rem; box-shadow: 0 25px 50px -12px rgba(0, 35, 73, 0.2); position: relative; z-index: 10; border-top: 12px solid var(--main-theme); }
+
+        /* تصميم التذكرة الاحترافي */
+        .ticket-design {
+            background: #ffffff;
+            position: relative;
+            border: 2px dashed #e2e8f0;
+            border-radius: 1.5rem;
+        }
+        /* فتحات المقص الجانبية */
+        .ticket-design::before, .ticket-design::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 26px;
+            height: 26px;
+            background: #f0f4f8; /* يطابق خلفية الصفحة لإعطاء تأثير القص */
+            border-radius: 50%;
+            transform: translateY(-50%);
+            border: 2px dashed #e2e8f0;
+            z-index: 5;
+        }
+        .ticket-design::before { left: -15px; border-left: none; }
+        .ticket-design::after { right: -15px; border-right: none; }
+
         .bounce-in { animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
         @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.3) translateY(100px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        
+        .btn-download { background: rgba(212, 175, 55, 0.1); color: #b8962d; border: 1px solid rgba(212, 175, 55, 0.3); }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
 
-    <div id="mainBox" class="max-w-md w-full main-card p-8 text-center bounce-in">
+    <audio id="successSound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
+
+    <div id="captureArea" class="max-w-md w-full main-card p-8 text-center bounce-in">
         <div class="flex justify-center mb-2">
-            <dotlottie-player src="https://lottie.host/82823631-f923-4412-bd77-2e9154784411/6vR0FvI7oN.json" background="transparent" speed="1.2" style="width: 160px; height: 140px;" loop autoplay></dotlottie-player>
+            <dotlottie-player src="https://lottie.host/82823631-f923-4412-bd77-2e9154784411/6vR0FvI7oN.json" background="transparent" speed="1.2" style="width: 150px; height: 130px;" loop autoplay></dotlottie-player>
         </div>
 
-        <h1 id="mainGreeting" class="text-3xl font-black mb-1" style="color: var(--main-theme);">---</h1>
+        <h1 id="mainGreeting" class="text-3xl font-black mb-1" style="color: var(--main-theme);">تم الحجز!</h1>
         <h2 id="userNameDisplay" class="text-xl font-black mb-4" style="color: var(--accent-theme);">...</h2>
 
         <div class="bg-blue-50/50 p-4 rounded-3xl mb-6">
-            <p id="statusMsg" class="text-blue-900 font-black text-sm leading-relaxed italic">---</p>
+            <p id="statusMsg" class="text-blue-900 font-black text-sm leading-relaxed italic">جاري تأمين بياناتك...</p>
         </div>
 
-        <p id="subInstruction" class="text-slate-500 font-bold text-xs px-4 leading-relaxed mb-6">---</p>
+        <div class="ticket-design p-6 mb-8">
+            <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">BOOKING REFERENCE</p>
+            <p id="orderIDDisplay" class="text-3xl font-black tracking-tighter" style="color: var(--main-theme);">---</p>
+            
+            <div class="h-[1px] bg-slate-100 my-4"></div>
+            
+            <div class="grid grid-cols-2 gap-2 text-right text-[11px] font-bold text-slate-600">
+                <p>🚗 السيارة: <span id="carDisplay" class="text-slate-900">...</span></p>
+                <p>📅 التاريخ: <span id="dateDisplay" class="text-slate-900">...</span></p>
+            </div>
 
-        <div class="bg-slate-50 p-6 rounded-[2.5rem] mb-8 border-2 border-dashed border-slate-200">
-            <p id="orderLabel" class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">REFERENCE NUMBER</p>
-            <p id="orderIDDisplay" class="text-2xl font-black tracking-tighter" style="color: var(--main-theme);">---</p>
-            <div id="summaryText" class="text-[10px] font-bold text-green-600 mt-2 flex items-center justify-center gap-1">
-                <i id="syncIcon" class="fas fa-satellite-dish animate-pulse"></i> <span id="syncText">...</span>
+            <div id="syncStatus" class="mt-4 flex items-center justify-center gap-2 text-[10px] font-bold text-green-600">
+                <i id="syncIcon" class="fas fa-satellite-dish animate-pulse"></i> <span id="syncText">جاري الحفظ...</span>
             </div>
         </div>
 
-        <a id="backBtn" href="index.html" class="block w-full py-5 rounded-2xl font-black text-xl shadow-xl transition-all active:scale-95 text-white" style="background: var(--main-theme);">
-            ---
-        </a>
+        <div class="space-y-3" id="actionButtons">
+            <button onclick="downloadTicket()" class="w-full py-4 rounded-2xl font-black text-sm btn-download flex items-center justify-center gap-2 transition-all active:scale-95">
+                <i class="fas fa-camera"></i> حفظ التذكرة في المعرض
+            </button>
+            
+            <a id="backBtn" href="index.html" class="block w-full py-5 rounded-2xl font-black text-xl shadow-xl text-white transition-all active:scale-95" style="background: var(--main-theme);">
+                العودة للرئيسية
+            </a>
+        </div>
     </div>
 
     <script>
         const u = new URLSearchParams(window.location.search);
-        const lang = u.get('lang') || 'ar';
-        const serviceType = u.get('service');
-        const type = serviceType === 'زفاف' ? 'wedding' : (serviceType === 'تدريب قيادة' ? 'training' : 'personal');
-        
-        // الرابط الجديد لمنظومة الحوت
         const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
 
-        const configs = {
-            training: { main: '#7c3aed', accent: '#D4AF37' },
-            wedding: { main: '#be185d', accent: '#D4AF37' },
-            personal: { main: '#002349', accent: '#D4AF37' }
-        };
-
-        const content = {
-            ar: { greet: "تم الحجز بنجاح!", status: "تم إرسال بياناتك إلى خوادم الحوت...", sub: "سيقوم فريق الدعم الفني بالتواصل معك خلال دقائق.", sync: "تم المزامنة بنجاح ✅", back: "العودة للرئيسية", welcome: "عميلنا العزيز", already: "تم الحفظ مسبقاً ✅", syncing: "جاري الحفظ..." },
-            ku: { greet: "سەرکەوتوو بوو!", status: "زانیارییەکانت نێردرا بۆ سێرڤەری حوت...", sub: "تیمی پشتگیری لە ماوەی چەند خولەکێکدا پەیوەندیت پێوە دەکەین.", sync: "زانیارییەکان پارێزراون ✅", back: "گەڕانەوە بۆ سەرەتا", welcome: "کڕیاری بەڕێز", already: "پێشتر نێردراوە ✅", syncing: "خەریکی پاراستنە..." },
-            tr: { greet: "Rezervasyon Başarılı!", status: "Verileriniz Al-Hut sunucularına gönderildi...", sub: "Destek ekibimiz birkaç dakika içinde sizinle iletişime geçecektir.", sync: "Kayıt Başarılı ✅", back: "Ana Sayفaya Dön", welcome: "Değerli Müşterimiz", already: "Zaten kaydedildi ✅", syncing: "Kaydediliyor..." },
-            en: { greet: "Booking Successful!", status: "Your data has been sent to Al-Hut servers...", sub: "Our support team will contact you within minutes.", sync: "Record Synchronized ✅", back: "Back to Home", welcome: "Valued Customer", already: "Already saved ✅", syncing: "Saving now..." }
-        };
-
         window.onload = async () => {
-            const c = configs[type] || configs.personal;
-            const l = content[lang] || content.ar;
-            const isRtl = (lang === 'ar' || lang === 'ku');
-
-            document.documentElement.style.setProperty('--main-theme', c.main);
-            document.documentElement.style.setProperty('--accent-theme', c.accent);
-            document.getElementById('htmlTag').dir = isRtl ? 'rtl' : 'ltr';
-
-            document.getElementById('mainGreeting').innerText = l.greet;
-            document.getElementById('statusMsg').innerText = l.status;
-            document.getElementById('subInstruction').innerText = l.sub;
-            document.getElementById('backBtn').innerText = l.back;
-            document.getElementById('syncText').innerText = l.syncing;
-            document.getElementById('userNameDisplay').innerText = u.get('name') || l.welcome;
-
+            // 1. تشغيل الصوت
+            document.getElementById('successSound').play().catch(() => {});
+            
+            // 2. تعبئة البيانات من الرابط
+            document.getElementById('userNameDisplay').innerText = u.get('name') || "عميلنا العزيز";
+            document.getElementById('carDisplay').innerText = u.get('car') || "غير محدد";
+            document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('ar-EG');
+            
             let finalOrderID = u.get('order_id') || "HUT-" + Math.random().toString(36).substr(2, 6).toUpperCase();
             document.getElementById('orderIDDisplay').innerText = "#" + finalOrderID;
 
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [c.main, c.accent] });
+            // 3. الألوان والاحتفال
+            const serviceType = u.get('service');
+            if(serviceType === 'زفاف') document.documentElement.style.setProperty('--main-theme', '#be185d');
+            else if(serviceType === 'تدريب قيادة') document.documentElement.style.setProperty('--main-theme', '#7c3aed');
+            
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
+            // 4. الإرسال للسيرفر (السكريبت)
             if (sessionStorage.getItem('sent_' + finalOrderID)) {
-                document.getElementById('syncText').innerText = l.already;
-                document.getElementById('syncIcon').className = "fas fa-check-double text-green-500";
+                document.getElementById('syncText').innerText = "تم الحفظ مسبقاً ✅";
+                document.getElementById('syncIcon').className = "fas fa-check-double";
                 return;
             }
 
@@ -108,25 +134,43 @@
             };
 
             try {
-                // استخدام POST مع no-cors لضمان العبور
-                await fetch(scriptURL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify(payload)
-                });
-
+                await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
                 sessionStorage.setItem('sent_' + finalOrderID, 'true');
-                setTimeout(() => {
-                    document.getElementById('syncText').innerText = l.sync;
-                    document.getElementById('syncIcon').className = "fas fa-check-double text-green-500";
-                    document.getElementById('syncIcon').classList.remove('animate-pulse');
-                }, 1500);
+                document.getElementById('syncText').innerText = "تم المزامنة بنجاح ✅";
+                document.getElementById('syncIcon').className = "fas fa-check-double";
+                document.getElementById('syncIcon').classList.remove('animate-pulse');
+                document.getElementById('statusMsg').innerText = "بياناتك الآن في أمان لدى عائلة الحوت 🐋";
             } catch (err) {
-                console.error("Sync error:", err);
-                document.getElementById('syncText').innerText = "تم الحفظ سحابياً";
+                document.getElementById('syncText').innerText = "تم الحفظ محلياً";
             }
         };
+
+        // دالة تحميل التذكرة كصورة
+        async function downloadTicket() {
+            const btn = event.currentTarget;
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> جاري التصوير...';
+            
+            const actions = document.getElementById('actionButtons');
+            actions.style.visibility = 'hidden'; // إخفاء الأزرار أثناء التصوير
+
+            try {
+                const canvas = await html2canvas(document.querySelector("#captureArea"), {
+                    backgroundColor: "#f0f4f8",
+                    scale: 3 // جودة عالية جداً
+                });
+                
+                const link = document.createElement('a');
+                link.download = `Hut-Ticket-${document.getElementById('orderIDDisplay').innerText}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            } catch (e) {
+                alert("تعذر حفظ الصورة، يرجى تصوير الشاشة يدوياً");
+            } finally {
+                actions.style.visibility = 'visible';
+                btn.innerHTML = originalContent;
+            }
+        }
     </script>
 </body>
 </html>
-

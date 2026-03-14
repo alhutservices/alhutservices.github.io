@@ -9,31 +9,36 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --whale-navy: #0f172a; --whale-gold: #d4af37; --bg-light: #f8fafc; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg-light); color: #1e293b; }
-        .premium-nav { background: white; border-radius: 0 0 2.5rem 2.5rem; border-bottom: 1px solid #f1f5f9; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg-light); color: #1e293b; transition: 0.3s; }
+        .premium-nav { background: white; border-radius: 0 0 2.5rem 2.5rem; border-bottom: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
         .tab-pill { transition: 0.4s; font-weight: 700; border-radius: 1rem; color: #94a3b8; }
-        .tab-pill.active { background: var(--whale-navy); color: white; }
-        .whale-card { background: white; border-radius: 2rem; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
-        .info-box { background: #f8fafc; padding: 12px; border-radius: 1.2rem; text-align: center; }
-        .btn-cancel-request { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.1); }
+        .tab-pill.active { background: var(--whale-navy); color: white; box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.2); }
+        .whale-card { background: white; border-radius: 2rem; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); transition: 0.3s; }
+        .info-box { background: #f8fafc; padding: 12px; border-radius: 1.2rem; text-align: center; border: 1px solid #f1f5f9; }
+        .btn-cancel-request { background: rgba(239, 68, 68, 0.08); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.1); }
         .new-order-alert { animation: pulse-alert 1.5s infinite; }
         @keyframes pulse-alert { 0% { background: #f8fafc; } 50% { background: #eff6ff; } 100% { background: #f8fafc; } }
+        #stopAlarmBtn { display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 100; box-shadow: 0 15px 35px rgba(239, 68, 68, 0.3); }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
     <audio id="radarSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock_ringing_rising.ogg" preload="auto" loop></audio>
 
+    <button id="stopAlarmBtn" onclick="stopAlert()" class="bg-red-500 text-white px-10 py-5 rounded-2xl font-black flex items-center gap-3 animate-bounce">
+        <i class="fas fa-bell-slash"></i> إيقاف صوت الرادار 🐋
+    </button>
+
     <header class="premium-nav px-6 py-6 mb-6">
         <div class="max-w-2xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <div class="text-3xl">🐋</div>
+                <div class="w-12 h-12 bg-slate-900 flex items-center justify-center rounded-xl shadow-lg text-2xl">🐋</div>
                 <div>
                     <h2 id="navOfficeName" class="font-black text-xl">...</h2>
                     <p id="navCity" class="text-blue-500 font-bold text-[11px]"></p>
                 </div>
             </div>
-            <button onclick="logout()" class="text-slate-400 hover:text-red-500"><i class="fas fa-sign-out-alt text-xl"></i></button>
+            <button onclick="logout()" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-sign-out-alt text-xl"></i></button>
         </div>
     </header>
 
@@ -50,7 +55,7 @@
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
-        let currentTab = 'new', allOrders = [];
+        let currentTab = 'new', allOrders = [], lastKnownNewOrders = -1;
 
         if(!officeData) window.location.href = 'login.html';
         document.getElementById('navOfficeName').innerText = officeData.name;
@@ -60,8 +65,35 @@
             try {
                 const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`);
                 allOrders = await res.json();
+                checkNewOrdersAlert();
                 renderCards();
             } catch(e) { console.error("خطأ رادار:", e); }
+        }
+
+        function checkNewOrdersAlert() {
+            const officeCity = (officeData.city || "").trim();
+            const myNewOrders = allOrders.filter(o => {
+                const prov = (o.province || o.prov || "").trim();
+                return prov === officeCity && (o.status.includes("جديد") || o.status.includes("الانتظار"));
+            }).length;
+
+            if (lastKnownNewOrders !== -1 && myNewOrders > lastKnownNewOrders) {
+                playAlert();
+            }
+            lastKnownNewOrders = myNewOrders;
+        }
+
+        function playAlert() {
+            document.getElementById('radarSound').play().catch(e => console.log("الصوت يحتاج تفاعل"));
+            document.body.classList.add('new-order-alert');
+            document.getElementById('stopAlarmBtn').style.display = 'flex';
+        }
+
+        function stopAlert() {
+            const sound = document.getElementById('radarSound');
+            sound.pause(); sound.currentTime = 0;
+            document.body.classList.remove('new-order-alert');
+            document.getElementById('stopAlarmBtn').style.display = 'none';
         }
 
         function renderCards() {
@@ -70,7 +102,8 @@
             
             let list = allOrders.filter(o => {
                 const status = (o.status || "");
-                if(currentTab === 'new') return (o.prov === officeCity || o.province === officeCity) && (status.includes("جديد") || status.includes("الانتظار"));
+                const prov = (o.province || o.prov || "").trim();
+                if(currentTab === 'new') return prov === officeCity && (status.includes("جديد") || status.includes("الانتظار"));
                 if(currentTab === 'mine') return o.office === officeData.name && status === "تم الاستلام";
                 if(currentTab === 'done') return o.office === officeData.name && (status.includes("✅") || status.includes("⚠️"));
             });
@@ -81,7 +114,6 @@
             }
 
             container.innerHTML = list.map(o => {
-                // فحص الرابط القادم من السكريبت (r[14] المسمى map)
                 const mapURL = o.map || "#";
                 const isMapValid = mapURL.startsWith("http");
 
@@ -102,32 +134,39 @@
                       currentTab === 'mine' ? 
                         `<div class="space-y-2">
                             <div class="flex gap-2">
-                                <a href="tel:${o.phone}" class="flex-1 bg-green-500 text-white py-3 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95">
+                                <a href="tel:${o.phone}" class="flex-1 bg-green-500 text-white py-3 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition-all">
                                     <i class="fas fa-phone"></i> اتصال
                                 </a>
-                                <a href="${isMapValid ? mapURL : '#'}" 
-                                   target="_blank" 
-                                   class="flex-1 ${isMapValid ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'} py-3 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95"
-                                   onclick="${!isMapValid ? "alert('عذراً، رابط الموقع غير متوفر لهذا الطلب'); return false;" : ""}">
+                                <a href="${isMapValid ? mapURL : '#'}" target="_blank" 
+                                   class="flex-1 ${isMapValid ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'} py-3 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition-all"
+                                   onclick="${!isMapValid ? "alert('عذراً، رابط الموقع غير متوفر حالياً'); return false;" : ""}">
                                     <i class="fas fa-map-marker-alt"></i> الموقع
                                 </a>
                             </div>
-                            <button onclick="update('${o.id}', 'complete')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold transition-all active:scale-95">تم التسليم بنجاح ✅</button>
-                            <button onclick="update('${o.id}', 'cancelRequest')" class="w-full btn-cancel-request py-3 rounded-xl font-bold text-[11px] transition-all active:scale-95">طلب إلغاء الطلبية ⚠️</button>
+                            <button onclick="update('${o.id}', 'complete')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold mt-2 active:scale-95 transition-all">تم التسليم بنجاح ✅</button>
+                            <button onclick="update('${o.id}', 'cancelRequest')" class="w-full btn-cancel-request py-3 rounded-xl font-bold text-[11px] mt-1 active:scale-95 transition-all">طلب إلغاء الطلبية ⚠️</button>
                         </div>` : 
-                        `<div class="text-center p-2 bg-slate-50 rounded-lg text-[10px] font-bold text-slate-500">${o.status}</div>`
+                        `<div class="text-center p-2 bg-slate-50 rounded-lg text-[10px] font-bold text-slate-500 border border-dashed">${o.status}</div>`
                     }
                 </div>
             `}).reverse().join('');
         }
 
         async function update(id, act) {
-            if(!confirm("تأكيد الإجراء؟")) return;
+            let confirmMsg = "هل أنت متأكد من تنفيذ هذا الإجراء؟";
+            if(act === 'cancelRequest') confirmMsg = "⚠️ تنبيه: هل أنت متأكد من طلب إلغاء هذه الطلبية؟ سيتم إبلاغ الإدارة للمراجعة.";
+            if(act === 'complete') confirmMsg = "✅ هل تؤكد تسليم السيارة للزبون بنجاح؟";
+            if(act === 'claim') confirmMsg = "⚡ هل تريد استلام هذه الطلبية وتنفيذها؟";
+
+            if(!confirm(confirmMsg)) return;
+
             try {
                 const res = await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
                 const result = await res.json();
-                if(result.success) fetchOrders();
-                else alert("خطأ: " + result.message);
+                if(result.success) {
+                    stopAlert();
+                    fetchOrders();
+                } else alert("خطأ: " + result.message);
             } catch(e) { alert("فشل الاتصال بالسيستم"); }
         }
 
@@ -142,6 +181,7 @@
         
         setInterval(fetchOrders, 30000);
         fetchOrders();
+        window.onclick = () => { document.getElementById('radarSound').load(); };
     </script>
 </body>
 </html>

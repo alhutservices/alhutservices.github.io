@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>تخصيص طلبك | إضافات الحوت المميزة في العراق</title>
-    <meta name="description" content="أضف لمستك الخاصة لرحلتك مع الحوت. نوفر تأمين شامل، تزيين سيارات أعراس، وكورسات تعليم سياقة ذهبية في بغداد، كركوك، أربيل، وكافة المحافظات.">
-    <meta name="keywords" content="تأمين سيارات ايجار العراق، تزيين سيارات اعراس بغداد، كورس تعليم سياقة كركوك، افضل مكتب تعليم قيادة، اضافات سيارات الحوت">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
@@ -20,7 +17,7 @@
         .city-overlay { position: absolute; inset: 0; opacity: 0.7; transition: 1s; pointer-events: none; }
         .whale-logo { font-size: 5rem; animation: floating 4s ease-in-out infinite; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3)); }
         @keyframes floating { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
-        .option-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 2.5rem; border: 2px solid transparent; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 15px 35px rgba(0,0,0,0.05); }
+        .option-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 2.5rem; border: 2px solid transparent; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 15px 35px rgba(0,0,0,0.05); height: 100%; }
         .option-card.active { border-color: #D4AF37; transform: translateY(-10px); background: #fff; box-shadow: 0 25px 50px rgba(212, 175, 55, 0.2); }
         .check-mark { position: absolute; top: 1.5rem; left: 1.5rem; width: 35px; height: 35px; background: #D4AF37; color: #002349; border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.5); transition: 0.3s; z-index: 10; }
         .option-card.active .check-mark { opacity: 1; transform: scale(1); }
@@ -30,7 +27,7 @@
         .btn-proceed:disabled { opacity: 0.3; cursor: not-allowed; }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-20 text-[#002349]">
 
     <header class="hero-bg text-white text-center relative">
         <div id="cityOverlay" class="city-overlay"></div>
@@ -43,8 +40,10 @@
     </header>
 
     <main class="container mx-auto px-4 -mt-24 relative z-20">
-        <div id="optionsGrid" class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8"></div>
-        <div class="max-w-md mx-auto mt-16">
+        <div id="optionsGrid" class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        
+        <div class="max-w-md mx-auto mt-16 text-center">
+            <p class="mb-4 font-bold text-slate-500 text-sm">* تطبق شروط الخدمة العامة لمنصة الحوت</p>
             <button id="nextBtn" onclick="proceed()" disabled class="btn-proceed py-6 rounded-[2.5rem] font-black text-2xl flex items-center justify-center gap-4 shadow-2xl active:scale-95">
                 <span id="btnText">---</span>
                 <i id="btnIcon" class="fas fa-chevron-left"></i>
@@ -68,26 +67,30 @@
         const content = {
             ar: {
                 training: { title: "باقات التدريب في " + city, sub: "افضل مكاتب تعليم سياقة قريبة منك", opts: [{ n: "كورس أساسي (3 أيام)", d: "تعلم مبادئ القيادة للمبتدئين", p: 100000, i: "🥉" }, { n: "كورس ذهبي (5 أيام)", d: "تدريب مكثف واحترافي للسياقة", p: 150000, i: "🥇" }] },
-                wedding: { title: "تزيين سيارات الأعراس - " + city, sub: "اجعل ليلة زفافك ملكية مع الحوت", opts: [{ n: "باقة الزهور الطبيعية", d: "تزيين أرقى السيارات بورد طبيعي", p: 75000, i: "💐" }, { n: "باقة الموكب الملكي", d: "تزيين كامل مع سائق لخدمة العرسان", p: 125000, i: "👑" }] },
-                personal: { title: "إضافات الحوت في " + city, sub: "خدمات إضافية لراحتك وأمانك", opts: [{ n: "تأمين شامل", d: "حماية تامة من حوادث الطرق في العراق", p: 25000, i: "🛡️" }, { n: "بدون إضافات", d: "تأجير سيارة بالمواصفات القياسية", p: 0, i: "🚗" }] },
+                wedding: { title: "باقات الزفاف في " + city, sub: "اجعل ليلة زفافك ملكية مع الحوت", opts: [{ n: "تزيين كامل للسيارة", d: "تزيين بورد طبيعي فخم + مناديل معطرة", p: 75000, i: "💐" }, { n: "الموكب الملكي", d: "تزيين + سائق بزي رسمي (VIP)", p: 125000, i: "👑" }] },
+                personal: { 
+                    title: "خدمات الحوت في " + city, 
+                    sub: "خصص رحلتك بخيارات الراحة القصوى", 
+                    opts: [
+                        { n: "سائق خاص", d: "سائق محترف خبير بطرق " + city, p: 25000, i: "👤" },
+                        { n: "توصيل للموقع", d: "توصيل واستلام السيارة من باب بيتك", p: 15000, i: "📍" },
+                        { n: "بدون إضافات", d: "تأجير قياسي (استلام من المكتب)", p: 0, i: "🚗" }
+                    ] 
+                },
                 btn: "تأكيد ومتابعة الحجز", free: "مجاني", curr: "د.ع"
-            },
-            ku: {
-                training: { title: "پاکێجەکانی ڕاهێنان لە " + city, sub: "باشترین نووسینگەی فێربوونی شۆفێری", opts: [{ n: "کۆرسی سەرەکی (3 ڕۆژ)", d: "فێربوونی بنەماکانی شۆفێری", p: 100000, i: "🥉" }, { n: "کۆرسی زێڕین (5 ڕۆژ)", d: "ڕاهێنانی چڕ و پیشەیی", p: 150000, i: "🥇" }] },
-                wedding: { title: "ڕازاندنەوەی سەیارەی بووک لە " + city, sub: "شەوەکەت شاهانە بکە", opts: [{ n: "پاکێجی گوڵی سروشتی", d: "ڕازاندنەوە بە گوڵی فرێش", p: 75000, i: "💐" }, { n: "پاکێجی کاروانی شاهانە", d: "ڕازاندنەوە لەگەڵ شۆفێر", p: 125000, i: "👑" }] },
-                personal: { title: "زیادکراوەکانی حوت لە " + city, sub: "گەشتەکەت تەرخان بکە", opts: [{ n: "دڵنیایی گشتگیر", d: "پاراستن لە ڕووداوەکان", p: 25000, i: "🛡️" }, { n: "بێ زیادکراو", d: "تایبەتمەندی ستاندارد", p: 0, i: "🚗" }] },
-                btn: "بەردەوام بە", free: "بێ بەرامبەر", curr: "د.ع"
-            },
-            tr: {
-                training: { title: city + " Eğitim Paketleri", sub: "En iyi ehliyet kursları", opts: [{ n: "Temel Kurs (3 Gün)", d: "Sürüş temelleri", p: 100000, i: "🥉" }, { n: "Altın Kurs (5 Gün)", d: "Tam profesyonel eğitim", p: 150000, i: "🥇" }] },
-                wedding: { title: city + " Düğün Paketleri", sub: "Gecenizi unutulmaz kılın", opts: [{ n: "Çiçek Paketi", d: "Taze çiçek süsleme", p: 75000, i: "💐" }, { n: "Kraliyet Konvoyu", d: "Süsleme + Şoför", p: 125000, i: "👑" }] },
-                personal: { title: city + " Whale Ekstraları", sub: "Güvenli ve konforlu sürüş", opts: [{ n: "Tam Sigorta", d: "Kaza koruma kalkanı", p: 25000, i: "🛡️" }, { n: "Ekstra Yok", d: "Standart paket", p: 0, i: "🚗" }] },
-                btn: "Onayla و Devam Et", free: "Ücretsiz", curr: "IQD"
             },
             en: {
                 training: { title: "Training in " + city, sub: "Best driving schools near you", opts: [{ n: "Basic Course (3 Days)", d: "Driving basics for beginners", p: 100000, i: "🥉" }, { n: "Golden Course (5 Days)", d: "Full professional training", p: 150000, i: "🥇" }] },
-                wedding: { title: "Wedding Packages - " + city, sub: "Make it a royal night", opts: [{ n: "Flowers Bundle", d: "Fresh natural decoration", p: 75000, i: "💐" }, { n: "Royal Convoy", d: "Decoration + Driver service", p: 125000, i: "👑" }] },
-                personal: { title: "Whale Add-ons in " + city, sub: "Customize for your safety", opts: [{ n: "Full Insurance", d: "Complete accident protection", p: 25000, i: "🛡️" }, { n: "No Add-ons", d: "Standard specification", p: 0, i: "🚗" }] },
+                wedding: { title: "Wedding Packages - " + city, sub: "Make it a royal night", opts: [{ n: "Full Decoration", d: "Fresh natural flowers + VIP setup", p: 75000, i: "💐" }, { n: "Royal Convoy", d: "Decoration + Professional Driver", p: 125000, i: "👑" }] },
+                personal: { 
+                    title: "Whale Extras in " + city, 
+                    sub: "Tailor your ride for maximum comfort", 
+                    opts: [
+                        { n: "Private Driver", d: "Expert driver who knows " + city, p: 25000, i: "👤" },
+                        { n: "Home Delivery", d: "We bring the car to your doorstep", p: 15000, i: "📍" },
+                        { n: "No Add-ons", d: "Standard rental (Office pickup)", p: 0, i: "🚗" }
+                    ] 
+                },
                 btn: "Confirm & Continue", free: "Free", curr: "IQD"
             }
         };
@@ -106,12 +109,14 @@
 
             const grid = document.getElementById('optionsGrid');
             grid.innerHTML = config.opts.map((opt, idx) => `
-                <section onclick="select(${idx}, '${opt.n}', ${opt.p})" id="card-${idx}" class="option-card p-10 cursor-pointer relative">
+                <section onclick="select(${idx}, '${opt.n}', ${opt.p})" id="card-${idx}" class="option-card p-8 cursor-pointer relative flex flex-col justify-between">
                     <div class="check-mark"><i class="fas fa-check"></i></div>
                     <div class="flex flex-col items-center text-center">
-                        <div class="text-7xl mb-6">${opt.i}</div>
-                        <h3 class="text-2xl font-black mb-4">${opt.n}</h3>
-                        <p class="text-slate-500 font-bold text-sm mb-8 leading-relaxed">${opt.d}</p>
+                        <div class="text-6xl mb-6">${opt.i}</div>
+                        <h3 class="text-xl font-black mb-3">${opt.n}</h3>
+                        <p class="text-slate-500 font-bold text-sm mb-6 leading-relaxed">${opt.d}</p>
+                    </div>
+                    <div class="text-center">
                         <div class="price-label text-lg">${opt.p === 0 ? l.free : opt.p.toLocaleString() + ' ' + l.curr}</div>
                     </div>
                 </section>

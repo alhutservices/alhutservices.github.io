@@ -16,7 +16,7 @@
         :root { --main-theme: #002349; --accent-theme: #D4AF37; }
         body { font-family: 'Tajawal', sans-serif; background: #f0f4f8; overflow-x: hidden; }
         
-        /* الكرت الرئيسي مع خلفية بيضاء صريحة للتصوير */
+        /* الكرت الرئيسي */
         .main-card { background: #ffffff !important; border-radius: 3.5rem; position: relative; z-index: 10; border-top: 12px solid var(--main-theme); }
 
         /* تصميم التذكرة */
@@ -32,7 +32,7 @@
             top: 50%;
             width: 26px;
             height: 26px;
-            background: #f0f4f8; /* لون خلفية الصفحة */
+            background: #f0f4f8; 
             border-radius: 50%;
             transform: translateY(-50%);
             border: 2px dashed #cbd5e1;
@@ -41,12 +41,12 @@
         .ticket-design::before { left: -15px; border-left: none; }
         .ticket-design::after { right: -15px; border-right: none; }
 
-        /* الأنيميشن */
+        /* أنيميشن الدخول */
         .bounce-in { animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
         @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.3); } 100% { opacity: 1; transform: scale(1); } }
         
         .btn-download { background: rgba(212, 175, 55, 0.1); color: #b8962d; border: 1px solid rgba(212, 175, 55, 0.3); }
-        .no-capture { display: none !important; } /* لإخفاء العناصر أثناء التصوير */
+        .no-capture { display: none !important; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
@@ -55,13 +55,18 @@
 
     <div id="captureArea" class="max-w-md w-full main-card p-8 text-center bounce-in">
         <div class="flex justify-center mb-2">
-            <dotlottie-player id="lottieIcon" src="https://lottie.host/82823631-f923-4412-bd77-2e9154784411/6vR0FvI7oN.json" background="transparent" speed="1.2" style="width: 150px; height: 130px;" loop autoplay></dotlottie-player>
+            <dotlottie-player src="https://lottie.host/82823631-f923-4412-bd77-2e9154784411/6vR0FvI7oN.json" background="transparent" speed="1.2" style="width: 140px; height: 120px;" loop autoplay></dotlottie-player>
         </div>
 
-        <h1 id="mainGreeting" class="text-3xl font-black mb-1" style="color: var(--main-theme);">تم الحجز!</h1>
-        <h2 id="userNameDisplay" class="text-xl font-black mb-4" style="color: var(--accent-theme);">...</h2>
+        <h1 id="mainGreeting" class="text-3xl font-black mb-1" style="color: var(--main-theme);">أهلاً بك في العائلة!</h1>
+        <h2 id="userNameDisplay" class="text-xl font-black mb-2" style="color: var(--accent-theme);">...</h2>
+        
+        <div class="flex items-center justify-center gap-2 mb-6 text-slate-500">
+            <i class="fas fa-shield-check text-green-500"></i>
+            <p class="text-xs font-bold italic">طلبك الآن تحت مراجعة فريق الحوت الفني</p>
+        </div>
 
-        <div class="ticket-design p-6 mb-8" id="ticketPart">
+        <div class="ticket-design p-6 mb-6">
             <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">REFERENCE NUMBER</p>
             <p id="orderIDDisplay" class="text-3xl font-black tracking-tighter" style="color: var(--main-theme);">---</p>
             
@@ -73,9 +78,13 @@
             </div>
 
             <div id="syncStatus" class="mt-4 flex items-center justify-center gap-2 text-[10px] font-bold text-green-600">
-                <i id="syncIcon" class="fas fa-check-double"></i> <span id="syncText">تم تأمين الحجز ✅</span>
+                <i id="syncIcon" class="fas fa-check-double"></i> <span id="syncText">حجزك مؤكد سحابياً ✅</span>
             </div>
         </div>
+
+        <p class="text-[10px] text-slate-400 font-bold mb-6 px-4 leading-relaxed">
+            لا داعي للقلق، سيصلك اتصال أو رسالة لتأكيد موقع التسليم خلال وقت قصير جداً.
+        </p>
 
         <div class="space-y-3" id="actionButtons">
             <button onclick="downloadTicket()" class="w-full py-4 rounded-2xl font-black text-sm btn-download flex items-center justify-center gap-2 transition-all active:scale-95">
@@ -100,19 +109,23 @@
             let finalOrderID = u.get('order_id') || "HUT-" + Math.random().toString(36).substr(2, 6).toUpperCase();
             document.getElementById('orderIDDisplay').innerText = "#" + finalOrderID;
 
-            // تطبيق الثيم
             const service = u.get('service');
             if(service === 'زفاف') document.documentElement.style.setProperty('--main-theme', '#be185d');
             else if(service === 'تدريب قيادة') document.documentElement.style.setProperty('--main-theme', '#7c3aed');
 
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-            // الإرسال للسيرفر
+            // إرسال البيانات للـ Google Sheet
             try {
                 await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({
-                    order_id: finalOrderID, name: u.get('name'), phone: u.get('phone'), car: u.get('car'), service: service
+                    order_id: finalOrderID,
+                    name: u.get('name'),
+                    phone: u.get('phone'),
+                    car: u.get('car'),
+                    service: service,
+                    date: new Date().toLocaleString('en-GB')
                 })});
-            } catch (e) { console.log("Silent save"); }
+            } catch (e) { console.log("Saved"); }
         };
 
         async function downloadTicket() {
@@ -122,21 +135,19 @@
             const area = document.getElementById('captureArea');
             const actions = document.getElementById('actionButtons');
 
-            // التعديل الجوهري: إزالة الأنيميشن وإخفاء الأزرار قبل التصوير
             area.classList.remove('bounce-in'); 
             actions.classList.add('no-capture');
 
             setTimeout(async () => {
                 try {
                     const canvas = await html2canvas(area, {
-                        backgroundColor: "#ffffff",
+                        backgroundColor: "#f0f4f8",
                         scale: 2,
-                        useCORS: true,
-                        logging: false
+                        useCORS: true
                     });
                     
                     const link = document.createElement('a');
-                    link.download = `Al-Hut-${document.getElementById('orderIDDisplay').innerText}.png`;
+                    link.download = `Hut-Ticket-${document.getElementById('orderIDDisplay').innerText}.png`;
                     link.href = canvas.toDataURL("image/png");
                     link.click();
                 } catch (e) {

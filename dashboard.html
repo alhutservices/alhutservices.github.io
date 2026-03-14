@@ -80,7 +80,12 @@
                 return;
             }
 
-            container.innerHTML = list.map(o => `
+            container.innerHTML = list.map(o => {
+                // فحص الرابط القادم من السكريبت (r[14] المسمى map)
+                const mapURL = o.map || "#";
+                const isMapValid = mapURL.startsWith("http");
+
+                return `
                 <div class="whale-card p-6 relative">
                     <div class="flex justify-between mb-4">
                         <h3 class="text-lg font-black">${o.car}</h3>
@@ -89,30 +94,36 @@
                     
                     <div class="grid grid-cols-2 gap-3 mb-5">
                         <div class="info-box"><p class="text-[10px] text-slate-400">الزبون</p><p class="font-bold text-xs">${o.name}</p></div>
-                        <div class="info-box"><p class="text-[10px] text-slate-400">السعر</p><p class="font-bold text-xs text-green-600">${Number(o.price).toLocaleString()} د.ع</p></div>
+                        <div class="info-box"><p class="text-[10px] text-slate-400">السعر</p><p class="font-bold text-xs text-green-600">${Number(o.price || 0).toLocaleString()} د.ع</p></div>
                     </div>
 
                     ${currentTab === 'new' ? 
-                        `<button onclick="update('${o.id}', 'claim')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold">استلام الطلب ⚡</button>` : 
+                        `<button onclick="update('${o.id}', 'claim')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold transition-all active:scale-95">استلام الطلب ⚡</button>` : 
                       currentTab === 'mine' ? 
                         `<div class="space-y-2">
                             <div class="flex gap-2">
-                                <a href="tel:${o.phone}" class="flex-1 bg-green-500 text-white py-3 rounded-xl text-center font-bold text-xs">اتصال 📞</a>
-                                <a href="${o.map}" target="_blank" class="flex-1 bg-blue-100 text-blue-600 py-3 rounded-xl text-center font-bold text-xs">الموقع 📍</a>
+                                <a href="tel:${o.phone}" class="flex-1 bg-green-500 text-white py-3 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95">
+                                    <i class="fas fa-phone"></i> اتصال
+                                </a>
+                                <a href="${isMapValid ? mapURL : '#'}" 
+                                   target="_blank" 
+                                   class="flex-1 ${isMapValid ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'} py-3 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95"
+                                   onclick="${!isMapValid ? "alert('عذراً، رابط الموقع غير متوفر لهذا الطلب'); return false;" : ""}">
+                                    <i class="fas fa-map-marker-alt"></i> الموقع
+                                </a>
                             </div>
-                            <button onclick="update('${o.id}', 'complete')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold">تم التسليم بنجاح ✅</button>
-                            <button onclick="update('${o.id}', 'cancelRequest')" class="w-full btn-cancel-request py-3 rounded-xl font-bold text-[11px]">طلب إلغاء الطلبية ⚠️</button>
+                            <button onclick="update('${o.id}', 'complete')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold transition-all active:scale-95">تم التسليم بنجاح ✅</button>
+                            <button onclick="update('${o.id}', 'cancelRequest')" class="w-full btn-cancel-request py-3 rounded-xl font-bold text-[11px] transition-all active:scale-95">طلب إلغاء الطلبية ⚠️</button>
                         </div>` : 
                         `<div class="text-center p-2 bg-slate-50 rounded-lg text-[10px] font-bold text-slate-500">${o.status}</div>`
                     }
                 </div>
-            `).reverse().join('');
+            `}).reverse().join('');
         }
 
         async function update(id, act) {
             if(!confirm("تأكيد الإجراء؟")) return;
             try {
-                // الربط مع السكريبت: نرسل id و action و office
                 const res = await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
                 const result = await res.json();
                 if(result.success) fetchOrders();

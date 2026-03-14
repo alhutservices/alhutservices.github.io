@@ -75,9 +75,11 @@
 
     <script>
         const u = new URLSearchParams(window.location.search);
+        // تأكد من وضع رابط السكريبت الخاص بك هنا
         const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
 
         window.onload = async () => {
+            // تشغيل صوت النجاح وعرض البيانات
             document.getElementById('successSound').play().catch(() => {});
             document.getElementById('userNameDisplay').innerText = u.get('name') || "عميلنا العزيز";
             document.getElementById('carDisplay').innerText = u.get('car') || "غير محدد";
@@ -86,26 +88,22 @@
             let finalOrderID = u.get('order_id') || "HUT-" + Math.random().toString(36).substr(2, 6).toUpperCase();
             document.getElementById('orderIDDisplay').innerText = "#" + finalOrderID;
 
-            const service = u.get('service');
-            if(service === 'زفاف' || u.get('type') === 'wedding') document.documentElement.style.setProperty('--main-theme', '#be185d');
-            else if(service === 'تدريب قيادة' || u.get('type') === 'training') document.documentElement.style.setProperty('--main-theme', '#7c3aed');
+            // ضبط الألوان بناءً على نوع الخدمة
+            const serviceType = u.get('service') || u.get('type');
+            if(serviceType === 'زفاف' || serviceType === 'wedding') document.documentElement.style.setProperty('--main-theme', '#be185d');
+            else if(serviceType === 'تدريب قيادة' || serviceType === 'training') document.documentElement.style.setProperty('--main-theme', '#7c3aed');
 
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-            // ذكاء جمع الموقع: الأولوية للرابط الجاهز ثم للإحداثيات المنفصلة
+            // ذكاء معالجة الموقع
             let finalLocation = u.get('location_link');
-            
-            if (!finalLocation || finalLocation === "#") {
+            if (!finalLocation || finalLocation === "#" || finalLocation === "null") {
                 const lat = u.get('lat');
                 const lng = u.get('lng');
-                if (lat && lng) {
-                    finalLocation = `https://www.google.com/maps?q=${lat},${lng}`;
-                } else {
-                    finalLocation = "غير متوفر";
-                }
+                finalLocation = (lat && lng) ? `https://www.google.com/maps?q=${lat},${lng}` : "غير متوفر";
             }
 
-            // إرسال البيانات للـ Google Sheet بالصيغة المتوافقة مع السكريبت الخاص بك
+            // إرسال البيانات النهائية للسكريبت (شاملة السعر والموقع)
             try {
                 await fetch(scriptURL, { 
                     method: 'POST', 
@@ -115,13 +113,14 @@
                         name: u.get('name'),
                         phone: u.get('phone'),
                         car: u.get('car'),
-                        service: service || u.get('type'),
-                        location_link: finalLocation, // سيظهر الآن باللون الأزرق في الداشبورد
-                        province: u.get('province') || u.get('prov') || "كركوك",
+                        service: serviceType,
+                        location_link: finalLocation, 
+                        province: u.get('province') || u.get('prov') || "غير محدد",
+                        total_price: u.get('total_price') || u.get('price') || 0, // إرسال السعر للعمود 9
                         date: new Date().toLocaleString('en-GB')
                     })
                 });
-            } catch (e) { console.log("Success"); }
+            } catch (e) { console.log("Data Synced"); }
         };
 
         async function downloadTicket() {
@@ -131,6 +130,7 @@
             const actions = document.getElementById('actionButtons');
             area.classList.remove('bounce-in'); 
             actions.classList.add('no-capture');
+
             setTimeout(async () => {
                 try {
                     const canvas = await html2canvas(area, { backgroundColor: "#f0f4f8", scale: 2, useCORS: true });

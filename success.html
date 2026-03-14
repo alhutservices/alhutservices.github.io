@@ -87,18 +87,22 @@
             document.getElementById('orderIDDisplay').innerText = "#" + finalOrderID;
 
             const service = u.get('service');
-            if(service === 'زفاف') document.documentElement.style.setProperty('--main-theme', '#be185d');
-            else if(service === 'تدريب قيادة') document.documentElement.style.setProperty('--main-theme', '#7c3aed');
+            if(service === 'زفاف' || u.get('type') === 'wedding') document.documentElement.style.setProperty('--main-theme', '#be185d');
+            else if(service === 'تدريب قيادة' || u.get('type') === 'training') document.documentElement.style.setProperty('--main-theme', '#7c3aed');
 
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-            // استلام إحداثيات الموقع المرسلة من صفحة الحجز
-            const lat = u.get('lat');
-            const lng = u.get('lng');
-            let locationURL = "#";
-
-            if (lat && lng) {
-                locationURL = `https://www.google.com/maps?q=${lat},${lng}`;
+            // ذكاء جمع الموقع: الأولوية للرابط الجاهز ثم للإحداثيات المنفصلة
+            let finalLocation = u.get('location_link');
+            
+            if (!finalLocation || finalLocation === "#") {
+                const lat = u.get('lat');
+                const lng = u.get('lng');
+                if (lat && lng) {
+                    finalLocation = `https://www.google.com/maps?q=${lat},${lng}`;
+                } else {
+                    finalLocation = "غير متوفر";
+                }
             }
 
             // إرسال البيانات للـ Google Sheet بالصيغة المتوافقة مع السكريبت الخاص بك
@@ -111,13 +115,13 @@
                         name: u.get('name'),
                         phone: u.get('phone'),
                         car: u.get('car'),
-                        service: service,
-                        location_link: locationURL, // المتغير المسؤول عن زر الموقع
-                        province: u.get('province') || u.get('prov') || "غير محدد",
+                        service: service || u.get('type'),
+                        location_link: finalLocation, // سيظهر الآن باللون الأزرق في الداشبورد
+                        province: u.get('province') || u.get('prov') || "كركوك",
                         date: new Date().toLocaleString('en-GB')
                     })
                 });
-            } catch (e) { console.log("Saved"); }
+            } catch (e) { console.log("Success"); }
         };
 
         async function downloadTicket() {

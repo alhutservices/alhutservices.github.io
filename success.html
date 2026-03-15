@@ -32,15 +32,15 @@
 
     <div id="captureArea" class="max-w-md w-full main-card p-8 text-center bounce-in">
         <div class="flex justify-center mb-2">
-            <dotlottie-player src="https://lottie.host/82823631-f923-4412-bd77-2e9154784411/6vR0FvI7oN.json" background="transparent" speed="1.2" style="width: 140px; height: 120px;" loop autoplay></dotlottie-player>
+            <dotlottie-player src="https://lottie.host/bc6e1e8b-b8f4-4a47-9759-368739194098/E8u7eR8zV5.json" background="transparent" speed="1" style="width: 150px; height: 150px;" loop autoplay></dotlottie-player>
         </div>
 
-        <h1 id="mainGreeting" class="text-3xl font-black mb-1" style="color: var(--main-theme);">أهلاً بك في العائلة!</h1>
+        <h1 id="mainGreeting" class="text-3xl font-black mb-1" style="color: var(--main-theme);">تم الحجز بنجاح!</h1>
         <h2 id="userNameDisplay" class="text-xl font-black mb-2" style="color: var(--accent-theme);">...</h2>
         
         <div class="flex items-center justify-center gap-2 mb-6 text-slate-500">
             <i class="fas fa-shield-check text-green-500"></i>
-            <p class="text-xs font-bold italic">طلبك الآن تحت مراجعة فريق الحوت الفني</p>
+            <p class="text-xs font-bold italic">تم إرسال بياناتك إلى خوادم الحوت</p>
         </div>
 
         <div class="ticket-design p-6 mb-6">
@@ -55,17 +55,17 @@
             </div>
 
             <div id="syncStatus" class="mt-4 flex items-center justify-center gap-2 text-[10px] font-bold text-green-600">
-                <i id="syncIcon" class="fas fa-check-double"></i> <span id="syncText">حجزك مؤكد سحابياً ✅</span>
+                <i id="syncIcon" class="fas fa-check-double"></i> <span id="syncText">حجزك مؤكد ✅</span>
             </div>
         </div>
 
         <p class="text-[10px] text-slate-400 font-bold mb-6 px-4 leading-relaxed">
-            لا داعي للقلق، سيصلك اتصال أو رسالة لتأكيد موقع التسليم خلال وقت قصير جداً.
+            سيقوم فريق الدعم الفني بالتواصل معك خلال دقائق.
         </p>
 
         <div class="space-y-3" id="actionButtons">
             <button onclick="downloadTicket()" class="w-full py-4 rounded-2xl font-black text-sm btn-download flex items-center justify-center gap-2 transition-all active:scale-95">
-                <i class="fas fa-camera"></i> حفظ التذكرة في المعرض
+                <i class="fas fa-camera"></i> حفظ تذكرة الحجز
             </button>
             <a href="index.html" class="block w-full py-5 rounded-2xl font-black text-xl shadow-xl text-white transition-all active:scale-95" style="background: var(--main-theme);">
                 العودة للرئيسية
@@ -75,17 +75,20 @@
 
     <script>
         const u = new URLSearchParams(window.location.search);
-        // تأكد من وضع رابط السكريبت الخاص بك هنا
+        // رابط سكريبت جوجل الخاص بك
         const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
 
         window.onload = async () => {
-            // تشغيل صوت النجاح وعرض البيانات
-            document.getElementById('successSound').play().catch(() => {});
+            // عرض البيانات الأساسية على الصفحة
             document.getElementById('userNameDisplay').innerText = u.get('name') || "عميلنا العزيز";
             document.getElementById('carDisplay').innerText = u.get('car') || "غير محدد";
             document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('ar-EG');
             
-            let finalOrderID = u.get('order_id') || "HUT-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+            // تحديد رقم الطلب
+            let finalOrderID = u.get('order_id');
+            if (!finalOrderID) {
+                finalOrderID = "HUT-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+            }
             document.getElementById('orderIDDisplay').innerText = "#" + finalOrderID;
 
             // ضبط الألوان بناءً على نوع الخدمة
@@ -93,9 +96,24 @@
             if(serviceType === 'زفاف' || serviceType === 'wedding') document.documentElement.style.setProperty('--main-theme', '#be185d');
             else if(serviceType === 'تدريب قيادة' || serviceType === 'training') document.documentElement.style.setProperty('--main-theme', '#7c3aed');
 
+            // --- حل مشكلة التكرار ---
+            // التحقق مما إذا كان هذا الرقم قد تم إرساله مسبقاً في هذه الجلسة
+            const sentOrders = JSON.parse(localStorage.getItem('sentHutOrders') || '{}');
+            
+            if (sentOrders[finalOrderID]) {
+                // إذا تم إرساله سابقاً، نكتفي بعرض الصفحة بدون إعادة الإرسال
+                console.log("الطلب مرسل مسبقاً، تم منع التكرار ✅");
+                document.getElementById('syncText').innerText = "تم عرض الحجز المؤكد ✅";
+                return; 
+            }
+
+            // --- إجراءات الإرسال لأول مرة فقط ---
+            
+            // تشغيل الصوت والقصاصات الورقية
+            document.getElementById('successSound').play().catch(() => {});
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-            // ذكاء معالجة الموقع
+            // معالجة رابط الموقع
             let finalLocation = u.get('location_link');
             if (!finalLocation || finalLocation === "#" || finalLocation === "null") {
                 const lat = u.get('lat');
@@ -103,26 +121,38 @@
                 finalLocation = (lat && lng) ? `https://www.google.com/maps?q=${lat},${lng}` : "غير متوفر";
             }
 
-            // إرسال البيانات النهائية للسكريبت (شاملة السعر والموقع)
+            // إرسال البيانات النهائية للسكريبت (POST)
             try {
+                // تعديل بسيط ليتناسب مع المتغير d المتوقع في السكريبت الخاص بك (صورة 2)
                 await fetch(scriptURL, { 
                     method: 'POST', 
                     mode: 'no-cors', 
                     body: JSON.stringify({
-                        order_id: finalOrderID,
-                        name: u.get('name'),
+                        order_id: finalOrderID, // السكريبت يقرأ d.order_id
+                        name: u.get('name'),   // السكريبت يقرأ d.name
                         phone: u.get('phone'),
                         car: u.get('car'),
                         service: serviceType,
-                        location_link: finalLocation, 
+                        location_link: finalLocation, // السكريبت يقرأ d.location_link ويضعه في العمود O
                         province: u.get('province') || u.get('prov') || "غير محدد",
-                        total_price: u.get('total_price') || u.get('price') || 0, // إرسال السعر للعمود 9
+                        // صورة 1 تظهر السعر في العمود I (رقم 9)، السكريبت يقرأ d.total_price
+                        total_price: u.get('total_price') || u.get('price') || 0, 
                         date: new Date().toLocaleString('en-GB')
                     })
                 });
-            } catch (e) { console.log("Data Synced"); }
+                
+                // بعد النجاح، نحفظ رقم الطلب في localStorage لمنع التكرار مستقبلاً
+                sentOrders[finalOrderID] = true;
+                localStorage.setItem('sentHutOrders', JSON.stringify(sentOrders));
+                console.log("تم إرسال البيانات بنجاح وتسجيل الطلب ✅");
+
+            } catch (e) { 
+                console.error("خطأ في المزامنة:", e);
+                document.getElementById('syncStatus').innerHTML = '<i class="fas fa-exclamation-triangle text-amber-500"></i> <span class="text-amber-600">جاري الحفظ محلياً...</span>';
+            }
         };
 
+        // دالة تحميل التذكرة (تبقي كما هي)
         async function downloadTicket() {
             const btn = event.currentTarget;
             btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> جاري الحفظ...';
@@ -135,14 +165,14 @@
                 try {
                     const canvas = await html2canvas(area, { backgroundColor: "#f0f4f8", scale: 2, useCORS: true });
                     const link = document.createElement('a');
-                    link.download = `Hut-Ticket-${document.getElementById('orderIDDisplay').innerText}.png`;
+                    link.download = `Hut-Booking-${document.getElementById('orderIDDisplay').innerText}.png`;
                     link.href = canvas.toDataURL("image/png");
                     link.click();
                 } catch (e) {
-                    alert("يرجى تصوير الشاشة يدوياً");
+                    alert("يرجى تصوير الشاشة يدوياً لحفظ التذكرة");
                 } finally {
                     actions.classList.remove('no-capture');
-                    btn.innerHTML = '<i class="fas fa-camera"></i> حفظ التذكرة في المعرض';
+                    btn.innerHTML = '<i class="fas fa-camera"></i> حفظ تذكرة الحجز';
                 }
             }, 100);
         }

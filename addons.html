@@ -4,119 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>باقات التدريب | أكاديمية الحوت 🐋</title>
+    <title>تخصيص طلبك | إضافات الحوت المميزة في العراق</title>
+    <meta name="description" content="أضف لمستك الخاصة لرحلتك مع الحوت. نوفر سائقين محترفين، ضمان أحدث موديلات السيارات، وتوصيل للموقع في كافة محافظات العراق.">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f0f4f8; overflow-x: hidden; }
-        .hero-bg { background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%); position: relative; padding-top: 4rem; padding-bottom: 10rem; border-bottom: 4px solid #D4AF37; }
-        .option-card { background: white; border-radius: 2.5rem; border: 2px solid transparent; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 25px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
-        .option-card.active { border-color: #D4AF37; transform: translateY(-8px); box-shadow: 0 20px 40px rgba(124, 58, 237, 0.2); }
-        .check-mark { position: absolute; top: 1.2rem; left: 1.2rem; width: 30px; height: 30px; background: #D4AF37; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.5); transition: 0.3s; z-index: 10; }
+        body { font-family: 'Tajawal', 'Poppins', sans-serif; background-color: #f0f2f5; transition: 0.5s; overflow-x: hidden; }
+        .hero-bg { background: linear-gradient(135deg, #002349 0%, #004d99 100%); position: relative; padding-top: 5rem; padding-bottom: 12rem; overflow: hidden; border-bottom: 4px solid #D4AF37; }
+        .dynamic-pattern { position: absolute; inset: 0; opacity: 0.20; pointer-events: none; background-repeat: repeat; animation: bgMove 40s linear infinite; }
+        @keyframes bgMove { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
+        .city-overlay { position: absolute; inset: 0; opacity: 0.7; transition: 1s; pointer-events: none; }
+        .whale-logo { font-size: 5rem; animation: floating 4s ease-in-out infinite; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3)); }
+        @keyframes floating { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
+        .option-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 2.5rem; border: 2px solid transparent; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 15px 35px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+        .option-card:hover { border-color: rgba(212, 175, 55, 0.3); }
+        .option-card.active { border-color: #D4AF37; transform: translateY(-10px); background: #fff; box-shadow: 0 25px 50px rgba(212, 175, 55, 0.2); }
+        .check-mark { position: absolute; top: 1.5rem; left: 1.5rem; width: 35px; height: 35px; background: #D4AF37; color: #002349; border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(0.5); transition: 0.3s; z-index: 10; }
         .option-card.active .check-mark { opacity: 1; transform: scale(1); }
-        .price-tag { background: #f3f4f6; color: #7c3aed; padding: 8px 20px; border-radius: 1rem; font-weight: 900; }
-        .delivery-badge { background: #ecfdf5; color: #059669; font-size: 0.7rem; padding: 4px 10px; border-radius: 20px; font-weight: 800; display: inline-block; margin-top: 5px; }
-        .btn-proceed { background: #7c3aed; color: white; transition: 0.3s; width: 100%; box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3); }
-        .btn-proceed:disabled { opacity: 0.4; }
+        .price-label { background: #002349; color: #D4AF37; padding: 10px 25px; border-radius: 1.25rem; font-weight: 900; display: inline-block; }
+        .btn-proceed { background: #002349; color: white; transition: 0.3s; width: 100%; }
+        .btn-proceed:not(:disabled):hover { background: #D4AF37; color: #002349; transform: scale(1.02); }
+        .btn-proceed:disabled { opacity: 0.3; cursor: not-allowed; }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-20 text-[#002349]">
 
-    <header class="hero-bg text-white text-center">
+    <header class="hero-bg text-white text-center relative">
+        <div id="cityOverlay" class="city-overlay"></div>
+        <div id="patternBox" class="dynamic-pattern"></div>
         <div class="container mx-auto px-6 relative z-10">
-            <div class="text-5xl mb-4">🎓</div>
-            <h1 class="text-3xl md:text-5xl font-black mb-2">اختر باقتك التدريبية</h1>
-            <p id="citySub" class="text-lg opacity-90 font-bold italic">خدمة التوصيل المنزلي متوفرة الآن</p>
+            <div class="whale-logo mb-4">🐋</div>
+            <h1 id="pageHeader" class="text-4xl md:text-6xl font-black mb-3 drop-shadow-md">---</h1>
+            <p id="pageSub" class="text-lg md:text-2xl opacity-90 font-bold max-w-2xl mx-auto italic">---</p>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 -mt-16 relative z-20">
-        <div id="optionsGrid" class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-            <section onclick="select(0, 'الباقة السريعة', 105000)" id="card-0" class="option-card p-6 cursor-pointer relative">
-                <div class="check-mark"><i class="fas fa-check"></i></div>
-                <div class="text-center">
-                    <div class="text-5xl mb-4">⚡</div>
-                    <h3 class="text-xl font-black mb-1">الباقة السريعة</h3>
-                    <p class="text-[11px] text-slate-500 font-bold mb-4">5 أيام | 60 دقيقة يومياً</p>
-                    <p class="text-xs text-slate-400 leading-relaxed mb-4">مثالية لكسر حاجز الخوف والتعود على التقاطعات.</p>
-                    <div class="delivery-badge"><i class="fas fa-car-side"></i> يشمل توصيل (15,000 د.ع)</div>
-                </div>
-                <div class="mt-6 text-center">
-                    <span class="price-tag">105,000 د.ع</span>
-                </div>
-            </section>
-
-            <section onclick="select(1, 'الباقة المكثفة', 148000)" id="card-1" class="option-card p-6 cursor-pointer relative">
-                <div class="check-mark"><i class="fas fa-check"></i></div>
-                <div class="text-center">
-                    <div class="text-5xl mb-4">🏆</div>
-                    <h3 class="text-xl font-black mb-1">الباقة الذهبية VIP</h3>
-                    <p class="text-[11px] text-slate-500 font-bold mb-4">6 أيام | 90 دقيقة يومياً</p>
-                    <p class="text-xs text-slate-400 leading-relaxed mb-4">كورس شامل للمبتدئين من الصفر وحتى الاحتراف.</p>
-                    <div class="delivery-badge"><i class="fas fa-car-side"></i> يشمل توصيل (18,000 د.ع)</div>
-                </div>
-                <div class="mt-6 text-center">
-                    <span class="price-tag">148,000 د.ع</span>
-                </div>
-            </section>
-
-            <section onclick="select(2, 'باقة الاحتراف', 122000)" id="card-2" class="option-card p-6 cursor-pointer relative">
-                <div class="check-mark"><i class="fas fa-check"></i></div>
-                <div class="text-center">
-                    <div class="text-5xl mb-4">🛡️</div>
-                    <h3 class="text-xl font-black mb-1">باقة الثقة</h3>
-                    <p class="text-[11px] text-slate-500 font-bold mb-4">4 أيام | 120 دقيقة يومياً</p>
-                    <p class="text-xs text-slate-400 leading-relaxed mb-4">اتقان البارك والسياقة في الزحام الشديد.</p>
-                    <div class="delivery-badge"><i class="fas fa-car-side"></i> يشمل توصيل (12,000 د.ع)</div>
-                </div>
-                <div class="mt-6 text-center">
-                    <span class="price-tag">122,000 د.ع</span>
-                </div>
-            </section>
-        </div>
+    <main class="container mx-auto px-4 -mt-24 relative z-20">
+        <div id="optionsGrid" class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         
-        <div class="max-w-md mx-auto mt-12 text-center">
-            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
-                <p class="text-[10px] text-amber-800 font-bold leading-relaxed">
-                    <i class="fas fa-info-circle"></i> تنبيه: يبدأ احتساب وقت الحصة التدريبية حصراً 
-                    <b>لحظة التقاء المدرب بك</b>. وقت الطريق لا يُحتسب من حقك.
-                </p>
-            </div>
-            
-            <button id="nextBtn" onclick="proceed()" disabled class="btn-proceed py-5 rounded-2xl font-black text-xl flex items-center justify-center gap-3 active:scale-95">
-                <span>تأكيد الباقة ومتابعة الحجز</span>
-                <i class="fas fa-arrow-left"></i>
+        <div class="max-w-md mx-auto mt-16 text-center">
+            <p class="mb-6 font-bold text-slate-500 text-sm">* تطبق شروط الخدمة: يبدأ احتساب وقت التدريب الفعلي لحظة التقاء المدرب بالمتدرب في موقعه.</p>
+            <button id="nextBtn" onclick="proceed()" disabled class="btn-proceed py-6 rounded-[2.5rem] font-black text-2xl flex items-center justify-center gap-4 shadow-2xl active:scale-95">
+                <span id="btnText">---</span>
+                <i id="btnIcon" class="fas fa-chevron-left"></i>
             </button>
         </div>
     </main>
 
     <script>
         const u = new URLSearchParams(window.location.search);
-        let choice = { name: '', price: 0 };
+        const type = u.get('type') || 'personal';
+        const lang = u.get('lang') || 'ar';
+        const city = u.get('city') || 'كركوك';
+        let choice = { name: '', price: 0, days: '1' };
 
-        function select(idx, name, price) {
-            choice = { name, price };
+        const styleColor = { 
+            'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 
+            'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 
+            'الأنبار': '#ef6c00', 'ديالى': '#558b2f' 
+        };
+        
+        const content = {
+            ar: {
+                training: { 
+                    title: "باقات التدريب في " + city, 
+                    sub: "المدرب يستلمك من باب بيتك ويبدأ التدريب فوراً", 
+                    opts: [
+                        { n: "الباقة السريعة (البركة)", d: "5 أيام | 60 دقيقة يومياً. مثالية لكسر حاجز الخوف. (تشمل خدمة الاستلام)", p: 105000, i: "⚡", days: "5" },
+                        { n: "الباقة المكثفة (الذهبية VIP)", d: "6 أيام | 90 دقيقة يومياً. كورس شامل للمبتدئين. (تشمل خدمة الاستلام)", p: 148000, i: "🏆", days: "6" },
+                        { n: "باقة الاحتراف (الثقة)", d: "4 أيام | 120 دقيقة يومياً. اتقان الزحام والبارك. (تشمل خدمة الاستلام)", p: 122000, i: "🛡️", days: "4" }
+                    ] 
+                },
+                wedding: { title: "باقات الزفاف في " + city, sub: "اجعل ليلة زفافك ملكية مع الحوت", opts: [{ n: "تزيين كامل للسيارة", d: "تزيين بورد طبيعي فخم + تجهيز VIP", p: 75000, i: "💐" }, { n: "الموكب الملكي", d: "تزيين كامل + سائق بزي رسمي للعرسان", p: 125000, i: "👑" }] },
+                personal: { 
+                    title: "خدمات الحوت في " + city, 
+                    sub: "خصص رحلتك بخيارات الراحة والتميز", 
+                    opts: [
+                        { n: "سائق خاص", d: "سائق محترف خبير بطرق وشوارع " + city, p: 25000, i: "👤" },
+                        { n: "ضمان موديل 2024-2025", d: "استلام أحدث موديل حصراً", p: 15000, i: "✨" },
+                        { n: "توصيل واستلام", d: "توصيل السيارة لموقعك الحالي", p: 15000, i: "📍" },
+                        { n: "بدون إضافات", d: "تأجير قياسي (الموديل واللون حسب المتوفر)", p: 0, i: "🚗" }
+                    ] 
+                },
+                btn: "تأكيد ومتابعة الحجز", free: "مجاني", curr: "د.ع"
+            }
+        };
+
+        function init() {
+            const l = content[lang] || content['ar'];
+            const config = l[type] || l['personal'];
+            const isRtl = (lang === 'ar' || lang === 'ku');
+            
+            document.getElementById('htmlTag').dir = isRtl ? 'rtl' : 'ltr';
+            document.getElementById('pageHeader').innerText = config.title;
+            document.getElementById('pageSub').innerText = config.sub;
+            document.getElementById('btnText').innerText = l.btn;
+            document.getElementById('btnIcon').className = `fas fa-chevron-${isRtl ? 'left' : 'right'}`;
+            document.getElementById('cityOverlay').style.backgroundColor = styleColor[city] || '#002349';
+
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = config.opts.map((opt, idx) => `
+                <section onclick="select(${idx}, '${opt.n}', ${opt.p}, '${opt.days || '1'}')" id="card-${idx}" class="option-card p-8 cursor-pointer shadow-sm">
+                    <div class="check-mark"><i class="fas fa-check"></i></div>
+                    <div class="flex flex-col items-center text-center">
+                        <div class="text-6xl mb-5">${opt.i}</div>
+                        <h3 class="text-xl font-black mb-3">${opt.n}</h3>
+                        <p class="text-slate-500 font-bold text-sm mb-6 leading-relaxed">${opt.d}</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="price-label text-lg">${opt.p === 0 ? l.free : opt.p.toLocaleString() + ' ' + l.curr}</div>
+                    </div>
+                </section>
+            `).join('');
+        }
+
+        function select(idx, name, price, days) {
+            choice = { name, price, days };
             document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
             document.getElementById(`card-${idx}`).classList.add('active');
             document.getElementById('nextBtn').disabled = false;
         }
 
         function proceed() {
-            // توجيه لصفحة حجز التدريب مع تمرير البيانات
-            u.set('addon_display', choice.name);
-            u.set('total_price', choice.price);
-            u.set('type', 'training'); // التأكيد على نوع الخدمة
+            let target = "booking_personal.html"; 
+            if (type === 'training') target = "training.html";
+            else if (type === 'wedding') target = "booking_wedding.html";
 
-            window.location.href = `training.html?${u.toString()}`;
+            u.set('addon_display', choice.name);
+            u.set('total_price', choice.price); // إرسال السعر الكلي جاهزاً
+            u.set('days', choice.days); // تحديث عدد الأيام بناءً على الباقة المختارة
+
+            window.location.href = `${target}?${u.toString()}`;
         }
 
-        window.onload = () => {
-            const city = u.get('city') || 'كركوك';
-            document.getElementById('citySub').innerText = `خدمة التوصيل المنزلي متوفرة في ${city}`;
-        };
+        window.onload = init;
     </script>
 </body>
 </html>

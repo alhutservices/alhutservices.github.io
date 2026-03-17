@@ -5,79 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تطبيق السائق | أسطول الحوت</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Tajawal', sans-serif; background: #000; color: #fff; }
-        .driver-card { background: linear-gradient(145deg, #0f172a, #020617); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .neon-glow { box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Tajawal', sans-serif; background: #000; color: #fff; }</style>
 </head>
-<body class="max-w-md mx-auto min-h-screen pb-24">
-    <header class="p-8 flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-black italic text-emerald-500 tracking-tighter uppercase">WHALE DRIVER</h1>
-            <p class="text-[10px] text-gray-500">كركوك - القطاع الجنوبي</p>
-        </div>
-        <div class="relative">
-            <div class="w-12 h-12 rounded-2xl bg-slate-900 border border-white/10 flex items-center justify-center text-xl">🏍️</div>
-            <span class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-black"></span>
-        </div>
+<body class="max-w-md mx-auto min-h-screen relative">
+    <header class="p-8 bg-slate-900 rounded-b-[3rem] shadow-2xl">
+        <h1 class="text-xl font-black text-emerald-500 italic uppercase tracking-tighter">Whale Logistics</h1>
+        <p class="text-[10px] text-gray-500">نظام إدارة المهام الميدانية</p>
     </header>
 
-    <div class="px-6 mb-8">
-        <div class="driver-card p-8 rounded-[2.5rem] neon-glow">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="text-[10px] text-gray-500 mb-1 font-bold">أرباحك المحققة اليوم</p>
-                    <h2 class="text-3xl font-black">48,750 <span class="text-xs text-emerald-500 mr-1">د.ع</span></h2>
+    <div class="p-6">
+        <div class="bg-[#0a0a0a] border border-white/5 p-8 rounded-[2.5rem] shadow-2xl">
+            <div class="flex justify-between items-center mb-10">
+                <span class="bg-emerald-600 text-black px-4 py-1 rounded-full text-[10px] font-black italic">مهمة جديدة متوفرة</span>
+                <span class="text-xs font-mono text-gray-500">ID: #HK-882</span>
+            </div>
+
+            <div class="space-y-10">
+                <div class="flex gap-4">
+                    <div class="text-2xl">📍</div>
+                    <div><p class="text-[10px] text-gray-500 uppercase font-bold">عنوان التوصيل</p><p class="text-xl font-bold">كركوك - حي الواسطي / قرب جامع المدينة</p></div>
                 </div>
-                <div class="text-center bg-white/5 p-3 rounded-2xl">
-                    <p class="text-[10px] text-gray-500 mb-1">الطلبات</p>
-                    <p class="text-xl font-bold">12</p>
+
+                <div class="flex gap-4">
+                    <div class="text-2xl">💰</div>
+                    <div><p class="text-[10px] text-gray-500 uppercase font-bold">قيمة الطلب الكلية (يدفعها الزبون)</p><p class="text-3xl font-black text-white">18,500 <span class="text-xs font-normal">د.ع</span></p></div>
+                </div>
+
+                <div class="flex gap-4">
+                    <div class="text-2xl">📞</div>
+                    <div><p class="text-[10px] text-gray-500 uppercase font-bold">رقم هاتف الزبون</p><p class="text-xl font-bold text-blue-400">077XXXXXXXX</p></div>
+                </div>
+
+                <div class="bg-emerald-500/10 p-6 rounded-3xl border border-emerald-500/20">
+                    <p class="text-[10px] text-emerald-500 uppercase font-bold text-center mb-1 italic">أجرة التوصيل الصافية لك</p>
+                    <p class="text-4xl font-black text-emerald-500 text-center italic">3,500 <span class="text-sm">د.ع</span></p>
                 </div>
             </div>
+
+            <button class="w-full bg-emerald-500 text-black py-6 mt-10 rounded-2xl font-black text-xl hover:scale-95 transition-transform">قبول المهمة فوراً ✅</button>
         </div>
     </div>
-
-    <div class="px-6">
-        <div class="driver-card p-10 rounded-[3rem] border-emerald-500/30 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-[60px]"></div>
-            
-            <div class="flex justify-between items-center mb-8">
-                <span class="bg-emerald-500 text-black px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">مهمة جديدة</span>
-                <span class="text-xs text-gray-400 font-mono italic">تبعد 1.8 كم عنك</span>
-            </div>
-
-            <div class="space-y-4 mb-8">
-                <h3 class="text-2xl font-black">مطعم الباشا المركزي</h3>
-                <div class="space-y-1">
-                    <p class="text-gray-400 text-sm">📍 التسليم: حي طريق بغداد</p>
-                    <p class="text-gray-400 text-sm">🍱 الطلب: برياني عائلي + مشروب</p>
-                </div>
-            </div>
-
-            <div class="flex justify-between items-end mb-10">
-                <div>
-                    <p class="text-[10px] text-gray-500 uppercase">قيمة الطلب</p>
-                    <p class="text-xl font-bold">22,000 د.ع</p>
-                </div>
-                <div class="text-left">
-                    <p class="text-[10px] text-gray-500 uppercase">أجرتك الصافية</p>
-                    <p class="text-3xl font-black text-emerald-500 italic">3,500 <span class="text-xs">د.ع</span></p>
-                </div>
-            </div>
-
-            <button class="w-full bg-emerald-500 text-black py-6 rounded-[2rem] font-black text-xl shadow-2xl shadow-emerald-500/20 active:scale-95 transition-all">
-                قبول وتوجه للمطعم ✅
-            </button>
-        </div>
-    </div>
-
-    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] glass-card rounded-full p-4 flex justify-around border-white/5 shadow-2xl">
-        <span class="text-xl opacity-100 text-emerald-500">🏠</span>
-        <span class="text-xl opacity-30">📦</span>
-        <span class="text-xl opacity-30">💬</span>
-        <span class="text-xl opacity-30">⚙️</span>
-    </nav>
 </body>
 </html>

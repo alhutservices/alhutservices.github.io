@@ -3,47 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق السائق | أسطول الحوت</title>
+    <title>تطبيق السائق | منظومة الحوت</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>body { font-family: 'Tajawal', sans-serif; background: #000; color: #fff; }</style>
 </head>
-<body class="max-w-md mx-auto min-h-screen relative">
-    <header class="p-8 bg-slate-900 rounded-b-[3rem] shadow-2xl">
-        <h1 class="text-xl font-black text-emerald-500 italic uppercase tracking-tighter">Whale Logistics</h1>
-        <p class="text-[10px] text-gray-500">نظام إدارة المهام الميدانية</p>
+<body class="max-w-md mx-auto min-h-screen">
+    <header class="p-8 bg-slate-900 rounded-b-[3rem] border-b border-emerald-500/30 shadow-2xl">
+        <h1 class="text-xl font-black text-emerald-500 italic uppercase tracking-tighter text-center">Whale Logistics</h1>
+        <div class="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-center">
+            <p class="text-xs text-emerald-400 font-bold leading-relaxed italic">
+                "أهلاً بك في نظام العدالة؛ هنا لا يضيع تعبك، ولا يُظلم مطعم، ولا يُثقل زبون.. أنت المحرك الحقيقي لكركوك."
+            </p>
+        </div>
     </header>
 
     <div class="p-6">
-        <div class="bg-[#0a0a0a] border border-white/5 p-8 rounded-[2.5rem] shadow-2xl">
-            <div class="flex justify-between items-center mb-10">
-                <span class="bg-emerald-600 text-black px-4 py-1 rounded-full text-[10px] font-black italic">مهمة جديدة متوفرة</span>
-                <span class="text-xs font-mono text-gray-500">ID: #HK-882</span>
+        <div class="bg-[#0a0a0a] border border-white/10 p-8 rounded-[3rem] shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 blur-[40px]"></div>
+            
+            <div class="flex justify-between items-center mb-8">
+                <span class="bg-emerald-600 text-black px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">مهمة جديدة</span>
+                <span class="text-xs font-mono text-gray-500">ID: #HK-202</span>
             </div>
 
-            <div class="space-y-10">
-                <div class="flex gap-4">
-                    <div class="text-2xl">📍</div>
-                    <div><p class="text-[10px] text-gray-500 uppercase font-bold">عنوان التوصيل</p><p class="text-xl font-bold">كركوك - حي الواسطي / قرب جامع المدينة</p></div>
+            <div class="space-y-6">
+                <div class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+                    <span class="text-2xl">📍</span>
+                    <div>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase">منطقة التوصيل</p>
+                        <p class="text-lg font-bold">طريق بغداد</p>
+                    </div>
                 </div>
 
-                <div class="flex gap-4">
-                    <div class="text-2xl">💰</div>
-                    <div><p class="text-[10px] text-gray-500 uppercase font-bold">قيمة الطلب الكلية (يدفعها الزبون)</p><p class="text-3xl font-black text-white">18,500 <span class="text-xs font-normal">د.ع</span></p></div>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="p-5 bg-red-500/5 border border-red-500/20 rounded-3xl">
+                        <p class="text-[10px] text-red-400 font-bold mb-1">💸 ادفع للمطعم عند الاستلام:</p>
+                        <div class="flex justify-between items-end">
+                            <p class="text-3xl font-black italic">14,500 <span class="text-xs">د.ع</span></p>
+                            <span class="text-[9px] text-gray-500 italic">سعر الطعام - 500 (عمولة)</span>
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-emerald-500/5 border border-emerald-500/20 rounded-3xl">
+                        <p class="text-[10px] text-emerald-400 font-bold mb-1">💵 استلم من الزبون عند الوصول:</p>
+                        <div class="flex justify-between items-end">
+                            <p class="text-3xl font-black italic">17,000 <span class="text-xs">د.ع</span></p>
+                            <span class="text-[9px] text-gray-500 italic">سعر الطعام + التوصيل</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="flex gap-4">
-                    <div class="text-2xl">📞</div>
-                    <div><p class="text-[10px] text-gray-500 uppercase font-bold">رقم هاتف الزبون</p><p class="text-xl font-bold text-blue-400">077XXXXXXXX</p></div>
+                <div class="bg-emerald-500 p-5 rounded-[2rem] text-slate-900 text-center shadow-xl">
+                    <p class="text-[10px] font-black uppercase mb-1">صافي ربحك من هذه المهمة</p>
+                    <p class="text-4xl font-black italic">2,500 <span class="text-sm">د.ع</span></p>
                 </div>
-
-                <div class="bg-emerald-500/10 p-6 rounded-3xl border border-emerald-500/20">
-                    <p class="text-[10px] text-emerald-500 uppercase font-bold text-center mb-1 italic">أجرة التوصيل الصافية لك</p>
-                    <p class="text-4xl font-black text-emerald-500 text-center italic">3,500 <span class="text-sm">د.ع</span></p>
+                
+                <div class="flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/5">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">📞</span>
+                        <p class="font-bold text-blue-400">077XXXXXXXX</p>
+                    </div>
+                    <button class="bg-blue-600/20 text-blue-400 px-4 py-2 rounded-xl text-xs font-bold">إتصال الآن</button>
                 </div>
             </div>
 
-            <button class="w-full bg-emerald-500 text-black py-6 mt-10 rounded-2xl font-black text-xl hover:scale-95 transition-transform">قبول المهمة فوراً ✅</button>
+            <button class="w-full bg-white text-black py-6 mt-8 rounded-2xl font-black text-xl hover:bg-emerald-400 transition-colors active:scale-95 shadow-2xl shadow-white/5">تأكيد إكمال المهمة ✅</button>
         </div>
     </div>
 </body>

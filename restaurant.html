@@ -5,64 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة المطعم | منظومة الحوت</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Tajawal', sans-serif; background: #f1f5f9; }</style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Tajawal', sans-serif; background: #f8fafc; }</style>
 </head>
 <body class="p-4 md:p-10">
-    <div class="max-w-xl mx-auto bg-white p-8 rounded-[2.5rem] shadow-2xl border border-slate-100">
-        <h2 class="text-2xl font-black mb-8 text-center text-slate-800">إرسال طلبية جديدة 📦</h2>
+    <div class="max-w-xl mx-auto bg-white p-10 rounded-[3rem] shadow-2xl border border-slate-100">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-black text-slate-900 italic">إرسال طلبية جديدة</h2>
+            <p class="text-xs text-gray-400 mt-2 font-bold uppercase tracking-widest">Al-Hut Advanced Logistics</p>
+        </div>
         
         <div class="space-y-6">
             <div>
-                <label class="text-sm font-bold text-slate-600 block mb-2">اختر منطقة التوصيل 📍</label>
-                <select id="region" class="w-full p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl outline-none focus:border-emerald-500" onchange="calculatePrice()">
-                    <option value="0" disabled selected>اختر المنطقة...</option>
-                    <option value="2000">طريق بغداد (2,000 د.ع)</option>
-                    <option value="2000">الواسطي (2,000 د.ع)</option>
-                    <option value="2500">حزيران (2,500 د.ع)</option>
-                    <option value="2500">الماس (2,500 د.ع)</option>
-                    <option value="3000">عرفة (3,000 د.ع)</option>
-                    <option value="3000">شارع المحافظة (3,000 د.ع)</option>
+                <label class="text-sm font-black text-slate-700 block mb-3 mr-2">📍 اختر منطقة التوصيل</label>
+                <select id="region" class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-emerald-500 transition-all font-bold" onchange="updateCalculations()">
+                    <option value="0" disabled selected>حدد المنطقة من القائمة...</option>
+                    <option value="2000">طريق بغداد (توصيل: 2,000)</option>
+                    <option value="2000">الواسطي (توصيل: 2,000)</option>
+                    <option value="2500">حزيران (توصيل: 2,500)</option>
+                    <option value="2500">الماس (توصيل: 2,500)</option>
+                    <option value="3000">عرفة (توصيل: 3,000)</option>
+                    <option value="3000">شارع المحافظة (توصيل: 3,000)</option>
                 </select>
             </div>
 
             <div>
-                <label class="text-sm font-bold text-slate-600 block mb-2">رقم هاتف الزبون 📞</label>
-                <input type="tel" class="w-full p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl outline-none" placeholder="077XXXXXXXX">
+                <label class="text-sm font-black text-slate-700 block mb-3 mr-2">📞 رقم هاتف المستلم</label>
+                <input type="tel" class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-emerald-500" placeholder="077XXXXXXXX">
             </div>
 
             <div>
-                <label class="text-sm font-bold text-slate-600 block mb-2">سعر الطعام (بدون التوصيل) 💰</label>
-                <input type="number" id="foodPrice" class="w-full p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl outline-none font-bold text-emerald-600" placeholder="مثال: 15000" oninput="calculatePrice()">
+                <label class="text-sm font-black text-slate-700 block mb-3 mr-2">💰 قيمة الطعام (بدون توصيل)</label>
+                <input type="number" id="foodPrice" class="w-full p-5 bg-emerald-50 border-2 border-emerald-100 rounded-2xl outline-none font-black text-emerald-700 text-xl" placeholder="مثلاً: 15000" oninput="updateCalculations()">
             </div>
 
-            <div class="bg-slate-900 text-white p-6 rounded-[2rem] space-y-2 shadow-inner">
-                <div class="flex justify-between text-xs opacity-70">
-                    <span>أجرة التوصيل:</span>
-                    <span id="deliveryDisplay">0 د.ع</span>
+            <div class="bg-slate-900 rounded-[2.5rem] p-8 space-y-4 shadow-2xl">
+                <div class="flex justify-between items-center pb-4 border-b border-white/10">
+                    <span class="text-gray-400 text-xs font-bold">ستستلم من السائق صافي:</span>
+                    <span id="restaurantTake" class="text-2xl font-black text-white italic">0 د.ع</span>
                 </div>
-                <div class="flex justify-between text-xs opacity-70">
-                    <span>عمولة المدير (تستقطع منك):</span>
-                    <span>500 د.ع</span>
+                <div class="flex justify-between items-center pt-2">
+                    <span class="text-gray-400 text-[10px] font-bold">المجموع على الزبون (شامل التوصيل):</span>
+                    <span id="totalCustomer" class="text-emerald-400 font-black">0 د.ع</span>
                 </div>
-                <div class="flex justify-between font-bold text-lg pt-2 border-t border-white/10">
-                    <span>المجموع المطلوب من الزبون:</span>
-                    <span id="totalDisplay" class="text-emerald-400">0 د.ع</span>
-                </div>
+                <p class="text-[9px] text-gray-500 text-center italic mt-4">"تم خصم 500 د.ع عمولة المنظومة تلقائياً"</p>
             </div>
 
-            <button class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-xl hover:bg-slate-800 transition-all active:scale-95 shadow-xl">بث الطلبية للمنظومة 🚀</button>
+            <button class="w-full bg-slate-900 text-white py-6 rounded-2xl font-black text-xl hover:bg-slate-800 transition-all shadow-xl active:scale-95">بث الطلبية لأسطول الحوت 🚀</button>
         </div>
     </div>
 
     <script>
-        function calculatePrice() {
+        function updateCalculations() {
             const delivery = parseInt(document.getElementById('region').value) || 0;
             const food = parseInt(document.getElementById('foodPrice').value) || 0;
-            const total = delivery + food;
-            
-            document.getElementById('deliveryDisplay').innerText = delivery.toLocaleString() + " د.ع";
-            document.getElementById('totalDisplay').innerText = total.toLocaleString() + " د.ع";
+            const commission = 500;
+
+            const restaurantNet = food > 0 ? (food - commission) : 0;
+            const totalForCustomer = food + delivery;
+
+            document.getElementById('restaurantTake').innerText = restaurantNet.toLocaleString() + " د.ع";
+            document.getElementById('totalCustomer').innerText = totalForCustomer.toLocaleString() + " د.ع";
         }
     </script>
 </body>

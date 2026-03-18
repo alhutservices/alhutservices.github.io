@@ -2,124 +2,138 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دخول الكابتن | منظومة الحوت</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>دخول الكابتن | رادار الحوت 🐋</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background: #020617; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .glass-input { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; }
-        .btn-amber { background: linear-gradient(135deg, #fbbf24, #d97706); color: #020617; }
-        .hidden { display: none; }
+        :root { --whale-amber: #fbbf24; --whale-navy: #020617; }
+        body { font-family: 'Tajawal', sans-serif; background: #010409; color: white; overflow-x: hidden; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        
+        /* تأثيرات الرادار الخلفية - السمة الكهرمانية */
+        .radar-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(251, 191, 36, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(251, 191, 36, 0.03) 1px, transparent 1px); background-size: 35px 35px; z-index: -1; }
+        .scan-line { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(to bottom, transparent, var(--whale-amber), transparent); animation: scan 7s linear infinite; opacity: 0.2; z-index: -1; }
+        @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
+
+        .glass-card { background: rgba(13, 17, 23, 0.85); backdrop-filter: blur(25px); border: 1px solid rgba(251, 191, 36, 0.15); box-shadow: 0 0 50px rgba(0,0,0,0.7); }
+        
+        .whale-input { width: 100%; padding: 1.1rem 3.5rem 1.1rem 1.1rem; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 1.2rem; color: white; transition: 0.4s; }
+        .whale-input:focus { border-color: var(--whale-amber); box-shadow: 0 0 20px rgba(251, 191, 36, 0.15); outline: none; }
+        
+        .action-btn { background: var(--whale-amber); color: #020617; font-weight: 900; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%); transition: 0.3s; cursor: pointer; }
+        .action-btn:active { transform: scale(0.96); filter: brightness(1.2); }
+        
         .animate-fade { animation: fadeIn 0.5s ease forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden { display: none; }
     </style>
 </head>
-<body class="p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-900 via-black to-black">
+<body class="p-6">
 
-    <div class="max-w-md w-full glass-card p-10 rounded-[3.5rem] shadow-2xl relative">
+    <div class="radar-grid"></div>
+    <div class="scan-line"></div>
+
+    <div class="max-w-md w-full glass-card p-10 rounded-[2.5rem] relative z-10">
         
-        <div id="loadingSplash" class="text-center py-10">
-            <div class="w-16 h-16 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p class="text-xs text-amber-500 font-black italic">جاري التعرف على الكابتن...</p>
+        <div id="loader" class="text-center py-12">
+            <div class="w-14 h-14 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+            <p class="text-[10px] text-amber-500 font-black tracking-[0.2em] italic uppercase">Scanning Pilot Identity...</p>
         </div>
 
-        <div id="mainAuthUI" class="hidden animate-fade">
-            <header class="text-center mb-8">
-                <div class="w-16 h-16 bg-amber-500 rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-xl shadow-amber-500/20">
-                    <span class="text-slate-900 text-3xl font-black font-mono italic">ح</span>
+        <div id="authUI" class="hidden animate-fade">
+            <header class="text-center mb-10">
+                <div class="inline-block p-4 rounded-3xl bg-amber-500/10 border border-amber-500/20 mb-4 shadow-2xl shadow-amber-500/10">
+                    <span class="text-4xl text-amber-500"><i class="fas fa-motorcycle"></i></span>
                 </div>
-                <h1 class="text-xl font-black italic text-white">رادار الحوت</h1>
-                <p class="text-[9px] text-gray-500 mt-2 uppercase tracking-widest font-black italic">نظام التعرف التلقائي</p>
+                <h2 class="text-2xl font-black tracking-widest uppercase italic" style="font-family: 'Orbitron', sans-serif;">
+                    WHALE <span class="text-amber-500">PILOT</span>
+                </h2>
+                <p class="text-[9px] text-slate-500 mt-3 tracking-[0.2em] font-bold italic uppercase">نظام التحقق التلقائي للكباتن</p>
             </header>
 
-            <form id="smartForm" class="space-y-6">
-                <div>
-                    <label class="text-[9px] text-amber-500 font-black mb-3 mr-2 block italic">رقم الهوية الوطنية</label>
-                    <input type="number" id="driverID" required placeholder="أدخل 12 رقم" 
-                           class="w-full glass-input p-5 rounded-2xl text-sm font-mono tracking-[0.3em] text-center text-white"
-                           oninput="checkUserStatus(this.value)">
+            <form id="smartForm" class="space-y-4">
+                <div class="relative">
+                    <i class="fas fa-fingerprint absolute right-4 top-1/2 -translate-y-1/2 text-amber-500"></i>
+                    <input type="number" id="driverID" required placeholder="رقم الهوية الوطنية" 
+                           class="whale-input text-center font-black tracking-widest text-lg"
+                           oninput="checkStatus(this.value)">
                 </div>
 
-                <div id="newUserData" class="hidden space-y-5 border-t border-white/5 pt-6">
-                    <input type="text" id="regName" placeholder="الاسم الثلاثي الكامل" class="w-full glass-input p-4 rounded-xl text-sm font-bold italic">
-                    <input type="tel" id="regPhone" placeholder="رقم الهاتف (واتساب)" class="w-full glass-input p-4 rounded-xl text-sm font-mono italic text-center" dir="ltr">
+                <div id="newFields" class="hidden space-y-4 border-t border-white/5 pt-6 animate-fade">
+                    <div class="relative">
+                        <i class="fas fa-user-tag absolute right-4 top-1/2 -translate-y-1/2 text-amber-500/50"></i>
+                        <input type="text" id="regName" placeholder="الاسم الثلاثي الكامل" class="whale-input font-bold italic">
+                    </div>
+                    <div class="relative">
+                        <i class="fab fa-whatsapp absolute right-4 top-1/2 -translate-y-1/2 text-amber-500/50"></i>
+                        <input type="tel" id="regPhone" placeholder="رقم الواتساب" class="whale-input font-mono tracking-widest italic" dir="ltr">
+                    </div>
                 </div>
 
-                <button type="submit" id="mainBtn" class="w-full btn-amber py-5 rounded-3xl font-black text-sm italic shadow-lg active:scale-95 transition-all">
-                    استمرار 🚀
+                <button type="submit" id="mainBtn" class="w-full py-5 action-btn mt-6 flex items-center justify-center gap-3">
+                    <span id="btnText">تفعيل الرادار</span>
+                    <i class="fas fa-crosshairs"></i>
                 </button>
             </form>
         </div>
 
-        <div id="waitMessage" class="hidden text-center py-8 animate-fade">
-            <div class="text-5xl mb-4">⏳</div>
-            <h3 class="text-lg font-black text-amber-400 italic font-bold">طلبك قيد المراجعة</h3>
-            <p class="text-[10px] text-gray-400 mt-4 leading-relaxed italic">أهلاً بك مجدداً كابتن. طلبك وصل للمدير، بانتظار التفعيل لبدء استلام الطلبيات.</p>
-            <button onclick="logout()" class="mt-8 text-[9px] text-red-500 underline font-black italic">إلغاء الطلب والتسجيل من جديد</button>
+        <div id="waitMessage" class="hidden text-center py-12 animate-fade">
+            <div class="text-6xl mb-6">🛰️</div>
+            <h3 class="text-xl font-black text-amber-500 italic uppercase tracking-tighter">بانتظار إشارة الإدارة</h3>
+            <p class="text-[10px] text-slate-400 mt-6 leading-relaxed italic">أهلاً بك كابتن. بياناتك الآن في غرفة العمليات.<br>سيتم فتح الرادار لك فور مراجعة الهوية.</p>
+            <button onclick="logout()" class="mt-10 text-[9px] text-red-500/70 underline font-black uppercase tracking-widest">Reset Identity Session</button>
         </div>
     </div>
 
     <script>
-        // محاكاة قاعدة بيانات (يجب ربطها بـ Google Sheets لاحقاً)
-        const mockUsers = [
-            { id: "123456789012", status: "active" },
-            { id: "000000000000", status: "pending" }
-        ];
+        // محاكاة سريعة
+        const mockDB = [{ id: "123456789012", status: "active" }];
 
-        window.onload = function() {
-            // فحص هل الهاتف "يتذكر" مستخدماً سابقاً؟
+        window.onload = () => {
             const savedID = localStorage.getItem('whale_driver_id');
             const savedStatus = localStorage.getItem('whale_driver_status');
 
             setTimeout(() => {
-                document.getElementById('loadingSplash').classList.add('hidden');
-                
+                document.getElementById('loader').classList.add('hidden');
                 if (savedID) {
                     if (savedStatus === 'active') {
-                        // إذا كان مفعلاً، انقله مباشرة للرادار
-                        alert("مرحباً بك مجدداً! جاري فتح الرادار...");
-                        // window.location.href = 'driver_dashboard.html';
+                        alert("✅ الرادار نشط - جاري الدخول للخدمة...");
                     } else {
-                        // إذا كان بانتظار الموافقة، أظهر له رسالة الانتظار فوراً
                         document.getElementById('waitMessage').classList.remove('hidden');
                     }
                 } else {
-                    // إذا لم يسجل من قبل، أظهر واجهة الدخول
-                    document.getElementById('mainAuthUI').classList.remove('hidden');
+                    document.getElementById('authUI').classList.remove('hidden');
                 }
-            }, 1000);
+            }, 1200);
         };
 
-        function checkUserStatus(val) {
-            const newUserSection = document.getElementById('newUserData');
-            const mainBtn = document.getElementById('mainBtn');
-            const user = mockUsers.find(u => u.id === val);
+        function checkStatus(val) {
+            const extra = document.getElementById('newFields');
+            const btnText = document.getElementById('btnText');
+            const user = mockDB.find(u => u.id === val);
 
             if (user) {
-                mainBtn.innerText = user.status === "active" ? "دخول سريع ✅" : "عرض الحالة ⏳";
-                newUserSection.classList.add('hidden');
-            } else if(val.length > 5) {
-                newUserSection.classList.remove('hidden');
-                mainBtn.innerText = "تقديم طلب انضمام 📤";
+                btnText.innerText = "دخول سريع";
+                extra.classList.add('hidden');
+            } else if (val.length >= 8) {
+                extra.classList.remove('hidden');
+                btnText.innerText = "طلب انضمام للأسطول";
             }
         }
 
         document.getElementById('smartForm').onsubmit = function(e) {
             e.preventDefault();
             const id = document.getElementById('driverID').value;
-            
-            // محاكاة حفظ البيانات في المتصفح (تذكرني)
             localStorage.setItem('whale_driver_id', id);
             
-            const user = mockUsers.find(u => u.id === id);
-            if (user && user.status === "active") {
+            const user = mockDB.find(u => u.id === id);
+            if (user && user.status === 'active') {
                 localStorage.setItem('whale_driver_status', 'active');
-                alert("تم التفعيل! سيتم نقلك للرادار.");
+                location.reload();
             } else {
                 localStorage.setItem('whale_driver_status', 'pending');
-                document.getElementById('mainAuthUI').classList.add('hidden');
+                document.getElementById('authUI').classList.add('hidden');
                 document.getElementById('waitMessage').classList.remove('hidden');
             }
         };

@@ -21,10 +21,10 @@
             <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-emerald-500 font-black">ح</div>
             <div>
                 <p class="text-[9px] text-gray-400 font-black uppercase italic">مرحباً بك في المنظومة</p>
-                <h1 id="displayResName" class="text-sm font-black text-slate-900 italic">مطعم غير معروف</h1>
+                <h1 id="displayResName" class="text-sm font-black text-slate-900 italic">جاري التحميل...</h1>
             </div>
         </div>
-        <button onclick="logout()" class="text-[9px] font-black text-red-500 border border-red-100 px-3 py-2 rounded-xl hover:bg-red-50">تسجيل خروج</button>
+        <button onclick="logout()" class="text-[9px] font-black text-red-500 border border-red-100 px-3 py-2 rounded-xl hover:bg-red-50 transition-colors">تسجيل خروج</button>
     </header>
 
     <div class="max-w-xl mx-auto bg-white p-6 md:p-10 rounded-[3rem] shadow-2xl border border-slate-100 relative overflow-hidden">
@@ -86,20 +86,22 @@
     </div>
 
     <script>
-        // نظام الحماية والترابط
+        // --- نظام الحماية والترابط الموحد لمنظومة الحوت ---
         document.addEventListener('DOMContentLoaded', () => {
-            const resName = localStorage.getItem('whale_res_name');
+            // استخدام المفاتيح الموحدة التي وضعناها في restaurant_login.html
+            const resID = localStorage.getItem('whale_res_id');
             const status = localStorage.getItem('whale_res_status');
+            const resName = localStorage.getItem('whale_res_name');
 
-            // إذا حاول الدخول بدون تسجيل أو حسابه غير مفعّل
-            if (!resName || status !== 'active') {
-                alert("عذراً، يجب تفعيل حسابك من قبل الإدارة أولاً.");
-                window.location.href = 'register.html';
+            // فحص الصلاحية: إذا لم يوجد ID أو الحساب ليس نشطاً
+            if (!resID || status !== 'active') {
+                alert("تنبيه أمني: يرجى تسجيل الدخول وتفعيل الحساب للوصول إلى لوحة البث.");
+                window.location.href = 'restaurant_login.html';
                 return;
             }
 
-            // عرض اسم المطعم المسجل
-            document.getElementById('displayResName').innerText = resName;
+            // عرض اسم المطعم المخزن أو استخدام اسم افتراضي
+            document.getElementById('displayResName').innerText = resName || "شريك الحوت";
         });
 
         function switchTab(type) {
@@ -138,14 +140,16 @@
 
         document.getElementById('orderForm').onsubmit = function(e) {
             e.preventDefault();
+            // ملاحظة للمستقبل: هنا سيتم إضافة كود fetch للربط مع Google Sheets
             alert("🚀 جاري البث... تم إرسال الطلبية بنجاح لأسطول السواق!");
             this.reset();
             document.getElementById('previewContainer').classList.add('hidden');
         };
 
         function logout() {
+            // تنظيف الذاكرة بالكامل لضمان الأمان عند الخروج
             localStorage.clear();
-            window.location.href = 'register.html';
+            window.location.href = 'restaurant_login.html';
         }
     </script>
 </body>

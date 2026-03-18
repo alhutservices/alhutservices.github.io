@@ -14,6 +14,8 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .receipt-thumb { transition: all 0.3s ease; cursor: pointer; }
         .receipt-thumb:hover { transform: scale(3) translateX(-10px); z-index: 50; position: relative; }
+        .contact-btn { transition: all 0.2s; }
+        .contact-btn:hover { transform: scale(1.1); }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-8 pb-20">
@@ -28,12 +30,12 @@
         </div>
         <div class="flex gap-4 mt-4 md:mt-0">
             <div class="glass px-6 py-2 rounded-2xl text-center border-r-4 border-emerald-500">
-                <p class="text-[10px] text-gray-500 uppercase font-bold">إجمالي طلبات اليوم</p>
-                <p class="font-black text-xl text-white">124</p>
+                <p class="text-[10px] text-gray-500 uppercase font-bold">الطلبات النشطة</p>
+                <p class="font-black text-xl text-white">24</p>
             </div>
             <div class="glass px-6 py-2 rounded-2xl text-center border-r-4 border-blue-500">
-                <p class="text-[10px] text-gray-500 uppercase font-bold">السواق النشطين</p>
-                <p class="font-black text-xl text-white">18</p>
+                <p class="text-[10px] text-gray-500 uppercase font-bold">السواق بالخدمة</p>
+                <p class="font-black text-xl text-white">12</p>
             </div>
         </div>
     </header>
@@ -46,20 +48,17 @@
         </div>
 
         <div id="orders" class="tab-content active glass p-6 md:p-10 rounded-[3rem]">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-xl font-black text-emerald-400 italic">📦 مراقبة الطلبات الميدانية</h2>
-                <div class="flex gap-2">
-                    <span class="bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full text-[10px] font-bold animate-pulse">تحديث مباشر من الأقمار 🛰️</span>
-                </div>
-            </div>
+            <h2 class="text-xl font-black text-emerald-400 italic mb-8 flex items-center gap-2">📦 رادار الطلبات الميدانية <span class="bg-emerald-500/10 text-[10px] px-2 py-1 rounded animate-pulse">LIVE</span></h2>
+            
             <div class="overflow-x-auto">
                 <table class="w-full text-right text-sm">
                     <thead>
                         <tr class="text-gray-500 border-b border-white/10 uppercase text-[10px] tracking-widest">
-                            <th class="p-4">الطلب والمصدر</th>
-                            <th class="p-4">البيانات / الوصل</th>
+                            <th class="p-4">الطلب / المصدر</th>
+                            <th class="p-4">المعلومات / الوصل</th>
                             <th class="p-4">السائق / الحالة</th>
-                            <th class="p-4">التحكم السيادي</th>
+                            <th class="p-4 text-center">التواصل السريع (إدارة الأزمات)</th>
+                            <th class="p-4">التحكم</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-white/5">
@@ -77,33 +76,32 @@
                                 </div>
                             </td>
                             <td class="p-4">
-                                <p class="text-white font-bold">أحمد الكركوكي</p>
-                                <span class="text-[9px] text-gray-400 italic font-bold">قيد التنفيذ... 🚚</span>
+                                <p class="text-white font-bold italic underline">أحمد الكركوكي</p>
+                                <span class="text-[9px] text-gray-400 italic font-bold">قيد التوصيل 🚚</span>
                             </td>
                             <td class="p-4">
-                                <div class="flex gap-2">
-                                    <button class="bg-blue-600 px-3 py-1 rounded-lg text-[10px] font-black">إتمام ✅</button>
-                                    <button class="bg-red-600/20 text-red-500 px-3 py-1 rounded-lg text-[10px] font-black">حذف 🗑️</button>
+                                <div class="flex flex-col gap-2 border-r border-white/10 pr-4">
+                                    <div class="flex items-center justify-between gap-4">
+                                        <span class="text-[9px] text-gray-500 font-black italic">المطعم:</span>
+                                        <div class="flex gap-1">
+                                            <a href="tel:077XXXXXXXX" class="contact-btn bg-slate-800 p-2 rounded-lg text-[10px]" title="اتصال">📞</a>
+                                            <a href="https://wa.me/96477XXXXXXXX" class="contact-btn bg-emerald-600/20 text-emerald-400 p-2 rounded-lg text-[10px]" title="واتساب">💬</a>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between gap-4 border-t border-white/5 pt-2">
+                                        <span class="text-[9px] text-gray-500 font-black italic">السائق:</span>
+                                        <div class="flex gap-1">
+                                            <a href="tel:077XXXXXXXX" class="contact-btn bg-slate-800 p-2 rounded-lg text-[10px]" title="اتصال">📞</a>
+                                            <a href="https://wa.me/96477XXXXXXXX" class="contact-btn bg-blue-600/20 text-blue-400 p-2 rounded-lg text-[10px]" title="واتساب">💬</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </td>
-                        </tr>
-                        <tr class="hover:bg-white/5 transition-colors">
                             <td class="p-4">
-                                <p class="font-black text-white">#HK-2202</p>
-                                <p class="text-xs text-blue-400 font-bold italic underline">بيتزا كركوك</p>
-                            </td>
-                            <td class="p-4">
-                                <div class="text-[10px] space-y-1">
-                                    <p class="text-white"><span class="text-gray-500 italic">📍:</span> طريق بغداد</p>
-                                    <p class="text-blue-400 font-bold italic underline cursor-pointer">📞 077XXXXXXXX</p>
-                                    <span class="text-[9px] bg-emerald-500/10 text-emerald-500 px-2 py-1 rounded font-bold italic">بيانات يدوية ✍️</span>
+                                <div class="flex gap-1">
+                                    <button class="bg-blue-600 px-3 py-1 rounded-lg text-[10px] font-black">إتمام</button>
+                                    <button class="bg-red-600/20 text-red-500 px-2 py-1 rounded-lg text-[10px]">حذف</button>
                                 </div>
-                            </td>
-                            <td class="p-4">
-                                <span class="text-[10px] text-gray-600 italic font-bold italic">بانتظار سائق ⏳</span>
-                            </td>
-                            <td class="p-4">
-                                <button class="bg-emerald-600 px-4 py-2 rounded-lg text-[10px] font-black w-full shadow-lg">تعيين سائق الآن 🏍️</button>
                             </td>
                         </tr>
                     </tbody>
@@ -112,45 +110,30 @@
         </div>
 
         <div id="restaurants" class="tab-content glass p-6 md:p-10 rounded-[3rem]">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-xl font-black text-blue-400">🍕 إدارة المطاعم المتعاقدة</h2>
-                <button class="bg-blue-600 px-4 py-2 rounded-xl text-xs font-black">+ إضافة مطعم جديد</button>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-white/5 p-6 rounded-[2.5rem] border border-white/5 hover:border-blue-500/30 transition-all">
-                    <div class="flex justify-between mb-4">
-                        <div class="w-12 h-12 bg-blue-500/20 rounded-2xl flex items-center justify-center text-xl">🏠</div>
-                        <span class="status-badge bg-emerald-500/10 text-emerald-500 text-[9px] px-3 py-1 rounded-full font-bold h-fit">نشط ✅</span>
-                    </div>
-                    <h3 class="text-lg font-black mb-1">بيتزا كركوك</h3>
-                    <p class="text-xs text-gray-500 mb-6 italic underline">077XXXXXXXX</p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button class="bg-amber-600/20 text-amber-500 p-2 rounded-xl text-[10px] font-black border border-amber-600/20">تعطيل 🔒</button>
-                        <button class="bg-red-600/20 text-red-500 p-2 rounded-xl text-[10px] font-black border border-red-600/20">حذف 🗑️</button>
+            <h2 class="text-xl font-black text-blue-400 mb-8 font-italic">🍕 إدارة المطاعم</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white/5 p-6 rounded-3xl border border-white/5">
+                    <h3 class="font-black text-lg text-white">مطعم كرز الشام</h3>
+                    <p class="text-xs text-gray-500 underline mb-4">077XXXXXXXX</p>
+                    <div class="flex gap-2">
+                        <button class="flex-1 bg-amber-600/20 text-amber-500 py-2 rounded-xl text-xs font-bold">تعطيل 🔒</button>
+                        <button class="flex-1 bg-red-600/20 text-red-500 py-2 rounded-xl text-xs font-bold">حذف 🗑️</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <div id="drivers" class="tab-content glass p-6 md:p-10 rounded-[3rem]">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-xl font-black text-amber-400 italic">🏍️ أسطول الحوت الميداني</h2>
-                <button class="bg-emerald-600 px-4 py-2 rounded-xl text-xs font-black shadow-lg shadow-emerald-900/40">+ قبول سائق جديد</button>
-            </div>
+            <h2 class="text-xl font-black text-amber-400 mb-8 font-italic">🏍️ إدارة السواق</h2>
             <div class="space-y-4">
-                <div class="bg-white/5 p-6 rounded-[2.5rem] border-r-8 border-emerald-500 flex flex-col md:flex-row justify-between items-center gap-6 group hover:bg-white/10 transition-all">
-                    <div class="flex items-center gap-6">
-                        <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center text-3xl border-2 border-emerald-500 shadow-2xl">👤</div>
-                        <div>
-                            <h4 class="font-black text-xl">أحمد كركوكلي</h4>
-                            <p class="text-[10px] text-emerald-400 font-bold italic">متصل الآن - حي الواسطي 📍</p>
-                            <p class="text-[9px] text-gray-500 mt-1 uppercase font-black">إجمالي رحلات اليوم: 14</p>
-                        </div>
+                <div class="bg-white/5 p-6 rounded-3xl flex justify-between items-center border-r-4 border-emerald-500">
+                    <div>
+                        <h4 class="font-black text-white">أحمد كركوكلي</h4>
+                        <p class="text-[10px] text-emerald-400 italic font-bold">متصل - حي الواسطي</p>
                     </div>
-                    <div class="flex flex-wrap gap-2">
-                        <a href="tel:077XXXXXXXX" class="bg-slate-800 px-4 py-2 rounded-xl text-xs font-bold">اتصال 📞</a>
-                        <button class="bg-amber-600/20 text-amber-500 px-4 py-2 rounded-xl text-xs font-bold border border-amber-600/20">تعطيل ⛔</button>
-                        <button class="bg-red-600/20 text-red-500 px-4 py-2 rounded-xl text-xs font-bold border border-red-600/20">حذف 🗑️</button>
+                    <div class="flex gap-2">
+                        <button class="bg-amber-600/20 text-amber-500 px-4 py-2 rounded-xl text-xs font-bold italic">تعطيل ⛔</button>
+                        <button class="bg-red-600/20 text-red-500 px-4 py-2 rounded-xl text-xs font-bold italic">حذف 🗑️</button>
                     </div>
                 </div>
             </div>
@@ -159,17 +142,14 @@
 
     <script>
         function showTab(tabId) {
-            // إخفاء المحتويات
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             
-            // تحديث شكل الأزرار
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('bg-emerald-600', 'shadow-lg');
                 btn.classList.add('glass');
             });
             
-            // تحديد الزر النشط
             const activeBtn = document.getElementById('btn-' + tabId);
             activeBtn.classList.add('bg-emerald-600', 'shadow-lg');
             activeBtn.classList.remove('glass');

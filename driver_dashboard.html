@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رادار الكابتن | منظومة الحوت</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background: #000; color: #fff; }
+        .receipt-card { background: linear-gradient(145deg, #0f172a, #020617); border: 1px solid rgba(255,255,255,0.05); }
+        .hidden { display: none; }
+        .modal-bg { background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px); }
+        /* أنيميشن للطلبات الجديدة */
+        .new-order-glow { box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); border: 1px solid #10b981; }
+    </style>
+</head>
+<body class="max-w-md mx-auto min-h-screen pb-10">
+    
+    <header class="p-6 bg-slate-900 rounded-b-[3rem] border-b border-emerald-500/30 shadow-2xl flex justify-between items-center">
+        <div>
+            <h1 class="text-sm font-black text-emerald-500 italic uppercase font-mono">Whale Radar</h1>
+            <p id="welcomeName" class="text-[10px] text-gray-400 mt-1 italic">كابتن: جاري التحقق...</p>
+        </div>
+        <button onclick="logout()" class="text-[10px] bg-red-500/10 text-red-500 px-3 py-2 rounded-xl font-black italic">خروج</button>
+    </header>
+
+    <main class="p-6">
+        <div class="flex items-center justify-center gap-2 mb-6">
+            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span>
+            <p class="text-[9px] text-emerald-500 font-black uppercase tracking-[0.3em] italic">الرادار متصل ويبحث عن طلبيات...</p>
+        </div>
+
+        <div id="orderCard" class="receipt-card p-8 rounded-[3rem] shadow-2xl relative overflow-hidden border-t-4 border-emerald-500 hidden">
+            
+            <div class="mb-6 flex flex-col items-center border-b border-white/5 pb-6 text-center">
+                <p class="text-[9px] text-emerald-500 font-black uppercase tracking-widest mb-2 italic">المطعم المصدر</p>
+                <h2 id="restaurantTitle" class="text-2xl font-black text-white italic tracking-tight underline decoration-emerald-500/30 underline-offset-8">...</h2>
+            </div>
+
+            <div id="receiptOnlyView" class="space-y-4">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="bg-amber-500 text-black px-4 py-1 rounded-full text-[9px] font-black italic">وصل مصور 📸</span>
+                    <span id="orderID_photo" class="text-[10px] font-mono text-gray-500 italic">#HK-000</span>
+                </div>
+                <div class="rounded-[2rem] overflow-hidden border border-white/10">
+                    <img id="receiptImg" src="" class="w-full h-auto" alt="Receipt">
+                </div>
+            </div>
+
+            <div id="manualInfoView" class="hidden space-y-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="bg-emerald-600 text-black px-4 py-1 rounded-full text-[9px] font-black uppercase italic">بيانات يدوية ✍️</span>
+                    <span id="orderID_manual" class="text-[10px] font-mono text-gray-500 italic">#HK-000</span>
+                </div>
+                <div class="bg-white/5 p-5 rounded-2xl border border-white/5">
+                    <p class="text-[8px] text-gray-500 font-black uppercase italic mb-1">📍 موقع التوصيل</p>
+                    <p id="locationTxt" class="text-lg font-black text-white italic">...</p>
+                </div>
+                <div class="bg-white/5 p-5 rounded-2xl border border-white/5 flex justify-between items-center">
+                    <div>
+                        <p class="text-[8px] text-gray-500 font-black uppercase italic mb-1">📞 هاتف الزبون</p>
+                        <p id="phoneTxt" class="text-lg font-black text-blue-400 font-mono tracking-widest italic">...</p>
+                    </div>
+                    <a id="phoneCall" href="#" class="bg-blue-600 p-4 rounded-2xl shadow-lg shadow-blue-900/40">📱</a>
+                </div>
+            </div>
+
+            <div class="mt-8 space-y-3">
+                <button onclick="confirmDelivery()" class="w-full bg-emerald-500 text-black py-5 rounded-3xl font-black text-lg active:scale-95 transition-all shadow-xl italic">تأكيد التسليم ✅</button>
+                <button onclick="toggleAppealModal(true)" class="w-full bg-transparent text-red-500/50 py-3 rounded-xl font-bold text-[10px] border border-red-500/10 italic">طلب إلغاء ⚠️</button>
+            </div>
+        </div>
+
+        <div id="noOrders" class="text-center py-20 opacity-30 italic">
+            <div class="text-5xl mb-4 text-slate-700">🔍</div>
+            <p class="text-xs font-black">لا توجد طلبيات قريبة منك حالياً</p>
+        </div>
+
+    </main>
+
+    <script>
+        // --- نظام الحماية (Gatekeeper) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const driverID = localStorage.getItem('whale_driver_id');
+            const status = localStorage.getItem('whale_driver_status');
+
+            // إذا حاول الدخول بدون تسجيل أو حسابه غير مفعّل
+            if (!driverID || status !== 'active') {
+                window.location.href = 'driver_login.html';
+                return;
+            }
+
+            // عرض رقم الهوية (أو الاسم لو كان مخزناً)
+            document.getElementById('welcomeName').innerText = "كابتن: " + driverID;
+            
+            // محاكاة جلب طلبية بعد 2 ثانية
+            setTimeout(loadMockOrder, 2000);
+        });
+
+        function loadMockOrder() {
+            let orderData = {
+                id: "#HK-2290",
+                restaurantName: "كرز الشام - كركوك",
+                type: "photo", // أو "manual"
+                location: "حي الواسطي",
+                phone: "07713225471",
+                img: "https://via.placeholder.com/500x700?text=Receipt+Image"
+            };
+
+            document.getElementById('noOrders').classList.add('hidden');
+            document.getElementById('orderCard').classList.remove('hidden');
+            document.getElementById('orderCard').classList.add('new-order-glow');
+
+            document.getElementById('restaurantTitle').innerText = orderData.restaurantName;
+            
+            if (orderData.type === "manual") {
+                document.getElementById('manualInfoView').classList.remove('hidden');
+                document.getElementById('receiptOnlyView').classList.add('hidden');
+                document.getElementById('locationTxt').innerText = orderData.location;
+                document.getElementById('phoneTxt').innerText = orderData.phone;
+                document.getElementById('phoneCall').href = "tel:" + orderData.phone;
+            } else {
+                document.getElementById('manualInfoView').classList.add('hidden');
+                document.getElementById('receiptOnlyView').classList.remove('hidden');
+                document.getElementById('receiptImg').src = orderData.img;
+            }
+        }
+
+        function confirmDelivery() {
+            if(confirm("تأكيد إكمال الطلب؟")) {
+                alert("تم الإرسال للإدارة! شكراً كابتن ✅");
+                location.reload(); // للبحث عن طلبية جديدة
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'driver_login.html';
+        }
+    </script>
+</body>
+</html>

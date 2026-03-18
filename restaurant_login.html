@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الشركاء | منظومة الحوت</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background: #020617; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-input { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; }
+        .glass-input:focus { border-color: #10b981; background: rgba(16, 185, 129, 0.05); outline: none; }
+        .btn-emerald { background: linear-gradient(135deg, #10b981, #059669); color: #020617; }
+        .hidden { display: none; }
+        .animate-fade { animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-slate-900 via-black to-black">
+
+    <div class="max-w-md w-full glass-card p-10 rounded-[3.5rem] shadow-2xl relative overflow-hidden">
+        
+        <div id="loader" class="text-center py-10">
+            <div class="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-[10px] text-emerald-500 font-black italic">جاري فحص اعتماد المطعم...</p>
+        </div>
+
+        <div id="authUI" class="hidden animate-fade">
+            <header class="text-center mb-10">
+                <div class="w-16 h-16 bg-emerald-500 rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-xl shadow-emerald-500/20">
+                    <span class="text-slate-900 text-3xl font-black font-mono">ح</span>
+                </div>
+                <h1 class="text-xl font-black italic text-white">بوابة شركاء الحوت</h1>
+                <p id="subTitle" class="text-[9px] text-gray-500 mt-2 uppercase tracking-widest font-black italic">أدخل رقم هوية المدير للوصول</p>
+            </header>
+
+            <form id="smartForm" class="space-y-5">
+                <div>
+                    <label class="text-[9px] text-emerald-500 font-black mb-3 mr-2 block italic">رقم الهوية الوطنية للمدير</label>
+                    <input type="number" id="managerID" required placeholder="12 رقم" 
+                           class="w-full glass-input p-5 rounded-2xl text-sm font-mono tracking-[0.3em] text-center text-white"
+                           oninput="checkRestaurantStatus(this.value)">
+                </div>
+
+                <div id="newRestaurantFields" class="hidden space-y-4 border-t border-white/5 pt-6 animate-fade">
+                    <p class="text-[10px] text-amber-500 font-black italic mb-2 text-center">أهلاً بك شريكاً جديداً! أكمل بياناتك:</p>
+                    <input type="text" id="resName" placeholder="اسم المطعم التجاري" class="w-full glass-input p-4 rounded-xl text-sm font-bold italic">
+                    <input type="tel" id="resPhone" placeholder="رقم واتساب التواصل" class="w-full glass-input p-4 rounded-xl text-sm font-mono italic text-center" dir="ltr">
+                    <input type="text" id="resLocation" placeholder="موقع المطعم (الحي/الشارع)" class="w-full glass-input p-4 rounded-xl text-sm font-bold italic">
+                </div>
+
+                <button type="submit" id="mainBtn" class="w-full btn-emerald py-5 rounded-3xl font-black text-sm italic shadow-lg active:scale-95 transition-all">
+                    استمرار 🚀
+                </button>
+            </form>
+        </div>
+
+        <div id="waitMessage" class="hidden text-center py-8 animate-fade">
+            <div class="text-5xl mb-4">⏳</div>
+            <h3 class="text-lg font-black text-emerald-400 italic">طلبك قيد المراجعة</h3>
+            <p class="text-[10px] text-gray-400 mt-4 leading-relaxed italic italic">سيتم تفعيل لوحة إرسال الطلبيات فور تأكيد بياناتك من الإدارة.<br>شكراً لثقتك بمنظومة الحوت.</p>
+            <button onclick="logout()" class="mt-8 text-[9px] text-red-500 underline font-black italic">تسجيل الخروج</button>
+        </div>
+    </div>
+
+    <script>
+        // محاكاة قاعدة البيانات
+        const mockRestaurants = [
+            { id: "199500001111", status: "active", name: "بيتزا كركوك" },
+            { id: "200000002222", status: "pending", name: "برجر كينج" }
+        ];
+
+        window.onload = function() {
+            const savedID = localStorage.getItem('whale_res_id');
+            const savedStatus = localStorage.getItem('whale_res_status');
+
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+                if (savedID) {
+                    if (savedStatus === 'active') {
+                        // window.location.href = 'restaurant.html';
+                        alert("مرحباً بك مجدداً شريكنا! جاري فتح اللوحة...");
+                    } else {
+                        document.getElementById('waitMessage').classList.remove('hidden');
+                    }
+                } else {
+                    document.getElementById('authUI').classList.remove('hidden');
+                }
+            }, 1200);
+        };
+
+        function checkRestaurantStatus(val) {
+            const extraFields = document.getElementById('newRestaurantFields');
+            const mainBtn = document.getElementById('mainBtn');
+            const res = mockRestaurants.find(r => r.id === val);
+
+            if (res) {
+                mainBtn.innerText = res.status === 'active' ? "دخول سريع للوحة ✅" : "عرض حالة الطلب ⏳";
+                extraFields.classList.add('hidden');
+            } else if (val.length > 5) {
+                extraFields.classList.remove('hidden');
+                mainBtn.innerText = "إرسال طلب الانضمام 📤";
+            }
+        }
+
+        document.getElementById('smartForm').onsubmit = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('managerID').value;
+            localStorage.setItem('whale_res_id', id);
+
+            const res = mockRestaurants.find(r => r.id === id);
+            if (res && res.status === 'active') {
+                localStorage.setItem('whale_res_status', 'active');
+                alert("تم التحقق! أهلاً بك.");
+            } else {
+                localStorage.setItem('whale_res_status', 'pending');
+                document.getElementById('authUI').classList.add('hidden');
+                document.getElementById('waitMessage').classList.remove('hidden');
+            }
+        };
+
+        function logout() {
+            localStorage.clear();
+            location.reload();
+        }
+    </script>
+</body>
+</html>

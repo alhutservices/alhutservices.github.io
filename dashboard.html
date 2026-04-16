@@ -4,60 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>رادار الحوت | نظام المكاتب 🐋</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root { --whale-navy: #0f172a; --whale-gold: #d4af37; --bg-light: #f8fafc; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg-light); color: #1e293b; transition: 0.3s; }
-        .premium-nav { background: white; border-radius: 0 0 2.5rem 2.5rem; border-bottom: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
-        .tab-pill { transition: 0.4s; font-weight: 700; border-radius: 1rem; color: #94a3b8; }
-        .tab-pill.active { background: var(--whale-navy); color: white; box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.2); }
-        .whale-card { background: white; border-radius: 2rem; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); transition: 0.3s; }
-        .info-box { background: #f8fafc; padding: 12px; border-radius: 1.2rem; text-align: center; border: 1px solid #f1f5f9; }
-        .btn-cancel-request { background: rgba(239, 68, 68, 0.08); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.1); }
-        .new-order-alert { animation: pulse-alert 1.5s infinite; }
-        @keyframes pulse-alert { 0% { background: #f8fafc; } 50% { background: #eff6ff; } 100% { background: #f8fafc; } }
-        #stopAlarmBtn { display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 100; box-shadow: 0 15px 35px rgba(239, 68, 68, 0.3); }
+        :root { --whale-gold: #D4AF37; --whale-navy: #020617; }
+        body { font-family: 'Tajawal', sans-serif; background: #010409; color: white; transition: 0.3s; overflow-x: hidden; min-height: 100vh; }
+        
+        /* الخلفيات وتأثير الرادار */
+        .trading-bg { position: fixed; inset: 0; background-image: linear-gradient(rgba(212, 175, 55, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(212, 175, 55, 0.02) 1px, transparent 1px); background-size: 40px 40px; z-index: -1; }
+        .radar-scan { position: fixed; top: 0; left: 0; width: 100%; height: 2px; background: var(--whale-gold); animation: scan 6s linear infinite; opacity: 0.2; pointer-events: none; z-index: -1; }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+        
+        /* الهيدر والتبويبات */
+        .glass-header { background: rgba(13, 17, 23, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(212, 175, 55, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 0 0 2.5rem 2.5rem; }
+        .tab-pill { transition: 0.4s; font-weight: 700; border-radius: 1.2rem; color: #64748b; }
+        .tab-pill.active { background: var(--whale-gold); color: #000; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3); }
+        
+        /* بطاقات الطلبات */
+        .whale-card { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 2rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); transition: 0.4s; }
+        .whale-card:hover { border-color: rgba(212, 175, 55, 0.3); transform: translateY(-3px); }
+        .info-box { background: rgba(0, 0, 0, 0.4); padding: 12px; border-radius: 1.2rem; text-align: center; border: 1px solid rgba(255, 255, 255, 0.03); }
+        
+        /* الأزرار التفاعلية */
+        .btn-action { transition: 0.3s; font-weight: 900; }
+        .btn-action:active { transform: scale(0.95); }
+        .btn-claim { background: linear-gradient(135deg, #D4AF37 0%, #b8962d 100%); color: #000; box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); }
+        .btn-complete { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; box-shadow: 0 10px 20px rgba(34, 197, 94, 0.2); }
+        .btn-cancel-request { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        
+        /* تأثير الإنذار للطلبات الجديدة */
+        .new-order-alert { animation: pulse-alert 2s infinite; }
+        @keyframes pulse-alert { 0% { box-shadow: inset 0 0 0 transparent; } 50% { box-shadow: inset 0 0 80px rgba(212, 175, 55, 0.15); } 100% { box-shadow: inset 0 0 0 transparent; } }
+        
+        #stopAlarmBtn { display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 100; box-shadow: 0 15px 35px rgba(239, 68, 68, 0.4); border: 2px solid #ef4444; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
+    <div class="trading-bg"></div>
+    <div class="radar-scan"></div>
+
     <audio id="radarSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock_ringing_rising.ogg" preload="auto" loop></audio>
 
-    <button id="stopAlarmBtn" onclick="stopAlert()" class="bg-red-500 text-white px-10 py-5 rounded-2xl font-black flex items-center gap-3 animate-bounce">
-        <i class="fas fa-bell-slash"></i> إيقاف صوت الرادار 🐋
+    <button id="stopAlarmBtn" onclick="stopAlert()" class="bg-red-600/90 backdrop-blur text-white px-10 py-5 rounded-3xl font-black items-center gap-3 animate-bounce">
+        <i class="fas fa-bell-slash text-xl"></i> إيقاف صوت الرادار 🐋
     </button>
 
-    <header class="premium-nav px-6 py-6 mb-6">
+    <header class="glass-header px-6 py-6 mb-6 relative z-10">
         <div class="max-w-2xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-slate-900 flex items-center justify-center rounded-xl shadow-lg text-2xl">🐋</div>
+                <div class="w-14 h-14 bg-black border border-[#D4AF37]/30 flex items-center justify-center rounded-2xl shadow-lg shadow-yellow-500/10 text-3xl">🐋</div>
                 <div>
-                    <h2 id="navOfficeName" class="font-black text-xl">...</h2>
-                    <p id="navCity" class="text-blue-500 font-bold text-[11px]"></p>
+                    <h2 id="navOfficeName" class="font-black text-2xl text-[#D4AF37]">...</h2>
+                    <p id="navCity" class="text-slate-400 font-bold text-xs tracking-widest mt-1"></p>
                 </div>
             </div>
-            <button onclick="logout()" class="text-slate-400 hover:text-red-500 transition-colors"><i class="fas fa-sign-out-alt text-xl"></i></button>
+            <button onclick="logout()" class="w-12 h-12 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition-all flex items-center justify-center border border-red-500/20">
+                <i class="fas fa-sign-out-alt text-xl"></i>
+            </button>
         </div>
     </header>
 
-    <div class="max-w-xl mx-auto px-4 sticky top-4 z-50">
-        <div class="bg-white/90 backdrop-blur p-1.5 rounded-2xl flex gap-1 shadow-xl border border-white">
-            <button onclick="switchTab('new')" id="tabNew" class="flex-1 py-3 tab-pill active">الرادار 📡</button>
-            <button onclick="switchTab('mine')" id="tabMine" class="flex-1 py-3 tab-pill">التنفيذ 📦</button>
-            <button onclick="switchTab('done')" id="tabDone" class="flex-1 py-3 tab-pill">الأرشيف ✅</button>
+    <div class="max-w-xl mx-auto px-4 sticky top-4 z-40">
+        <div class="bg-[#0f172a]/80 backdrop-blur-md p-1.5 rounded-2xl flex gap-1 shadow-2xl border border-white/5">
+            <button onclick="switchTab('new')" id="tabNew" class="flex-1 py-3.5 tab-pill active text-sm">الرادار 📡</button>
+            <button onclick="switchTab('mine')" id="tabMine" class="flex-1 py-3.5 tab-pill text-sm">التنفيذ 📦</button>
+            <button onclick="switchTab('done')" id="tabDone" class="flex-1 py-3.5 tab-pill text-sm">الأرشيف ✅</button>
         </div>
     </div>
 
-    <main id="mainContainer" class="p-4 max-w-2xl mx-auto space-y-5 mt-4"></main>
+    <main id="mainContainer" class="p-4 max-w-2xl mx-auto space-y-5 mt-4 relative z-10"></main>
 
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
         const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
         let currentTab = 'new', allOrders = [], lastKnownNewOrders = -1;
 
-        if(!officeData) window.location.href = 'login.html';
+        // التحقق من تسجيل الدخول (إذا لم يكن هناك بيانات، يوجه لشاشة الدخول)
+        if(!officeData) window.location.href = 'portal.html'; // أو login.html حسب اسم ملف شاشة الدخول
+        
         document.getElementById('navOfficeName').innerText = officeData.name;
         document.getElementById('navCity').innerText = `📍 ${officeData.city}`;
 
@@ -84,7 +112,7 @@
         }
 
         function playAlert() {
-            document.getElementById('radarSound').play().catch(e => console.log("الصوت يحتاج تفاعل"));
+            document.getElementById('radarSound').play().catch(e => console.log("الصوت يحتاج تفاعل المستخدم أولاً"));
             document.body.classList.add('new-order-alert');
             document.getElementById('stopAlarmBtn').style.display = 'flex';
         }
@@ -109,44 +137,65 @@
             });
 
             if(!list.length) {
-                container.innerHTML = `<div class="text-center py-20 opacity-30 font-bold">لا توجد بيانات حالياً</div>`;
+                container.innerHTML = `
+                    <div class="text-center py-20 mt-10 border border-dashed border-slate-700/50 rounded-3xl bg-slate-900/20">
+                        <i class="fas fa-satellite-dish text-4xl text-slate-600 mb-4 animate-pulse"></i>
+                        <p class="text-slate-500 font-bold tracking-widest text-sm">الرادار هادئ.. لا توجد بيانات حالياً</p>
+                    </div>`;
                 return;
             }
 
             container.innerHTML = list.map(o => {
-                const mapURL = o.map || "#";
+                const mapURL = o.map || o.location_link || "#";
                 const isMapValid = mapURL.startsWith("http");
 
                 return `
-                <div class="whale-card p-6 relative">
-                    <div class="flex justify-between mb-4">
-                        <h3 class="text-lg font-black">${o.car}</h3>
-                        <span class="text-[10px] font-bold text-slate-400">${o.id}</span>
+                <div class="whale-card p-6 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 bottom-0 w-1 ${currentTab === 'new' ? 'bg-blue-500' : currentTab === 'mine' ? 'bg-amber-500' : 'bg-green-500'}"></div>
+                    
+                    <div class="flex justify-between items-start mb-5 pl-2 border-b border-white/5 pb-4">
+                        <div>
+                            <h3 class="text-xl font-black text-white">${o.car}</h3>
+                            <p class="text-[10px] text-[#D4AF37] mt-1"><i class="fas fa-plus-circle mr-1"></i> ${o.addon || o.add_on || 'بدون إضافات'}</p>
+                        </div>
+                        <span class="text-[9px] font-black text-slate-500 bg-black/50 px-3 py-1.5 rounded-lg border border-white/5 tracking-wider">${o.id || o.order_id}</span>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-3 mb-5">
-                        <div class="info-box"><p class="text-[10px] text-slate-400">الزبون</p><p class="font-bold text-xs">${o.name}</p></div>
-                        <div class="info-box"><p class="text-[10px] text-slate-400">السعر</p><p class="font-bold text-xs text-green-600">${Number(o.price || 0).toLocaleString()} د.ع</p></div>
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <div class="info-box">
+                            <p class="text-[10px] text-slate-400 mb-1"><i class="fas fa-user text-[9px]"></i> الزبون</p>
+                            <p class="font-bold text-sm text-white">${o.name}</p>
+                        </div>
+                        <div class="info-box border border-[#D4AF37]/20 bg-[#D4AF37]/5">
+                            <p class="text-[10px] text-[#D4AF37]/70 mb-1"><i class="fas fa-wallet text-[9px]"></i> السعر</p>
+                            <p class="font-black text-sm text-[#D4AF37]">${Number(o.price || 0).toLocaleString()} د.ع</p>
+                        </div>
                     </div>
 
                     ${currentTab === 'new' ? 
-                        `<button onclick="update('${o.id}', 'claim')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold transition-all active:scale-95">استلام الطلب ⚡</button>` : 
+                        `<button onclick="update('${o.id || o.order_id}', 'claim')" class="w-full btn-action btn-claim py-4 rounded-xl text-lg flex items-center justify-center gap-2">
+                            <span>استلام الطلب</span> <i class="fas fa-bolt"></i>
+                        </button>` : 
                       currentTab === 'mine' ? 
-                        `<div class="space-y-2">
-                            <div class="flex gap-2">
-                                <a href="tel:${o.phone}" class="flex-1 bg-green-500 text-white py-3 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition-all">
+                        `<div class="space-y-3">
+                            <div class="flex gap-3">
+                                <a href="tel:${o.phone}" class="flex-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500 hover:text-white py-3.5 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 transition-all">
                                     <i class="fas fa-phone"></i> اتصال
                                 </a>
                                 <a href="${isMapValid ? mapURL : '#'}" target="_blank" 
-                                   class="flex-1 ${isMapValid ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'} py-3 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 active:scale-95 transition-all"
+                                   class="flex-1 ${isMapValid ? 'bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500 hover:text-white' : 'bg-slate-800/50 text-slate-500 border-slate-700'} border py-3.5 rounded-xl text-center font-bold text-xs flex items-center justify-center gap-2 transition-all"
                                    onclick="${!isMapValid ? "alert('عذراً، رابط الموقع غير متوفر حالياً'); return false;" : ""}">
                                     <i class="fas fa-map-marker-alt"></i> الموقع
                                 </a>
                             </div>
-                            <button onclick="update('${o.id}', 'complete')" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold mt-2 active:scale-95 transition-all">تم التسليم بنجاح ✅</button>
-                            <button onclick="update('${o.id}', 'cancelRequest')" class="w-full btn-cancel-request py-3 rounded-xl font-bold text-[11px] mt-1 active:scale-95 transition-all">طلب إلغاء الطلبية ⚠️</button>
+                            <button onclick="update('${o.id || o.order_id}', 'complete')" class="w-full btn-action btn-complete py-4 rounded-xl flex items-center justify-center gap-2">
+                                <span>تم التسليم بنجاح</span> <i class="fas fa-check-circle"></i>
+                            </button>
+                            <button onclick="update('${o.id || o.order_id}', 'cancelRequest')" class="w-full btn-action btn-cancel-request py-3.5 rounded-xl text-xs flex items-center justify-center gap-2 hover:bg-red-500 hover:text-white transition-all">
+                                <span>طلب إلغاء الطلبية</span> <i class="fas fa-exclamation-triangle"></i>
+                            </button>
                         </div>` : 
-                        `<div class="text-center p-2 bg-slate-50 rounded-lg text-[10px] font-bold text-slate-500 border border-dashed">${o.status}</div>`
+                        `<div class="text-center p-3 bg-black/40 rounded-xl text-[11px] font-black ${o.status.includes('✅') ? 'text-green-400 border border-green-500/20' : 'text-slate-400 border border-slate-700'} tracking-wider">${o.status}</div>`
                     }
                 </div>
             `}).reverse().join('');
@@ -155,19 +204,20 @@
         async function update(id, act) {
             let confirmMsg = "هل أنت متأكد من تنفيذ هذا الإجراء؟";
             if(act === 'cancelRequest') confirmMsg = "⚠️ تنبيه: هل أنت متأكد من طلب إلغاء هذه الطلبية؟ سيتم إبلاغ الإدارة للمراجعة.";
-            if(act === 'complete') confirmMsg = "✅ هل تؤكد تسليم السيارة للزبون بنجاح؟";
-            if(act === 'claim') confirmMsg = "⚡ هل تريد استلام هذه الطلبية وتنفيذها؟";
+            if(act === 'complete') confirmMsg = "✅ هل تؤكد تسليم السيارة للزبون بنجاح واستلام المبلغ؟";
+            if(act === 'claim') confirmMsg = "⚡ هل تريد استلام هذه الطلبية وتنفيذها؟ لن يتمكن المكاتب الأخرى من رؤيتها.";
 
             if(!confirm(confirmMsg)) return;
 
             try {
+                // منع التكرار وإظهار حالة التحميل (اختياري، يمكن تطويره لإظهار Spinner)
                 const res = await fetch(`${scriptURL}?action=${act}&id=${id}&office=${encodeURIComponent(officeData.name)}`);
                 const result = await res.json();
                 if(result.success) {
                     stopAlert();
                     fetchOrders();
                 } else alert("خطأ: " + result.message);
-            } catch(e) { alert("فشل الاتصال بالسيستم"); }
+            } catch(e) { alert("❌ فشل الاتصال بخادم الحوت."); }
         }
 
         function switchTab(t) {
@@ -177,10 +227,18 @@
             renderCards();
         }
 
-        function logout() { localStorage.clear(); window.location.href = 'login.html'; }
+        function logout() { 
+            if(confirm("هل أنت متأكد من تسجيل الخروج من الرادار؟")) {
+                localStorage.removeItem('whale_office_data'); 
+                window.location.href = 'portal.html'; // أو login.html
+            }
+        }
         
+        // تحديث البيانات كل 30 ثانية
         setInterval(fetchOrders, 30000);
         fetchOrders();
+        
+        // تمهيد الصوت ليعمل بدون مشاكل في المتصفحات
         window.onclick = () => { document.getElementById('radarSound').load(); };
     </script>
 </body>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlTag">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title id="docTitle">حجز كورس تعليم | الحوت 🐋</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <style>
+        body { font-family: 'Tajawal', 'Poppins', sans-serif; background-color: #f0f2f5; transition: 0.5s; overflow-x: hidden; }
+        .hero-bg { background: linear-gradient(135deg, #002349 0%, #004d99 100%); position: relative; padding-top: 3rem; padding-bottom: 10rem; overflow: hidden; border-bottom: 4px solid #D4AF37; }
+        .dynamic-pattern { position: absolute; inset: 0; opacity: 0.20; pointer-events: none; background-repeat: repeat; animation: bgMove 40s linear infinite; }
+        @keyframes bgMove { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
+        .city-overlay { position: absolute; inset: 0; opacity: 0.7; transition: 1s; pointer-events: none; }
+        .section-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border-radius: 3.5rem; box-shadow: 0 25px 60px rgba(0,0,0,0.1); position: relative; z-index: 20; }
+        .glass-input { width: 100%; padding: 1.1rem 1.5rem; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 1.5rem; font-weight: 700; outline: none; transition: 0.3s; color: #002349; }
+        .glass-input:focus { border-color: #D4AF37; background: white; transform: translateY(-2px); }
+        #map { height: 280px; border-radius: 2.5rem; border: 4px solid #f1f5f9; z-index: 1; }
+        .gender-btn { flex: 1; padding: 1.1rem; border: 2px solid #e2e8f0; border-radius: 1.5rem; font-weight: 900; transition: 0.4s; cursor: pointer; text-align: center; background: white; }
+        .gender-btn.active { background: #002349; color: white; border-color: #002349; transform: scale(1.05); }
+        .summary-badge { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-radius: 1.5rem; padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.3); font-size: 0.85rem; }
+        .btn-confirm { background: #002349; color: #D4AF37; font-weight: 900; border-radius: 2.5rem; transition: 0.4s; }
+        .btn-confirm:hover { background: #D4AF37; color: #002349; transform: translateY(-5px); }
+        .label-text { font-weight: 900; font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem; margin-right: 0.5rem; display: block; }
+    </style>
+</head>
+<body class="text-[#002349]">
+
+    <header class="hero-bg text-white text-center">
+        <div id="cityOverlay" class="city-overlay"></div>
+        <div id="patternBox" class="dynamic-pattern"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-5xl mb-4">🎓</div>
+            <h1 id="pageTitle" class="text-3xl md:text-5xl font-black text-[#D4AF37] mb-6">---</h1>
+            <div class="flex flex-wrap justify-center gap-3">
+                <div class="summary-badge"><i class="fas fa-graduation-cap text-amber-400"></i><span id="courseLabel"></span></div>
+                <div class="summary-badge"><i class="fas fa-map-marker-alt text-amber-400"></i><span id="cityLabel"></span></div>
+                <div class="summary-badge"><i class="fas fa-wallet text-amber-400"></i><span id="priceLabel"></span></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 -mt-24 relative z-20 pb-20">
+        <div class="section-card p-8 md:p-12 max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-slate-100 p-3 rounded-2xl text-[#002349]"><i class="fas fa-user-graduate text-xl"></i></div>
+                        <h3 id="personalInfoTitle" class="font-black text-2xl">بيانات المتدرب</h3>
+                    </div>
+                    <div>
+                        <label id="lblFullName" class="label-text">---</label>
+                        <input type="text" id="tName" class="glass-input">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label id="lblPhone" class="label-text">---</label>
+                            <input type="tel" id="tPhone" class="glass-input text-left" dir="ltr" placeholder="07xx xxx xxxx">
+                        </div>
+                        <div>
+                            <label id="lblAge" class="label-text">---</label>
+                            <input type="number" id="tAge" class="glass-input" value="18">
+                        </div>
+                    </div>
+                    <div>
+                        <label id="lblGender" class="label-text">---</label>
+                        <div class="flex gap-4">
+                            <div id="maleBtn" onclick="setGender('Male')" class="gender-btn active">---</div>
+                            <div id="femaleBtn" onclick="setGender('Female')" class="gender-btn">---</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-slate-100 p-3 rounded-2xl text-[#002349]"><i class="fas fa-id-card text-xl"></i></div>
+                        <h3 id="docsTitle" class="font-black text-2xl">الوثائق الثبوتية</h3>
+                    </div>
+                    <div>
+                        <label id="lblID" class="label-text">---</label>
+                        <input type="text" id="tNationalID" class="glass-input">
+                    </div>
+                    <div class="p-5 bg-indigo-50 rounded-[2rem] border border-indigo-100 flex gap-3 items-start">
+                        <span class="text-2xl">💡</span>
+                        <p id="tipText" class="text-[12px] font-bold text-indigo-800 leading-relaxed">---</p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 space-y-4">
+                    <div class="flex justify-between items-center px-2">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-slate-100 p-3 rounded-2xl text-[#002349]"><i class="fas fa-search-location"></i></div>
+                            <h3 id="mapTitle" class="font-black text-2xl">---</h3>
+                        </div>
+                        <button id="gpsBtn" onclick="getGPS()" class="text-[#002349] font-black text-sm bg-white px-5 py-3 rounded-2xl border-2 shadow-sm">---</button>
+                    </div>
+                    <div id="map"></div>
+                </div>
+
+                <button id="reviewBtn" onclick="goToReviewTraining()" class="btn-confirm md:col-span-2 w-full py-6 text-2xl shadow-2xl active:scale-95 flex items-center justify-center gap-4">
+                    <span id="reviewBtnText">---</span> <i id="btnIcon" class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let map, marker, selectedGender = 'Male';
+        const p = new URLSearchParams(window.location.search);
+        const lang = p.get('lang') || 'ar';
+        const city = p.get('city') || 'كركوك';
+
+        const data = {
+            ar: {
+                title: "كورس تعليم قيادة", lblN: "اسم المتدرب الكامل", lblP: "رقم الهاتف", 
+                lblA: "العمر", lblI: "رقم الهوية / الجواز", lblG: "الجنس", male: "👨 ذكر", female: "👩 أنثى",
+                lblM: "موقع السكن التقريبي", gps: "تحديد موقعي 🛰️", review: "مراجعة الطلب", 
+                alert: "يرجى إكمال جميع الحقول 🐋", mapP: "ابحث عن منطقة...", curr: "د.ع",
+                tip: "سيتم التواصل معك لتحديد موعد البدء بعد مراجعة بياناتك رسمياً."
+            },
+            ku: {
+                title: "کۆرسی فێربوون", lblN: "ناوی تەواوی فێرخواز", lblP: "ژمارەی مۆبایل", 
+                lblA: "تەمەن", lblI: "ژمارەی ناسنامە", lblG: "ڕەگەز", male: "👨 نێر", female: "👩 مێ",
+                lblM: "شوێنی نیشتەجێبوون", gps: "دیاریکردنی شوێن 🛰️", review: "پێداچوونەوە", 
+                alert: "تکایە هەموو خانەکان پڕبکەرەوە 🐋", mapP: "بگەڕێ...", curr: "د.ع",
+                tip: "دوای پێداچوونەوەی زانیارییەکانت پەیوەندیت پێوە دەکەین بۆ دەستپێکردن."
+            },
+            tr: {
+                title: "Sürüş Kursu", lblN: "Öğrencinin Tam Adı", lblP: "Telefon Numarası", 
+                lblA: "Yaş", lblI: "Kimlik / Pasaport No", lblG: "Cinsiyet", male: "👨 Erkek", female: "👩 Kadın",
+                lblM: "Yaklaşık Adres", gps: "Konumumu Bul 🛰️", review: "Siparişi İncele", 
+                alert: "Lütfen tüm alanları doldurun 🐋", mapP: "Bölge ara...", curr: "IQD",
+                tip: "Bilgileriniz incelendikten sonra başlama tarihi için sizinle iletişime geçilecektir."
+            },
+            en: {
+                title: "Driving Course", lblN: "Student Full Name", lblP: "Phone Number", 
+                lblA: "Age", lblI: "ID / Passport No", lblG: "Gender", male: "👨 Male", female: "👩 Female",
+                lblM: "Approximate Location", gps: "Get Location 🛰️", review: "Review Request", 
+                alert: "Please fill in all fields 🐋", mapP: "Search area...", curr: "IQD",
+                tip: "We will contact you to schedule the start date after reviewing your details."
+            }
+        };
+
+        const styleColor = { 
+            'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 
+            'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 
+            'الأنبار': '#ef6c00', 'ديالى': '#558b2f' 
+        };
+
+        window.onload = function() {
+            const l = data[lang] || data['ar'];
+            const isRtl = (lang === 'ar' || lang === 'ku');
+            document.getElementById('htmlTag').dir = isRtl ? 'rtl' : 'ltr';
+            
+            document.getElementById('pageTitle').innerText = l.title;
+            document.getElementById('lblFullName').innerText = l.lblN;
+            document.getElementById('lblPhone').innerText = l.lblP;
+            document.getElementById('lblAge').innerText = l.lblA;
+            document.getElementById('lblID').innerText = l.lblI;
+            document.getElementById('lblGender').innerText = l.lblG;
+            document.getElementById('maleBtn').innerText = l.male;
+            document.getElementById('femaleBtn').innerText = l.female;
+            document.getElementById('mapTitle').innerText = l.lblM;
+            document.getElementById('gpsBtn').innerText = l.gps;
+            document.getElementById('tipText').innerText = l.tip;
+            document.getElementById('reviewBtnText').innerText = l.review;
+            document.getElementById('btnIcon').className = `fas fa-chevron-${isRtl ? 'left' : 'right'}`;
+
+            document.getElementById('cityOverlay').style.backgroundColor = styleColor[city] || '#002349';
+            document.getElementById('courseLabel').innerText = p.get('addon_display') || '---';
+            document.getElementById('cityLabel').innerText = city;
+            document.getElementById('priceLabel').innerText = (p.get('addon_price') || '0').toLocaleString() + ` ${l.curr}`;
+
+            map = L.map('map').setView([33.3152, 44.3661], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            marker = L.marker([33.3152, 44.3661], {draggable: true}).addTo(map);
+
+            L.Control.geocoder({
+                defaultMarkGeocode: false,
+                placeholder: l.mapP
+            }).on('markgeocode', function(e) {
+                map.setView(e.geocode.center, 16);
+                marker.setLatLng(e.geocode.center);
+            }).addTo(map);
+        };
+
+        function setGender(g) {
+            selectedGender = g;
+            document.getElementById('maleBtn').classList.toggle('active', g === 'Male');
+            document.getElementById('femaleBtn').classList.toggle('active', g === 'Female');
+        }
+
+        function getGPS() {
+            navigator.geolocation.getCurrentPosition(pos => {
+                const coords = [pos.coords.latitude, pos.coords.longitude];
+                map.setView(coords, 17); marker.setLatLng(coords);
+            });
+        }
+
+        function goToReviewTraining() {
+            const l = data[lang] || data['ar'];
+            const name = document.getElementById('tName').value;
+            const phone = document.getElementById('tPhone').value;
+            const id_no = document.getElementById('tNationalID').value;
+            if(!name || !phone || !id_no) { alert(l.alert); return; }
+            
+            const orderId = "EDU-" + Math.floor(1000 + Math.random() * 9000);
+            const pos = marker.getLatLng();
+
+            p.set('order_id', orderId);
+            p.set('name', name);
+            p.set('phone', phone);
+            p.set('national_id', id_no);
+            p.set('age', document.getElementById('tAge').value);
+            p.set('gender', selectedGender === 'Male' ? 'ذكر' : 'أنثى');
+            p.set('province', city);
+            p.set('location_link', `https://www.google.com/maps?q=${pos.lat},${pos.lng}`);
+            p.set('service', 'تدريب قيادة');
+            p.set('car', p.get('addon_display'));
+            p.set('total_price', p.get('addon_price'));
+            p.set('license_no', 'Training-No-License');
+
+            window.location.href = `review.html?${p.toString()}`;
+        }
+    </script>
+</body>
+</html>

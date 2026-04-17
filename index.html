@@ -2,74 +2,62 @@
 <html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="docTitle">منصة الحوت | أرخص تأجير سيارات وأفضل تدريب قيادة في العراق</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <title>منصة الحوت | أرخص تأجير سيارات وأفضل تدريب قيادة في العراق</title>
     <meta name="description" content="منصة الحوت: الخيار الأول لـ تأجير سيارات في بغداد، كركوك، أربيل، وكافة مدن العراق. أرخص الأسعار، أفضل تدريب قيادة للنساء، وأحدث سيارات الأعراس.">
+    <meta name="keywords" content="سيارات للايجار، سياقة العراق، أرخص مكتب سياقة، أفضل تأجير سيارات، بغداد، كركوك، أربيل، البصرة، الموصل، السليمانية، الأنبار، ديالى">
     
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "كيف أجد أرخص مكتب تأجير سيارات في بغداد وكركوك؟",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "منصة الحوت تقارن الأسعار في بغداد وكركوك وأربيل لتعطيك أرخص سعر للإيجار اليومي والشهري."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "هل يتوفر تدريب قيادة للنساء في البصرة والموصل؟",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "نعم، توفر منصة الحوت أفضل المدربات المحترفات لتعليم السياقة للنساء في البصرة، الموصل، وكافة محافظات العراق."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <link rel="icon" type="image/png" href="Cars/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; transition: background-color 0.5s; overflow-x: hidden; }
-        
-        /* التنسيقات المشتركة */
-        .hero-bg { transition: all 1s ease; position: relative; overflow: hidden; }
-        .hero-home { background: linear-gradient(135deg, #002349 0%, #004d99 100%); padding: 6rem 0 18rem 0; }
-        .hero-checkout { background: linear-gradient(135deg, #002349 0%, #004d99 100%); padding-top: 3rem; padding-bottom: 10rem; border-bottom: 4px solid #D4AF37; }
-        .hero-wedding { background: linear-gradient(135deg, #002349 0%, #be185d 100%); padding-top: 4rem; padding-bottom: 12rem; border-bottom: 6px solid #D4AF37; }
-        
-        .map-pattern { position: absolute; inset: 0; opacity: 0.15; pointer-events: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text y="40" x="10" font-size="20">📍</text><text y="80" x="50" font-size="18">🗺️</text></svg>'); background-repeat: repeat; animation: bgMove 40s linear infinite; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; transition: 0.5s; overflow-x: hidden; }
+        .hero-bg { background: linear-gradient(135deg, #002349 0%, #004d99 100%); position: relative; padding: 6rem 0 18rem 0; overflow: hidden; }
+        .map-pattern {
+            position: absolute; inset: 0; opacity: 0.15; pointer-events: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text y="40" x="10" font-size="20">📍</text><text y="80" x="50" font-size="18">🗺️</text></svg>');
+            background-repeat: repeat; animation: bgMove 40s linear infinite;
+        }
         @keyframes bgMove { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
-        
-        #cityOverlay { transition: background-color 1s ease-in-out; position: absolute; inset: 0; opacity: 0.5; pointer-events: none; }
-        
-        /* أزرار اللغات */
-        .lang-btn { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; font-size: 0.85rem; z-index: 100; position: relative; }
-        .lang-active { background: #D4AF37 !important; color: #002349 !important; border-color: #D4AF37; }
-        
-        /* حاويات الواجهات */
-        .view-section { display: none; animation: fadeIn 0.5s ease-in-out; }
-        .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* تنسيقات الرئيسية */
+        #cityOverlay { transition: background-color 1s ease-in-out; }
         .glass-box { background: white; box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.2); transform: translateY(-150px); border-radius: 2.5rem; position: relative; z-index: 30; border: 1px solid #e2e8f0; }
         .smart-input { width: 100%; padding: 1.1rem 1rem; background: #f1f5f9; border: 2px solid transparent; border-radius: 1.2rem; font-weight: 700; outline: none; transition: 0.3s; color: #002349; font-size: 0.9rem; }
         .smart-input:focus { border-color: #D4AF37; background: #fff; }
+        .lang-btn { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s; font-size: 0.85rem; }
+        .lang-active { background: #D4AF37 !important; color: #002349 !important; border-color: #D4AF37; }
         .hidden-field { display: none; }
         [dir="rtl"] .text-start-custom { text-align: right; }
         [dir="ltr"] .text-start-custom { text-align: left; }
         .whale-float { animation: floating 4s ease-in-out infinite; }
         @keyframes floating { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
-
-        /* تنسيقات واجهات الحجز */
-        .section-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border-radius: 3.5rem; box-shadow: 0 25px 60px rgba(0,0,0,0.1); position: relative; z-index: 20; }
-        .wedding-card { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(15px); border-radius: 4rem; box-shadow: 0 40px 80px rgba(190, 24, 93, 0.15); border: 2px solid rgba(212, 175, 55, 0.3); }
-        .glass-input-checkout { width: 100%; padding: 1.1rem 1.5rem; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 1.5rem; font-weight: 700; outline: none; transition: 0.3s; color: #002349; }
-        .glass-input-checkout:focus { border-color: #D4AF37; background: white; transform: translateY(-2px); }
-        .wedding-input { border-color: #f1e4bc; background: #fffbff; }
-        .wedding-input:focus { border-color: #be185d; box-shadow: 0 10px 25px rgba(190, 24, 93, 0.1); }
-        
-        .map-container { height: 280px; border-radius: 2.5rem; border: 4px solid #f1f5f9; z-index: 1; }
-        .gender-btn { flex: 1; padding: 1.1rem; border: 2px solid #e2e8f0; border-radius: 1.5rem; font-weight: 900; transition: 0.4s; cursor: pointer; text-align: center; background: white; }
-        .gender-btn.active { background: #002349; color: white; border-color: #002349; transform: scale(1.05); }
-        .gender-btn-wedding { border-color: #f1e4bc; }
-        .gender-btn-wedding.active { background: #be185d; color: white; border-color: #be185d; box-shadow: 0 10px 20px rgba(190, 24, 93, 0.3); }
-        
-        .summary-badge { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-radius: 1.5rem; padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.3); font-size: 0.85rem; color: white;}
-        .label-text { font-weight: 900; font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem; display: block; }
-        
-        .btn-confirm { background: #002349; color: #D4AF37; font-weight: 900; border-radius: 2.5rem; transition: 0.4s; }
-        .btn-confirm:hover { background: #D4AF37; color: #002349; transform: translateY(-5px); }
-        .btn-wedding { background: linear-gradient(135deg, #D4AF37 0%, #b8962d 100%); color: white; }
-        .btn-wedding:hover { box-shadow: 0 15px 35px rgba(212, 175, 55, 0.4); color: white; }
     </style>
 </head>
 <body>
@@ -81,11 +69,10 @@
         <button onclick="changeLang('en')" id="btn-en" class="lang-btn">English</button>
     </div>
 
-    <header id="mainHeader" class="hero-bg hero-home text-white">
-        <div id="cityOverlay"></div>
+    <header class="hero-bg text-white">
+        <div id="cityOverlay" class="absolute inset-0 opacity-50"></div>
         <div class="map-pattern"></div>
-        
-        <div id="header-home" class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row justify-between items-center gap-8 view-section active">
+        <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
             <div class="text-start-custom w-full">
                 <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight" id="brandName"></h1>
                 <p id="dynamicGreeting" class="text-xl md:text-2xl font-bold opacity-90 mb-2 h-8"></p>
@@ -96,484 +83,144 @@
                 <div class="text-3xl font-black mt-2" id="whaleTitle">الحوت</div>
             </div>
         </div>
-
-        <div id="header-personal" class="container mx-auto px-6 relative z-10 text-center view-section">
-            <div class="text-5xl mb-4">🐋</div>
-            <h1 id="p_pageTitle" class="text-3xl md:text-5xl font-black text-[#D4AF37] mb-6">---</h1>
-            <div class="flex flex-wrap justify-center gap-3">
-                <div class="summary-badge"><i class="fas fa-car text-amber-400"></i><span id="p_carLabel"></span></div>
-                <div class="summary-badge"><i class="fas fa-calendar-alt text-amber-400"></i><span id="p_dateLabel"></span></div>
-                <div class="summary-badge"><i class="fas fa-clock text-amber-400"></i><span id="p_daysLabel"></span></div>
-            </div>
-        </div>
-
-        <div id="header-wedding" class="container mx-auto px-6 relative z-10 text-center view-section">
-            <div class="text-6xl mb-4 animate-bounce">💍</div>
-            <h1 id="w_pageTitle" class="text-4xl md:text-6xl font-black text-white mb-2 drop-shadow-lg">---</h1>
-            <p id="w_pageSub" class="text-xl font-bold opacity-90">---</p>
-        </div>
-
-        <div id="header-training" class="container mx-auto px-6 relative z-10 text-center view-section">
-            <div class="text-5xl mb-4">🎓</div>
-            <h1 id="t_pageTitle" class="text-3xl md:text-5xl font-black text-[#D4AF37] mb-6">---</h1>
-            <div class="flex flex-wrap justify-center gap-3">
-                <div class="summary-badge"><i class="fas fa-graduation-cap text-amber-400"></i><span id="t_courseLabel"></span></div>
-                <div class="summary-badge"><i class="fas fa-map-marker-alt text-amber-400"></i><span id="t_cityLabel"></span></div>
-                <div class="summary-badge"><i class="fas fa-wallet text-amber-400"></i><span id="t_priceLabel"></span></div>
-            </div>
-        </div>
     </header>
 
-    <main class="container mx-auto px-4 relative z-20 pb-20">
-        
-        <div id="view-home" class="view-section active">
-            <div class="glass-box p-6 md:p-8 max-w-7xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-                    <div class="md:col-span-2">
-                        <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase" id="labelCity"></label>
-                        <select id="citySelect" onchange="adaptToCity()" class="smart-input"></select>
-                    </div>
-                    <div class="md:col-span-3">
-                        <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase" id="labelService"></label>
-                        <select id="mainService" onchange="checkService()" class="smart-input"></select>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase" id="labelDate"></label>
-                        <input type="date" id="dateInput" class="smart-input">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase" id="labelTime"></label>
-                        <input type="time" id="timeInput" class="smart-input">
-                    </div>
-                    <div id="daysWrapper" class="md:col-span-1 hidden-field">
-                        <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase" id="labelDays"></label>
-                        <input type="number" id="daysInput" class="smart-input" value="1" min="1">
-                    </div>
-                    <div class="md:col-span-2">
-                        <button onclick="startBooking()" class="w-full bg-[#002349] text-white py-4 rounded-xl font-black text-lg hover:bg-[#D4AF37] hover:text-[#002349] transition-all flex items-center justify-center gap-2 shadow-lg">
-                            <span id="btnText"></span> <i class="fas fa-arrow-left transition-transform" id="btnIcon"></i>
-                        </button>
-                    </div>
+    <main class="container mx-auto px-4 relative z-20">
+        <div class="glass-box p-6 md:p-8 max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                <div class="md:col-span-2">
+                    <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase" id="labelCity"></label>
+                    <select id="citySelect" onchange="adaptToCity()" class="smart-input"></select>
                 </div>
-            </div>
-
-            <section class="max-w-5xl mx-auto mt-10 text-start-custom">
-                <h2 class="text-3xl font-black text-[#002349] mb-8 border-b-4 border-[#D4AF37] w-fit" id="faqTitle"></h2>
-                <div id="faqContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-            </section>
-        </div>
-
-        <div id="view-personal" class="view-section -mt-24">
-            <div class="section-card p-8 md:p-12 max-w-4xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div class="space-y-6">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="bg-slate-100 p-3 rounded-2xl text-[#002349]"><i class="fas fa-user-edit text-xl"></i></div>
-                            <h3 id="p_personalInfoTitle" class="font-black text-2xl">---</h3>
-                        </div>
-                        <div>
-                            <label id="p_lblFullName" class="label-text">---</label>
-                            <input type="text" id="p_custName" class="glass-input-checkout">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label id="p_lblPhone" class="label-text">---</label>
-                                <input type="tel" id="p_custPhone" class="glass-input-checkout text-left" dir="ltr" placeholder="07xx xxx xxxx">
-                            </div>
-                            <div>
-                                <label id="p_lblAge" class="label-text">---</label>
-                                <input type="number" id="p_custAge" class="glass-input-checkout" value="20">
-                            </div>
-                        </div>
-                        <div>
-                            <label id="p_lblGender" class="label-text">---</label>
-                            <div class="flex gap-4">
-                                <div id="p_maleBtn" onclick="setGender('p_gender', 'Male', this)" class="gender-btn active p_gender">---</div>
-                                <div id="p_femaleBtn" onclick="setGender('p_gender', 'Female', this)" class="gender-btn p_gender">---</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-6">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="bg-slate-100 p-3 rounded-2xl text-[#002349]"><i class="fas fa-id-card text-xl"></i></div>
-                            <h3 id="p_docsTitle" class="font-black text-2xl">---</h3>
-                        </div>
-                        <div>
-                            <label id="p_lblID" class="label-text">---</label>
-                            <input type="text" id="p_idNumber" class="glass-input-checkout">
-                        </div>
-                        <div>
-                            <label id="p_lblLicense" class="label-text">---</label>
-                            <input type="text" id="p_drivingLicense" class="glass-input-checkout">
-                        </div>
-                        <div class="p-5 bg-amber-50 rounded-[2rem] border border-amber-100 flex gap-3 items-start">
-                            <span class="text-2xl">⚠️</span>
-                            <p id="p_warningText" class="text-[12px] font-bold text-amber-800 leading-relaxed">---</p>
-                        </div>
-                    </div>
-
-                    <div class="md:col-span-2 space-y-4">
-                        <div class="flex justify-between items-center px-2">
-                            <div class="flex items-center gap-3">
-                                <div class="bg-slate-100 p-3 rounded-2xl text-[#002349]"><i class="fas fa-search-location"></i></div>
-                                <h3 id="p_mapTitle" class="font-black text-2xl">---</h3>
-                            </div>
-                            <button id="p_gpsBtn" onclick="getGPS('map_personal', marker_personal)" class="text-[#002349] font-black text-sm bg-white px-5 py-3 rounded-2xl border-2 shadow-sm transition-all">---</button>
-                        </div>
-                        <div id="map_personal" class="map-container"></div>
-                    </div>
-
-                    <button onclick="confirmBooking('personal')" class="btn-confirm md:col-span-2 w-full py-6 text-2xl shadow-2xl active:scale-95 flex items-center justify-center gap-4">
-                        <span id="p_btnSubmitText">---</span> <i id="p_btnIcon" class="fas fa-chevron-left"></i>
+                <div class="md:col-span-3">
+                    <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase" id="labelService"></label>
+                    <select id="mainService" onchange="checkService()" class="smart-input"></select>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase" id="labelDate"></label>
+                    <input type="date" id="dateInput" class="smart-input">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase" id="labelTime"></label>
+                    <input type="time" id="timeInput" class="smart-input">
+                </div>
+                <div id="daysWrapper" class="md:col-span-1 hidden-field">
+                    <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase" id="labelDays"></label>
+                    <input type="number" id="daysInput" class="smart-input" value="1" min="1">
+                </div>
+                <div class="md:col-span-2">
+                    <button onclick="startBooking()" class="w-full bg-[#002349] text-white py-4 rounded-xl font-black text-lg hover:bg-[#D4AF37] hover:text-[#002349] transition-all flex items-center justify-center gap-2 shadow-lg">
+                        <span id="btnText"></span> <i class="fas fa-arrow-left transition-transform" id="btnIcon"></i>
                     </button>
                 </div>
             </div>
         </div>
 
-        <div id="view-wedding" class="view-section -mt-28">
-            <div class="wedding-card p-8 md:p-12 max-w-4xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div class="space-y-6">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="bg-rose-100 p-3 rounded-2xl text-[#be185d]"><i class="fas fa-heart text-xl"></i></div>
-                            <h3 id="w_infoTitle" class="font-black text-2xl text-[#be185d]">---</h3>
-                        </div>
-                        <div>
-                            <label id="w_lblFullName" class="label-text text-[#be185d]">---</label>
-                            <input type="text" id="w_custName" class="glass-input-checkout wedding-input">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label id="w_lblPhone" class="label-text text-[#be185d]">---</label>
-                                <input type="tel" id="w_custPhone" class="glass-input-checkout wedding-input text-left" dir="ltr" placeholder="07xx xxx xxxx">
-                            </div>
-                            <div>
-                                <label id="w_lblAge" class="label-text text-[#be185d]">---</label>
-                                <input type="number" id="w_custAge" class="glass-input-checkout wedding-input" value="25">
-                            </div>
-                        </div>
-                        <div>
-                            <label id="w_lblRole" class="label-text text-[#be185d]">---</label>
-                            <div class="flex gap-4">
-                                <div id="w_maleBtn" onclick="setGender('w_gender', 'Male', this)" class="gender-btn gender-btn-wedding active w_gender">---</div>
-                                <div id="w_femaleBtn" onclick="setGender('w_gender', 'Female', this)" class="gender-btn gender-btn-wedding w_gender">---</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-6">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="bg-amber-100 p-3 rounded-2xl text-amber-600"><i class="fas fa-crown text-xl"></i></div>
-                            <h3 id="w_summaryTitle" class="font-black text-2xl">---</h3>
-                        </div>
-                        <div class="p-8 relative overflow-hidden" style="background: linear-gradient(to bottom, #fff9f0, #fff); border: 1px dashed #D4AF37; border-radius: 2.5rem;">
-                            <div id="w_summary" class="space-y-4 relative z-10 font-bold text-[#002349]"></div>
-                        </div>
-                        <div id="w_quoteText" class="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-center italic text-amber-800 text-sm font-bold">---</div>
-                    </div>
-
-                    <div class="md:col-span-2 space-y-4">
-                        <div class="flex justify-between items-center px-2">
-                            <div class="flex items-center gap-3">
-                                <div class="bg-slate-100 p-3 rounded-2xl text-slate-600"><i class="fas fa-search-location text-xl"></i></div>
-                                <h3 id="w_mapTitle" class="font-black text-2xl">---</h3>
-                            </div>
-                            <button id="w_gpsBtn" onclick="getGPS('map_wedding', marker_wedding)" class="text-rose-600 font-black text-sm bg-rose-50 px-5 py-3 rounded-2xl border border-rose-100 shadow-sm hover:bg-rose-100 transition-all">---</button>
-                        </div>
-                        <div id="map_wedding" class="map-container" style="box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-color:#fff;"></div>
-                    </div>
-
-                    <button onclick="confirmBooking('wedding')" class="btn-confirm btn-wedding md:col-span-2 w-full py-6 text-2xl shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-4">
-                        <span id="w_btnConfirmText">---</span> <i class="fas fa-magic"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div id="view-training" class="view-section -mt-24">
-            <div class="section-card p-8 md:p-12 max-w-4xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div class="space-y-6">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="bg-slate-100 p-3 rounded-2xl text-[#002349]"><i class="fas fa-user-graduate text-xl"></i></div>
-                            <h3 id="t_personalInfoTitle" class="font-black text-2xl">---</h3>
-                        </div>
-                        <div>
-                            <label id="t_lblFullName" class="label-text">---</label>
-                            <input type="text" id="t_tName" class="glass-input-checkout">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label id="t_lblPhone" class="label-text">---</label>
-                                <input type="tel" id="t_tPhone" class="glass-input-checkout text-left" dir="ltr" placeholder="07xx xxx xxxx">
-                            </div>
-                            <div>
-                                <label id="t_lblAge" class="label-text">---</label>
-                                <input type="number" id="t_tAge" class="glass-input-checkout" value="18">
-                            </div>
-                        </div>
-                        <div>
-                            <label id="t_lblGender" class="label-text">---</label>
-                            <div class="flex gap-4">
-                                <div id="t_maleBtn" onclick="setGender('t_gender', 'Male', this)" class="gender-btn active t_gender">---</div>
-                                <div id="t_femaleBtn" onclick="setGender('t_gender', 'Female', this)" class="gender-btn t_gender">---</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-6">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="bg-slate-100 p-3 rounded-2xl text-[#002349]"><i class="fas fa-id-card text-xl"></i></div>
-                            <h3 id="t_docsTitle" class="font-black text-2xl">---</h3>
-                        </div>
-                        <div>
-                            <label id="t_lblID" class="label-text">---</label>
-                            <input type="text" id="t_tNationalID" class="glass-input-checkout">
-                        </div>
-                        <div class="p-5 bg-indigo-50 rounded-[2rem] border border-indigo-100 flex gap-3 items-start">
-                            <span class="text-2xl">💡</span>
-                            <p id="t_tipText" class="text-[12px] font-bold text-indigo-800 leading-relaxed">---</p>
-                        </div>
-                    </div>
-
-                    <div class="md:col-span-2 space-y-4">
-                        <div class="flex justify-between items-center px-2">
-                            <div class="flex items-center gap-3">
-                                <div class="bg-slate-100 p-3 rounded-2xl text-[#002349]"><i class="fas fa-search-location"></i></div>
-                                <h3 id="t_mapTitle" class="font-black text-2xl">---</h3>
-                            </div>
-                            <button id="t_gpsBtn" onclick="getGPS('map_training', marker_training)" class="text-[#002349] font-black text-sm bg-white px-5 py-3 rounded-2xl border-2 shadow-sm">---</button>
-                        </div>
-                        <div id="map_training" class="map-container"></div>
-                    </div>
-
-                    <button onclick="confirmBooking('training')" class="btn-confirm md:col-span-2 w-full py-6 text-2xl shadow-2xl active:scale-95 flex items-center justify-center gap-4">
-                        <span id="t_reviewBtnText">---</span> <i id="t_btnIcon" class="fas fa-chevron-left"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
+        <section class="max-w-5xl mx-auto -mt-10 pb-20 text-start-custom">
+            <h2 class="text-3xl font-black text-[#002349] mb-8 border-b-4 border-[#D4AF37] w-fit" id="faqTitle"></h2>
+            <div id="faqContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </section>
     </main>
 
     <script>
-        // إعدادات الـ URL وتحديد نوع العرض
-        const u = new URLSearchParams(window.location.search);
-        const viewType = u.get('type') || 'home'; 
-        const city = u.get('city') || 'كركوك';
-        const days = parseInt(u.get('days') || '1');
-        
-        let map_personal, marker_personal;
-        let map_wedding, marker_wedding;
-        let map_training, marker_training;
-        
-        let selections = {
-            p_gender: 'Male',
-            w_gender: 'Male',
-            t_gender: 'Male'
-        };
-
         const citiesList = ['كركوك', 'بغداد', 'أربيل', 'السليمانية', 'الموصل', 'البصرة', 'الأنبار', 'ديالى'];
-        const styleColor = { 'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 'الأنبار': '#ef6c00', 'ديالى': '#558b2f' };
-
-        // القاموس الشامل لجميع الواجهات
         const translations = {
             ar: {
-                dir: 'rtl',
-                cityNames: { 'كركوك': 'كركوك 💎', 'بغداد': 'بغداد 🏰', 'أربيل': 'أربيل 🏔️', 'السليمانية': 'السليمانية 🌲', 'الموصل': 'الموصل 🏹', 'البصرة': 'البصرة ⚓', 'الأنبار': 'الأنبار 🌴', 'ديالى': 'ديالى 🍊' },
-                home: {
-                    whale: 'الحوت', brand: 'أرخص تأجير سيارات<br>وأفضل تدريب قيادة', subGreet: 'أحسن منصة خدمات في العراق لعام 2026',
-                    labelCity: 'المدينة', labelService: 'الخدمة', labelDate: 'التاريخ', labelTime: 'الساعة', labelDays: 'الأيام', btnText: 'استمر', faqTitle: 'الأسئلة الشائعة (دليل خدماتنا)',
-                    faqs: [ {q: 'كيف أجد أرخص مكتب تأجير سيارات؟', a: 'منصة الحوت تقارن الأسعار لتعطيك الأرخص.'}, {q: 'هل يتوفر تدريب للنساء؟', a: 'نعم، نوفر أفضل المدربات لكافة المحافظات.'} ],
-                    services: { placeholder: '-- اختر الخدمة --', personal: '🚗 تأجير سيارات', wedding: '🎁 سيارات أعراس', training: '🎓 تعليم سياقة' }
-                },
-                checkout: {
-                    curr: "د.ع", day: "يوم", gps: "تحديد موقعي 🛰️", mapP: "ابحث عن منطقة أو شارع...", alert: "يرجى إكمال البيانات الأساسية 🐋",
-                    personal: {
-                        title: "إكمال بيانات الحجز", personalInfo: "المعلومات الشخصية", docs: "الوثائق المطلوبة", lblN: "اسم المستأجر الكامل", lblP: "رقم الهاتف", lblA: "العمر", lblG: "الجنس", lblID: "رقم الهوية", lblL: "رقم إجازة السوق", male: "👨 ذكر", female: "👩 أنثى", warn: "تنبيه: يجب إحضار الوثائق الأصلية عند استلام السيارة.", map: "موقع التوصيل / الاستلام", review: "مراجعة الطلب"
-                    },
-                    wedding: {
-                        title: "مبارك لكما!", sub: "يومكم الكبير يبدأ مع الحوت", infoT: "بيانات أصحاب الفرح", lblN: "الاسم الكامل (للعريس/العروس)", lblP: "رقم الهاتف", lblA: "العمر", lblR: "صاحب الحجز", groom: "👨 عريس", bride: "👩 عروس", summaryT: "ملخص ليلة العمر", mapT: "موقع انطلاق الموكب", confirm: "تأكيد الحجز الملكي", quote: "ليلة العمر تستحق الأفضل ✨", car: "السيارة", addon: "الإضافة", total: "المبلغ الإجمالي"
-                    },
-                    training: {
-                        title: "كورس تعليم قيادة", personalInfo: "بيانات المتدرب", docs: "الوثائق الثبوتية", lblN: "اسم المتدرب", lblP: "رقم الهاتف", lblA: "العمر", lblI: "رقم الهوية", lblG: "الجنس", male: "👨 ذكر", female: "👩 أنثى", lblM: "موقع السكن التقريبي", review: "مراجعة الطلب", tip: "سيتم التواصل معك لتحديد موعد البدء بعد المراجعة."
-                    }
-                }
+                dir: 'rtl', whale: 'الحوت', brand: 'أرخص تأجير سيارات<br>وأفضل تدريب قيادة', subGreet: 'أحسن منصة خدمات في العراق لعام 2026',
+                labelCity: 'المدينة', labelService: 'الخدمة', labelDate: 'التاريخ', labelTime: 'الساعة', labelDays: 'الأيام', btnText: 'استمر',
+                faqTitle: 'الأسئلة الشائعة (دليل خدماتنا)',
+                faqs: [
+                    {q: 'كيف أجد أرخص مكتب تأجير سيارات في بغداد وكركوك؟', a: 'منصة الحوت تقارن الأسعار في بغداد وكركوك وأربيل لتعطيك أرخص سعر للإيجار اليومي والشهري.'},
+                    {q: 'هل يتوفر تدريب قيادة للنساء في البصرة والموصل؟', a: 'نعم، نوفر أفضل المدربات لتعليم السياقة للنساء في البصرة، الموصل، وكافة المحافظات.'},
+                    {q: 'أين أجد أقرب مكتب سياقة في الأنبار وديالى؟', a: 'بمجرد اختيار مدينتك، يظهر لك موقع الحوت أقرب المكاتب المعتمدة في الأنبار وديالى.'},
+                    {q: 'ما هي أسعار تأجير سيارات الأعراس في السليمانية؟', a: 'نحن نوفر أفخم سيارات الزفة في السليمانية وبأفضل الأسعار التنافسية.'}
+                ],
+                services: { placeholder: '-- اختر الخدمة --', personal: '🚗 تأجير سيارات (الأرخص)', wedding: '🎁 سيارات أعراس (الأفخم)', training: '🎓 تعليم سياقة (الأفضل)' },
+                cityNames: { 'كركوك': 'كركوك 💎', 'بغداد': 'بغداد 🏰', 'أربيل': 'أربيل 🏔️', 'السليمانية': 'السليمانية 🌲', 'الموصل': 'الموصل 🏹', 'البصرة': 'البصرة ⚓', 'الأنبار': 'الأنبار 🌴', 'ديالى': 'ديالى 🍊' }
+            },
+            ku: {
+                dir: 'rtl', whale: 'ئەلحووت', brand: 'هەرزانترین بەکرێگرتن<br>باشترین فێربوونی شۆفێری', subGreet: 'هەڵبژاردەی یەکەم لە هەموو عێراق',
+                labelCity: 'شار', labelService: 'خزمەتگوزاری', labelDate: 'بەروار', labelTime: 'کاتژمێر', labelDays: 'ڕۆژەکان', btnText: 'بەردەوام بە',
+                faqTitle: 'پسیارە باوەکان',
+                faqs: [
+                    {q: 'هەرزانترین کرێی سەیارە لە کوێیە؟', a: 'ئەلحووت هەرزانترین نرخ لە بەغداد، کەرکوک و هەولێر دابین دەکات.'},
+                    {q: 'فێربوونی شۆفێری بۆ ئافرەتان هەیە؟', a: 'بەڵێ، باشترین ڕاهێنەری شارەزامان هەیە لە هەموو پارێزگاکان.'}
+                ],
+                services: { placeholder: '-- خزمەتگوزاری --', personal: '🚗 بەکرێگرتنی سەیارە', wedding: '🎁 سەیارەی زەماوەند', training: '🎓 فێربوونی شۆفێری' },
+                cityNames: { 'كركوك': 'کەرکوک 💎', 'بغداد': 'بەغداد 🏰', 'أربيل': 'هەولێر 🏔️', 'السليمانية': 'سلێمانی 🌲', 'الموصل': 'مووسڵ 🏹', 'البصرة': 'بەسرە ⚓', 'الأنبار': 'ئەنبار 🌴', 'ديالى': 'دیالە 🍊' }
+            },
+            tr: {
+                dir: 'ltr', whale: 'AL-HUT', brand: 'En Ucuz Araç Kiralama<br>En İyi Ehliyet Kursu', subGreet: 'Irak\'ın 1 Numaralı Platformu',
+                labelCity: 'Şehir', labelService: 'Hizmet', labelDate: 'Tarih', labelTime: 'Saat', labelDays: 'Gün', btnText: 'Devam Et',
+                faqTitle: 'Sıkça Sorulan Sorular',
+                faqs: [
+                    {q: 'En ucuz araç nerede bulunur?', a: 'Al-Hut, Bağdat ve Kerkük\'te en uygun fiyatlı araç kiralama hizmetini sunar.'},
+                    {q: 'Bayanlar için ehliyet kursu var mı?', a: 'Evet, Erbil ve Musul dahil tüm şehirlerde profesyonel bayan eğitmenlerimiz mevcuttur.'}
+                ],
+                services: { placeholder: '-- Seçiniz --', personal: '🚗 Araç Kiralama', wedding: '🎁 Düğün Arabası', training: '🎓 Ehliyet Kursu' },
+                cityNames: { 'كركوك': 'Kerkük 💎', 'بغداد': 'Bağdat 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Süleymaniye 🌲', 'الموصل': 'Musul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Anbar 🌴', 'ديالى': 'Diyala 🍊' }
             },
             en: {
-                dir: 'ltr',
-                cityNames: { 'كركوك': 'Kirkuk 💎', 'بغداد': 'Baghdad 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Sulaymaniyah 🌲', 'الموصل': 'Mosul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Anbar 🌴', 'ديالى': 'Diyala 🍊' },
-                home: {
-                    whale: 'AL-HUT', brand: 'Cheapest Car Rental<br>& Best Driving School', subGreet: 'The Best Choice in Iraq 2026', labelCity: 'City', labelService: 'Service', labelDate: 'Date', labelTime: 'Time', labelDays: 'Days', btnText: 'Continue', faqTitle: 'General FAQ',
-                    faqs: [ {q: 'Where to find the cheapest rental?', a: 'Al-Hut compares prices to give you the best deals.'}, {q: 'Is there driving training for ladies?', a: 'Yes, we provide professional female instructors.'} ],
-                    services: { placeholder: '-- Select --', personal: '🚗 Car Rental', wedding: '🎁 Wedding Cars', training: '🎓 Driving School' }
-                },
-                checkout: {
-                    curr: "IQD", day: "Day", gps: "Get Location 🛰️", mapP: "Search area...", alert: "Please fill required fields 🐋",
-                    personal: { title: "Complete Booking", personalInfo: "Personal Information", docs: "Required Documents", lblN: "Full Name", lblP: "Phone Number", lblA: "Age", lblG: "Gender", lblID: "National ID", lblL: "Driving License", male: "👨 Male", female: "👩 Female", warn: "Note: Original documents must be presented.", map: "Delivery Location", review: "Review Order" },
-                    wedding: { title: "Congratulations!", sub: "Big day starts with Al-Hut", infoT: "Wedding Details", lblN: "Full Name", lblP: "Phone Number", lblA: "Age", lblR: "Booking Role", groom: "👨 Groom", bride: "👩 Bride", summaryT: "Booking Summary", mapT: "Convoy Start", confirm: "Confirm Royal Booking", quote: "Deserves the best ✨", car: "Car", addon: "Add-on", total: "Total Amount" },
-                    training: { title: "Driving Course", personalInfo: "Student Details", docs: "Documents", lblN: "Student Name", lblP: "Phone Number", lblA: "Age", lblI: "ID Number", lblG: "Gender", male: "👨 Male", female: "👩 Female", lblM: "Approximate Location", review: "Review Request", tip: "We will contact you to schedule." }
-                }
+                dir: 'ltr', whale: 'AL-HUT', brand: 'Cheapest Car Rental<br>& Best Driving School', subGreet: 'The Best Choice in Iraq 2026',
+                labelCity: 'City', labelService: 'Service', labelDate: 'Date', labelTime: 'Time', labelDays: 'Days', btnText: 'Continue',
+                faqTitle: 'General FAQ',
+                faqs: [
+                    {q: 'Where to find the cheapest car rental in Iraq?', a: 'Al-Hut compares prices in Baghdad, Kirkuk, and Erbil to give you the best deals.'},
+                    {q: 'Is there driving training for ladies?', a: 'Yes, we provide professional female instructors in Basra, Mosul, and all provinces.'}
+                ],
+                services: { placeholder: '-- Select --', personal: '🚗 Car Rental', wedding: '🎁 Wedding Cars', training: '🎓 Driving School' },
+                cityNames: { 'كركوك': 'Kirkuk 💎', 'بغداد': 'Baghdad 🏰', 'أربيل': 'Erbil 🏔️', 'السليمانية': 'Sulaymaniyah 🌲', 'الموصل': 'Mosul 🏹', 'البصرة': 'Basra ⚓', 'الأنبار': 'Anbar 🌴', 'ديالى': 'Diyala 🍊' }
             }
-        };
-        // دمج الكردية والتركية بناءً على طلبك الأصلي بإيجاز لتبسيط الكود المدمج
-        translations.ku = translations.ar; translations.tr = translations.en;
-
-        window.onload = () => {
-            const lang = u.get('lang') || 'ar';
-            
-            // تهيئة حقول التاريخ والوقت في الرئيسية
-            document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
-            document.getElementById('timeInput').value = new Date().toTimeString().slice(0,5);
-
-            // تحديد الواجهة بناء على URL
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('mainHeader').className = 'hero-bg text-white';
-
-            if (viewType === 'personal') {
-                document.getElementById('view-personal').classList.add('active');
-                document.getElementById('header-personal').classList.add('active');
-                document.getElementById('mainHeader').classList.add('hero-checkout');
-                setTimeout(() => initMap('map_personal'), 300);
-            } else if (viewType === 'wedding') {
-                document.getElementById('view-wedding').classList.add('active');
-                document.getElementById('header-wedding').classList.add('active');
-                document.getElementById('mainHeader').classList.add('hero-wedding');
-                document.body.style.backgroundColor = '#fffafb';
-                setTimeout(() => initMap('map_wedding'), 300);
-            } else if (viewType === 'training') {
-                document.getElementById('view-training').classList.add('active');
-                document.getElementById('header-training').classList.add('active');
-                document.getElementById('mainHeader').classList.add('hero-checkout');
-                setTimeout(() => initMap('map_training'), 300);
-            } else {
-                document.getElementById('view-home').classList.add('active');
-                document.getElementById('header-home').classList.add('active');
-                document.getElementById('mainHeader').classList.add('hero-home');
-            }
-
-            changeLang(lang);
         };
 
         function changeLang(lang) {
-            const l = translations[lang] || translations['ar'];
+            const l = translations[lang];
             document.getElementById('htmlTag').dir = l.dir;
             document.getElementById('htmlTag').lang = lang;
             document.body.style.fontFamily = (lang === 'en' || lang === 'tr') ? 'Poppins' : 'Tajawal';
-            
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('lang-active'));
             document.getElementById('btn-' + lang).classList.add('lang-active');
 
-            // --- ترجمة الرئيسية ---
-            document.getElementById('brandName').innerHTML = l.home.brand;
-            document.getElementById('whaleTitle').innerText = l.home.whale;
-            document.getElementById('subGreeting').innerText = l.home.subGreet;
-            document.getElementById('labelCity').innerText = l.home.labelCity;
-            document.getElementById('labelService').innerText = l.home.labelService;
-            document.getElementById('labelDate').innerText = l.home.labelDate;
-            document.getElementById('labelTime').innerText = l.home.labelTime;
-            document.getElementById('labelDays').innerText = l.home.labelDays;
-            document.getElementById('btnText').innerText = l.home.btnText;
-            document.getElementById('faqTitle').innerText = l.home.faqTitle;
-            
-            if(document.getElementById('btnIcon')) 
-                document.getElementById('btnIcon').style.transform = l.dir === 'rtl' ? 'rotate(0deg)' : 'rotate(180deg)';
+            document.getElementById('brandName').innerHTML = l.brand;
+            document.getElementById('whaleTitle').innerText = l.whale;
+            document.getElementById('subGreeting').innerText = l.subGreet;
+            document.getElementById('labelCity').innerText = l.labelCity;
+            document.getElementById('labelService').innerText = l.labelService;
+            document.getElementById('labelDate').innerText = l.labelDate;
+            document.getElementById('labelTime').innerText = l.labelTime;
+            document.getElementById('labelDays').innerText = l.labelDays;
+            document.getElementById('btnText').innerText = l.btnText;
+            document.getElementById('faqTitle').innerText = l.faqTitle;
+            document.getElementById('btnIcon').style.transform = l.dir === 'rtl' ? 'rotate(0deg)' : 'rotate(180deg)';
 
             const citySelect = document.getElementById('citySelect');
             const currentC = citySelect.value || 'كركوك';
             citySelect.innerHTML = citiesList.map(c => `<option value="${c}" ${c===currentC?'selected':''}>${l.cityNames[c]}</option>`).join('');
 
             const svc = document.getElementById('mainService');
-            svc.innerHTML = `<option value="">${l.home.services.placeholder}</option><option value="personal">${l.home.services.personal}</option><option value="wedding">${l.home.services.wedding}</option><option value="training">${l.home.services.training}</option>`;
+            svc.innerHTML = `<option value="">${l.services.placeholder}</option><option value="personal">${l.services.personal}</option><option value="wedding">${l.services.wedding}</option><option value="training">${l.services.training}</option>`;
 
-            document.getElementById('faqContainer').innerHTML = l.home.faqs.map(f => `<div class="bg-white p-6 rounded-2xl shadow-sm border-${l.dir==='rtl'?'r':'l'}-4 border-[#D4AF37]"><h3 class="font-black text-lg text-[#002349] mb-2">${f.q}</h3><p class="text-slate-600">${f.a}</p></div>`).join('');
-            
-            // --- ترجمة الحجز الشخصي ---
-            document.getElementById('p_pageTitle').innerText = l.checkout.personal.title;
-            document.getElementById('p_personalInfoTitle').innerText = l.checkout.personal.personalInfo;
-            document.getElementById('p_docsTitle').innerText = l.checkout.personal.docs;
-            document.getElementById('p_lblFullName').innerText = l.checkout.personal.lblN;
-            document.getElementById('p_lblPhone').innerText = l.checkout.personal.lblP;
-            document.getElementById('p_lblAge').innerText = l.checkout.personal.lblA;
-            document.getElementById('p_lblGender').innerText = l.checkout.personal.lblG;
-            document.getElementById('p_lblID').innerText = l.checkout.personal.lblID;
-            document.getElementById('p_lblLicense').innerText = l.checkout.personal.lblL;
-            document.getElementById('p_maleBtn').innerText = l.checkout.personal.male;
-            document.getElementById('p_femaleBtn').innerText = l.checkout.personal.female;
-            document.getElementById('p_warningText').innerText = l.checkout.personal.warn;
-            document.getElementById('p_mapTitle').innerText = l.checkout.personal.map;
-            document.getElementById('p_gpsBtn').innerText = l.checkout.gps;
-            document.getElementById('p_btnSubmitText').innerText = l.checkout.personal.review;
-            if(document.getElementById('p_btnIcon')) document.getElementById('p_btnIcon').className = `fas fa-chevron-${l.dir === 'rtl' ? 'left' : 'right'}`;
-
-            document.getElementById('p_carLabel').innerText = u.get('car') || '---';
-            document.getElementById('p_dateLabel').innerText = u.get('date') || '---';
-            document.getElementById('p_daysLabel').innerText = `${days} ${l.checkout.day}`;
-
-            // --- ترجمة حجز الزفاف ---
-            document.getElementById('w_pageTitle').innerText = l.checkout.wedding.title;
-            document.getElementById('w_pageSub').innerText = l.checkout.wedding.sub;
-            document.getElementById('w_infoTitle').innerText = l.checkout.wedding.infoT;
-            document.getElementById('w_lblFullName').innerText = l.checkout.wedding.lblN;
-            document.getElementById('w_lblPhone').innerText = l.checkout.wedding.lblP;
-            document.getElementById('w_lblAge').innerText = l.checkout.wedding.lblA;
-            document.getElementById('w_lblRole').innerText = l.checkout.wedding.lblR;
-            document.getElementById('w_maleBtn').innerText = l.checkout.wedding.groom;
-            document.getElementById('w_femaleBtn').innerText = l.checkout.wedding.bride;
-            document.getElementById('w_summaryTitle').innerText = l.checkout.wedding.summaryT;
-            document.getElementById('w_quoteText').innerText = l.checkout.wedding.quote;
-            document.getElementById('w_mapTitle').innerText = l.checkout.wedding.mapT;
-            document.getElementById('w_gpsBtn').innerText = l.checkout.gps;
-            document.getElementById('w_btnConfirmText').innerText = l.checkout.wedding.confirm;
-
-            const basePrice = parseInt(u.get('basePrice') || 0);
-            const addonPrice = parseInt(u.get('addon_price') || 0);
-            const totalW = (basePrice + addonPrice) * days;
-            document.getElementById('w_summary').innerHTML = `
-                <div class="flex justify-between border-b border-amber-100 pb-2"><span>${l.checkout.wedding.car}:</span> <span>${u.get('car') || '---'}</span></div>
-                <div class="flex justify-between border-b border-amber-100 pb-2"><span>${l.checkout.wedding.addon}:</span> <span>${u.get('addon_display') || '---'}</span></div>
-                <div class="flex justify-between pt-2 text-rose-700 text-xl font-black"><span>${l.checkout.wedding.total}:</span> <span>${totalW.toLocaleString()} ${l.checkout.curr}</span></div>
-            `;
-
-            // --- ترجمة كورس التعليم ---
-            document.getElementById('t_pageTitle').innerText = l.checkout.training.title;
-            document.getElementById('t_personalInfoTitle').innerText = l.checkout.training.personalInfo;
-            document.getElementById('t_docsTitle').innerText = l.checkout.training.docs;
-            document.getElementById('t_lblFullName').innerText = l.checkout.training.lblN;
-            document.getElementById('t_lblPhone').innerText = l.checkout.training.lblP;
-            document.getElementById('t_lblAge').innerText = l.checkout.training.lblA;
-            document.getElementById('t_lblID').innerText = l.checkout.training.lblI;
-            document.getElementById('t_lblGender').innerText = l.checkout.training.lblG;
-            document.getElementById('t_maleBtn').innerText = l.checkout.training.male;
-            document.getElementById('t_femaleBtn').innerText = l.checkout.training.female;
-            document.getElementById('t_mapTitle').innerText = l.checkout.training.lblM;
-            document.getElementById('t_gpsBtn').innerText = l.checkout.gps;
-            document.getElementById('t_tipText').innerText = l.checkout.training.tip;
-            document.getElementById('t_reviewBtnText').innerText = l.checkout.training.review;
-            if(document.getElementById('t_btnIcon')) document.getElementById('t_btnIcon').className = `fas fa-chevron-${l.dir === 'rtl' ? 'left' : 'right'}`;
-            
-            document.getElementById('t_courseLabel').innerText = u.get('addon_display') || '---';
-            document.getElementById('t_cityLabel').innerText = city;
-            document.getElementById('t_priceLabel').innerText = addonPrice.toLocaleString() + ` ${l.checkout.curr}`;
-
+            document.getElementById('faqContainer').innerHTML = l.faqs.map(f => `
+                <div class="bg-white p-6 rounded-2xl shadow-sm border-${l.dir==='rtl'?'r':'l'}-4 border-[#D4AF37]">
+                    <h3 class="font-black text-lg text-[#002349] mb-2">${f.q}</h3>
+                    <p class="text-slate-600">${f.a}</p>
+                </div>`).join('');
             adaptToCity();
         }
 
-        // دالة تلوين الواجهات حسب المدينة
         function adaptToCity() {
-            let activeCity = city;
-            if (viewType === 'home') activeCity = document.getElementById('citySelect').value;
-            
-            document.getElementById('cityOverlay').style.backgroundColor = styleColor[activeCity] || '#002349';
-            
-            if (viewType === 'home') {
-                const lang = document.getElementById('htmlTag').lang;
-                const l = translations[lang] || translations['ar'];
-                const greetEl = document.getElementById('dynamicGreeting');
-                greetEl.style.opacity = 0;
-                setTimeout(() => { greetEl.innerText = `${lang==='ar'?'أهلاً بك في':'Welcome to'} ${l.cityNames[activeCity].split(' ')[0]}`; greetEl.style.opacity = 1; }, 200);
-            }
+            const city = document.getElementById('citySelect').value;
+            const colors = { 'كركوك': '#0d9488', 'بغداد': '#1e3a8a', 'أربيل': '#15803d', 'السليمانية': '#7e22ce', 'الموصل': '#374151', 'البصرة': '#0369a1', 'الأنبار': '#b45309', 'ديالى': '#65a30d' };
+            document.getElementById('cityOverlay').style.backgroundColor = colors[city] || '#002349';
+            const greetings = { ar: 'أهلاً بك في', ku: 'بەخێربێیت بۆ', tr: 'Hoş geldiniz', en: 'Welcome to' };
+            const lang = document.getElementById('htmlTag').lang;
+            const l = translations[lang] || translations['ar'];
+            const greetEl = document.getElementById('dynamicGreeting');
+            greetEl.style.opacity = 0;
+            setTimeout(() => {
+                greetEl.innerText = `${greetings[lang]} ${l.cityNames[city].split(' ')[0]}`;
+                greetEl.style.opacity = 1;
+            }, 200);
         }
 
         function checkService() {
@@ -582,92 +229,21 @@
             svc === 'personal' ? wrap.classList.remove('hidden-field') : wrap.classList.add('hidden-field');
         }
 
-        // دالة الذهاب للأسطول من الرئيسية (تم الحفاظ عليها)
         function startBooking() {
             const svc = document.getElementById('mainService').value;
-            const c = document.getElementById('citySelect').value;
+            const city = document.getElementById('citySelect').value;
             const date = document.getElementById('dateInput').value;
             const time = document.getElementById('timeInput').value;
-            const d = document.getElementById('daysInput').value || "1";
-            const lang = document.getElementById('htmlTag').lang;
-
-            if(!svc || !date || !time) return alert("يرجى ملء جميع الحقول 🐋");
-
-            if (svc === 'training') {
-                window.location.href = `addons.html?type=${svc}&city=${encodeURIComponent(c)}&date=${date}&time=${time}&lang=${lang}`;
-            } else {
-                window.location.href = `fleet.html?type=${svc}&city=${encodeURIComponent(c)}&date=${date}&time=${time}&days=${d}&lang=${lang}`;
-            }
+            if(!svc || !date || !time) return alert(document.getElementById('htmlTag').lang === 'ar' ? "يرجى ملء جميع الحقول 🐋" : "Please fill all fields");
+            window.location.href = `fleet.html?type=${svc}&city=${city}&date=${date}&time=${time}&lang=${document.getElementById('htmlTag').lang}`;
         }
 
-        // دوال الخرائط الشاملة
-        function initMap(mapId) {
-            let m = L.map(mapId).setView([33.3152, 44.3661], 12);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(m);
-            let mk = L.marker([33.3152, 44.3661], {draggable: true}).addTo(m);
-            
-            L.Control.geocoder({ defaultMarkGeocode: false, placeholder: "ابحث..." })
-            .on('markgeocode', function(e) { m.setView(e.geocode.center, 16); mk.setLatLng(e.geocode.center); }).addTo(m);
-
-            if(mapId === 'map_personal') { map_personal = m; marker_personal = mk; }
-            if(mapId === 'map_wedding') { map_wedding = m; marker_wedding = mk; }
-            if(mapId === 'map_training') { map_training = m; marker_training = mk; }
-        }
-
-        function getGPS(mapId, markerObj) {
-            navigator.geolocation.getCurrentPosition(p => { 
-                const c = [p.coords.latitude, p.coords.longitude]; 
-                if(mapId === 'map_personal') { map_personal.setView(c, 16); marker_personal.setLatLng(c); }
-                if(mapId === 'map_wedding') { map_wedding.setView(c, 16); marker_wedding.setLatLng(c); }
-                if(mapId === 'map_training') { map_training.setView(c, 16); marker_training.setLatLng(c); }
-            }); 
-        }
-
-        function setGender(group, val, btn) {
-            selections[group] = val;
-            document.querySelectorAll(`.${group}`).forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
-        }
-
-        // التأكيد وإرسال البيانات للـ Review
-        function confirmBooking(type) {
-            const lang = document.getElementById('htmlTag').lang;
-            const l = translations[lang] || translations['ar'];
-            
-            let name, phone, id_no = 'N/A', age, license = 'N/A', genderVal, pos, orderId;
-            const basePrice = parseInt(u.get('basePrice') || 0);
-            const addonPrice = parseInt(u.get('addon_price') || 0);
-            const finalTotal = (basePrice + addonPrice) * days;
-
-            if (type === 'personal') {
-                name = document.getElementById('p_custName').value; phone = document.getElementById('p_custPhone').value; id_no = document.getElementById('p_idNumber').value; age = document.getElementById('p_custAge').value; license = document.getElementById('p_drivingLicense').value; genderVal = selections.p_gender; pos = marker_personal.getLatLng();
-                orderId = "HUT-" + Math.floor(1000 + Math.random() * 9000);
-            } else if (type === 'wedding') {
-                name = document.getElementById('w_custName').value; phone = document.getElementById('w_custPhone').value; age = document.getElementById('w_custAge').value; genderVal = selections.w_gender; pos = marker_wedding.getLatLng();
-                orderId = "WD-" + Math.floor(1000 + Math.random() * 9999);
-            } else if (type === 'training') {
-                name = document.getElementById('t_tName').value; phone = document.getElementById('t_tPhone').value; id_no = document.getElementById('t_tNationalID').value; age = document.getElementById('t_tAge').value; genderVal = selections.t_gender; pos = marker_training.getLatLng();
-                orderId = "EDU-" + Math.floor(1000 + Math.random() * 9000);
-            }
-
-            if(!name || !phone) { alert(l.checkout.alert); return; }
-
-            u.set('order_id', orderId);
-            u.set('name', name);
-            u.set('phone', phone);
-            u.set('age', age);
-            u.set('gender', genderVal);
-            u.set('national_id', id_no);
-            u.set('license_no', license);
-            u.set('province', city);
-            u.set('total_price', finalTotal);
-            u.set('location_link', `https://www.google.com/maps?q=$${pos.lat},${pos.lng}`);
-            
-            if(type === 'training') { u.set('service', 'تدريب قيادة'); u.set('car', u.get('addon_display')); }
-            if(type === 'wedding') { u.set('service', 'زفاف'); }
-
-            window.location.href = `review.html?${u.toString()}`;
-        }
+        window.onload = () => {
+            const now = new Date();
+            document.getElementById('dateInput').value = now.toISOString().split('T')[0];
+            document.getElementById('timeInput').value = now.toTimeString().slice(0,5);
+            changeLang('ar');
+        };
     </script>
 </body>
 </html>

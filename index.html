@@ -62,11 +62,16 @@
 </head>
 <body>
 
-    <div class="fixed top-6 left-0 right-0 z-[100] flex justify-center gap-2 px-4">
-        <button onclick="changeLang('ar')" id="btn-ar" class="lang-btn">العربية</button>
-        <button onclick="changeLang('ku')" id="btn-ku" class="lang-btn">کوردی</button>
-        <button onclick="changeLang('tr')" id="btn-tr" class="lang-btn">Türkçe</button>
-        <button onclick="changeLang('en')" id="btn-en" class="lang-btn">English</button>
+    <div class="fixed top-4 left-0 right-0 z-[100] flex flex-wrap justify-between items-center px-4 md:px-8 gap-2">
+        <div class="flex gap-2">
+            <button onclick="changeLang('ar')" id="btn-ar" class="lang-btn">العربية</button>
+            <button onclick="changeLang('ku')" id="btn-ku" class="lang-btn">کوردی</button>
+            <button onclick="changeLang('tr')" id="btn-tr" class="lang-btn">Türkçe</button>
+            <button onclick="changeLang('en')" id="btn-en" class="lang-btn">English</button>
+        </div>
+        <button onclick="openTracker()" class="bg-[#D4AF37] text-[#002349] px-4 py-2 rounded-xl font-black hover:bg-yellow-500 transition-all shadow-lg flex items-center gap-2 text-sm md:text-base border border-yellow-600">
+            <span id="trackBtnText">تتبع حجزي</span> <i class="fas fa-satellite-dish animate-pulse"></i>
+        </button>
     </div>
 
     <header class="hero-bg text-white">
@@ -122,13 +127,50 @@
         </section>
     </main>
 
+    <div id="trackerModal" class="fixed inset-0 z-[200] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 transition-all duration-500 opacity-0 pointer-events-none" dir="rtl">
+        <div class="bg-white w-full max-w-md rounded-3xl p-6 relative shadow-2xl transform scale-95 transition-transform duration-500" id="trackerCard">
+            
+            <button onclick="closeTracker()" class="absolute top-4 left-4 w-8 h-8 bg-slate-100 text-slate-500 rounded-full hover:bg-red-100 hover:text-red-500 transition-all flex items-center justify-center">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="text-center mb-6 pt-2">
+                <div class="w-16 h-16 bg-[#002349]/10 text-[#002349] rounded-full flex items-center justify-center text-2xl mx-auto mb-3">
+                    <i class="fas fa-search-location"></i>
+                </div>
+                <h3 class="text-xl font-black text-[#002349]" id="trackModalTitle">أين سيارتي؟ 🐋</h3>
+                <p class="text-xs text-slate-500 mt-1 font-bold" id="trackInputLabel">أدخل رقم الحجز (مثال: HUT-1234)</p>
+            </div>
+
+            <div class="space-y-4">
+                <input type="text" id="trackOrderId" placeholder="HUT-..." class="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl text-center text-lg font-bold tracking-widest uppercase outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all">
+                
+                <button onclick="checkOrderStatus()" id="btnTrack" class="w-full bg-[#002349] text-white py-4 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-[#D4AF37] hover:text-[#002349] transition-all">
+                    <span id="trackSearchBtn">بحث في الرادار</span> <i class="fas fa-radar"></i>
+                </button>
+            </div>
+
+            <div id="trackResult" class="mt-6 hidden border-t border-slate-100 pt-6 text-center">
+                <span id="resStatus" class="inline-block px-3 py-1 bg-amber-100 text-amber-600 text-xs font-black rounded-lg mb-2 border border-amber-200">جاري المعالجة</span>
+                <h4 id="resCar" class="text-lg font-black text-[#002349] mb-1">...</h4>
+                <p id="resOffice" class="text-sm font-bold text-slate-500 mb-4"><i class="fas fa-building text-[#D4AF37]"></i> المكتب: <span class="text-slate-800">...</span></p>
+                
+                <button id="resActionBtn" class="w-full py-3 rounded-xl font-bold text-sm transition-all hidden flex items-center justify-center gap-2"></button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
+        const ADMIN_PHONE = "9647713225471"; // رقم الواتساب الخاص بك
+
         const citiesList = ['كركوك', 'بغداد', 'أربيل', 'السليمانية', 'الموصل', 'البصرة', 'الأنبار', 'ديالى'];
         const translations = {
             ar: {
                 dir: 'rtl', whale: 'الحوت', brand: 'أرخص تأجير سيارات<br>وأفضل تدريب قيادة', subGreet: 'أحسن منصة خدمات في العراق لعام 2026',
                 labelCity: 'المدينة', labelService: 'الخدمة', labelDate: 'التاريخ', labelTime: 'الساعة', labelDays: 'الأيام', btnText: 'استمر',
                 faqTitle: 'الأسئلة الشائعة (دليل خدماتنا)',
+                trackBtn: 'تتبع حجزي', trackModalTitle: 'أين سيارتي؟ 🐋', trackInputLabel: 'أدخل رقم الحجز (مثال: HUT-1234)', trackSearchBtn: 'بحث في الرادار',
                 faqs: [
                     {q: 'كيف أجد أرخص مكتب تأجير سيارات في بغداد وكركوك؟', a: 'منصة الحوت تقارن الأسعار في بغداد وكركوك وأربيل لتعطيك أرخص سعر للإيجار اليومي والشهري.'},
                     {q: 'هل يتوفر تدريب قيادة للنساء في البصرة والموصل؟', a: 'نعم، نوفر أفضل المدربات لتعليم السياقة للنساء في البصرة، الموصل، وكافة المحافظات.'},
@@ -142,6 +184,7 @@
                 dir: 'rtl', whale: 'ئەلحووت', brand: 'هەرزانترین بەکرێگرتن<br>باشترین فێربوونی شۆفێری', subGreet: 'هەڵبژاردەی یەکەم لە هەموو عێراق',
                 labelCity: 'شار', labelService: 'خزمەتگوزاری', labelDate: 'بەروار', labelTime: 'کاتژمێر', labelDays: 'ڕۆژەکان', btnText: 'بەردەوام بە',
                 faqTitle: 'پسیارە باوەکان',
+                trackBtn: 'بەدواداچوون', trackModalTitle: 'سەیارەکەم لە کوێیە؟ 🐋', trackInputLabel: 'ژمارەی حجزەکە بنووسە', trackSearchBtn: 'گەڕان',
                 faqs: [
                     {q: 'هەرزانترین کرێی سەیارە لە کوێیە؟', a: 'ئەلحووت هەرزانترین نرخ لە بەغداد، کەرکوک و هەولێر دابین دەکات.'},
                     {q: 'فێربوونی شۆفێری بۆ ئافرەتان هەیە؟', a: 'بەڵێ، باشترین ڕاهێنەری شارەزامان هەیە لە هەموو پارێزگاکان.'}
@@ -153,6 +196,7 @@
                 dir: 'ltr', whale: 'AL-HUT', brand: 'En Ucuz Araç Kiralama<br>En İyi Ehliyet Kursu', subGreet: 'Irak\'ın 1 Numaralı Platformu',
                 labelCity: 'Şehir', labelService: 'Hizmet', labelDate: 'Tarih', labelTime: 'Saat', labelDays: 'Gün', btnText: 'Devam Et',
                 faqTitle: 'Sıkça Sorulan Sorular',
+                trackBtn: 'Sipariş Takibi', trackModalTitle: 'Aracım Nerede? 🐋', trackInputLabel: 'Rezervasyon No Giriniz', trackSearchBtn: 'Sistemi Tara',
                 faqs: [
                     {q: 'En ucuz araç nerede bulunur?', a: 'Al-Hut, Bağdat ve Kerkük\'te en uygun fiyatlı araç kiralama hizmetini sunar.'},
                     {q: 'Bayanlar için ehliyet kursu var mı?', a: 'Evet, Erbil ve Musul dahil tüm şehirlerde profesyonel bayan eğitmenlerimiz mevcuttur.'}
@@ -164,6 +208,7 @@
                 dir: 'ltr', whale: 'AL-HUT', brand: 'Cheapest Car Rental<br>& Best Driving School', subGreet: 'The Best Choice in Iraq 2026',
                 labelCity: 'City', labelService: 'Service', labelDate: 'Date', labelTime: 'Time', labelDays: 'Days', btnText: 'Continue',
                 faqTitle: 'General FAQ',
+                trackBtn: 'Track Booking', trackModalTitle: 'Where is my car? 🐋', trackInputLabel: 'Enter Booking ID', trackSearchBtn: 'Search Radar',
                 faqs: [
                     {q: 'Where to find the cheapest car rental in Iraq?', a: 'Al-Hut compares prices in Baghdad, Kirkuk, and Erbil to give you the best deals.'},
                     {q: 'Is there driving training for ladies?', a: 'Yes, we provide professional female instructors in Basra, Mosul, and all provinces.'}
@@ -192,6 +237,12 @@
             document.getElementById('btnText').innerText = l.btnText;
             document.getElementById('faqTitle').innerText = l.faqTitle;
             document.getElementById('btnIcon').style.transform = l.dir === 'rtl' ? 'rotate(0deg)' : 'rotate(180deg)';
+
+            // تحديث نصوص التتبع
+            document.getElementById('trackBtnText').innerText = l.trackBtn;
+            document.getElementById('trackModalTitle').innerText = l.trackModalTitle;
+            document.getElementById('trackInputLabel').innerText = l.trackInputLabel;
+            document.getElementById('trackSearchBtn').innerText = l.trackSearchBtn;
 
             const citySelect = document.getElementById('citySelect');
             const currentC = citySelect.value || 'كركوك';
@@ -236,6 +287,72 @@
             const time = document.getElementById('timeInput').value;
             if(!svc || !date || !time) return alert(document.getElementById('htmlTag').lang === 'ar' ? "يرجى ملء جميع الحقول 🐋" : "Please fill all fields");
             window.location.href = `fleet.html?type=${svc}&city=${city}&date=${date}&time=${time}&lang=${document.getElementById('htmlTag').lang}`;
+        }
+
+        // --- دوال نافذة التتبع ---
+        function openTracker() {
+            const modal = document.getElementById('trackerModal');
+            const card = document.getElementById('trackerCard');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            card.classList.remove('scale-95');
+        }
+
+        function closeTracker() {
+            const modal = document.getElementById('trackerModal');
+            const card = document.getElementById('trackerCard');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            card.classList.add('scale-95');
+            document.getElementById('trackOrderId').value = '';
+            document.getElementById('trackResult').classList.add('hidden');
+        }
+
+        async function checkOrderStatus() {
+            const input = document.getElementById('trackOrderId').value.trim().toUpperCase();
+            if(!input) return alert("يرجى إدخال رقم الحجز");
+
+            const btn = document.getElementById('btnTrack');
+            const originalText = document.getElementById('trackSearchBtn').innerText;
+            btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> جاري البحث...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAllOrders&t=${Date.now()}`);
+                const orders = await res.json();
+                const myOrder = orders.find(o => o.id === input || (o.id && o.id.includes(input)));
+
+                const resDiv = document.getElementById('trackResult');
+                const resStatus = document.getElementById('resStatus');
+                const resActionBtn = document.getElementById('resActionBtn');
+
+                if (myOrder) {
+                    document.getElementById('resCar').innerText = myOrder.car;
+                    document.getElementById('resOffice').innerHTML = `<i class="fas fa-building text-[#D4AF37]"></i> المكتب: <span class="text-slate-800">${myOrder.office || "بانتظار التأكيد"}</span>`;
+                    
+                    resStatus.innerText = myOrder.status;
+                    resActionBtn.classList.remove('hidden');
+
+                    if (myOrder.status.includes("تم الاستلام")) {
+                        resStatus.className = "inline-block px-3 py-1 bg-green-100 text-green-600 text-xs font-black rounded-lg mb-2 border border-green-200";
+                        resActionBtn.className = "w-full py-3 rounded-xl font-bold text-sm bg-green-500 text-white hover:bg-green-600 transition-all flex items-center justify-center gap-2";
+                        resActionBtn.innerHTML = '<i class="fab fa-whatsapp text-lg"></i> تواصل مع المكتب الآن';
+                        resActionBtn.onclick = () => window.open(`https://wa.me/${ADMIN_PHONE}?text=مرحباً، أود التواصل مع مكتب ${myOrder.office} بخصوص طلبي ${myOrder.id}`, '_blank');
+                    } else {
+                        resStatus.className = "inline-block px-3 py-1 bg-blue-100 text-blue-600 text-xs font-black rounded-lg mb-2 border border-blue-200";
+                        resActionBtn.className = "w-full py-3 rounded-xl font-bold text-sm bg-slate-100 text-[#002349] hover:bg-slate-200 transition-all flex items-center justify-center gap-2";
+                        resActionBtn.innerHTML = '<i class="fas fa-headset"></i> الدعم الفني';
+                        resActionBtn.onclick = () => window.open(`https://wa.me/${ADMIN_PHONE}?text=مرحباً إدارة الحوت، أستفسر عن طلبي ${myOrder.id}`, '_blank');
+                    }
+                    resDiv.classList.remove('hidden');
+                } else {
+                    alert("لم يتم العثور على هذا الطلب! تأكد من الرقم وحاول مجدداً.");
+                    resDiv.classList.add('hidden');
+                }
+            } catch (e) {
+                alert("فشل الاتصال بالرادار، تأكد من جودة الإنترنت.");
+            } finally {
+                btn.innerHTML = `<span id="trackSearchBtn">${originalText}</span> <i class="fas fa-radar"></i>`;
+                btn.disabled = false;
+            }
         }
 
         window.onload = () => {

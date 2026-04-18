@@ -58,6 +58,34 @@
         [dir="ltr"] .text-start-custom { text-align: left; }
         .whale-float { animation: floating 4s ease-in-out infinite; }
         @keyframes floating { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
+        
+        /* تأثير تمدد زر التتبع في الموبايل */
+        .fab-container { position: fixed; bottom: 24px; right: 24px; z-index: 90; display: flex; align-items: center; justify-content: flex-end; }
+        [dir="ltr"] .fab-container { right: auto; left: 24px; justify-content: flex-start; }
+        
+        .fab-button {
+            background: #002349; color: white; border-radius: 2rem; padding: 16px;
+            box-shadow: 0 15px 35px rgba(0,35,73,0.4); border: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; gap: 12px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden; cursor: pointer; white-space: nowrap; width: 60px; /* العرض الافتراضي (دائرة) */
+        }
+        
+        /* في شاشات الكمبيوتر: يكون مفتوحاً دائماً */
+        @media (min-width: 768px) {
+            .fab-container { bottom: 24px; left: 24px; right: auto; justify-content: flex-start; }
+            [dir="ltr"] .fab-container { left: auto; right: 24px; justify-content: flex-end; }
+            .fab-button { width: auto; padding: 16px 24px; }
+            .fab-text { opacity: 1; transform: translateX(0); position: relative; }
+        }
+
+        /* في الموبايل: يتمدد عند اللمس/المرور */
+        @media (max-width: 767px) {
+            .fab-text { opacity: 0; transform: translateX(20px); position: absolute; visibility: hidden; transition: all 0.3s; }
+            [dir="ltr"] .fab-text { transform: translateX(-20px); }
+            
+            .fab-container:hover .fab-button, .fab-container:active .fab-button { width: 145px; } /* عرض الزر عند التمدد */
+            .fab-container:hover .fab-text, .fab-container:active .fab-text { opacity: 1; transform: translateX(0); visibility: visible; position: relative; }
+        }
     </style>
 </head>
 <body>
@@ -71,14 +99,16 @@
         </div>
     </div>
 
-    <button onclick="openTracker()" class="fixed bottom-6 right-6 md:left-6 md:right-auto z-[90] bg-[#002349] text-white px-5 py-4 rounded-2xl font-black hover:-translate-y-2 transition-all shadow-[0_15px_35px_rgba(0,35,73,0.4)] flex items-center gap-3 group border border-white/10">
-        <div class="relative">
-            <i class="fas fa-satellite-dish text-[#D4AF37] text-xl group-hover:animate-pulse"></i>
-            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-[#002349] rounded-full animate-ping"></span>
-            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-[#002349] rounded-full"></span>
-        </div>
-        <span id="trackBtnText" class="hidden md:block">تتبع حجزي</span>
-    </button>
+    <div class="fab-container">
+        <button onclick="openTracker()" class="fab-button group">
+            <div class="relative shrink-0 flex items-center justify-center w-6 h-6">
+                <i class="fas fa-satellite-dish text-[#D4AF37] text-xl group-hover:animate-pulse"></i>
+                <span class="absolute -top-2 -right-2 w-3 h-3 bg-red-500 border-2 border-[#002349] rounded-full animate-ping"></span>
+                <span class="absolute -top-2 -right-2 w-3 h-3 bg-red-500 border-2 border-[#002349] rounded-full"></span>
+            </div>
+            <span id="trackBtnText" class="font-black text-sm fab-text">تتبع حجزي</span>
+        </button>
+    </div>
 
     <header class="hero-bg text-white">
         <div id="cityOverlay" class="absolute inset-0 opacity-50"></div>
@@ -295,7 +325,7 @@
             window.location.href = `fleet.html?type=${svc}&city=${city}&date=${date}&time=${time}&lang=${document.getElementById('htmlTag').lang}`;
         }
 
-        // --- دوال نافذة التتبع (المحدثة للبحث بالهاتف و ID) ---
+        // --- دوال نافذة التتبع ---
         function openTracker() {
             const modal = document.getElementById('trackerModal');
             const card = document.getElementById('trackerCard');
@@ -316,7 +346,6 @@
             const input = document.getElementById('trackOrderId').value.trim();
             if(!input) return alert(document.getElementById('htmlTag').lang === 'ar' ? "يرجى إدخال رقم الحجز أو الهاتف" : "Please enter ID or Phone");
 
-            // تنظيف المدخلات (تجهيزها للبحث بالرقم أو الهاتف)
             const searchKey = input.toUpperCase();
             const cleanPhone = input.replace(/\s+/g, '');
 
@@ -329,7 +358,6 @@
                 const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAllOrders&t=${Date.now()}`);
                 const orders = await res.json();
                 
-                // عكسنا المصفوفة (reverse) لكي نجلب أحدث طلب قام به الزبون في حال كان لديه طلبات قديمة
                 const myOrder = [...orders].reverse().find(o => 
                     (o.id && o.id.toUpperCase().includes(searchKey)) || 
                     (o.phone && o.phone.toString().replace(/\s+/g, '').includes(cleanPhone))
@@ -370,7 +398,6 @@
             }
         }
 
-        // دعم الضغط على زر Enter للبحث
         document.getElementById('trackOrderId').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') checkOrderStatus();
         });

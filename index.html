@@ -62,23 +62,29 @@
 </head>
 <body>
 
-    <div class="fixed top-4 left-0 right-0 z-[100] flex flex-wrap justify-between items-center px-4 md:px-8 gap-2">
-        <div class="flex gap-2">
+    <div class="fixed top-4 left-0 right-0 z-[50] flex flex-wrap justify-center md:justify-start items-center px-4 md:px-8 gap-2">
+        <div class="flex gap-2 bg-black/20 backdrop-blur-md p-1.5 rounded-2xl border border-white/10">
             <button onclick="changeLang('ar')" id="btn-ar" class="lang-btn">العربية</button>
             <button onclick="changeLang('ku')" id="btn-ku" class="lang-btn">کوردی</button>
             <button onclick="changeLang('tr')" id="btn-tr" class="lang-btn">Türkçe</button>
             <button onclick="changeLang('en')" id="btn-en" class="lang-btn">English</button>
         </div>
-        <button onclick="openTracker()" class="bg-[#D4AF37] text-[#002349] px-4 py-2 rounded-xl font-black hover:bg-yellow-500 transition-all shadow-lg flex items-center gap-2 text-sm md:text-base border border-yellow-600">
-            <span id="trackBtnText">تتبع حجزي</span> <i class="fas fa-satellite-dish animate-pulse"></i>
-        </button>
     </div>
+
+    <button onclick="openTracker()" class="fixed bottom-6 right-6 md:left-6 md:right-auto z-[90] bg-[#002349] text-white px-5 py-4 rounded-2xl font-black hover:-translate-y-2 transition-all shadow-[0_15px_35px_rgba(0,35,73,0.4)] flex items-center gap-3 group border border-white/10">
+        <div class="relative">
+            <i class="fas fa-satellite-dish text-[#D4AF37] text-xl group-hover:animate-pulse"></i>
+            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-[#002349] rounded-full animate-ping"></span>
+            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-[#002349] rounded-full"></span>
+        </div>
+        <span id="trackBtnText" class="hidden md:block">تتبع حجزي</span>
+    </button>
 
     <header class="hero-bg text-white">
         <div id="cityOverlay" class="absolute inset-0 opacity-50"></div>
         <div class="map-pattern"></div>
         <div class="container mx-auto px-6 relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
-            <div class="text-start-custom w-full">
+            <div class="text-start-custom w-full mt-10 md:mt-0">
                 <h1 class="text-4xl md:text-6xl font-black mb-4 leading-tight" id="brandName"></h1>
                 <p id="dynamicGreeting" class="text-xl md:text-2xl font-bold opacity-90 mb-2 h-8"></p>
                 <p id="subGreeting" class="text-lg font-bold text-[#D4AF37]"></p>
@@ -139,11 +145,11 @@
                     <i class="fas fa-search-location"></i>
                 </div>
                 <h3 class="text-xl font-black text-[#002349]" id="trackModalTitle">أين سيارتي؟ 🐋</h3>
-                <p class="text-xs text-slate-500 mt-1 font-bold" id="trackInputLabel">أدخل رقم الحجز (مثال: HUT-1234)</p>
+                <p class="text-[11px] text-slate-500 mt-1 font-bold" id="trackInputLabel">أدخل رقم الحجز أو رقم الهاتف</p>
             </div>
 
             <div class="space-y-4">
-                <input type="text" id="trackOrderId" placeholder="HUT-..." class="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl text-center text-lg font-bold tracking-widest uppercase outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all">
+                <input type="text" id="trackOrderId" placeholder="مثال: HUT-1234 أو 077..." class="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl text-center text-lg font-bold tracking-widest outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition-all">
                 
                 <button onclick="checkOrderStatus()" id="btnTrack" class="w-full bg-[#002349] text-white py-4 rounded-xl font-black flex items-center justify-center gap-2 hover:bg-[#D4AF37] hover:text-[#002349] transition-all">
                     <span id="trackSearchBtn">بحث في الرادار</span> <i class="fas fa-radar"></i>
@@ -162,7 +168,7 @@
 
     <script>
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
-        const ADMIN_PHONE = "9647713225471"; // رقم الواتساب الخاص بك
+        const ADMIN_PHONE = "9647713225471"; 
 
         const citiesList = ['كركوك', 'بغداد', 'أربيل', 'السليمانية', 'الموصل', 'البصرة', 'الأنبار', 'ديالى'];
         const translations = {
@@ -170,7 +176,7 @@
                 dir: 'rtl', whale: 'الحوت', brand: 'أرخص تأجير سيارات<br>وأفضل تدريب قيادة', subGreet: 'أحسن منصة خدمات في العراق لعام 2026',
                 labelCity: 'المدينة', labelService: 'الخدمة', labelDate: 'التاريخ', labelTime: 'الساعة', labelDays: 'الأيام', btnText: 'استمر',
                 faqTitle: 'الأسئلة الشائعة (دليل خدماتنا)',
-                trackBtn: 'تتبع حجزي', trackModalTitle: 'أين سيارتي؟ 🐋', trackInputLabel: 'أدخل رقم الحجز (مثال: HUT-1234)', trackSearchBtn: 'بحث في الرادار',
+                trackBtn: 'تتبع حجزي', trackModalTitle: 'أين سيارتي؟ 🐋', trackInputLabel: 'أدخل رقم الحجز أو رقم الهاتف (مثال: 077...)', trackSearchBtn: 'بحث في الرادار',
                 faqs: [
                     {q: 'كيف أجد أرخص مكتب تأجير سيارات في بغداد وكركوك؟', a: 'منصة الحوت تقارن الأسعار في بغداد وكركوك وأربيل لتعطيك أرخص سعر للإيجار اليومي والشهري.'},
                     {q: 'هل يتوفر تدريب قيادة للنساء في البصرة والموصل؟', a: 'نعم، نوفر أفضل المدربات لتعليم السياقة للنساء في البصرة، الموصل، وكافة المحافظات.'},
@@ -184,7 +190,7 @@
                 dir: 'rtl', whale: 'ئەلحووت', brand: 'هەرزانترین بەکرێگرتن<br>باشترین فێربوونی شۆفێری', subGreet: 'هەڵبژاردەی یەکەم لە هەموو عێراق',
                 labelCity: 'شار', labelService: 'خزمەتگوزاری', labelDate: 'بەروار', labelTime: 'کاتژمێر', labelDays: 'ڕۆژەکان', btnText: 'بەردەوام بە',
                 faqTitle: 'پسیارە باوەکان',
-                trackBtn: 'بەدواداچوون', trackModalTitle: 'سەیارەکەم لە کوێیە؟ 🐋', trackInputLabel: 'ژمارەی حجزەکە بنووسە', trackSearchBtn: 'گەڕان',
+                trackBtn: 'بەدواداچوون', trackModalTitle: 'سەیارەکەم لە کوێیە؟ 🐋', trackInputLabel: 'ژمارەی حجزەکە یان مۆبایل بنووسە', trackSearchBtn: 'گەڕان',
                 faqs: [
                     {q: 'هەرزانترین کرێی سەیارە لە کوێیە؟', a: 'ئەلحووت هەرزانترین نرخ لە بەغداد، کەرکوک و هەولێر دابین دەکات.'},
                     {q: 'فێربوونی شۆفێری بۆ ئافرەتان هەیە؟', a: 'بەڵێ، باشترین ڕاهێنەری شارەزامان هەیە لە هەموو پارێزگاکان.'}
@@ -196,7 +202,7 @@
                 dir: 'ltr', whale: 'AL-HUT', brand: 'En Ucuz Araç Kiralama<br>En İyi Ehliyet Kursu', subGreet: 'Irak\'ın 1 Numaralı Platformu',
                 labelCity: 'Şehir', labelService: 'Hizmet', labelDate: 'Tarih', labelTime: 'Saat', labelDays: 'Gün', btnText: 'Devam Et',
                 faqTitle: 'Sıkça Sorulan Sorular',
-                trackBtn: 'Sipariş Takibi', trackModalTitle: 'Aracım Nerede? 🐋', trackInputLabel: 'Rezervasyon No Giriniz', trackSearchBtn: 'Sistemi Tara',
+                trackBtn: 'Sipariş Takibi', trackModalTitle: 'Aracım Nerede? 🐋', trackInputLabel: 'Rezervasyon No veya Telefon No Giriniz', trackSearchBtn: 'Sistemi Tara',
                 faqs: [
                     {q: 'En ucuz araç nerede bulunur?', a: 'Al-Hut, Bağdat ve Kerkük\'te en uygun fiyatlı araç kiralama hizmetini sunar.'},
                     {q: 'Bayanlar için ehliyet kursu var mı?', a: 'Evet, Erbil ve Musul dahil tüm şehirlerde profesyonel bayan eğitmenlerimiz mevcuttur.'}
@@ -208,7 +214,7 @@
                 dir: 'ltr', whale: 'AL-HUT', brand: 'Cheapest Car Rental<br>& Best Driving School', subGreet: 'The Best Choice in Iraq 2026',
                 labelCity: 'City', labelService: 'Service', labelDate: 'Date', labelTime: 'Time', labelDays: 'Days', btnText: 'Continue',
                 faqTitle: 'General FAQ',
-                trackBtn: 'Track Booking', trackModalTitle: 'Where is my car? 🐋', trackInputLabel: 'Enter Booking ID', trackSearchBtn: 'Search Radar',
+                trackBtn: 'Track Booking', trackModalTitle: 'Where is my car? 🐋', trackInputLabel: 'Enter Booking ID or Phone Number', trackSearchBtn: 'Search Radar',
                 faqs: [
                     {q: 'Where to find the cheapest car rental in Iraq?', a: 'Al-Hut compares prices in Baghdad, Kirkuk, and Erbil to give you the best deals.'},
                     {q: 'Is there driving training for ladies?', a: 'Yes, we provide professional female instructors in Basra, Mosul, and all provinces.'}
@@ -289,7 +295,7 @@
             window.location.href = `fleet.html?type=${svc}&city=${city}&date=${date}&time=${time}&lang=${document.getElementById('htmlTag').lang}`;
         }
 
-        // --- دوال نافذة التتبع ---
+        // --- دوال نافذة التتبع (المحدثة للبحث بالهاتف و ID) ---
         function openTracker() {
             const modal = document.getElementById('trackerModal');
             const card = document.getElementById('trackerCard');
@@ -307,8 +313,12 @@
         }
 
         async function checkOrderStatus() {
-            const input = document.getElementById('trackOrderId').value.trim().toUpperCase();
-            if(!input) return alert("يرجى إدخال رقم الحجز");
+            const input = document.getElementById('trackOrderId').value.trim();
+            if(!input) return alert(document.getElementById('htmlTag').lang === 'ar' ? "يرجى إدخال رقم الحجز أو الهاتف" : "Please enter ID or Phone");
+
+            // تنظيف المدخلات (تجهيزها للبحث بالرقم أو الهاتف)
+            const searchKey = input.toUpperCase();
+            const cleanPhone = input.replace(/\s+/g, '');
 
             const btn = document.getElementById('btnTrack');
             const originalText = document.getElementById('trackSearchBtn').innerText;
@@ -318,7 +328,12 @@
             try {
                 const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAllOrders&t=${Date.now()}`);
                 const orders = await res.json();
-                const myOrder = orders.find(o => o.id === input || (o.id && o.id.includes(input)));
+                
+                // عكسنا المصفوفة (reverse) لكي نجلب أحدث طلب قام به الزبون في حال كان لديه طلبات قديمة
+                const myOrder = [...orders].reverse().find(o => 
+                    (o.id && o.id.toUpperCase().includes(searchKey)) || 
+                    (o.phone && o.phone.toString().replace(/\s+/g, '').includes(cleanPhone))
+                );
 
                 const resDiv = document.getElementById('trackResult');
                 const resStatus = document.getElementById('resStatus');
@@ -344,7 +359,7 @@
                     }
                     resDiv.classList.remove('hidden');
                 } else {
-                    alert("لم يتم العثور على هذا الطلب! تأكد من الرقم وحاول مجدداً.");
+                    alert(document.getElementById('htmlTag').lang === 'ar' ? "لم يتم العثور على هذا الطلب! تأكد من الرقم وحاول مجدداً." : "Order not found! Please check the number.");
                     resDiv.classList.add('hidden');
                 }
             } catch (e) {
@@ -354,6 +369,11 @@
                 btn.disabled = false;
             }
         }
+
+        // دعم الضغط على زر Enter للبحث
+        document.getElementById('trackOrderId').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkOrderStatus();
+        });
 
         window.onload = () => {
             const now = new Date();

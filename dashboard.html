@@ -42,7 +42,11 @@
             background-size: 30px 30px;
         }
 
-        /* الهيدر والتبويبات (Segmented Control) */
+        /* شاشة تسجيل الدخول المدمجة */
+        #portalOverlay { transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
+        .input-gold:focus { box-shadow: 0 0 15px rgba(229, 192, 92, 0.2); }
+
+        /* الهيدر والتبويبات */
         .glass-header { 
             background: rgba(5, 8, 16, 0.8); 
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
@@ -120,6 +124,23 @@
 
     <audio id="radarSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock_ringing_rising.ogg" preload="auto" loop></audio>
 
+    <div id="portalOverlay" class="fixed inset-0 z-[100] bg-[#050810]/95 backdrop-blur-2xl flex flex-col items-center justify-center p-6 hidden">
+        <div class="w-24 h-24 bg-gradient-to-br from-[#1e293b] to-black border border-[#E5C05C]/30 flex items-center justify-center rounded-3xl shadow-[0_0_30px_rgba(229,192,92,0.15)] text-5xl mb-6">🐋</div>
+        <h2 class="text-white text-3xl font-black mb-2 tracking-tighter text-center">بوابة الشركاء</h2>
+        <p class="text-[#E5C05C] text-xs font-bold tracking-[0.2em] mb-10">AL-HUT RADAR SYSTEM</p>
+        
+        <div class="w-full max-w-sm bg-[var(--glass-bg)] p-8 rounded-3xl border border-[#E5C05C]/10 shadow-2xl">
+            <label class="text-xs text-slate-400 font-bold mb-2 block">كود المكتب (Office ID)</label>
+            <input type="text" id="officeIdInput" 
+                   class="input-gold w-full bg-[#050810]/80 border border-slate-700 rounded-xl p-4 text-center text-2xl text-white outline-none focus:border-[#E5C05C] transition-all mb-6"
+                   placeholder="أدخل الكود هنا">
+            <button onclick="loginOffice()" class="w-full btn-prime py-4 rounded-xl text-lg flex items-center justify-center gap-2">
+                <span>تفعيل الرادار</span> <i class="fas fa-satellite-dish"></i>
+            </button>
+        </div>
+        <p class="text-[10px] text-slate-500 mt-8 text-center"><i class="fas fa-lock mr-1"></i> الاتصال مشفر ومحمي بأنظمة الحوت المتقدمة</p>
+    </div>
+
     <div id="hudAlert">
         <i class="fas fa-satellite-dish animate-pulse text-xl"></i>
         <span>يوجد طلب جديد في الرادار!</span>
@@ -137,7 +158,7 @@
                 </div>
                 <div>
                     <h2 id="navOfficeName" class="font-black text-xl text-white">...</h2>
-                    <p id="navCity" class="text-[#E5C05C] font-bold text-[10px] tracking-widest mt-0.5 uppercase"><i class="fas fa-location-crosshairs mr-1"></i> جاري تحديد الموقع</p>
+                    <p id="navCity" class="text-[#E5C05C] font-bold text-[10px] tracking-widest mt-0.5 uppercase"><i class="fas fa-location-crosshairs mr-1"></i> جاري التحديد</p>
                 </div>
             </div>
             <button onclick="logout()" class="w-10 h-10 bg-slate-800/50 text-slate-400 hover:text-red-400 rounded-full transition-all flex items-center justify-center border border-slate-700">
@@ -163,24 +184,80 @@
 
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
-        const officeData = JSON.parse(localStorage.getItem('whale_office_data'));
+        let officeData = null;
         let currentTab = 'new', allOrders = [], lastKnownNewOrders = -1;
 
-        if(!officeData) window.location.href = 'portal.html';
-        
-        document.getElementById('navOfficeName').innerText = officeData.name;
-        document.getElementById('navCity').innerHTML = `<i class="fas fa-location-crosshairs text-[9px] mr-1"></i> ${officeData.city}`;
+        // التحقق عند فتح الملف
+        window.onload = () => {
+            const savedData = localStorage.getItem('whale_office_data');
+            if (savedData) {
+                officeData = JSON.parse(savedData);
+                document.getElementById('portalOverlay').classList.add('hidden');
+                initRadarApp();
+            } else {
+                document.getElementById('portalOverlay').classList.remove('hidden');
+            }
+        };
 
-        // فتح التطبيق (مطلوب لتفعيل الصوت في المتصفحات الحديثة)
-        Swal.fire({
-            title: 'مرحباً بك في رادار الحوت 🐋',
-            text: 'جاهز لاستقبال الطلبات في ' + officeData.city + '؟',
-            icon: 'info',
-            confirmButtonText: 'بدء العمل',
-            allowOutsideClick: false
-        }).then(() => { fetchOrders(); });
+        // نظام تسجيل الدخول المدمج
+        async function loginOffice() {
+            const inputId = document.getElementById('officeIdInput').value.trim();
+            if (!inputId) return Swal.fire('تنبيه', 'يرجى إدخال كود المكتب أولاً', 'warning');
 
+            Swal.fire({ title: 'جاري الاتصال بالخوادم...', text: 'يتم الآن التحقق من الهوية', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
+
+            try {
+                // نستخدم دالة getAdminFullData لسحب قائمة المكاتب والتحقق منها برمجياً
+                const res = await fetch(`${scriptURL}?action=getAdminFullData&t=${Date.now()}`);
+                const data = await res.json();
+                
+                // البحث عن المكتب بواسطة الكود (ID)
+                const office = data.offices.find(o => o.id == inputId);
+
+                if (office) {
+                    if (office.status === 'نشط') {
+                        officeData = office;
+                        localStorage.setItem('whale_office_data', JSON.stringify(office));
+                        
+                        Swal.fire({ icon: 'success', title: 'تم التحقق بنجاح', text: 'مرحباً بك في نظام الحوت', timer: 1500, showConfirmButton: false });
+                        
+                        document.getElementById('portalOverlay').classList.add('opacity-0', 'scale-110', 'pointer-events-none');
+                        setTimeout(() => {
+                            document.getElementById('portalOverlay').classList.add('hidden');
+                            initRadarApp();
+                        }, 700);
+
+                    } else {
+                        Swal.fire('حساب موقوف', 'عذراً، حساب هذا المكتب قيد المراجعة أو تم إيقافه من قبل الإدارة العليا.', 'error');
+                    }
+                } else {
+                    Swal.fire('خطأ في المطابقة', 'الكود الذي أدخلته غير صحيح، يرجى التأكد والمحاولة مرة أخرى.', 'error');
+                }
+            } catch (e) {
+                Swal.fire('فقدان الاتصال', 'حدث خطأ في الاتصال بالسيرفر، يرجى التحقق من جودة الإنترنت.', 'error');
+            }
+        }
+
+        // تشغيل الرادار بعد الدخول أو عند وجود بيانات محفوظة
+        function initRadarApp() {
+            document.getElementById('navOfficeName').innerText = officeData.name;
+            document.getElementById('navCity').innerHTML = `<i class="fas fa-location-crosshairs text-[9px] mr-1"></i> ${officeData.city}`;
+
+            // نافذة الترحيب (مهمة لتفعيل الصوت في المتصفحات)
+            Swal.fire({
+                title: 'جاهز للعمل؟ 🐋',
+                text: `مكتب ${officeData.name} متصل الآن في ${officeData.city}`,
+                icon: 'info',
+                confirmButtonText: 'فتح الرادار',
+                allowOutsideClick: false
+            }).then(() => { fetchOrders(); });
+        }
+
+        // --------------------------------------------------------
+        // الكود التشغيلي للرادار (نفس السابق)
+        // --------------------------------------------------------
         async function fetchOrders() {
+            if(!officeData) return;
             try {
                 const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`);
                 allOrders = await res.json();
@@ -338,16 +415,28 @@
             renderCards();
         }
 
+        // تسجيل الخروج
         function logout() { 
             Swal.fire({
                 title: 'تسجيل الخروج', text: 'هل أنت متأكد من مغادرة الرادار؟', icon: 'warning',
                 showCancelButton: true, confirmButtonText: 'خروج', cancelButtonText: 'بقاء', confirmButtonColor: '#ef4444'
             }).then((result) => {
-                if (result.isConfirmed) { localStorage.removeItem('whale_office_data'); window.location.href = 'portal.html'; }
+                if (result.isConfirmed) { 
+                    localStorage.removeItem('whale_office_data'); 
+                    officeData = null;
+                    document.getElementById('portalOverlay').classList.remove('hidden', 'opacity-0', 'scale-110', 'pointer-events-none');
+                    document.getElementById('officeIdInput').value = '';
+                }
             });
         }
         
+        // تحديث البيانات كل 30 ثانية
         setInterval(fetchOrders, 30000);
+        
+        // دعم الدخول بزر Enter
+        document.getElementById('officeIdInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') loginOffice();
+        });
     </script>
 </body>
 </html>

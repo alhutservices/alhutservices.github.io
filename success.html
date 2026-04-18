@@ -3,176 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="docTitle">تم بنجاح | عائلة الحوت 🐋✨</title>
+    <title id="docTitle">تتبع الحجز | نظام الحوت 🐋</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        :root { --main-theme: #002349; --accent-theme: #D4AF37; }
-        body { font-family: 'Tajawal', sans-serif; background: #f0f4f8; overflow-x: hidden; }
-        .main-card { background: #ffffff !important; border-radius: 3.5rem; position: relative; z-index: 10; border-top: 12px solid var(--main-theme); }
-        .ticket-design { background: #ffffff !important; position: relative; border: 2px dashed #cbd5e1; border-radius: 1.5rem; }
-        .ticket-design::before, .ticket-design::after { content: ''; position: absolute; top: 50%; width: 26px; height: 26px; background: #f0f4f8; border-radius: 50%; transform: translateY(-50%); border: 2px dashed #cbd5e1; z-index: 5; }
-        .ticket-design::before { left: -15px; border-left: none; }
-        .ticket-design::after { right: -15px; border-right: none; }
+        :root { --main-theme: #020617; --accent-theme: #D4AF37; }
+        body { font-family: 'Tajawal', sans-serif; background: #f8fafc; overflow-x: hidden; }
+        
+        .premium-card { 
+            background: #ffffff; border-radius: 2.5rem; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            position: relative; overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        /* تأثيرات الرادار الحية للزبون */
+        .live-radar-box {
+            position: relative; width: 120px; height: 120px; margin: 0 auto;
+            border-radius: 50%; background: rgba(212, 175, 55, 0.05);
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .radar-sweep {
+            position: absolute; inset: 0; border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent 70%, rgba(212, 175, 55, 0.4) 100%);
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        /* شريط التقدم الحي */
+        .tracker-step { transition: all 0.5s ease; opacity: 0.4; }
+        .tracker-step.active { opacity: 1; transform: scale(1.05); }
+        .tracker-step.active .step-icon { background: var(--accent-theme); color: #000; border-color: var(--accent-theme); box-shadow: 0 0 15px rgba(212,175,55,0.5); }
+        .step-icon { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; border: 2px solid #cbd5e1; background: #fff; color: #cbd5e1; transition: 0.5s; z-index: 2; position: relative; }
+        .tracker-line { position: absolute; top: 17px; left: 30px; right: 30px; height: 3px; background: #e2e8f0; z-index: 1; }
+        .tracker-line-fill { height: 100%; background: var(--accent-theme); width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .ticket-box { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 1.5rem; position: relative; }
         .bounce-in { animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
-        @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.3); } 100% { opacity: 1; transform: scale(1); } }
-        .btn-download { background: rgba(212, 175, 55, 0.1); color: #b8962d; border: 1px solid rgba(212, 175, 55, 0.3); }
-        .no-capture { display: none !important; }
+        @keyframes bounceIn { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+        
+        .pulse-text { animation: pulseOpacity 1.5s infinite; }
+        @keyframes pulseOpacity { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
+<body class="flex items-center justify-center min-h-screen p-4 pb-10 pt-10">
 
     <audio id="successSound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
+    <audio id="matchSound" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
 
-    <div id="captureArea" class="max-w-md w-full main-card p-8 text-center bounce-in">
-        <div class="flex justify-center mb-2">
-            <dotlottie-player src="https://lottie.host/bc6e1e8b-b8f4-4a47-9759-368739194098/E8u7eR8zV5.json" background="transparent" speed="1" style="width: 150px; height: 150px;" loop autoplay></dotlottie-player>
-        </div>
-
-        <h1 id="mainGreeting" class="text-3xl font-black mb-1" style="color: var(--main-theme);">تم الحجز بنجاح!</h1>
-        <h2 id="userNameDisplay" class="text-xl font-black mb-2" style="color: var(--accent-theme);">...</h2>
+    <div id="captureArea" class="max-w-md w-full premium-card p-8 text-center bounce-in">
         
-        <div class="flex items-center justify-center gap-2 mb-6 text-slate-500">
-            <i class="fas fa-shield-check text-green-500"></i>
-            <p class="text-xs font-bold italic">تم إرسال بياناتك إلى خوادم الحوت</p>
+        <div id="radarContainer" class="live-radar-box mb-6">
+            <div class="radar-sweep" id="radarSweep"></div>
+            <i id="statusMainIcon" class="fas fa-satellite-dish text-4xl text-[#D4AF37] relative z-10"></i>
         </div>
 
-        <div class="ticket-design p-6 mb-6">
-            <p class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">REFERENCE NUMBER</p>
-            <p id="orderIDDisplay" class="text-3xl font-black tracking-tighter" style="color: var(--main-theme);">---</p>
-            
-            <div class="h-[1px] bg-slate-100 my-4"></div>
-            
-            <div class="grid grid-cols-2 gap-2 text-right text-[11px] font-bold text-slate-600">
-                <p>🚗 السيارة: <span id="carDisplay" class="text-slate-900">...</span></p>
-                <p>📅 التاريخ: <span id="dateDisplay" class="text-slate-900">...</span></p>
-            </div>
-
-            <div id="syncStatus" class="mt-4 flex items-center justify-center gap-2 text-[10px] font-bold text-green-600">
-                <i id="syncIcon" class="fas fa-check-double"></i> <span id="syncText">حجزك مؤكد ✅</span>
+        <h1 id="statusTitle" class="text-2xl font-black mb-2 text-slate-800">جاري معالجة الطلب...</h1>
+        <p id="statusDesc" class="text-sm font-bold text-slate-500 mb-6 pulse-text">نبحث في رادار الحوت عن أقرب مكتب متاح لخدمتك</p>
+        
+        <div class="relative mb-8 px-4">
+            <div class="tracker-line"><div class="tracker-line-fill" id="trackerFill"></div></div>
+            <div class="flex justify-between relative z-10">
+                <div class="tracker-step active flex flex-col items-center" id="step1">
+                    <div class="step-icon"><i class="fas fa-paper-plane"></i></div>
+                    <span class="text-[10px] font-bold mt-2 text-slate-600">إرسال</span>
+                </div>
+                <div class="tracker-step flex flex-col items-center" id="step2">
+                    <div class="step-icon"><i class="fas fa-search"></i></div>
+                    <span class="text-[10px] font-bold mt-2 text-slate-600">بحث</span>
+                </div>
+                <div class="tracker-step flex flex-col items-center" id="step3">
+                    <div class="step-icon"><i class="fas fa-handshake"></i></div>
+                    <span class="text-[10px] font-bold mt-2 text-slate-600">استلام</span>
+                </div>
             </div>
         </div>
 
-        <p class="text-[10px] text-slate-400 font-bold mb-6 px-4 leading-relaxed">
-            سيقوم فريق الدعم الفني بالتواصل معك خلال دقائق.
-        </p>
+        <div class="ticket-box p-5 mb-6 text-right">
+            <div class="flex justify-between items-start mb-4 border-b border-slate-200 pb-3">
+                <div>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1" style="font-family: 'Orbitron', sans-serif;">TRACKING ID</p>
+                    <p id="orderIDDisplay" class="text-2xl font-black text-slate-800 tracking-tighter" style="font-family: 'Orbitron', sans-serif;">---</p>
+                </div>
+                <div class="text-left">
+                    <p class="text-[9px] font-black text-slate-400 mb-1">العميل</p>
+                    <p id="userNameDisplay" class="text-sm font-bold text-slate-800 truncate w-24">...</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 text-xs font-bold text-slate-600">
+                <p><i class="fas fa-car text-[#D4AF37] ml-1"></i> <span id="carDisplay">...</span></p>
+                <p><i class="fas fa-calendar-alt text-[#D4AF37] ml-1"></i> <span id="dateDisplay">...</span></p>
+                <p class="col-span-2 bg-white p-2 rounded-lg border border-slate-200 mt-1">
+                    <i class="fas fa-building text-[#D4AF37] ml-1"></i> المكتب المنفذ: <span id="officeDisplay" class="text-slate-800 font-black">بانتظار التأكيد...</span>
+                </p>
+            </div>
+        </div>
 
         <div class="space-y-3" id="actionButtons">
-            <button onclick="downloadTicket()" class="w-full py-4 rounded-2xl font-black text-sm btn-download flex items-center justify-center gap-2 transition-all active:scale-95">
-                <i class="fas fa-camera"></i> حفظ تذكرة الحجز
+            <button onclick="downloadTicket()" class="w-full py-3.5 rounded-xl font-black text-sm bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center gap-2 transition-all">
+                <i class="fas fa-camera"></i> تصوير التذكرة
             </button>
-            <a href="index.html" class="block w-full py-5 rounded-2xl font-black text-xl shadow-xl text-white transition-all active:scale-95" style="background: var(--main-theme);">
-                العودة للرئيسية
-            </a>
+            
+            <button onclick="contactSupport()" id="supportBtn" class="w-full py-4 rounded-xl font-black text-sm bg-green-50 text-green-600 border border-green-200 flex items-center justify-center gap-2 transition-all hover:bg-green-100">
+                <i class="fab fa-whatsapp text-lg"></i> الإدارة المركزية
+            </button>
         </div>
     </div>
 
     <script>
         const u = new URLSearchParams(window.location.search);
-        // رابط سكريبت جوجل الخاص بك
+        // رابط السكريبت المركزي (المطور)
         const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
+        
+        let finalOrderID = u.get('order_id') || "HUT-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+        let currentStatus = "جديد";
+        let trackingInterval;
 
         window.onload = async () => {
-            // عرض البيانات الأساسية على الصفحة
+            // تعبئة البيانات الأولية
             document.getElementById('userNameDisplay').innerText = u.get('name') || "عميلنا العزيز";
             document.getElementById('carDisplay').innerText = u.get('car') || "غير محدد";
             document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('ar-EG');
-            
-            // تحديد رقم الطلب
-            let finalOrderID = u.get('order_id');
-            if (!finalOrderID) {
-                finalOrderID = "HUT-" + Math.random().toString(36).substr(2, 6).toUpperCase();
-            }
             document.getElementById('orderIDDisplay').innerText = "#" + finalOrderID;
 
-            // ضبط الألوان بناءً على نوع الخدمة
-            const serviceType = u.get('service') || u.get('type');
-            if(serviceType === 'زفاف' || serviceType === 'wedding') document.documentElement.style.setProperty('--main-theme', '#be185d');
-            else if(serviceType === 'تدريب قيادة' || serviceType === 'training') document.documentElement.style.setProperty('--main-theme', '#7c3aed');
-
-            // --- حل مشكلة التكرار ---
-            // التحقق مما إذا كان هذا الرقم قد تم إرساله مسبقاً في هذه الجلسة
+            // إرسال الطلب للسيرفر أو بدء التتبع مباشرة
             const sentOrders = JSON.parse(localStorage.getItem('sentHutOrders') || '{}');
             
-            if (sentOrders[finalOrderID]) {
-                // إذا تم إرساله سابقاً، نكتفي بعرض الصفحة بدون إعادة الإرسال
-                console.log("الطلب مرسل مسبقاً، تم منع التكرار ✅");
-                document.getElementById('syncText').innerText = "تم عرض الحجز المؤكد ✅";
-                return; 
-            }
-
-            // --- إجراءات الإرسال لأول مرة فقط ---
-            
-            // تشغيل الصوت والقصاصات الورقية
-            document.getElementById('successSound').play().catch(() => {});
-            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-
-            // معالجة رابط الموقع
-            let finalLocation = u.get('location_link');
-            if (!finalLocation || finalLocation === "#" || finalLocation === "null") {
-                const lat = u.get('lat');
-                const lng = u.get('lng');
-                finalLocation = (lat && lng) ? `https://www.google.com/maps?q=${lat},${lng}` : "غير متوفر";
-            }
-
-            // إرسال البيانات النهائية للسكريبت (POST)
-            try {
-                // تعديل بسيط ليتناسب مع المتغير d المتوقع في السكريبت الخاص بك (صورة 2)
-                await fetch(scriptURL, { 
-                    method: 'POST', 
-                    mode: 'no-cors', 
-                    body: JSON.stringify({
-                        order_id: finalOrderID, // السكريبت يقرأ d.order_id
-                        name: u.get('name'),   // السكريبت يقرأ d.name
-                        phone: u.get('phone'),
-                        car: u.get('car'),
-                        service: serviceType,
-                        location_link: finalLocation, // السكريبت يقرأ d.location_link ويضعه في العمود O
-                        province: u.get('province') || u.get('prov') || "غير محدد",
-                        // صورة 1 تظهر السعر في العمود I (رقم 9)، السكريبت يقرأ d.total_price
-                        total_price: u.get('total_price') || u.get('price') || 0, 
-                        date: new Date().toLocaleString('en-GB')
-                    })
-                });
-                
-                // بعد النجاح، نحفظ رقم الطلب في localStorage لمنع التكرار مستقبلاً
+            if (!sentOrders[finalOrderID]) {
+                document.getElementById('successSound').play().catch(() => {});
+                await submitNewOrder();
                 sentOrders[finalOrderID] = true;
                 localStorage.setItem('sentHutOrders', JSON.stringify(sentOrders));
-                console.log("تم إرسال البيانات بنجاح وتسجيل الطلب ✅");
-
-            } catch (e) { 
-                console.error("خطأ في المزامنة:", e);
-                document.getElementById('syncStatus').innerHTML = '<i class="fas fa-exclamation-triangle text-amber-500"></i> <span class="text-amber-600">جاري الحفظ محلياً...</span>';
             }
+
+            // بدء التتبع الحي للطلب كل 5 ثواني
+            startLiveTracking();
         };
 
-        // دالة تحميل التذكرة (تبقي كما هي)
+        async function submitNewOrder() {
+            let finalLocation = u.get('location_link') || (u.get('lat') ? `https://www.google.com/maps?q=$${u.get('lat')},${u.get('lng')}` : "غير متوفر");
+            
+            try {
+                await fetch(scriptURL, { 
+                    method: 'POST', mode: 'no-cors', 
+                    body: JSON.stringify({
+                        order_id: finalOrderID, name: u.get('name'), phone: u.get('phone'),
+                        car: u.get('car'), service: u.get('service') || u.get('type'),
+                        location_link: finalLocation, province: u.get('province') || u.get('prov') || "غير محدد",
+                        total_price: u.get('total_price') || u.get('price') || 0, addons: u.get('addons') || "بدون إضافات"
+                    })
+                });
+            } catch(e) { console.error("Error sending order"); }
+        }
+
+        // --- نظام التتبع الحي (Live Polling) ---
+        function startLiveTracking() {
+            // تحديث واجهة "البحث"
+            updateUIState("waiting");
+            
+            // فحص حالة الطلب من السيرفر كل 5 ثوانٍ
+            trackingInterval = setInterval(async () => {
+                try {
+                    const res = await fetch(`${scriptURL}?action=getAllOrders&t=${Date.now()}`);
+                    const orders = await res.json();
+                    const myOrder = orders.find(o => o.id === finalOrderID);
+                    
+                    if (myOrder) {
+                        if (myOrder.status !== currentStatus) {
+                            currentStatus = myOrder.status;
+                            handleStatusChange(myOrder);
+                        }
+                    }
+                } catch(e) { console.log("جاري إعادة الاتصال بالرادار..."); }
+            }, 5000);
+        }
+
+        function handleStatusChange(order) {
+            const status = order.status;
+            const office = order.office;
+
+            if (status.includes("تم الاستلام")) {
+                clearInterval(trackingInterval); // إيقاف البحث لأن المكتب استلم
+                document.getElementById('matchSound').play().catch(()=>{});
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                
+                document.getElementById('officeDisplay').innerText = office;
+                document.getElementById('officeDisplay').className = "text-green-600 font-black";
+                
+                updateUIState("matched", office);
+            } 
+            else if (status.includes("مكتمل") || status.includes("✅")) {
+                clearInterval(trackingInterval);
+                updateUIState("completed", office);
+            }
+            else if (status.includes("إلغاء") || status.includes("❌")) {
+                clearInterval(trackingInterval);
+                updateUIState("cancelled", office);
+            }
+        }
+
+        function updateUIState(state, officeName = "") {
+            const title = document.getElementById('statusTitle');
+            const desc = document.getElementById('statusDesc');
+            const icon = document.getElementById('statusMainIcon');
+            const sweep = document.getElementById('radarSweep');
+            const fill = document.getElementById('trackerFill');
+            
+            document.getElementById('step2').classList.add('active');
+
+            if (state === "waiting") {
+                fill.style.width = "50%";
+                title.innerText = "رادار الحوت يبحث...";
+                desc.innerText = "تم رفع طلبك للمكاتب في مدينتك، يرجى الانتظار بالصفحة.";
+            } 
+            else if (state === "matched") {
+                fill.style.width = "100%";
+                document.getElementById('step3').classList.add('active');
+                sweep.style.display = "none";
+                icon.className = "fas fa-handshake text-5xl text-green-500";
+                
+                title.innerText = "تم استلام طلبك! 🎉";
+                title.className = "text-2xl font-black mb-2 text-green-600";
+                desc.innerText = `رائع! مكتب (${officeName}) استلم طلبك للتو. لقد أرسلنا لهم رقمك وسيقومون بمراسلتك على الواتساب فوراً.`;
+                desc.classList.remove('pulse-text');
+
+                // تحويل زر الدعم ليكون أكثر تفاعلية
+                const btn = document.getElementById('supportBtn');
+                btn.innerHTML = `<i class="fab fa-whatsapp text-lg"></i> تواصل مع الإدارة إذا تأخروا`;
+                btn.className = "w-full py-4 rounded-xl font-black text-sm bg-slate-800 text-white shadow-lg flex items-center justify-center gap-2 transition-all hover:bg-slate-700 animate-pulse";
+            }
+        }
+
+        // رابط الواتساب الذكي للزبون
+        function contactSupport() {
+            const adminPhone = "9647713225471"; // رقمك
+            const msg = `مرحباً إدارة الحوت 🐋\nأنا أتابع طلبي رقم: #${finalOrderID}\nالسيارة: ${u.get('car')}\nالحالة الحالية التي تظهر لي: ${currentStatus}`;
+            window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // تحميل التذكرة
         async function downloadTicket() {
             const btn = event.currentTarget;
+            const originalHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner animate-spin"></i> جاري الحفظ...';
             const area = document.getElementById('captureArea');
             const actions = document.getElementById('actionButtons');
-            area.classList.remove('bounce-in'); 
-            actions.classList.add('no-capture');
+            actions.style.display = 'none';
 
             setTimeout(async () => {
                 try {
-                    const canvas = await html2canvas(area, { backgroundColor: "#f0f4f8", scale: 2, useCORS: true });
+                    const canvas = await html2canvas(area, { backgroundColor: "#f8fafc", scale: 2 });
                     const link = document.createElement('a');
-                    link.download = `Hut-Booking-${document.getElementById('orderIDDisplay').innerText}.png`;
+                    link.download = `Hut-Tracker-${finalOrderID}.png`;
                     link.href = canvas.toDataURL("image/png");
                     link.click();
-                } catch (e) {
-                    alert("يرجى تصوير الشاشة يدوياً لحفظ التذكرة");
-                } finally {
-                    actions.classList.remove('no-capture');
-                    btn.innerHTML = '<i class="fas fa-camera"></i> حفظ تذكرة الحجز';
+                } catch (e) { alert("حدث خطأ أثناء حفظ الصورة"); } 
+                finally {
+                    actions.style.display = 'block';
+                    btn.innerHTML = originalHTML;
                 }
             }, 100);
         }

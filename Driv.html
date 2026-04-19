@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نحلة كركوك 🐝 | لوحة الكابتن (نموذج عرض)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:'Cairo',sans-serif;
+      background:#faf9f6;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      padding:16px;
+    }
+    .card{
+      max-width:460px;
+      width:100%;
+      background:#ffffff;
+      border-radius:40px;
+      padding:28px 22px;
+      box-shadow:0 30px 50px -15px rgba(0,0,0,0.08), 0 0 0 1px rgba(251,191,36,0.2);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-bottom:20px;
+    }
+    .brand-icon{
+      background:#FBBF24;
+      width:52px;height:52px;
+      border-radius:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#1e1e1e;
+      font-size:28px;
+      box-shadow:0 10px 15px -5px rgba(251,191,36,0.3);
+    }
+    .brand-text h2{
+      font-size:1.5rem;
+      font-weight:900;
+      color:#1c1917;
+      margin:0;
+      line-height:1.2;
+    }
+    .brand-text span{
+      font-size:0.7rem;
+      font-weight:700;
+      color:#b45309;
+      background:#fef9c3;
+      padding:2px 10px;
+      border-radius:40px;
+    }
+    /* شريط الحالة (متصل / متاح) */
+    .status-bar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:#f5f5f4;
+      border-radius:60px;
+      padding:8px 12px 8px 8px;
+      margin-bottom:25px;
+      border:1px solid #e7e5e4;
+    }
+    .online-toggle{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .toggle-switch{
+      width:48px;
+      height:26px;
+      background:#10b981;
+      border-radius:40px;
+      position:relative;
+      box-shadow:inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .toggle-switch::after{
+      content:"";
+      width:22px;
+      height:22px;
+      background:white;
+      border-radius:50%;
+      position:absolute;
+      left:3px;
+      top:2px;
+    }
+    .badge-success{
+      background:#10b981;
+      color:white;
+      padding:4px 16px;
+      border-radius:40px;
+      font-weight:800;
+      font-size:0.8rem;
+    }
+    /* الإحصائيات */
+    .stats-mini{
+      display:flex;
+      gap:8px;
+      margin-bottom:25px;
+    }
+    .stat-chip{
+      background:#fef9c3;
+      border-radius:40px;
+      padding:6px 16px;
+      font-size:0.8rem;
+      font-weight:700;
+      color:#92400e;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      border:1px solid #fde68a;
+    }
+    /* الرادار الدائري */
+    .radar-wrapper{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      margin-bottom:30px;
+    }
+    .radar-circle{
+      width:150px;
+      height:150px;
+      border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, #fff3cd, #FBBF24);
+      border:4px solid #1e1e1e;
+      box-shadow:0 0 0 8px #fef9c3, 0 15px 25px rgba(251,191,36,0.2);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:12px;
+      position:relative;
+    }
+    .radar-sweep{
+      position:absolute;
+      width:100%;
+      height:100%;
+      border-radius:50%;
+      background:conic-gradient(from 0deg, #1e1e1e 0deg, transparent 60deg);
+      opacity:0.15;
+    }
+    .radar-text{
+      font-weight:900;
+      color:#1e1e1e;
+      text-align:center;
+    }
+    .radar-title{
+      font-size:1.1rem;
+    }
+    .radar-sub{
+      font-size:0.75rem;
+      color:#78716c;
+    }
+    /* قسم الطلبات */
+    .section-header{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin:20px 0 15px;
+    }
+    .section-header h3{
+      font-size:1.2rem;
+      font-weight:900;
+      color:#1c1917;
+      margin:0;
+    }
+    .order-card{
+      background:#faf9f6;
+      border-radius:24px;
+      padding:18px;
+      margin-bottom:15px;
+      border:1px solid #fde68a;
+    }
+    .order-header{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:12px;
+    }
+    .order-id{
+      font-weight:900;
+      font-size:1.1rem;
+    }
+    .order-price{
+      font-weight:900;
+      color:#b45309;
+    }
+    .restaurant{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:15px;
+      font-weight:700;
+    }
+    .action-buttons{
+      display:flex;
+      gap:10px;
+      margin-top:12px;
+    }
+    .btn-primary{
+      background:#FBBF24;
+      border:none;
+      border-radius:18px;
+      padding:14px 18px;
+      font-weight:900;
+      font-size:1rem;
+      color:#1c1917;
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      box-shadow:0 8px 15px rgba(251,191,36,0.2);
+      border:1px solid #fcd34d;
+      cursor:default;
+    }
+    .btn-outline{
+      background:white;
+      border:1px solid #e7e5e4;
+      border-radius:18px;
+      padding:14px 18px;
+      font-weight:700;
+      color:#57534e;
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      cursor:default;
+    }
+    .footer-note{
+      text-align:center;
+      color:#a8a29e;
+      font-weight:500;
+      font-size:0.7rem;
+      margin-top:20px;
+    }
+    .divider{
+      height:2px;
+      background:repeating-linear-gradient(90deg, #FBBF24 0px, #FBBF24 6px, #fff 6px, #fff 12px);
+      margin:20px 0 5px;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <!-- العلامة التجارية -->
+  <div class="brand">
+    <div class="brand-icon">🐝</div>
+    <div class="brand-text">
+      <h2>أحمد الكابتن</h2>
+      <span>نحلة كركوك · أسطول النخبة</span>
+    </div>
+  </div>
+
+  <!-- شريط الحالة -->
+  <div class="status-bar">
+    <div class="online-toggle">
+      <i class="ph ph-power" style="color:#10b981; font-size:1.3rem;"></i>
+      <span style="font-weight:700;">متاح للطلبات</span>
+    </div>
+    <div class="toggle-switch"></div>
+    <span class="badge-success">🟢 نشط الآن</span>
+  </div>
+
+  <!-- إحصائيات مصغرة -->
+  <div class="stats-mini">
+    <div class="stat-chip"><i class="ph ph-check-circle"></i> ٢٤٥ طلب</div>
+    <div class="stat-chip"><i class="ph ph-currency-circle-dollar"></i> ٣٢٬٥٠٠ د.ع</div>
+    <div class="stat-chip"><i class="ph ph-star"></i> ٤.٩</div>
+  </div>
+
+  <!-- الرادار -->
+  <div class="radar-wrapper">
+    <div class="radar-circle">
+      <div class="radar-sweep"></div>
+      <span style="font-size:3rem;">🐝</span>
+    </div>
+    <div class="radar-text">
+      <div class="radar-title">الرادار النشط</div>
+      <div class="radar-sub">جاري البحث عن طلبات قريبة...</div>
+    </div>
+  </div>
+
+  <!-- الطلبات المتاحة -->
+  <div class="section-header">
+    <i class="ph ph-bell-ringing" style="color:#FBBF24; font-size:1.4rem;"></i>
+    <h3>طلبات جديدة بالقرب منك</h3>
+  </div>
+
+  <!-- طلب 1 -->
+  <div class="order-card">
+    <div class="order-header">
+      <span class="order-id">#NHL-2410</span>
+      <span class="order-price">12,500 د.ع</span>
+    </div>
+    <div class="restaurant">
+      <i class="ph ph-storefront"></i>
+      <span>مطعم النحل الذهبي · القادسية</span>
+    </div>
+    <div style="font-size:0.85rem; color:#57534e; margin-bottom:5px;">
+      <i class="ph ph-clock"></i> الآن · 1.2 كم
+    </div>
+    <div class="action-buttons">
+      <button class="btn-primary" onclick="return false;"><i class="ph ph-check-fat"></i> قبول</button>
+      <button class="btn-outline" onclick="return false;"><i class="ph ph-x"></i> تجاهل</button>
+    </div>
+  </div>
+
+  <!-- طلب 2 -->
+  <div class="order-card">
+    <div class="order-header">
+      <span class="order-id">#NHL-2409</span>
+      <span class="order-price">9,000 د.ع</span>
+    </div>
+    <div class="restaurant">
+      <i class="ph ph-storefront"></i>
+      <span>مشاوي الخلية · شارع القدس</span>
+    </div>
+    <div style="font-size:0.85rem; color:#57534e; margin-bottom:5px;">
+      <i class="ph ph-clock"></i> الآن · 0.8 كم
+    </div>
+    <div class="action-buttons">
+      <button class="btn-primary" onclick="return false;"><i class="ph ph-check-fat"></i> قبول</button>
+      <button class="btn-outline" onclick="return false;"><i class="ph ph-x"></i> تجاهل</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- طلب قيد التنفيذ -->
+  <div class="section-header">
+    <i class="ph ph-package" style="color:#FBBF24;"></i>
+    <h3>الطلبات قيد التنفيذ</h3>
+  </div>
+
+  <div class="order-card" style="background:#fff7e6;">
+    <div class="order-header">
+      <span class="order-id">#NHL-2405</span>
+      <span class="order-price">18,000 د.ع</span>
+    </div>
+    <div class="restaurant">
+      <i class="ph ph-storefront"></i>
+      <span>مطعم النحل الذهبي</span>
+    </div>
+    <!-- شريط تقدم -->
+    <div style="margin:15px 0 10px;">
+      <div style="display:flex; justify-content:space-between; font-size:0.7rem; margin-bottom:5px;">
+        <span>متجه للمطعم</span>
+        <span>🚴 5 دقائق</span>
+      </div>
+      <div style="height:6px; background:#e7e5e4; border-radius:10px;">
+        <div style="width:40%; height:6px; background:#FBBF24; border-radius:10px;"></div>
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button class="btn-primary" style="background:#1e1e1e; color:#FBBF24;" onclick="return false;"><i class="ph ph-map-pin"></i> تأكيد الوصول</button>
+      <button class="btn-outline" onclick="return false;"><i class="ph ph-phone"></i> اتصال</button>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    🐝 نحلة كركوك · تجربة مخصصة
+  </div>
+</div>
+
+<script>
+  // كود شكلي فقط للعرض – لا وظائف فعلية
+</script>
+</body>
+</html>

@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
-  <!-- Leaflet للخريطة -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
@@ -29,7 +28,6 @@
       position:relative;
       box-shadow:0 0 30px rgba(0,0,0,0.03);
     }
-    /* رأس ملون */
     .top-bar{
       background:#FBBF24;
       padding:28px 20px 20px 20px;
@@ -80,7 +78,6 @@
       color:#FBBF24;
       font-size:20px;
     }
-    /* بطاقات الإحصائيات */
     .stats-row{
       display:flex;
       gap:12px;
@@ -108,7 +105,6 @@
       color:#b45309;
       margin-top:4px;
     }
-    /* خريطة */
     .map-container{
       margin:0 20px 20px;
       border-radius:32px;
@@ -123,7 +119,6 @@
       width:100%;
       z-index:1;
     }
-    /* شريط بحث */
     .search-box{
       padding:5px 20px 15px;
     }
@@ -138,7 +133,6 @@
       border:1px solid #e7e5e4;
       font-weight:500;
     }
-    /* عنوان القسم */
     .section-header{
       display:flex;
       align-items:center;
@@ -160,7 +154,6 @@
       color:#b45309;
       border:1px solid #fde68a;
     }
-    /* بطاقة طلب حديثة (أفقية) */
     .order-row{
       display:flex;
       align-items:center;
@@ -236,7 +229,6 @@
       border:1px solid #e7e5e4;
       color:#57534e;
     }
-    /* قائمة سفلية مختلفة */
     .bottom-bar{
       position:fixed;
       bottom:0;
@@ -284,13 +276,13 @@
 </head>
 <body>
 <div class="app">
-  <!-- رأس أصفر -->
+  <!-- الرأس -->
   <div class="top-bar">
     <div class="top-row">
       <div class="admin-info">
         <div class="admin-avatar">👑</div>
         <div class="admin-name">
-          <h4>أحمد المدير</h4>
+          <h4>مهند</h4>
           <span>نحلة كركوك · مركز العمليات</span>
         </div>
       </div>
@@ -298,7 +290,7 @@
     </div>
   </div>
   
-  <!-- الإحصائيات -->
+  <!-- مؤشرات الأداء -->
   <div class="stats-row">
     <div class="stat-item">
       <div class="stat-num">24</div>
@@ -314,12 +306,12 @@
     </div>
   </div>
   
-  <!-- خريطة كركوك -->
+  <!-- خريطة العمليات -->
   <div class="map-container">
     <div id="map"></div>
   </div>
   
-  <!-- شريط البحث -->
+  <!-- حقل البحث -->
   <div class="search-box">
     <div class="search-input">
       <i class="ph ph-magnifying-glass"></i>
@@ -327,18 +319,18 @@
     </div>
   </div>
   
-  <!-- الرادار (عنوان) -->
+  <!-- قسم الطلبات النشطة -->
   <div class="section-header">
-    <h3><i class="ph ph-radar" style="color:#FBBF24;"></i> الطلبات الحية</h3>
+    <h3><i class="ph ph-radar" style="color:#FBBF24;"></i> الطلبات النشطة</h3>
     <span class="pill">8 طلبات</span>
   </div>
   
-  <!-- طلب 1 (بانتظار كابتن) -->
+  <!-- طلب قيد التوجيه -->
   <div class="order-row">
     <div class="order-main">
       <div class="order-title">
         <span class="order-id">#NHL-2410</span>
-        <span class="order-badge"><i class="ph ph-clock"></i> بانتظار كابتن</span>
+        <span class="order-badge"><i class="ph ph-clock"></i> قيد التوجيه</span>
       </div>
       <div class="resto"><i class="ph ph-storefront"></i> مطعم النحل الذهبي · القادسية</div>
       <div class="price">12,500 د.ع</div>
@@ -346,40 +338,40 @@
     <div class="action-btn"><i class="ph ph-user-plus"></i></div>
   </div>
   
-  <!-- طلب 2 (متوجه) -->
+  <!-- طلب قيد التنفيذ -->
   <div class="order-row">
     <div class="order-main">
       <div class="order-title">
         <span class="order-id">#NHL-2409</span>
-        <span class="order-badge blue"><i class="ph ph-arrows-clockwise"></i> متوجه للمطعم</span>
+        <span class="order-badge blue"><i class="ph ph-arrows-clockwise"></i> قيد التنفيذ</span>
       </div>
       <div class="resto"><i class="ph ph-storefront"></i> مشاوي الخلية · شارع القدس</div>
       <div class="price">9,000 د.ع</div>
       <div style="display:flex; align-items:center; gap:6px; margin-top:5px;">
-        <span style="font-size:0.8rem; background:#f5f3f0; padding:2px 10px; border-radius:20px;"><i class="ph ph-bicycle"></i> أحمد</span>
+        <span style="font-size:0.8rem; background:#f5f3f0; padding:2px 10px; border-radius:20px;"><i class="ph ph-bicycle"></i> الكابتن أحمد</span>
       </div>
     </div>
     <div class="action-btn outline"><i class="ph ph-phone-call"></i></div>
   </div>
   
-  <!-- طلب 3 (سيادي) -->
+  <!-- طلب سيادي -->
   <div class="order-row">
     <div class="order-main">
       <div class="order-title">
         <span class="order-id">#NHL-2405</span>
-        <span class="order-badge green"><i class="ph ph-crown"></i> سيادي</span>
+        <span class="order-badge green"><i class="ph ph-crown"></i> تعيين إداري</span>
       </div>
       <div class="resto"><i class="ph ph-storefront"></i> مطعم النحل الذهبي · رأس دوميز</div>
       <div class="price">18,000 د.ع</div>
       <div style="display:flex; align-items:center; gap:6px; margin-top:5px;">
-        <span style="font-size:0.8rem; background:#f5f3f0; padding:2px 10px; border-radius:20px;"><i class="ph ph-bicycle"></i> سارة</span>
-        <span class="emergency-chip"><i class="ph ph-warning"></i> تدخل يدوي</span>
+        <span style="font-size:0.8rem; background:#f5f3f0; padding:2px 10px; border-radius:20px;"><i class="ph ph-bicycle"></i> الكابتن سارة</span>
+        <span class="emergency-chip"><i class="ph ph-warning"></i> أولوية قصوى</span>
       </div>
     </div>
     <div class="action-btn"><i class="ph ph-arrows-out"></i></div>
   </div>
   
-  <!-- طلب 4 (تأخر) -->
+  <!-- طلب متأخر -->
   <div class="order-row">
     <div class="order-main">
       <div class="order-title">
@@ -394,7 +386,7 @@
   
   <div class="footer-space"></div>
   
-  <!-- قائمة سفلية -->
+  <!-- شريط التنقل السفلي -->
   <div class="bottom-bar">
     <div class="b-nav active"><i class="ph ph-radar"></i><span>العمليات</span></div>
     <div class="b-nav"><i class="ph ph-chart-bar"></i><span>التقارير</span></div>
@@ -404,28 +396,13 @@
 </div>
 
 <script>
-  // تهيئة خريطة Leaflet (ثابتة للعرض)
-  const map = L.map('map', {
-    zoomControl: false,
-    attributionControl: false
-  }).setView([35.468, 44.392], 13);
-  
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19
-  }).addTo(map);
-  
-  // إضافة علامات تجريبية
-  L.marker([35.468, 44.392]).addTo(map)
-    .bindPopup('<b>نحلة كركوك</b><br>مركز العمليات').openPopup();
+  const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([35.468, 44.392], 13);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+  L.marker([35.468, 44.392]).addTo(map).bindPopup('<b>نحلة كركوك</b><br>مركز العمليات').openPopup();
   L.marker([35.472, 44.398]).addTo(map).bindPopup('مطعم النحل الذهبي');
-  L.marker([35.460, 44.385]).addTo(map).bindPopup('كابتن أحمد');
-  L.marker([35.475, 44.405]).addTo(map).bindPopup('كابتن سارة');
-  
-  // تعطيل التفاعل (للعرض فقط)
-  map.dragging.disable();
-  map.touchZoom.disable();
-  map.doubleClickZoom.disable();
-  map.scrollWheelZoom.disable();
+  L.marker([35.460, 44.385]).addTo(map).bindPopup('الكابتن أحمد');
+  L.marker([35.475, 44.405]).addTo(map).bindPopup('الكابتن سارة');
+  map.dragging.disable(); map.touchZoom.disable(); map.doubleClickZoom.disable(); map.scrollWheelZoom.disable();
 </script>
 </body>
 </html>

@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نحلة كركوك 🐝 | لوحة المطعم (نموذج عرض)</title>
-  <!-- خط Cairo -->
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <!-- Bootstrap للشبكة والأزرار (للمظهر فقط) -->
+  <title>نحلة كركوك 🐝 | لوحة المطعم (Modern)</title>
+  <!-- خطوط عصرية -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Bootstrap للشبكة (للمظهر فقط) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
-  <!-- أيقونات Lucide (ثابتة للعرض) -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- أيقونات Phosphor (أكثر حداثة من Lucide) -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
   <style>
     * {
       margin: 0;
@@ -19,472 +19,494 @@
 
     body {
       font-family: 'Cairo', sans-serif;
-      background: #1a1a1a; /* خلفية داكنة */
-      color: #1e1e1e;
-      padding: 20px 0 40px;
+      background: #0d0d0d; /* أسود عميق */
+      color: #ffffff;
+      padding: 30px 20px;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    /* شعار نحلة كركوك */
-    .brand-header {
-      text-align: center;
-      margin-bottom: 20px;
+    /* شعار نحلة كركوك - مودرن */
+    .brand-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 520px;
+      margin-bottom: 30px;
+      padding: 0 10px;
     }
-    .brand-icon {
-      font-size: 3.5rem;
-      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.4));
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    .brand-name {
-      font-size: 2.2rem;
+    .logo-icon {
+      background: #FBBF24;
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0d0d0d;
+      font-size: 28px;
+      box-shadow: 0 8px 20px rgba(251, 191, 36, 0.3);
+    }
+    .logo-text {
+      font-size: 1.8rem;
       font-weight: 900;
       color: #FBBF24;
-      text-shadow: 3px 3px 0 #000;
-      letter-spacing: 2px;
+      letter-spacing: -0.5px;
     }
-    .brand-sub {
-      color: #FDE68A;
-      font-weight: 600;
-      background: rgba(0,0,0,0.4);
-      display: inline-block;
-      padding: 4px 20px;
-      border-radius: 30px;
-      backdrop-filter: blur(4px);
-      font-size: 0.9rem;
+    .logo-badge {
+      background: #2a2a2a;
+      padding: 6px 14px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #aaa;
+      border: 1px solid #3a3a3a;
     }
 
     /* الحاوية الرئيسية */
-    .demo-container {
-      max-width: 500px;
+    .dashboard {
+      max-width: 520px;
       width: 100%;
-      padding: 0 15px;
     }
 
-    /* بطاقة المحتوى الرئيسية */
-    .glass-card {
-      background: #FEF9C3; /* أصفر فاتح */
-      border-radius: 36px;
-      padding: 25px 20px;
-      border: 3px solid #1a1a1a;
-      box-shadow: 8px 8px 0 #000, 0 15px 30px rgba(0,0,0,0.5);
+    /* بطاقة ترحيب مع ملخص سريع */
+    .welcome-card {
+      background: linear-gradient(145deg, #1a1a1a 0%, #111 100%);
+      border-radius: 32px;
+      padding: 25px;
       margin-bottom: 25px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* زخرفة خلفية سداسية */
-    .glass-card::before {
-      content: "";
-      position: absolute;
-      top: -40px;
-      left: -40px;
-      width: 200px;
-      height: 200px;
-      background: repeating-linear-gradient(45deg, #FDE68A 0px, #FDE68A 8px, #FEF3C7 8px, #FEF3C7 16px);
-      opacity: 0.4;
-      transform: rotate(15deg);
-      border-radius: 50%;
-      z-index: 0;
-    }
-
-    .glass-card > * {
-      position: relative;
-      z-index: 2;
-    }
-
-    /* الهيدر داخل البطاقة */
-    .app-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 3px dashed #1a1a1a;
+      border: 1px solid #2a2a2a;
+      box-shadow: 0 20px 35px -5px rgba(0,0,0,0.7);
     }
     .restaurant-name {
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: #1a1a1a;
-    }
-    .badge-partner {
-      background: #1a1a1a;
-      color: #FBBF24;
-      padding: 4px 12px;
-      border-radius: 40px;
-      font-size: 0.7rem;
-      font-weight: 800;
-      border: 1px solid #FBBF24;
-    }
-
-    /* بطاقات الإحصائيات */
-    .stat-row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 25px;
-    }
-    .stat-box {
-      background: white;
-      border-radius: 24px;
-      padding: 12px 8px;
-      border: 2px solid #1a1a1a;
-      box-shadow: 4px 4px 0 #000;
-      text-align: center;
-      flex: 1;
-    }
-    .stat-box h3 {
-      margin: 0;
-      font-weight: 900;
-      color: #d97706;
       font-size: 1.8rem;
-    }
-    .stat-box p {
-      margin: 0;
-      font-size: 0.7rem;
-      font-weight: 800;
-      color: #1a1a1a;
-      opacity: 0.8;
-    }
-
-    /* عنوان القسم */
-    .section-title {
-      font-size: 1.3rem;
       font-weight: 900;
-      color: #1a1a1a;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
+      color: white;
+      margin-bottom: 5px;
     }
-    .section-title i {
-      color: #d97706;
+    .status-row {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .metric {
+      flex: 1;
+      background: #0d0d0d;
+      border-radius: 20px;
+      padding: 15px 12px;
+      border: 1px solid #2a2a2a;
+    }
+    .metric-value {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #FBBF24;
+      line-height: 1.2;
+    }
+    .metric-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .trend-up {
+      color: #10b981;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-top: 5px;
     }
 
-    /* تبويب نوع الطلب */
-    .order-type-toggle {
+    /* شريط التبويب (حديث) */
+    .tab-bar {
       display: flex;
-      background: #fde68a;
-      border-radius: 20px;
-      padding: 5px;
-      border: 2px solid #1a1a1a;
+      background: #151515;
+      border-radius: 40px;
+      padding: 6px;
       margin-bottom: 25px;
+      border: 1px solid #2a2a2a;
     }
-    .toggle-btn {
+    .tab {
       flex: 1;
       text-align: center;
-      padding: 12px;
-      font-weight: 800;
-      color: #1a1a1a;
-      border-radius: 16px;
+      padding: 14px 10px;
+      font-weight: 700;
+      color: #888;
+      border-radius: 30px;
       cursor: default;
+      transition: none;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       font-size: 0.9rem;
-      transition: none;
     }
-    .toggle-btn.active {
+    .tab.active {
       background: #FBBF24;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-      border: 1px solid #1a1a1a;
+      color: #0d0d0d;
+      box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2);
     }
 
-    /* حقول الإدخال (ثابتة للعرض) */
-    .custom-input {
-      background: white;
-      border: 2px solid #1a1a1a;
-      border-radius: 18px;
-      padding: 14px 16px;
-      font-weight: 700;
-      width: 100%;
-      font-size: 1rem;
-      color: #1a1a1a;
-      margin-bottom: 15px;
-      box-shadow: 3px 3px 0 #000;
-    }
-    .custom-input::placeholder {
-      color: #a8a29e;
-    }
-
-    /* زر كاميرا */
-    .camera-btn {
-      background: #1a1a1a;
-      border: 2px solid #FBBF24;
-      border-radius: 20px;
+    /* بطاقة إرسال طلب جديدة */
+    .order-card {
+      background: #151515;
+      border-radius: 28px;
       padding: 25px;
-      text-align: center;
-      color: #FBBF24;
-      font-weight: 800;
+      border: 1px solid #2a2a2a;
+      margin-bottom: 25px;
+    }
+    .section-header {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 10px;
-      box-shadow: 4px 4px 0 #000;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .section-header h3 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: white;
+      margin: 0;
+    }
+    .badge-new {
+      background: #FBBF24;
+      color: #0d0d0d;
+      padding: 4px 10px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 900;
+      text-transform: uppercase;
     }
 
-    /* زر الإرسال */
-    .btn-action {
-      background: #FBBF24;
-      color: #1a1a1a;
-      border: 2px solid #1a1a1a;
-      border-radius: 20px;
-      padding: 18px;
-      font-weight: 900;
+    /* حقل إدخال حديث */
+    .input-modern {
+      background: #0d0d0d;
+      border: 1px solid #333;
+      border-radius: 18px;
+      padding: 16px 18px;
       width: 100%;
-      font-size: 1.2rem;
+      font-family: 'Cairo', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: white;
+      margin-bottom: 16px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .input-modern:focus {
+      border-color: #FBBF24;
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+    }
+    .input-modern::placeholder {
+      color: #666;
+      font-weight: 400;
+    }
+
+    /* زر رئيسي */
+    .btn-primary {
+      background: #FBBF24;
+      color: #0d0d0d;
+      border: none;
+      border-radius: 18px;
+      padding: 18px 24px;
+      font-weight: 900;
+      font-size: 1.1rem;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
-      box-shadow: 5px 5px 0 #000;
-      margin-top: 20px;
+      box-shadow: 0 8px 20px rgba(251, 191, 36, 0.25);
       cursor: default;
+      transition: none;
+      margin-top: 10px;
     }
 
-    /* بطاقة طلب حي */
-    .live-order-card {
-      background: white;
+    /* قائمة الطلبات النشطة */
+    .orders-feed {
+      margin-top: 10px;
+    }
+    .order-item {
+      background: #151515;
       border-radius: 24px;
-      padding: 18px;
-      border: 2px solid #1a1a1a;
-      box-shadow: 5px 5px 0 #000;
+      padding: 20px;
+      border: 1px solid #2a2a2a;
       margin-bottom: 15px;
+      transition: none;
     }
     .order-header {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 10px;
+      align-items: center;
+      margin-bottom: 12px;
     }
     .order-id {
-      font-weight: 900;
       font-size: 1.2rem;
+      font-weight: 800;
+      color: white;
     }
-    .driver-pill {
-      background: #1a1a1a;
-      color: #FBBF24;
+    .order-status {
+      background: #2a2a2a;
+      padding: 6px 14px;
       border-radius: 40px;
-      padding: 4px 14px;
+      font-size: 0.75rem;
       font-weight: 700;
+      color: #FBBF24;
+    }
+    .order-detail {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+      color: #aaa;
       font-size: 0.9rem;
+    }
+    .driver-chip {
+      background: #0d0d0d;
+      border-radius: 40px;
+      padding: 8px 16px;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 10px;
+      font-weight: 700;
+      border: 1px solid #333;
     }
-    .progress-tracker {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 15px;
-      position: relative;
+    .driver-chip i {
+      color: #FBBF24;
     }
-    .progress-step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      width: 25%;
+    .progress-modern {
+      height: 6px;
+      background: #2a2a2a;
+      border-radius: 10px;
+      margin: 15px 0 10px;
     }
-    .progress-dot {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: #e2e8f0;
-      border: 2px solid #1a1a1a;
-    }
-    .progress-step.active .progress-dot {
+    .progress-fill {
+      width: 66%;
+      height: 6px;
       background: #FBBF24;
-    }
-    .progress-label {
-      font-size: 0.6rem;
-      font-weight: 800;
+      border-radius: 10px;
     }
 
-    /* خطوط النحلة */
-    .bee-stripes {
-      height: 6px;
-      background: repeating-linear-gradient(90deg, #1a1a1a 0px, #1a1a1a 10px, #FBBF24 10px, #FBBF24 20px);
-      border-radius: 4px;
-      margin: 15px 0;
-      border: 1px solid black;
+    /* زر إجراء */
+    .action-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #444;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: default;
+    }
+
+    /* خط النحلة (زخرفة) */
+    .bee-divider {
+      height: 3px;
+      background: repeating-linear-gradient(90deg, #FBBF24 0px, #FBBF24 8px, #0d0d0d 8px, #0d0d0d 16px);
+      margin: 20px 0;
+      opacity: 0.3;
     }
 
     /* تذييل */
-    .footer-note {
+    .demo-footer {
       text-align: center;
-      color: #FDE68A;
-      font-weight: 600;
-      margin-top: 15px;
+      color: #666;
+      font-weight: 500;
+      margin-top: 25px;
+      font-size: 0.8rem;
     }
   </style>
 </head>
 <body>
 
-<div class="brand-header">
-  <div class="brand-icon">🐝🍯</div>
-  <div class="brand-name">نحلة كركوك</div>
-  <div class="brand-sub">لوحة المطعم · نموذج عرض</div>
+<div class="brand-bar">
+  <div class="logo">
+    <div class="logo-icon">🐝</div>
+    <div class="logo-text">نحلة</div>
+  </div>
+  <div class="logo-badge">كركوك · الإصدار 2.0</div>
 </div>
 
-<div class="demo-container">
+<div class="dashboard">
   
-  <!-- البطاقة الرئيسية -->
-  <div class="glass-card">
-    <!-- هيدر المطعم -->
-    <div class="app-header">
-      <div>
-        <div class="restaurant-name">مطعم النحل الذهبي</div>
-        <span class="badge-partner">🐝 شريك نحلة</span>
+  <!-- بطاقة الترحيب والإحصائيات -->
+  <div class="welcome-card">
+    <div class="restaurant-name">مطعم النحل الذهبي</div>
+    <div style="display:flex; gap:8px; margin-top:5px;">
+      <span style="background:#2a2a2a; padding:4px 12px; border-radius:20px; font-size:0.8rem; color:#FBBF24;">🍯 شريك مميز</span>
+      <span style="background:#2a2a2a; padding:4px 12px; border-radius:20px; font-size:0.8rem;">🟢 مفتوح الآن</span>
+    </div>
+    
+    <div class="status-row">
+      <div class="metric">
+        <div class="metric-value">1,284</div>
+        <div class="metric-label">طلب هذا الشهر</div>
+        <div class="trend-up"><i class="ph ph-trend-up"></i> +12% عن الشهر الماضي</div>
       </div>
-      <div style="color:#1a1a1a;">
-        <i data-lucide="log-out" width="20" height="20"></i>
+      <div class="metric">
+        <div class="metric-value">246.5K</div>
+        <div class="metric-label">العمولة المستحقة</div>
+        <div class="trend-up"><i class="ph ph-currency-circle-dollar"></i> ≈ 2,460,000 د.ع</div>
       </div>
     </div>
+  </div>
 
-    <!-- إحصائيات -->
-    <div class="stat-row">
-      <div class="stat-box">
-        <h3>127</h3>
-        <p>طلبات الشهر</p>
-      </div>
-      <div class="stat-box">
-        <h3>84,500</h3>
-        <p>العمولة (د.ع)</p>
-      </div>
-      <div class="stat-box">
-        <h3>مناصفة</h3>
-        <p>نظام الدفع</p>
-      </div>
+  <!-- تبويب رئيسي -->
+  <div class="tab-bar">
+    <div class="tab active">
+      <i class="ph ph-paper-plane-tilt"></i>
+      <span>طلب جديد</span>
     </div>
-
-    <!-- قسم إرسال طلب -->
-    <div class="section-title">
-      <i data-lucide="send" width="24" height="24"></i>
-      <span>إرسال طلب توصيل</span>
+    <div class="tab">
+      <i class="ph ph-clock-countdown"></i>
+      <span>الطلبات النشطة</span>
     </div>
+  </div>
 
-    <!-- تبويب يدوي / تصوير -->
-    <div class="order-type-toggle">
-      <div class="toggle-btn active">
-        <i data-lucide="keyboard" width="18" height="18"></i> إدخال يدوي
-      </div>
-      <div class="toggle-btn">
-        <i data-lucide="camera" width="18" height="18"></i> تصوير سريع
-      </div>
+  <!-- قسم إرسال طلب جديد (تصميم حديث) -->
+  <div class="order-card">
+    <div class="section-header">
+      <h3>إنشاء طلب توصيل</h3>
+      <span class="badge-new">سريع</span>
     </div>
-
-    <!-- نموذج الإدخال (ثابت) -->
+    
     <form onsubmit="return false;">
-      <!-- قائمة المناطق -->
-      <select class="custom-input" style="appearance: none;">
-        <option selected disabled>-- اختر منطقة الزبون --</option>
-        <option>حي القادسية (توصيل: 3000)</option>
-        <option>شارع القدس (توصيل: 2500)</option>
-        <option>رأس دوميز (توصيل: 2000)</option>
-        <option>أخرى</option>
+      <!-- اختيار المنطقة بقائمة منسدلة حديثة -->
+      <select class="input-modern" style="appearance:none;">
+        <option selected disabled>اختر منطقة التسليم</option>
+        <option>القادسية - 3,000 د.ع</option>
+        <option>شارع القدس - 2,500 د.ع</option>
+        <option>رأس دوميز - 2,000 د.ع</option>
+        <option>تسعيرة خاصة</option>
       </select>
       
-      <!-- إجمالي الحساب -->
-      <input type="number" class="custom-input" placeholder="إجمالي الحساب (دينار)" value="15000">
+      <!-- حقل السعر -->
+      <input type="number" class="input-modern" placeholder="إجمالي الفاتورة (دينار عراقي)" value="22,500">
       
-      <!-- رقم هاتف الزبون -->
+      <!-- رقم هاتف الزبون مع شارة ذكية -->
       <div style="position:relative;">
-        <input type="tel" class="custom-input" placeholder="07XXXXXXXXX" value="07701234567">
-        <span style="position:absolute; left:15px; top:18px; background:#10b981; color:white; padding:2px 8px; border-radius:20px; font-size:0.7rem;">✓ نُظِّف</span>
+        <input type="tel" class="input-modern" placeholder="رقم هاتف الزبون" value="0770 123 4567">
+        <span style="position:absolute; left:15px; top:16px; background:#10b981; color:white; padding:4px 10px; border-radius:40px; font-size:0.7rem; font-weight:800;">✓ نُظِّف</span>
       </div>
       
       <!-- تفاصيل -->
-      <input type="text" class="custom-input" placeholder="تفاصيل إضافية (اختياري)" value="قرب صيدلية السلام">
+      <input type="text" class="input-modern" placeholder="ملاحظات (اختياري)" value="باب المطبخ الخلفي">
       
       <!-- زر الإرسال -->
-      <button type="submit" class="btn-action">
-        🚀 إرسال للرادار <i data-lucide="zap" width="20" height="20"></i>
+      <button type="submit" class="btn-primary">
+        <i class="ph ph-rocket-launch" style="font-size:1.4rem;"></i>
+        إطلاق الطلب إلى الأسطول
       </button>
     </form>
-
-    <!-- رسالة نجاح -->
-    <div style="background:#10b981; color:white; border-radius:20px; padding:15px; margin-top:20px; display:flex; gap:15px; border:2px solid #1a1a1a;">
-      <i data-lucide="check-circle" width="30" height="30"></i>
+    
+    <!-- تأكيد سريع -->
+    <div style="background:#1a2a1a; border-radius:16px; padding:14px; margin-top:18px; border:1px solid #2a4a2a; display:flex; gap:12px;">
+      <i class="ph ph-check-circle" style="color:#10b981; font-size:1.5rem;"></i>
       <div>
-        <div class="fw-black">تم الإطلاق بنجاح!</div>
-        <small>الطلب الآن نشط ومحمي في الرادار 📡</small>
+        <div style="font-weight:800; color:#10b981;">تم الإرسال بنجاح</div>
+        <div style="font-size:0.8rem; color:#aaa;">الطلب #NHL-2410 قيد البحث عن أقرب كابتن</div>
       </div>
     </div>
   </div>
 
-  <!-- بطاقة الطلبات النشطة -->
-  <div class="glass-card" style="margin-top: -5px;">
-    <!-- تبويب الطلبات -->
-    <div class="order-type-toggle" style="margin-bottom:20px;">
-      <div class="toggle-btn active py-2">
-        <i data-lucide="activity" width="18" height="18"></i> قيد التوصيل
+  <!-- قائمة الطلبات الجارية -->
+  <div class="orders-feed">
+    <div class="section-header" style="margin-bottom:15px;">
+      <h3 style="font-size:1.2rem;">الطلبات قيد التنفيذ</h3>
+      <span style="background:#FBBF24; color:#0d0d0d; padding:2px 10px; border-radius:40px; font-weight:800;">2</span>
+    </div>
+    
+    <!-- طلب 1 -->
+    <div class="order-item">
+      <div class="order-header">
+        <span class="order-id">#NHL-2408</span>
+        <span class="order-status"><i class="ph ph-arrows-clockwise"></i> متجه للمطعم</span>
       </div>
-      <div class="toggle-btn py-2">
-        <i data-lucide="check-circle-2" width="18" height="18"></i> سجل اليوم
+      <div class="order-detail">
+        <i class="ph ph-map-pin" style="color:#FBBF24;"></i>
+        <span>حي القادسية · 22,500 د.ع</span>
+      </div>
+      <div class="driver-chip">
+        <i class="ph ph-bicycle"></i>
+        <span>الكابتن: أحمد كريم</span>
+        <i class="ph ph-phone-call" style="margin-right:auto; color:#FBBF24;"></i>
+      </div>
+      <div class="progress-modern">
+        <div class="progress-fill" style="width:40%;"></div>
+      </div>
+      <div class="action-group">
+        <div class="btn-secondary"><i class="ph ph-check-fat"></i> جاهز للاستلام</div>
+        <div class="btn-secondary"><i class="ph ph-x-circle"></i> إلغاء</div>
       </div>
     </div>
-
-    <!-- طلب نشط 1 -->
-    <div class="live-order-card">
+    
+    <!-- طلب 2 -->
+    <div class="order-item">
       <div class="order-header">
-        <span class="order-id">#NHL-2401</span>
-        <span class="driver-pill"><i data-lucide="bike" width="14" height="14"></i> أحمد</span>
+        <span class="order-id">#NHL-2405</span>
+        <span class="order-status"><i class="ph ph-package"></i> بالطريق للزبون</span>
       </div>
-      <div><i data-lucide="map-pin" width="14" height="14" style="color:#d97706;"></i> حي القادسية</div>
-      <div class="bee-stripes"></div>
-      <div class="progress-tracker">
-        <div class="progress-step active">
-          <div class="progress-dot"></div>
-          <span class="progress-label">بانتظار</span>
-        </div>
-        <div class="progress-step active">
-          <div class="progress-dot"></div>
-          <span class="progress-label">متوجه</span>
-        </div>
-        <div class="progress-step">
-          <div class="progress-dot"></div>
-          <span class="progress-label">بالمطعم</span>
-        </div>
-        <div class="progress-step">
-          <div class="progress-dot"></div>
-          <span class="progress-label">بالطريق</span>
-        </div>
+      <div class="order-detail">
+        <i class="ph ph-map-pin" style="color:#FBBF24;"></i>
+        <span>شارع القدس · 18,000 د.ع</span>
       </div>
-      <div style="display:flex; justify-content:flex-end; margin-top:10px;">
-        <span style="background:#FEF3C7; padding:5px 12px; border-radius:20px; border:1px solid black; font-weight:800;">🍽️ جاهز للاستلام</span>
+      <div class="driver-chip">
+        <i class="ph ph-bicycle"></i>
+        <span>الكابتن: سارة محمد</span>
+        <i class="ph ph-phone-call" style="margin-right:auto; color:#FBBF24;"></i>
       </div>
-    </div>
-
-    <!-- طلب نشط 2 -->
-    <div class="live-order-card">
-      <div class="order-header">
-        <span class="order-id">#NHL-2398</span>
-        <span class="driver-pill"><i data-lucide="bike" width="14" height="14"></i> علي</span>
+      <div class="progress-modern">
+        <div class="progress-fill" style="width:85%;"></div>
       </div>
-      <div><i data-lucide="map-pin" width="14" height="14" style="color:#d97706;"></i> شارع القدس</div>
-      <div class="progress-tracker">
-        <div class="progress-step active"><div class="progress-dot"></div><span class="progress-label">بانتظار</span></div>
-        <div class="progress-step"><div class="progress-dot"></div><span class="progress-label">متوجه</span></div>
-        <div class="progress-step"><div class="progress-dot"></div><span class="progress-label">بالمطعم</span></div>
-        <div class="progress-step"><div class="progress-dot"></div><span class="progress-label">بالطريق</span></div>
-      </div>
-      <div style="display:flex; gap:10px; margin-top:12px;">
-        <button style="background:#FBBF24; border:2px solid black; border-radius:20px; padding:5px 12px; font-weight:800;">📞 اتصال</button>
-        <button style="background:#1a1a1a; color:#FBBF24; border:2px solid black; border-radius:20px; padding:5px 12px; font-weight:800;">🗺️ خريطة</button>
+      <div style="background:#1a1a1a; border-radius:16px; padding:12px; margin-top:12px; text-align:center; color:#FBBF24; font-weight:700;">
+        🎉 الطلب في الطريق للتسليم
       </div>
     </div>
   </div>
+  
+  <div class="bee-divider"></div>
+  
+  <!-- سجل سريع (أرشيف) -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+    <span style="font-weight:700; color:#aaa;"><i class="ph ph-clock-counter-clockwise"></i> آخر الطلبات المكتملة</span>
+    <span style="color:#FBBF24; font-weight:800;">اليوم: 345,000 د.ع</span>
+  </div>
+  <div style="background:#151515; border-radius:20px; padding:15px; border:1px solid #2a2a2a;">
+    <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #2a2a2a;">
+      <span>#NHL-2399</span>
+      <span>الكابتن علي</span>
+      <span style="color:#FBBF24;">12,500 د.ع</span>
+    </div>
+    <div style="display:flex; justify-content:space-between; padding:10px 0;">
+      <span>#NHL-2397</span>
+      <span>الكابتن أحمد</span>
+      <span style="color:#FBBF24;">9,000 د.ع</span>
+    </div>
+  </div>
 
-  <div class="footer-note">
-    🐝 تصميم خاص لنحلة كركوك · جاهز للعرض
+  <div class="demo-footer">
+    🐝 نحلة كركوك · تجربة مودرن مختلفة تماماً
   </div>
 </div>
 
 <script>
-  // تفعيل أيقونات Lucide فقط (بدون منطق)
-  if (typeof lucide !== 'undefined') lucide.createIcons();
+  // لا يوجد أي JavaScript وظيفي، فقط للعرض
 </script>
-
 </body>
 </html>

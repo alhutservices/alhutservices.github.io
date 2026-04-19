@@ -28,7 +28,6 @@
       position:relative;
       box-shadow:0 25px 50px -12px rgba(0,0,0,0.15);
     }
-    /* رأس متطور بتأثير زجاجي */
     .top-bar{
       background:linear-gradient(145deg, #FBBF24 0%, #F59E0B 100%);
       padding:32px 20px 30px 20px;
@@ -103,7 +102,6 @@
       border:1px solid rgba(255,255,255,0.2);
       box-shadow:0 6px 10px rgba(0,0,0,0.1);
     }
-    /* مؤشرات الأداء المتطورة */
     .stats-row{
       display:flex;
       gap:12px;
@@ -146,7 +144,6 @@
       color:#10b981;
       margin-top:6px;
     }
-    /* خريطة محسّنة */
     .map-container{
       margin:0 16px 20px;
       border-radius:36px;
@@ -157,7 +154,6 @@
       width:calc(100% - 32px);
     }
     #map{ height:100%; width:100%; z-index:1; }
-    /* شريط بحث متطور */
     .search-box{
       padding:5px 16px 18px;
     }
@@ -175,7 +171,6 @@
       backdrop-filter:blur(4px);
     }
     .search-input i{ color:#b45309; }
-    /* رأس القسم */
     .section-header{
       display:flex;
       align-items:center;
@@ -199,19 +194,19 @@
       border:1px solid #fde68a;
       box-shadow:0 2px 6px rgba(0,0,0,0.02);
     }
-    /* بطاقة طلب عالمية (أفقية متطورة) */
-    .order-row{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+    .order-row, .fleet-row, .analytics-card, .profile-card{
       background:#ffffff;
       margin:8px 16px;
       padding:18px 20px;
       border-radius:32px;
       border:1px solid #fef3c7;
       box-shadow:0 8px 18px -6px rgba(0,0,0,0.05);
-      transition:all 0.15s;
       backdrop-filter:blur(4px);
+    }
+    .order-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
     }
     .order-main{ flex:1; }
     .order-title{
@@ -287,7 +282,7 @@
       font-size:24px;
       box-shadow:0 12px 18px -6px rgba(251,191,36,0.4);
       border:1px solid #fcd34d;
-      cursor:default;
+      cursor:pointer;
     }
     .action-btn.outline{
       background:white;
@@ -295,7 +290,6 @@
       border:1px solid #e7e5e4;
       color:#57534e;
     }
-    /* شريط التنقل السفلي عالمي */
     .bottom-bar{
       position:fixed;
       bottom:0;
@@ -319,6 +313,8 @@
       color:#a8a29e;
       font-size:0.7rem;
       font-weight:700;
+      cursor:pointer;
+      transition:0.1s;
     }
     .b-nav.active{ color:#b45309; }
     .b-nav i{ font-size:1.7rem; margin-bottom:4px; }
@@ -336,6 +332,38 @@
     .footer-space{ height:15px; }
     .spark-line{ display:flex; align-items:flex-end; height:16px; gap:2px; margin-left:8px; }
     .spark{ width:3px; background:#b45309; border-radius:2px; }
+
+    /* أقسام المحتوى */
+    .content-pane{ display:none; }
+    .content-pane.active{ display:block; }
+
+    /* التحليلات */
+    .chart-placeholder{
+      background:linear-gradient(145deg, #fef9c3, #fde68a);
+      border-radius:20px;
+      padding:20px;
+      margin:16px 0;
+    }
+    .fleet-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .profile-card{
+      display:flex;
+      align-items:center;
+      gap:16px;
+    }
+    .profile-avatar{
+      width:70px;height:70px;
+      background:#0f0f0f;
+      border-radius:24px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#FBBF24;
+      font-size:32px;
+    }
   </style>
 </head>
 <body>
@@ -352,121 +380,121 @@
       <div class="notify-icon"><i class="ph ph-bell-ringing"></i></div>
     </div>
   </div>
-  
-  <!-- مؤشرات أداء متطورة -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-num">24</div>
-      <div class="stat-lbl">الطلبات النشطة</div>
-      <div class="trend"><i class="ph ph-trend-up"></i> +12%</div>
+
+  <!-- أقسام المحتوى القابلة للتبديل -->
+  <!-- 1. العمليات (الرئيسية) -->
+  <div id="pane-ops" class="content-pane active">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num">24</div><div class="stat-lbl">الطلبات النشطة</div><div class="trend"><i class="ph ph-trend-up"></i> +12%</div></div>
+      <div class="stat-card"><div class="stat-num">12</div><div class="stat-lbl">كباتن ميدان</div><div class="trend"><i class="ph ph-users"></i> 4 متاح</div></div>
+      <div class="stat-card"><div class="stat-num">8</div><div class="stat-lbl">مطاعم</div><div class="trend"><i class="ph ph-storefront"></i> 6 نشطة</div></div>
     </div>
-    <div class="stat-card">
-      <div class="stat-num">12</div>
-      <div class="stat-lbl">كباتن ميدان</div>
-      <div class="trend"><i class="ph ph-users"></i> 4 متاح</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">8</div>
-      <div class="stat-lbl">مطاعم</div>
-      <div class="trend"><i class="ph ph-storefront"></i> 6 نشطة</div>
-    </div>
-  </div>
-  
-  <!-- خريطة ذكية -->
-  <div class="map-container">
-    <div id="map"></div>
-  </div>
-  
-  <!-- بحث سريع -->
-  <div class="search-box">
-    <div class="search-input">
-      <i class="ph ph-magnifying-glass"></i>
-      <span>بحث عن طلب، كابتن، أو مطعم...</span>
-    </div>
-  </div>
-  
-  <!-- الطلبات النشطة -->
-  <div class="section-header">
-    <h3><i class="ph ph-radar" style="color:#FBBF24; margin-left:8px;"></i> لوحة العمليات</h3>
-    <span class="pill">8 طلبات</span>
-  </div>
-  
-  <!-- طلب 1: قيد التوجيه مع sparkline -->
-  <div class="order-row">
-    <div class="order-main">
-      <div class="order-title">
-        <span class="order-id">#NHL-2410</span>
-        <span class="order-badge"><i class="ph ph-clock"></i> قيد التوجيه</span>
-        <span class="spark-line">
-          <span class="spark" style="height:8px;"></span><span class="spark" style="height:12px;"></span><span class="spark" style="height:6px;"></span><span class="spark" style="height:14px;"></span>
-        </span>
+    <div class="map-container"><div id="map"></div></div>
+    <div class="search-box"><div class="search-input"><i class="ph ph-magnifying-glass"></i><span>بحث عن طلب، كابتن، أو مطعم...</span></div></div>
+    <div class="section-header"><h3><i class="ph ph-radar" style="color:#FBBF24; margin-left:8px;"></i> لوحة العمليات</h3><span class="pill">8 طلبات</span></div>
+    <div class="order-row">
+      <div class="order-main">
+        <div class="order-title"><span class="order-id">#NHL-2410</span><span class="order-badge"><i class="ph ph-clock"></i> قيد التوجيه</span><span class="spark-line"><span class="spark" style="height:8px;"></span><span class="spark" style="height:12px;"></span><span class="spark" style="height:6px;"></span><span class="spark" style="height:14px;"></span></span></div>
+        <div class="resto"><i class="ph ph-storefront"></i> مطعم النحل الذهبي · القادسية</div>
+        <div class="price">12,500 د.ع</div>
+        <div class="meta-row"><span class="driver-tag"><i class="ph ph-timer"></i> منذ 3 دقائق</span></div>
       </div>
-      <div class="resto"><i class="ph ph-storefront"></i> مطعم النحل الذهبي · القادسية</div>
-      <div class="price">12,500 د.ع</div>
-      <div class="meta-row"><span class="driver-tag"><i class="ph ph-timer"></i> منذ 3 دقائق</span></div>
+      <div class="action-btn"><i class="ph ph-user-plus"></i></div>
     </div>
-    <div class="action-btn"><i class="ph ph-user-plus"></i></div>
-  </div>
-  
-  <!-- طلب 2: قيد التنفيذ مع مؤشر تقدم -->
-  <div class="order-row">
-    <div class="order-main">
-      <div class="order-title">
-        <span class="order-id">#NHL-2409</span>
-        <span class="order-badge blue"><i class="ph ph-arrows-clockwise"></i> قيد التنفيذ</span>
+    <div class="order-row">
+      <div class="order-main">
+        <div class="order-title"><span class="order-id">#NHL-2409</span><span class="order-badge blue"><i class="ph ph-arrows-clockwise"></i> قيد التنفيذ</span></div>
+        <div class="resto"><i class="ph ph-storefront"></i> مشاوي الخلية · شارع القدس</div>
+        <div class="price">9,000 د.ع</div>
+        <div class="meta-row"><span class="driver-tag"><i class="ph ph-bicycle"></i> الكابتن أحمد</span><div class="progress-indicator"><div class="progress-fill" style="width:45%;"></div></div></div>
       </div>
-      <div class="resto"><i class="ph ph-storefront"></i> مشاوي الخلية · شارع القدس</div>
-      <div class="price">9,000 د.ع</div>
-      <div class="meta-row">
-        <span class="driver-tag"><i class="ph ph-bicycle"></i> الكابتن أحمد</span>
-        <div class="progress-indicator"><div class="progress-fill" style="width:45%;"></div></div>
-      </div>
+      <div class="action-btn outline"><i class="ph ph-phone-call"></i></div>
     </div>
-    <div class="action-btn outline"><i class="ph ph-phone-call"></i></div>
-  </div>
-  
-  <!-- طلب 3: تعيين إداري -->
-  <div class="order-row">
-    <div class="order-main">
-      <div class="order-title">
-        <span class="order-id">#NHL-2405</span>
-        <span class="order-badge green"><i class="ph ph-crown"></i> تعيين إداري</span>
+    <div class="order-row">
+      <div class="order-main">
+        <div class="order-title"><span class="order-id">#NHL-2405</span><span class="order-badge green"><i class="ph ph-crown"></i> تعيين إداري</span></div>
+        <div class="resto"><i class="ph ph-storefront"></i> مطعم النحل الذهبي · رأس دوميز</div>
+        <div class="price">18,000 د.ع</div>
+        <div class="meta-row"><span class="driver-tag"><i class="ph ph-bicycle"></i> الكابتن سارة</span><span class="emergency-chip"><i class="ph ph-warning"></i> أولوية قصوى</span></div>
       </div>
-      <div class="resto"><i class="ph ph-storefront"></i> مطعم النحل الذهبي · رأس دوميز</div>
-      <div class="price">18,000 د.ع</div>
-      <div class="meta-row">
-        <span class="driver-tag"><i class="ph ph-bicycle"></i> الكابتن سارة</span>
-        <span class="emergency-chip"><i class="ph ph-warning"></i> أولوية قصوى</span>
-      </div>
+      <div class="action-btn"><i class="ph ph-arrows-out"></i></div>
     </div>
-    <div class="action-btn"><i class="ph ph-arrows-out"></i></div>
-  </div>
-  
-  <!-- طلب 4: متأخر -->
-  <div class="order-row">
-    <div class="order-main">
-      <div class="order-title">
-        <span class="order-id">#NHL-2398</span>
-        <span class="order-badge"><i class="ph ph-hourglass"></i> تأخر 8 دقائق</span>
+    <div class="order-row">
+      <div class="order-main">
+        <div class="order-title"><span class="order-id">#NHL-2398</span><span class="order-badge"><i class="ph ph-hourglass"></i> تأخر 8 دقائق</span></div>
+        <div class="resto"><i class="ph ph-storefront"></i> بيتزا الريم · حي العسكري</div>
+        <div class="price">7,500 د.ع</div>
       </div>
-      <div class="resto"><i class="ph ph-storefront"></i> بيتزا الريم · حي العسكري</div>
-      <div class="price">7,500 د.ع</div>
+      <div class="action-btn outline"><i class="ph ph-chat"></i></div>
     </div>
-    <div class="action-btn outline"><i class="ph ph-chat"></i></div>
   </div>
-  
+
+  <!-- 2. التحليلات -->
+  <div id="pane-analytics" class="content-pane">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num">1,284</div><div class="stat-lbl">إجمالي الطلبات</div><div class="trend"><i class="ph ph-trend-up"></i> +8.2%</div></div>
+      <div class="stat-card"><div class="stat-num">246.5k</div><div class="stat-lbl">الإيرادات (د.ع)</div><div class="trend"><i class="ph ph-trend-up"></i> +5.1%</div></div>
+      <div class="stat-card"><div class="stat-num">4.8</div><div class="stat-lbl">التقييم</div><div class="trend">⭐ ⭐ ⭐ ⭐ ⭐</div></div>
+    </div>
+    <div class="section-header"><h3><i class="ph ph-chart-line" style="color:#FBBF24;"></i> الأداء الأسبوعي</h3><span class="pill">آخر 7 أيام</span></div>
+    <div class="chart-placeholder" style="display:flex; justify-content:space-around; padding:25px;">
+      <div style="text-align:center;"><span style="font-weight:900;">₊</span><div style="width:20px; height:70px; background:#fde68a; border-radius:12px; margin-top:5px;"><div style="height:60%; background:#b45309; border-radius:12px;"></div></div><span>أحد</span></div>
+      <div style="text-align:center;"><span style="font-weight:900;">₊</span><div style="width:20px; height:70px; background:#fde68a; border-radius:12px; margin-top:5px;"><div style="height:80%; background:#b45309; border-radius:12px;"></div></div><span>إثنين</span></div>
+      <div style="text-align:center;"><span style="font-weight:900;">₊</span><div style="width:20px; height:70px; background:#fde68a; border-radius:12px; margin-top:5px;"><div style="height:45%; background:#b45309; border-radius:12px;"></div></div><span>ثلاثاء</span></div>
+      <div style="text-align:center;"><span style="font-weight:900;">₊</span><div style="width:20px; height:70px; background:#fde68a; border-radius:12px; margin-top:5px;"><div style="height:90%; background:#b45309; border-radius:12px;"></div></div><span>أربعاء</span></div>
+      <div style="text-align:center;"><span style="font-weight:900;">₊</span><div style="width:20px; height:70px; background:#fde68a; border-radius:12px; margin-top:5px;"><div style="height:70%; background:#b45309; border-radius:12px;"></div></div><span>خميس</span></div>
+    </div>
+    <div class="section-header"><h3><i class="ph ph-pizza"></i> أفضل المطاعم</h3></div>
+    <div class="order-row"><div><span class="fw-bold">1. مطعم النحل الذهبي</span><span class="text-muted ms-3">342 طلب</span></div><span class="price">+18%</span></div>
+    <div class="order-row"><div><span class="fw-bold">2. مشاوي الخلية</span><span class="text-muted ms-3">287 طلب</span></div><span class="price">+12%</span></div>
+    <div class="order-row"><div><span class="fw-bold">3. بيتزا الريم</span><span class="text-muted ms-3">201 طلب</span></div><span class="price">+5%</span></div>
+  </div>
+
+  <!-- 3. الأسطول -->
+  <div id="pane-fleet" class="content-pane">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num">12</div><div class="stat-lbl">إجمالي الكباتن</div></div>
+      <div class="stat-card"><div class="stat-num">4</div><div class="stat-lbl">متاحون الآن</div></div>
+      <div class="stat-card"><div class="stat-num">8</div><div class="stat-lbl">قيد التنفيذ</div></div>
+    </div>
+    <div class="section-header"><h3><i class="ph ph-users"></i> الكباتن النشطون</h3><span class="pill">4 متاح</span></div>
+    <div class="fleet-row order-row"><div><span class="fw-bold">أحمد</span><span class="text-muted ms-2">🟢 متاح</span></div><span>4.9 ⭐</span><span>2 طلبات</span><div class="action-btn outline" style="width:40px;height:40px;"><i class="ph ph-phone"></i></div></div>
+    <div class="fleet-row order-row"><div><span class="fw-bold">سارة</span><span class="text-muted ms-2">🟡 مشغولة</span></div><span>4.8 ⭐</span><span>3 طلبات</span><div class="action-btn outline" style="width:40px;height:40px;"><i class="ph ph-phone"></i></div></div>
+    <div class="fleet-row order-row"><div><span class="fw-bold">علي</span><span class="text-muted ms-2">🟢 متاح</span></div><span>4.7 ⭐</span><span>0 طلبات</span><div class="action-btn outline" style="width:40px;height:40px;"><i class="ph ph-phone"></i></div></div>
+    <div class="section-header"><h3><i class="ph ph-garage"></i> مركبات الأسطول</h3></div>
+    <div class="order-row"><i class="ph ph-bicycle"></i> دراجة نارية · 6 متاحة</div>
+    <div class="order-row"><i class="ph ph-car"></i> سيارة · 4 متاحة</div>
+  </div>
+
+  <!-- 4. الحساب -->
+  <div id="pane-account" class="content-pane">
+    <div class="profile-card order-row">
+      <div class="profile-avatar">👑</div>
+      <div><h4 class="fw-bold mb-1">مهند</h4><span class="text-muted">المدير التنفيذي · Nahla Command™</span></div>
+    </div>
+    <div class="section-header"><h3><i class="ph ph-gear"></i> الإعدادات</h3></div>
+    <div class="order-row"><i class="ph ph-bell"></i> الإشعارات <span class="ms-auto"><span class="badge bg-success">مفعلة</span></span></div>
+    <div class="order-row"><i class="ph ph-moon"></i> الوضع الليلي <span class="ms-auto"><span class="badge bg-secondary">تلقائي</span></span></div>
+    <div class="order-row"><i class="ph ph-currency-circle-dollar"></i> العملة <span class="ms-auto">دينار عراقي (د.ع)</span></div>
+    <div class="section-header"><h3><i class="ph ph-info"></i> الدعم</h3></div>
+    <div class="order-row"><i class="ph ph-lifebuoy"></i> مركز المساعدة</div>
+    <div class="order-row"><i class="ph ph-chats"></i> تواصل مع الدعم</div>
+    <div class="order-row text-danger"><i class="ph ph-sign-out"></i> تسجيل الخروج</div>
+  </div>
+
   <div class="footer-space"></div>
-  
+
   <!-- شريط التنقل السفلي -->
   <div class="bottom-bar">
-    <div class="b-nav active"><i class="ph ph-radar"></i><span>العمليات</span></div>
-    <div class="b-nav"><i class="ph ph-chart-line"></i><span>التحليلات</span></div>
-    <div class="b-nav"><i class="ph ph-buildings"></i><span>الأسطول</span></div>
-    <div class="b-nav"><i class="ph ph-user-circle"></i><span>الحساب</span></div>
+    <div class="b-nav active" data-pane="ops"><i class="ph ph-radar"></i><span>العمليات</span></div>
+    <div class="b-nav" data-pane="analytics"><i class="ph ph-chart-line"></i><span>التحليلات</span></div>
+    <div class="b-nav" data-pane="fleet"><i class="ph ph-buildings"></i><span>الأسطول</span></div>
+    <div class="b-nav" data-pane="account"><i class="ph ph-user-circle"></i><span>الحساب</span></div>
   </div>
 </div>
 
 <script>
+  // تهيئة الخريطة
   const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([35.468, 44.392], 13);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
   L.marker([35.468, 44.392], {icon: L.divIcon({className:'', html:'<div style="background:#FBBF24; width:18px;height:18px;border-radius:50%;border:3px solid white;box-shadow:0 4px 8px rgba(0,0,0,0.2);"></div>', iconSize:[18,18]})}).addTo(map).bindPopup('Nahla Command HQ');
@@ -474,6 +502,46 @@
   L.marker([35.460, 44.385]).addTo(map).bindPopup('الكابتن أحمد');
   L.marker([35.475, 44.405]).addTo(map).bindPopup('الكابتن سارة');
   map.dragging.disable(); map.touchZoom.disable(); map.doubleClickZoom.disable(); map.scrollWheelZoom.disable();
+
+  // منطق التبويبات
+  const navItems = document.querySelectorAll('.b-nav');
+  const panes = {
+    ops: document.getElementById('pane-ops'),
+    analytics: document.getElementById('pane-analytics'),
+    fleet: document.getElementById('pane-fleet'),
+    account: document.getElementById('pane-account')
+  };
+
+  function switchPane(paneId) {
+    // إخفاء جميع الأجزاء
+    Object.values(panes).forEach(p => p.classList.remove('active'));
+    // إظهار الجزء المطلوب
+    panes[paneId].classList.add('active');
+    // تحديث نشاط الأيقونات
+    navItems.forEach(item => {
+      item.classList.remove('active');
+      if (item.dataset.pane === paneId) item.classList.add('active');
+    });
+    // إعادة رسم الخريطة عند العودة للعمليات
+    if (paneId === 'ops') setTimeout(() => map.invalidateSize(), 100);
+  }
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const pane = item.dataset.pane;
+      if (pane) switchPane(pane);
+    });
+  });
+
+  // معالجة أزرار الإجراءات (للتفاعل الشكلي)
+  document.querySelectorAll('.action-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // تأثير بسيط للتوضيح
+      btn.style.transform = 'scale(0.9)';
+      setTimeout(() => btn.style.transform = '', 100);
+    });
+  });
 </script>
 </body>
 </html>

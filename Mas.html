@@ -7,6 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  <!-- Leaflet للخريطة -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{
@@ -29,7 +32,7 @@
     /* رأس ملون */
     .top-bar{
       background:#FBBF24;
-      padding:28px 20px 40px 20px;
+      padding:28px 20px 20px 20px;
       border-bottom-left-radius:32px;
       border-bottom-right-radius:32px;
       color:#1c1917;
@@ -81,8 +84,8 @@
     .stats-row{
       display:flex;
       gap:12px;
-      margin-top:-20px;
-      padding:0 10px;
+      margin-top:-10px;
+      padding:0 10px 20px;
     }
     .stat-item{
       flex:1;
@@ -105,9 +108,24 @@
       color:#b45309;
       margin-top:4px;
     }
+    /* خريطة */
+    .map-container{
+      margin:0 20px 20px;
+      border-radius:32px;
+      overflow:hidden;
+      border:2px solid #fde68a;
+      box-shadow:0 10px 20px rgba(0,0,0,0.05);
+      height:200px;
+      width:calc(100% - 40px);
+    }
+    #map{
+      height:100%;
+      width:100%;
+      z-index:1;
+    }
     /* شريط بحث */
     .search-box{
-      padding:20px 20px 5px;
+      padding:5px 20px 15px;
     }
     .search-input{
       background:#f5f3f0;
@@ -153,7 +171,6 @@
       border-radius:28px;
       border:1px solid #fde68a;
       box-shadow:0 4px 8px rgba(0,0,0,0.02);
-      transition:all 0.1s;
     }
     .order-main{
       display:flex;
@@ -242,7 +259,6 @@
       color:#a8a29e;
       font-size:0.7rem;
       font-weight:700;
-      transition:0.1s;
     }
     .b-nav.active{
       color:#b45309;
@@ -251,7 +267,6 @@
       font-size:1.6rem;
       margin-bottom:2px;
     }
-    /* شارة الطوارئ */
     .emergency-chip{
       background:#fee2e2;
       border-radius:30px;
@@ -281,7 +296,6 @@
       </div>
       <div class="notify-icon"><i class="ph ph-bell-ringing"></i></div>
     </div>
-    <!-- يمكن إضافة ملخص سريع -->
   </div>
   
   <!-- الإحصائيات -->
@@ -298,6 +312,11 @@
       <div class="stat-num">8</div>
       <div class="stat-lbl">مطاعم</div>
     </div>
+  </div>
+  
+  <!-- خريطة كركوك -->
+  <div class="map-container">
+    <div id="map"></div>
   </div>
   
   <!-- شريط البحث -->
@@ -373,10 +392,9 @@
     <div class="action-btn outline"><i class="ph ph-chat"></i></div>
   </div>
   
-  <!-- مساحة إضافية -->
   <div class="footer-space"></div>
   
-  <!-- قائمة سفلية جديدة -->
+  <!-- قائمة سفلية -->
   <div class="bottom-bar">
     <div class="b-nav active"><i class="ph ph-radar"></i><span>العمليات</span></div>
     <div class="b-nav"><i class="ph ph-chart-bar"></i><span>التقارير</span></div>
@@ -384,5 +402,30 @@
     <div class="b-nav"><i class="ph ph-user"></i><span>الملف</span></div>
   </div>
 </div>
+
+<script>
+  // تهيئة خريطة Leaflet (ثابتة للعرض)
+  const map = L.map('map', {
+    zoomControl: false,
+    attributionControl: false
+  }).setView([35.468, 44.392], 13);
+  
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19
+  }).addTo(map);
+  
+  // إضافة علامات تجريبية
+  L.marker([35.468, 44.392]).addTo(map)
+    .bindPopup('<b>نحلة كركوك</b><br>مركز العمليات').openPopup();
+  L.marker([35.472, 44.398]).addTo(map).bindPopup('مطعم النحل الذهبي');
+  L.marker([35.460, 44.385]).addTo(map).bindPopup('كابتن أحمد');
+  L.marker([35.475, 44.405]).addTo(map).bindPopup('كابتن سارة');
+  
+  // تعطيل التفاعل (للعرض فقط)
+  map.dragging.disable();
+  map.touchZoom.disable();
+  map.doubleClickZoom.disable();
+  map.scrollWheelZoom.disable();
+</script>
 </body>
 </html>

@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>نحلة كركوك · إرسال طلب</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{
       font-family:'Cairo',sans-serif;
-      background:#fefce8; /* أصفر باهت جداً */
+      background:#faf9f6;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -19,101 +19,151 @@
       padding:16px;
     }
     .card{
-      max-width:480px;
+      max-width:460px;
       width:100%;
       background:#ffffff;
-      border-radius:36px;
-      padding:28px 24px;
-      box-shadow:0 20px 35px -5px rgba(0,0,0,0.05), 0 0 0 1px rgba(251,191,36,0.2);
-      border:1px solid #fff3c9;
+      border-radius:40px;
+      padding:28px 22px;
+      box-shadow:0 30px 50px -15px rgba(0,0,0,0.08), 0 0 0 1px rgba(251,191,36,0.2);
     }
     .brand{
       display:flex;
       align-items:center;
-      gap:12px;
-      margin-bottom:20px;
+      gap:14px;
+      margin-bottom:18px;
     }
     .brand-icon{
       background:#FBBF24;
-      width:48px;height:48px;
-      border-radius:18px;
+      width:52px;height:52px;
+      border-radius:20px;
       display:flex;
       align-items:center;
       justify-content:center;
       color:#1e1e1e;
       font-size:28px;
+      box-shadow:0 10px 15px -5px rgba(251,191,36,0.3);
     }
     .brand-text h2{
-      font-size:1.5rem;
+      font-size:1.6rem;
       font-weight:900;
-      color:#1e1e1e;
+      color:#1c1917;
       margin:0;
       line-height:1.2;
     }
     .brand-text span{
-      font-size:0.75rem;
-      font-weight:600;
+      font-size:0.7rem;
+      font-weight:700;
       color:#b45309;
       background:#fef9c3;
       padding:2px 10px;
-      border-radius:30px;
+      border-radius:40px;
+      letter-spacing:0.3px;
     }
     .mini-stats{
       display:flex;
       gap:8px;
-      margin-bottom:24px;
+      margin-bottom:28px;
     }
     .stat-chip{
       background:#fef9c3;
       border-radius:40px;
-      padding:4px 14px;
+      padding:5px 16px;
       font-size:0.8rem;
       font-weight:700;
       color:#92400e;
       display:flex;
       align-items:center;
       gap:6px;
+      border:1px solid #fde68a;
     }
-    .order-form h3{
-      font-size:1.3rem;
-      font-weight:900;
-      color:#1e1e1e;
-      margin-bottom:20px;
+    .section-title{
       display:flex;
       align-items:center;
-      gap:8px;
+      gap:10px;
+      margin-bottom:22px;
     }
+    .section-title h3{
+      font-size:1.4rem;
+      font-weight:900;
+      color:#1c1917;
+      margin:0;
+    }
+    .badge-new{
+      background:#1c1917;
+      color:#FBBF24;
+      padding:3px 10px;
+      border-radius:40px;
+      font-size:0.65rem;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+    /* تبويب (يدوي / تصوير) */
+    .mode-switch{
+      display:flex;
+      background:#f5f5f4;
+      border-radius:40px;
+      padding:5px;
+      margin-bottom:25px;
+      border:1px solid #e7e5e4;
+    }
+    .mode-btn{
+      flex:1;
+      text-align:center;
+      padding:12px 8px;
+      font-weight:700;
+      font-size:0.9rem;
+      color:#78716c;
+      border-radius:40px;
+      cursor:default;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      transition:none;
+    }
+    .mode-btn.active{
+      background:#ffffff;
+      color:#1c1917;
+      box-shadow:0 4px 10px rgba(0,0,0,0.03);
+      border:1px solid #fde68a;
+    }
+    /* الحقول */
     .input-group{
-      margin-bottom:16px;
+      margin-bottom:18px;
     }
     .input-label{
       display:flex;
       align-items:center;
-      gap:6px;
+      gap:8px;
       font-size:0.8rem;
       font-weight:700;
-      color:#4a3a1a;
+      color:#44403c;
       margin-bottom:6px;
     }
     .modern-input{
       width:100%;
-      background:#fffbeb;
-      border:1.5px solid #fde68a;
-      border-radius:20px;
+      background:#faf9f6;
+      border:1.5px solid #e7e5e4;
+      border-radius:24px;
       padding:15px 18px;
       font-family:'Cairo',sans-serif;
-      font-size:1rem;
+      font-size:0.95rem;
       font-weight:500;
-      color:#1e1e1e;
+      color:#1c1917;
       outline:none;
       transition:0.2s;
     }
     .modern-input:focus{
       border-color:#FBBF24;
-      box-shadow:0 0 0 4px rgba(251,191,36,0.15);
       background:#fff;
+      box-shadow:0 0 0 4px rgba(251,191,36,0.1);
     }
-    .phone-clean-badge{
+    /* حقل الهاتف مع شارة */
+    .phone-wrap{
+      position:relative;
+    }
+    .clean-badge{
       position:absolute;
       left:14px;
       top:50%;
@@ -122,61 +172,92 @@
       color:white;
       font-size:0.65rem;
       font-weight:900;
-      padding:2px 10px;
+      padding:3px 10px;
       border-radius:40px;
+    }
+    /* منطقة تصوير الوصل */
+    .receipt-area{
+      background:#fef9c3;
+      border-radius:28px;
+      padding:25px 15px;
+      text-align:center;
+      border:2px dashed #FBBF24;
+      margin:15px 0 10px;
+    }
+    .receipt-preview{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      margin-top:15px;
+    }
+    .preview-thumb{
+      width:60px;
+      height:60px;
+      background:#fff;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid #fde68a;
+    }
+    .preview-thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:16px;
     }
     .btn-primary{
       background:#FBBF24;
       border:none;
-      border-radius:20px;
+      border-radius:28px;
       padding:18px 24px;
       font-weight:900;
       font-size:1.2rem;
-      color:#1e1e1e;
+      color:#1c1917;
       width:100%;
       display:flex;
       align-items:center;
       justify-content:center;
       gap:12px;
-      box-shadow:0 8px 18px rgba(251,191,36,0.3);
-      margin:25px 0 10px;
+      box-shadow:0 15px 25px -5px rgba(251,191,36,0.3);
+      margin-top:20px;
       border:1px solid #fcd34d;
-      transition:none;
       cursor:default;
     }
-    .success-badge{
+    .success-message{
       background:#dcfce7;
-      border-radius:18px;
+      border-radius:20px;
       padding:14px 18px;
       display:flex;
       align-items:center;
       gap:12px;
       color:#166534;
       font-weight:700;
-      margin-top:15px;
+      margin-top:18px;
       border:1px solid #bbf7d0;
     }
     .divider{
       height:2px;
       background:repeating-linear-gradient(90deg, #FBBF24 0px, #FBBF24 6px, #fff 6px, #fff 12px);
-      margin:20px 0 15px;
+      margin:25px 0 18px;
     }
     .live-title{
       font-size:0.9rem;
       font-weight:800;
       color:#78716c;
-      margin-bottom:10px;
+      margin-bottom:12px;
       display:flex;
       align-items:center;
-      gap:8px;
+      gap:10px;
     }
     .mini-order{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      background:#fafaf9;
-      border-radius:20px;
-      padding:12px 16px;
+      background:#faf9f6;
+      border-radius:24px;
+      padding:14px 18px;
       margin-bottom:8px;
       border:1px solid #fde68a;
     }
@@ -187,11 +268,11 @@
     }
     .order-badge{
       background:#FBBF24;
-      border-radius:30px;
-      padding:2px 12px;
-      font-size:0.7rem;
+      border-radius:40px;
+      padding:3px 14px;
+      font-size:0.75rem;
       font-weight:900;
-      color:#1e1e1e;
+      color:#1c1917;
     }
     .driver{
       font-size:0.8rem;
@@ -213,28 +294,54 @@
 </head>
 <body>
 <div class="card">
-  <!-- الشعار -->
+  <!-- العلامة التجارية -->
   <div class="brand">
     <div class="brand-icon">🐝</div>
     <div class="brand-text">
-      <h2>مطعم النحل الذهبي</h2>
-      <span>شريك نحلة كركوك</span>
+      <h2>نحلة كركوك</h2>
+      <span>مطعم النحل الذهبي · شريك مميز</span>
     </div>
   </div>
   
-  <!-- إحصائيات صغيرة جداً -->
+  <!-- إحصائيات صغيرة -->
   <div class="mini-stats">
-    <div class="stat-chip"><i class="ph ph-package"></i> ١٢٧ طلب</div>
+    <div class="stat-chip"><i class="ph ph-package"></i> ١٢٧</div>
     <div class="stat-chip"><i class="ph ph-currency-circle-dollar"></i> ٨٤٫٥ ألف</div>
     <div class="stat-chip"><i class="ph ph-hand-coins"></i> مناصفة</div>
   </div>
   
-  <!-- نموذج إرسال الطلب (التركيز الأكبر) -->
-  <div class="order-form">
-    <h3><i class="ph ph-paper-plane-tilt" style="color:#FBBF24;"></i> إرسال طلب توصيل</h3>
+  <!-- عنوان القسم -->
+  <div class="section-title">
+    <h3>إنشاء طلب جديد</h3>
+    <span class="badge-new">Quick</span>
+  </div>
+  
+  <!-- تبويب يدوي / تصوير -->
+  <div class="mode-switch">
+    <div class="mode-btn active"><i class="ph ph-keyboard"></i> إدخال يدوي</div>
+    <div class="mode-btn"><i class="ph ph-camera"></i> تصوير الوصل</div>
+  </div>
+  
+  <!-- نموذج إرسال الطلب -->
+  <form onsubmit="return false;">
+    <!-- منطقة التصوير (تظهر عند اختيار التصوير) - هنا نعرضها بشكل افتراضي للتوضيح -->
+    <div class="receipt-area">
+      <i class="ph ph-camera" style="font-size:2.2rem; color:#b45309;"></i>
+      <div style="font-weight:800; margin-top:8px; color:#92400e;">اضغط لالتقاط صورة الوصل</div>
+      <div style="font-size:0.75rem; color:#a16207; margin-top:4px;">يجب أن يظهر العنوان ورقم الهاتف</div>
+      <!-- معاينة الصورة -->
+      <div class="receipt-preview">
+        <div class="preview-thumb">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='%23b45309' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='2' width='20' height='20' rx='2.18'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'/%3E%3Cpolyline points='21 15 16 10 5 21'/%3E%3C/svg%3E" alt="receipt">
+        </div>
+        <span style="font-weight:700; color:#1c1917;">وصل_الطلب.jpg</span>
+        <i class="ph ph-check-circle" style="color:#10b981; font-size:1.3rem;"></i>
+      </div>
+    </div>
     
+    <!-- حقول الإدخال اليدوي (معطلة بصرياً إذا كنا في وضع التصوير) -->
     <div class="input-group">
-      <div class="input-label"><i class="ph ph-map-pin"></i> منطقة التسليم</div>
+      <div class="input-label"><i class="ph ph-map-pin" style="color:#FBBF24;"></i> منطقة التسليم</div>
       <select class="modern-input" style="appearance:none;">
         <option selected disabled>اختر المنطقة</option>
         <option>القادسية · 3,000 د.ع</option>
@@ -245,55 +352,56 @@
     </div>
     
     <div class="input-group">
-      <div class="input-label"><i class="ph ph-money"></i> إجمالي الفاتورة</div>
+      <div class="input-label"><i class="ph ph-money" style="color:#FBBF24;"></i> إجمالي الفاتورة</div>
       <input type="number" class="modern-input" placeholder="المبلغ (دينار)" value="22,500">
     </div>
     
-    <div class="input-group" style="position:relative;">
-      <div class="input-label"><i class="ph ph-device-mobile-camera"></i> رقم هاتف الزبون</div>
+    <div class="input-group phone-wrap">
+      <div class="input-label"><i class="ph ph-device-mobile-camera" style="color:#FBBF24;"></i> رقم هاتف الزبون</div>
       <input type="tel" class="modern-input" placeholder="07XXXXXXXXX" value="0770 123 4567">
-      <span class="phone-clean-badge">✓ نُظِّف</span>
+      <span class="clean-badge">✓ نُظِّف</span>
     </div>
     
     <div class="input-group">
-      <div class="input-label"><i class="ph ph-note-pencil"></i> ملاحظات (اختياري)</div>
-      <input type="text" class="modern-input" placeholder="تفاصيل إضافية" value="باب المطبخ الخلفي">
+      <div class="input-label"><i class="ph ph-note-pencil" style="color:#FBBF24;"></i> ملاحظات (اختياري)</div>
+      <input type="text" class="modern-input" placeholder="مثال: باب المطبخ الخلفي" value="قرب صيدلية السلام">
     </div>
     
     <!-- زر الإرسال الرئيسي -->
-    <button class="btn-primary" onclick="return false;">
-      <i class="ph ph-rocket-launch"></i> إطلاق للأسطول
+    <button class="btn-primary">
+      <i class="ph ph-rocket-launch"></i> إطلاق إلى الأسطول
     </button>
     
-    <!-- رسالة نجاح (اختيارية) -->
-    <div class="success-badge">
-      <i class="ph ph-check-circle" style="font-size:1.6rem;"></i>
+    <!-- رسالة نجاح -->
+    <div class="success-message">
+      <i class="ph ph-check-circle" style="font-size:1.8rem;"></i>
       <div>
-        <div style="font-weight:900;">تم الإطلاق بنجاح!</div>
-        <div style="font-size:0.8rem;">الطلب #NHL-2410 قيد البحث عن أقرب كابتن</div>
+        <div style="font-weight:900;">تم إرسال الطلب بنجاح</div>
+        <div style="font-size:0.8rem;">#NHL-2410 · جاري البحث عن أقرب كابتن</div>
       </div>
     </div>
-  </div>
+  </form>
   
   <div class="divider"></div>
   
-  <!-- قائمة مصغرة للطلبات النشطة -->
+  <!-- الطلبات النشطة -->
   <div class="live-title">
     <i class="ph ph-clock-countdown" style="color:#FBBF24;"></i>
-    <span>الطلبات قيد التنفيذ (٢)</span>
+    <span>الطلبات قيد التنفيذ</span>
+    <span style="background:#1c1917; color:#FBBF24; padding:2px 10px; border-radius:40px; font-size:0.7rem;">٢</span>
   </div>
   
   <div class="mini-order">
     <div class="order-info">
       <span class="order-badge">#2408</span>
-      <span class="driver"><i class="ph ph-bicycle"></i> أحمد</span>
+      <span class="driver"><i class="ph ph-bicycle"></i> أحمد ك.</span>
     </div>
     <span class="price">22,500 د.ع</span>
   </div>
   <div class="mini-order">
     <div class="order-info">
       <span class="order-badge">#2405</span>
-      <span class="driver"><i class="ph ph-bicycle"></i> سارة</span>
+      <span class="driver"><i class="ph ph-bicycle"></i> سارة م.</span>
     </div>
     <span class="price">18,000 د.ع</span>
   </div>

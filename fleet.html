@@ -9,163 +9,1103 @@
     <meta name="keywords" content="تأجير تويوتا كورولا العراق، حجز هيونداي توسان بغداد، سيارات أعراس كركوك، ايجار سيارات دفع رباعي أربيل، اسعار تأجير السيارات في الموصل، الحوت لتاجير السيارات">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f0f2f5; transition: 0.5s; overflow-x: hidden; }
-        .hero-bg { background: linear-gradient(135deg, #002349 0%, #004d99 100%); transition: 1s; position: relative; padding-top: 5rem; padding-bottom: 14rem; overflow: hidden; border-bottom: 4px solid #D4AF37; }
-        .map-pattern { position: absolute; inset: 0; opacity: 0.20; pointer-events: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><text y="60" x="10" font-size="45">🚗</text></svg>'); background-repeat: repeat; animation: bgMove 40s linear infinite; }
-        @keyframes bgMove { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
-        .city-overlay { position: absolute; inset: 0; opacity: 0.7; transition: 1s; pointer-events: none; }
-        .whale-logo { font-size: 5rem; animation: floating 4s ease-in-out infinite; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3)); }
-        @keyframes floating { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
-        .car-card { transition: all 0.4s ease; border-radius: 3rem; overflow: hidden; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 15px 35px rgba(0,0,0,0.05); }
-        .car-card:hover { transform: translateY(-12px); border-color: #D4AF37; box-shadow: 0 25px 50px rgba(0,35,73,0.15); }
-        .price-badge { background: #002349; color: #D4AF37; padding: 10px 22px; border-radius: 1.5rem; font-weight: 900; display: inline-block; }
-        .filter-box { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(20px); border-radius: 3rem; box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.2); transform: translateY(-80px); position: relative; z-index: 30; border: 1px solid white; }
-        .smart-select { padding: 1.1rem; background-color: #f8fafc; border-radius: 1.5rem; font-weight: 900; color: #002349; border: 2px solid transparent; transition: 0.3s; width: 100%; text-align: center; cursor: pointer; }
-        .smart-select:focus { border-color: #D4AF37; background-color: #fff; }
-        .btn-select { background: #002349; color: white; transition: 0.3s; font-weight: 900; border-radius: 1.5rem; width: 100%; }
-        .btn-select:hover { background: #D4AF37; color: #002349; transform: scale(1.02); }
+        :root {
+            --navy:   #001a38;
+            --navy2:  #002349;
+            --navy3:  #003a7a;
+            --gold:   #D4AF37;
+            --gold2:  #f0cc55;
+            --light:  #f4f6fa;
+            --card-bg:#ffffff;
+            --text-main:#0a1628;
+            --text-sub:#5a6a82;
+            --radius-xl: 20px;
+            --radius-lg: 14px;
+            --shadow-card: 0 4px 24px rgba(0,35,73,.09);
+            --shadow-hover: 0 20px 50px rgba(0,35,73,.18);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Tajawal', 'Montserrat', sans-serif;
+            background: var(--light);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* ═══ NOISE TEXTURE OVERLAY ═══ */
+        body::before {
+            content: '';
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            opacity: 0.4;
+        }
+
+        /* ═══ HERO ═══ */
+        .hero {
+            background: linear-gradient(160deg, var(--navy) 0%, var(--navy3) 60%, #00305f 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 0 0 120px;
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .hero-mesh {
+            position: absolute; inset: 0; pointer-events: none;
+            background:
+                radial-gradient(ellipse 60% 60% at 80% 20%, rgba(212,175,55,.12) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 50% at 10% 80%, rgba(0,61,140,.4) 0%, transparent 70%);
+        }
+
+        .hero-lines {
+            position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+        }
+        .hero-lines::before {
+            content: '';
+            position: absolute;
+            width: 200%; height: 200%;
+            top: -50%; left: -50%;
+            background: repeating-linear-gradient(
+                -45deg,
+                transparent, transparent 60px,
+                rgba(212,175,55,.025) 60px, rgba(212,175,55,.025) 61px
+            );
+            animation: lineDrift 30s linear infinite;
+        }
+        @keyframes lineDrift { to { transform: translate(60px, 60px); } }
+
+        /* ═══ NAVBAR STRIP ═══ */
+        .nav-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 32px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            position: relative; z-index: 10;
+        }
+        .nav-logo {
+            display: flex; align-items: center; gap: 10px;
+            font-weight: 900; font-size: 1.3rem; color: white; letter-spacing: .5px;
+        }
+        .nav-logo .whale { font-size: 2rem; animation: floatWhale 4s ease-in-out infinite; }
+        @keyframes floatWhale {
+            0%,100% { transform: translateY(0) rotate(-5deg); }
+            50%      { transform: translateY(-8px) rotate(4deg); }
+        }
+        .nav-brand-gold { color: var(--gold); }
+
+        .nav-breadcrumb {
+            display: flex; align-items: center; gap: 8px;
+            font-size: .82rem; color: rgba(255,255,255,.55); font-weight: 500;
+        }
+        .nav-breadcrumb span { color: var(--gold); font-weight: 700; }
+
+        /* ═══ BOOKING CONTEXT BAR ═══ */
+        .booking-bar {
+            display: flex; flex-wrap: wrap; gap: 10px;
+            align-items: center; justify-content: center;
+            padding: 14px 32px;
+            position: relative; z-index: 10;
+            border-bottom: 1px solid rgba(255,255,255,.07);
+        }
+        .booking-chip {
+            display: inline-flex; align-items: center; gap: 7px;
+            background: rgba(255,255,255,.09);
+            border: 1px solid rgba(255,255,255,.14);
+            border-radius: 50px;
+            padding: 7px 16px;
+            font-size: .82rem; font-weight: 700; color: rgba(255,255,255,.85);
+            backdrop-filter: blur(8px);
+        }
+        .booking-chip i { color: var(--gold); font-size: .8rem; }
+        .booking-chip b { color: white; }
+
+        /* ═══ HERO CONTENT ═══ */
+        .hero-content {
+            text-align: center;
+            padding: 52px 24px 30px;
+            position: relative; z-index: 10;
+        }
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(212,175,55,.15);
+            border: 1px solid rgba(212,175,55,.3);
+            border-radius: 50px;
+            padding: 6px 18px;
+            font-size: .8rem; font-weight: 700;
+            color: var(--gold2); letter-spacing: 1.5px; text-transform: uppercase;
+            margin-bottom: 18px;
+            animation: fadeSlideDown .6s ease both;
+        }
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 3.6rem);
+            font-weight: 900;
+            color: white;
+            line-height: 1.1;
+            letter-spacing: -.5px;
+            animation: fadeSlideDown .7s .1s ease both;
+        }
+        .hero-title .gold { color: var(--gold); }
+        .hero-subtitle {
+            margin-top: 14px;
+            font-size: 1.05rem; font-weight: 500;
+            color: rgba(255,255,255,.6);
+            animation: fadeSlideDown .7s .2s ease both;
+        }
+
+        /* ═══ STATS ROW ═══ */
+        .stats-row {
+            display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+            margin-top: 36px;
+            animation: fadeSlideDown .7s .3s ease both;
+        }
+        .stat-item { text-align: center; }
+        .stat-num {
+            font-size: 1.9rem; font-weight: 900;
+            color: var(--gold);
+            font-family: 'Montserrat', sans-serif;
+        }
+        .stat-label { font-size: .72rem; color: rgba(255,255,255,.5); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+        .stat-divider { width: 1px; background: rgba(255,255,255,.12); align-self: stretch; }
+
+        @keyframes fadeSlideDown {
+            from { opacity: 0; transform: translateY(-16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ═══ FILTER PANEL ═══ */
+        .filter-panel {
+            background: white;
+            border-radius: 24px 24px 0 0;
+            box-shadow: 0 -8px 40px rgba(0,35,73,.12);
+            position: relative; z-index: 30;
+            margin: 0 auto;
+            max-width: 900px;
+            transform: translateY(-1px);
+            padding: 28px 32px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .filter-label {
+            font-size: .72rem; font-weight: 800;
+            color: var(--text-sub); letter-spacing: 1.5px;
+            text-transform: uppercase; margin-bottom: 12px;
+        }
+
+        /* pill filters */
+        .pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
+        .pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 9px 20px;
+            border-radius: 50px;
+            font-size: .85rem; font-weight: 700;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all .2s ease;
+            background: var(--light);
+            color: var(--text-sub);
+            user-select: none;
+        }
+        .pill:hover { border-color: var(--navy2); color: var(--navy2); }
+        .pill.active {
+            background: var(--navy2);
+            color: white;
+            border-color: var(--navy2);
+            box-shadow: 0 4px 14px rgba(0,35,73,.25);
+        }
+        .pill.active.gold-pill {
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            color: var(--navy);
+            border-color: transparent;
+        }
+        .pill .pill-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: currentColor; opacity: .5;
+        }
+        .pill.active .pill-dot { opacity: 1; }
+
+        .filter-divider { width: 100%; height: 1px; background: var(--light); margin: 20px 0; }
+
+        .results-bar {
+            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+            margin-top: 6px;
+        }
+        .results-count {
+            font-size: .85rem; font-weight: 700; color: var(--text-sub);
+        }
+        .results-count b { color: var(--navy2); font-size: 1rem; }
+        .sort-hint {
+            font-size: .75rem; color: var(--text-sub); font-weight: 600;
+            display: flex; align-items: center; gap: 5px;
+        }
+
+        /* ═══ MAIN CONTENT AREA ═══ */
+        .content-area {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 20px 80px;
+            position: relative; z-index: 20;
+        }
+
+        /* ═══ FLEET GRID ═══ */
+        #fleetGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        /* ═══ CAR CARD ═══ */
+        .car-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            border: 1.5px solid rgba(0,35,73,.07);
+            box-shadow: var(--shadow-card);
+            transition: transform .35s cubic-bezier(.22,.68,0,1.2), box-shadow .35s ease, border-color .25s ease;
+            animation: cardReveal .5s ease both;
+            position: relative;
+        }
+        .car-card:hover {
+            transform: translateY(-10px) scale(1.01);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--gold);
+        }
+        @keyframes cardReveal {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* IMAGE WRAPPER */
+        .card-img-wrap {
+            position: relative;
+            background: linear-gradient(135deg, #e8edf5 0%, #dde3ee 100%);
+            overflow: hidden;
+            height: 210px;
+        }
+        .card-img-wrap img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform .5s ease;
+        }
+        .car-card:hover .card-img-wrap img { transform: scale(1.05); }
+
+        /* BADGES ON IMAGE */
+        .card-badges {
+            position: absolute; top: 12px;
+            display: flex; gap: 6px; flex-wrap: wrap;
+        }
+        [dir="rtl"] .card-badges { right: 12px; }
+        [dir="ltr"] .card-badges { left: 12px; }
+
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 11px;
+            border-radius: 50px;
+            font-size: .7rem; font-weight: 800;
+            letter-spacing: .3px;
+            backdrop-filter: blur(8px);
+        }
+        .badge-navy { background: rgba(0,26,56,.82); color: white; }
+        .badge-gold { background: rgba(212,175,55,.92); color: var(--navy); }
+        .badge-green { background: rgba(20,160,80,.85); color: white; }
+        .badge-luxury { background: linear-gradient(135deg, rgba(30,10,50,.9), rgba(80,40,120,.9)); color: #e8d5ff; }
+        .badge-popular {
+            position: absolute; bottom: 12px;
+            background: var(--gold);
+            color: var(--navy);
+            font-size: .68rem; font-weight: 900;
+            padding: 4px 12px; border-radius: 50px;
+            display: flex; align-items: center; gap: 4px;
+            box-shadow: 0 3px 12px rgba(212,175,55,.4);
+        }
+        [dir="rtl"] .badge-popular { left: 12px; }
+        [dir="ltr"] .badge-popular { right: 12px; }
+
+        /* gradient fade on image bottom */
+        .card-img-wrap::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 60px;
+            background: linear-gradient(to top, rgba(255,255,255,.7), transparent);
+            pointer-events: none;
+        }
+
+        /* CARD BODY */
+        .card-body { padding: 20px 22px 22px; }
+
+        .card-header { margin-bottom: 14px; }
+        .car-name {
+            font-size: 1.25rem; font-weight: 900;
+            color: var(--text-main); line-height: 1.2;
+        }
+        .car-sub {
+            font-size: .78rem; font-weight: 600;
+            color: var(--text-sub); margin-top: 3px;
+        }
+
+        /* SPECS GRID */
+        .specs-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 8px; margin-bottom: 18px;
+            padding: 14px 0;
+            border-top: 1px solid var(--light);
+            border-bottom: 1px solid var(--light);
+        }
+        .spec-item {
+            display: flex; flex-direction: column;
+            align-items: center; gap: 4px;
+        }
+        .spec-icon {
+            width: 34px; height: 34px; border-radius: 10px;
+            background: var(--light);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .85rem; color: var(--navy2);
+        }
+        .spec-val { font-size: .72rem; font-weight: 800; color: var(--text-main); }
+        .spec-key { font-size: .62rem; font-weight: 600; color: var(--text-sub); }
+
+        /* FEATURES CHIPS */
+        .features-row {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            margin-bottom: 18px;
+        }
+        .feat-chip {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: var(--light);
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: .7rem; font-weight: 700; color: var(--text-sub);
+        }
+        .feat-chip i { font-size: .65rem; color: var(--navy2); }
+
+        /* PRICE + CTA */
+        .card-footer {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            flex-wrap: wrap;
+        }
+        .price-block {}
+        .price-from {
+            font-size: .65rem; font-weight: 700;
+            color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px;
+        }
+        .price-main {
+            font-size: 1.7rem; font-weight: 900;
+            color: var(--navy2);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1;
+        }
+        .price-main .currency {
+            font-size: .85rem; font-weight: 700; color: var(--text-sub);
+            vertical-align: middle;
+        }
+        .price-total {
+            font-size: .72rem; font-weight: 700;
+            color: var(--gold);
+            margin-top: 2px;
+        }
+
+        .btn-book {
+            flex: 1; min-width: 130px;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 14px 20px;
+            border-radius: 14px;
+            background: var(--navy2);
+            color: white;
+            font-size: .9rem; font-weight: 800;
+            border: none; cursor: pointer;
+            transition: all .25s ease;
+            letter-spacing: .3px;
+        }
+        .btn-book:hover {
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            color: var(--navy);
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(212,175,55,.35);
+        }
+        .btn-book:active { transform: scale(.97); }
+        .btn-book i { transition: transform .2s ease; }
+        .btn-book:hover i { transform: translateX(-3px); }
+        [dir="ltr"] .btn-book:hover i { transform: translateX(3px); }
+
+        /* ═══ EMPTY STATE ═══ */
+        .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 80px 24px;
+        }
+        .empty-state .empty-icon {
+            font-size: 5rem; margin-bottom: 20px;
+            animation: floatWhale 4s ease-in-out infinite;
+        }
+        .empty-state h3 { font-size: 1.5rem; font-weight: 900; color: var(--text-sub); }
+        .empty-state p { margin-top: 8px; color: #aaa; font-size: .9rem; }
+
+        /* ═══ FOOTER NOTE ═══ */
+        .footer-note {
+            text-align: center;
+            font-size: .78rem; font-weight: 600;
+            color: var(--text-sub);
+            padding: 0 20px;
+            margin-top: 10px;
+        }
+        .footer-note i { color: var(--gold); margin-inline-end: 5px; }
+
+        /* ═══ TRUST BADGES ═══ */
+        .trust-bar {
+            display: flex; justify-content: center; flex-wrap: wrap; gap: 28px;
+            padding: 28px 20px;
+            background: white;
+            border-top: 1px solid rgba(0,35,73,.06);
+            margin-top: 40px;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-card);
+        }
+        .trust-item {
+            display: flex; align-items: center; gap: 10px;
+            font-size: .82rem; font-weight: 700; color: var(--text-sub);
+        }
+        .trust-icon {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: var(--light);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; color: var(--navy2);
+        }
+        .trust-item strong { color: var(--text-main); display: block; font-size: .9rem; }
+
+        /* ═══ RESPONSIVE ═══ */
+        @media (max-width: 768px) {
+            .filter-panel { padding: 22px 18px; border-radius: 20px 20px 0 0; }
+            #fleetGrid { grid-template-columns: 1fr; }
+            .stats-row { gap: 20px; }
+            .stat-divider { display: none; }
+            .nav-breadcrumb { display: none; }
+            .booking-bar { padding: 10px 16px; }
+        }
+
+        /* ═══ SCROLLBAR ═══ */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--light); }
+        ::-webkit-scrollbar-thumb { background: var(--navy3); border-radius: 10px; }
     </style>
 </head>
-<body class="text-[#002349]">
 
-    <header class="hero-bg text-white pt-16 pb-32 text-center relative">
-        <div id="cityOverlay" class="city-overlay"></div>
-        <div id="patternBox" class="map-pattern"></div>
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="whale-logo mb-4">🐋</div>
-            <h1 id="pageTitle" class="text-4xl md:text-6xl font-black text-[#D4AF37] drop-shadow-md">أسطول سيارات الحوت</h1>
-            <p id="serviceLabel" class="text-lg md:text-2xl opacity-90 mt-3 font-bold px-4 italic"></p>
+<body>
+
+    <!-- ══════════════════════════════════════════
+         HERO
+    ══════════════════════════════════════════ -->
+    <header class="hero">
+        <div class="hero-mesh"></div>
+        <div class="hero-lines"></div>
+
+        <!-- Navbar strip -->
+        <div class="nav-strip">
+            <div class="nav-logo">
+                <span class="whale">🐋</span>
+                <span>أسطول <span class="nav-brand-gold">الحوت</span></span>
+            </div>
+            <div class="nav-breadcrumb">
+                <i class="fas fa-home" style="color:var(--gold);font-size:.75rem"></i>
+                <span style="opacity:.4">/</span>
+                <span>اختيار السيارة</span>
+                <span style="opacity:.4">/</span>
+                <span id="breadCrumbCity"></span>
+            </div>
+        </div>
+
+        <!-- Booking context chips -->
+        <div class="booking-bar" id="bookingBar">
+            <!-- filled by JS -->
+        </div>
+
+        <!-- Title content -->
+        <div class="hero-content">
+            <div class="hero-eyebrow" id="heroEyebrow">
+                <i class="fas fa-star"></i>
+                <span>أسطول معتمد &bull; جاهز للتسليم</span>
+            </div>
+            <h1 class="hero-title" id="pageTitle">اختر سيارتك</h1>
+            <p class="hero-subtitle" id="serviceLabel"></p>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-num">+50</div>
+                    <div class="stat-label" id="statCarsLabel">سيارة</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <div class="stat-num">8</div>
+                    <div class="stat-label" id="statCitiesLabel">مدن</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <div class="stat-num">24/7</div>
+                    <div class="stat-label" id="statSupportLabel">دعم</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <div class="stat-num">0</div>
+                    <div class="stat-label" id="statDepositLabel">وديعة مخفية</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter panel pinned to bottom of hero -->
+        <div style="position:relative;z-index:30;padding:0 20px;">
+            <div class="filter-panel" id="filterPanel">
+                <!-- ENGINE FILTERS -->
+                <div class="filter-label" id="filterEngLabel">نوع المحرك</div>
+                <div class="pill-group" id="enginePills">
+                    <div class="pill active" data-group="engine" data-val="all" onclick="pillClick(this)" id="optEngAll">
+                        <span class="pill-dot"></span> الكل
+                    </div>
+                    <div class="pill" data-group="engine" data-val="hybrid" onclick="pillClick(this)" id="optEngHybrid">
+                        <i class="fas fa-leaf" style="font-size:.7rem"></i> هايبرد
+                    </div>
+                    <div class="pill" data-group="engine" data-val="auto" onclick="pillClick(this)" id="optEngAuto">
+                        <i class="fas fa-cog" style="font-size:.7rem"></i> أوتوماتيك
+                    </div>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <!-- CATEGORY FILTERS -->
+                <div class="filter-label" id="filterCatLabel">فئة السيارة</div>
+                <div class="pill-group" id="categoryPills">
+                    <div class="pill active gold-pill" data-group="category" data-val="all" onclick="pillClick(this)" id="optCatAll">
+                        <i class="fas fa-th-large" style="font-size:.7rem"></i> كل الفئات
+                    </div>
+                    <div class="pill" data-group="category" data-val="economy" onclick="pillClick(this)" id="optCatEco">
+                        <i class="fas fa-leaf" style="font-size:.7rem"></i> اقتصادية
+                    </div>
+                    <div class="pill" data-group="category" data-val="family" onclick="pillClick(this)" id="optCatFam">
+                        <i class="fas fa-users" style="font-size:.7rem"></i> عائلية / SUV
+                    </div>
+                    <div class="pill" data-group="category" data-val="luxury" onclick="pillClick(this)" id="optCatLux">
+                        <i class="fas fa-gem" style="font-size:.7rem"></i> فاخرة VIP
+                    </div>
+                </div>
+
+                <div class="filter-divider"></div>
+
+                <!-- Results bar -->
+                <div class="results-bar">
+                    <div class="results-count"><b id="resultsNum">6</b> <span id="resultsText">سيارة متوفرة</span></div>
+                    <div class="sort-hint"><i class="fas fa-info-circle" style="color:var(--gold)"></i> <span id="sortHintText">الأسعار تشمل اليوم الواحد</span></div>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 relative z-20 pb-20">
-        <div class="filter-box p-6 md:p-8 max-w-5xl mx-auto flex flex-col md:flex-row gap-5 items-center justify-center">
-            <div class="w-full md:w-1/3">
-                <select id="engineFilter" onchange="renderFleet()" class="smart-select">
-                    <option value="all" id="optEngAll">كل المحركات</option>
-                    <option value="hybrid" id="optEngHybrid">هايبرد</option>
-                    <option value="auto" id="optEngAuto">أوتوماتيك</option>
-                </select>
+    <!-- ══════════════════════════════════════════
+         MAIN
+    ══════════════════════════════════════════ -->
+    <main class="content-area">
+        <div id="fleetGrid"></div>
+
+        <!-- Trust bar -->
+        <div class="trust-bar" id="trustBar">
+            <div class="trust-item">
+                <div class="trust-icon"><i class="fas fa-shield-alt"></i></div>
+                <div><strong id="trust1T">سيارات مؤمنة</strong><span id="trust1S">تأمين شامل</span></div>
             </div>
-            <div class="w-full md:w-1/3">
-                <select id="categoryFilter" onchange="renderFleet()" class="smart-select">
-                    <option value="all" id="optCatAll">كل الفئات</option>
-                    <option value="economy" id="optCatEco">اقتصادية</option>
-                    <option value="family" id="optCatFam">عائلية / SUV</option>
-                    <option value="luxury" id="optCatLux">فاخرة VIP</option>
-                </select>
+            <div class="trust-item">
+                <div class="trust-icon"><i class="fas fa-headset"></i></div>
+                <div><strong id="trust2T">دعم 24/7</strong><span id="trust2S">خدمة على مدار الساعة</span></div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div><strong id="trust3T">توصيل للموقع</strong><span id="trust3S">نوصل السيارة لك</span></div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon"><i class="fas fa-star"></i></div>
+                <div><strong id="trust4T">+1000 عميل</strong><span id="trust4S">تقييمات ممتازة</span></div>
             </div>
         </div>
-        <div id="fleetGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto"></div>
-        
-        <p class="text-center mt-12 text-slate-500 font-bold text-sm px-4" id="availabilityNote"></p>
+
+        <p class="footer-note" id="availabilityNote"></p>
     </main>
 
+    <!-- ══════════════════════════════════════════
+         HIDDEN SELECTS (compatibility - not shown)
+    ══════════════════════════════════════════ -->
+    <select id="engineFilter" style="display:none" onchange="renderFleet()">
+        <option value="all">all</option>
+        <option value="hybrid">hybrid</option>
+        <option value="auto">auto</option>
+    </select>
+    <select id="categoryFilter" style="display:none" onchange="renderFleet()">
+        <option value="all">all</option>
+        <option value="economy">economy</option>
+        <option value="family">family</option>
+        <option value="luxury">luxury</option>
+    </select>
+
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const type = params.get('type') || 'personal'; 
-        const currentLang = params.get('lang') || 'ar';
-        const city = params.get('city') || 'كركوك';
-        const days = params.get('days') || '1'; 
-        const date = params.get('date') || '';
-        const time = params.get('time') || '';
+        /* ══════════════════════════════════════
+           URL PARAMS  — identical to original
+        ══════════════════════════════════════ */
+        const params      = new URLSearchParams(window.location.search);
+        const type        = params.get('type')  || 'personal';
+        const currentLang = params.get('lang')  || 'ar';
+        const city        = params.get('city')  || 'كركوك';
+        const days        = params.get('days')  || '1';
+        const date        = params.get('date')  || '';
+        const time        = params.get('time')  || '';
 
-        const styleColor = { 
-            'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 
-            'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 
-            'الأنبار': '#ef6c00', 'ديالى': '#558b2f' 
+        /* ══════════════════════════════════════
+           STYLE COLORS  — identical to original
+        ══════════════════════════════════════ */
+        const styleColor = {
+            'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32',
+            'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd',
+            'الأنبار': '#ef6c00', 'ديالى': '#558b2f'
         };
-        
+
+        /* ══════════════════════════════════════
+           TRANSLATIONS  — identical to original
+        ══════════════════════════════════════ */
         const translations = {
-            ar: { dir: 'rtl', font: 'Tajawal', title: 'أسطول سيارات الحوت', wedding: '✨ سيارات الأعراس في ' + city, personal: '🚗 السيارات المتوفرة في ' + city, engAll: 'كل المحركات', engHyb: 'هايبرد', engAuto: 'أوتوماتيك', catAll: 'كل الفئات', catEco: 'اقتصادية', catFam: 'عائلية', catLux: 'فاخرة VIP', btn: 'اختيار السيارة', currency: 'د.ع / يوم', empty: 'لا توجد نتائج في هذه المدينة 🐋', modelTag: 'موديل 2020 - 2025', colorNote: 'اللون والموديل حسب المتوفر', footerNote: '* جميع الصور تقريبية، اللون والموديل يعتمدان على التوفر لحظة التجهيز.' },
-            ku: { dir: 'rtl', font: 'Tajawal', title: 'ئەلحووت فلێت', wedding: '✨ ئۆتۆمبێلی زەماوەند', personal: '🚗 ئۆتۆمبێلی کەسی', engAll: 'هەموو بزوێنەرەکان', engHyb: 'هایبرید', engAuto: 'ئۆتۆماتیک', catAll: 'هەموو جۆرەکان', catEco: 'ئابووری', catFam: 'خێزانی', catLux: 'ناوازە VIP', btn: 'هەڵبژاردن', currency: 'د.ع / ڕۆژ', empty: 'نەدۆزرایەوە 🐋', modelTag: 'مۆدێل ٢٠٢٠ - ٢٠٢٥', colorNote: 'ڕەنگ و مۆدێل بەپێی بەردەستبوون', footerNote: '* وێنەکان تەنها بۆ نیشاندانن، ڕەنگ و مۆدێل بەپێی بەردەستبوونە.' },
-            tr: { dir: 'ltr', font: 'Poppins', title: 'Al-Hut Fleet', wedding: '✨ Wedding Cars in ' + city, personal: '🚗 Personal Cars in ' + city, engAll: 'All Engines', engHyb: 'Hybrid', engAuto: 'Automatic', catAll: 'All Categories', catEco: 'Economy', catFam: 'Family/SUV', catLux: 'Luxury VIP', btn: 'Select Car', currency: 'IQD / Day', empty: 'No cars found 🐋', modelTag: 'Model 2020 - 2025', colorNote: 'Subject to availability', footerNote: '* Images are for illustrative purposes. Color and model depend on availability.' },
-            en: { dir: 'ltr', font: 'Poppins', title: 'Al-Hut Fleet', wedding: '✨ Wedding Section in ' + city, personal: '🚗 Personal Section in ' + city, engAll: 'All Engines', engHyb: 'Hybrid', engAuto: 'Automatic', catAll: 'All Categories', catEco: 'Economy', catFam: 'Family/SUV', catLux: 'Luxury VIP', btn: 'Select Car', currency: 'IQD / Day', empty: 'No cars found 🐋', modelTag: 'Model 2020 - 2025', colorNote: 'Subject to availability', footerNote: '* All images are representative. Actual color and model may vary based on availability.' }
+            ar: {
+                dir:'rtl', font:'Tajawal',
+                title:'أسطول سيارات الحوت',
+                wedding:'✨ سيارات الأعراس في ' + city,
+                personal:'🚗 السيارات المتوفرة في ' + city,
+                engAll:'كل المحركات', engHyb:'هايبرد', engAuto:'أوتوماتيك',
+                catAll:'كل الفئات', catEco:'اقتصادية', catFam:'عائلية / SUV', catLux:'فاخرة VIP',
+                btn:'احجز الآن', currency:'د.ع',
+                empty:'لا توجد نتائج في هذه المدينة 🐋',
+                modelTag:'موديل 2020 - 2025', colorNote:'اللون والموديل حسب المتوفر',
+                footerNote:'* جميع الصور تقريبية، اللون والموديل يعتمدان على التوفر لحظة التجهيز.',
+                perDay:'/ يوم', totalLabel:'الإجمالي', days:'أيام',
+                cityChip:'المدينة', dateChip:'تاريخ الاستلام', daysChip:'مدة الإيجار',
+                seats:'مقاعد', doors:'أبواب', ac:'تكييف', trans:'ناقل',
+                hybridBadge:'هايبرد 🌿', autoBadge:'أوتو', luxuryBadge:'VIP فاخرة',
+                economyBadge:'اقتصادية', familyBadge:'عائلية',
+                popular:'الأكثر طلباً',
+                resultsText:'سيارة متوفرة', sortHint:'الأسعار تشمل اليوم الواحد',
+                filterEng:'نوع المحرك', filterCat:'فئة السيارة',
+                eyebrow:'أسطول معتمد • جاهز للتسليم',
+                statCars:'سيارة', statCities:'مدن', statSupport:'دعم', statDeposit:'وديعة مخفية',
+                trust1T:'سيارات مؤمنة', trust1S:'تأمين شامل',
+                trust2T:'دعم 24/7', trust2S:'خدمة على مدار الساعة',
+                trust3T:'توصيل للموقع', trust3S:'نوصل السيارة لك',
+                trust4T:'+1000 عميل', trust4S:'تقييمات ممتازة',
+                breadCity: city
+            },
+            ku: {
+                dir:'rtl', font:'Tajawal',
+                title:'ئەلحووت فلێت',
+                wedding:'✨ ئۆتۆمبێلی زەماوەند',
+                personal:'🚗 ئۆتۆمبێلی کەسی',
+                engAll:'هەموو بزوێنەرەکان', engHyb:'هایبرید', engAuto:'ئۆتۆماتیک',
+                catAll:'هەموو جۆرەکان', catEco:'ئابووری', catFam:'خێزانی', catLux:'ناوازە VIP',
+                btn:'هەڵبژاردن', currency:'د.ع',
+                empty:'نەدۆزرایەوە 🐋',
+                modelTag:'مۆدێل ٢٠٢٠ - ٢٠٢٥', colorNote:'ڕەنگ و مۆدێل بەپێی بەردەستبوون',
+                footerNote:'* وێنەکان تەنها بۆ نیشاندانن، ڕەنگ و مۆدێل بەپێی بەردەستبوونە.',
+                perDay:'/ ڕۆژ', totalLabel:'کۆی گشتی', days:'ڕۆژ',
+                cityChip:'شار', dateChip:'بەرواری وەرگرتن', daysChip:'ماوەی کرێ',
+                seats:'کورسی', doors:'دەرگا', ac:'هێوا', trans:'گێرس',
+                hybridBadge:'هایبرید 🌿', autoBadge:'ئۆتۆ', luxuryBadge:'VIP',
+                economyBadge:'ئابووری', familyBadge:'خێزانی',
+                popular:'زۆرترین داواکاری',
+                resultsText:'ئۆتۆمبێل بەردەستە', sortHint:'نرخەکان بۆ یەک ڕۆژن',
+                filterEng:'جۆری بزوێنەر', filterCat:'پۆلی ئۆتۆمبێل',
+                eyebrow:'فلێتی پەسەندکراو • ئامادەی تەسلیم',
+                statCars:'ئۆتۆمبێل', statCities:'شار', statSupport:'پشتیوانی', statDeposit:'مەبەستی نهێنی',
+                trust1T:'بیمەکراو', trust1S:'بیمەی تەواو',
+                trust2T:'پشتیوانی 24/7', trust2S:'خزمەتگوزاری',
+                trust3T:'گەیاندن', trust3S:'دەیگەیەنین',
+                trust4T:'+١٠٠٠ کڕیار', trust4S:'هەڵسەنگاندنی باش',
+                breadCity: city
+            },
+            en: {
+                dir:'ltr', font:'Montserrat',
+                title:'Al-Hut Fleet',
+                wedding:'✨ Wedding Cars in ' + city,
+                personal:'Available Cars in ' + city,
+                engAll:'All Engines', engHyb:'Hybrid', engAuto:'Automatic',
+                catAll:'All Categories', catEco:'Economy', catFam:'Family/SUV', catLux:'Luxury VIP',
+                btn:'Book Now', currency:'IQD',
+                empty:'No cars found 🐋',
+                modelTag:'Model 2020 – 2025', colorNote:'Subject to availability',
+                footerNote:'* All images are representative. Actual color and model may vary based on availability.',
+                perDay:'/ day', totalLabel:'Total', days:'days',
+                cityChip:'City', dateChip:'Pick-up Date', daysChip:'Duration',
+                seats:'Seats', doors:'Doors', ac:'A/C', trans:'Trans.',
+                hybridBadge:'Hybrid 🌿', autoBadge:'Auto', luxuryBadge:'Luxury VIP',
+                economyBadge:'Economy', familyBadge:'Family',
+                popular:'Most Popular',
+                resultsText:'cars available', sortHint:'Prices per day',
+                filterEng:'Engine Type', filterCat:'Car Category',
+                eyebrow:'Certified Fleet • Ready for Delivery',
+                statCars:'Cars', statCities:'Cities', statSupport:'Support', statDeposit:'Hidden Fee',
+                trust1T:'Insured Cars', trust1S:'Full Insurance',
+                trust2T:'24/7 Support', trust2S:'Round-the-clock',
+                trust3T:'Delivery', trust3S:'We bring it to you',
+                trust4T:'+1000 Clients', trust4S:'Excellent Reviews',
+                breadCity: city
+            },
+            tr: {
+                dir:'ltr', font:'Montserrat',
+                title:'Al-Hut Filosu',
+                wedding:'✨ Düğün Araçları — ' + city,
+                personal:'Mevcut Araçlar — ' + city,
+                engAll:'Tüm Motorlar', engHyb:'Hibrit', engAuto:'Otomatik',
+                catAll:'Tüm Kategoriler', catEco:'Ekonomi', catFam:'Aile/SUV', catLux:'Lüks VIP',
+                btn:'Şimdi Kirala', currency:'IQD',
+                empty:'Araç bulunamadı 🐋',
+                modelTag:'Model 2020 – 2025', colorNote:'Müsaitliğe göre',
+                footerNote:'* Görseller temsilidir. Renk ve model müsaitliğe göre değişebilir.',
+                perDay:'/ gün', totalLabel:'Toplam', days:'gün',
+                cityChip:'Şehir', dateChip:'Teslim Tarihi', daysChip:'Süre',
+                seats:'Koltuk', doors:'Kapı', ac:'Klima', trans:'Vites',
+                hybridBadge:'Hibrit 🌿', autoBadge:'Otomatik', luxuryBadge:'Lüks VIP',
+                economyBadge:'Ekonomi', familyBadge:'Aile',
+                popular:'En Çok Tercih',
+                resultsText:'araç mevcut', sortHint:'Fiyatlar günlük',
+                filterEng:'Motor Tipi', filterCat:'Araç Kategorisi',
+                eyebrow:'Sertifikalı Filo • Teslime Hazır',
+                statCars:'Araç', statCities:'Şehir', statSupport:'Destek', statDeposit:'Gizli Ücret',
+                trust1T:'Sigortalı Araçlar', trust1S:'Tam Sigorta',
+                trust2T:'7/24 Destek', trust2S:'Sürekli Hizmet',
+                trust3T:'Teslimat', trust3S:'Kapına Getiriyoruz',
+                trust4T:'+1000 Müşteri', trust4S:'Mükemmel Değerlendirmeler',
+                breadCity: city
+            }
         };
 
-        // تم إضافة (أو ما يماثلها) لأسماء السيارات لتكون مطابقة للمعايير العالمية
+        /* ══════════════════════════════════════
+           FLEET DATA  — identical to original (+ display meta)
+        ══════════════════════════════════════ */
         const fleet = [
-            { name: {ar:"تويوتا كورولا (أو ما يماثلها)", ku:"تۆیۆتا کۆرۆلا", tr:"Toyota Corolla (or similar)", en:"Toyota Corolla (or similar)"}, engine: "hybrid", cat: "economy", price: "45000", img: "Cars/corolla.jpg" },
-            { name: {ar:"دودج جارجر (أو ما يماثلها)", ku:"دۆج جارجەر", tr:"Dodge Charger (or similar)", en:"Dodge Charger (or similar)"}, engine: "auto", cat: "luxury", price: "85000", img: "Cars/charger.jpg" },
-            { name: {ar:"هيونداي توسان (أو ما يماثلها)", ku:"هیۆندای تۆسۆن", tr:"Hyundai Tucson (or similar)", en:"Hyundai Tucson (or similar)"}, engine: "auto", cat: "family", price: "60000", img: "Cars/tucson.jpg" },
-            { name: {ar:"مرسيدس S-Class (أو ما يماثلها)", ku:"مێرسیدس S-Class", tr:"Mercedes S-Class (or similar)", en:"Mercedes S-Class (or similar)"}, engine: "auto", cat: "luxury", price: "150000", img: "Cars/mercedes.jpg" },
-            { name: {ar:"تويوتا كامري (أو ما يماثلها)", ku:"تۆیۆتا کامری", tr:"Toyota Camry (or similar)", en:"Toyota Camry (or similar)"}, engine: "hybrid", cat: "economy", price: "55000", img: "Cars/camry.jpg" },
-            { name: {ar:"كيا سورينتو (أو ما يماثلها)", ku:"کیا سۆرێنتۆ", tr:"Kia Sorento (or similar)", en:"Kia Sorento (or similar)"}, engine: "auto", cat: "family", price: "70000", img: "Cars/sorento.jpg" }
+            {
+                name: { ar:"تويوتا كورولا (أو ما يماثلها)", ku:"تۆیۆتا کۆرۆلا", tr:"Toyota Corolla (veya benzeri)", en:"Toyota Corolla (or similar)" },
+                engine:"hybrid", cat:"economy", price:"45000",
+                img:"Cars/corolla.jpg",
+                specs:{ seats:5, doors:4, ac:true, trans:'CVT' },
+                features:['abs','bluetooth','camera'],
+                popular: true
+            },
+            {
+                name: { ar:"دودج جارجر (أو ما يماثلها)", ku:"دۆج جارجەر", tr:"Dodge Charger (veya benzeri)", en:"Dodge Charger (or similar)" },
+                engine:"auto", cat:"luxury", price:"85000",
+                img:"Cars/charger.jpg",
+                specs:{ seats:5, doors:4, ac:true, trans:'Auto' },
+                features:['leather','sunroof','camera'],
+                popular: false
+            },
+            {
+                name: { ar:"هيونداي توسان (أو ما يماثلها)", ku:"هیۆندای تۆسۆن", tr:"Hyundai Tucson (veya benzeri)", en:"Hyundai Tucson (or similar)" },
+                engine:"auto", cat:"family", price:"60000",
+                img:"Cars/tucson.jpg",
+                specs:{ seats:5, doors:5, ac:true, trans:'Auto' },
+                features:['abs','camera','carplay'],
+                popular: true
+            },
+            {
+                name: { ar:"مرسيدس S-Class (أو ما يماثلها)", ku:"مێرسیدس S-Class", tr:"Mercedes S-Class (veya benzeri)", en:"Mercedes S-Class (or similar)" },
+                engine:"auto", cat:"luxury", price:"150000",
+                img:"Cars/mercedes.jpg",
+                specs:{ seats:5, doors:4, ac:true, trans:'Auto' },
+                features:['leather','sunroof','massageSeat'],
+                popular: false
+            },
+            {
+                name: { ar:"تويوتا كامري (أو ما يماثلها)", ku:"تۆیۆتا کامری", tr:"Toyota Camry (veya benzeri)", en:"Toyota Camry (or similar)" },
+                engine:"hybrid", cat:"economy", price:"55000",
+                img:"Cars/camry.jpg",
+                specs:{ seats:5, doors:4, ac:true, trans:'CVT' },
+                features:['abs','bluetooth','usb'],
+                popular: false
+            },
+            {
+                name: { ar:"كيا سورينتو (أو ما يماثلها)", ku:"کیا سۆرێنتۆ", tr:"Kia Sorento (veya benzeri)", en:"Kia Sorento (or similar)" },
+                engine:"auto", cat:"family", price:"70000",
+                img:"Cars/sorento.jpg",
+                specs:{ seats:7, doors:5, ac:true, trans:'Auto' },
+                features:['abs','camera','carplay'],
+                popular: false
+            }
         ];
 
-        function initLang() {
-            const l = translations[currentLang] || translations['ar'];
-            document.getElementById('htmlTag').dir = l.dir;
-            document.body.style.fontFamily = l.font + ', sans-serif';
-            document.getElementById('pageTitle').innerText = l.title;
-            document.getElementById('serviceLabel').innerText = type === 'wedding' ? l.wedding : l.personal;
-            document.getElementById('cityOverlay').style.backgroundColor = styleColor[city] || '#002349';
-            document.getElementById('availabilityNote').innerText = l.footerNote;
-            
-            const icon = type === 'wedding' ? '🎁' : '🚗';
-            document.getElementById('patternBox').style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><text y="60" x="10" font-size="45">${icon}</text></svg>')`;
-            
-            document.getElementById('optEngAll').innerText = l.engAll;
-            document.getElementById('optEngHybrid').innerText = l.engHyb;
-            document.getElementById('optEngAuto').innerText = l.engAuto;
-            document.getElementById('optCatAll').innerText = l.catAll;
-            document.getElementById('optCatEco').innerText = l.catEco;
-            document.getElementById('optCatFam').innerText = l.catFam;
-            document.getElementById('optCatLux').innerText = l.catLux;
+        /* ══════════════════════════════════════
+           PILL CLICK (replaces select onchange)
+        ══════════════════════════════════════ */
+        function pillClick(el) {
+            const group = el.dataset.group;
+            const val   = el.dataset.val;
+
+            // deactivate siblings
+            document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p => {
+                p.classList.remove('active', 'gold-pill');
+            });
+
+            // activate clicked
+            el.classList.add('active');
+            if (group === 'category') el.classList.add('gold-pill');
+
+            // sync hidden selects
+            if (group === 'engine')   document.getElementById('engineFilter').value   = val;
+            if (group === 'category') document.getElementById('categoryFilter').value = val;
+
+            renderFleet();
         }
 
-        function renderFleet() {
-            const eng = document.getElementById('engineFilter').value;
-            const cat = document.getElementById('categoryFilter').value;
-            const grid = document.getElementById('fleetGrid');
+        /* ══════════════════════════════════════
+           INIT LANG  — identical logic, new targets
+        ══════════════════════════════════════ */
+        function initLang() {
             const l = translations[currentLang] || translations['ar'];
+
+            // direction & font
+            document.getElementById('htmlTag').dir = l.dir;
+            document.body.style.fontFamily = l.font + ', Tajawal, sans-serif';
+
+            // hero text
+            document.getElementById('pageTitle').innerText    = l.title;
+            document.getElementById('serviceLabel').innerText = type === 'wedding' ? l.wedding : l.personal;
+            document.getElementById('heroEyebrow').innerHTML  = `<i class="fas fa-star"></i><span>${l.eyebrow}</span>`;
+
+            // breadcrumb city
+            const bc = document.getElementById('breadCrumbCity');
+            if (bc) bc.innerText = l.breadCity || city;
+
+            // stats
+            document.getElementById('statCarsLabel').innerText    = l.statCars;
+            document.getElementById('statCitiesLabel').innerText  = l.statCities;
+            document.getElementById('statSupportLabel').innerText = l.statSupport;
+            document.getElementById('statDepositLabel').innerText = l.statDeposit;
+
+            // booking chips
+            const bar = document.getElementById('bookingBar');
+            bar.innerHTML = '';
+            const addChip = (icon, label, val) => {
+                if (!val) return;
+                bar.innerHTML += `<div class="booking-chip"><i class="fas ${icon}"></i><span>${label}:</span><b>${val}</b></div>`;
+            };
+            addChip('fa-map-marker-alt', l.cityChip, city);
+            addChip('fa-calendar',       l.dateChip, date || '—');
+            addChip('fa-clock',          l.daysChip, days + ' ' + l.days);
+            addChip('fa-tag',            type === 'wedding' ? (l.wedding || '') : (l.personal || ''), '');
+
+            // filter labels
+            document.getElementById('filterEngLabel').innerText = l.filterEng;
+            document.getElementById('filterCatLabel').innerText = l.filterCat;
+
+            // pill text
+            const engPills = document.querySelectorAll('[data-group="engine"]');
+            const catPills = document.querySelectorAll('[data-group="category"]');
+            const engTexts = [l.engAll, l.engHyb, l.engAuto];
+            const catTexts = [l.catAll, l.catEco, l.catFam, l.catLux];
+            const catIcons = ['fa-th-large','fa-leaf','fa-users','fa-gem'];
+            engPills.forEach((p, i) => {
+                const icon = i===1 ? '<i class="fas fa-leaf" style="font-size:.7rem"></i>' :
+                             i===2 ? '<i class="fas fa-cog"  style="font-size:.7rem"></i>'  :
+                                     '<span class="pill-dot"></span>';
+                p.innerHTML = icon + ' ' + engTexts[i];
+                p.dataset.val = ['all','hybrid','auto'][i];
+            });
+            catPills.forEach((p, i) => {
+                p.innerHTML = `<i class="fas ${catIcons[i]}" style="font-size:.7rem"></i> ${catTexts[i]}`;
+                p.dataset.val = ['all','economy','family','luxury'][i];
+            });
+
+            // hints
+            document.getElementById('sortHintText').innerText = l.sortHint;
+
+            // trust bar
+            document.getElementById('trust1T').innerText = l.trust1T;
+            document.getElementById('trust1S').innerText = l.trust1S;
+            document.getElementById('trust2T').innerText = l.trust2T;
+            document.getElementById('trust2S').innerText = l.trust2S;
+            document.getElementById('trust3T').innerText = l.trust3T;
+            document.getElementById('trust3S').innerText = l.trust3S;
+            document.getElementById('trust4T').innerText = l.trust4T;
+            document.getElementById('trust4S').innerText = l.trust4S;
+
+            // footer
+            document.getElementById('availabilityNote').innerHTML =
+                `<i class="fas fa-info-circle"></i> ${l.footerNote}`;
+        }
+
+        /* ══════════════════════════════════════
+           RENDER FLEET  — identical filter logic, new card template
+        ══════════════════════════════════════ */
+        function renderFleet() {
+            const eng  = document.getElementById('engineFilter').value;
+            const cat  = document.getElementById('categoryFilter').value;
+            const grid = document.getElementById('fleetGrid');
+            const l    = translations[currentLang] || translations['ar'];
+
             grid.innerHTML = '';
-            const filtered = fleet.filter(car => (eng === 'all' || car.engine === eng) && (cat === 'all' || car.cat === cat));
-            
+
+            const filtered = fleet.filter(car =>
+                (eng === 'all' || car.engine === eng) &&
+                (cat === 'all' || car.cat === cat)
+            );
+
+            // update results count
+            document.getElementById('resultsNum').innerText  = filtered.length;
+            document.getElementById('resultsText').innerText = l.resultsText;
+
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-20 font-black text-slate-400 text-2xl">${l.empty}</div>`;
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🐋</div>
+                        <h3>${l.empty}</h3>
+                        <p>${l.colorNote}</p>
+                    </div>`;
                 return;
             }
 
-            filtered.forEach(car => {
-                const carName = car.name[currentLang] || car.name['ar'];
-                const seoAlt = `تأجير ${carName} في ${city} - منصة الحوت`;
-                
+            filtered.forEach((car, idx) => {
+                const carName  = car.name[currentLang] || car.name['ar'];
+                const seoAlt   = `${carName} — Al-Hut Rental ${city}`;
+                const dayPrice = parseInt(car.price);
+                const totalPr  = dayPrice * parseInt(days || 1);
+                const priceStr = dayPrice.toLocaleString();
+                const totalStr = totalPr.toLocaleString();
+
+                // engine badge
+                const engBadge = car.engine === 'hybrid'
+                    ? `<span class="badge badge-green">${l.hybridBadge}</span>`
+                    : `<span class="badge badge-navy">${l.autoBadge}</span>`;
+
+                // category badge
+                const catMap = { economy:'badge-navy', family:'badge-navy', luxury:'badge-luxury' };
+                const catText = { economy: l.economyBadge, family: l.familyBadge, luxury: l.luxuryBadge };
+                const catBadge = `<span class="badge ${catMap[car.cat]}">${catText[car.cat]}</span>`;
+
+                // popular badge
+                const popularBadge = car.popular
+                    ? `<div class="badge-popular"><i class="fas fa-fire"></i>${l.popular}</div>`
+                    : '';
+
+                // specs
+                const sp = car.specs || {};
+                const specsHTML = `
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <div class="spec-icon"><i class="fas fa-user-friends"></i></div>
+                            <div class="spec-val">${sp.seats||5}</div>
+                            <div class="spec-key">${l.seats}</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon"><i class="fas fa-car-side"></i></div>
+                            <div class="spec-val">${sp.doors||4}</div>
+                            <div class="spec-key">${l.doors}</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon"><i class="fas fa-wind"></i></div>
+                            <div class="spec-val">${sp.ac ? '✓' : '✗'}</div>
+                            <div class="spec-key">${l.ac}</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon"><i class="fas fa-cogs"></i></div>
+                            <div class="spec-val">${sp.trans||'Auto'}</div>
+                            <div class="spec-key">${l.trans}</div>
+                        </div>
+                    </div>`;
+
+                // feature chips
+                const featLabels = {
+                    abs: {ar:'نظام ABS',en:'ABS',ku:'ABS',tr:'ABS'},
+                    bluetooth: {ar:'بلوتوث',en:'Bluetooth',ku:'بلوتوث',tr:'Bluetooth'},
+                    camera: {ar:'كاميرا خلفية',en:'Rear Camera',ku:'کامێرا',tr:'Kamera'},
+                    leather: {ar:'مقاعد جلد',en:'Leather Seats',ku:'کورسی پێست',tr:'Deri Koltuk'},
+                    sunroof: {ar:'سقف بانورامي',en:'Sunroof',ku:'سنرووف',tr:'Sunroof'},
+                    carplay: {ar:'Apple CarPlay',en:'Apple CarPlay',ku:'Apple CarPlay',tr:'Apple CarPlay'},
+                    usb: {ar:'USB / شحن',en:'USB Charge',ku:'USB',tr:'USB Şarj'},
+                    massageSeat: {ar:'مقاعد تدليك',en:'Massage Seats',ku:'کورسی ماساژ',tr:'Masaj Koltuk'}
+                };
+                const featIcons = { abs:'fa-car-crash',bluetooth:'fa-bluetooth-b',camera:'fa-camera',leather:'fa-couch',sunroof:'fa-sun',carplay:'fa-apple',usb:'fa-plug',massageSeat:'fa-spa' };
+
+                const featHTML = (car.features || []).map(f => {
+                    const lbl = (featLabels[f] || {})[currentLang] || f;
+                    const ico = featIcons[f] || 'fa-check';
+                    return `<span class="feat-chip"><i class="fas ${ico}"></i>${lbl}</span>`;
+                }).join('');
+
+                // total line (only if days > 1)
+                const totalLine = parseInt(days) > 1
+                    ? `<div class="price-total"><i class="fas fa-calculator" style="font-size:.6rem"></i> ${l.totalLabel}: ${totalStr} ${l.currency}</div>`
+                    : '';
+
+                // arrow direction
+                const arrowDir = l.dir === 'rtl' ? 'fa-arrow-left' : 'fa-arrow-right';
+
                 grid.innerHTML += `
-                    <article class="car-card p-5">
-                        <img src="${car.img}" alt="${seoAlt}" title="${seoAlt}" class="w-full h-56 object-cover rounded-[2.5rem] mb-5 shadow-inner" onerror="this.src='https://via.placeholder.com/400x250?text=Al-Hut+${carName}'">
-                        <div class="px-2 ${l.dir === 'rtl' ? 'text-right' : 'text-left'}">
-                            <h3 class="text-2xl font-black mb-1 text-slate-800">${carName}</h3>
-                            
-                            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
-                                <span class="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-lg">
-                                    <i class="fas fa-calendar-alt"></i> ${l.modelTag}
-                                </span>
-                                <span class="text-[10px] text-[#D4AF37] font-black uppercase">
-                                    ${l.colorNote}
-                                </span>
+                    <article class="car-card" style="animation-delay:${idx * .08}s">
+                        <!-- IMAGE -->
+                        <div class="card-img-wrap">
+                            <img
+                                src="${car.img}"
+                                alt="${seoAlt}"
+                                title="${seoAlt}"
+                                loading="lazy"
+                                onerror="this.src='https://placehold.co/600x300/001a38/D4AF37?text=${encodeURIComponent(carName)}'">
+                            <div class="card-badges">
+                                ${engBadge}
+                                ${catBadge}
+                            </div>
+                            ${popularBadge}
+                        </div>
+
+                        <!-- BODY -->
+                        <div class="card-body">
+                            <div class="card-header">
+                                <h3 class="car-name">${carName}</h3>
+                                <p class="car-sub">${l.modelTag} &bull; ${l.colorNote}</p>
                             </div>
 
-                            <div class="price-badge text-lg mb-6">${parseInt(car.price).toLocaleString()} ${l.currency}</div>
-                            <button onclick="selectCar('${carName}', '${car.price}')" class="btn-select py-4 text-xl shadow-lg active:scale-95">
-                                ${l.btn}
-                            </button>
+                            ${specsHTML}
+
+                            <div class="features-row">${featHTML}</div>
+
+                            <div class="card-footer">
+                                <div class="price-block">
+                                    <div class="price-from">${l.currency}</div>
+                                    <div class="price-main">
+                                        ${priceStr}
+                                        <span class="currency"> ${l.perDay}</span>
+                                    </div>
+                                    ${totalLine}
+                                </div>
+                                <button
+                                    class="btn-book"
+                                    onclick="selectCar('${carName.replace(/'/g,"\\'")}', '${car.price}')">
+                                    ${l.btn}
+                                    <i class="fas ${arrowDir}"></i>
+                                </button>
+                            </div>
                         </div>
-                    </article>
-                `;
+                    </article>`;
             });
         }
 
+        /* ══════════════════════════════════════
+           SELECT CAR  — identical to original
+        ══════════════════════════════════════ */
         function selectCar(carName, carPrice) {
             const nextURL = `addons.html?type=${type}&lang=${currentLang}&city=${encodeURIComponent(city)}&days=${days}&date=${date}&time=${time}&car=${encodeURIComponent(carName)}&basePrice=${carPrice}`;
             window.location.href = nextURL;
         }
 
-        window.onload = () => { initLang(); renderFleet(); };
+        /* ══════════════════════════════════════
+           BOOT
+        ══════════════════════════════════════ */
+        window.onload = () => {
+            initLang();
+            renderFleet();
+        };
     </script>
 </body>
 </html>

@@ -1,962 +1,1275 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <script>
-        // نظام إدارة النسخ (لمنع تعليق المتصفح على نسخة قديمة)
-        const CURRENT_APP_VERSION = "88.2";
-        const VERSION_KEY = 'nahla_master_app_version';
-        try {
-            if (localStorage.getItem(VERSION_KEY) !== CURRENT_APP_VERSION) {
-                localStorage.setItem(VERSION_KEY, CURRENT_APP_VERSION);
-                if ('caches' in window) {
-                    caches.keys().then(function(names) {
-                        for (let name of names) caches.delete(name);
-                    });
-                }
-                window.location.reload();
-            }
-        } catch (e) { console.warn('تعذّر التحقق من الإصدار:', e.message); }
-    </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>نحلة كركوك | Master Panel V88</title>
     
-    <meta name="theme-color" content="#09090b">
+    <title>نحلة 🐝 | الإدارة المركزية</title>
+    
+    <meta name="theme-color" content="#F59E0B">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <meta name="apple-mobile-web-app-title" content="إدارة نحلة">
+    <meta name="mobile-web-app-capable" content="yes">
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js" defer></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js" defer></script>
 
     <style>
-        /* =========================================
-           1. المتغيرات اللونية (Theme Variables)
-           ========================================= */
-        :root {
-            --primary: #f59e0b;       /* أصفر نحلة */
-            --primary-dark: #d97706;  
-            --primary-glow: rgba(245, 158, 11, 0.15);
-            
-            --bg-main: #09090b;       /* أسود عميق (الخلفية الأساسية) */
-            --bg-surface: #18181b;    /* لون البطاقات */
-            --bg-elevated: #27272a;   /* لون الحقول والتفاصيل المرتفعة */
-            
-            --border-color: #3f3f46;
-            
-            --text-main: #f8fafc;     /* أبيض ناصع للنصوص */
-            --text-muted: #a1a1aa;    /* رمادي للنصوص الثانوية */
-            
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --info: #3b82f6;
-
-            --nav-h: 75px;
-            --sidebar-w: 260px;
-        }
-
-        /* =========================================
-           2. الإعدادات العامة (Global)
-           ========================================= */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body {
-            height: 100%;
-            overflow: hidden; /* لمنع التمرير في الهيكل الأساسي */
-            background: var(--bg-main);
-            font-family: 'Cairo', sans-serif;
-            color: var(--text-main);
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .hidden-section { display: none !important; }
-        
-        /* الأزرار الأساسية */
-        .btn-brand {
-            background: var(--primary);
-            color: #000;
-            border: none;
-            border-radius: 12px;
-            padding: 12px 20px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .btn-brand:active { transform: scale(0.96); }
-        .btn-brand:disabled { opacity: 0.7; cursor: not-allowed; }
-
-        /* الحقول الإدخال */
-        .input-brand {
-            width: 100%;
-            background: var(--bg-elevated);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px 15px;
-            font-family: 'Cairo', sans-serif;
-            outline: none;
-            transition: 0.2s;
-        }
-        .input-brand:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-glow);
-        }
-
-        /* البطاقات الزجاجية */
-        .glass-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-
-        /* =========================================
-           3. شاشات التنبيه والتحميل
-           ========================================= */
-        #authOverlay {
-            position: fixed; inset: 0; z-index: 10000;
-            background: var(--bg-main);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .auth-box {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 40px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-
-        .modal-overlay {
-            position: fixed; inset: 0; z-index: 20000;
-            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);
-            display: none; align-items: center; justify-content: center; padding: 20px;
-        }
-        .modal-overlay.active { display: flex; animation: fadeIn 0.2s; }
-        .modal-content-box {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            width: 100%; max-width: 450px; max-height: 90vh;
-            padding: 25px; overflow-y: auto;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* =========================================
-           4. الهيكل الرئيسي (Layout)
-           ========================================= */
-        #mainApp { display: flex; height: 100%; width: 100%; }
-        
-        .main-content {
-            flex: 1;
-            height: 100%;
-            overflow-y: auto;
-            background: var(--bg-main);
-            position: relative;
+        /* 🐝 الهوية البصرية لشركة نحلة (Premium Glassmorphism) */
+        :root { 
+            --sidebar-width: 280px; 
+            --nahla-yellow: #F59E0B; /* أصفر نحلة الفاخر */
+            --nahla-dark: #1F2937;   /* لون داكن راقي */
+            --nahla-light: #FEF3C7;  /* خلفية صفراء خفيفة */
+            --bg-light: #F4F7F6;     /* خلفية رمادية فاتحة جداً */
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --shadow-soft: 0 10px 40px rgba(0,0,0,0.04);
+            --bottom-nav-height: 75px; 
         }
         
-        .admin-tab { display: none; padding: 20px; padding-bottom: 100px; }
-        .admin-tab.active-tab { display: block; animation: fadeUp 0.3s ease-out; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* إعدادات عامة */
+        html, body { height: 100%; overflow: hidden; overscroll-behavior: none; background-color: var(--bg-light); font-family: 'Cairo', sans-serif; color: var(--nahla-dark); -webkit-tap-highlight-color: transparent; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        /* 🔐 واجهة تسجيل الدخول الزجاجية */
+        #authOverlay { position: fixed; inset: 0; background: linear-gradient(135deg, #1F2937 0%, #000000 100%); z-index: 10000; display: flex; align-items: center; justify-content: center; }
+        .auth-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 32px; padding: 50px 30px; width: 90%; max-width: 400px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); text-align: center; }
+        .auth-icon-wrapper { background: linear-gradient(135deg, var(--nahla-yellow) 0%, #D97706 100%); width: 80px; height: 80px; border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4); }
+        .auth-card input { background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: white !important; font-weight: bold; letter-spacing: 2px; transition: 0.3s; }
+        .auth-card input:focus { background: rgba(255, 255, 255, 0.2) !important; border-color: var(--nahla-yellow) !important; outline: none; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2) !important; }
+        .auth-card input::placeholder { color: rgba(255, 255, 255, 0.5); }
+        .btn-nahla { background: linear-gradient(135deg, var(--nahla-yellow) 0%, #D97706 100%); border: none; color: white; font-weight: 900; transition: 0.3s; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3); }
+        .btn-nahla:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(245, 158, 11, 0.4); }
 
-        /* شريط التنقل */
-        .nav-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px 16px; border-radius: 12px;
-            color: var(--text-muted); font-weight: 700;
-            cursor: pointer; margin-bottom: 8px; transition: 0.2s;
-        }
-        .nav-item.active { background: var(--primary); color: #000; }
-
-        /* استجابة الموبايل */
+        /* 📱 الهيكل العام */
+        #mainDashboard { display: flex; height: 100%; width: 100%; overflow: hidden; }
+        .admin-tab { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .admin-tab.active-tab { display: block; }
+        
+        /* 📱 الموبايل */
         @media (max-width: 768px) {
             .sidebar { display: none !important; }
             .desktop-header { display: none !important; }
-            .bottom-nav {
-                display: flex; position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-h);
-                background: var(--bg-surface); border-top: 1px solid var(--border-color);
-                justify-content: space-around; align-items: center; z-index: 999;
-                padding-bottom: env(safe-area-inset-bottom);
-            }
-            .b-nav-item {
-                display: flex; flex-direction: column; align-items: center; gap: 4px;
-                color: var(--text-muted); font-size: 0.65rem; font-weight: 700; cursor: pointer; transition: 0.2s;
-            }
-            .b-nav-item.active { color: var(--primary); transform: translateY(-3px); }
+            .main-content { margin-right: 0 !important; padding: 0 !important; width: 100%; height: 100%; position: relative; }
+            
+            /* Bottom Nav زجاجي عائم */
+            .bottom-nav { display: flex; position: absolute; bottom: 20px; left: 20px; right: 20px; height: var(--bottom-nav-height); background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 24px; justify-content: space-around; align-items: center; z-index: 9999; box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
+            .b-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #94a3b8; font-size: 0.75rem; font-weight: 800; width: 25%; transition: 0.3s; cursor: pointer; }
+            .b-nav-item.active { color: var(--nahla-dark); }
+            .b-nav-item.active i { color: var(--nahla-yellow); transform: translateY(-4px); filter: drop-shadow(0 4px 6px rgba(245, 158, 11, 0.3)); }
+            
+            .admin-tab { position: absolute; inset: 0; bottom: calc(var(--bottom-nav-height) + 30px); overflow-y: auto; background: var(--bg-light); z-index: 5; }
+            #tab-live.active-tab { overflow: hidden; } 
+            
+            .map-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 55%; z-index: 1; }
+            #adminMap { width: 100%; height: 100%; border: none; border-radius: 0 0 32px 32px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+            
+            .bottom-sheet { position: absolute; top: 52%; left: 0; width: 100%; height: 48%; background: var(--bg-light); border-radius: 32px 32px 0 0; z-index: 10; display: flex; flex-direction: column; box-shadow: 0 -15px 40px rgba(0,0,0,0.08); }
+            .sheet-handle { width: 50px; height: 5px; background: #cbd5e1; border-radius: 10px; margin: 15px auto; flex-shrink: 0; }
+            .sheet-content { overflow-y: auto; padding: 0 20px 20px 20px; flex: 1; }
+            
+            .map-floating-header { position: absolute; top: max(15px, env(safe-area-inset-top)); left: 15px; right: 15px; z-index: 10; display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
+            .map-floating-header > * { pointer-events: auto; }
+            .map-floating-stats { position: absolute; top: calc(max(15px, env(safe-area-inset-top)) + 65px); right: 15px; z-index: 10; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
+            .m-stat { background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); padding: 10px 18px; border-radius: 20px; font-weight: 900; font-size: 1.1rem; box-shadow: 0 8px 20px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 10px; pointer-events: auto; border: 1px solid rgba(255,255,255,0.8); }
+            
+            .desktop-stats { display: none !important; }
+            .tab-inner-padding { padding: 20px; padding-top: max(20px, env(safe-area-inset-top)); }
         }
 
-        /* استجابة الديسكتوب */
+        /* 💻 الديسكتوب */
         @media (min-width: 769px) {
-            .bottom-nav { display: none !important; }
-            .sidebar {
-                width: var(--sidebar-w); background: var(--bg-surface);
-                border-left: 1px solid var(--border-color);
-                padding: 20px; display: flex; flex-direction: column;
-            }
-            .main-content { padding: 30px; }
-            .desktop-header { display: flex; justify-content: space-between; margin-bottom: 25px; }
+            .sidebar { width: var(--sidebar-width); background: var(--nahla-dark); height: 100vh; position: fixed; right: 0; top: 0; color: white; padding: 30px 20px; z-index: 1005; box-shadow: -5px 0 25px rgba(0,0,0,0.1); display: flex; flex-direction: column;}
+            .main-content { margin-right: var(--sidebar-width); padding: 40px; height: 100vh; overflow-y: auto; position: relative; width: calc(100% - var(--sidebar-width)); background: var(--bg-light); }
+            
+            .nav-item { display: flex; align-items: center; gap: 15px; padding: 16px 20px; color: #9CA3AF; text-decoration: none; border-radius: 20px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease; font-weight: 700; }
+            .nav-item:hover { background: rgba(255,255,255,0.05); color: white; transform: translateX(-5px); }
+            .nav-item.active { background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, transparent 100%); color: var(--nahla-yellow); border-right: 4px solid var(--nahla-yellow); border-radius: 16px 0 0 16px; font-weight: 900; }
+            
+            .map-wrapper { width: 100%; height: 500px; margin-bottom: 30px; border-radius: 32px; overflow: hidden; box-shadow: var(--shadow-soft); border: 8px solid white; background: white;}
+            #adminMap { width: 100%; height: 100%; z-index: 1; }
+            .map-floating-header, .map-floating-stats { display: none !important; }
+            .sheet-handle { display: none; }
+            .bottom-nav { display: none; }
+            .desktop-stats { display: flex; }
         }
 
-        /* =========================================
-           5. عناصر الواجهة (UI Components)
-           ========================================= */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 💠 الكروت والإحصائيات الزجاجية */
+        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 28px; box-shadow: var(--shadow-soft); padding: 20px; }
         
-        /* فلاتر البحث */
-        .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 15px; scrollbar-width: none; }
-        .filter-bar::-webkit-scrollbar { display: none; }
-        .filter-pill {
-            padding: 8px 16px; border-radius: 20px;
-            background: var(--bg-elevated); color: var(--text-muted); border: 1px solid var(--border-color);
-            font-size: 0.85rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.2s;
-        }
-        .filter-pill.active { background: var(--primary); color: #000; border-color: var(--primary); }
+        .stat-compact { background: white; border-radius: 24px; padding: 20px; box-shadow: var(--shadow-soft); display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(0,0,0,0.02); transition: 0.3s; }
+        .stat-compact:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.06); }
+        .stat-compact .icon-box { width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; }
+        .stat-compact h3 { margin: 0; font-weight: 900; font-size: 1.8rem; }
+        .stat-compact p { margin: 0; font-weight: 700; font-size: 0.9rem; color: #64748b; }
 
-        /* بطاقات الرادار (الطلبات) */
-        .order-card {
-            background: var(--bg-surface); border-radius: 16px; padding: 16px;
-            border: 1px solid var(--border-color); margin-bottom: 15px; position: relative;
-        }
-        .order-card.urgent { border-right: 4px solid var(--danger); }
-        .order-card.normal { border-right: 4px solid var(--success); }
+        .radar-filter-btn { background: white; border: 1px solid transparent; padding: 10px 20px; border-radius: 16px; font-weight: 800; color: #64748b; cursor: pointer; transition: 0.3s; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .radar-filter-btn.active { background: var(--nahla-dark); color: var(--nahla-yellow); box-shadow: 0 8px 25px rgba(31, 41, 55, 0.2); }
         
-        /* بطاقات الكيانات (مطاعم / كباتن) */
-        .entity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .entity-card {
-            background: var(--bg-surface); border: 1px solid var(--border-color);
-            border-radius: 16px; padding: 15px; display: flex; flex-direction: column;
-        }
-        .action-btns-row { display: flex; gap: 5px; margin-top: 15px; border-top: 1px solid var(--bg-elevated); padding-top: 10px; }
-        .btn-circle {
-            width: 36px; height: 36px; border-radius: 10px; border: none;
-            display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
-        }
-
-        /* الجداول (سجل اليوم) */
-        .table-responsive { overflow-x: auto; background: var(--bg-surface); border-radius: 16px; border: 1px solid var(--border-color); }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; text-align: right; }
-        th { background: var(--bg-elevated); padding: 12px; font-size: 0.85rem; color: var(--text-muted); }
-        td { padding: 12px; border-bottom: 1px solid var(--bg-elevated); font-size: 0.9rem; font-weight: 600; }
+        /* 🐝 كروت الطلبات (مستوحاة من التصاميم العالمية) */
+        .smart-order-card { background: white; border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(0,0,0,0.03); border-right: 6px solid #94a3b8; box-shadow: var(--shadow-soft); position: relative; transition: 0.3s; }
+        .smart-order-card:hover { box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
         
-        /* التنبيهات (Toast) */
-        #toastContainer { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; flex-direction: column; gap: 10px; }
-        .toast-msg { background: var(--bg-elevated); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 20px; border-radius: 12px; box-shadow: var(--s-sm); font-weight: 700; display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .status-danger { border-right-color: #ef4444; } .status-warning { border-right-color: #F59E0B; } .status-success { border-right-color: #10b981; } .status-primary { border-right-color: #1F2937; }
+        .status-purple { border-right-color: #8b5cf6 !important; } .bg-purple { background-color: #8b5cf6 !important; } .text-purple { color: #8b5cf6 !important; } .border-purple { border-color: #e9d5ff !important; } .batch-card { background-color: #faf5ff !important; }
+        
+        .status-ringing { border-right-color: var(--nahla-yellow); background: linear-gradient(90deg, rgba(245, 158, 11, 0.03) 0%, transparent 100%); animation: flashOrange 2s infinite; }
+        @keyframes flashOrange { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.3); } 70% { box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
 
+        .status-overdue { border-right-color: #ef4444; background: linear-gradient(90deg, rgba(239, 68, 68, 0.05) 0%, transparent 100%); animation: flashRed 1s infinite; }
+        @keyframes flashRed { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+        .delay-badge { position: absolute; top: -12px; right: 20px; background: #ef4444; color: white; padding: 6px 16px; border-radius: 20px; font-size: 0.75rem; font-weight: 900; animation: pulse 2s infinite; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.5); border: 2px solid white; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        .info-row { display: flex; justify-content: space-between; align-items: center; background: #F9FAFB; padding: 10px 15px; border-radius: 16px; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: var(--nahla-dark); }
+        .info-card-inner { background: #F3F4F6; padding: 15px; border-radius: 16px; margin-top: 10px; border: 1px dashed #D1D5DB; }
+        
+        .btn-call-mini { background: white; border: 1px solid #e2e8f0; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); flex-shrink: 0;}
+        .btn-call-mini:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        .btn-call-mini:active { transform: scale(0.9); }
+        .btn-call-mini.call-success { color: #059669; border-color: #a7f3d0; background: #ecfdf5;}
+        
+        .btn-track { background: var(--nahla-light); color: #D97706; border: none; border-radius: 12px; padding: 6px 12px; font-size: 0.8rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;}
+        .btn-track:hover { background: var(--nahla-yellow); color: white; }
+        .manual-assign-select { border: none; border-radius: 12px; padding: 6px 10px; font-size: 0.85rem; font-weight: 800; max-width: 120px; background: white; outline: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer;}
+
+        /* فلاتر القوائم (المطاعم/الكباتن) */
+        .filter-btn-group { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 15px; }
+        .filter-btn-group::-webkit-scrollbar { height: 0; }
+        .filter-btn { background: white; border: 1px solid transparent; padding: 10px 20px; border-radius: 16px; font-weight: 800; color: #64748b; cursor: pointer; font-size: 0.95rem; white-space: nowrap; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: 0.3s;}
+        .filter-btn.active { background: var(--nahla-dark); color: var(--nahla-yellow); box-shadow: 0 8px 20px rgba(31, 41, 55, 0.2); }
+        .filter-btn .badge-count { background: #F3F4F6; color: var(--nahla-dark); padding: 3px 8px; border-radius: 10px; margin-right: 8px; font-size: 0.8rem; }
+        .filter-btn.active .badge-count { background: rgba(245, 158, 11, 0.2); color: var(--nahla-yellow); }
+
+        .archive-toolbar { background: white; border-radius: 24px; padding: 20px; box-shadow: var(--shadow-soft); margin-bottom: 20px; }
+        .analytics-bar { background: linear-gradient(135deg, var(--nahla-dark) 0%, #111827 100%); color: white; border-radius: 24px; padding: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; box-shadow: 0 15px 30px rgba(31, 41, 55, 0.2); }
+        .analytics-bar h4 { color: var(--nahla-yellow); }
+
+        /* أزرار الإجراءات في القوائم */
+        .sov-btn { border: none; border-radius: 14px; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
+        .sov-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        .sov-btn:active { transform: scale(0.9); }
+        .sov-accept { background: #ecfdf5; color: #10b981; } .sov-pause { background: #fffbeb; color: #d97706; } .sov-delete { background: #fef2f2; color: #ef4444; } .sov-reset { background: var(--nahla-light); color: #D97706; } .sov-call { background: var(--nahla-dark); color: var(--nahla-yellow); }
+
+        /* Toast Notifications */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 20000; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px;}
+        .toast-msg { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-right: 6px solid var(--nahla-yellow); border-radius: 16px; padding: 16px 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 0.95rem; animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; color: var(--nahla-dark);}
+        .toast-msg.success { border-color: #10b981; } .toast-msg.error { border-color: #ef4444; }
+        @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Emergency Modal */
+        #emergencyModal { position: fixed; inset: 0; background: rgba(31,41,55,0.85); z-index: 30000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .emergency-card { background: white; border-radius: 32px; padding: 40px; width: 90%; max-width: 450px; text-align: center; border-top: 10px solid #ef4444; box-shadow: 0 30px 60px rgba(0,0,0,0.4); animation: pulseAlert 2s infinite; }
+        @keyframes pulseAlert { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); } 70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+        /* Driver Performance Dots */
+        .perf-dot { position: absolute; top: 15px; left: 15px; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); color: white; font-weight: 900; font-size: 0.8rem; border: 2px solid white;}
+        .perf-green { background-color: #10b981; } .perf-yellow { background-color: #f59e0b; } .perf-red { background-color: #ef4444; } 
+
+        .leaflet-interactive.path-animated { animation: dash 20s linear infinite; }
+        @keyframes dash { to { stroke-dashoffset: -1000; } }
+
+        .marker-pulse { border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.8); animation: pulseMarker 2s infinite; }
+        @keyframes pulseMarker { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.8); } 70% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+
+        .btn-loading { opacity: 0.7 !important; pointer-events: none !important; position: relative; color: transparent !important; }
+        .btn-loading::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; border: 3px solid rgba(0,0,0,0.2); border-top-color: #000; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        
+        #invoiceModal { position: fixed; inset: 0; background: rgba(31,41,55,0.7); z-index: 20000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); padding: 15px; }
+        .invoice-card { background: white; border-radius: 32px; padding: 35px; width: 100%; max-width: 450px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.3);}
+        .invoice-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 700; font-size: 0.95rem; color: var(--nahla-dark);}
+        
+        .table-responsive { border-radius: 24px; overflow: hidden; }
+        .table { margin: 0; }
+        .table th { background: #F9FAFB; color: #6B7280; font-weight: 800; border-bottom: 2px solid #E5E7EB; padding: 15px; }
+        .table td { padding: 15px; vertical-align: middle; border-bottom: 1px solid #F3F4F6; }
     </style>
 </head>
 <body>
 
-    <div id="toastContainer"></div>
-    <audio id="adminAlertSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+<div id="toast-container"></div>
 
-    <div id="authOverlay">
-        <div class="auth-box">
-            <div style="background: var(--primary); width: 60px; height: 60px; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; transform: rotate(45deg);">
-                <i data-lucide="hexagon" style="color: #000; transform: rotate(-45deg);" width="30" height="30"></i>
-            </div>
-            <h2 class="fw-black mb-1 text-white">نحلة كركوك</h2>
-            <p class="text-muted fw-bold mb-4 small">الإدارة العليا - Hive V88.2</p>
-            <input type="password" id="masterPass" class="input-brand" placeholder="رمز المرور الإداري" onkeypress="if(event.key === 'Enter') loginAdmin()">
-            <button class="btn-brand w-100 mt-2" onclick="loginAdmin()">دخول للخلية</button>
+<audio id="adminAlertSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+<audio id="emergencySound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto" loop></audio>
+
+<div id="emergencyModal">
+    <div class="emergency-card">
+        <div class="bg-danger bg-opacity-10 d-inline-block p-4 rounded-circle mb-4">
+            <i data-lucide="alert-triangle" size="60" class="text-danger"></i>
         </div>
+        <h2 class="fw-black text-danger mb-2">نداء سيادي!</h2>
+        <p class="text-muted fw-bold mb-4 fs-5">يوجد طلب معلق لفترة طويلة جداً ويحتاج لتدخل يدوي للتعيين فوراً.</p>
+        <button class="btn btn-danger w-100 fw-black rounded-pill py-3 fs-5 shadow" onclick="closeEmergency()">حسناً، سأتدخل الآن</button>
     </div>
+</div>
 
-    <div id="mainApp" class="hidden-section">
-        
-        <aside class="sidebar">
-            <div class="mb-4 text-center">
-                <h4 class="fw-black text-white m-0">نحلة كركوك 🐝</h4>
-                <small class="text-muted fw-bold">Master Panel</small>
+<div id="authOverlay">
+    <div class="auth-card">
+        <div class="auth-icon-wrapper">
+            <i data-lucide="hexagon" size="45" color="white" fill="white"></i>
+        </div>
+        <h2 class="fw-black text-white mb-1" style="letter-spacing: -1px;">نحلة 🐝</h2>
+        <p class="text-white-50 fw-bold mb-4">الإدارة المركزية الذكية</p>
+        <input type="password" id="masterPass" class="form-control form-control-lg text-center mb-4 rounded-pill py-3 fs-5" placeholder="رمز الدخول الآمن" autocomplete="off" onkeypress="if(event.key === 'Enter') checkAuth()">
+        <button class="btn btn-nahla w-100 py-3 rounded-pill fs-5" onclick="checkAuth()">تسجيل الدخول</button>
+    </div>
+</div>
+
+<div class="d-none" id="mainDashboard">
+    <aside class="sidebar" id="sidebar">
+        <div class="d-flex align-items-center gap-3 mb-5 px-2 mt-3">
+            <div class="bg-white bg-opacity-10 p-2 rounded-3">
+                <i data-lucide="hexagon" color="var(--nahla-yellow)" fill="var(--nahla-yellow)" size="30"></i>
             </div>
-            <nav>
-                <div class="nav-item active" onclick="switchTab('live', this)"><i data-lucide="map"></i> الرادار الميداني</div>
-                <div class="nav-item" onclick="switchTab('archive', this)"><i data-lucide="bar-chart-2"></i> سجل اليوم</div>
-                <div class="nav-item" onclick="switchTab('restaurants', this)"><i data-lucide="store"></i> الشركاء</div>
-                <div class="nav-item" onclick="switchTab('drivers', this)"><i data-lucide="users"></i> الأسطول</div>
-                <div class="nav-item" onclick="switchTab('system', this)"><i data-lucide="cpu"></i> النظام</div>
-            </nav>
-            <button class="btn-brand mt-auto" style="background: var(--bg-elevated); color: var(--danger);" onclick="location.reload()">تسجيل خروج</button>
-        </aside>
-
-        <main class="main-content">
-            
-            <header class="desktop-header">
-                <div>
-                    <h3 class="fw-black m-0 text-white">لوحة التحكم</h3>
-                    <p class="text-muted fw-bold small m-0" id="connectionStatus">جاري الاتصال بقاعدة البيانات...</p>
-                </div>
-                <div class="glass-card py-2 px-4" id="liveTime">00:00</div>
-            </header>
-
-            <div id="tab-live" class="admin-tab active-tab">
-                <div class="row g-3 mb-3 d-none d-md-flex">
-                    <div class="col-md-6"><div class="glass-card text-center"><h3 class="fw-black text-warning m-0" id="stat-active-orders">0</h3><small class="text-muted fw-bold">طلبات نشطة</small></div></div>
-                    <div class="col-md-6"><div class="glass-card text-center"><h3 class="fw-black text-success m-0" id="stat-online-drivers">0</h3><small class="text-muted fw-bold">كباتن بالميدان</small></div></div>
-                </div>
-
-                <div id="mapWrap">
-                    <div id="adminMap"></div>
-                </div>
-
-                <h5 class="fw-black mb-3 text-white">إدارة الرادار الحي</h5>
-                <div class="filter-bar" id="radarFilters">
-                    <button class="filter-pill active" onclick="filterRadar('all', this)">الكل</button>
-                    <button class="filter-pill text-danger" onclick="filterRadar('pending', this)">معلق (بانتظار كابتن)</button>
-                    <button class="filter-pill text-success" onclick="filterRadar('active', this)">بالطريق (قيد التوصيل)</button>
-                </div>
-                
-                <div id="radarContainer">
-                    <div class="text-center text-muted fw-bold py-5">جاري جلب الطلبات...</div>
-                </div>
+            <div>
+                <h3 class="m-0 fw-black text-white" style="letter-spacing:-1px;">نحلة 🐝</h3>
+                <small class="text-white-50 fw-bold" style="font-size: 0.85rem;">مركز التحكم</small>
             </div>
-
-            <div id="tab-archive" class="admin-tab">
-                <h4 class="fw-black mb-3 text-white">سجل اليوم المباشر</h4>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-8"><div class="glass-card"><canvas id="dailyChart" height="200"></canvas></div></div>
-                    <div class="col-md-4"><div class="glass-card text-center h-100 d-flex flex-column justify-content-center"><h3 class="fw-black text-danger m-0" id="stat-total-comm">0</h3><small class="text-muted fw-bold">إجمالي العمولات المنجزة</small></div></div>
-                </div>
-                
-                <input type="text" id="archiveSearch" class="input-brand mb-3" placeholder="بحث برقم الطلب أو المطعم..." oninput="renderArchiveTable()">
-                
-                <div class="table-responsive">
-                    <table id="archiveTable">
-                        <thead>
-                            <tr><th>رقم الطلب</th><th>الوقت</th><th>المطعم</th><th>الكابتن</th><th>السعر</th><th>العمولة</th><th>الحالة</th></tr>
-                        </thead>
-                        <tbody id="archiveTableBody">
-                            <tr><td colspan="7" class="text-center">لا توجد بيانات</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="tab-restaurants" class="admin-tab">
-                <h4 class="fw-black mb-3 text-white">إدارة المطاعم الشريكة</h4>
-                <input type="text" id="resSearch" class="input-brand mb-3" placeholder="بحث باسم المطعم أو الرقم..." oninput="renderEntities('RES')">
-                <div class="filter-bar" id="resFilters">
-                    <button class="filter-pill active" onclick="filterEntities('RES', 'all', this)">الكل</button>
-                    <button class="filter-pill" onclick="filterEntities('RES', 'active', this)">مفعّل</button>
-                    <button class="filter-pill text-danger" onclick="filterEntities('RES', 'pending', this)">طلبات انضمام</button>
-                </div>
-                <div class="entity-grid" id="resContainer"></div>
-            </div>
-
-            <div id="tab-drivers" class="admin-tab">
-                <h4 class="fw-black mb-3 text-white">إدارة أسطول النحلة</h4>
-                <input type="text" id="drvSearch" class="input-brand mb-3" placeholder="بحث باسم الكابتن أو الرقم..." oninput="renderEntities('DRV')">
-                <div class="filter-bar" id="drvFilters">
-                    <button class="filter-pill active" onclick="filterEntities('DRV', 'all', this)">الكل</button>
-                    <button class="filter-pill text-success" onclick="filterEntities('DRV', 'active', this)">متاح بالميدان</button>
-                    <button class="filter-pill text-warning" onclick="filterEntities('DRV', 'inactive', this)">في استراحة</button>
-                    <button class="filter-pill text-danger" onclick="filterEntities('DRV', 'banned', this)">موقوف</button>
-                </div>
-                <div class="entity-grid" id="drvContainer"></div>
-            </div>
-
-            <div id="tab-system" class="admin-tab">
-                <h4 class="fw-black mb-3 text-white">النظام والأدوات</h4>
-                
-                <div class="aiops-ticker">
-                    <i data-lucide="activity" class="me-2"></i> <span id="systemTicker">🟢 النظام يعمل بسلاسة. جميع الخدمات متصلة.</span>
-                </div>
-
-                <div class="glass-card mb-4 border-danger">
-                    <h5 class="fw-black text-danger mb-2"><i data-lucide="archive"></i> التصفية الليلية (Nightly Cleaner)</h5>
-                    <p class="text-muted fw-bold small mb-3">يقوم هذا الإجراء بحساب أرباح اليوم، مسح الطلبات المنجزة من الشاشة، وتحديث ديون المطاعم والكباتن في قاعدة البيانات والشيت.</p>
-                    <button class="btn-brand" style="background: var(--danger); color: white;" onclick="executeAdminAction('RUN_NIGHTLY_CLEANER', this)">تشغيل التصفية الآن</button>
-                </div>
-
-                <h5 class="fw-black mb-3 text-white">سجل التدقيق (Audit Trail)</h5>
-                <div id="auditContainer" class="glass-card p-3">
-                    <div class="text-muted text-center">لا توجد سجلات حديثة</div>
-                </div>
-            </div>
-
-        </main>
-
-        <nav class="bottom-nav">
-            <div class="b-nav-item active" onclick="switchTab('live', this)"><i data-lucide="map" width="22"></i>الميدان</div>
-            <div class="b-nav-item" onclick="switchTab('archive', this)"><i data-lucide="bar-chart-2" width="22"></i>السجل</div>
-            <div class="b-nav-item" onclick="switchTab('restaurants', this)"><i data-lucide="store" width="22"></i>المطاعم</div>
-            <div class="b-nav-item" onclick="switchTab('drivers', this)"><i data-lucide="users" width="22"></i>الكباتن</div>
-            <div class="b-nav-item" onclick="switchTab('system', this)"><i data-lucide="cpu" width="22"></i>النظام</div>
+        </div>
+        <nav class="flex-grow-1">
+            <div class="nav-item active desktop-nav-link" onclick="showTab(event, 'live')"><i data-lucide="layout-dashboard"></i> <span>الرصد الميداني</span></div>
+            <div class="nav-item desktop-nav-link" onclick="showTab(event, 'orders')"><i data-lucide="database"></i> <span>الأرشيف المركزي</span></div>
+            <div class="nav-item desktop-nav-link" onclick="showTab(event, 'restaurants')"><i data-lucide="store"></i> <span>إدارة الشركاء</span></div>
+            <div class="nav-item desktop-nav-link" onclick="showTab(event, 'drivers')"><i data-lucide="users"></i> <span>إدارة الأسطول</span></div>
         </nav>
-    </div>
+        <div class="mt-auto text-center opacity-50 pb-3">
+            <small class="fw-bold">Nahla V88.0.0 Enterprise</small>
+        </div>
+    </aside>
 
-    <div class="modal-overlay" id="editModal" onclick="closeModal('editModal')">
-        <div class="modal-content-box" onclick="event.stopPropagation()">
-            <h4 class="fw-black mb-1 text-center text-primary" id="editTitle">تعديل البيانات</h4>
-            <p class="text-muted fw-bold small text-center mb-4" id="editSub">قم بتحديث بيانات الشريك</p>
+    <main class="main-content">
+        <header class="d-flex justify-content-between align-items-center mb-4 desktop-header">
+            <div>
+                <h2 class="fw-black m-0" style="color: var(--nahla-dark);">لوحة القيادة</h2>
+                <p class="text-muted m-0 fw-bold fs-6">رصد حي لعمليات التوصيل في كركوك</p>
+            </div>
+            <div id="liveTimeDesk" class="bg-white px-4 py-2 rounded-pill shadow-sm fw-black border fs-5" style="color: var(--nahla-dark);">00:00</div>
+        </header>
+
+        <div id="tab-live" class="admin-tab active-tab">
             
-            <label class="fw-bold text-muted small mb-1">الاسم</label>
-            <input type="text" id="editName" class="input-brand mb-3">
-            
-            <label class="fw-bold text-muted small mb-1">رقم الهاتف (لا يمكن تغييره)</label>
-            <input type="text" id="editPhone" class="input-brand mb-3" disabled style="opacity: 0.5;">
-            
-            <label class="fw-bold text-warning small mb-1">تغيير كلمة المرور (اتركه فارغاً لعدم التغيير)</label>
-            <input type="text" id="editPass" class="input-brand mb-3" placeholder="كلمة مرور جديدة">
-            
-            <div id="editResOnly" class="d-none">
-                <label class="fw-bold text-muted small mb-1">المنطقة</label>
-                <input type="text" id="editArea" class="input-brand mb-3">
-                <div class="row g-2 mb-3">
-                    <div class="col-6"><label class="fw-bold text-muted small mb-1">العمولة (د.ع)</label><input type="number" id="editComm" class="input-brand"></div>
-                    <div class="col-6"><label class="fw-bold text-muted small mb-1">نظام الدفع</label>
-                        <select id="editPayType" class="input-brand"><option value="المطعم يدفع">المطعم يدفع</option><option value="مناصفة">مناصفة</option></select>
+            <div class="row g-4 mb-4 desktop-stats">
+                <div class="col-4">
+                    <div class="stat-compact">
+                        <div><p>الطلبات النشطة</p><h3 class="val-orders" style="color: var(--nahla-dark);">0</h3></div>
+                        <div class="icon-box" style="background: var(--nahla-light);"><i data-lucide="package" style="color: var(--nahla-yellow);"></i></div>
                     </div>
                 </div>
-                <div class="row g-2 mb-4">
-                    <div class="col-6"><label class="fw-bold text-muted small mb-1">خط العرض (Lat)</label><input type="number" id="editLat" class="input-brand"></div>
-                    <div class="col-6"><label class="fw-bold text-muted small mb-1">خط الطول (Lng)</label><input type="number" id="editLng" class="input-brand"></div>
+                <div class="col-4">
+                    <div class="stat-compact">
+                        <div><p>كباتن بالميدان</p><h3 class="text-success val-drivers">0</h3></div>
+                        <div class="icon-box bg-success bg-opacity-10"><i data-lucide="zap" class="text-success"></i></div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="stat-compact">
+                        <div><p>مطاعم متصلة</p><h3 class="val-res" style="color: var(--nahla-dark);">0</h3></div>
+                        <div class="icon-box bg-dark bg-opacity-10"><i data-lucide="store" class="text-dark"></i></div>
+                    </div>
                 </div>
             </div>
 
-            <div id="editDrvOnly" class="d-none">
-                <label class="fw-bold text-muted small mb-1">حالة الحساب</label>
-                <select id="editStatus" class="input-brand mb-4">
-                    <option value="active">متاح (نشط)</option>
-                    <option value="inactive">في استراحة</option>
-                    <option value="banned">موقوف إدارياً</option>
-                </select>
+            <div class="map-floating-header">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="bg-white p-2 rounded-circle shadow-sm d-flex align-items-center justify-content-center">
+                        <i data-lucide="hexagon" size="24" color="var(--nahla-yellow)" fill="var(--nahla-yellow)"></i>
+                    </div>
+                    <h4 class="m-0 fw-black text-dark" style="text-shadow: 0 0 10px white, 0 0 10px white;">نحلة</h4>
+                </div>
+                <div id="liveTimeMob" class="bg-white px-3 py-1 rounded-pill shadow-sm fw-black text-dark fs-6 border">00:00</div>
             </div>
 
-            <div class="d-flex gap-2">
-                <button class="btn-brand w-100" style="background: var(--bg-elevated); color: var(--text-main);" onclick="closeModal('editModal')">إلغاء</button>
-                <button class="btn-brand w-100" id="btnSaveEdit" onclick="saveEdits()">حفظ التعديلات</button>
+            <div class="map-floating-stats">
+                <div class="m-stat" style="color: var(--nahla-dark);"><i data-lucide="package" size="20" style="color: var(--nahla-yellow);"></i> <span class="val-orders">0</span></div>
+                <div class="m-stat text-success"><i data-lucide="zap" size="20"></i> <span class="val-drivers">0</span></div>
+            </div>
+
+            <div class="map-wrapper">
+                <div id="adminMap"></div>
+            </div>
+            
+            <div class="bottom-sheet">
+                <div class="sheet-handle"></div>
+                <div class="sheet-content">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-black m-0" style="color: var(--nahla-dark);"><i data-lucide="activity" class="text-danger me-2" size="22"></i> الرادار الميداني</h5>
+                    </div>
+                    <div class="d-flex gap-2 w-100 mb-4" id="radarFilters">
+                        <button class="radar-filter-btn active flex-grow-1" onclick="filterRadar('all', this)">الكل</button>
+                        <button class="radar-filter-btn text-danger bg-danger bg-opacity-10 flex-grow-1" onclick="filterRadar('pending', this)">معلق</button>
+                        <button class="radar-filter-btn text-success bg-success bg-opacity-10 flex-grow-1" onclick="filterRadar('active', this)">مُسند</button>
+                    </div>
+                    <div class="row g-3" id="smartOrdersContainer"><div class="text-center p-5 text-muted fw-bold">جاري جلب إشارات نحلة...</div></div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal-overlay" id="invoiceModal" onclick="closeModal('invoiceModal')">
-        <div class="modal-content-box" onclick="event.stopPropagation()">
-            <div class="text-center mb-3 text-primary"><i data-lucide="receipt" width="40" height="40"></i></div>
-            <h4 class="fw-black text-center text-white mb-4">تفاصيل الطلب</h4>
-            
-            <div class="d-flex justify-content-between border-bottom border-secondary pb-2 mb-2"><span class="text-muted fw-bold">رقم الطلب</span><span class="fw-black text-white" id="invId"></span></div>
-            <div class="d-flex justify-content-between border-bottom border-secondary pb-2 mb-2"><span class="text-muted fw-bold">المطعم</span><span class="fw-black text-warning" id="invRes"></span></div>
-            <div class="d-flex justify-content-between border-bottom border-secondary pb-2 mb-2"><span class="text-muted fw-bold">الكابتن</span><span class="fw-black text-success" id="invDrv"></span></div>
-            <div class="d-flex justify-content-between border-bottom border-secondary pb-2 mb-2"><span class="text-muted fw-bold">السعر</span><span class="fw-black text-primary" id="invPrice"></span></div>
-            <div class="d-flex justify-content-between border-bottom border-secondary pb-2 mb-2"><span class="text-muted fw-bold">العمولة</span><span class="fw-black text-danger" id="invComm"></span></div>
-            <div class="d-flex justify-content-between pb-2 mb-4"><span class="text-muted fw-bold">الحالة</span><span class="fw-black" id="invStatus"></span></div>
-            
-            <button class="btn-brand w-100" onclick="closeModal('invoiceModal')">إغلاق</button>
+        <div id="tab-orders" class="admin-tab tab-inner-padding">
+            <h3 class="fw-black mb-4 text-dark d-md-none">الأرشيف المركزي</h3>
+            <div class="archive-toolbar">
+                <div class="row g-3">
+                    <div class="col-12 col-md-3"><input type="text" id="arcSearch" class="form-control form-control-lg rounded-pill bg-light border-0 px-4 fw-bold" placeholder="بحث برقم الطلب..." oninput="renderArchive()"></div>
+                    <div class="col-6 col-md-2"><select id="arcRes" class="form-select form-select-lg rounded-pill bg-light border-0 fw-bold" onchange="renderArchive()"><option value="">كل المطاعم</option></select></div>
+                    <div class="col-6 col-md-2"><select id="arcDriver" class="form-select form-select-lg rounded-pill bg-light border-0 fw-bold" onchange="renderArchive()"><option value="">كل الكباتن</option></select></div>
+                    <div class="col-6 col-md-2"><input type="date" id="arcDateFrom" class="form-control form-control-lg rounded-pill bg-light border-0 fw-bold text-muted" onchange="renderArchive()"></div>
+                    <div class="col-6 col-md-2"><input type="date" id="arcDateTo" class="form-control form-control-lg rounded-pill bg-light border-0 fw-bold text-muted" onchange="renderArchive()"></div>
+                    <div class="col-12 col-md-1"><button class="btn btn-nahla btn-lg w-100 rounded-pill d-flex align-items-center justify-content-center" onclick="exportExcel()"><i data-lucide="download" size="20"></i></button></div>
+                </div>
+            </div>
+            <div class="analytics-bar">
+                <div><span class="opacity-75 fw-bold">إجمالي الطلبات المكتملة</span> <h2 class="fw-black m-0 mt-1" id="arcTotalCount">0</h2></div>
+                <div class="text-end"><span class="opacity-75 fw-bold">إجمالي العمولات المستحقة</span> <h2 class="fw-black m-0 mt-1" id="arcTotalComm">0 <span class="fs-5">د.ع</span></h2></div>
+            </div>
+            <div class="glass-panel p-0 table-responsive">
+                <table class="table table-hover align-middle m-0" id="archiveTable" style="min-width: 700px;">
+                    <thead><tr style="color: var(--nahla-dark);"><th>ID الطلب</th><th>التاريخ</th><th>المطعم</th><th>الكابتن</th><th>الحالة</th></tr></thead>
+                    <tbody id="ordersTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="tab-restaurants" class="admin-tab tab-inner-padding">
+            <h3 class="fw-black mb-4 text-dark d-md-none">إدارة الشركاء</h3>
+            <div class="mb-4">
+                <input type="text" id="searchResInput" class="form-control form-control-lg rounded-pill bg-white px-4 py-3 fw-bold shadow-sm border-0" placeholder="🔍 ابحث عن مطعم أو رقم هاتف..." oninput="triggerSearch('RESTAURANT')">
+            </div>
+            <div class="filter-btn-group" id="resFiltersGroup">
+                <button class="filter-btn active" onclick="applySectionFilter('RESTAURANT', 'all', this)">الكل <span class="badge-count" id="badge-res-all">0</span></button>
+                <button class="filter-btn" onclick="applySectionFilter('RESTAURANT', 'pending', this)">طلبات جديدة <span class="badge-count" id="badge-res-pending">0</span></button>
+                <button class="filter-btn" onclick="applySectionFilter('RESTAURANT', 'active', this)">مفعل <span class="badge-count" id="badge-res-active">0</span></button>
+                <button class="filter-btn" onclick="applySectionFilter('RESTAURANT', 'inactive', this)">استراحة <span class="badge-count" id="badge-res-inactive">0</span></button>
+                <button class="filter-btn" onclick="applySectionFilter('RESTAURANT', 'banned', this)">موقوف <span class="badge-count" id="badge-res-banned">0</span></button>
+            </div>
+            <div class="row g-3" id="resListContainer"></div>
+        </div>
+
+        <div id="tab-drivers" class="admin-tab tab-inner-padding">
+            <h3 class="fw-black mb-4 text-dark d-md-none">إدارة الأسطول</h3>
+            <div class="mb-4">
+                <input type="text" id="searchDriverInput" class="form-control form-control-lg rounded-pill bg-white px-4 py-3 fw-bold shadow-sm border-0" placeholder="🔍 ابحث عن كابتن أو رقم هاتف..." oninput="triggerSearch('DRIVER')">
+            </div>
+            <div class="filter-btn-group" id="driverFiltersGroup">
+                <button class="filter-btn active" onclick="applySectionFilter('DRIVER', 'all', this)">الكل <span class="badge-count" id="badge-driver-all">0</span></button>
+                <button class="filter-btn" onclick="applySectionFilter('DRIVER', 'pending', this)">طلبات انضمام <span class="badge-count" id="badge-driver-pending">0</span></button>
+                <button class="filter-btn" onclick="applySectionFilter('DRIVER', 'active', this)">بالميدان <span class="badge-count" id="badge-driver-active">0</span></button>
+                <button class="filter-btn" onclick="applySectionFilter('DRIVER', 'inactive', this)">استراحة <span class="badge-count" id="badge-driver-inactive">0</span></button>
+                <button class="filter-btn" onclick="applySectionFilter('DRIVER', 'banned', this)">موقوف <span class="badge-count" id="badge-driver-banned">0</span></button>
+            </div>
+            <div class="row g-3" id="driverListContainer"></div>
+        </div>
+        
+        <nav class="bottom-nav">
+            <div class="b-nav-item mobile-nav-link active" onclick="showTab(event, 'live')">
+                <i data-lucide="hexagon" size="24" fill="currentColor"></i><span class="mt-1">الرادار</span>
+            </div>
+            <div class="b-nav-item mobile-nav-link" onclick="showTab(event, 'orders')">
+                <i data-lucide="file-text" size="24"></i><span class="mt-1">الأرشيف</span>
+            </div>
+            <div class="b-nav-item mobile-nav-link" onclick="showTab(event, 'store')">
+                <i data-lucide="store" size="24"></i><span class="mt-1">المطاعم</span>
+            </div>
+            <div class="b-nav-item mobile-nav-link" onclick="showTab(event, 'drivers')">
+                <i data-lucide="users" size="24"></i><span class="mt-1">الأسطول</span>
+            </div>
+        </nav>
+
+    </main>
+</div>
+
+<div id="invoiceModal" onclick="closeInvoice(event)">
+    <div class="invoice-card" onclick="event.stopPropagation()">
+        <button class="btn btn-light rounded-circle position-absolute d-flex align-items-center justify-content-center p-2 shadow-sm" style="top:20px; left:20px;" onclick="closeInvoice()"><i data-lucide="x" size="20"></i></button>
+        <div class="invoice-header text-center mb-4">
+            <div class="d-inline-block p-4 rounded-circle mb-3" style="background: var(--nahla-light);">
+                <i data-lucide="receipt" size="35" style="color: var(--nahla-yellow);"></i>
+            </div>
+            <h3 class="fw-black m-0 text-dark">فاتورة الطلب</h3>
+            <p class="text-muted fw-bold mb-0 fs-6 mt-1" id="invOrderId">#HUT-0000</p>
+        </div>
+        <div class="bg-light p-3 rounded-4 mb-3">
+            <div class="invoice-row"><span>التاريخ والوقت:</span> <span id="invDate" class="text-muted">---</span></div>
+            <div class="invoice-row"><span>المطعم الشريك:</span> <span class="text-dark fw-black" id="invRes">---</span></div>
+            <div class="invoice-row"><span>الكابتن المنفذ:</span> <span class="text-success fw-black" id="invDriver">---</span></div>
+            <div class="invoice-row mb-0"><span>تفاصيل الزبون:</span> <span id="invCust" class="text-muted text-start" style="max-width: 180px;">---</span></div>
+        </div>
+        <div class="bg-dark text-white p-3 rounded-4">
+            <div class="invoice-row border-bottom border-secondary pb-2 mb-2"><span class="opacity-75">سعر الطلب:</span> <span id="invPrice" class="fs-5 fw-black text-warning">---</span></div>
+            <div class="invoice-row mb-2"><span class="opacity-75">العمولة المفروضة:</span> <span id="invComm">---</span></div>
+            <div class="invoice-row mb-2"><span class="opacity-75">نظام الدفع:</span> <span id="invPayType">---</span></div>
+            <div class="invoice-row mb-0"><span class="opacity-75">حالة المحاسبة:</span> <span id="invStatus">---</span></div>
         </div>
     </div>
+</div>
 
+<script>
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+    
+    // 🌐 الرابط السحابي الجديد والنهائي لشركة نحلة V88.0.0
+    const API_URL = "https://script.google.com/macros/s/AKfycbyA5NXtyt_PelH9IKtZyBLd9UH0x_sn3dKKiak7N2mHahYUAN7Mz7ocYUB3BE4_mby4Ag/exec";
+    // 🔐 مفتاح الأمان الحصري المتوافق مع بروبرتيز السكريبت
+    const API_TOKEN = "NAHLA_SECURE_TOKEN_2026"; 
+    
+    let map, heatLayer, driverClusterGroup, trackPolyline = null;
+    let restaurantMarkersLayer = null; 
+    let globalData = null; 
+    let currentRadarFilter = 'all';
+    
+    let currentResSectionFilter = 'all';
+    let currentDriverSectionFilter = 'all';
+    
+    let masterPassword = ""; 
+    let lastPendingCount = 0; 
+    let driverPerformanceCache = {};
 
-    <script>
-        // -----------------------------------------
-        // ⚙️ إعدادات النظام للعميل (نحلة كركوك)
-        // -----------------------------------------
-        const CONFIG = { 
-            API_URL: "https://script.google.com/macros/s/AKfycbwS9YOFYGAuM5F5lNHhC3rtuvGzIop_VONWXfj--E9LYuLe8O74D7r0XfiE_Oa4aOXeKw/exec", 
-            TOKEN: "NAHLA_SECURE_TOKEN_2026", 
-            FIREBASE_URL: "https://nahla-delivery-6b06f-default-rtdb.europe-west1.firebasedatabase.app" 
-        };
+    let lastRadarHtml = "";
+    let lastResHtml = "";
+    let lastDriverHtml = "";
+    let lastArchiveHtml = "";
+    let lastMapStateHash = "";
 
-        // -----------------------------------------
-        // 💾 متغيرات الحالة (State)
-        // -----------------------------------------
-        let map, heatLayer, clusterGroup;
-        let masterPass = "";
-        let GLOBAL_DATA = { restaurants: [], drivers: [] };
-        let LIVE_ORDERS = [], ARCHIVE_ORDERS = [];
-        let LEDGERS = { restaurants: {}, drivers: {} };
-        let radarFilter = 'all', resFilter = 'all', drvFilter = 'all';
-        let currentEditType = '', currentEditPhone = '';
-        let chartInstance = null;
+    let localOverrides = { orders: {}, drivers: {}, restaurants: {} };
+    let fetchPauseTimeout = null;
+    let isEmergencyMuted = false;
 
-        // تهيئة فايربيس
-        firebase.initializeApp({ databaseURL: CONFIG.FIREBASE_URL });
-        const db = firebase.database();
+    function showToast(msg, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast-msg ${type}`;
+        const icon = type === 'success' ? '<i data-lucide="check-circle" color="#10b981"></i>' : '<i data-lucide="alert-circle" color="#ef4444"></i>';
+        toast.innerHTML = `${icon} <span style="flex:1;">${msg}</span>`;
+        container.appendChild(toast);
+        if (typeof lucide !== 'undefined') lucide.createIcons({root: toast});
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 400);
+        }, 3000);
+    }
 
-        // التهيئة عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            setInterval(() => {
-                const t = new Date().toLocaleTimeString('ar-EG');
-                if(document.getElementById('liveTime')) document.getElementById('liveTime').innerText = t;
-            }, 1000);
+    function triggerEmergency() {
+        const modal = document.getElementById('emergencyModal');
+        if (modal.style.display !== 'flex') {
+            modal.style.display = 'flex';
+            const audio = document.getElementById('emergencySound');
+            audio.currentTime = 0; audio.play().catch(e=>{});
+        }
+    }
 
-            // فحص الجلسة المحفوظة
-            if (sessionStorage.getItem('nahla_master')) {
-                document.getElementById('masterPass').value = sessionStorage.getItem('nahla_master');
-                loginAdmin();
+    function closeEmergency() {
+        document.getElementById('emergencyModal').style.display = 'none';
+        document.getElementById('emergencySound').pause();
+        isEmergencyMuted = true; 
+    }
+
+    function calculateDriverPerformanceBySpeed(ordersData, driverPhone) {
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+        let deliveryTimes = []; 
+        for (let i = ordersData.length - 1; i >= 1; i--) {
+            const o = ordersData[i];
+            const orderDateStr = o[7];
+            if (!orderDateStr) continue;
+            const orderDate = new Date(orderDateStr);
+            if (orderDate.getMonth() === currentMonth && orderDate.getFullYear() === currentYear && o[6] === driverPhone && (o[5] === 'completed' || o[5] === 'مكتمل' || o[5] === 'settled')) {
+                deliveryTimes.push(1); 
+                if(deliveryTimes.length >= 10) break; 
+            }
+        }
+        const count = deliveryTimes.length;
+        if (count >= 10) return { class: 'perf-green', label: 'ممتاز' };
+        if (count > 0) return { class: 'perf-yellow', label: 'نشط' };
+        return { class: 'perf-red', label: 'جديد/متأخر' };
+    }
+
+    function checkAuth() {
+        const pass = document.getElementById('masterPass').value.trim();
+        if(!pass) return showToast("الرجاء إدخال رمز المرور", "error");
+        masterPassword = encodeURIComponent(pass); 
+        const btn = document.querySelector('.auth-card button');
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm mx-2"></span> جاري التحقق...';
+        btn.disabled = true;
+
+        const script = document.createElement('script');
+        script.id = 'auth-script';
+        script.src = `${API_URL}?action=VERIFY_MASTER_PASS&pass=${masterPassword}&token=${API_TOKEN}&callback=authResult&ts=${Date.now()}`;
+        document.body.appendChild(script);
+        
+        setTimeout(() => {
+            if(btn.disabled) {
+                btn.innerHTML = 'تسجيل الدخول';
+                btn.disabled = false;
+                showToast("⏳ تأخر السيرفر، تحقق من الإنترنت", "error");
+            }
+        }, 12000);
+    }
+
+    window.authResult = function(response) {
+        const oldScript = document.getElementById('auth-script');
+        if (oldScript) oldScript.remove();
+        
+        const btn = document.querySelector('.auth-card button');
+        btn.innerHTML = 'تسجيل الدخول';
+        btn.disabled = false;
+
+        if(response.success) {
+            document.getElementById('authOverlay').style.display = 'none';
+            document.getElementById('mainDashboard').classList.remove('d-none');
+            
+            const audio = document.getElementById('adminAlertSound');
+            audio.volume = 0; audio.play().then(() => { audio.pause(); audio.currentTime = 0; audio.volume = 1; }).catch(e=>{});
+
+            startClock(); refreshData(); setInterval(refreshData, 15000);
+            initMap();
+        } else {
+            masterPassword = ""; 
+            showToast("رمز المرور غير صحيح", "error");
+        }
+    };
+
+    function startClock() { setInterval(() => { 
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
+        document.getElementById('liveTimeDesk').innerText = timeStr; 
+        document.getElementById('liveTimeMob').innerText = timeStr; 
+    }, 1000); }
+
+    function refreshData() {
+        if (document.hidden) return; 
+        if (fetchPauseTimeout !== null) return;
+
+        const oldScript = document.getElementById('data-fetch-script');
+        if (oldScript) oldScript.remove(); 
+        
+        const script = document.createElement('script');
+        script.id = 'data-fetch-script';
+        script.src = `${API_URL}?action=getGlobalData&token=${API_TOKEN}&callback=renderData&ts=${Date.now()}`;
+        document.body.appendChild(script);
+    }
+
+    window.renderData = function(data) {
+        const oldScript = document.getElementById('data-fetch-script');
+        if (oldScript) oldScript.remove(); 
+
+        const now = Date.now();
+
+        data.orders.forEach(o => {
+            let override = localOverrides.orders[o[0]];
+            if (override) {
+                if (now - override.ts < 120000) { 
+                    o[5] = override.status || o[5];
+                    if (override.driverPhone) o[6] = override.driverPhone;
+                } else {
+                    delete localOverrides.orders[o[0]];
+                }
             }
         });
 
-        // دوال المساعدة
-        function showToast(msg, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const icon = type === 'success' ? 'check-circle' : 'alert-circle';
-            const color = type === 'success' ? 'var(--success)' : 'var(--danger)';
-            container.innerHTML += `<div class="toast-msg" style="border-left: 4px solid ${color};"><i data-lucide="${icon}" style="color:${color}"></i> ${msg}</div>`;
-            lucide.createIcons();
-            setTimeout(() => { if(container.lastChild) container.lastChild.remove(); }, 3500);
-        }
+        data.drivers.forEach(d => {
+            let override = localOverrides.drivers[d[2]];
+            if (override && (now - override.ts < 120000)) d[4] = override.status;
+            else if (override) delete localOverrides.drivers[d[2]];
+        });
 
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        data.restaurants.forEach(r => {
+            let override = localOverrides.restaurants[r[2]]; 
+            if (override && (now - override.ts < 120000)) r[4] = override.status;
+            else if (override) delete localOverrides.restaurants[r[2]];
+        });
+
+        globalData = data; 
         
-        function normalizePhone(p) {
-            if(!p) return '';
-            let c = String(p).replace(/\D/g, '');
-            if(c.startsWith('964')) c = c.slice(3);
-            return c.replace(/^0+/, '');
+        if(document.getElementById('arcRes').options.length === 1) {
+            data.restaurants.slice(1).forEach(r => document.getElementById('arcRes').innerHTML += `<option value="${r[1]}">${r[1]}</option>`);
+            data.drivers.slice(1).forEach(d => document.getElementById('arcDriver').innerHTML += `<option value="${String(d[2])}">${d[1]}</option>`);
         }
 
-        function getEntityName(type, phone) {
-            const p = normalizePhone(phone);
-            const list = type === 'RES' ? GLOBAL_DATA.restaurants : GLOBAL_DATA.drivers;
-            const found = list.find(x => normalizePhone(x[2]) === p);
-            return found ? found[1] : phone;
+        const activeOrdersList = data.orders.slice(1).filter(o => 
+            o[5] !== 'completed' && o[5] !== 'مكتمل' && o[5] !== 'settled' && o[5] !== 'deleted'
+        );
+
+        let currentPendingCount = 0;
+        let hasEmergency = false;
+
+        activeOrdersList.forEach(o => {
+            if (!o[6] || o[6] === "pending_driver") {
+                currentPendingCount++;
+                const orderTime = new Date(o[7]);
+                if ((new Date() - orderTime) / 60000 >= 3) hasEmergency = true; 
+            }
+        });
+
+        if(currentPendingCount > lastPendingCount) {
+            const audio = document.getElementById('adminAlertSound');
+            audio.currentTime = 0; audio.play().catch(e=>{});
+        }
+        lastPendingCount = currentPendingCount;
+
+        if (hasEmergency) {
+            if (!isEmergencyMuted) triggerEmergency();
+        } else {
+            isEmergencyMuted = false; 
+            const eModal = document.getElementById('emergencyModal');
+            if (eModal && eModal.style.display === 'flex') closeEmergency();
         }
 
-        // -----------------------------------------
-        // 🔐 تسجيل الدخول
-        // -----------------------------------------
-        async function loginAdmin() {
-            masterPass = document.getElementById('masterPass').value.trim();
-            if(!masterPass) return showToast('يرجى إدخال رمز المرور', 'error');
-            
-            const btn = document.querySelector('.auth-box .btn-brand');
-            btn.innerText = 'جاري التحقق...'; btn.disabled = true;
-            
-            try {
-                const res = await fetch(CONFIG.API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'VERIFY_MASTER_PASS', pass: masterPass, token: CONFIG.TOKEN })
-                });
-                const data = await res.json();
-                
-                if (data.success) {
-                    sessionStorage.setItem('nahla_master', masterPass);
-                    document.getElementById('authOverlay').style.display = 'none';
-                    document.getElementById('mainApp').classList.remove('hidden-section');
-                    initMap();
-                    fetchInitialData();
-                    showToast('تم تسجيل الدخول بنجاح');
-                } else {
-                    showToast('رمز المرور خاطئ', 'error');
+        const countOrders = activeOrdersList.length;
+        const countDrivers = data.drivers.filter(d => d[4] === 'active').length;
+        const countRes = data.restaurants.filter(r => r[4] === 'active').length;
+        
+        document.querySelectorAll('.val-orders').forEach(el => el.innerText = countOrders);
+        document.querySelectorAll('.val-drivers').forEach(el => el.innerText = countDrivers);
+        document.querySelectorAll('.val-res').forEach(el => el.innerText = countRes);
+
+        let resDebts = {}; let resUnpaidCounts = {}; let driverDebts = {};
+        data.restaurants.slice(1).forEach(r => { resDebts[r[1]] = 0; resUnpaidCounts[r[1]] = 0; }); 
+        
+        data.drivers.slice(1).forEach(d => {
+            driverDebts[String(d[2])] = 0;
+            driverPerformanceCache[String(d[2])] = calculateDriverPerformanceBySpeed(data.orders, String(d[2]));
+        }); 
+        
+        data.orders.slice(1).forEach(o => {
+            const status = o[5];
+            if (status === 'completed' || status === 'مكتمل') {
+                const rName = o[1]; const dPhone = String(o[6]);
+                const rData = data.restaurants.find(r => r[1] === rName);
+                if (rData) {
+                    const comm = parseFloat(rData[5]) || 0; const payType = String(rData[8]); 
+                    if (resUnpaidCounts[rName] !== undefined) resUnpaidCounts[rName]++; 
+                    if (payType.includes('مناصفة')) {
+                        if (resDebts[rName] !== undefined) resDebts[rName] += (comm / 2);
+                        if (driverDebts[dPhone] !== undefined) driverDebts[dPhone] += (comm / 2);
+                    } else {
+                        if (resDebts[rName] !== undefined) resDebts[rName] += comm;
+                    }
                 }
-            } catch (err) {
-                showToast('خطأ في الاتصال بالخادم', 'error');
-            } finally {
-                btn.innerText = 'دخول للخلية'; btn.disabled = false;
+            }
+        });
+
+        renderRadar(activeOrdersList); 
+        renderArchive();
+        
+        updateSectionBadges('RESTAURANT', data.restaurants);
+        updateSectionBadges('DRIVER', data.drivers);
+        renderFilteredSection('RESTAURANT', data.restaurants, resDebts, resUnpaidCounts);
+        renderFilteredSection('DRIVER', data.drivers, driverDebts, null);
+        
+        let newMapStateHash = "";
+        data.restaurants.slice(1).forEach(r => { if(r[4] === 'active') newMapStateHash += r[1]+r[6]+r[7]; });
+        data.drivers.slice(1).forEach(d => { if(d[4] === 'active') newMapStateHash += d[2]+d[5]+d[6]; });
+
+        if (map && driverClusterGroup && restaurantMarkersLayer && newMapStateHash !== lastMapStateHash) {
+            driverClusterGroup.clearLayers(); 
+            restaurantMarkersLayer.clearLayers(); 
+            
+            data.restaurants.slice(1).forEach(r => {
+                if(r[4] === 'active' && r[6] && r[7]) { 
+                    const lat = parseFloat(r[6]), lng = parseFloat(r[7]);
+                    if(!isNaN(lat) && !isNaN(lng)) {
+                        const resIcon = L.divIcon({
+                            className: 'custom-res-icon',
+                            html: `<div style="background-color: #1F2937; width: 14px; height: 14px; border-radius: 4px; border: 2px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.4); transform: rotate(45deg);"></div>`,
+                            iconSize: [14, 14], iconAnchor: [7, 7]
+                        });
+                        const marker = L.marker([lat, lng], {icon: resIcon, zIndexOffset: -100})
+                            .bindPopup(`<div class="text-center fw-bold" style="font-family:'Cairo';"><span style="color:var(--nahla-dark);">المطعم:</span> ${r[1]}</div>`);
+                        restaurantMarkersLayer.addLayer(marker);
+                    }
+                }
+            });
+
+            data.drivers.slice(1).forEach(d => {
+                if(d[4] === 'active' && d[5] && d[6]) { 
+                    const lat = parseFloat(d[5]), lng = parseFloat(d[6]);
+                    if(!isNaN(lat) && !isNaN(lng)) {
+                        const perf = driverPerformanceCache[String(d[2])] || { class: 'perf-yellow' };
+                        let colorHex = '#f59e0b', pulseClass = '';
+                        if(perf.class === 'perf-green') { colorHex = '#10b981'; pulseClass = 'marker-pulse'; }
+                        if(perf.class === 'perf-red') colorHex = '#ef4444';
+
+                        const driverIcon = L.divIcon({
+                            className: 'custom-div-icon',
+                            html: `<div class="${pulseClass}" style="background-color: ${colorHex}; width: 18px; height: 18px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.3);"></div>`,
+                            iconSize: [18, 18], iconAnchor: [9, 9]
+                        });
+                        const marker = L.marker([lat, lng], {icon: driverIcon, zIndexOffset: 100})
+                            .bindPopup(`<div class="text-center fw-bold" style="font-family:'Cairo';"><span style="color:${colorHex}">الكابتن:</span> ${d[1]}<br><span style="color:var(--nahla-dark);">هاتف:</span> ${d[2]}</div>`);
+                        driverClusterGroup.addLayer(marker); 
+                    }
+                }
+            });
+            lastMapStateHash = newMapStateHash;
+        }
+    };
+
+    function updateSectionBadges(type, list) {
+        const prefix = type === 'RESTAURANT' ? 'res' : 'driver';
+        const counts = { all: 0, pending: 0, active: 0, inactive: 0, banned: 0 };
+        list.slice(1).forEach(item => {
+            const status = item[4];
+            if (status !== 'deleted') counts.all++;
+            if (status === 'pending' || status === 'waiting') counts.pending++;
+            if (status === 'active') counts.active++;
+            if (status === 'inactive') counts.inactive++;
+            if (status === 'banned') counts.banned++;
+        });
+        document.getElementById(`badge-${prefix}-all`).innerText = counts.all;
+        document.getElementById(`badge-${prefix}-pending`).innerText = counts.pending;
+        document.getElementById(`badge-${prefix}-active`).innerText = counts.active;
+        document.getElementById(`badge-${prefix}-inactive`).innerText = counts.inactive;
+        document.getElementById(`badge-${prefix}-banned`).innerText = counts.banned;
+    }
+
+    function triggerSearch(type) {
+        const group = type === 'RESTAURANT' ? document.getElementById('resFiltersGroup') : document.getElementById('driverFiltersGroup');
+        const activeBtn = group.querySelector('.active');
+        const filter = type === 'RESTAURANT' ? currentResSectionFilter : currentDriverSectionFilter;
+        applySectionFilter(type, filter, activeBtn);
+    }
+
+    function applySectionFilter(type, filter, btnElement) {
+        if(type === 'RESTAURANT') currentResSectionFilter = filter;
+        else currentDriverSectionFilter = filter;
+        const group = btnElement.closest('.filter-btn-group');
+        group.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+
+        if (globalData) {
+            let resDebts = {}; let resUnpaidCounts = {}; let driverDebts = {};
+            globalData.restaurants.slice(1).forEach(r => { resDebts[r[1]] = 0; resUnpaidCounts[r[1]] = 0; }); 
+            globalData.drivers.slice(1).forEach(d => { driverDebts[String(d[2])] = 0; }); 
+            globalData.orders.slice(1).forEach(o => {
+                if (o[5] === 'completed' || o[5] === 'مكتمل') {
+                    const rData = globalData.restaurants.find(r => r[1] === o[1]);
+                    if (rData) {
+                        const comm = parseFloat(rData[5]) || 0; 
+                        if (resUnpaidCounts[o[1]] !== undefined) resUnpaidCounts[o[1]]++; 
+                        if (String(rData[8]).includes('مناصفة')) { resDebts[o[1]] += (comm / 2); driverDebts[String(o[6])] += (comm / 2); } 
+                        else { resDebts[o[1]] += comm; }
+                    }
+                }
+            });
+            if(type === 'RESTAURANT') renderFilteredSection('RESTAURANT', globalData.restaurants, resDebts, resUnpaidCounts);
+            else renderFilteredSection('DRIVER', globalData.drivers, driverDebts, null);
+        }
+    }
+
+    function renderFilteredSection(type, fullList, debtsMap, unpaidCounts) {
+        let filteredList = [];
+        const filter = type === 'RESTAURANT' ? currentResSectionFilter : currentDriverSectionFilter;
+        
+        const searchQuery = type === 'RESTAURANT' ? 
+            (document.getElementById('searchResInput') ? document.getElementById('searchResInput').value.trim().toLowerCase() : '') : 
+            (document.getElementById('searchDriverInput') ? document.getElementById('searchDriverInput').value.trim().toLowerCase() : '');
+
+        fullList.slice(1).forEach(item => {
+            const status = item[4];
+            const name = String(item[1]).toLowerCase();
+            const phone = String(item[2]).toLowerCase();
+
+            if (status === 'deleted') return;
+
+            if (searchQuery && !name.includes(searchQuery) && !phone.includes(searchQuery)) return;
+
+            if (filter === 'all') filteredList.push(item);
+            else if (filter === 'pending' && (status === 'pending' || status === 'waiting')) filteredList.push(item);
+            else if (filter === status) filteredList.push(item);
+        });
+
+        const containerId = type === 'RESTAURANT' ? 'resListContainer' : 'driverListContainer';
+        const icon = type === 'RESTAURANT' ? 'store' : 'user';
+        const phoneIndex = 2; const mapKeyIndex = type === 'RESTAURANT' ? 1 : 2; 
+
+        let html = '';
+        if (filteredList.length === 0) {
+            html = `<div class="col-12 text-center py-5 text-muted fw-bold fs-5">لا توجد حسابات تطابق هذا الفلتر.</div>`;
+        } else {
+            filteredList.forEach(item => {
+                const name = item[1], phone = item[phoneIndex], status = item[4];
+                const debtAmount = debtsMap[item[mapKeyIndex]] || 0; 
+                let statusBadge = '';
+                if(status === 'active') statusBadge = '<span class="badge bg-success px-3 py-2 rounded-pill">نشط</span>';
+                else if(status === 'inactive') statusBadge = '<span class="badge bg-warning px-3 py-2 rounded-pill text-dark">استراحة</span>';
+                else if(status === 'pending' || status === 'waiting') statusBadge = '<span class="badge bg-dark px-3 py-2 rounded-pill text-warning">جديد</span>';
+                else if(status === 'banned') statusBadge = '<span class="badge bg-danger px-3 py-2 rounded-pill">موقوف</span>';
+
+                let unpaidBadge = '';
+                if (type === 'RESTAURANT' && unpaidCounts && unpaidCounts[name] > 0) unpaidBadge = `<span class="badge bg-danger rounded-pill ms-2 shadow-sm">${unpaidCounts[name]} طلبات</span>`;
+
+                let perfIndicator = '';
+                if (type === 'DRIVER') {
+                    const perf = driverPerformanceCache[String(phone)] || { class: 'perf-yellow', label: 'مستجد' };
+                    perfIndicator = `<span class="perf-dot ${perf.class}" title="معدل السرعة: ${perf.label}"><i data-lucide="zap" size="12"></i></span>`;
+                }
+
+                html += `
+                <div class="col-md-6 col-xl-4">
+                    <div class="glass-panel flex-column align-items-stretch position-relative transition">
+                        ${perfIndicator}
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="p-3 rounded-4 ms-3" style="background: var(--nahla-light);"><i data-lucide="${icon}" size="22" style="color: var(--nahla-yellow);"></i></div>
+                            ${statusBadge}
+                        </div>
+                        <h5 class="m-0 fw-black mb-1 text-dark" style="padding-left: 20px;">${name}</h5>
+                        <small class="text-muted fw-bold d-block mb-3" style="font-size:0.85rem;" dir="ltr">${phone}</small>
+                        <div class="mb-4 d-inline-flex align-items-center gap-2 bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill border border-danger border-opacity-25" style="width: fit-content;">
+                            <span class="fw-bold" style="font-size: 0.85rem;">ديون: ${debtAmount} د.ع</span> ${unpaidBadge}
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <div class="d-flex gap-2">
+                                <button class="sov-btn sov-accept" onclick="adminActionOptUI('ACCEPT', '${type}', '${phone}', this)"><i data-lucide="check" size="18"></i></button>
+                                <button class="sov-btn sov-pause" onclick="adminActionOptUI('PAUSE', '${type}', '${phone}', this)"><i data-lucide="pause" size="18"></i></button>
+                                <button class="sov-btn sov-delete" onclick="adminActionOptUI('DELETE', '${type}', '${phone}', this)"><i data-lucide="ban" size="18"></i></button>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="sov-btn sov-reset" onclick="resetDebtOptUI('${type}', '${phone}', this)"><i data-lucide="banknote" size="18"></i></button>
+                                <button class="sov-btn sov-call shadow" onclick="window.open('tel:${phone}')"><i data-lucide="phone-call" size="18"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+        
+        const currentHtml = html || `<div class="col-12 text-center py-5 text-muted fw-bold">لا توجد حسابات...</div>`;
+        if (type === 'RESTAURANT') {
+            if (lastResHtml !== currentHtml) { 
+                const container = document.getElementById(containerId);
+                container.innerHTML = currentHtml; 
+                lastResHtml = currentHtml; 
+                if (typeof lucide !== 'undefined') lucide.createIcons({root: container});
+            }
+        } else {
+            if (lastDriverHtml !== currentHtml) { 
+                const container = document.getElementById(containerId);
+                container.innerHTML = currentHtml; 
+                lastDriverHtml = currentHtml; 
+                if (typeof lucide !== 'undefined') lucide.createIcons({root: container});
             }
         }
+    }
 
-        // -----------------------------------------
-        // 🗺️ تهيئة الخريطة (Leaflet)
-        // -----------------------------------------
-        function initMap() {
-            map = L.map('adminMap', { zoomControl: false }).setView([35.468, 44.392], 13);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-            heatLayer = L.heatLayer([], { radius: 25, blur: 15, maxZoom: 14, gradient: { 0.4: '#f59e0b', 0.8: '#d97706', 1.0: '#b45309' } }).addTo(map);
-            clusterGroup = L.markerClusterGroup({
-                iconCreateFunction: function(c) {
-                    return L.divIcon({ html: `<div style="background:var(--primary); color:#000; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; border:2px solid #000;">${c.getChildCount()}</div>`, className: '', iconSize: L.point(36, 36) });
+    function filterRadar(type, btnElement) {
+        currentRadarFilter = type;
+        document.querySelectorAll('.radar-filter-btn').forEach(b => b.classList.remove('active', 'text-danger', 'bg-danger', 'text-success', 'bg-success'));
+        
+        if(type === 'pending') btnElement.className = 'radar-filter-btn flex-grow-1 active bg-danger text-white shadow-sm';
+        else if(type === 'active') btnElement.className = 'radar-filter-btn flex-grow-1 active bg-success text-white shadow-sm';
+        else btnElement.className = 'radar-filter-btn flex-grow-1 active';
+        
+        renderRadar();
+    }
+
+    function renderRadar(activeOrdersList = null) {
+        if(!globalData) return;
+        
+        if (!activeOrdersList) {
+            activeOrdersList = globalData.orders.slice(1).filter(o => 
+                o[5] !== 'completed' && o[5] !== 'مكتمل' && o[5] !== 'settled' && o[5] !== 'deleted'
+            );
+        }
+
+        let smartHtml = '';
+        let activeDriversOptions = '<option value="" disabled selected>تعيين كابتن...</option>';
+        globalData.drivers.slice(1).forEach(d => {
+            if(d[4] === 'active') {
+                const perf = driverPerformanceCache[String(d[2])] || { class: 'perf-yellow' };
+                let symbol = perf.class === 'perf-green' ? '🟢' : (perf.class === 'perf-red' ? '🔴' : '🟡');
+                activeDriversOptions += `<option value="${String(d[2])}">${symbol} ${d[1]}</option>`;
+            }
+        });
+
+        if(currentRadarFilter === 'pending') activeOrdersList = activeOrdersList.filter(o => !o[6] || o[6] === "pending_driver");
+        if(currentRadarFilter === 'active') activeOrdersList = activeOrdersList.filter(o => o[6] && o[6] !== "pending_driver");
+
+        let groupedOrders = {}; let pendingOrders = [];
+        activeOrdersList.forEach(o => {
+            const driverPhone = o[6];
+            if (driverPhone && driverPhone !== "pending_driver" && driverPhone !== "manual_pending") {
+                if (!groupedOrders[driverPhone]) groupedOrders[driverPhone] = [];
+                groupedOrders[driverPhone].push(o);
+            } else { pendingOrders.push(o); }
+        });
+
+        const getStatusInfo = (status, hasDriver, orderTimeStr) => {
+            const diffSecs = Math.floor((new Date() - new Date(orderTimeStr)) / 1000);
+            if(!hasDriver || status === 'pending_driver' || status === 'manual_pending') {
+                if (hasDriver) { 
+                    if (diffSecs > 60) return { class: "status-overdue", desc: "🚨 لا يستجيب", badge: "bg-danger", isRinging: true, overdue: true };
+                    else return { class: "status-ringing", desc: "⏳ جاري الرنين...", badge: "bg-warning text-dark", isRinging: true };
                 }
-            });
-            map.addLayer(clusterGroup);
-        }
+                return { class: "status-danger", desc: "🔴 بانتظار كابتن", badge: "bg-danger" };
+            }
+            if(status === 'picked_up' || status === 'في الطريق') return { class: "status-success", desc: "🟢 بالطريق للزبون", badge: "bg-success" };
+            if(status === 'arrived_at_res') return { class: "status-warning", desc: "🟠 في المطعم", badge: "bg-warning text-dark" };
+            if(status === 'accepted' || status === 'heading') return { class: "status-primary", desc: "🔵 متجه للمطعم", badge: "bg-dark text-warning" };
 
-        // -----------------------------------------
-        // 📡 جلب البيانات والاستماع لفايربيس
-        // -----------------------------------------
-        async function fetchInitialData() {
-            try {
-                const res = await fetch(`${CONFIG.API_URL}?action=getGlobalData&token=${CONFIG.TOKEN}`);
-                const data = await res.json();
-                GLOBAL_DATA.restaurants = data.restaurants || [];
-                GLOBAL_DATA.drivers = data.drivers || [];
-                startFirebaseListeners();
-            } catch (err) { showToast('خطأ في جلب بيانات الشيت', 'error'); }
-        }
+            return { class: "status-primary", desc: status, badge: "bg-dark text-white" };
+        };
 
-        function startFirebaseListeners() {
-            // حالة الاتصال
-            db.ref('.info/connected').on('value', snap => {
-                const statusEl = document.getElementById('connectionStatus');
-                statusEl.innerText = snap.val() ? 'متصل بقاعدة البيانات 🟢' : 'فقد الاتصال 🔴';
-                statusEl.style.color = snap.val() ? 'var(--success)' : 'var(--danger)';
-            });
+        Object.keys(groupedOrders).forEach(driverPhone => {
+            const orders = groupedOrders[driverPhone];
+            const driverName = globalData.drivers.find(d => String(d[2]) === String(driverPhone))?.[1] || 'غير معروف';
 
-            // سجلات الديون
-            db.ref('ledgers').on('value', snap => {
-                const val = snap.val() || {};
-                LEDGERS.restaurants = val.restaurants || {};
-                LEDGERS.drivers = val.drivers || {};
-                renderEntities('RES'); renderEntities('DRV');
-            });
-
-            // الطلبات الحية
-            db.ref('active_orders').on('value', snap => {
-                const val = snap.val() || {};
-                LIVE_ORDERS = []; ARCHIVE_ORDERS = [];
-                Object.values(val).forEach(o => {
-                    if (['completed', 'deleted', 'مكتمل'].includes(o.status)) ARCHIVE_ORDERS.push(o);
-                    else LIVE_ORDERS.push(o);
-                });
-                LIVE_ORDERS.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                ARCHIVE_ORDERS.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                
-                renderRadar();
-                renderArchiveTable();
-                
-                // تحديث الخريطة (Heatmap للطلبات النشطة)
-                const pts = [];
-                LIVE_ORDERS.forEach(o => {
-                    const r = GLOBAL_DATA.restaurants.find(x => x[1] === o.restaurant);
-                    if (r && r[6] && r[7]) pts.push([parseFloat(r[6]), parseFloat(r[7]), 1]);
-                });
-                heatLayer.setLatLngs(pts);
-            });
-
-            // مواقع الكباتن
-            db.ref('drivers_locations').on('value', snap => {
-                const locs = snap.val() || {};
-                clusterGroup.clearLayers();
-                let onlineCount = 0;
-                
-                Object.keys(locs).forEach(phone => {
-                    const d = locs[phone];
-                    if (d.status === 'active' && d.lat && d.lng) {
-                        onlineCount++;
-                        const marker = L.marker([parseFloat(d.lat), parseFloat(d.lng)]).bindPopup(`<b>${getEntityName('DRV', phone)}</b>`);
-                        clusterGroup.addLayer(marker);
-                    }
-                });
-                
-                document.getElementById('stat-online-drivers').innerText = onlineCount;
-                renderEntities('DRV');
-            });
-
-            // سجل التدقيق (Audit)
-            db.ref('admin_audit_trail').limitToLast(20).on('value', snap => {
-                const val = snap.val() || {};
-                let html = '';
-                Object.values(val).reverse().forEach(log => {
-                    const time = new Date(log.timestamp).toLocaleTimeString('ar-EG');
-                    html += `
-                    <div class="glass-card mb-2 p-3 d-flex align-items-center gap-3">
-                        <div style="background:var(--bg-elevated); padding:10px; border-radius:10px;"><i data-lucide="activity" style="color:var(--primary)"></i></div>
-                        <div>
-                            <div class="fw-bold" style="font-size:0.9rem;">${log.action}</div>
-                            <div class="text-muted" style="font-size:0.8rem;">${log.details} - ${time}</div>
+            if (orders.length > 1) {
+                smartHtml += `<div class="col-md-6 col-12"><div class="smart-order-card status-purple batch-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom border-purple">
+                        <h5 class="fw-black m-0 text-purple"><i data-lucide="layers" size="18"></i> طلب مزدوج | ${driverName}</h5>
+                        <button class="btn-track" style="background: #ede9fe; color: #7c3aed;" onclick="trackDriver('${driverPhone}', '${orders[0][1]}')"><i data-lucide="map-pin" size="14"></i> تتبع</button>
+                    </div>`;
+                orders.forEach((o, index) => {
+                    const sInfo = getStatusInfo(o[5], true, o[7]);
+                    smartHtml += `
+                    <div class="info-card-inner mb-2 bg-white shadow-sm border-0" id="order-${o[0]}">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-black text-purple" style="font-size:0.95rem;">#${o[0]}</span>
+                            <span class="badge ${sInfo.badge} px-2 py-1 rounded-pill">${sInfo.desc}</span>
+                        </div>
+                        <div class="d-flex justify-content-between text-muted mb-2">
+                            <span class="fw-black text-dark">${o[1]}</span>
+                            <span class="text-success fw-black">${o[4]} د.ع</span>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2 mt-2 pt-2 border-top">
+                            <button class="btn btn-sm btn-light text-success fw-bold rounded-pill px-3" onclick="adminActionOptUI('COMPLETE', 'ORDER', '${o[0]}', this)"><i data-lucide="check" size="14"></i> إنهاء</button>
+                            <button class="btn btn-sm btn-light text-danger fw-bold rounded-pill px-3" onclick="adminActionOptUI('DELETE', 'ORDER', '${o[0]}', this)"><i data-lucide="x" size="14"></i> إلغاء</button>
                         </div>
                     </div>`;
+                    if(index < orders.length - 1) smartHtml += `<div class="text-center my-2"><i data-lucide="link" size="18" style="color: #a78bfa;"></i></div>`;
                 });
-                document.getElementById('auditContainer').innerHTML = html || '<div class="text-muted text-center">لا توجد سجلات حديثة</div>';
-                lucide.createIcons();
-            });
+                smartHtml += `</div></div>`;
+            } else {
+                smartHtml += generateSingleCardHTML(orders[0], true, driverName, driverPhone, activeDriversOptions);
+            }
+        });
+
+        pendingOrders.forEach(o => { smartHtml += generateSingleCardHTML(o, false, 'يبحث عن كابتن...', null, activeDriversOptions); });
+        
+        const currentRadarHtml = smartHtml || '<div class="col-12 text-center p-5 fw-black text-muted fs-4">الرادار نظيف 🐝 لا توجد طلبات معلقة.</div>';
+        if (lastRadarHtml !== currentRadarHtml) {
+            const container = document.getElementById('smartOrdersContainer');
+            container.innerHTML = currentRadarHtml;
+            lastRadarHtml = currentRadarHtml;
+            if (typeof lucide !== 'undefined') lucide.createIcons({root: container});
+        }
+    }
+
+    function generateSingleCardHTML(o, hasDriver, driverName, driverPhone, activeDriversOptions) {
+        const orderId = o[0], restName = o[1], orderArea = o[2], details = o[3], orderPrice = o[4], status = o[5], orderTimeStr = o[7];
+        const orderTimeStrFormat = new Date(orderTimeStr).toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'});
+        
+        const diffMins = Math.floor((new Date() - new Date(orderTimeStr)) / 60000);
+        const sInfo = getStatusInfo(status, hasDriver, orderTimeStr);
+
+        let withdrawBtn = '';
+        if (sInfo.isRinging && hasDriver) {
+            withdrawBtn = `<button class="btn btn-sm btn-outline-danger px-3 d-flex align-items-center gap-1 rounded-pill" style="font-size:0.8rem;" onclick="withdrawOrderOptUI('${orderId}', '${driverPhone}', this)"><i data-lucide="user-minus" size="14"></i> سحب</button>`;
         }
 
-        // -----------------------------------------
-        // 📟 التنقل بين التبويبات (Tabs)
-        // -----------------------------------------
-        function switchTab(tabId, element) {
-            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active-tab'));
-            document.querySelectorAll('.nav-item, .b-nav-item').forEach(n => n.classList.remove('active'));
-            
-            document.getElementById(`tab-${tabId}`).classList.add('active-tab');
-            element.classList.add('active');
-            
-            if (tabId === 'live' && map) setTimeout(() => map.invalidateSize(), 100);
-            if (tabId === 'archive') renderCharts();
+        let callBtn = '';
+        let currentOptions = activeDriversOptions;
+
+        if (hasDriver && !sInfo.isRinging) {
+            callBtn = `<button class="btn-call-mini call-success" onclick="window.open('tel:${driverPhone}')"><i data-lucide="phone" size="14"></i></button>`;
+            currentOptions = activeDriversOptions.replace('تعيين كابتن...', 'إعادة تعيين 🔄');
         }
 
-        // -----------------------------------------
-        // 🎯 معالجة الرادار (الطلبات النشطة)
-        // -----------------------------------------
-        function filterRadar(filter, btn) {
-            radarFilter = filter;
-            document.querySelectorAll('#radarFilters .filter-pill').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderRadar();
-        }
+        let driverControls = `
+            <div class="d-flex gap-2 align-items-center">
+                ${withdrawBtn}
+                ${callBtn}
+                <select class="manual-assign-select p-2" onchange="assignDriverOptUI('${orderId}', this.value, this)">${currentOptions}</select>
+            </div>
+        `;
 
-        function renderRadar() {
-            document.getElementById('stat-active-orders').innerText = LIVE_ORDERS.length;
-            
-            let filtered = LIVE_ORDERS;
-            if (radarFilter === 'pending') filtered = LIVE_ORDERS.filter(o => !o.driverPhone || o.driverPhone === 'system_routing' || o.driverPhone === 'pending_driver');
-            if (radarFilter === 'active') filtered = LIVE_ORDERS.filter(o => o.driverPhone && o.driverPhone !== 'system_routing' && o.driverPhone !== 'pending_driver');
-
-            let html = '';
-            
-            // تجهيز قائمة الكباتن للتعيين اليدوي
-            let drvOptions = '<option value="">تعيين لكابتن...</option>';
-            GLOBAL_DATA.drivers.slice(1).forEach(d => { drvOptions += `<option value="${d[2]}">${d[1]}</option>`; });
-
-            filtered.forEach(o => {
-                const isPending = !o.driverPhone || o.driverPhone === 'system_routing' || o.driverPhone === 'pending_driver';
-                const dName = isPending ? 'يبحث عن كابتن...' : getEntityName('DRV', o.driverPhone);
-                const borderClass = isPending ? 'urgent' : 'normal';
-                const badgeClass = isPending ? 'bg-danger text-white' : 'bg-success text-white';
-                const badgeText = isPending ? 'معلق' : 'بالطريق';
-
-                html += `
-                <div class="order-card ${borderClass}">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <div class="fw-black" style="font-size:1.1rem;">#${String(o.id).slice(4,9)} <span class="badge ${badgeClass} ms-2" style="font-size:0.7rem;">${badgeText}</span></div>
-                        <div class="fw-black text-primary fs-5">${o.price} <small class="text-muted fs-6">د.ع</small></div>
+        return `
+        <div class="col-md-6 col-12" id="order-${orderId}">
+            <div class="smart-order-card ${sInfo.class}">
+                ${diffMins > 3 && !hasDriver ? `<div class="delay-badge">${diffMins} دقيقة انتظار</div>` : ''}
+                <div class="d-flex justify-content-between align-items-start mb-3 border-bottom pb-3">
+                    <div>
+                        <h5 class="fw-black m-0" style="color: var(--nahla-dark);">#${orderId}</h5>
+                        <div class="mt-1 small fw-bold text-muted">الوقت: ${orderTimeStrFormat}</div>
                     </div>
-                    <div class="text-muted fw-bold small mb-3"><i data-lucide="store" width="14" class="me-1"></i> ${o.restaurant} &nbsp;|&nbsp; <i data-lucide="map-pin" width="14" class="me-1"></i> ${o.area || 'غير محدد'}</div>
-                    <div class="d-flex justify-content-between align-items-center bg-dark p-2 rounded-3 border border-secondary">
-                        <div class="fw-bold" style="color:var(--primary-dark); font-size:0.85rem;"><i data-lucide="bike" width="14" class="me-1"></i> ${dName}</div>
-                        <div class="d-flex gap-2">
-                            <select class="input-brand p-1 m-0" style="width: 120px; font-size:0.75rem;" onchange="executeAdminAction('ASSIGN_DRIVER', this, '${o.id}', this.value, 'ORDER')">
-                                ${drvOptions}
-                            </select>
-                            <button class="btn-circle" style="background:rgba(16,185,129,0.2); color:var(--success);" onclick="executeAdminAction('ADMIN_UPDATE_STATUS', this, '${o.id}', 'completed', 'ORDER')"><i data-lucide="check" width="16"></i></button>
-                            <button class="btn-circle" style="background:rgba(239,68,68,0.2); color:var(--danger);" onclick="executeAdminAction('ADMIN_UPDATE_STATUS', this, '${o.id}', 'deleted', 'ORDER')"><i data-lucide="trash" width="16"></i></button>
+                    <div class="d-flex flex-column align-items-end gap-2">
+                        <span class="badge ${sInfo.badge} px-3 py-2 rounded-pill shadow-sm">${sInfo.desc}</span>
+                        <div class="d-flex gap-2 align-items-center mt-1">
+                            ${hasDriver ? `<button class="btn-track" onclick="trackDriver('${driverPhone}', '${restName}')"><i data-lucide="map-pin" size="14"></i> تتبع</button>` : ''}
+                            <button class="btn btn-sm btn-light text-success p-2 rounded-circle shadow-sm" onclick="adminActionOptUI('COMPLETE', 'ORDER', '${orderId}', this)"><i data-lucide="check" size="16"></i></button>
+                            <button class="btn btn-sm btn-light text-danger p-2 rounded-circle shadow-sm" onclick="adminActionOptUI('DELETE', 'ORDER', '${orderId}', this)"><i data-lucide="trash-2" size="16"></i></button>
                         </div>
                     </div>
-                </div>`;
-            });
-
-            document.getElementById('radarContainer').innerHTML = html || '<div class="text-center text-muted fw-bold py-5">الرادار نظيف، لا توجد طلبات.</div>';
-            lucide.createIcons();
-        }
-
-        // -----------------------------------------
-        // 📊 سجل اليوم المباشر (Archive & Charts)
-        // -----------------------------------------
-        function renderArchiveTable() {
-            const query = document.getElementById('archiveSearch').value.toLowerCase();
-            let html = '';
-            let totalComm = 0;
-
-            ARCHIVE_ORDERS.forEach(o => {
-                if (query && !o.restaurant.toLowerCase().includes(query) && !String(o.id).toLowerCase().includes(query)) return;
-                
-                if (o.status !== 'deleted') totalComm += (parseFloat(o.comm) || 0);
-                const time = o.timestamp ? new Date(o.timestamp).toLocaleTimeString('ar-EG') : '---';
-                const statusHtml = o.status === 'deleted' ? '<span class="badge bg-danger">ملغي</span>' : '<span class="badge bg-success">مكتمل</span>';
-                
-                // تشفير البيانات لإرسالها للنافذة المنبثقة
-                const strData = encodeURIComponent(JSON.stringify(o)).replace(/'/g, "%27");
-
-                html += `
-                <tr style="cursor:pointer;" onclick="openInvoice('${strData}')">
-                    <td style="color:var(--primary); font-weight:900;">${String(o.id).slice(4,9)}</td>
-                    <td class="text-muted">${time}</td>
-                    <td>${o.restaurant}</td>
-                    <td>${getEntityName('DRV', o.driverPhone)}</td>
-                    <td class="text-success">${o.price}</td>
-                    <td class="text-danger">${o.comm || 0}</td>
-                    <td>${statusHtml}</td>
-                </tr>`;
-            });
-
-            document.getElementById('archiveTableBody').innerHTML = html || '<tr><td colspan="7" class="text-center py-4">لا توجد بيانات مطابقة</td></tr>';
-            document.getElementById('stat-total-comm').innerText = totalComm.toLocaleString() + ' د.ع';
-        }
-
-        function openInvoice(dataStr) {
-            const o = JSON.parse(decodeURIComponent(dataStr));
-            document.getElementById('invId').innerText = '#' + String(o.id).slice(4,9);
-            document.getElementById('invDate').innerText = o.timestamp ? new Date(o.timestamp).toLocaleString('ar-EG') : '---';
-            document.getElementById('invRes').innerText = o.restaurant;
-            document.getElementById('invDrv').innerText = getEntityName('DRV', o.driverPhone);
-            document.getElementById('invPrice').innerText = o.price + ' د.ع';
-            document.getElementById('invComm').innerText = (o.comm || 0) + ' د.ع';
-            document.getElementById('invStatus').innerHTML = o.status === 'deleted' ? '<span class="badge bg-danger">ملغي</span>' : '<span class="badge bg-success">مكتمل</span>';
-            document.getElementById('invoiceModal').classList.add('active');
-        }
-
-        function renderCharts() {
-            if (!chartInstance) {
-                const ctx = document.getElementById('dailyChart');
-                chartInstance = new Chart(ctx, {
-                    type: 'bar',
-                    data: { labels: ['مكتمل', 'ملغي'], datasets: [{ label: 'الطلبات', data: [0, 0], backgroundColor: ['#10b981', '#ef4444'], borderRadius: 8 }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-                });
-            }
-            const comp = ARCHIVE_ORDERS.filter(o => o.status !== 'deleted').length;
-            const canc = ARCHIVE_ORDERS.filter(o => o.status === 'deleted').length;
-            chartInstance.data.datasets[0].data = [comp, canc];
-            chartInstance.update();
-        }
-
-        // -----------------------------------------
-        // 👥 إدارة الشركاء (مطاعم وكباتن)
-        // -----------------------------------------
-        function filterEntities(type, filter, btn) {
-            if (type === 'RES') resFilter = filter; else drvFilter = filter;
-            btn.parentElement.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderEntities(type);
-        }
-
-        function renderEntities(type) {
-            const container = document.getElementById(type === 'RES' ? 'resContainer' : 'drvContainer');
-            const query = document.getElementById(type === 'RES' ? 'resSearch' : 'drvSearch').value.toLowerCase();
-            const filter = type === 'RES' ? resFilter : drvFilter;
-            const list = type === 'RES' ? GLOBAL_DATA.restaurants.slice(1) : GLOBAL_DATA.drivers.slice(1);
-            
-            let html = '';
-            
-            list.forEach(item => {
-                const name = item[1], phone = item[2], status = item[4];
-                if (status === 'deleted') return;
-                if (query && !name.toLowerCase().includes(query) && !String(phone).includes(query)) return;
-                if (filter === 'pending' && status !== 'pending') return;
-                if (filter === 'active' && status !== 'active') return;
-                if (filter === 'inactive' && status !== 'inactive') return;
-                if (filter === 'banned' && status !== 'banned') return;
-
-                const cleanP = normalizePhone(phone);
-                const ledger = type === 'RES' ? (LEDGERS.restaurants[cleanP] || {}) : (LEDGERS.drivers[cleanP] || {});
-                const debt = ledger.debt || 0;
-                const comp = ledger.completed_orders || 0;
-
-                let badgeCls = 'bg-secondary';
-                if(status === 'active') badgeCls = 'bg-success';
-                else if(status === 'inactive') badgeCls = 'bg-warning text-dark';
-                else if(status === 'pending') badgeCls = 'bg-primary text-dark';
-                else if(status === 'banned') badgeCls = 'bg-danger';
-
-                html += `
-                <div class="entity-card">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <div>
-                            <div class="fw-black text-white" style="font-size:1.1rem;">${name}</div>
-                            <div class="text-muted fw-bold small" dir="ltr">${phone}</div>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <div class="info-row">
+                        <span class="text-muted d-flex align-items-center gap-1"><i data-lucide="store" style="color: var(--nahla-yellow);" size="16"></i> مطعم:</span> 
+                        <span class="text-dark fw-black">${restName}</span>
+                    </div>
+                    <div class="info-card-inner border-0 shadow-sm bg-white">
+                        <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                            <span class="fw-bold text-muted"><i data-lucide="map-pin" size="14" class="text-primary me-1"></i> ${orderArea || 'غير محدد'}</span>
+                            <span class="fw-black text-success fs-6">${orderPrice || 0} د.ع</span>
                         </div>
-                        <span class="badge ${badgeCls}">${status}</span>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="fw-black" style="color: var(--nahla-dark);"><i data-lucide="zap" size="16" class="text-warning"></i> ${driverName}</span>
+                            ${driverControls}
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between bg-dark p-2 rounded-3 border border-secondary mt-2 mb-3">
-                        <div class="text-center w-50 border-end border-secondary"><small class="d-block text-muted">منجزة</small><span class="fw-black">${comp}</span></div>
-                        <div class="text-center w-50"><small class="d-block text-danger">الديون</small><span class="fw-black text-danger">${debt}</span></div>
-                    </div>
-                    <div class="action-btns-row">
-                        <button class="btn-circle" style="background:rgba(16,185,129,0.2); color:var(--success);" title="تفعيل" onclick="executeAdminAction('ADMIN_UPDATE_STATUS', this, '${phone}', 'active', '${type}')"><i data-lucide="check" width="16"></i></button>
-                        <button class="btn-circle" style="background:rgba(245,158,11,0.2); color:var(--warning);" title="تجميد" onclick="executeAdminAction('ADMIN_UPDATE_STATUS', this, '${phone}', 'inactive', '${type}')"><i data-lucide="pause" width="16"></i></button>
-                        <button class="btn-circle" style="background:rgba(239,68,68,0.2); color:var(--danger);" title="حظر" onclick="executeAdminAction('ADMIN_UPDATE_STATUS', this, '${phone}', 'banned', '${type}')"><i data-lucide="ban" width="16"></i></button>
-                        <button class="btn-circle" style="background:var(--bg-elevated); color:var(--primary);" title="تعديل" onclick="openEditModal('${type}', '${phone}')"><i data-lucide="edit-2" width="16"></i></button>
-                        <button class="btn-circle ms-auto" style="background:var(--primary); color:#000;" title="تصفير الديون" onclick="executeAdminAction('RESET_DEBT', this, '${phone}', null, '${type}')"><i data-lucide="banknote" width="16"></i></button>
-                    </div>
-                </div>`;
-            });
+                </div>
+            </div>
+        </div>`;
+    }
 
-            container.innerHTML = html || '<div class="text-center text-muted fw-bold py-5" style="grid-column: 1/-1;">لا توجد نتائج مطابقة</div>';
-            lucide.createIcons();
-        }
+    function withdrawOrderOptUI(orderId, driverPhone, element) {
+        if(!confirm("سحب الطلب وإعادته للرادار للبحث عن كابتن آخر؟")) return;
+        pauseAutoFetch();
+        element.classList.add('btn-loading');
+        const card = document.getElementById(`order-${orderId}`);
+        if(card) card.style.opacity = '0.5';
 
-        // -----------------------------------------
-        // ✏️ نافذة التعديل (Edit Modal)
-        // -----------------------------------------
-        function openEditModal(type, phone) {
-            currentEditType = type; currentEditPhone = phone;
-            const item = (type === 'RES' ? GLOBAL_DATA.restaurants : GLOBAL_DATA.drivers).find(x => normalizePhone(x[2]) === normalizePhone(phone));
-            if(!item) return;
+        localOverrides.orders[String(orderId)] = { status: 'pending_driver', driverPhone: 'pending_driver', ts: Date.now() };
 
-            document.getElementById('editTitle').innerText = type === 'RES' ? 'تعديل بيانات المطعم' : 'تعديل بيانات الكابتن';
-            document.getElementById('editName').value = item[1];
-            document.getElementById('editPhone').value = item[2];
-            document.getElementById('editPass').value = '';
+        const url = `${API_URL}?action=DECLINE_ORDER&orderId=${orderId}&driverPhone=${driverPhone}&token=${API_TOKEN}&pass=${masterPassword}`;
+        const script = document.createElement('script'); script.src = `${url}&callback=silentCallback&ts=${Date.now()}`; 
+        
+        script.onload = () => script.remove(); 
+        script.onerror = () => { script.remove(); showToast("فشل الاتصال", "error"); if(card) card.style.opacity = '1'; };
+        setTimeout(() => { if(script.parentNode) script.remove(); }, 15000);
+        
+        document.body.appendChild(script); showToast("تم سحب الطلب للرادار", "success");
+    }
 
-            if (type === 'RES') {
-                document.getElementById('editResOnly').classList.remove('d-none');
-                document.getElementById('editDrvOnly').classList.add('d-none');
-                document.getElementById('editArea').value = item[3] || '';
-                document.getElementById('editComm').value = item[5] || '';
-                document.getElementById('editPayType').value = item[8] || 'المطعم يدفع';
-                document.getElementById('editLat').value = item[6] || '';
-                document.getElementById('editLng').value = item[7] || '';
-            } else {
-                document.getElementById('editResOnly').classList.add('d-none');
-                document.getElementById('editDrvOnly').classList.remove('d-none');
-                document.getElementById('editStatus').value = item[4] || 'active';
-            }
-            document.getElementById('editModal').classList.add('active');
-        }
+    function trackDriver(driverPhone, restName) {
+        if(!map || !globalData) return;
+        const driver = globalData.drivers.find(d => String(d[2]) === String(driverPhone));
+        const restaurant = globalData.restaurants.find(r => r[1] === restName);
 
-        async function saveEdits() {
-            const btn = document.getElementById('btnSaveEdit');
-            btn.innerText = 'جاري الحفظ...'; btn.disabled = true;
+        if(driver && driver[5] && driver[6]) {
+            const dLat = parseFloat(driver[5]); const dLng = parseFloat(driver[6]);
+            if(isNaN(dLat) || isNaN(dLng)) { showToast("الإحداثيات غير متوفرة", "error"); return; }
             
-            const updates = { name: document.getElementById('editName').value, password: document.getElementById('editPass').value };
-            if (currentEditType === 'RES') {
-                updates.area = document.getElementById('editArea').value;
-                updates.comm = document.getElementById('editComm').value;
-                updates.payType = document.getElementById('editPayType').value;
-                updates.lat = parseFloat(document.getElementById('editLat').value) || 0;
-                updates.lng = parseFloat(document.getElementById('editLng').value) || 0;
-            } else {
-                updates.status = document.getElementById('editStatus').value;
-            }
+            let bounds = [[dLat, dLng]]; 
+            if(trackPolyline) map.removeLayer(trackPolyline);
 
-            try {
-                const res = await fetch(CONFIG.API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'updateEntityInfo', type: currentEditType, phone: currentEditPhone, updates: updates, token: CONFIG.TOKEN, pass: masterPass })
-                });
-                const data = await res.json();
-                if(data.success) { showToast('تم تحديث البيانات بنجاح'); fetchInitialData(); closeModal('editModal'); }
-                else { showToast('فشل التحديث', 'error'); }
-            } catch (err) { showToast('خطأ اتصال', 'error'); }
-            finally { btn.innerText = 'حفظ التعديلات'; btn.disabled = false; }
+            if(restaurant && restaurant[6] && restaurant[7]) {
+                const rLat = parseFloat(restaurant[6]); const rLng = parseFloat(restaurant[7]);
+                if(!isNaN(rLat) && !isNaN(rLng)) {
+                    bounds.push([rLat, rLng]); 
+                    trackPolyline = L.polyline([[dLat, dLng], [rLat, rLng]], { color: '#F59E0B', weight: 6, dashArray: '15, 15', className: 'path-animated' }).addTo(map);
+                    map.fitBounds(bounds, { padding: [50, 50], maxZoom: 16, animate: true, duration: 1.5 });
+                } else { map.flyTo([dLat, dLng], 16, { duration: 1.5 }); }
+            } else { map.flyTo([dLat, dLng], 16, { duration: 1.5 }); }
+            
+            if(window.innerWidth <= 768) { document.getElementById('tab-live').scrollTop = 0; } 
+            else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
         }
+    }
 
-        // -----------------------------------------
-        // ⚙️ تنفيذ العمليات الإدارية المركزية
-        // -----------------------------------------
-        async function executeAdminAction(action, btnElement, id, statusOrValue, type) {
-            if(action === 'RESET_DEBT' && !confirm('هل أنت متأكد من تصفير ديون هذا الحساب بالكامل؟')) return;
-            if(action === 'ADMIN_UPDATE_STATUS' && statusOrValue === 'deleted' && !confirm('هل أنت متأكد من إلغاء هذا الطلب؟')) return;
-            if(action === 'RUN_NIGHTLY_CLEANER' && !confirm('تنبيه: تشغيل التصفية الليلية سيقوم بأرشفة جميع طلبات اليوم وتحديث الديون. هل تريد الاستمرار؟')) return;
+    function pauseAutoFetch() {
+        if (fetchPauseTimeout) clearTimeout(fetchPauseTimeout);
+        fetchPauseTimeout = setTimeout(() => { fetchPauseTimeout = null; }, 3000);
+    }
 
-            const originalHtml = btnElement.innerHTML;
-            btnElement.innerHTML = '<span class="spinner-border spinner-border-sm" style="width:1rem;height:1rem;"></span>';
-            btnElement.disabled = true;
+    function assignDriverOptUI(orderId, driverPhone, element) {
+        if(!driverPhone) return;
+        pauseAutoFetch();
+        element.classList.add('btn-loading');
+        const card = document.getElementById(`order-${orderId}`);
+        if(card) card.style.opacity = '0.5';
+        
+        localOverrides.orders[String(orderId)] = { status: 'manual_pending', driverPhone: driverPhone, ts: Date.now() };
 
-            const payload = { action: action, token: CONFIG.TOKEN, pass: masterPass };
-            if (id) payload.id = id;
-            if (id && action !== 'RESET_DEBT') payload.orderId = id; // لتعيين الكابتن
-            if (type) payload.type = type;
-            if (statusOrValue && action === 'ADMIN_UPDATE_STATUS') payload.status = statusOrValue;
-            if (statusOrValue && action === 'ASSIGN_DRIVER') payload.driverPhone = statusOrValue;
+        const url = `${API_URL}?action=ASSIGN_DRIVER&orderId=${orderId}&driverPhone=${driverPhone}&token=${API_TOKEN}&pass=${masterPassword}`;
+        const script = document.createElement('script'); script.src = `${url}&callback=silentCallback&ts=${Date.now()}`; 
+        
+        script.onload = () => script.remove(); 
+        script.onerror = () => { script.remove(); showToast("فشل الاتصال", "error"); if(card) card.style.opacity = '1'; };
+        setTimeout(() => { if(script.parentNode) script.remove(); }, 15000);
+        
+        document.body.appendChild(script); showToast("تم إرسال التعيين 🚀", "success");
+    }
 
-            try {
-                const res = await fetch(CONFIG.API_URL, { method: 'POST', body: JSON.stringify(payload) });
-                const data = await res.json();
-                if (data.success) {
-                    showToast(action === 'RUN_NIGHTLY_CLEANER' ? 'تمت التصفية بنجاح!' : 'تم تنفيذ الإجراء بنجاح');
-                    if (action === 'ADMIN_UPDATE_STATUS' || action === 'RESET_DEBT') fetchInitialData();
-                } else {
-                    showToast(data.msg || 'تعذر التنفيذ', 'error');
+    function resetDebtOptUI(type, id, element) {
+        if(!confirm(`هل أنت متأكد من تصفير ديون الحساب (${id})؟`)) return;
+        pauseAutoFetch();
+        element.classList.add('btn-loading');
+        const url = `${API_URL}?action=RESET_DEBT&type=${type}&id=${id}&token=${API_TOKEN}&pass=${masterPassword}`;
+        const script = document.createElement('script'); script.src = `${url}&callback=silentCallback&ts=${Date.now()}`; 
+        
+        script.onload = () => script.remove(); 
+        script.onerror = () => script.remove();
+        setTimeout(() => { if(script.parentNode) script.remove(); }, 15000);
+        
+        document.body.appendChild(script); showToast("تم تصفير الديون وتحديث الأرصدة 💸", "success");
+    }
+
+    function adminActionOptUI(cmd, type, id, element) {
+        const statusMap = { 'ACCEPT': 'active', 'PAUSE': 'inactive', 'DELETE': 'deleted', 'COMPLETE': 'completed' };
+        let newStatus = statusMap[cmd];
+        if (cmd === 'DELETE' && type !== 'ORDER') newStatus = 'banned'; 
+
+        if (cmd === 'COMPLETE' || cmd === 'DELETE') {
+            if(!confirm(cmd === 'COMPLETE' ? "تأكيد الإتمام القسري؟" : "تأكيد الحذف/الحظر؟")) return;
+            const card = element.closest('.col-md-6') || element.closest('.col-12');
+            
+            if (card && (cmd === 'DELETE' || (cmd === 'COMPLETE' && type === 'ORDER'))) { 
+                card.style.transition = '0.3s'; card.style.opacity = '0'; card.style.transform = 'scale(0.95)';
+                setTimeout(() => card.style.display = 'none', 300); 
+                
+                if (type === 'ORDER') localOverrides.orders[String(id)] = { status: newStatus, ts: Date.now() };
+                if (type === 'RESTAURANT') localOverrides.restaurants[String(id)] = { status: newStatus, ts: Date.now() };
+                if (type === 'DRIVER') localOverrides.drivers[String(id)] = { status: newStatus, ts: Date.now() };
+            }
+        } else {
+             if (type === 'ORDER') localOverrides.orders[String(id)] = { status: newStatus, ts: Date.now() };
+             if (type === 'RESTAURANT') localOverrides.restaurants[String(id)] = { status: newStatus, ts: Date.now() };
+             if (type === 'DRIVER') localOverrides.drivers[String(id)] = { status: newStatus, ts: Date.now() };
+        }
+        
+        pauseAutoFetch();
+        element.classList.add('btn-loading'); 
+
+        const script = document.createElement('script'); 
+        script.src = `${API_URL}?action=ADMIN_UPDATE_STATUS&type=${type}&id=${id}&status=${newStatus}&token=${API_TOKEN}&pass=${masterPassword}&callback=silentCallback&ts=${Date.now()}`; 
+        
+        script.onload = () => script.remove(); 
+        script.onerror = () => script.remove();
+        setTimeout(() => { if(script.parentNode) script.remove(); }, 15000);
+        
+        document.body.appendChild(script); showToast("تم تنفيذ الإجراء 👍", "success");
+    }
+
+    window.silentCallback = function(response) {
+        if(!response.success) { showToast("خطأ: " + (response.msg || response.error), "error"); refreshData(); }
+    };
+
+    function renderArchive() {
+        if(!globalData) return;
+        const search = document.getElementById('arcSearch').value.trim().toLowerCase();
+        const resFilter = document.getElementById('arcRes').value;
+        const driverFilter = document.getElementById('arcDriver').value;
+        const dateFrom = document.getElementById('arcDateFrom').value;
+        const dateTo = document.getElementById('arcDateTo').value;
+        
+        let archiveHtml = ''; let totalOrders = 0; let totalComm = 0;
+        let displayedCount = 0; let displayLimit = 150; 
+
+        const completedOrders = globalData.orders.slice(1).filter(o => o[5] === 'completed' || o[5] === 'مكتمل' || o[5] === 'settled').reverse();
+        
+        completedOrders.forEach(o => {
+            const orderId = o[0], restName = o[1], price = o[4], details = o[3], status = o[5], driverPhone = o[6];
+            let orderDateISO = "", orderDateFormatted = "---";
+            if (o[7]) {
+                const orderDateObj = new Date(o[7]);
+                if (!isNaN(orderDateObj.getTime())) { orderDateISO = orderDateObj.toISOString().split('T')[0]; orderDateFormatted = orderDateObj.toLocaleString('ar-EG'); }
+            }
+            let match = true;
+            if(search && !String(orderId).toLowerCase().includes(search) && !String(details).toLowerCase().includes(search)) match = false;
+            if(resFilter && restName !== resFilter) match = false;
+            if(driverFilter && String(driverPhone) !== driverFilter) match = false;
+            if(dateFrom && orderDateISO && orderDateISO < dateFrom) match = false;
+            if(dateTo && orderDateISO && orderDateISO > dateTo) match = false;
+            
+            if(match) {
+                totalOrders++;
+                const isSettled = (status === 'settled');
+                let comm = 0, payType = "المطعم يدفع";
+                const rData = globalData.restaurants.find(r => r[1] === restName);
+                if(rData) { comm = parseFloat(rData[5]) || 0; payType = String(rData[8]); }
+                totalComm += comm;
+                
+                if (displayedCount < displayLimit) {
+                    displayedCount++;
+                    const dData = globalData.drivers.find(d => String(d[2]) === String(driverPhone));
+                    let driverName = dData ? dData[1] : driverPhone;
+                    const orderDataObj = { id: orderId, date: orderDateFormatted, res: restName, driver: driverName, details: details, price: price, comm: comm, payType: payType, isSettled: isSettled };
+                    const orderDataStr = encodeURIComponent(JSON.stringify(orderDataObj));
+                    archiveHtml += `<tr onclick="openInvoice('${orderDataStr}')" style="cursor:pointer; transition: 0.2s;" onmouseover="this.style.backgroundColor='#F9FAFB'" onmouseout="this.style.backgroundColor='transparent'">
+                        <td class="fw-black text-nowrap text-dark" style="font-size:0.9rem;">#${orderId || '-'}</td>
+                        <td class="fw-bold text-muted text-nowrap">${orderDateISO || '-'}</td>
+                        <td class="fw-black" style="color: var(--nahla-dark); white-space: normal;">${restName || '-'}</td>
+                        <td class="text-muted fw-bold" style="white-space: normal;">${driverName}</td>
+                        <td><span class="badge ${isSettled ? 'bg-light text-secondary border' : 'bg-success'} px-3 py-2 rounded-pill shadow-sm" style="font-size:0.75rem;">${isSettled ? 'مُسدد' : 'مكتمل'}</span></td>
+                    </tr>`;
                 }
-            } catch (err) {
-                showToast('ضعف في الاتصال بالخادم', 'error');
-            } finally {
-                btnElement.innerHTML = originalHtml;
-                btnElement.disabled = false;
             }
+        });
+        
+        if (totalOrders > displayLimit) {
+            archiveHtml += `<tr><td colspan="5" class="text-center text-muted py-4 fw-bold">تم إخفاء ${totalOrders - displayLimit} طلب قديم للحفاظ على سرعة النظام.</td></tr>`;
         }
-    </script>
+
+        document.getElementById('arcTotalCount').innerText = totalOrders;
+        document.getElementById('arcTotalComm').innerHTML = `${totalComm} <span class="fs-5">د.ع</span>`;
+        
+        const currentArchiveHtml = archiveHtml || `<tr><td colspan="5" class="text-center text-muted py-5 fw-bold fs-5">لا توجد سجلات.</td></tr>`;
+        if (lastArchiveHtml !== currentArchiveHtml) {
+            document.getElementById('ordersTableBody').innerHTML = currentArchiveHtml;
+            lastArchiveHtml = currentArchiveHtml;
+        }
+    }
+
+    function openInvoice(dataStr) {
+        const data = JSON.parse(decodeURIComponent(dataStr));
+        document.getElementById('invOrderId').innerText = "#" + data.id; document.getElementById('invDate').innerText = data.date; document.getElementById('invRes').innerText = data.res; document.getElementById('invDriver').innerText = data.driver; document.getElementById('invCust').innerText = data.details; document.getElementById('invPrice').innerText = data.price + " د.ع"; document.getElementById('invComm').innerText = data.comm + " د.ع"; document.getElementById('invPayType').innerText = data.payType; document.getElementById('invStatus').innerHTML = data.isSettled ? '<span class="badge bg-light text-secondary border px-3 py-2 rounded-pill">تم تسوية الحساب</span>' : '<span class="badge bg-success px-3 py-2 rounded-pill">مكتمل (غير مسدد)</span>';
+        document.getElementById('invoiceModal').style.display = 'flex';
+    }
+    function closeInvoice(e) { if(!e || e.target.id === 'invoiceModal') document.getElementById('invoiceModal').style.display = 'none'; }
+
+    function exportExcel() {
+        let csv = '\uFEFF'; csv += "ID الطلب,التاريخ,المطعم,الكابتن,الحالة\n";
+        const rows = document.querySelectorAll("#archiveTable tbody tr");
+        if(rows.length === 0 || rows[0].cells.length === 1) return showToast("لا توجد بيانات للتصدير", "error");
+        rows.forEach(row => { let rowData = []; row.querySelectorAll("td").forEach(cell => rowData.push('"' + cell.innerText.trim() + '"')); csv += rowData.join(",") + "\n"; });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "سجلات_نحلة_" + new Date().toISOString().split('T')[0] + ".csv"; document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    }
+
+    function showTab(e, name) {
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active-tab'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelectorAll('.b-nav-item').forEach(n => n.classList.remove('active'));
+        
+        document.getElementById('tab-' + name).classList.add('active-tab');
+        
+        document.querySelectorAll(`.desktop-nav-link[onclick*="${name}"]`).forEach(el => el.classList.add('active'));
+        document.querySelectorAll(`.mobile-nav-link[onclick*="${name}"]`).forEach(el => el.classList.add('active'));
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+        if(name === 'live' && map) { setTimeout(() => { map.invalidateSize(); }, 300); }
+    }
+
+    function initMap() {
+        const kirkukLocation = [35.468, 44.392];
+        map = L.map('adminMap', { zoomControl: false }).setView(kirkukLocation, 13);
+        
+        L.control.zoom({ position: 'topright' }).addTo(map);
+        
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap & Nahla Delivery', maxZoom: 19 }).addTo(map);
+        heatLayer = L.heatLayer([], { radius: 25, blur: 15, maxZoom: 14, gradient: {0.4: '#FEF3C7', 0.6: '#FCD34D', 0.7: '#F59E0B', 0.8: '#D97706', 1.0: '#B45309'} }).addTo(map);
+        restaurantMarkersLayer = L.layerGroup().addTo(map);
+        driverClusterGroup = L.markerClusterGroup({
+            iconCreateFunction: function(cluster) {
+                return L.divIcon({ html: '<div style="background-color: var(--nahla-dark); color: var(--nahla-yellow); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">' + cluster.getChildCount() + '</div>', className: 'custom-cluster-icon', iconSize: L.point(40, 40) });
+            }, maxClusterRadius: 40 
+        });
+        map.addLayer(driverClusterGroup);
+        setTimeout(() => { map.invalidateSize(); }, 1000);
+    }
+</script>
+
 </body>
 </html>

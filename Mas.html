@@ -1,82 +1,558 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head>
-<script>const V="88.1",VK='nahla_admin_v';try{if(localStorage.getItem(VK)!==V){localStorage.setItem(VK,V);if(localStorage.getItem(VK)===V){caches.keys().then(n=>{for(let x of n)caches.delete(x);});window.location.reload();}}}catch(e){}</script>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"><title>نحلة كركوك | Hive Admin V88.1</title>
-<meta name="theme-color" content="#09090b">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/><link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/><script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-<style>
-/* 🐝 الوضع الليلي الفاخر (Premium Dark) */
-:root{--p:#fbbf24;--pd:#f59e0b;--pl:rgba(251,191,36,0.1);--a:#09090b;--bg:#09090b;--sfc:#18181b;--elv:#27272a;--br:#3f3f46;--t1:#f8fafc;--t2:#d4d4d8;--t3:#a1a1aa;--s:#10b981;--w:#f59e0b;--d:#ef4444;--sx:0 4px 20px rgba(0,0,0,0.5);--nav:72px;}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;} html,body{height:100%;overflow:hidden;background:var(--bg);font-family:'Cairo',sans-serif;color:var(--t1);-webkit-tap-highlight-color:transparent;}
-.d-none{display:none!important;} .card-glass{background:var(--sfc);border-radius:20px;padding:16px;box-shadow:var(--sx);border:1px solid var(--br);}
-/* Auth */ #authOverlay{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;}
-.auth-wrap{background:var(--sfc);padding:40px;border-radius:28px;box-shadow:var(--sx);text-align:center;width:90%;max-width:400px;border:1px solid var(--br);}
-.inp{width:100%;background:var(--elv);color:var(--t1);border:1px solid var(--br);border-radius:14px;padding:14px;font-weight:700;text-align:center;margin-bottom:15px;outline:none;} .inp:focus{border-color:var(--p);box-shadow:0 0 0 3px var(--pl);}
-.btn-m{width:100%;padding:14px;background:var(--p);color:#000;border:none;border-radius:14px;font-weight:900;cursor:pointer;transition:.2s;} .btn-m:active{transform:scale(.96);}
-/* Layout */ #app{display:flex;height:100%;width:100%;} .tab{display:none;height:100%;overflow-y:auto;padding:20px;padding-bottom:100px;} .tab.active{display:block;}
-.sidebar{width:260px;background:var(--sfc);border-left:1px solid var(--br);padding:20px 15px;display:flex;flex-direction:column;} .main{flex:1;position:relative;background:var(--bg);overflow-y:auto;}
-.nav-i{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;color:var(--t2);font-weight:700;cursor:pointer;margin-bottom:5px;} .nav-i.active{background:var(--p);color:#000;}
-@media(max-width:768px){.sidebar,.d-hdr{display:none;} .main{width:100%;} .b-nav{display:flex;position:fixed;bottom:0;width:100%;height:var(--nav);background:var(--sfc);border-top:1px solid var(--br);justify-content:space-around;align-items:center;z-index:999;border-radius:20px 20px 0 0;} .bn-i{display:flex;flex-direction:column;align-items:center;font-size:.65rem;font-weight:700;color:var(--t3);gap:4px;} .bn-i.active{color:var(--p);transform:translateY(-3px);}} @media(min-width:769px){.b-nav{display:none;} .main{padding:30px;} .d-hdr{display:flex;justify-content:space-between;margin-bottom:20px;}}
-/* Map & Cards */ #mapWrap{height:45vh;position:relative;border-radius:20px;overflow:hidden;border:2px solid var(--br);margin-bottom:20px;} #map{height:100%;}
-.oc{background:var(--sfc);border-radius:16px;padding:15px;border:1px solid var(--br);margin-bottom:10px;position:relative;border-right:4px solid var(--br);} .oc-p{border-right-color:var(--d);animation:p 2s infinite;} .oc-a{border-right-color:var(--s);}
-@keyframes p{50%{box-shadow:0 0 15px rgba(239,68,68,.3);}} .flex-b{display:flex;justify-content:space-between;align-items:center;} .btn-sm-c{width:32px;height:32px;border:none;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;}
-/* Modals & Misc */ .overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;display:none;align-items:center;justify-content:center;} .mdl{background:var(--sfc);padding:25px;border-radius:24px;width:90%;max-width:450px;max-height:90vh;overflow-y:auto;border:1px solid var(--br);}
-.fp{padding:6px 14px;border-radius:20px;border:1px solid var(--br);background:var(--elv);color:var(--t2);font-size:.8rem;font-weight:700;white-space:nowrap;} .fp.active{background:var(--p);color:#000;border-color:var(--p);} .f-bar{display:flex;gap:8px;overflow-x:auto;padding-bottom:5px;}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;} .table-w{background:var(--sfc);border-radius:16px;overflow-x:auto;border:1px solid var(--br);} table{width:100%;text-align:center;font-size:.85rem;color:var(--t2);} th{padding:10px;background:var(--elv);color:var(--t1);} td{padding:10px;border-bottom:1px solid var(--br);}
-#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:10000;width:90%;max-width:350px;} .tm{background:var(--sfc);color:var(--t1);padding:12px;border-radius:12px;box-shadow:var(--sx);font-weight:700;margin-bottom:8px;display:flex;gap:10px;align-items:center;border:1px solid var(--br);}
-.spin{width:20px;height:20px;border:2px solid transparent;border-top-color:#000;border-radius:50%;animation:s .8s linear infinite;} @keyframes s{to{transform:rotate(360deg);}}
-</style></head>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <script>
+        const CURRENT_APP_VERSION = "88.1";
+        const VERSION_KEY = 'nahla_master_app_version';
+        try {
+            if (localStorage.getItem(VERSION_KEY) !== CURRENT_APP_VERSION) {
+                localStorage.setItem(VERSION_KEY, CURRENT_APP_VERSION);
+                if (localStorage.getItem(VERSION_KEY) === CURRENT_APP_VERSION) {
+                    if ('caches' in window) {
+                        caches.keys().then(function(names) {
+                            for (let name of names) caches.delete(name);
+                        });
+                    }
+                    window.location.reload();
+                }
+            }
+        } catch (e) {}
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>نحلة كركوك | Hive Admin V88.1</title>
+    <meta name="theme-color" content="#09090b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <style>
+        /* 🐝 الوضع الليلي لشركة نحلة */
+        :root {
+            --primary: #f59e0b;       
+            --primary-dark: #d97706;  
+            --primary-light: rgba(245, 158, 11, 0.1); 
+            --primary-mist: #09090b;  /* أسود الخلفية */
+            --accent: #f59e0b;
+            --accent-dark: #d97706;
+            --accent-light: rgba(245, 158, 11, 0.15);
+            --surface: #18181b;       /* لون البطاقات */
+            --surface-2: #27272a;
+            --border: #3f3f46;
+            --text-1: #f8fafc;        /* نصوص بيضاء */
+            --text-2: #d4d4d8;
+            --text-3: #a1a1aa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --s-xs: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --s-sm: 0 8px 24px rgba(0, 0, 0, 0.4);
+            --s-md: 0 12px 32px rgba(0, 0, 0, 0.5);
+            --r-sm: 14px;
+            --r-md: 20px;
+            --r-lg: 28px;
+            --r-xl: 36px;
+            --r-full: 999px;
+            --sidebar-w: 264px;
+            --nav-h: 72px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; overflow: hidden; background: var(--primary-mist); font-family: 'Cairo', sans-serif; color: var(--text-1); -webkit-tap-highlight-color: transparent; }
+        .hidden-section { display: none !important; }
+
+        .aiops-ticker { background: var(--surface); border-radius: var(--r-md); padding: 12px 16px; font-size: 0.85rem; font-weight: 800; color: var(--primary); white-space: nowrap; overflow: hidden; display: flex; align-items: center; box-shadow: var(--s-xs); border: 1px solid var(--border); margin-bottom: 20px; }
+        .ticker-content { display: inline-block; animation: tickerScroll 20s linear infinite; }
+        @keyframes tickerScroll { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
+
+        .reject-tag { background: rgba(239, 68, 68, 0.1); color: var(--danger); font-size: 0.7rem; font-weight: 800; padding: 2px 6px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.3); display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; }
+        .ready-badge { background: rgba(16, 185, 129, 0.1); color: var(--success); font-size: 0.65rem; font-weight: 900; padding: 3px 8px; border-radius: var(--r-full); border: 1px solid rgba(16, 185, 129, 0.3); display: inline-flex; align-items: center; gap: 3px; animation: readyPulse 2s ease-in-out infinite; }
+        @keyframes readyPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.2); } 50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); } }
+
+        .map-wrapper { transition: all 0.4s ease; position: relative; }
+        .map-wrapper.fullscreen { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999 !important; }
+        .fab-map-action { position: absolute; right: 15px; width: 45px; height: 45px; border-radius: 14px; background: var(--surface); color: var(--text-1); display: flex; align-items: center; justify-content: center; box-shadow: var(--s-sm); cursor: pointer; z-index: 1010; border: 1px solid var(--border); transition: 0.2s; }
+        .fab-map-action:active { transform: scale(0.9); }
+        .fab-expand { top: 75px; }
+        .fab-cancel-track { top: 130px; background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); display: none; }
+        .fab-broadcast { position: fixed; bottom: calc(var(--nav-h) + 20px); left: 20px; width: 50px; height: 50px; border-radius: 50%; background: var(--primary); color: #000; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); cursor: pointer; z-index: 1010; border: none; transition: 0.2s; }
+        .fab-broadcast:active { transform: scale(0.9); }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); z-index: 20000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-xl); width: 100%; max-width: 460px; padding: 30px; box-shadow: var(--s-md); animation: emergIn .3s; }
+        .msg-btn { width: 100%; text-align: right; background: var(--surface-2); border: 1px solid var(--border); padding: 12px; border-radius: 12px; margin-bottom: 8px; font-weight: 800; color: var(--text-2); cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px; font-family: 'Cairo'; }
+        .msg-btn:active { transform: scale(0.98); background: var(--primary-light); color: var(--primary); border-color: var(--primary);}
+
+        #authOverlay { position: fixed; inset: 0; z-index: 10000; background: var(--primary-mist); display: flex; align-items: center; justify-content: center; }
+        .auth-wrap { width: 92%; max-width: 400px; background: var(--surface); border-radius: var(--r-xl); border: 1px solid var(--border); box-shadow: var(--s-md); padding: 44px 36px 40px; text-align: center; }
+        .auth-logo { width: 72px; height: 72px; border-radius: 24px; background: var(--primary); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 22px; color:#000; transform: rotate(45deg);}
+        .auth-logo i { transform: rotate(-45deg); }
+        .auth-title { font-size: 1.5rem; font-weight: 900; color: var(--text-1); margin-bottom: 4px; }
+        .auth-sub { font-size: 0.82rem; font-weight: 600; color: var(--text-3); margin-bottom: 32px; }
+        .auth-input { width: 100%; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r-md); padding: 15px 20px; font-family: 'Cairo', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text-1); text-align: center; outline: none; transition: all .25s ease; margin-bottom: 16px; }
+        .auth-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+        .auth-btn { width: 100%; padding: 15px; background: var(--primary); color: #000; border: none; border-radius: var(--r-md); font-family: 'Cairo', sans-serif; font-size: 1rem; font-weight: 900; cursor: pointer; transition: all .2s ease; }
+        .auth-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3); }
+        .auth-btn:active { transform: scale(0.97); }
+
+        #mainDashboard { display: flex; height: 100%; width: 100%; overflow: hidden; position: relative; }
+        .admin-tab { display: none; } .admin-tab.active-tab { display: block; }
+
+        @media (max-width: 768px) {
+            .sidebar, .desktop-header { display: none !important; }
+            .main-content { margin-right: 0 !important; padding: 0 !important; width: 100%; height: 100%; position: relative; background: var(--primary-mist); }
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-h); background: var(--surface); border-top: 1px solid var(--border); border-radius: 28px 28px 0 0; justify-content: space-around; align-items: center; z-index: 9999; padding-bottom: env(safe-area-inset-bottom); }
+            .b-nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 20%; cursor: pointer; padding: 10px 0; transition: all .3s; position: relative; }
+            .b-nav-icon { width: 40px; height: 40px; border-radius: 14px; display: flex; align-items: center; justify-content: center; transition: all .3s; color: var(--text-3); }
+            .b-nav-label { font-size: 0.62rem; font-weight: 700; color: var(--text-3); transition: color .3s; }
+            .b-nav-item.active .b-nav-icon { background: var(--primary); color: #000; transform: translateY(-4px); }
+            .b-nav-item.active .b-nav-label { color: var(--primary); }
+            .admin-tab { position: absolute; top: 0; bottom: var(--nav-h); left: 0; right: 0; display: block !important; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.3s ease; overflow-y: auto; overflow-x: hidden; background: var(--primary-mist); scrollbar-width: none; }
+            .admin-tab.active-tab { opacity: 1; visibility: visible; pointer-events: auto; z-index: 10; }
+            #tab-live.active-tab { display: flex !important; flex-direction: column; overflow: hidden; }
+            .map-wrapper { position: relative; width: 100%; flex: 1; min-height: 40vh; z-index: 1; }
+            #adminMap { width: 100%; height: 100%; }
+            .map-floating-header { position: absolute; top: max(16px, env(safe-area-inset-top)); left: 16px; right: 16px; z-index: 10; display: flex; justify-content: space-between; align-items: center; pointer-events: none; }
+            .map-floating-header>* { pointer-events: auto; }
+            .brand-pill { background: rgba(24, 24, 27, 0.8); backdrop-filter: blur(12px); padding: 9px 18px; border-radius: var(--r-full); display: flex; align-items: center; gap: 10px; border: 1px solid var(--border); color: var(--primary); font-weight: 900; }
+            .map-floating-stats { position: absolute; top: calc(max(16px, env(safe-area-inset-top)) + 62px); right: 16px; z-index: 10; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+            .m-stat { background: rgba(24, 24, 27, 0.8); backdrop-filter: blur(12px); padding: 8px 14px; border-radius: var(--r-full); font-weight: 800; font-size: 0.88rem; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); color: var(--text-1); pointer-events: auto; }
+            .bottom-sheet { position: absolute; top: 53%; left: 0; width: 100%; height: 47%; background: var(--primary-mist); border-radius: 32px 32px 0 0; z-index: 10; display: flex; flex-direction: column; box-shadow: 0 -10px 40px rgba(0,0,0,0.5); transition: top .35s; min-height: 0; border-top: 1px solid var(--border); }
+            .sheet-handle { width: 40px; height: 5px; background: var(--border); border-radius: 99px; margin: 12px auto 0; flex-shrink: 0; }
+            .sheet-content { overflow-y: auto; flex: 1; padding: 14px 16px 60px; scrollbar-width: none; min-height: 0; overscroll-behavior: contain; }
+            .sheet-content::-webkit-scrollbar { display: none; }
+            .tab-inner-padding { padding: 20px 16px; padding-top: max(24px, env(safe-area-inset-top)); padding-bottom: calc(var(--nav-h) + 20px); }
+            .desktop-stats { display: none !important; }
+            #invoiceModal { padding-bottom: var(--nav-h); }
+        }
+
+        @media (min-width: 769px) {
+            .bottom-nav { display: none !important; }
+            .sidebar { width: var(--sidebar-w); background: var(--surface); height: 100vh; position: fixed; right: 0; top: 0; padding: 28px 16px; z-index: 1005; border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+            .sidebar-logo { display: flex; align-items: center; gap: 14px; padding: 4px 12px 28px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+            .sidebar-logo-icon { width: 46px; height: 46px; border-radius: 16px; background: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #000; transform: rotate(45deg);}
+            .sidebar-logo-icon i { transform: rotate(-45deg);}
+            .sidebar-name { font-size: 1rem; font-weight: 900; color: var(--text-1); }
+            .sidebar-sub { font-size: 0.72rem; font-weight: 600; color: var(--text-3); }
+            .nav-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-radius: var(--r-md); color: var(--text-2); font-size: 0.88rem; font-weight: 700; cursor: pointer; margin-bottom: 6px; transition: all .25s ease; text-decoration: none; }
+            .nav-item:hover { background: var(--primary-light); color: var(--primary); }
+            .nav-item.active { background: var(--primary); color: #000; }
+            .nav-item .nav-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); flex-shrink: 0; transition: background .25s; }
+            .nav-item.active .nav-icon { background: rgba(0,0,0,0.2); }
+            .main-content { margin-right: var(--sidebar-w); padding: 32px 36px; height: 100vh; overflow-y: auto; width: calc(100% - var(--sidebar-w)); background: var(--primary-mist); position: relative; }
+            .desktop-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+            .desktop-header-title { font-size: 1.6rem; font-weight: 900; color: var(--text-1); }
+            .desktop-header-sub { font-size: 0.82rem; font-weight: 600; color: var(--text-3); margin-top: 2px; }
+            .desktop-clock { background: var(--surface); padding: 10px 22px; border-radius: var(--r-full); font-weight: 800; font-size: 1rem; color: var(--primary); border: 1px solid var(--border); }
+            .map-wrapper { width: 100%; height: 460px; margin-bottom: 28px; position: relative; }
+            #adminMap { width: 100%; height: 100%; border-radius: var(--r-lg); border: 4px solid var(--surface); z-index: 1; }
+            .map-floating-header, .map-floating-stats, .sheet-handle { display: none !important; }
+        }
+
+        .driver-rating { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; margin-bottom: 10px; font-size: 0.75rem; font-weight: 800; border: 1px solid transparent; }
+        .rating-new { background: var(--surface-2); color: var(--text-2); border-color: var(--border); }
+        .rating-bronze { background: rgba(180, 83, 9, 0.1); color: #fbbf24; border-color: rgba(180, 83, 9, 0.3); }
+        .rating-silver { background: rgba(100, 116, 139, 0.1); color: #cbd5e1; border-color: rgba(100, 116, 139, 0.3); }
+        .rating-gold { background: rgba(217, 119, 6, 0.1); color: var(--primary); border-color: rgba(217, 119, 6, 0.3); }
+        .rating-diamond { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
+
+        .driver-metrics { display: flex; gap: 10px; font-size: 0.7rem; font-weight: 800; margin-bottom: 12px; background: var(--surface-2); padding: 6px 10px; border-radius: 12px; border: 1px solid var(--border); }
+        .metrics-item { display: flex; align-items: center; gap: 4px; color: var(--text-2); }
+        .metrics-item.good { color: var(--success); }
+        .metrics-item.bad { color: var(--danger); }
+
+        .stat-card { background: var(--surface); border-radius: var(--r-lg); padding: 18px 16px; border: 1px solid var(--border); display: flex; align-items: center; gap: 14px; transition: all .25s ease; position: relative; overflow: hidden; }
+        .stat-card:hover { transform: translateY(-2px); border-color: var(--primary-light); }
+        .stat-icon { width: 46px; height: 46px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--primary-light); color: var(--primary);}
+        .stat-val { font-size: 1.7rem; font-weight: 900; line-height: 1; color: var(--text-1); }
+        .stat-lbl { font-size: 0.73rem; font-weight: 700; color: var(--text-3); margin-top: 3px; }
+
+        .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px; scrollbar-width: none; flex-wrap: wrap; }
+        .filter-bar::-webkit-scrollbar { display: none; }
+        .fp { flex-shrink: 0; padding: 8px 18px; border-radius: var(--r-full); font-family: 'Cairo', sans-serif; font-size: 0.8rem; font-weight: 800; color: var(--text-2); background: var(--surface); border: 1px solid var(--border); cursor: pointer; transition: all .2s ease; display: flex; align-items: center; gap: 6px; }
+        .fp:hover { background: var(--surface-2); color: var(--text-1); }
+        .fp.active { background: var(--primary); color: #000; border-color: transparent; }
+        .fp .cnt { background: rgba(255,255,255,0.1); padding: 1px 7px; border-radius: 99px; font-size: 0.72rem; color:var(--text-2);}
+        .fp.active .cnt { background: rgba(0,0,0,0.2); color: #000; }
+
+        .order-card { background: var(--surface); border-radius: var(--r-lg); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); position: relative; transition: all .25s ease; }
+        .order-card::after { content: ''; position: absolute; right: 0; top: 12px; bottom: 12px; width: 4px; border-radius: 99px; background: var(--text-3); }
+        .oc-pending::after { background: var(--danger); }
+        .oc-ringing::after { background: var(--warning); }
+        .oc-active::after { background: var(--success); }
+        .oc-heading::after { background: var(--primary); }
+        .oc-arrived::after { background: var(--accent); }
+        
+        .oc-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .oc-id { font-size: 1rem; font-weight: 900; color: var(--text-1); display: flex; align-items: center; }
+        .oc-time { font-size: 0.7rem; font-weight: 700; color: var(--text-3); margin-top: 3px; }
+        .oc-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; flex-wrap: wrap; max-width: 60%; }
+        
+        .oc-btn { width: 32px; height: 32px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: all .18s ease; flex-shrink: 0; }
+        .oc-btn-complete { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .oc-btn-delete { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .oc-btn-image { background: var(--primary-light); color: var(--primary); }
+        .oc-btn-track { background: var(--primary-light); color: var(--primary); padding: 0 10px; width: auto; border-radius: 10px; font-family: 'Cairo', sans-serif; font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; gap: 4px; height: 32px; }
+
+        .oc-body { display: flex; flex-direction: column; gap: 10px; }
+        .oc-row { display: flex; align-items: center; justify-content: space-between; }
+        .oc-res { font-size: 0.9rem; font-weight: 800; color: var(--text-1); display: flex; align-items: center; gap: 6px; }
+        .oc-price { font-size: 1rem; font-weight: 900; color: var(--success); }
+        .oc-area { font-size: 0.78rem; font-weight: 700; color: var(--text-2); display: flex; align-items: center; gap: 5px; }
+
+        .oc-driver-row { background: var(--surface-2); border-radius: var(--r-sm); padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid var(--border); }
+        .oc-driver-name { font-size: 0.8rem; font-weight: 800; color: var(--primary); flex: 1; min-width: 0; }
+        .btn-call-sm { width: 32px; height: 32px; border-radius: 10px; background: rgba(16, 185, 129, 0.1); color: var(--success); border: none; display: flex; align-items: center; justify-content: center; }
+        .assign-select { border: 1px solid var(--border); border-radius: 10px; padding: 6px 10px; font-family: 'Cairo', sans-serif; font-size: 0.75rem; font-weight: 800; max-width: 120px; background: var(--bg-main); color: var(--text-1); outline: none; }
+        
+        .delay-pill { position: absolute; top: 12px; left: 16px; background: rgba(239, 68, 68, 0.1); color: var(--danger); padding: 3px 10px; border-radius: var(--r-full); font-size: 0.7rem; font-weight: 900; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .sbadge { padding: 4px 10px; border-radius: var(--r-full); font-size: 0.7rem; font-weight: 900; border: none; }
+        .sbadge-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .sbadge-warn { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .sbadge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .sbadge-blue { background: var(--primary-light); color: var(--primary); border: 1px solid rgba(245, 158, 11, 0.2); }
+
+        .entity-card { background: var(--surface); border-radius: var(--r-lg); padding: 18px; border: 1px solid var(--border); display: flex; flex-direction: column; position: relative; height: 100%; }
+        .entity-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+        .entity-avatar { width: 44px; height: 44px; border-radius: 16px; display: flex; align-items: center; justify-content: center; background: var(--primary-light); color: var(--primary); flex-shrink: 0; }
+        .entity-name { font-size: 0.92rem; font-weight: 900; color: var(--text-1); margin-bottom: 2px; }
+        .entity-phone { font-size: 0.75rem; font-weight: 700; color: var(--text-3); direction: ltr; margin-bottom: 8px; }
+        .entity-debt { background: var(--surface-2); border-radius: var(--r-sm); padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border: 1px solid var(--border); }
+        .entity-debt-lbl { font-size: 0.74rem; font-weight: 700; color: var(--danger); }
+        .entity-debt-val { font-size: 0.9rem; font-weight: 900; color: var(--danger); }
+        .entity-actions { display: flex; justify-content: center; align-items: center; padding-top: 10px; border-top: 1px solid var(--border); margin-top: auto; flex-wrap: wrap; gap: 8px; }
+        
+        .ea-btn { width: 32px; height: 32px; border-radius: 10px; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .ea-accept { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .ea-pause { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .ea-ban { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .ea-trash { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+        .ea-debt { background: var(--primary-light); color: var(--primary); }
+        .ea-edit { background: var(--surface-2); color: var(--text-1); }
+
+        .arch-alert { background: var(--primary-light); color: var(--primary); padding: 12px 16px; border-radius: var(--r-md); font-size: 0.8rem; font-weight: 800; border: 1px solid rgba(245, 158, 11, 0.2); display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+        .arch-toolbar { background: var(--surface); border-radius: var(--r-lg); padding: 20px; border: 1px solid var(--border); margin-bottom: 16px; }
+        .form-ctrl { width: 100%; background: var(--bg-main); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 12px 14px; font-family: 'Cairo', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--text-1); outline: none; }
+        .form-ctrl:focus { border-color: var(--primary); }
+        
+        .arch-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+        @media (max-width: 768px) { .arch-kpi-row { grid-template-columns: repeat(2, 1fr); } }
+        .arch-kpi { background: var(--surface); border-radius: var(--r-lg); padding: 18px 16px; border: 1px solid var(--border); position: relative; }
+        .arch-kpi-num { font-size: 1.75rem; font-weight: 900; color: var(--text-1); margin-bottom: 4px; }
+        .arch-kpi-lbl { font-size: 0.72rem; font-weight: 700; color: var(--text-3); }
+        
+        .chart-box { background: var(--surface); border-radius: var(--r-lg); padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .arch-table-wrap { background: var(--surface); border-radius: var(--r-lg); border: 1px solid var(--border); overflow: hidden; }
+        .arch-table { width: 100%; border-collapse: collapse; min-width: 720px; }
+        .arch-table thead tr { background: var(--bg-elevated); border-bottom: 1px solid var(--border); }
+        .arch-table th { padding: 13px 14px; font-size: 0.74rem; font-weight: 800; color: var(--text-3); text-align: center; }
+        .arch-table td { padding: 13px 14px; font-size: 0.82rem; font-weight: 700; text-align: center; border-bottom: 1px solid var(--bg-elevated); }
+        .arch-action-btn.primary { background: var(--primary); color: #000; border: none; height: 34px; padding: 0 14px; border-radius: 10px; font-family: 'Cairo'; font-size: 0.78rem; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+
+        #toast-container { position: fixed; top: max(20px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 20000; display: flex; flex-direction: column; gap: 8px; width: 92%; max-width: 340px; }
+        .toast-msg { background: var(--surface); border-radius: 18px; padding: 14px 18px; display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 0.86rem; color: var(--text-1); border: 1px solid var(--border); animation: toastIn .3s forwards; }
+        .toast-msg.success .t-icon { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .toast-msg.error .t-icon { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .t-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+
+        #invoiceModal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); z-index: 30000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .invoice-card { background: var(--surface); border-radius: var(--r-xl); padding: 32px 28px; width: 100%; max-width: 440px; position: relative; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        .inv-close { position: absolute; top: 16px; left: 16px; width: 34px; height: 34px; border-radius: 10px; background: var(--bg-elevated); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-2); }
+        .inv-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--border); font-size: 0.84rem; }
+        .inv-label { font-weight: 700; color: var(--text-2); }
+        .inv-value { font-weight: 800; color: var(--text-1); text-align: left; }
+
+        .btn-shifts-toggle { width: 100%; padding: 14px 20px; background: var(--warning); color: #000; border: none; border-radius: var(--r-md); font-family: 'Cairo'; font-size: 0.95rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 16px; }
+        .btn-shifts-toggle.active-shifts { background: var(--danger); color: white; }
+    </style>
+</head>
 <body>
-<div id="toast"></div><audio id="snd" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
-<div id="authOverlay"><div class="auth-wrap"><div style="background:var(--p);width:60px;height:60px;border-radius:16px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:15px;transform:rotate(45deg);"><i data-lucide="hexagon" style="transform:rotate(-45deg);" width="30" color="#000"></i></div><h3 class="fw-black text-white">نحلة كركوك</h3><p class="fw-bold text-muted small mb-4">الإدارة العليا - Hive V88.1</p><input type="password" id="pass" class="inp" placeholder="رمز المرور"><button class="btn-m" onclick="login()">دخول للخلية</button></div></div>
-<div id="app" class="d-none">
-<aside class="sidebar"><h4 class="fw-black mb-4 text-center text-white">نحلة كركوك 🐝</h4><nav><div class="nav-i active" onclick="tab('live')"><i data-lucide="map"></i> الرادار الميداني</div><div class="nav-i" onclick="tab('arc')"><i data-lucide="bar-chart"></i> سجل اليوم</div><div class="nav-i" onclick="tab('res')"><i data-lucide="store"></i> الشركاء</div><div class="nav-i" onclick="tab('drv')"><i data-lucide="users"></i> الأسطول</div><div class="nav-i" onclick="tab('sys')"><i data-lucide="cpu"></i> النظام</div></nav><button class="btn-m mt-auto" style="background:var(--elv);color:var(--d);" onclick="location.reload()">خروج</button></aside>
-<main class="main">
-<div class="d-hdr"><div><h3 class="fw-black">نحلة كركوك</h3><span class="text-muted fw-bold small" id="conn">جاري الاتصال...</span></div></div>
-<div id="t-live" class="tab active"><div class="grid-2 mb-3"><div class="card-glass text-center"><h3 class="fw-black text-warning m-0" id="lc-ord">0</h3><small class="fw-bold text-muted">طلبات نشطة</small></div><div class="card-glass text-center"><h3 class="fw-black text-success m-0" id="lc-drv">0</h3><small class="fw-bold text-muted">كباتن بالميدان</small></div></div><div id="mapWrap"><div id="map"></div></div><h5 class="fw-black mb-3 text-white">الرادار الحي</h5><div class="f-bar mb-3" id="rf"><button class="fp active" onclick="fR('all',this)">الكل</button><button class="fp text-danger" onclick="fR('pending',this)">معلق</button><button class="fp text-success" onclick="fR('active',this)">بالطريق</button></div><div id="radar"></div></div>
-<div id="t-arc" class="tab"><h4 class="fw-black mb-3 text-white">سجل اليوم</h4><div class="grid-2 mb-3"><div class="card-glass"><canvas id="ch1" height="150"></canvas></div><div class="card-glass text-center"><h4 class="fw-black text-danger m-0 mt-3" id="ac-comm">0</h4><small class="fw-bold">إجمالي العمولات</small></div></div><input type="text" id="sArc" class="inp" placeholder="بحث..." oninput="rArc()"><div class="table-w"><table><thead><tr><th>الطلب</th><th>المطعم</th><th>الكابتن</th><th>السعر</th><th>العمولة</th><th>الحالة</th></tr></thead><tbody id="tb-arc"></tbody></table></div></div>
-<div id="t-res" class="tab"><h4 class="fw-black mb-3 text-white">المطاعم</h4><input type="text" id="sRes" class="inp" placeholder="بحث..." oninput="rEnt('RES')"><div class="f-bar mb-3" id="fr"><button class="fp active" onclick="fE('RES','all',this)">الكل</button><button class="fp" onclick="fE('RES','pending',this)">انتظار</button></div><div class="grid-2" id="l-res"></div></div>
-<div id="t-drv" class="tab"><h4 class="fw-black mb-3 text-white">الكباتن</h4><input type="text" id="sDrv" class="inp" placeholder="بحث..." oninput="rEnt('DRV')"><div class="f-bar mb-3" id="fd"><button class="fp active" onclick="fE('DRV','all',this)">الكل</button><button class="fp" onclick="fE('DRV','active',this)">بالميدان</button></div><div class="grid-2" id="l-drv"></div></div>
-<div id="t-sys" class="tab"><h4 class="fw-black mb-3 text-white">النظام والأدوات</h4><div class="card-glass mb-3"><h6 class="fw-bold text-danger">التصفية الليلية (Nightly Cleaner)</h6><p class="small text-muted fw-bold">حساب الإيرادات والأرشفة آلياً.</p><button class="btn-m" onclick="exe('RUN_NIGHTLY_CLEANER',this)">تشغيل الآن</button></div><h5 class="fw-black mt-4 mb-2 text-white">سجل النظام</h5><div id="audL"></div></div>
-</main>
-<nav class="b-nav"><div class="bn-i active" onclick="tab('live')"><i data-lucide="map"></i>الميدان</div><div class="bn-i" onclick="tab('arc')"><i data-lucide="bar-chart"></i>السجل</div><div class="bn-i" onclick="tab('res')"><i data-lucide="store"></i>المطاعم</div><div class="bn-i" onclick="tab('drv')"><i data-lucide="users"></i>الكباتن</div><div class="bn-i" onclick="tab('sys')"><i data-lucide="cpu"></i>النظام</div></nav>
-</div>
-<div class="overlay" id="editM" onclick="this.style.display='none'"><div class="mdl" onclick="event.stopPropagation()"><h5 class="fw-black mb-3 text-white">تعديل البيانات</h5><input type="text" id="eN" class="inp" placeholder="الاسم"><input type="text" id="eP" class="inp mb-1" placeholder="كلمة مرور جديدة"><small class="text-danger fw-bold d-block mb-3">اتركه فارغاً لعدم التغيير</small><div id="eR" class="d-none"><input type="text" id="eA" class="inp" placeholder="المنطقة"><input type="number" id="eC" class="inp" placeholder="العمولة"><select id="ePT" class="inp"><option value="المطعم يدفع">المطعم يدفع</option><option value="مناصفة">مناصفة</option></select><input type="number" id="eLt" class="inp" placeholder="Lat"><input type="number" id="eLg" class="inp" placeholder="Lng"></div><div id="eD" class="d-none"><select id="eS" class="inp"><option value="active">نشط</option><option value="inactive">استراحة</option><option value="banned">موقوف</option></select></div><button class="btn-m" onclick="svE(this)">حفظ</button></div></div>
-<script>
-// ⚙️ إعدادات نحلة (النمط الليلي V88.1)
-const CFG = { 
-    URL: "https://script.google.com/macros/s/AKfycbwS9YOFYGAuM5F5lNHhC3rtuvGzIop_VONWXfj--E9LYuLe8O74D7r0XfiE_Oa4aOXeKw/exec", 
-    TOK: "NAHLA_SECURE_TOKEN_2026", 
-    FB: "https://nahla-delivery-6b06f-default-rtdb.europe-west1.firebasedatabase.app" 
-};
-const $ = i => document.getElementById(i); let mp, hl, cg, pw="", D={r:[],d:[],o:[],a:[],ld:{},lr:{}}, cF='all', cER='all', cED='all', eT, eP;
-firebase.initializeApp({databaseURL: CFG.FB}); const db = firebase.database();
-document.addEventListener('DOMContentLoaded',()=>{lucide.createIcons(); if(sessionStorage.getItem('hut')){$('pass').value=sessionStorage.getItem('hut');login();}});
-const T = (m,t='success')=>{$('toast').innerHTML+=`<div class="tm ${t}"><i data-lucide="${t==='success'?'check-circle':'alert-circle'}"></i>${m}</div>`;lucide.createIcons();setTimeout(()=>$('toast').lastChild.remove(),3000);};
-async function login(){pw=$('pass').value;if(!pw)return T('أدخل الرمز','error');let b=document.querySelector('.auth-wrap .btn-m');b.innerHTML='<div class="spin"></div>';
-try{let r=await fetch(CFG.URL,{method:'POST',body:JSON.stringify({action:'VERIFY_MASTER_PASS',pass:pw,token:CFG.TOK})});let d=await r.json();
-if(d.success){sessionStorage.setItem('hut',pw);$('authOverlay').style.display='none';$('app').classList.remove('d-none');init();load();}else T('مرفوض','error');}catch(e){T('خطأ','error');}b.innerHTML='دخول للخلية';}
-function tab(id){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.nav-i,.bn-i').forEach(e=>e.classList.remove('active'));$(`t-${id}`).classList.add('active');if(id==='live'&&mp)setTimeout(()=>mp.invalidateSize(),100);event.currentTarget.classList.add('active');if(id==='arc')ch();}
-function init(){mp=L.map('map',{zoomControl:0}).setView([35.468,44.392],13);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(mp);hl=L.heatLayer([],{radius:25}).addTo(mp);cg=L.markerClusterGroup();mp.addLayer(cg);
-db.ref('.info/connected').on('value',s=>$('conn').textContent=s.val()?'متصل 🟢':'غير متصل 🔴');}
-async function load(){let r=await(await fetch(`${CFG.URL}?action=getGlobalData&token=${CFG.TOK}`)).json();D.r=r.restaurants;D.d=r.drivers;
-db.ref('active_orders').on('value',s=>{let o=s.val()||{};D.o=[];D.a=[];Object.values(o).forEach(x=>{if(['completed','deleted'].includes(x.status))D.a.push(x);else D.o.push(x);});D.o.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));rO();rA();});
-db.ref('drivers_locations').on('value',s=>{let l=s.val()||{};cg.clearLayers();let c=0;Object.keys(l).forEach(k=>{let d=l[k];if(d.status==='active'&&d.lat){c++;cg.addLayer(L.marker([d.lat,d.lng]).bindPopup(k));}});$('lc-drv').textContent=c;rE('DRV');});
-db.ref('ledgers').on('value',s=>{let l=s.val()||{};D.ld=l.drivers||{};D.lr=l.restaurants||{};rE('RES');rE('DRV');});db.ref('admin_audit_trail').limitToLast(20).on('value',s=>{let a=s.val()||{};let h='';Object.values(a).reverse().forEach(x=>h+=`<div class="card-glass mb-2" style="font-size:.8rem;color:var(--t2);"><b>${x.action}</b>: ${x.details}</div>`);$('audL').innerHTML=h;});}
-function gN(t,p){let c=String(p).replace(/\D/g,'');if(c.startsWith('964'))c=c.slice(3);c=c.replace(/^0+/,'');let l=t==='RES'?D.r:D.d;let f=l.find(x=>String(x[2]).includes(c));return f?f[1]:p;}
-function rO(){$('lc-ord').textContent=D.o.length;let pts=[];D.o.forEach(o=>{let r=D.r.find(x=>x[1]===o.restaurant);if(r&&r[6])pts.push([r[6],r[7],1]);});hl.setLatLngs(pts);let f=D.o.filter(o=>{if(cF==='pending')return !o.driverPhone||o.driverPhone==='system_routing';if(cF==='active')return o.driverPhone&&o.driverPhone!=='system_routing';return true;});
-let h='';let opt='<option value="">كابتن (تلقائي)</option>';D.d.slice(1).forEach(d=>opt+=`<option value="${d[2]}">${d[1]}</option>`);f.forEach(o=>{let pd=!o.driverPhone||o.driverPhone==='system_routing';let dN=pd?'يبحث...':gN('DRV',o.driverPhone);h+=`<div class="oc ${pd?'oc-p':'oc-a'}"><div class="flex-b mb-2"><b style="color:var(--t1);">#${o.id.slice(4,9)}</b><span class="badge ${pd?'bg-danger':'bg-success'}">${pd?'معلق':'بالطريق'}</span></div><div class="small fw-bold text-muted mb-2">${o.restaurant} • ${o.price} د.ع</div><div class="flex-b"><select class="inp m-0" style="width:60%;padding:5px;" onchange="exe('ASSIGN_DRIVER',this,'${o.id}',this.value)">${opt}</select><div style="display:flex;gap:5px;"><button class="btn-sm-c bg-success text-white" onclick="exe('ADMIN_UPDATE_STATUS',this,'${o.id}','completed','ORDER')">✓</button><button class="btn-sm-c bg-danger text-white" onclick="exe('ADMIN_UPDATE_STATUS',this,'${o.id}','deleted','ORDER')">×</button></div></div></div>`;});$('radar').innerHTML=h||'<div class="text-center text-muted">لا طلبات</div>';}
-function fR(f,b){cF=f;$('rf').querySelectorAll('.fp').forEach(x=>x.classList.remove('active'));b.classList.add('active');rO();} function fE(t,f,b){if(t==='RES')cER=f;else cED=f;b.parentNode.querySelectorAll('.fp').forEach(x=>x.classList.remove('active'));b.classList.add('active');rEnt(t);}
-function rEnt(t){let c=t==='RES'?$('l-res'):$('l-drv');let f=t==='RES'?cER:cED;let q=(t==='RES'?$('sRes'):$('sDrv')).value.toLowerCase();let l=t==='RES'?D.r:D.d;let s=l.slice(1).filter(x=>x[4]!=='deleted'&&(x[1].toLowerCase().includes(q)||x[2].includes(q)));if(f==='pending')s=s.filter(x=>x[4]==='pending');else if(f==='active')s=s.filter(x=>x[4]==='active');let h='';s.forEach(x=>{let led=t==='RES'?(D.lr[x[2]]||{}):(D.ld[x[2]]||{});h+=`<div class="card-glass"><b style="color:var(--t1);">${x[1]}</b><br><small style="color:var(--t3);">${x[2]}</small><br><small class="text-danger fw-black">الديون: ${led.debt||0} د.ع</small><div class="flex-b mt-2"><span class="badge bg-secondary">${x[4]}</span><div style="display:flex;gap:5px;"><button class="btn-sm-c bg-warning" onclick="oE('${t}','${x[2]}')">✎</button><button class="btn-sm-c bg-success text-white" onclick="exe('RESET_DEBT',this,'${x[2]}',null,'${t}')">$</button></div></div></div>`;});c.innerHTML=h||'<div class="text-center text-muted w-100">لا نتائج</div>';}
-function rA(){let q=$('sArc').value.toLowerCase();let h='';let c=0,v=0;D.a.forEach(o=>{if(q&&!o.restaurant.toLowerCase().includes(q)&&!o.id.includes(q))return;if(o.status!=='deleted'){c++;v+=Number(o.price)||0;}h+=`<tr><td style="color:var(--t1);">${o.id.slice(4,9)}</td><td>${o.restaurant}</td><td>${gN('DRV',o.driverPhone)}</td><td class="text-success">${o.price}</td><td>${o.comm||0}</td><td>${o.status==='deleted'?'<span class="text-danger">ملغي</span>':'<span class="text-success">مكتمل</span>'}</td></tr>`;});$('tb-arc').innerHTML=h;$('ac-comm').textContent=v;}
-let ch1; function ch(){if(!D.a.length||!$('t-arc').classList.contains('active'))return;let c=D.a.filter(x=>x.status!=='deleted').length;let a=D.a.filter(x=>x.status==='deleted').length;if(ch1)ch1.destroy();ch1=new Chart($('ch1'),{type:'doughnut',data:{labels:['مكتمل','ملغي'],datasets:[{data:[c,a],backgroundColor:['#10b981','#ef4444'],borderColor:'#18181b'}]},options:{responsive:true,maintainAspectRatio:false}});}
-function oE(t,p){eT=t;eP=p;let d=(t==='RES'?D.r:D.d).find(x=>x[2]==p);$('eN').value=d[1];$('eP').value='';if(t==='RES'){$('eR').classList.remove('d-none');$('eD').classList.add('d-none');$('eA').value=d[3];$('eC').value=d[5];$('ePT').value=d[8];$('eLt').value=d[6]||'';$('eLg').value=d[7]||'';}else{$('eR').classList.add('d-none');$('eD').classList.remove('d-none');$('eS').value=d[4];}$('editM').style.display='flex';}
-async function svE(b){b.innerHTML='<div class="spin"></div>';let u={name:$('eN').value,password:$('eP').value};if(eT==='RES'){u.area=$('eA').value;u.comm=$('eC').value;u.payType=$('ePT').value;u.lat=parseFloat($('eLt').value)||0;u.lng=parseFloat($('eLg').value)||0;}else{u.status=$('eS').value;}try{await fetch(CFG.URL,{method:'POST',body:JSON.stringify({token:CFG.TOK,pass:pw,action:'updateEntityInfo',type:eT,phone:eP,updates:u})});$('editM').style.display='none';T('تم الحفظ');load();}catch(e){T('خطأ','error');}b.innerHTML='حفظ';}
-async function exe(a,b,id,ex,ty){let ob=b.innerHTML;b.innerHTML='...';try{await fetch(CFG.URL,{method:'POST',body:JSON.stringify({token:CFG.TOK,pass:pw,action:a,id:id,type:ty,status:ex,orderId:id,driverPhone:ex})});T('تم');if(a==='ADMIN_UPDATE_STATUS'||a==='RESET_DEBT')load();}catch(e){T('خطأ','error');}b.innerHTML=ob;}
-</script></body></html>
+
+    <div id="toast-container"></div>
+    <audio id="adminAlertSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+    <audio id="emergencySound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto" loop></audio>
+
+    <div id="receiptImageModal" class="modal-overlay" onclick="closeReceiptImage()">
+        <div style="position:relative; max-width:100%; max-height:90vh; border-radius:16px; overflow:hidden;" onclick="event.stopPropagation()">
+            <button style="position:absolute; top:16px; right:16px; width:40px; height:40px; border-radius:50%; background:rgba(0,0,0,0.5); color:white; border:2px solid rgba(255,255,255,0.2); cursor:pointer;" onclick="closeReceiptImage()">✕</button>
+            <img id="receiptImageFull" style="max-width:100vw; max-height:90vh; object-fit:contain;" src="" alt="صورة الوصل">
+        </div>
+    </div>
+
+    <div id="emergencyModal" class="modal-overlay">
+        <div class="modal-card text-center" style="border-top:6px solid var(--danger);">
+            <i data-lucide="alert-triangle" width="56" height="56" style="color:var(--danger); margin-bottom:15px;"></i>
+            <h3 style="font-weight:900; color:var(--danger); margin-bottom:8px;">نداء سيادي!</h3>
+            <p style="font-size:0.84rem; font-weight:700; color:var(--text-2); margin-bottom:20px;">طلب معلق لفترة طويلة جداً — يحتاج تدخل يدوي فوراً.</p>
+            <button style="width:100%; padding:14px; background:var(--danger); color:#fff; border:none; border-radius:14px; font-family:'Cairo'; font-weight:800; cursor:pointer;" onclick="closeEmergency()">حسناً، سأتدخل الآن</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="broadcastModal" onclick="closeModal('broadcastModal')">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <h5 class="fw-black mb-3 text-primary"><i data-lucide="radio" class="me-2"></i> بث رسالة سيادية</h5>
+            <button class="msg-btn" onclick="sendBroadcast('prayer')"><span>🕌</span> <span>حان الآن موعد الصلاة، تقبل الله طاعاتكم.</span></button>
+            <button class="msg-btn" onclick="sendBroadcast('clean')"><span>🧼</span> <span>يرجى الحفاظ على نظافة الصندوق والمظهر العام.</span></button>
+            <button class="msg-btn" onclick="sendBroadcast('trust')"><span>✨</span> <span>توكلوا على الله، يوم عمل موفق ورزق حلال.</span></button>
+            <button class="btn btn-dark w-100 fw-bold mt-2" style="background:var(--border);" onclick="closeModal('broadcastModal')">إلغاء</button>
+        </div>
+    </div>
+
+    <div id="editEntityModal" class="modal-overlay" onclick="closeEditModal()">
+        <div class="modal-card" style="max-width:480px; max-height:90vh; overflow-y:auto;" onclick="event.stopPropagation()">
+            <h4 class="fw-black mb-1 text-center" id="editModalTitle">تعديل البيانات</h4>
+            <p class="text-center text-muted fw-bold mb-4" id="editModalSub">قم بتحديث بيانات الشريك</p>
+            <label class="edit-label">الاسم الكامل / التجاري</label>
+            <input type="text" id="editName" class="form-ctrl mb-3" placeholder="الاسم">
+            <label class="edit-label">رقم الهاتف (للعرض فقط)</label>
+            <input type="text" id="editPhoneDisplay" class="form-ctrl mb-3" disabled style="opacity:0.6;">
+            <label class="edit-label text-primary">تعديل كلمة المرور (اتركه فارغاً للتجاهل)</label>
+            <input type="text" id="editPassword" class="form-ctrl mb-3" placeholder="كلمة مرور جديدة">
+            <div id="editResFields" style="display:none;">
+                <label class="edit-label">المنطقة</label>
+                <input type="text" id="editArea" class="form-ctrl mb-3" placeholder="المنطقة">
+                <div class="row g-2 mb-3">
+                    <div class="col-6"><label class="edit-label">العمولة</label><input type="number" id="editComm" class="form-ctrl"></div>
+                    <div class="col-6"><label class="edit-label">نظام الدفع</label><select id="editPayType" class="form-ctrl"><option value="المطعم يدفع">المطعم يدفع</option><option value="مناصفة">مناصفة مع السائق</option></select></div>
+                </div>
+                <div class="row g-2 mb-3">
+                    <div class="col-6"><input type="number" id="editLat" class="form-ctrl" placeholder="خط العرض (Lat)"></div>
+                    <div class="col-6"><input type="number" id="editLng" class="form-ctrl" placeholder="خط الطول (Lng)"></div>
+                </div>
+            </div>
+            <div id="editDriverFields" style="display:none;">
+                <label class="edit-label">المنطقة المفضلة</label>
+                <input type="text" id="editDriverArea" class="form-ctrl mb-3">
+                <label class="edit-label">حالة الحساب</label>
+                <select id="editStatus" class="form-ctrl mb-3"><option value="active">نشط</option><option value="inactive">استراحة</option><option value="banned">موقوف</option></select>
+            </div>
+            <button class="btn-m mt-2" onclick="saveEntityEdits()">حفظ التعديلات</button>
+        </div>
+    </div>
+
+    <div id="authOverlay">
+        <div class="auth-wrap">
+            <div class="auth-logo"><i data-lucide="hexagon" width="36" height="36"></i></div>
+            <div class="auth-title">نحلة كركوك</div>
+            <div class="auth-sub">الإدارة العليا — Hive V88.1</div>
+            <input type="password" id="masterPass" class="auth-input" placeholder="رمز المرور الإداري" onkeypress="if(event.key==='Enter') checkAuth()">
+            <button class="auth-btn" onclick="checkAuth()">دخول للخلية</button>
+        </div>
+    </div>
+
+    <div class="d-none" id="mainDashboard">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon"><i data-lucide="hexagon" width="24" height="24"></i></div>
+                <div><div class="sidebar-name">نحلة كركوك</div><div class="sidebar-sub">Master Panel</div></div>
+            </div>
+            <nav>
+                <div class="nav-item active desktop-nav-link" onclick="switchTab('live', this)"><div class="nav-icon"><i data-lucide="map" width="18"></i></div><span>الميدان</span></div>
+                <div class="nav-item desktop-nav-link" onclick="showTab(event,'orders')"><div class="nav-icon"><i data-lucide="bar-chart-big" width="18"></i></div><span>السجل</span></div>
+                <div class="nav-item desktop-nav-link" onclick="showTab(event,'restaurants')"><div class="nav-icon"><i data-lucide="store" width="18"></i></div><span>المطاعم</span></div>
+                <div class="nav-item desktop-nav-link" onclick="showTab(event,'drivers')"><div class="nav-icon"><i data-lucide="users" width="18"></i></div><span>الكباتن</span></div>
+                <div class="nav-item desktop-nav-link" onclick="showTab(event,'aiops')"><div class="nav-icon"><i data-lucide="cpu" width="18"></i></div><span>النظام</span></div>
+                <div class="nav-item desktop-nav-link" onclick="showTab(event,'audit')"><div class="nav-icon"><i data-lucide="scroll-text" width="18"></i></div><span>التدقيق</span></div>
+            </nav>
+            <div style="margin-top: auto;">
+                <button style="width:100%; padding:12px; border-radius:14px; background:transparent; border:1px solid var(--border); color:var(--danger); font-family:'Cairo'; font-weight:bold; cursor:pointer;" onclick="performLogout()"><i data-lucide="log-out" width="16" class="me-1"></i> تسجيل خروج</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="desktop-header">
+                <div><div class="desktop-header-title">نحلة كركوك 🐝</div><div class="desktop-header-sub">الرصد المباشر — Dark Mode</div></div>
+                <div id="liveTimeDesk" class="desktop-clock">00:00</div>
+            </header>
+
+            <div id="tab-live" class="admin-tab active-tab">
+                <div class="live-stat-row desktop-stats">
+                    <div class="live-stat-card"><div class="lsc-icon" style="background:var(--primary-light); color:var(--primary);"><i data-lucide="package" width="24"></i></div><div><div class="lsc-val val-orders">0</div><div class="lsc-lbl">الطلبات النشطة</div></div></div>
+                    <div class="live-stat-card"><div class="lsc-icon" style="background:rgba(16,185,129,0.1); color:var(--success);"><i data-lucide="truck" width="24"></i></div><div><div class="lsc-val val-drivers">0</div><div class="lsc-lbl">كباتن بالميدان</div></div></div>
+                    <div class="live-stat-card"><div class="lsc-icon" style="background:rgba(139,92,246,0.1); color:var(--purple);"><i data-lucide="store" width="24"></i></div><div><div class="lsc-val val-res">0</div><div class="lsc-lbl">مطاعم متصلة</div></div></div>
+                </div>
+                <div class="map-floating-header">
+                    <div class="brand-pill"><i data-lucide="hexagon" width="18" height="18"></i><span class="brand-pill-name">نحلة كركوك</span></div>
+                    <div id="liveTimeMob" class="brand-pill brand-pill-name">00:00</div>
+                </div>
+                <div class="map-wrapper" id="mapWrapper">
+                    <div id="adminMap"></div>
+                    <button class="fab-map-action fab-expand" onclick="toggleFullscreen()"><i data-lucide="maximize" id="fsIcon"></i></button>
+                    <button class="fab-map-action fab-cancel-track" id="btnCancelTrack" onclick="cancelTracking()"><i data-lucide="x"></i></button>
+                    <button class="fab-broadcast" onclick="document.getElementById('broadcastModal').classList.add('active')"><i data-lucide="megaphone" width="22"></i></button>
+                </div>
+                <div class="bottom-sheet" id="radarSheet">
+                    <div class="sheet-handle"></div>
+                    <div class="sheet-content">
+                        <div class="section-hdr mb-3"><div class="section-hdr-title"><div class="dot"></div> الرادار الميداني</div></div>
+                        <div class="filter-bar" id="radarFilters">
+                            <button class="fp active" onclick="filterRadar('all',this)">الكل <span class="cnt" id="cnt-all">0</span></button>
+                            <button class="fp text-danger" onclick="filterRadar('pending',this)">معلق <span class="cnt" id="cnt-pending">0</span></button>
+                            <button class="fp text-success" onclick="filterRadar('active',this)">قيد التوصيل <span class="cnt" id="cnt-active">0</span></button>
+                        </div>
+                        <div id="smartOrdersContainer"><div class="empty-state">جاري التحميل...</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-orders" class="admin-tab tab-inner-padding">
+                <span class="page-title-mob">سجل اليوم المباشر</span>
+                <div class="chart-box"><h5 class="chart-title">أداء اليوم</h5><div style="height:250px;width:100%;"><canvas id="dailyChart"></canvas></div></div>
+                <div class="arch-kpi-row">
+                    <div class="arch-kpi"><div class="arch-kpi-icon blue"><i data-lucide="check-circle" width="18"></i></div><div class="arch-kpi-num" id="arcTotalCount">0</div><div class="arch-kpi-lbl">طلبات منجزة</div></div>
+                    <div class="arch-kpi"><div class="arch-kpi-icon red"><i data-lucide="alert-circle" width="18"></i></div><div class="arch-kpi-num" id="arcCancelledCount">0</div><div class="arch-kpi-lbl">طلبات ملغية</div></div>
+                    <div class="arch-kpi"><div class="arch-kpi-icon amber"><i data-lucide="banknote" width="18"></i></div><div class="arch-kpi-num" id="arcTotalComm">0</div><div class="arch-kpi-lbl">إجمالي العمولات</div></div>
+                </div>
+                <div class="arch-toolbar">
+                    <input type="text" id="arcSearch" class="form-ctrl" placeholder="بحث ברقم الطلب..." oninput="renderArchive()">
+                </div>
+                <div class="arch-table-wrap">
+                    <div class="arch-action-bar"><div class="arch-result-info">النتائج: <span class="arch-result-badge" id="arcResultBadge">0</span></div><button class="arch-action-btn primary" onclick="exportExcel()">تصدير CSV</button></div>
+                    <div class="arch-table-scroll">
+                        <table class="arch-table" id="archiveTable">
+                            <thead><tr><th>الطلب</th><th>الوقت</th><th>المطعم</th><th>الكابتن</th><th>السعر</th><th>العمولة</th><th>الحالة</th></tr></thead>
+                            <tbody id="ordersTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-restaurants" class="admin-tab tab-inner-padding">
+                <span class="page-title-mob">المطاعم الشريكة</span>
+                <div class="search-input-wrap"><input type="text" id="searchResInput" class="search-input" placeholder="بحث عن مطعم..." oninput="triggerSearch('RESTAURANT')"></div>
+                <div class="filter-bar" id="resFiltersGroup">
+                    <button class="fp active" onclick="applySectionFilter('RESTAURANT','mostOrders',this)">الأكثر طلباً <span class="cnt" id="badge-res-mostOrders">0</span></button>
+                    <button class="fp" onclick="applySectionFilter('RESTAURANT','active',this)">مفعّل <span class="cnt" id="badge-res-active">0</span></button>
+                    <button class="fp" onclick="applySectionFilter('RESTAURANT','pending',this)">انتظار <span class="cnt" id="badge-res-pending">0</span></button>
+                </div>
+                <div class="entity-grid" id="resListContainer"></div>
+            </div>
+
+            <div id="tab-drivers" class="admin-tab tab-inner-padding">
+                <span class="page-title-mob">أسطول النحلة</span>
+                <div class="search-input-wrap"><input type="text" id="searchDriverInput" class="search-input" placeholder="بحث عن كابتن..." oninput="triggerSearch('DRIVER')"></div>
+                <div class="filter-bar" id="driverFiltersGroup">
+                    <button class="fp active" onclick="applySectionFilter('DRIVER','mostOrders',this)">التقييم العالي <span class="cnt" id="badge-driver-mostOrders">0</span></button>
+                    <button class="fp" onclick="applySectionFilter('DRIVER','active',this)">بالميدان <span class="cnt" id="badge-driver-active">0</span></button>
+                    <button class="fp" onclick="applySectionFilter('DRIVER','inactive',this)">استراحة <span class="cnt" id="badge-driver-inactive">0</span></button>
+                </div>
+                <div class="entity-grid" id="driverListContainer"></div>
+            </div>
+
+            <div id="tab-aiops" class="admin-tab tab-inner-padding">
+                <span class="page-title-mob">النظام والأدوات</span>
+                <div class="aiops-ticker"><i data-lucide="activity" width="18" class="me-2"></i><div class="ticker-content" id="tickerText"><span>🟢 النظام متصل...</span></div></div>
+                <div class="row g-3 mb-4">
+                    <div class="col-6"><div class="stat-card"><div class="stat-icon"><i data-lucide="activity"></i></div><div><div class="stat-val text-success">مستقر</div><div class="stat-lbl">الخادم</div></div></div></div>
+                    <div class="col-6"><div class="stat-card"><div class="stat-icon"><i data-lucide="shield-check"></i></div><div><div class="stat-val text-warning">نشط</div><div class="stat-lbl">كلب الحراسة</div></div></div></div>
+                </div>
+                <button class="btn-shifts-toggle" onclick="exe('RUN_NIGHTLY_CLEANER',this)">تشغيل التصفية الليلية آلياً</button>
+                <div class="chart-box mt-4"><h5 class="chart-title">الإنذارات الميدانية</h5><div id="systemAlertsContainer"></div></div>
+            </div>
+
+            <div id="tab-audit" class="admin-tab tab-inner-padding">
+                <span class="page-title-mob">سجل التدقيق</span>
+                <input type="text" id="auditSearchInput" class="search-input mb-4" placeholder="بحث في السجل..." oninput="renderAuditTrail()">
+                <div id="auditListContainer"></div>
+            </div>
+
+            <nav class="bottom-nav">
+                <div class="b-nav-item active" onclick="switchTab('live', this)"><div class="b-nav-icon"><i data-lucide="map" width="20"></i></div><span class="b-nav-label">الميدان</span></div>
+                <div class="b-nav-item" onclick="showTab(event,'orders')"><div class="b-nav-icon"><i data-lucide="bar-chart-big" width="20"></i></div><span class="b-nav-label">السجل</span></div>
+                <div class="b-nav-item" onclick="showTab(event,'restaurants')"><div class="b-nav-icon"><i data-lucide="store" width="20"></i></div><span class="b-nav-label">المطاعم</span></div>
+                <div class="b-nav-item" onclick="showTab(event,'drivers')"><div class="b-nav-icon"><i data-lucide="users" width="20"></i></div><span class="b-nav-label">الكباتن</span></div>
+                <div class="b-nav-item" onclick="showTab(event,'sys')"><div class="b-nav-icon"><i data-lucide="cpu" width="20"></i></div><span class="b-nav-label">النظام</span></div>
+            </nav>
+        </main>
+    </div>
+
+    <div id="invoiceModal" class="modal-overlay" onclick="closeInvoice(event)">
+        <div class="invoice-card" onclick="event.stopPropagation()">
+            <button class="inv-close" onclick="closeInvoice()"><i data-lucide="x"></i></button>
+            <div class="inv-icon-wrap" style="background:var(--primary-light); color:var(--primary); width:60px; height:60px; border-radius:20px; display:flex; align-items:center; justify-content:center; margin:0 auto 15px;"><i data-lucide="receipt" width="28"></i></div>
+            <div class="inv-title text-white">فاتورة الطلب</div>
+            <div class="inv-id" id="invOrderId"></div>
+            <div class="inv-row"><span class="inv-label">الوقت</span><span class="inv-value" id="invDate"></span></div>
+            <div class="inv-row"><span class="inv-label">المطعم</span><span class="inv-value text-warning" id="invRes"></span></div>
+            <div class="inv-row"><span class="inv-label">الكابتن</span><span class="inv-value text-success" id="invDriver"></span></div>
+            <div class="inv-row"><span class="inv-label">السعر</span><span class="inv-value text-primary" id="invPrice"></span></div>
+            <div class="inv-row"><span class="inv-label">العمولة</span><span class="inv-value text-danger" id="invComm"></span></div>
+            <div class="inv-row border-0"><span class="inv-label">الحالة</span><span class="inv-value" id="invStatus"></span></div>
+        </div>
+    </div>
+
+    <script>
+        // ⚙️ إعدادات نحلة كركوك (V88.1 Dark Mode)
+        const CFG = {
+            URL: "https://script.google.com/macros/s/AKfycbwS9YOFYGAuM5F5lNHhC3rtuvGzIop_VONWXfj--E9LYuLe8O74D7r0XfiE_Oa4aOXeKw/exec",
+            TOK: "NAHLA_SECURE_TOKEN_2026",
+            FB: "https://nahla-delivery-6b06f-default-rtdb.europe-west1.firebasedatabase.app"
+        };
+        const $ = i => document.getElementById(i); let mp, hl, cg, pw="", D={r:[],d:[],o:[],a:[],ld:{},lr:{}}, cF='all', cER='mostOrders', cED='mostOrders', eT, eP, am, sysA=[];
+        
+        firebase.initializeApp({databaseURL: CFG.FB}); const db = firebase.database();
+        
+        document.addEventListener('DOMContentLoaded',()=>{lucide.createIcons(); if(sessionStorage.getItem('nahla_mast')){$('masterPass').value=sessionStorage.getItem('nahla_mast');checkAuth();}});
+        const T = (m,t='success')=>{$('toast-container').innerHTML+=`<div class="toast-msg ${t}"><div class="t-icon"><i data-lucide="${t==='success'?'check-circle':'alert-circle'}"></i></div><span style="flex:1;">${m}</span></div>`;lucide.createIcons();setTimeout(()=>$('toast-container').lastChild.remove(),3500);};
+
+        async function checkAuth(){pw=$('masterPass').value;if(!pw)return T('أدخل الرمز','error');let b=document.querySelector('.auth-btn');b.innerText='جاري الدخول...';
+        try{let r=await fetch(CFG.URL,{method:'POST',body:JSON.stringify({action:'VERIFY_MASTER_PASS',pass:pw,token:CFG.TOK})});let d=await r.json();
+        if(d.success){sessionStorage.setItem('nahla_mast',pw);$('authOverlay').style.display='none';$('mainDashboard').classList.remove('d-none');init();load();}else T('الرمز خاطئ','error');}catch(e){T('خطأ','error');}b.innerText='دخول للخلية';}
+
+        function tab(id){document.querySelectorAll('.admin-tab').forEach(e=>e.classList.remove('active-tab'));document.querySelectorAll('.nav-i,.bn-i').forEach(e=>e.classList.remove('active'));$(`t-${id==='sys'?'aiops':id}`).classList.add('active-tab');if(id==='live'&&mp)setTimeout(()=>mp.invalidateSize(),100);event.currentTarget.classList.add('active');if(id==='arc')updateCharts();}
+        function switchTab(id,el){tab(id);} function showTab(e,id){tab(id);}
+
+        function init(){mp=L.map('adminMap',{zoomControl:0}).setView([35.468,44.392],13);L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(mp);hl=L.heatLayer([],{radius:25}).addTo(mp);cg=L.markerClusterGroup();mp.addLayer(cg);
+        db.ref('.info/connected').on('value',s=>$('conn').textContent=s.val()?'متصل 🟢':'غير متصل 🔴'); setInterval(()=>{let t=new Date().toLocaleTimeString('ar-EG');if($('liveTimeDesk'))$('liveTimeDesk').innerText=t;if($('liveTimeMob'))$('liveTimeMob').innerText=t;},1000);}
+
+        async function load(){let r=await(await fetch(`${CFG.URL}?action=getGlobalData&token=${CFG.TOK}`)).json();D.r=r.restaurants;D.d=r.drivers;
+        db.ref('active_orders').on('value',s=>{let o=s.val()||{};D.o=[];D.a=[];Object.values(o).forEach(x=>{if(['completed','deleted'].includes(x.status))D.a.push(x);else D.o.push(x);});D.o.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));rO();renderArchive();});
+        db.ref('drivers_locations').on('value',s=>{let l=s.val()||{};cg.clearLayers();let c=0;Object.keys(l).forEach(k=>{let d=l[k];if(d.status==='active'&&d.lat){c++;cg.addLayer(L.marker([d.lat,d.lng]).bindPopup(gN('DRV',k)));}});$('lc-drv').textContent=c;document.querySelectorAll('.val-drivers').forEach(e=>e.innerText=c);rEnt('DRV');});
+        db.ref('ledgers').on('value',s=>{let l=s.val()||{};D.ld=l.drivers||{};D.lr=l.restaurants||{};rEnt('RES');rEnt('DRV');}); db.ref('admin_audit_trail').limitToLast(20).on('value',s=>{let a=s.val()||{};let h='';Object.values(a).reverse().forEach(x=>h+=`<div class="card-glass mb-2" style="font-size:.8rem;color:var(--t2);"><b>${x.action}</b>: ${x.details}</div>`);$('audL').innerHTML=h;}); db.ref('system_alerts').limitToLast(10).on('value',s=>{sysA=[];let v=s.val();if(v)Object.keys(v).forEach(k=>sysA.unshift(v[k]));rAlerts();});}
+
+        function gN(t,p){let c=String(p).replace(/\D/g,'');if(c.startsWith('964'))c=c.slice(3);c=c.replace(/^0+/,'');let l=t==='RES'?D.r:D.d;let f=l.find(x=>String(x[2]).includes(c));return f?f[1]:p;}
+        function fR(f,b){cF=f;$('radarFilters').querySelectorAll('.fp').forEach(x=>x.classList.remove('active'));b.classList.add('active');rO();} function fE(t,f,b){if(t==='RES')cER=f;else cED=f;b.parentNode.querySelectorAll('.fp').forEach(x=>x.classList.remove('active'));b.classList.add('active');rEnt(t);}
+
+        function rO(){$('lc-ord').textContent=D.o.length; document.querySelectorAll('.val-orders').forEach(e=>e.innerText=D.o.length); document.querySelectorAll('.val-res').forEach(e=>e.innerText=[...new Set(D.o.map(x=>x.restaurant))].length);
+        let pts=[];D.o.forEach(o=>{let r=D.r.find(x=>x[1]===o.restaurant);if(r&&r[6])pts.push([r[6],r[7],1]);});hl.setLatLngs(pts);let f=D.o.filter(o=>{if(cF==='pending')return !o.driverPhone||o.driverPhone==='system_routing';if(cF==='active')return o.driverPhone&&o.driverPhone!=='system_routing';return true;});
+        let h='';let opt='<option value="">كابتن (تلقائي)</option>';D.d.slice(1).forEach(d=>opt+=`<option value="${d[2]}">${d[1]}</option>`);f.forEach(o=>{let pd=!o.driverPhone||o.driverPhone==='system_routing';let dN=pd?'يبحث...':gN('DRV',o.driverPhone);h+=`<div class="oc ${pd?'oc-p':'oc-a'}"><div class="flex-b mb-2"><b style="color:var(--t1);">#${o.id.slice(4,9)}</b><span class="badge ${pd?'bg-danger':'bg-success'}">${pd?'معلق':'بالطريق'}</span></div><div class="small fw-bold text-muted mb-2">${o.restaurant} • ${o.price} د.ع</div><div class="flex-b"><select class="inp m-0" style="width:60%;padding:5px;background:var(--elv);" onchange="exe('ASSIGN_DRIVER',this,'${o.id}',this.value,'ORDER')">${opt}</select><div style="display:flex;gap:5px;"><button class="btn-sm-c" style="background:rgba(16,185,129,0.2);color:var(--success);" onclick="exe('ADMIN_UPDATE_STATUS',this,'${o.id}','completed','ORDER')">✓</button><button class="btn-sm-c" style="background:rgba(239,68,68,0.2);color:var(--danger);" onclick="exe('ADMIN_UPDATE_STATUS',this,'${o.id}','deleted','ORDER')">×</button></div></div></div>`;});$('smartOrdersContainer').innerHTML=h||'<div class="text-center text-muted">لا طلبات</div>';}
+
+        function rEnt(t){let c=t==='RES'?$('resListContainer'):$('driverListContainer');let f=t==='RES'?cER:cED;let q=(t==='RES'?$('searchResInput'):$('searchDriverInput')).value.toLowerCase();let l=t==='RES'?D.r:D.d;let s=l.slice(1).filter(x=>x[4]!=='deleted'&&(x[1].toLowerCase().includes(q)||x[2].includes(q)));
+        if(f==='pending')s=s.filter(x=>x[4]==='pending');else if(f==='active')s=s.filter(x=>x[4]==='active');let h='';s.forEach(x=>{let led=t==='RES'?(D.lr[x[2]]||{}):(D.ld[x[2]]||{});h+=`<div class="card-glass"><b style="color:var(--t1);">${x[1]}</b><br><small style="color:var(--t3);">${x[2]}</small><br><small class="text-danger fw-black">الديون: ${led.debt||0} د.ع</small><div class="flex-b mt-2"><span class="badge bg-dark border border-secondary">${x[4]}</span><div style="display:flex;gap:5px;"><button class="btn-sm-c" style="background:var(--elv);color:var(--p);" onclick="oE('${t}','${x[2]}')">✎</button><button class="btn-sm-c bg-dark text-white" onclick="exe('RESET_DEBT',this,'${x[2]}',null,'${t}')">$</button></div></div></div>`;});c.innerHTML=h||'<div class="text-center text-muted w-100">لا نتائج</div>';}
+
+        function renderArchive(){let q=$('arcSearch').value.toLowerCase();let h='';let c=0,v=0,cm=0;D.a.forEach(o=>{if(q&&!o.restaurant.toLowerCase().includes(q)&&!o.id.includes(q))return;if(o.status!=='deleted'){c++;v+=Number(o.price)||0;cm+=Number(o.comm)||0;}let jO=encodeURIComponent(JSON.stringify(o));h+=`<tr onclick="openInvoice('${jO}')"><td>${o.id.slice(4,9)}</td><td style="font-size:.7rem">${new Date(o.timestamp||0).toLocaleTimeString()}</td><td>${o.restaurant}</td><td>${gN('DRV',o.driverPhone)}</td><td class="text-success">${o.price}</td><td class="text-danger">${o.comm||0}</td><td>${o.status==='deleted'?'<span class="text-danger">ملغي</span>':'<span class="text-success">مكتمل</span>'}</td></tr>`;});$('ordersTableBody').innerHTML=h;$('arcTotalCount').innerText=c;$('arcTotalComm').innerText=cm;$('arcResultBadge').innerText=D.a.length;}
+
+        let ch1, ch2; function updateCharts(){if(!D.a.length||!$('tab-orders').classList.contains('active-tab'))return;let c=D.a.filter(x=>x.status!=='deleted').length;let a=D.a.filter(x=>x.status==='deleted').length;if(ch1)ch1.destroy();ch1=new Chart($('dailyChart'),{type:'bar',data:{labels:['مكتمل','ملغي'],datasets:[{data:[c,a],backgroundColor:['#10b981','#ef4444'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});}
+
+        function oE(t,p){eT=t;eP=p;let d=(t==='RES'?D.r:D.d).find(x=>x[2]==p);$('eN').value=d[1];$('ePhoneDisplay').value=d[2];$('ePassword').value='';if(t==='RES'){$('editResFields').style.display='block';$('editDriverFields').style.display='none';$('editArea').value=d[3];$('editComm').value=d[5];$('editPayType').value=d[8];$('editLat').value=d[6]||'';$('editLng').value=d[7]||'';}else{$('editResFields').style.display='none';$('editDriverFields').style.display='block';$('editStatus').value=d[4];}$('editEntityModal').classList.add('active');}
+        async function saveEntityEdits(){let b=document.querySelector('#editEntityModal .btn-m');b.innerText='...';let u={name:$('editName').value,password:$('editPassword').value};if(eT==='RES'){u.area=$('editArea').value;u.comm=$('editComm').value;u.payType=$('editPayType').value;u.lat=parseFloat($('editLat').value)||0;u.lng=parseFloat($('editLng').value)||0;}else{u.status=$('editStatus').value;}try{await fetch(CFG.URL,{method:'POST',body:JSON.stringify({token:CFG.TOK,pass:pw,action:'updateEntityInfo',type:eT,phone:eP,updates:u})});$('editEntityModal').classList.remove('active');T('تم الحفظ');load();}catch(e){T('خطأ','error');}b.innerText='حفظ التعديلات';}
+
+        async function exe(a,b,id,ex,ty){let ob=b.innerText;b.innerText='...';try{await fetch(CFG.URL,{method:'POST',body:JSON.stringify({token:CFG.TOK,pass:pw,action:a,id:id,type:ty,status:ex,orderId:id,driverPhone:ex})});T('نجاح');if(a==='ADMIN_UPDATE_STATUS'||a==='RESET_DEBT')load();}catch(e){T('خطأ','error');}b.innerText=ob;}
+
+        function openInvoice(ds){let d=JSON.parse(decodeURIComponent(ds));$('invOrderId').innerText='#'+d.id;$('invDate').innerText=new Date(d.timestamp).toLocaleString();$('invRes').innerText=d.restaurant;$('invDriver').innerText=gN('DRV',d.driverPhone);$('invPrice').innerText=d.price+' د.ع';$('invComm').innerText=(d.comm||0)+' د.ع';$('invStatus').innerText=d.status==='deleted'?'ملغي':'مكتمل';$('invoiceModal').classList.add('active');}
+        function closeInvoice(e){if(!e||e.target.id==='invoiceModal')$('invoiceModal').classList.remove('active');}
+        function closeModal(id){$(id).classList.remove('active');} function triggerEmergency(){$('emergencyModal').classList.add('active');$('emergencySound').play().catch(()=>{});} function closeEmergency(){$('emergencyModal').classList.remove('active');$('emergencySound').pause();}
+        function rAlerts(){let h='';sysA.forEach(a=>h+=`<div class="card-glass mb-2"><b class="text-danger">${a.message}</b><br><small class="text-muted">الطلب #${a.orderId}</small></div>`);$('systemAlertsContainer').innerHTML=h||'<div class="text-muted">لا إنذارات</div>';}
+        function toggleFullscreen(){let w=$('mapWrapper');w.classList.toggle('fullscreen');setTimeout(()=>mp.invalidateSize(),200);}
+        function performLogout(){sessionStorage.clear();localStorage.clear();location.reload();}
+    </script>
+</body>
+</html>

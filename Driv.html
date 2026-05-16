@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <script>
-        // --- إصدار 88.0 (نسخة نحلة المعتمدة مع محرك Firebase V10) ---
-        const CURRENT_APP_VERSION = "88.0.Nahla.V10";
+        // --- إصدار 12.0 (نسخة أوبر المخصصة لنحلة - محفظة لحظية V10) ---
+        const CURRENT_APP_VERSION = "12.0.Nahla.Uber";
         try {
             if (localStorage.getItem('hut_app_version') !== CURRENT_APP_VERSION) {
                 localStorage.setItem('hut_app_version', CURRENT_APP_VERSION);
@@ -19,198 +19,195 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>كباتن نحلة 🐝 | النظام السحابي</title>
+    <title>كباتن نحلة 🐝 | Uber Edition</title>
     
-    <meta name="theme-color" content="#111827">
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="driver-logo.png"> 
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
+        /* =========================================
+           🐝 الهوية البصرية - Uber Edition لشركة نحلة
+           ========================================= */
         :root { 
-            --primary-blue: #111827; /* أسود فحمي لنحلة */
-            --accent-blue: #3b82f6; 
-            --accent-orange: #f97316; 
-            --success-green: #10b981; 
-            --danger-red: #ef4444; 
-            --bg-light: #f8fafc; 
-            --card-bg: #ffffff; 
-            --text-main: #0f172a; 
-            --text-muted: #64748b; 
-            --border-color: #e2e8f0; 
-            --stat-bg: #f1f5f9;
+            --uber-black: #000000;
+            --uber-gray: #1F2937;
             --nahla-yellow: #FFC107;
+            --nahla-yellow-dark: #E0A800;
+            --bg-light: #F3F4F6;
+            --surface: #FFFFFF;
+            --text-main: #000000;
+            --text-muted: #6B7280;
+            --border-light: #E5E7EB;
+            --success: #05A357; /* لون أوبر الأخضر */
+            --danger: #E21C3F;
+            --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
-        body { background: var(--bg-light); font-family: 'Cairo', sans-serif; overflow-x: hidden; color: var(--text-main); -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; overscroll-behavior-y: contain; }
+
+        body { 
+            background-color: var(--bg-light); 
+            font-family: 'Cairo', sans-serif; 
+            color: var(--text-main); 
+            -webkit-tap-highlight-color: transparent; 
+            user-select: none; -webkit-user-select: none; 
+            overflow-x: hidden; padding-bottom: env(safe-area-inset-bottom);
+        }
+
         .hidden-section { display: none !important; }
-        #offlineBanner { position: fixed; top: 0; left: 0; width: 100%; background: var(--danger-red); color: white; text-align: center; z-index: 99999; padding: max(5px, env(safe-area-inset-top)) 10px 5px 10px; font-weight: 800; font-size: 0.85rem; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); animation: slideDown 0.3s; }
+        
+        #offlineBanner { position: fixed; top: 0; left: 0; width: 100%; background: var(--danger); color: white; text-align: center; z-index: 99999; padding: max(10px, env(safe-area-inset-top)) 10px 10px 10px; font-weight: 800; font-size: 0.9rem; animation: slideDown 0.3s; }
         @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
-        #loadingOverlay, #permissionOverlay { position: fixed; inset: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); z-index: 30000; display: flex; align-items: center; justify-content: center; flex-direction: column; color: var(--primary-blue); text-align: center; padding: 25px; }
+        
+        #loadingOverlay, #permissionOverlay { position: fixed; inset: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); z-index: 30000; display: flex; align-items: center; justify-content: center; flex-direction: column; color: var(--uber-black); text-align: center; padding: 25px; }
         #loadingOverlay { z-index: 20000; display: none; }
-        .permission-icon { animation: shakeAlert 0.5s ease-in-out infinite alternate; }
+        .permission-icon { animation: shakeAlert 0.5s ease-in-out infinite alternate; color: var(--danger); }
         @keyframes shakeAlert { 0% { transform: translateX(-5px); } 100% { transform: translateX(5px); } }
 
-        .login-wrapper { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-light); padding: 20px; padding-bottom: env(safe-area-inset-bottom); transition: 0.3s; }
-        .login-card { background: var(--card-bg); border-radius: 30px; padding: 40px; width: 100%; max-width: 400px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 20px 40px rgba(0,0,0,0.08); position: relative; }
-        .form-label { font-weight: 700; color: #64748b; font-size: 0.9rem; margin-bottom: 10px; display: block; text-align: right; }
+        /* -------------------------------------
+           شاشة المصادقة (Auth Screen - Dark Uber Style)
+           ------------------------------------- */
+        .login-wrapper { min-height: 100vh; display: flex; flex-direction: column; background: var(--uber-black); position: relative; overflow: hidden; justify-content: space-between;}
+        .login-header { padding: 40px 20px; text-align: center; color: white; margin-top: 8vh; }
         
-        .custom-input { background: #f1f5f9; border: 2px solid transparent; border-radius: 18px; padding: 16px; font-weight: 700; transition: 0.3s; width: 100%; font-size: 1rem; color: var(--primary-blue); margin-bottom: 15px; }
-        .custom-input.phone-format { letter-spacing: 2px; font-size: 1.4rem; text-align: center; }
-        .custom-input:focus { background: white; border-color: var(--nahla-yellow); outline: none; box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.1); }
+        .login-card { background: var(--surface); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 30px 25px max(30px, env(safe-area-inset-bottom)); width: 100%; box-shadow: 0 -10px 40px rgba(0,0,0,0.5); }
+        .form-label { font-weight: 800; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 8px; display: block; text-align: right; }
         
-        .btn-action { background: var(--primary-blue); color: white; border: none; border-radius: 18px; padding: 20px; font-weight: 900; width: 100%; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 12px; transition: 0.3s; box-shadow: 0 10px 20px rgba(17, 24, 39, 0.2); }
-        .btn-action:active { transform: scale(0.96); box-shadow: none; }
+        .custom-input { width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 8px; border: 1px solid var(--border-light); background: #F9F9F9; font-weight: 700; font-size: 1.1rem; transition: 0.3s; color: var(--uber-black); }
+        .custom-input.phone-format { letter-spacing: 1px; font-size: 1.2rem; direction: ltr; text-align: right; }
+        .custom-input:focus { border-color: var(--uber-black); outline: none; background: white; }
         
-        .dash-header { background: var(--primary-blue); color: white; padding: max(30px, env(safe-area-inset-top)) 20px 60px 20px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: 0 10px 30px rgba(17, 24, 39, 0.15); position: relative; z-index: 10; transition: 0.3s; }
-        .status-badge { padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; transition: 0.3s; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); }
-        .status-badge.online { background: #10b981; border-color: #059669; }
-        
-        .stats-wrapper { margin-top: -35px; position: relative; z-index: 15; }
-        .stat-box { background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); text-align: center; border: 1px solid var(--border-color); }
-        
-        .radar-container { background: var(--card-bg); border-radius: 35px; padding: 40px 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.04); border: 1px solid var(--border-color); text-align: center; margin: 20px 15px 0 15px; transition: 0.3s; }
-        .radar-container.offline-mode { filter: grayscale(100%) opacity(0.5); }
-        .radar-center { width: 160px; height: 160px; margin: 0 auto 30px auto; position: relative; display: flex; align-items: center; justify-content: center; }
-        .radar-wave { position: absolute; width: 100%; height: 100%; border: 3px solid var(--nahla-yellow); border-radius: 50%; animation: radarWave 2.5s cubic-bezier(0.25, 1, 0.5, 1) infinite; opacity: 0; }
-        .radar-container.offline-mode .radar-wave { animation: none; display: none; }
-        @keyframes radarWave { 0% { transform: scale(0.3); opacity: 1; border-width: 3px; } 100% { transform: scale(1.6); opacity: 0; border-width: 1px; } }
-        
-        .global-order-card { background: var(--card-bg); border-radius: 24px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid var(--border-color); margin-bottom: 20px; position: relative; overflow: hidden; }
-        .global-order-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--primary-blue); }
-        .order-badge { background: rgba(255, 193, 7, 0.1); color: #B48600; padding: 6px 12px; border-radius: 12px; font-weight: 900; font-size: 0.85rem; display: inline-flex; align-items: center; border: 1px solid rgba(255, 193, 7, 0.2); }
-        .order-badge.double { background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); border-color: rgba(249, 115, 22, 0.2); }
-        .order-price { font-weight: 900; color: var(--success-green); font-size: 1.4rem; }
-        .order-price small { font-size: 0.8rem; color: var(--text-muted); margin-right: 2px; }
-        .status-banner { text-align: center; padding: 8px; border-radius: 12px; font-weight: 800; font-size: 0.95rem; margin-bottom: 20px; background: var(--stat-bg); color: var(--primary-blue); }
-        
-        .rejection-counter {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger-red);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            margin-top: 4px;
-        }
-        
-        /* ── إشعار الجهوزية ── */
-        .ready-banner {
-            background: linear-gradient(135deg, #fff7ed, #fef3c7);
-            border: 2px solid #f97316;
-            border-radius: 16px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: readyPulse 1.5s ease-in-out infinite;
-        }
-        .ready-banner-text { font-weight: 900; color: #c2410c; font-size: 0.95rem; }
-        @keyframes readyPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(249,115,22,0.3); }
-            50% { box-shadow: 0 0 0 8px rgba(249,115,22,0); }
-        }
+        .btn-action { background: var(--uber-black); color: white; border: none; border-radius: 8px; padding: 18px; font-weight: 800; font-size: 1.2rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; }
+        .btn-action:active { transform: scale(0.98); background: var(--uber-gray); }
 
-        .btn-support-mini { background: rgba(17, 24, 39, 0.05); color: var(--primary-blue); border: 1px solid rgba(17, 24, 39, 0.3); padding: 4px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 800; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
-        .btn-support-mini:active { transform: scale(0.95); background: rgba(17, 24, 39, 0.1); }
-        .timer-badge { font-weight: 900; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px; border: 1px solid transparent; transition: 0.3s; }
-        .timer-safe { background: rgba(16, 185, 129, 0.1); color: var(--success-green); border-color: rgba(16, 185, 129, 0.2); }
-        .timer-warn { background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); border-color: rgba(249, 115, 22, 0.2); }
-        .timer-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger-red); border-color: rgba(239, 68, 68, 0.2); animation: pulseDanger 1.5s infinite; }
-        @keyframes pulseDanger { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); } 70% { box-shadow: 0 0 0 8px rgba(239,68,68,0); } 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } }
-
-        .route-timeline { position: relative; padding-right: 25px; margin-bottom: 20px; border-right: 2px dashed #cbd5e1; margin-right: 10px; }
-        .route-point { position: relative; margin-bottom: 25px; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; }
-        .route-point:last-child { margin-bottom: 0; }
-        .route-point::before { content: ''; position: absolute; right: -33px; top: 4px; width: 14px; height: 14px; border-radius: 50%; background: var(--card-bg); border: 4px solid; }
-        .route-point.pickup::before { border-color: var(--nahla-yellow); }
-        .route-point.dropoff::before { border-color: var(--success-green); }
-        .point-content { padding-left: 10px; width: 100%; margin-bottom: 10px;}
-        .point-title { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 2px; }
-        .point-name { font-size: 1.1rem; font-weight: 900; color: var(--text-main); line-height: 1.3; }
+        /* -------------------------------------
+           لوحة التحكم الرئيسية (Dashboard)
+           ------------------------------------- */
+        #dashboardPage { height: 100vh; display: flex; flex-direction: column; position: relative; }
         
-        .point-actions-grid { display: flex; gap: 8px; width: 100%; flex-wrap: wrap; margin-top: 5px; }
-        .btn-action-pill { flex: 1; min-width: 90px; padding: 10px; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 800; font-size: 0.85rem; border: none; cursor: pointer; transition: 0.2s; }
-        .btn-action-pill:active { transform: scale(0.95); }
-        .btn-action-pill.call { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); border: 1px solid rgba(59, 130, 246, 0.3); }
-        .btn-action-pill.whatsapp { background: rgba(16, 185, 129, 0.1); color: var(--success-green); border: 1px solid rgba(16, 185, 129, 0.3); }
-        .btn-action-pill.map { background: rgba(249, 115, 22, 0.1); color: var(--accent-orange); border: 1px solid rgba(249, 115, 22, 0.3); }
-        .btn-photo-view { background: var(--stat-bg); color: var(--primary-blue); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; font-size: 0.95rem; font-weight: 800; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 20px; }
-        
-        .btn-status { width: 100%; border-radius: 20px; padding: 18px; font-weight: 900; font-size: 1.2rem; color: white; border: none; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
-        .btn-status:active:not(:disabled) { transform: scale(0.96); box-shadow: none; }
-        .btn-status.heading { background: var(--primary-blue); }
-        .btn-status.arrived { background: var(--nahla-yellow); color: var(--primary-blue); }
-        .btn-status.picked { background: var(--success-green); }
-        .btn-status:disabled { opacity: 0.8; cursor: not-allowed; background: #94a3b8 !important; box-shadow: none; }
+        /* خلفية الخريطة الوهمية */
+        .map-background { position: absolute; inset: 0; background-color: #EAEAEA; background-image: radial-gradient(#D1D1D1 1px, transparent 1px); background-size: 20px 20px; z-index: -1; }
+        .map-background::after { content:''; position:absolute; inset:0; background: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 20%, rgba(255,255,255,0) 80%, rgba(255,255,255,0.9) 100%); }
 
-        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .dash-header { display: flex; justify-content: space-between; align-items: flex-start; padding: max(15px, env(safe-area-inset-top)) 20px 10px; position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
+        
+        /* زر القائمة / الخروج */
+        .menu-btn { background: white; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); cursor: pointer; color: var(--danger); }
+        
+        /* شريط الأرباح والديون العلوي */
+        .earnings-pill { background: white; border-radius: 30px; padding: 10px 20px; box-shadow: 0 2px 15px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; cursor: pointer; border: 1px solid var(--border-light); }
+        .earnings-pill:active { transform: scale(0.96); }
+        .earnings-val { font-size: 1.2rem; font-weight: 900; margin: 0; color: var(--uber-black); }
+        
+        /* -------------------------------------
+           زر الـ Switch (أوبر ستايل)
+           ------------------------------------- */
+        .switch-container { display: flex; align-items: center; gap: 10px; background: white; padding: 6px 12px; border-radius: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border: 1px solid var(--border-light); margin-top: 10px; }
+        .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider-btn { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.3); transition: .4s; border-radius: 30px; }
-        .slider-btn:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider-btn { background-color: #10b981; }
-        input:checked + .slider-btn:before { transform: translateX(24px); }
+        .slider-btn { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #D1D5DB; transition: .4s; border-radius: 30px; }
+        .slider-btn:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        input:checked + .slider-btn { background-color: var(--success); }
+        input:checked + .slider-btn:before { transform: translateX(22px); }
+        .status-badge { font-weight: 800; font-size: 0.85rem; color: var(--text-muted); transition: 0.3s; }
+        .status-badge.online { color: var(--success); }
 
-        #ledgerModal { position: fixed; inset: 0; background: var(--bg-light); z-index: 20000; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; animation: slideUp 0.3s ease-out; }
+        /* -------------------------------------
+           زر الـ GO (الرادار)
+           ------------------------------------- */
+        .go-section { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 15vh; position: relative; z-index: 5; }
+        .radar-container { transition: 0.3s; }
+        .radar-container.offline-mode { filter: grayscale(100%) opacity(0.5); pointer-events: none;}
+        .go-btn-wrapper { position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; }
+        
+        .radar-center { width: 100px; height: 100px; border-radius: 50%; border: none; background: var(--uber-black); color: white; font-weight: 900; font-size: 1.5rem; cursor: default; position: relative; z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; flex-direction: column; }
+        
+        .radar-wave { position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--uber-black); opacity: 0; z-index: 1; pointer-events: none; }
+        .radar-container:not(.offline-mode) .radar-wave { border-color: var(--nahla-yellow); border-width: 4px; }
+        .radar-container:not(.offline-mode) .radar-wave:nth-child(1) { animation: ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite; }
+        .radar-container:not(.offline-mode) .radar-wave:nth-child(2) { animation: ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite 0.8s; }
+        @keyframes ping { 0% { transform: scale(0.6); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+
+        .bottom-status-bar { position: absolute; bottom: 0; left: 0; right: 0; background: white; padding: 20px; border-top-left-radius: 20px; border-top-right-radius: 20px; box-shadow: var(--bottom-sheet-shadow); text-align: center; z-index: 10; transition: transform 0.3s ease; }
+        .status-text { font-size: 1.1rem; font-weight: 800; color: var(--uber-black); margin: 0; }
+
+        /* -------------------------------------
+           بطاقات المهام (Uber Task Cards)
+           ------------------------------------- */
+        .tasks-container { position: absolute; bottom: 0; left: 0; right: 0; background: transparent; z-index: 20; padding: 10px 15px max(15px, env(safe-area-inset-bottom)); max-height: 85vh; overflow-y: auto; }
+        
+        .uber-card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); border: 1px solid var(--border-light); position: relative; }
+        
+        .uc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid var(--border-light); padding-bottom: 15px;}
+        .uc-price { font-size: 1.8rem; font-weight: 900; color: var(--uber-black); line-height: 1; }
+        .uc-status-text { font-size: 1.2rem; font-weight: 800; color: var(--uber-black); margin-bottom: 5px; display: block; }
+        
+        /* مسار الرحلة المتصل - Uber Style */
+        .uc-timeline { position: relative; padding-right: 25px; margin-bottom: 20px; }
+        .uc-timeline::before { content: ''; position: absolute; right: 4px; top: 10px; bottom: 10px; width: 2px; background: var(--uber-black); }
+        .uc-node { position: relative; margin-bottom: 20px; }
+        .uc-node:last-child { margin-bottom: 0; }
+        .uc-node::before { content: ''; position: absolute; right: -25px; top: 4px; width: 10px; height: 10px; background: var(--uber-black); border-radius: 50%; z-index: 2; }
+        .uc-node.dropoff::before { background: white; border: 2px solid var(--uber-black); width: 12px; height: 12px; right: -26px;}
+        
+        .uc-node-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 2px; }
+        .uc-node-val { font-size: 1.1rem; font-weight: 900; color: var(--uber-black); line-height: 1.3; }
+        .uc-node-desc { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
+
+        .uc-actions-grid { display: flex; gap: 8px; margin-top: 8px; }
+        .uc-action-btn { flex: 1; border-radius: 8px; padding: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 800; font-size: 0.85rem; border: 1px solid var(--border-light); background: #F9F9F9; color: var(--uber-black); cursor: pointer; transition: 0.2s; text-decoration: none;}
+        .uc-action-btn:active { background: #EEEEEE; transform: scale(0.95); }
+
+        .btn-photo-view { background: transparent; color: var(--uber-black); border: 1px dashed var(--border-light); border-radius: 8px; padding: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 100%; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+        /* أزرار الإجراءات الرئيسية */
+        .uc-main-btn { width: 100%; border-radius: 12px; padding: 18px; font-weight: 900; font-size: 1.2rem; color: white; border: none; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px; background: var(--success); }
+        .uc-main-btn:active:not(:disabled) { transform: scale(0.98); }
+        .uc-main-btn.heading { background: var(--uber-black); }
+        .uc-main-btn.arrived { background: var(--nahla-yellow); color: var(--uber-black); }
+        .uc-main-btn:disabled { background: #E5E7EB !important; color: #9CA3AF !important; opacity: 1; cursor: not-allowed; }
+
+        /* -------------------------------------
+           رادار استقبال الطلب (Uber Alert Sheet)
+           ------------------------------------- */
+        #orderAlertOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 40000; display: flex; flex-direction: column; justify-content: flex-end; backdrop-filter: blur(5px); }
+        
+        .alert-card { background: white; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 25px; text-align: right; animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        
+        .alert-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-light); }
+        .alert-timer-circle { width: 50px; height: 50px; border-radius: 50%; border: 3px solid var(--nahla-yellow); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; color: var(--uber-black); position: relative;}
+        
+        .alert-price { font-size: 2.2rem; font-weight: 900; color: var(--uber-black); margin: 0; }
+        
+        .alert-accept-btn { background: var(--nahla-yellow); color: var(--uber-black); border: none; border-radius: 12px; padding: 20px; font-weight: 900; font-size: 1.3rem; width: 100%; margin-top: 15px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);}
+        .alert-accept-btn:active { transform: scale(0.98); background: var(--nahla-yellow-dark); }
+        
+        /* -------------------------------------
+           عناصر مساعدة وتنبيهات
+           ------------------------------------- */
+        .toast-msg { background: var(--uber-black); color: white; border-radius: 12px; padding: 14px 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 0.95rem; animation: toastIn .35s cubic-bezier(0.22, 1, 0.36, 1) forwards; transition: opacity .3s; margin-bottom: 10px; }
+        .toast-msg.error { background: var(--danger); }
+        .t-icon { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(-16px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        #toast-container { position: fixed; top: max(20px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 100000; display: flex; flex-direction: column; width: 90%; max-width: 340px; }
+
+        #ledgerModal { position: fixed; inset: 0; background: var(--bg-light); z-index: 50000; overflow-y: auto; padding: 20px; animation: slideUp 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); display: flex; flex-direction: column; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .ledger-card { background: var(--card-bg); border-radius: 25px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.03); margin-bottom: 15px; border: 1px solid var(--border-color); }
-        .ledger-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
-        .ledger-item:last-child { border-bottom: none; padding-bottom: 0; }
-
-        #orderAlertOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary-blue); z-index: 40000; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: max(50px, env(safe-area-inset-top)) 20px calc(30px + env(safe-area-inset-bottom)) 20px; text-align: center; overflow-y: auto; }
-        .alert-pulse { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; animation: pulseWhite 2s infinite; }
-        @keyframes pulseWhite { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255,255,255, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 25px rgba(255,255,255, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255,255,255, 0); } }
+        .ledger-card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 15px; border: 1px solid var(--border-light); box-shadow: 0 2px 10px rgba(0,0,0,0.02);}
+        .ledger-item { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-light); }
         
-        #cancelAlertOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--danger-red); z-index: 45000; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; animation: fadeIn 0.3s; }
-        .cancel-pulse { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; box-shadow: 0 0 0 15px rgba(255,255,255,0.2); }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .timer-container { position: relative; width: 160px; height: 160px; margin: 20px auto; display: flex; align-items: center; justify-content: center; flex-shrink: 0;}
-        .timer-svg { transform: rotate(-90deg); width: 160px; height: 160px; }
-        .timer-circle { fill: none; stroke: var(--nahla-yellow); stroke-width: 10; stroke-dasharray: 471; stroke-dashoffset: 0; transition: 1s linear; stroke-linecap: round; }
-        .alert-details-card { background: rgba(255, 255, 255, 1); color: var(--text-main); border-radius: 25px; padding: 25px; margin-bottom: 20px; text-align: right; box-shadow: 0 15px 30px rgba(0,0,0,0.2);}
+        .progress-bar-wrap { width: 100%; height: 4px; background: var(--border-light); border-radius: 2px; margin-top: 15px; overflow: hidden; position: absolute; bottom: 0; left: 0; }
+        .progress-bar-fill { height: 100%; background: var(--nahla-yellow); width: 100%; transition: width 1s linear; }
 
-        .waiting-pulse { animation: softPulse 2s infinite; display: inline-block;}
-        @keyframes softPulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
-        .btn-refresh-waiting { background: #f1f5f9; color: var(--text-muted); border: 1px solid var(--border-color); font-weight: 700; border-radius: 20px; padding: 10px 20px; transition: 0.2s; border: none; }
-        .btn-accept-order { background: var(--success-green); color: white; border-radius: 20px; padding: 20px; font-weight: 900; font-size: 1.2rem; width: 100%; border: none; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3); margin-bottom: 15px; }
-        
-        .btn-mute {
-            background: rgba(255,255,255,0.15);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 20px;
-            padding: 14px;
-            font-weight: 800;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            margin-bottom: 12px;
-        }
-        .btn-mute:active { transform: scale(0.97); background: rgba(255,255,255,0.25); }
+        /* شارات مخصصة */
+        .order-badge { background: rgba(0,0,0,0.05); color: var(--uber-black); padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.75rem; display: inline-flex; align-items: center; }
+        .order-badge.double { background: rgba(226, 28, 63, 0.1); color: var(--danger); }
+        .ready-banner { background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 8px; padding: 10px; margin-top: 10px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 800; color: #D97706; }
 
-        .svg-icon { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
-        .svg-icon-small { width: 16px; height: 16px; }
-
-        #syncStatus { position: fixed; bottom: max(10px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.9); color: white; padding: 6px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; z-index: 10000; display: none; align-items: center; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); backdrop-filter: blur(5px); }
-        .sync-spinner { width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .shift-badge {
-            font-size: 0.7rem; font-weight: 800;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 4px 8px; border-radius: 12px;
-            display: inline-flex; align-items: center; gap: 4px;
-            margin-top: 5px;
-        }
+        #syncStatus { position: fixed; bottom: max(10px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); background: rgba(0,0,0, 0.8); color: white; padding: 6px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; z-index: 10000; display: none; align-items: center; gap: 8px; backdrop-filter: blur(5px); }
     </style>
 </head>
 <body>
@@ -218,29 +215,25 @@
 <div id="offlineBanner" class="hidden-section">أنت غير متصل بالإنترنت حالياً</div>
 
 <div id="syncStatus">
-    <div class="sync-spinner"></div>
+    <div class="spinner-border spinner-border-sm" style="width: 12px; height: 12px; border-width: 2px;" role="status"></div>
     <span id="syncText">جاري مزامنة البيانات...</span>
 </div>
 
 <div id="permissionOverlay" class="hidden-section">
-    <svg class="svg-icon permission-icon mb-4 text-danger" style="width: 70px; height: 70px;" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
     <h2 class="fw-black text-danger mb-3">الرادار مغلق!</h2>
-    <p class="fw-bold mb-4 fs-5" style="color: var(--text-main);">يرجى تفعيل "الموقع" لكي يستطيع النظام تحويل الطلبات إليك.</p>
-    <button class="btn btn-primary rounded-pill px-5 py-3 fw-bold fs-5 shadow-lg" onclick="location.reload()">تحديث بعد التفعيل</button>
+    <p class="fw-bold mb-4 fs-5">يرجى تفعيل "الموقع" لكي يستطيع النظام تحويل الطلبات إليك.</p>
+    <button class="btn btn-dark rounded-3 px-5 py-3 fw-bold fs-5 shadow-lg" onclick="location.reload()">تحديث بعد التفعيل</button>
 </div>
 
 <div id="loadingOverlay">
     <div class="spinner-grow mb-3" role="status" style="width: 3rem; height: 3rem; color: var(--nahla-yellow);"></div>
-    <h5 class="fw-bold" id="loadingText" style="color: var(--primary-blue);">جاري المزامنة مع النظام...</h5>
+    <h5 class="fw-bold" id="loadingText" style="color: var(--uber-black);">جاري المزامنة مع النظام...</h5>
 </div>
 
-<div id="cancelAlertOverlay" class="hidden-section">
-    <div class="cancel-pulse">
-        <svg class="svg-icon" style="color: var(--danger-red); width: 40px; height: 40px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-    </div>
+<div id="cancelAlertOverlay" class="hidden-section" style="position: fixed; inset: 0; background: var(--danger); z-index: 45000; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
     <h1 class="fw-black mb-3">تنبيه هام!</h1>
     <h4 class="fw-bold mb-4" id="cancelAlertText">تم إلغاء الطلب</h4>
-    <button class="btn btn-light btn-lg rounded-pill px-5 fw-bold text-danger" onclick="closeCancelAlert()">حسناً، فهمت</button>
+    <button class="btn btn-light btn-lg rounded-3 px-5 fw-bold text-danger" onclick="closeCancelAlert()">حسناً، فهمت</button>
 </div>
 
 <audio id="keepAliveAudio" loop src="data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAAABkYXRhDAAAAAA="></audio>
@@ -250,193 +243,179 @@
 <audio id="welcomeSound" src="https://actions.google.com/sounds/v1/water/water_drop.ogg"></audio>
 <audio id="readySound" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg"></audio>
 
+<div id="toast-container"></div>
+
 <div id="loginSection" class="login-wrapper">
-    <div class="text-center mb-5 w-100">
-        <div class="d-inline-block p-4 bg-white rounded-circle shadow-sm mb-4">
-            <svg class="svg-icon" style="width: 50px; height: 50px; color: var(--nahla-yellow);" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
-        </div>
-        <h2 class="fw-black m-0" style="color: var(--primary-blue);">شركة نحلة للتوصيل 🐝</h2>
-        <p class="text-muted fw-bold mb-0">المنصة الرسمية للكباتن</p>
-        <p class="text-muted fw-bold" style="font-size: 0.85rem;">بالتعاون مع نظام الحوت V88.0</p>
+    <div class="login-header">
+        <h1 class="fw-black m-0" style="font-size: 2.8rem; letter-spacing: -1px;">نحلة</h1>
+        <p class="fw-bold" style="color: var(--nahla-yellow); font-size: 1rem;">تطبيق الكباتن الشركاء</p>
     </div>
 
     <div class="login-card" id="authBox">
-        <div class="mb-3 text-center">
-            <label class="form-label text-center">رقم هاتف الكابتن المسجل</label>
+        <h4 class="fw-black mb-4 text-center">أهلاً بك 🐝</h4>
+        
+        <div class="mb-3">
             <input type="tel" id="driverPhone" class="custom-input phone-format" placeholder="07XXXXXXXXX" dir="ltr" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');">
         </div>
         
-        <div class="mb-4 text-center" id="loginPassContainer">
-            <label class="form-label text-center">كلمة المرور</label>
-            <input type="password" id="driverPassword" class="custom-input text-center" placeholder="********" autocomplete="off">
+        <div class="mb-2" id="loginPassContainer">
+            <input type="password" id="driverPassword" class="custom-input text-center" placeholder="كلمة المرور" autocomplete="off">
         </div>
         
-        <div id="registerFields" class="hidden-section text-start" style="animation: fadeIn 0.5s;">
-            <hr class="my-4 opacity-10">
-            <div class="d-flex align-items-center justify-content-center gap-2 mb-4 text-success">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        <div id="registerFields" class="hidden-section text-start" style="animation: slideDown 0.4s;">
+            <hr class="my-4 opacity-25">
+            <div class="mb-3 text-center">
                 <h5 class="fw-black m-0">تسجيل كابتن جديد</h5>
             </div>
-            
-            <div class="mb-3">
-                <label class="form-label">الاسم الثلاثي</label>
-                <input type="text" id="driverName" class="custom-input" placeholder="مثال: أحمد محمد علي" autocomplete="off">
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">إنشاء كلمة مرور</label>
-                <input type="password" id="regPassword" class="custom-input" placeholder="كلمة مرور قوية" autocomplete="off">
-            </div>
-
-            <div class="mb-4">
-                <label class="form-label">مدة الشفت المفضلة</label>
-                <select id="regShift" class="custom-input" style="font-size: 0.9rem;">
-                    <option value="6">6 ساعات</option>
-                    <option value="10" selected>10 ساعات</option>
-                    <option value="12">12 ساعة</option>
-                </select>
-            </div>
+            <input type="text" id="driverName" class="custom-input" placeholder="الاسم الثلاثي" autocomplete="off">
+            <input type="password" id="regPassword" class="custom-input" placeholder="إنشاء كلمة مرور قوية" autocomplete="off">
+            <select id="regShift" class="custom-input text-center" style="font-size: 0.95rem;">
+                <option value="6">شفت 6 ساعات</option>
+                <option value="10" selected>شفت 10 ساعات</option>
+                <option value="12">شفت 12 ساعة</option>
+            </select>
         </div>
 
-        <button class="btn-action" id="mainAuthBtn" onclick="initAudioAndAuth()">
-            تسجيل الدخول <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        <button class="btn-action mt-3" id="mainAuthBtn" onclick="initAudioAndAuth()">
+            المتابعة للميدان
         </button>
     </div>
     
-    <div class="login-card hidden-section text-center" id="waitingBox">
-        <div class="waiting-pulse mb-3 bg-warning bg-opacity-10 p-4 rounded-circle d-inline-block">
-            <svg class="svg-icon text-warning" style="width: 60px; height: 60px;" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><polyline points="21 3 21 8 16 8"></polyline><polyline points="12 8 12 12 15 15"></polyline></svg>
-        </div>
-        <h3 class="fw-black mb-2" style="color: var(--primary-blue);">أنت في غرفة الانتظار</h3>
-        <p class="text-muted fw-bold mb-4" style="font-size: 0.9rem;">حسابك مسجل وقيد المراجعة.<br>النظام يفحص حالتك تلقائياً الآن، ستدخل فور موافقة الإدارة.</p>
-        <div class="d-flex align-items-center justify-content-center gap-2 mb-4">
-            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-            <span class="text-primary fw-bold small" id="waitingStatusText">جاري الاستعلام التلقائي...</span>
-        </div>
-        <button class="btn-refresh-waiting mt-2 w-100" onclick="window.checkWaitingStatus(true)">
-            تحديث يدوي <svg class="svg-icon" style="width: 16px; height:16px; margin-right:5px;" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-        </button>
+    <div class="login-card hidden-section text-center py-5" id="waitingBox">
+        <div class="spinner-border mb-3" style="color: var(--nahla-yellow); width: 3rem; height: 3rem;" role="status"></div>
+        <h4 class="fw-black text-dark mb-2">في غرفة الانتظار</h4>
+        <p class="text-muted fw-bold mb-4" style="font-size: 0.9rem;">حسابك مسجل وقيد المراجعة.<br>ستدخل تلقائياً فور موافقة الإدارة.</p>
+        <p class="text-dark fw-bold small" id="waitingStatusText">جاري الاستعلام التلقائي...</p>
+        <button class="btn btn-light fw-bold mt-2 w-100 py-3 rounded-3 border" onclick="window.checkWaitingStatus(true)">تحديث يدوي</button>
     </div>
 </div>
 
 <div id="dashboardPage" class="hidden-section">
+    <div class="map-background"></div>
+    
     <div class="dash-header">
-        <div class="d-flex justify-content-between align-items-start">
+        <div class="d-flex align-items-center gap-3">
+            <div class="menu-btn" onclick="window.logout()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </div>
             <div>
-                <h3 class="fw-black m-0 mb-1" id="driverNameDisplay">...</h3>
-                <div class="shift-badge" id="shiftDisplay" style="display: none;">
-                    <svg class="svg-icon" style="width:12px;height:12px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    <span id="shiftTimeText">---</span>
-                </div>
+                <h4 class="fw-black m-0 mb-1" id="driverNameDisplay" style="color: var(--uber-black); font-size: 1.1rem;">...</h4>
                 <div id="rejectionCounter" class="rejection-counter hidden-section">
-                    <svg class="svg-icon" style="width:12px;height:12px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                    <span id="rejectionCount">0</span> رفض اليوم
-                </div>
-                <div class="d-flex align-items-center gap-2 mt-2">
-                    <label class="switch">
-                        <input type="checkbox" id="onlineToggle" onchange="window.toggleOnlineStatus()">
-                        <span class="slider-btn"></span>
-                    </label>
-                    <div id="onlineStatusBadge" class="status-badge">
-                        <span id="onlineStatusText">في استراحة</span>
-                    </div>
+                    <span id="rejectionCount">0</span> رفض
                 </div>
             </div>
-            <div>
-                <button class="btn btn-light rounded-circle p-2 text-danger border-0 shadow-sm" onclick="window.logout()">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
-                </button>
+        </div>
+        
+        <div class="d-flex flex-column align-items-end">
+            <div class="earnings-pill" onclick="window.openLedger()">
+                <div class="text-end">
+                    <span style="font-size:0.7rem; font-weight:700; color:var(--text-muted); display:block; line-height:1;">تسديد المكتب</span>
+                    <h2 class="earnings-val" id="statDebt">0 <span style="font-size:0.8rem;">د.ع</span></h2>
+                </div>
             </div>
         </div>
     </div>
-    <div class="container pb-5" style="padding-bottom: calc(50px + env(safe-area-inset-bottom)) !important;">
-        <div class="row g-3 px-1 stats-wrapper">
-            <div class="col-6">
-                <div class="stat-box">
-                    <svg class="svg-icon text-success mb-2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    <h6 class="text-muted fw-bold mb-1" style="font-size: 0.8rem;">الطلبات المنجزة</h6>
-                    <h3 class="fw-black m-0" style="color: var(--primary-blue);" id="statOrdersCount">0</h3>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="stat-box">
-                    <svg class="svg-icon text-danger mb-2" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg>
-                    <h6 class="text-muted fw-bold mb-1" style="font-size: 0.8rem;">عمولة الشركة</h6>
-                    <h4 class="fw-black text-danger m-0" id="statDebt">0 <small class="fs-6">د.ع</small></h4>
-                </div>
-            </div>
-            <div class="col-12">
-                <button class="btn w-100 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" style="background: var(--card-bg); border-radius: 16px; padding: 14px; border: 1px solid var(--border-color); color: var(--primary-blue);" onclick="window.openLedger()">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                    سجل رحلاتي اليوم
-                </button>
-            </div>
-        </div>
 
-        <div id="searchingStatus" class="radar-container offline-mode">
-            <div class="radar-center">
-                <div class="radar-wave" style="border-color:var(--nahla-yellow); animation-delay: 0s"></div>
-                <div class="radar-wave" style="border-color:var(--nahla-yellow); animation-delay: 0.8s"></div>
-                <div class="radar-wave" style="border-color:var(--nahla-yellow); animation-delay: 1.6s"></div>
-                <div class="rounded-circle shadow-lg d-flex align-items-center justify-content-center position-relative" style="width: 80px; height: 80px; z-index: 10; background: var(--card-bg);">
-                    <svg class="svg-icon" style="color: var(--nahla-yellow); width: 40px; height: 40px;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
-                </div>
-            </div>
-            <h4 class="fw-black mb-2" style="color: var(--text-main);" id="radarTitle">الرادار متوقف</h4>
-            <p class="text-muted fw-bold mb-0" id="radarDesc">قم بتفعيل متاح للطلبات لبدء الشفت</p>
+    <div class="switch-container mx-auto" style="position: absolute; top: 85px; left: 50%; transform: translateX(-50%); z-index: 10;">
+        <label class="switch">
+            <input type="checkbox" id="onlineToggle" onchange="window.toggleOnlineStatus()">
+            <span class="slider-btn"></span>
+        </label>
+        <div id="onlineStatusBadge" class="status-badge">
+            <span id="onlineStatusText">غير متصل</span>
         </div>
-
-        <div id="activeOrderBox" class="mt-4 hidden-section"></div>
     </div>
+
+    <div class="go-section" id="searchingStatus">
+        <div class="radar-container offline-mode" id="radarAnimContainer">
+            <div class="go-btn-wrapper">
+                <div class="radar-wave"></div>
+                <div class="radar-wave"></div>
+                <div class="radar-center">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+                </div>
+            </div>
+            <h4 class="fw-black mb-1 mt-4" style="color: var(--text-main);" id="radarTitle">أنت غير متصل</h4>
+            <p class="text-muted fw-bold mb-0" id="radarDesc">قم بتشغيل الزر بالأعلى للبحث عن طلبات</p>
+            
+            <div id="shiftDisplay" class="mt-3" style="display: none;">
+                <span class="badge bg-white text-dark border px-3 py-2 fw-bold shadow-sm" style="font-size:0.85rem;">
+                    الوقت المتبقي: <span id="shiftTimeText">---</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div id="activeOrderBox" class="tasks-container hidden-section"></div>
 </div>
 
 <div id="ledgerModal" class="hidden-section">
-    <div class="ledger-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h3 class="fw-black m-0" style="color: var(--primary-blue);">سجل اليوم</h3>
-        <button class="btn btn-light rounded-circle p-2 border" onclick="window.closeLedger()">
-            <svg class="svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+        <h3 class="fw-black m-0 text-dark">سجل اليوم</h3>
+        <button class="btn btn-light rounded-circle p-2 border" onclick="window.closeLedger()">✕</button>
     </div>
-    <div class="ledger-card text-center pb-4 mb-4">
-        <h6 class="text-muted fw-bold mb-2">إجمالي المبالغ المحصلة (كاش)</h6>
-        <h1 class="fw-black text-success m-0" id="ledgerTotalCash">0 <small class="fs-5">د.ع</small></h1>
+    
+    <div class="row g-2 mb-3">
+        <div class="col-6">
+            <div class="ledger-card text-center m-0">
+                <h6 class="text-muted fw-bold mb-1" style="font-size: 0.75rem;">الطلبات المنجزة</h6>
+                <h3 class="fw-black m-0 text-dark" id="statOrdersCount">0</h3>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="ledger-card text-center m-0" style="background: #F9FAFB;">
+                <h6 class="text-muted fw-bold mb-1" style="font-size: 0.75rem;">النقد المحصل</h6>
+                <h3 class="fw-black text-success m-0" id="ledgerTotalCash" style="font-size: 1.4rem;">0</h3>
+            </div>
+        </div>
     </div>
-    <div class="ledger-card" id="ledgerList" style="padding: 10px;"></div>
+
+    <div id="ledgerList" style="flex: 1; overflow-y: auto;"></div>
 </div>
 
 <div id="orderAlertOverlay" class="hidden-section">
-    <div>
-        <div class="alert-pulse">
-            <svg class="svg-icon" style="color: var(--primary-blue); width: 40px; height: 40px;" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+    <div class="alert-card">
+        <div class="alert-header-row">
+            <div>
+                <p class="text-muted fw-bold mb-1" style="font-size:0.85rem;" id="alertTitleText">مبلغ الوصل والتوصيل</p>
+                <h2 class="alert-price" id="alertPrice">0 د.ع</h2>
+                <p class="fw-bold text-danger mb-0 mt-1" id="alertSovereignText" style="font-size:0.85rem;"></p>
+            </div>
+            <div class="alert-timer-circle">
+                <span id="seconds">60</span>
+                <div class="progress-bar-wrap"><div class="progress-bar-fill" id="alert-progress"></div></div>
+            </div>
         </div>
-        <h1 class="fw-black mb-1" id="alertTitleText">طلب جديد!</h1>
-        <p class="fw-bold text-warning mb-0 mt-2" id="alertSovereignText" style="font-size:1.1rem;"></p>
-    </div>
-    <div class="timer-container">
-        <svg class="timer-svg"><circle class="timer-circle" id="timerCircle" cx="80" cy="80" r="75"></circle></svg>
-        <div class="position-absolute fw-black text-white" style="font-size: 3.5rem;" id="seconds">60</div>
-    </div>
-    <div class="alert-details-card">
-        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom border-light">
-            <small class="text-muted fw-bold">المطعم</small>
-            <h3 class="fw-black m-0" style="color: var(--primary-blue);" id="alertResName">---</h3>
+        
+        <div class="uc-timeline mt-2 mb-3">
+            <div class="uc-node pickup">
+                <div class="uc-node-label">استلام من</div>
+                <div class="uc-node-val" id="alertResName">المطعم</div>
+            </div>
+            <div class="uc-node dropoff">
+                <div class="uc-node-label">تسليم إلى</div>
+                <div class="uc-node-val" id="alertArea">المنطقة</div>
+                <div class="uc-node-desc" id="alertDetails">...</div>
+            </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center">
-            <small class="text-muted fw-bold">المنطقة</small>
-            <h4 class="fw-bold m-0 text-success" id="alertArea">---</h4>
+        
+        <button class="alert-accept-btn" id="btnAcceptMain" onclick="window.acceptOrder()">
+            قبول الطلب
+        </button>
+        
+        <div class="d-flex gap-2 mt-2">
+            <button class="btn btn-light fw-bold flex-fill py-3 rounded-3 border" onclick="window.muteAlarmOnly()">إسكات 🔕</button>
+            <button class="btn btn-link text-danger fw-bold flex-fill text-decoration-none" onclick="window.declineOrder()">✕ رفض الطلب</button>
         </div>
     </div>
-    <div class="pb-2 flex-shrink-0">
-        <button class="btn-mute w-100 d-flex align-items-center justify-content-center gap-2" onclick="window.muteAlarmOnly()">
-            إسكات الصوت
-            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M13.73 21a2 2 0 0 1-3.46 0"></path><path d="M18.63 13A17.89 17.89 0 0 1 18 8"></path><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"></path><path d="M18 8a6 6 0 0 0-9.33-5"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-        </button>
-        <button class="btn-accept-order" id="btnAcceptMain" onclick="window.acceptOrder()">
-            قبول الطلب فوراً <svg class="svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </button>
-        <button class="btn btn-link text-white w-100 fw-bold text-decoration-none fs-5" onclick="window.declineOrder()">
-            تجاهل الطلب
-        </button>
+</div>
+
+<div class="modal fade" id="receiptModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 bg-transparent">
+            <div class="modal-header border-0 pb-0 justify-content-end"><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" style="background:rgba(0,0,0,0.5); padding:10px; border-radius:50%;"></button></div>
+            <div class="modal-body text-center p-0 mt-2"><img id="receiptImageFull" src="" class="img-fluid rounded border border-2 border-white" style="width: 100%; background:black;"></div>
+        </div>
     </div>
 </div>
 
@@ -447,7 +426,6 @@
     const API_URL   = "https://script.google.com/macros/s/AKfycbyA5NXtyt_PelH9IKtZyBLd9UH0x_sn3dKKiak7N2mHahYUAN7Mz7ocYUB3BE4_mby4Ag/exec";
     const API_TOKEN = "NAHLA_SECURE_TOKEN_2026";
     
-    // ربط تطبيق نحلة بقاعدة بيانات Firebase V10 المطورة
     const firebaseConfig = {
       apiKey: "AIzaSyAsmQKlCCZpCgfJG8AZM7fWmYPWVZkpjSQ",
       authDomain: "nahla-delivery-6b06f.firebaseapp.com",
@@ -531,14 +509,6 @@
     }
     setInterval(processOfflineQueue, 5000);
 
-    const svgPhone   = `<svg class="svg-icon svg-icon-small" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>`;
-    const svgMap     = `<svg class="svg-icon svg-icon-small" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>`;
-    const svgWa      = `<svg class="svg-icon svg-icon-small" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>`;
-    const svgImg     = `<svg class="svg-icon svg-icon-small" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>`;
-    const svgSupport = `<svg class="svg-icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>`;
-    const svgTimer   = `<svg class="svg-icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
-    const svgBell    = `<svg class="svg-icon svg-icon-small" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>`;
-
     window.openSafeLink = function(url) {
         if (window.AndroidRadar && window.AndroidRadar.openExternalApp) { window.AndroidRadar.openExternalApp(url); }
         else { window.open(url, '_blank'); }
@@ -559,18 +529,11 @@
     };
 
     function showToast(msg, type = 'success') {
-        let container = document.getElementById('toast-container');
-        if (!container) {
-            container = document.createElement('div');
-            container.id = 'toast-container';
-            container.style.cssText = 'position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:99999; display:flex; flex-direction:column; gap:10px; max-width: 90vw;';
-            document.body.appendChild(container);
-        }
-        const toast = document.createElement('div');
-        toast.style.cssText = `background: ${type === 'success' ? '#10b981' : (type === 'info' ? '#1e3a8a' : '#ef4444')}; color: white; padding: 15px 20px; border-radius: 20px; font-weight: 800; font-size: 0.95rem; box-shadow: 0 10px 25px rgba(0,0,0,0.25); text-align: center; animation: slideDown 0.3s forwards; line-height: 1.4;`;
-        toast.innerHTML = msg;
-        container.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 6000);
+        const c = document.getElementById('toast-container'), t = document.createElement('div');
+        t.className = `toast-msg ${type}`;
+        t.innerHTML = `<div class="t-icon">🔔</div><span style="flex:1;">${msg}</span>`;
+        c.appendChild(t);
+        setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 350); }, 3000);
     }
 
     function checkFridayMessage() {
@@ -579,7 +542,7 @@
             const todayStr = today.toISOString().split('T')[0];
             if (localStorage.getItem('hut_friday_msg') !== todayStr) {
                 setTimeout(() => {
-                    showToast('جمعة مباركة ومتقبلة بإذن الله 🕌✨<br>لا تنسَ الصلاة على الحبيب المصطفى ﷺ 📿🤲.<br>رزقك الله من واسع فضله 💙', 'success');
+                    showToast('جمعة مباركة ومتقبلة بإذن الله 🕌✨', 'success');
                     localStorage.setItem('hut_friday_msg', todayStr);
                 }, 3000);
             }
@@ -736,9 +699,7 @@
             document.getElementById('loginPassContainer').classList.add('hidden-section');
             document.getElementById('registerFields').classList.remove('hidden-section');
             document.getElementById('driverPhone').disabled = true;
-            document.getElementById('mainAuthBtn').innerHTML = `إرسال طلب الانضمام <svg class="svg-icon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`;
-            document.getElementById('mainAuthBtn').style.background = 'var(--nahla-yellow)';
-            document.getElementById('mainAuthBtn').style.color = '#000';
+            document.getElementById('mainAuthBtn').innerHTML = `إرسال طلب الانضمام`;
         }
     }
 
@@ -790,7 +751,7 @@
     function showDashboard() {
         document.getElementById('loginSection').classList.add('hidden-section');
         document.getElementById('dashboardPage').classList.remove('hidden-section');
-        document.getElementById('driverNameDisplay').innerText = "كابتن " + driverData.name;
+        document.getElementById('driverNameDisplay').innerText = driverData.name;
         startSystem();
         checkFridayMessage();
     }
@@ -811,7 +772,7 @@
         const shiftDisplay = document.getElementById('shiftDisplay');
         const shiftText = document.getElementById('shiftTimeText');
         
-        shiftDisplay.style.display = 'inline-flex';
+        shiftDisplay.style.display = 'block';
         
         shiftTimerInterval = setInterval(() => {
             if (!driverData.shiftEnd) return;
@@ -820,35 +781,30 @@
             if (remaining <= 0) {
                 clearInterval(shiftTimerInterval);
                 shiftText.innerText = "انتهى الشفت";
-                shiftDisplay.style.background = 'rgba(239, 68, 68, 0.2)';
-                shiftDisplay.style.color = '#fecaca';
                 
                 document.getElementById('onlineToggle').checked = false;
                 window.toggleOnlineStatus();
-                alert("⏰ انتهى وقت الشفت الخاص بك، وتم تحويلك إلى (في استراحة) تلقائياً.");
+                alert("⏰ انتهى وقت الشفت الخاص بك، وتم تحويلك إلى (غير متصل) تلقائياً.");
                 return;
             }
             
             const hours = Math.floor(remaining / (1000 * 60 * 60));
             const mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-            shiftText.innerText = `متبقي: ${hours}س و ${mins}د`;
+            shiftText.innerText = `${hours}س و ${mins}د`;
             
-            if (hours < 1) {
-                shiftDisplay.style.background = 'rgba(249, 115, 22, 0.2)';
-                shiftDisplay.style.color = '#fed7aa';
-            } else {
-                shiftDisplay.style.background = 'rgba(255, 255, 255, 0.15)';
-                shiftDisplay.style.color = 'white';
-            }
         }, 1000);
     }
 
     window.toggleOnlineStatus = async function() {
         isOnline = document.getElementById('onlineToggle').checked;
-        const badge = document.getElementById('onlineStatusBadge');
+        const badgeText = document.getElementById('onlineStatusText');
+        const badgeContainer = document.getElementById('onlineStatusBadge');
+        const radarContainer = document.getElementById('radarAnimContainer');
+        const radarTitle = document.getElementById('radarTitle');
+        const radarDesc = document.getElementById('radarDesc');
         
         if (isOnline) {
-            badge.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"></div>`;
+            badgeText.innerText = "جاري الاتصال...";
             try {
                 const res = await fetch(`${API_URL}?action=START_SHIFT&phone=${driverData.phone}&token=${API_TOKEN}`);
                 const data = await res.json();
@@ -859,7 +815,8 @@
                     alert(data.msg || "تعذّر بدء الشفت.");
                     document.getElementById('onlineToggle').checked = false;
                     isOnline = false;
-                    badge.className = "status-badge offline"; badge.innerHTML = `في استراحة`;
+                    badgeText.innerText = "غير متصل";
+                    badgeContainer.classList.remove('online');
                     return;
                 }
             } catch(e) { 
@@ -867,14 +824,16 @@
                 alert("تعذر الاتصال بالخادم. حاول مرة أخرى.");
                 document.getElementById('onlineToggle').checked = false;
                 isOnline = false;
-                badge.className = "status-badge offline"; badge.innerHTML = `في استراحة`;
+                badgeText.innerText = "غير متصل";
+                badgeContainer.classList.remove('online');
                 return;
             }
 
-            badge.className = "status-badge online"; badge.innerHTML = `متاح للطلبات`;
-            document.getElementById('searchingStatus').classList.remove('offline-mode');
-            document.getElementById('radarTitle').innerText = "الرادار يعمل";
-            document.getElementById('radarDesc').innerText = "جاري البحث عن طلبات قريبة...";
+            badgeText.innerText = "متصل";
+            badgeContainer.classList.add('online');
+            radarContainer.classList.remove('offline-mode');
+            radarTitle.innerText = "الرادار يعمل";
+            radarDesc.innerText = "جاري البحث عن طلبات قريبة...";
             
             startShiftTimer();
 
@@ -892,10 +851,11 @@
             displayActiveOrders();
             
         } else {
-            badge.className = "status-badge offline"; badge.innerHTML = `في استراحة`;
-            document.getElementById('searchingStatus').classList.add('offline-mode');
-            document.getElementById('radarTitle').innerText = "الرادار متوقف";
-            document.getElementById('radarDesc').innerText = "قم بتفعيل متاح للطلبات لبدء الشفت";
+            badgeText.innerText = "غير متصل";
+            badgeContainer.classList.remove('online');
+            radarContainer.classList.add('offline-mode');
+            radarTitle.innerText = "أنت غير متصل";
+            radarDesc.innerText = "قم بتشغيل الزر للبحث عن طلبات";
             
             if (shiftTimerInterval) clearInterval(shiftTimerInterval);
             document.getElementById('shiftDisplay').style.display = 'none';
@@ -992,7 +952,6 @@
             }
         });
 
-        // ── المحفظة (تجمع الخزنة الباردة + ديون وعمولات اليوم اللحظية) ──
         onValue(ref(db, `ledgers/drivers/${driverData.phone}`), snap => {
             const l = snap.val() || { completed_orders: 0, debt: 0 };
             
@@ -1007,7 +966,7 @@
                 });
                 
                 document.getElementById('statOrdersCount').innerText = (l.completed_orders || 0) + liveOrdersToday;
-                document.getElementById('statDebt').innerHTML = `${(parseFloat(l.debt) || 0) + liveDebtToday} <small class="fs-6">د.ع</small>`;
+                document.getElementById('statDebt').innerHTML = `${(parseFloat(l.debt) || 0) + liveDebtToday} <span style="font-size:0.8rem;">د.ع</span>`;
             }); 
         });
 
@@ -1018,9 +977,9 @@
             Object.values(daily).sort((a, b) => b.timestamp - a.timestamp).forEach(r => {
                 total += r.price;
                 const t = new Date(r.timestamp).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-                html += `<div class="ledger-item"><div><h6 class="fw-black m-0 text-dark">#${r.orderId} - ${r.resName}</h6><small class="text-muted fw-bold">${t} | منطقة ${r.area}</small></div><h5 class="fw-black text-success m-0">${r.price} <small class="fs-6">د.ع</small></h5></div>`;
+                html += `<div class="ledger-item"><div><h6 class="fw-bold m-0 text-dark">#${String(r.orderId).substring(0,5)} - ${r.resName}</h6><small class="text-muted fw-bold" style="font-size: 0.75rem;">${t} | منطقة ${r.area}</small></div><h5 class="fw-black text-success m-0">${r.price} <small class="fs-6">د.ع</small></h5></div>`;
             });
-            document.getElementById('ledgerTotalCash').innerHTML = `${total} <small class="fs-5">د.ع</small>`;
+            document.getElementById('ledgerTotalCash').innerHTML = `${total.toLocaleString()} <small style="font-size:1rem;color:#000;">د.ع</small>`;
             document.getElementById('ledgerList').innerHTML = html || '<div class="text-center text-muted fw-bold py-4">لا توجد رحلات مكتملة اليوم.</div>';
         });
 
@@ -1093,6 +1052,7 @@
                     const isForMe     = (safeFbPhone === myId) && (fbOrder.status === "pending_driver" || fbOrder.status === "manual_pending");
                     const notAccepted = !activeOrders.find(o => String(o.id) === String(fbOrder.id));
                     const notRinging  = !(currentOrderData && String(currentOrderData.id) === String(fbOrder.id));
+                    
                     if (isForMe && notAccepted && notRinging) {
                         currentOrderData = {
                             id: fbOrder.id, resName: fbOrder.restaurant, area: fbOrder.area || "غير محدد",
@@ -1103,10 +1063,14 @@
                         };
                         const orderAge = fbOrder.last_update ? (Date.now() - new Date(fbOrder.last_update).getTime()) : 0;
                         currentOrderData.expireTime = Date.now() + Math.max(10000, 60000 - orderAge);
-                        document.getElementById('alertTitleText').innerText = activeOrders.length > 0 ? "طلب إضافي!" : "طلب جديد!";
+                        
+                        document.getElementById('alertTitleText').innerText = activeOrders.length > 0 ? "طلب إضافي!" : "المبلغ للوصل والتوصيل";
                         document.getElementById('alertSovereignText').innerText = currentOrderData.is_sovereign ? "⚠️ تعيين إداري مباشر (لا يمكن تجاهله)" : "";
                         document.getElementById('alertResName').innerText = fbOrder.restaurant;
                         document.getElementById('alertArea').innerText    = fbOrder.area || "غير محدد";
+                        document.getElementById('alertPrice').innerText   = (fbOrder.price > 0) ? (parseFloat(fbOrder.price).toLocaleString() + " د.ع") : "تأكد من الوصل";
+                        document.getElementById('alertDetails').innerHTML = fbOrder.details + (fbOrder.photoUrl && fbOrder.photoUrl !== "processing" ? ' <span class="badge bg-dark ms-1">📸 صورة مرفقة</span>' : "");
+                        
                         document.getElementById('orderAlertOverlay').classList.remove('hidden-section');
                         if (window.AndroidRadar) { window.AndroidRadar.triggerOrderAlarm(); }
                         else {
@@ -1123,27 +1087,14 @@
             const data = snap.val();
             if (data && data.msg) {
                 const age = data.ts ? Date.now() - data.ts : 0;
-                if (age < 10000) showBroadcastModal(data.msg);
+                if (age < 10000) showToast(data.msg, 'info');
             }
         });
     }
 
-    function showBroadcastModal(message) {
-        const overlay = document.createElement('div');
-        overlay.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:50000; display:flex; align-items:center; justify-content:center; padding:20px;';
-        overlay.innerHTML = `
-            <div style="background:white; border-radius:30px; padding:30px; max-width:350px; width:100%; text-align:center;">
-                <svg style="width:48px;height:48px;color:#1e3a8a;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;margin-bottom:15px;" viewBox="0 0 24 24"><path d="M3 11l19-9-9 19-2-8-8-2z"></path></svg>
-                <h3 style="font-weight:900; color:#1e3a8a; margin-bottom:10px;">تنبيه الإدارة</h3>
-                <p style="font-size:1.1rem; margin:15px 0; color:#0f172a; line-height:1.6;">${message}</p>
-                <button onclick="this.closest('div').parentElement.remove()" style="background:#1e3a8a; color:white; border:none; padding:12px 28px; border-radius:20px; font-weight:900; font-size:1rem; cursor:pointer;">حسناً</button>
-            </div>`;
-        document.body.appendChild(overlay);
-        setTimeout(() => { if (overlay.parentElement) overlay.remove(); }, 8000);
-    }
-
     function startCountdown() {
         const circle = document.getElementById('timerCircle');
+        const progressBar = document.getElementById('alert-progress');
         clearInterval(countdownInterval);
         const totalMs = currentOrderData.expireTime - Date.now();
         countdownInterval = setInterval(() => {
@@ -1151,7 +1102,10 @@
             if (rem < 0) rem = 0;
             document.getElementById('seconds').innerText = rem;
             const totalSec = Math.ceil(totalMs / 1000);
-            if (circle) circle.style.strokeDashoffset = 471 - (rem * (471 / Math.max(totalSec, 1)));
+            
+            if (circle) circle.style.strokeDashoffset = 170 - (rem * (170 / Math.max(totalSec, 1)));
+            if (progressBar) progressBar.style.width = `${(rem/Math.max(totalSec, 1))*100}%`;
+            
             if (rem <= 0) window.declineOrder();
         }, 1000);
     }
@@ -1185,7 +1139,7 @@
 
     window.acceptOrder = async function() {
         const btn = document.getElementById('btnAcceptMain');
-        btn.innerHTML = `<div class="spinner-border spinner-border-sm text-white"></div> جاري تأمين الطلب...`;
+        btn.innerHTML = `<div class="spinner-border spinner-border-sm text-dark"></div>`;
         btn.disabled  = true;
         clearInterval(countdownInterval);
         window.muteAlarmOnly();
@@ -1198,7 +1152,6 @@
                     const resInfo = data.restaurants.find(r => r[1] === currentOrderData.resName);
                     if (resInfo) {
                         currentOrderData.resPhone = resInfo[2];
-                        currentOrderData.resArea  = resInfo[3];
                         currentOrderData.resLat   = resInfo[6];
                         currentOrderData.resLng   = resInfo[7];
                         currentOrderData.comm     = parseFloat(resInfo[5]) || 0;
@@ -1215,7 +1168,6 @@
         const newO = {
             id            : currentOrderData.id,
             resName       : currentOrderData.resName,
-            resArea       : currentOrderData.resArea || null,
             details       : String(currentOrderData.details),
             price         : parseFloat(currentOrderData.price) || 0,
             area          : currentOrderData.area,
@@ -1227,7 +1179,6 @@
             comm          : currentOrderData.comm || 0,
             payType       : currentOrderData.payType || "المطعم يدفع",
             acceptedTime  : Date.now(),
-            is_sovereign  : currentOrderData.is_sovereign || false,
             readyForPickup: false
         };
         activeOrders.push(newO);
@@ -1242,31 +1193,36 @@
 
         const acceptBtn = document.getElementById('btnAcceptMain');
         if (acceptBtn) {
-            acceptBtn.innerHTML = `قبول الطلب فوراً <svg class="svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+            acceptBtn.innerHTML = `قبول الطلب`;
             acceptBtn.disabled  = false;
         }
     }
 
     function displayActiveOrders() {
         const box = document.getElementById('activeOrderBox');
+        const radarStatusContainer = document.getElementById('radarStatusContainer');
+        const searchingStatus = document.getElementById('searchingStatus');
+        
         if (activeOrders.length === 0) {
-            document.getElementById('searchingStatus').classList.remove('hidden-section');
+            searchingStatus.classList.remove('hidden-section');
+            radarStatusContainer.style.transform = 'translateY(0)';
             box.classList.add('hidden-section');
             lastActiveHtml = 'empty';
             return;
         }
-        document.getElementById('searchingStatus').classList.add('hidden-section');
+        
+        searchingStatus.classList.add('hidden-section');
+        radarStatusContainer.style.transform = 'translateY(100%)';
         box.classList.remove('hidden-section');
 
         let html = '';
         const isDouble = activeOrders.length > 1;
 
         activeOrders.forEach((order, index) => {
-            let stateTitle = order.state === 'heading' ? "متوجه للمطعم" : order.state === 'arrived' ? "في المطعم" : "في الطريق للزبون";
+            let stateTitle = order.state === 'heading' ? "متوجه للاستلام" : order.state === 'arrived' ? "بانتظار تجهيز الطلب" : "في الطريق للزبون";
             let btnAction  = order.state === 'heading' ? "arrive"  : order.state === 'arrived' ? "pickup"  : "finish";
             let btnText    = order.state === 'heading' ? "تأكيد الوصول للمطعم" : order.state === 'arrived' ? "تأكيد استلام الطلب" : "تأكيد تسليم الطلب";
             let btnClass   = order.state === 'heading' ? "heading" : order.state === 'arrived' ? "arrived" : "picked";
-            let btnIcon    = order.state === 'heading' ? svgMap : order.state === 'arrived' ? svgImg : `<svg class="svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
             let disabledAttr = "";
 
             if (order.state === 'picked_up') {
@@ -1277,94 +1233,64 @@
                 }
             }
 
-            const mapUrl      = order.resLat ? `https://www.google.com/maps/dir/?api=1&destination=${order.resLat},${order.resLng}` : '';
+            const mapUrl      = order.resLat ? `https://www.google.com/maps/dir/?api=1&destination=$${order.resLat},${order.resLng}` : '';
             const resPhoneStr = order.resPhone ? String(order.resPhone) : "";
             const resPhoneNum = resPhoneStr ? (resPhoneStr.startsWith('0') ? resPhoneStr : '0' + resPhoneStr) : null;
             const waRes       = resPhoneStr ? (resPhoneStr.startsWith('0') ? '964' + resPhoneStr.substring(1) : resPhoneStr) : null;
             const safeDetails = String(order.details || "");
             const custMatch   = safeDetails.match(/(07[0-9]{8,9})/);
             const custPhoneNum= custMatch ? String(custMatch[0]) : null;
-            const waCustHtml  = custPhoneNum ? `<button class="btn-action-pill whatsapp" onclick="window.openSmartWhatsapp('${custPhoneNum}', '${order.resName}', '${order.area}', '${order.id}', '${order.price}')">${svgWa} رسالة للزبون</button>` : '';
-            const badgeHtml   = isDouble
-                ? `<div class="order-badge double">طلب مزدوج (${index + 1} من ${activeOrders.length})</div>`
-                : `<div class="order-badge">طلب حصري</div>`;
-            const photoBtnHtml= (order.photoUrl && String(order.photoUrl).startsWith("http"))
-                ? `<button class="btn-photo-view" onclick="window.openSafeLink('${order.photoUrl}')">${svgImg} عرض صورة الوصل</button>` : '';
+            const waCustHtml  = custPhoneNum ? `<button class="uc-action-btn" onclick="window.openSmartWhatsapp('${custPhoneNum}', '${order.resName}', '${order.area}', '${order.id}', '${order.price}')">💬 واتساب للزبون</button>` : '';
+            const badgeHtml   = isDouble ? `<div class="order-badge double mb-2">مهمة ${index + 1} من ${activeOrders.length}</div>` : ``;
+            const photoBtnHtml= (order.photoUrl && String(order.photoUrl).startsWith("http")) ? `<button class="btn-photo-view" onclick="window.showReceiptImage('${order.photoUrl}')">📄 عرض الوصل المرفق</button>` : '';
 
-            const readyBannerHtml = order.readyForPickup
-                ? `<div class="ready-banner">${svgBell}<span class="ready-banner-text">🍽️ الطلبية جاهزة في المطعم — توجّه الآن للاستلام!</span></div>`
-                : '';
-
-            const pickupAreaLabel = order.resArea ? order.resArea : 'موقع المطعم';
+            const readyBannerHtml = order.readyForPickup ? `<div class="ready-banner">✓ الطلبية جاهزة للاستلام بالمطعم!</div>` : '';
 
             html += `
-            <div class="global-order-card" id="order-${order.id}">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="d-flex flex-column gap-2 align-items-start">
+            <div class="uber-card" id="order-${order.id}">
+                <div class="uc-header">
+                    <div>
                         ${badgeHtml}
-                        <div id="timer-${order.id}" class="timer-badge timer-safe">${svgTimer} --:--</div>
+                        <span class="uc-status-text">${stateTitle}</span>
+                        <span style="font-size: 0.75rem; color: #9CA3AF; font-weight: bold;">الطلب #${String(order.id).substring(0,5)}</span>
                     </div>
-                    <div class="d-flex flex-column align-items-end gap-2">
-                        <div class="order-price">${order.price} <small>د.ع</small></div>
-                        <a href="#" onclick="window.openSafeLink('https://wa.me/9647713225471'); return false;" class="btn-support-mini">${svgSupport} الدعم الفني</a>
+                    <div class="text-end">
+                        <div class="uc-price">${order.price > 0 ? parseFloat(order.price).toLocaleString() : 'بوصل'} <small style="font-size:1rem;">د.ع</small></div>
                     </div>
                 </div>
 
                 ${readyBannerHtml}
                 
-                <div class="status-banner">${stateTitle}</div>
-                
-                <div class="route-timeline">
-                    <div class="route-point pickup">
-                        <div class="point-content">
-                            <div class="point-title">الاستلام من (${pickupAreaLabel})</div>
-                            <div class="point-name">${order.resName}</div>
-                            <div class="point-actions-grid">
-                                ${resPhoneNum ? `<button class="btn-action-pill call" onclick="window.openSafeLink('tel:${resPhoneNum}')">${svgPhone} اتصال</button>` : ''}
-                                ${waRes ? `<button class="btn-action-pill whatsapp" onclick="window.openSafeLink('https://wa.me/${waRes}')">${svgWa} المطعم</button>` : ''}
-                                ${mapUrl ? `<button class="btn-action-pill map" onclick="window.openSafeLink('${mapUrl}')">${svgMap} الخريطة</button>` : ''}
-                            </div>
+                <div class="uc-timeline mt-3">
+                    <div class="uc-node pickup">
+                        <div class="uc-node-label">نقطة الاستلام</div>
+                        <div class="uc-node-val">${order.resName}</div>
+                        <div class="uc-actions-grid">
+                            ${resPhoneNum ? `<button class="uc-action-btn" onclick="window.openSafeLink('tel:${resPhoneNum}')">📞 اتصال بالمطعم</button>` : ''}
+                            ${mapUrl ? `<button class="uc-action-btn" onclick="window.openSafeLink('${mapUrl}')">📍 الخريطة</button>` : ''}
                         </div>
                     </div>
-                    <div class="route-point dropoff">
-                        <div class="point-content">
-                            <div class="point-title">التسليم إلى (${order.area})</div>
-                            <div class="point-name">${safeDetails}</div>
-                            <div class="point-actions-grid">
-                                ${custPhoneNum ? `<button class="btn-action-pill call" onclick="window.openSafeLink('tel:${custPhoneNum}')">${svgPhone} اتصال</button>` : ''}
-                                ${waCustHtml}
-                            </div>
+                    <div class="uc-node dropoff">
+                        <div class="uc-node-label">نقطة التسليم</div>
+                        <div class="uc-node-val">${order.area}</div>
+                        <div class="uc-node-desc">${safeDetails}</div>
+                        <div class="uc-actions-grid mt-2">
+                            ${custPhoneNum ? `<button class="uc-action-btn" onclick="window.openSafeLink('tel:${custPhoneNum}')">📞 اتصال بالزبون</button>` : ''}
+                            ${waCustHtml}
                         </div>
                     </div>
                 </div>
 
                 ${photoBtnHtml}
 
-                <button class="btn-status ${btnClass}" ${disabledAttr} onclick="window.updateOrderStatus('${order.id}', '${btnAction}', this)">
-                    ${btnIcon} ${btnText}
+                <button class="uc-main-btn ${btnClass}" ${disabledAttr} onclick="window.updateOrderStatus('${order.id}', '${btnAction}', this)">
+                    ${btnText}
                 </button>
             </div>`;
         });
 
         if (lastActiveHtml !== html) { box.innerHTML = html; lastActiveHtml = html; }
     }
-
-    function updateOrderTimers() {
-        activeOrders.forEach(order => {
-            const timerEl = document.getElementById(`timer-${order.id}`);
-            if (!timerEl) return;
-            const elapsed    = Date.now() - (order.acceptedTime || Date.now());
-            const allowed    = 30 * 60 * 1000; 
-            const remaining  = allowed - elapsed;
-            const isNeg      = remaining < 0;
-            const abs        = Math.abs(remaining);
-            const min        = Math.floor(abs / 60000);
-            const sec        = Math.floor((abs % 60000) / 1000);
-            timerEl.innerHTML = `${svgTimer} ${isNeg ? '-' : ''}${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-            timerEl.className = remaining > 600000 ? "timer-badge timer-safe" : remaining > 0 ? "timer-badge timer-warn" : "timer-badge timer-danger";
-        });
-    }
-    setInterval(updateOrderTimers, 1000);
 
     window.updateOrderStatus = function(id, action, btnElement) {
         const order = activeOrders.find(o => String(o.id) === String(id));
@@ -1379,7 +1305,7 @@
         }
 
         const origHtml = btnElement.innerHTML;
-        btnElement.innerHTML = `<div class="spinner-border spinner-border-sm text-white"></div>`;
+        btnElement.innerHTML = `<div class="spinner-border spinner-border-sm text-dark"></div>`;
         btnElement.disabled  = true;
 
         if (action === 'arrive') {
@@ -1407,13 +1333,12 @@
                 updates[`daily_metrics/${driverData.phone}/${todayS}/completed_orders`] = increment(1);
                 updates[`daily_metrics/${driverData.phone}/${todayS}/total_delivery_minutes`] = increment(deliveryMins);
 
-                // ✨ حساب ديون الكابتن اللحظية وإرسالها لـ daily_ledgers
                 let drvComm = 0;
                 let commStr = String(order.comm || '0');
                 let payType = String(order.payType || '');
                 if (!commStr.includes('شهري')) {
                     if (commStr.includes('/')) {
-                        drvComm = parseFloat(commStr.split('/')[0]) || 0; // الكابتن هو الرقم الأول
+                        drvComm = parseFloat(commStr.split('/')[0]) || 0;
                     } else {
                         let val = parseFloat(commStr) || 0;
                         if (payType.includes("مناصفة")) drvComm = val / 2;

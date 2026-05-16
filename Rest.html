@@ -18,7 +18,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        const CURRENT_APP_VERSION = "37.0";
+        const CURRENT_APP_VERSION = "37.2";
         if (localStorage.getItem('hut_res_app_version') !== CURRENT_APP_VERSION) {
             localStorage.setItem('hut_res_app_version', CURRENT_APP_VERSION);
             if ('caches' in window) { caches.keys().then(names => { for (let name of names) caches.delete(name); }); }
@@ -58,7 +58,6 @@
 
         .hidden-section { display: none !important; }
 
-        /* حاويات الزجاج */
         .glass-panel {
             background: var(--glass-bg);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -66,7 +65,6 @@
             border-radius: 24px;
         }
 
-        /* الأزرار العصرية */
         .btn-nahla {
             background: var(--nahla-yellow); color: var(--accent);
             border: none; border-radius: 18px; padding: 16px 20px;
@@ -77,7 +75,6 @@
         .btn-nahla:active { transform: scale(0.97); background: var(--nahla-yellow-dark); }
         .btn-nahla:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* شاشة المصادقة والتسجيل */
         #loginSection { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .login-card { width: 100%; max-width: 400px; padding: 40px 25px; text-align: center; }
         .auth-input, .custom-input {
@@ -88,35 +85,29 @@
         .auth-input:focus, .custom-input:focus { border-color: var(--nahla-yellow); outline: none; background: white; box-shadow: 0 0 0 4px rgba(255,193,7,0.1); }
         .auth-input.text-center { text-align: center; }
 
-        /* نظام العمولة الديناميكي */
         .commission-type-toggle { display: flex; background: rgba(15, 23, 42, 0.04); border-radius: 16px; padding: 5px; margin-bottom: 15px; }
         .comm-type-btn { flex: 1; text-align: center; padding: 10px 5px; font-weight: 700; color: #64748b; border-radius: 12px; cursor: pointer; transition: 0.3s ease; font-size: 0.85rem; }
         .comm-type-btn.active { background: white; color: var(--accent); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
 
-        /* الهيدر والإحصائيات */
         .app-header { background: white; padding: 25px 20px 35px 20px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; }
         .stat-card { background: var(--bg-color); border-radius: 16px; padding: 12px 5px; text-align: center; }
         
-        /* اللوجو المتحرك (من الكود السابق) */
         .custom-s-logo { width: 42px; height: 42px; position: relative; }
         .custom-s-logo svg { width: 100%; height: 100%; stroke: #cbd5e1; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; transition: stroke 0.5s ease; }
         .app-header.active .custom-s-logo svg path, .app-header.active .custom-s-logo svg circle { stroke: url(#magicGradient); filter: drop-shadow(0 2px 8px rgba(255, 193, 7, 0.5)); }
 
-        /* التبويبات */
         .nav-tabs-custom { display: flex; padding: 20px 20px 5px 20px; gap: 12px; overflow-x: auto; scrollbar-width: none; }
         .nav-tabs-custom::-webkit-scrollbar { display: none; }
         .nav-tab { padding: 12px 24px; border-radius: 20px; font-weight: 800; background: white; color: #6B7280; white-space: nowrap; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         .nav-tab.active { background: var(--accent); color: var(--nahla-yellow); box-shadow: 0 4px 15px rgba(17,24,39,0.2); }
         .tab-content { padding: 20px 20px 100px 20px; }
 
-        /* اللصق الذكي */
         .smart-paste-btn { background: rgba(34, 197, 94, 0.1); color: #15803d; border: 1px dashed rgba(34, 197, 94, 0.3); border-radius: 16px; padding: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s; margin-bottom: 20px; }
         .smart-paste-btn:active { transform: scale(0.98); background: rgba(34, 197, 94, 0.2); }
         #pasteModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); z-index: 10000; display: none; align-items: center; justify-content: center; }
         .paste-modal-content { background: rgba(255,255,255,0.95); border-radius: 24px; padding: 25px; width: 90%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center; }
 
-        /* القائمة المنسدلة الذكية */
         .smart-dropdown-wrapper { position: relative; width: 100%; }
         .search-icon-inside { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #9CA3AF; pointer-events: none; }
         .smart-dropdown-list { position: absolute; top: 100%; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 10px 35px rgba(0,0,0,0.1); max-height: 200px; overflow-y: auto; z-index: 100; margin-top: 5px; border: 1px solid #E5E7EB; display: none; padding: 6px; }
@@ -125,17 +116,14 @@
         .dropdown-item-area:hover, .dropdown-item-area:active { background: #F1F5F9; }
         .area-price-tag { font-size: 0.8rem; background: var(--bg-color); padding: 4px 8px; border-radius: 8px; color: var(--success); }
 
-        /* رقم الهاتف الذكي */
         .smart-phone-wrap { position: relative; }
         .phone-clean-badge { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); background: var(--success); color: white; border-radius: 50%; width: 24px; height: 24px; display: none; align-items: center; justify-content: center; pointer-events: none; }
         .smart-phone-wrap.cleaned .phone-clean-badge { display: flex; }
 
-        /* زر الكاميرا العملاق */
         .camera-card { background: #F8FAFC; border: 3px dashed #CBD5E1; border-radius: 24px; padding: 40px 20px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .camera-card:active { background: #F1F5F9; border-color: var(--nahla-yellow); }
         .camera-icon-wrapper { background: var(--nahla-yellow-light); color: var(--warning); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* شريط تقدم الطلب */
         .order-card { padding: 22px; margin-bottom: 18px; border: 1px solid #F3F4F6; background: white; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: opacity 0.3s;}
         .progress-track { height: 6px; background: #F3F4F6; border-radius: 3px; margin: 15px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--nahla-yellow); border-radius: 3px; transition: width 0.5s ease; }
@@ -143,7 +131,6 @@
         .progress-fill.arrived { background: var(--warning); width: 66%; }
         .progress-fill.picked { background: var(--success); width: 100%; }
 
-        /* Toast */
         .toast-nahla { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 14px 24px; border-radius: 30px; font-weight: 800; font-size: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 100000; display: flex; align-items: center; gap: 10px; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         .toast-nahla.show { top: 40px; }
 
@@ -362,7 +349,10 @@
         </div>
     </div>
 
-    <div id="toast" class="toast-nahla"><i data-lucide="check-circle" id="toast-icon"></i> <span id="toast-msg">تم!</span></div>
+    <div id="toast" class="toast-nahla">
+        <span id="toast-icon-wrap"><i data-lucide="info"></i></span> 
+        <span id="toast-msg">تم!</span>
+    </div>
 
     <script>
         lucide.createIcons();
@@ -381,7 +371,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 2. الحالة العامة (State)
+        // 2. الحالة العامة
         let resSession = JSON.parse(localStorage.getItem('hut_res_session')) || null;
         let isRegistering = false;
         let currentOrderMode = 'manual';
@@ -389,23 +379,25 @@
         let globalDriversMap = {}; 
         let myCustomPriceList = {};
         
-        // متغيرات التسجيل
         let pickerMap;
         let regLat = 35.468; let regLng = 44.392;
         let currentCommissionType = 'fixed';
 
         window.onload = () => { if (resSession && (Date.now() - resSession.timestamp < 24*3600000)) enterDashboard(); };
 
+        // حل مشكلة انهيار الـ Toast بوضع الأيقونة داخل span
         function showToast(msg, isSuccess = true) {
             document.getElementById('toast-msg').innerText = msg;
-            document.getElementById('toast-icon').setAttribute('data-lucide', isSuccess ? 'check-circle' : 'info');
-            lucide.createIcons();
+            const iconName = isSuccess ? 'check-circle' : 'alert-circle';
+            document.getElementById('toast-icon-wrap').innerHTML = `<i data-lucide="${iconName}"></i>`;
+            lucide.createIcons({root: document.getElementById('toast-icon-wrap')});
+            
             const t = document.getElementById('toast');
             t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500);
         }
 
         // ==========================================
-        // أدوات التسجيل المتقدمة (الخريطة، العمولة)
+        // أدوات التسجيل والخرائط
         // ==========================================
         function initPickerMap() {
             if (!document.getElementById('pickerMap')) return;
@@ -414,11 +406,7 @@
             L.control.zoom({ position: 'bottomleft' }).addTo(pickerMap);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(pickerMap);
             pickerMap.on('move', function () { regLat = pickerMap.getCenter().lat; regLng = pickerMap.getCenter().lng; });
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => {
-                    regLat = pos.coords.latitude; regLng = pos.coords.longitude; pickerMap.setView([regLat, regLng], 16);
-                }, null, { timeout: 5000 });
-            }
+            setTimeout(() => pickerMap.invalidateSize(), 500); // تحديث الخريطة بعد الظهور
         }
 
         function searchLocation() {
@@ -481,7 +469,6 @@
                         const price = match[2].trim();
                         if (area && price) resultObj[area] = parseInt(price);
                     } else {
-                        // مجرد اسم منطقة بدون سعر
                         const area = sub.replace(/[-._!@#$%^&*()=]+$/g, '').trim();
                         if(area) resultObj[area] = 0;
                     }
@@ -491,50 +478,62 @@
         }
 
         // ==========================================
-        // المصادقة
+        // المصادقة والتسجيل
         // ==========================================
         async function authAction() {
             let phone = document.getElementById('checkPhone').value.replace(/[^\d]/g, ''); if(phone.startsWith('0')) phone = phone.substring(1);
             let pass = document.getElementById('checkPassword').value.trim();
             if(!phone || !pass) return showToast("أدخل الرقم وكلمة المرور", false);
 
-            const btn = document.getElementById('mainAuthBtn'); btn.innerHTML = "جاري الاتصال... ⏳"; btn.disabled = true;
+            const btn = document.getElementById('mainAuthBtn'); 
+            const originalBtnHTML = btn.innerHTML;
+            btn.innerHTML = "جاري الاتصال... ⏳"; btn.disabled = true;
 
-            if (isRegistering) {
-                updateCommissionString();
-                const commFinal = document.getElementById('regCommFinal').value;
-                const regData = { action: 'RESTAURANT_REG', token: API_TOKEN, phone: '0'+phone, password: pass, name: document.getElementById('regName').value, area: document.getElementById('regArea').value, pay: document.getElementById('regPayType').value, comm: commFinal, lat: regLat, lng: regLng, priceList: parseCustomPriceList(document.getElementById('regPriceList').value) };
-                try { await fetch(API_URL, { method: 'POST', body: JSON.stringify(regData) }); document.getElementById('authBox').classList.add('hidden-section'); document.getElementById('waitingBox').classList.remove('hidden-section'); } catch(e) { showToast("فشل التسجيل.", false); }
-            } else {
-                try {
+            try {
+                if (isRegistering) {
+                    updateCommissionString();
+                    const commFinal = document.getElementById('regCommFinal').value;
+                    const regData = { action: 'RESTAURANT_REG', token: API_TOKEN, phone: '0'+phone, password: pass, name: document.getElementById('regName').value, area: document.getElementById('regArea').value, pay: document.getElementById('regPayType').value, comm: commFinal, lat: regLat, lng: regLng, priceList: parseCustomPriceList(document.getElementById('regPriceList').value) };
+                    
+                    const req = await fetch(API_URL, { method: 'POST', body: JSON.stringify(regData) });
+                    document.getElementById('authBox').classList.add('hidden-section'); document.getElementById('waitingBox').classList.remove('hidden-section');
+                } else {
                     const res = await fetch(`${API_URL}?action=checkRes&phone=${phone}&password=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
                     const data = await res.json();
+                    
                     if (data.status === 'active' || data.status === 'inactive') {
                         resSession = { phone: '0'+phone, name: data.name, payType: data.payType, comm: data.comm, priceList: data.priceList, timestamp: Date.now() };
                         localStorage.setItem('hut_res_session', JSON.stringify(resSession)); enterDashboard();
                     } else if (data.status === 'pending' || data.status === 'waiting') {
                         document.getElementById('authBox').classList.add('hidden-section'); document.getElementById('waitingBox').classList.remove('hidden-section');
+                    } else if (data.status === 'wrong_password') {
+                        showToast("❌ كلمة المرور غير صحيحة", false);
                     } else { 
                         isRegistering = true; document.getElementById('registerFields').classList.remove('hidden-section'); 
-                        btn.innerHTML = "إرسال طلب الانضمام 🚀"; showToast("الرقم غير مسجل، أكمل البيانات.", false); 
+                        btn.innerHTML = "إرسال طلب الانضمام 🚀"; showToast("الرقم غير مسجل، أكمل البيانات للتسجيل.", false); 
                         setTimeout(initPickerMap, 300);
+                        return; // لا تعيد تفعيل الزر لشكله القديم
                     }
-                } catch(e) { showToast("خطأ بالاتصال", false); }
+                }
+            } catch(e) {
+                showToast("خطأ بالاتصال بالسيرفر", false);
             }
-            btn.disabled = false; if(!isRegistering) btn.innerHTML = "دخول <i data-lucide='log-in'></i>"; lucide.createIcons();
+            
+            btn.disabled = false;
+            if(!isRegistering) btn.innerHTML = "دخول <i data-lucide='log-in'></i>";
+            lucide.createIcons();
         }
 
         function logout() { localStorage.removeItem('hut_res_session'); location.reload(); }
 
         // ==========================================
-        // الدخول وإعداد الواجهة
+        // الدخول والواجهة الأساسية
         // ==========================================
         function enterDashboard() {
             document.getElementById('loginSection').classList.add('hidden-section');
             document.getElementById('dashboardSection').classList.remove('hidden-section');
             document.getElementById('headerResName').innerText = resSession.name;
             
-            // جلب أسماء الكباتن
             fetch(`${API_URL}?action=getGlobalData&token=${API_TOKEN}`)
                 .then(r => r.json()).then(data => { (data.drivers || []).forEach(d => { if(d[2]) globalDriversMap[d[2].replace(/[^\d]/g, '').replace(/^0+/, '')] = d[1]; }); }).catch(e=>{});
 
@@ -559,11 +558,18 @@
         }
 
         // ==========================================
-        // أدوات الإدخال الذكية (Dropdown, Phone, Paste)
+        // أدوات الإدخال الذكية 
         // ==========================================
         function parseAndPopulateAreas() {
             const listData = resSession.priceList || "{}";
-            try { myCustomPriceList = JSON.parse(listData); } catch(e) { myCustomPriceList = {}; }
+            myCustomPriceList = {};
+            try { 
+                let parsed = JSON.parse(listData);
+                if(Array.isArray(parsed)) { parsed.forEach(a => myCustomPriceList[a] = 0); }
+                else { myCustomPriceList = parsed; }
+            } catch(e) {
+                listData.split(/[,،\n-]/).forEach(a => { if(a.trim()) myCustomPriceList[a.trim()] = 0; });
+            }
             buildCustomAreaDropdown();
         }
 
@@ -572,7 +578,7 @@
             let html = '';
             Object.keys(myCustomPriceList).sort().forEach(area => {
                 const price = myCustomPriceList[area] || 0;
-                html += `<div class="dropdown-item-area" onclick="selectDropdownArea('${area}', ${price})"><span>${area}</span><span class="area-price-tag">${price} د.ع</span></div>`;
+                html += `<div class="dropdown-item-area" onclick="selectDropdownArea('${area}', ${price})"><span>${area}</span><span class="area-price-tag">${price > 0 ? price + ' د.ع' : 'بدون تسعيرة'}</span></div>`;
             });
             html += `<div class="dropdown-item-area text-primary mt-1" onclick="selectDropdownArea('أخرى')">منطقة غير مدرجة بالقائمة</div>`;
             listContainer.innerHTML = html;
@@ -589,7 +595,7 @@
             document.getElementById('smartDropdownList').classList.remove('show');
             const priceHint = document.getElementById('priceHint'); const customSec = document.getElementById('customAreaSection');
             if (areaName === "أخرى") { priceHint.classList.add('hidden-section'); customSec.classList.remove('hidden-section'); }
-            else { customSec.classList.add('hidden-section'); if(price) { priceHint.classList.remove('hidden-section'); priceHint.innerText = `التوصيل: ${price} د.ع`; document.getElementById('orderPrice').value = price; } }
+            else { customSec.classList.add('hidden-section'); if(price > 0) { priceHint.classList.remove('hidden-section'); priceHint.innerText = `التوصيل: ${price} د.ع`; document.getElementById('orderPrice').value = price; } else { priceHint.classList.add('hidden-section'); } }
         }
         document.addEventListener('click', function(e) { const wrap = document.getElementById('smartDropdownWrap'); const list = document.getElementById('smartDropdownList'); if (wrap && !wrap.contains(e.target)) list.classList.remove('show'); });
 
@@ -605,7 +611,7 @@
         function handleSmartPhone(input) { const { clean, changed } = normalizeCustomerPhone(input.value); const wrap = document.getElementById('customerPhoneWrap'); if (changed && clean.length >= 10) { input.value = clean; wrap.classList.add('cleaned'); } else { wrap.classList.remove('cleaned'); } }
         function handleSmartPhonePaste(e) { e.preventDefault(); const pasted = (e.clipboardData || window.clipboardData).getData('text'); const { clean, changed } = normalizeCustomerPhone(pasted); document.getElementById('customerPhone').value = clean || pasted; handleSmartPhone(document.getElementById('customerPhone')); }
 
-        // --- اللصق الذكي بالذكاء الاصطناعي ---
+        // --- اللصق الذكي عبر Gemini ---
         async function fetchGeminiWithRetry(payload) {
             try {
                 let res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getGeminiKey()}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -637,7 +643,7 @@
         }
 
         // ==========================================
-        // معالجة الصور (ImgBB + Gemini OCR)
+        // معالجة وإرسال الطلب 
         // ==========================================
         function handlePhotoSelect(event) {
             const file = event.target.files[0]; if(!file) return;
@@ -658,11 +664,11 @@
             document.getElementById('receiptPhoto').value = '';
         }
 
-        // ==========================================
-        // الإرسال السريع (Optimistic UI & Background Processing)
-        // ==========================================
         async function submitOrder() {
             const orderId = 'HUT-' + Date.now();
+            const btn = document.getElementById('btnSubmitOrder');
+            const originalBtnText = btn.innerHTML;
+
             const orderPayload = {
                 id: orderId, restaurant: resSession.name, resPhone: resSession.phone,
                 status: 'pending_driver', driverPhone: 'system_routing',
@@ -670,40 +676,50 @@
                 comm: resSession.comm, payType: resSession.payType, is_sovereign: false, ready_for_pickup: false
             };
 
-            if (currentOrderMode === 'manual') {
-                let finalArea = document.getElementById('customerArea').value;
-                if (finalArea === "أخرى") {
-                    const cName = document.getElementById('customAreaName').value.trim(); const cPrice = document.getElementById('customAreaPrice').value.trim();
-                    if (!cName) return showToast("⚠️ يرجى تحديد اسم المنطقة", false);
-                    finalArea = `${cName} (توصيل: ${cPrice})`;
-                } else if (myCustomPriceList[finalArea]) { finalArea = `${finalArea} (توصيل: ${myCustomPriceList[finalArea]})`; }
+            btn.disabled = true; btn.innerHTML = "جاري إرسال الطلب... 🚀";
 
-                const price = Number(document.getElementById('orderPrice').value);
-                const phone = document.getElementById('customerPhone').value.replace(/[^\d]/g, '');
-                if (!finalArea || !price) return showToast("⚠️ يرجى إدخال المنطقة والمبلغ", false);
-                
-                orderPayload.area = finalArea; orderPayload.price = price; orderPayload.details = document.getElementById('customerDetails').value + (phone ? ` | هاتف: ${phone}` : "");
-                
-                db.ref(`active_orders/${orderId}`).set(orderPayload);
-                fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'NEW_ORDER', order: orderPayload, token: API_TOKEN }) }).catch(()=>{});
-                showToast("🚀 تم الإرسال للرادار!");
-                resetForms();
-                
-            } else {
-                if (!base64Receipt) return showToast("⚠️ يرجى تصوير الوصل أولاً", false);
+            try {
+                if (currentOrderMode === 'manual') {
+                    let finalArea = document.getElementById('customerArea').value;
+                    if (finalArea === "أخرى") {
+                        const cName = document.getElementById('customAreaName').value.trim(); const cPrice = document.getElementById('customAreaPrice').value.trim();
+                        if (!cName) { btn.disabled = false; btn.innerHTML = originalBtnText; return showToast("⚠️ يرجى تحديد اسم المنطقة", false); }
+                        finalArea = `${cName} (توصيل: ${cPrice})`;
+                    } else if (myCustomPriceList[finalArea] > 0) { finalArea = `${finalArea} (توصيل: ${myCustomPriceList[finalArea]})`; }
 
-                orderPayload.area = "جاري قراءة المنطقة 🤖..."; orderPayload.price = 0; orderPayload.details = "طلب بوصل مصور"; orderPayload.photoUrl = "processing";
-                db.ref(`active_orders/${orderId}`).set(orderPayload); 
-                showToast("🚀 تم استلام الطلب! جاري استخراج المنطقة في الخلفية...");
-                
-                const b64Data = base64Receipt; resetForms();
-                processBackgroundAI(orderId, b64Data);
+                    const price = Number(document.getElementById('orderPrice').value);
+                    const phone = document.getElementById('customerPhone').value.replace(/[^\d]/g, '');
+                    if (!finalArea || !price) { btn.disabled = false; btn.innerHTML = originalBtnText; return showToast("⚠️ يرجى إدخال المنطقة والمبلغ", false); }
+                    
+                    orderPayload.area = finalArea; orderPayload.price = price; orderPayload.details = document.getElementById('customerDetails').value + (phone ? ` | هاتف: ${phone}` : "");
+                    
+                    await db.ref(`active_orders/${orderId}`).set(orderPayload);
+                    fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'NEW_ORDER', order: orderPayload, token: API_TOKEN }) }).catch(()=>{});
+                    
+                    showToast("🚀 تم الإرسال بنجاح للرادار!");
+                    resetForms();
+                    
+                } else {
+                    if (!base64Receipt) { btn.disabled = false; btn.innerHTML = originalBtnText; return showToast("⚠️ يرجى تصوير الوصل أولاً", false); }
+
+                    orderPayload.area = "جاري قراءة المنطقة 🤖..."; orderPayload.price = 0; orderPayload.details = "طلب بوصل مصور"; orderPayload.photoUrl = "processing";
+                    await db.ref(`active_orders/${orderId}`).set(orderPayload); 
+                    
+                    showToast("🚀 تم استلام الطلب! وتوجيهه للرادار.");
+                    const b64Data = base64Receipt; resetForms();
+                    processBackgroundAI(orderId, b64Data);
+                }
+            } catch(e) {
+                showToast("❌ خطأ في الإرسال. تأكد من اتصال الإنترنت.", false);
             }
+            
+            btn.disabled = false; btn.innerHTML = "إرسال طلب آخر 🚀";
         }
 
         function resetForms() {
             document.getElementById('customerArea').value = ''; document.getElementById('areaDisplayInput').value = ''; document.getElementById('customAreaSection').classList.add('hidden-section'); document.getElementById('priceHint').classList.add('hidden-section');
             document.getElementById('orderPrice').value = ''; document.getElementById('customerPhone').value = ''; document.getElementById('customerDetails').value = ''; document.getElementById('customerPhoneWrap').classList.remove('cleaned');
+            document.getElementById('customAreaName').value = ''; document.getElementById('customAreaPrice').value = '';
             clearPhotoPreview();
         }
 
@@ -718,7 +734,14 @@
 
                 let extractedArea = "غير محدد";
                 try {
-                    let promptText = `أنت خبير ذكاء اصطناعي. استخرج "منطقة توصيل الزبون" فقط من الصورة. تجاهل اسم المطعم. طابق مع [${KIRKUK_AREAS}]. أرجع اسم المنطقة الأقرب المطابق فقططط وإذا لم تجد أرجع "غير محدد".`;
+                    let promptText = `أنت خبير ذكاء اصطناعي متخصص في قراءة وصولات المطاعم العراقية (في كركوك).
+مهمتك: استخراج "منطقة توصيل الزبون" فقط من الصورة.
+1. ابحث عن كلمة "العنوان" أو "Road" أو "شارع" أو "حي".
+2. اقرأ الكتابات بخط اليد في أعلى أو أسفل الوصل (غالباً تكون هي المنطقة مثل "ساحة طيران").
+3. تجاهل اسم المطعم تماماً وتجاهل الوجبات.
+4. طابق المنطقة مع: [${KIRKUK_AREAS}].
+5. أرجع اسم المنطقة الأقرب فقط. وإذا لم تجدها أرجع "غير محدد".`;
+
                     let aiResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getGeminiKey(), {
                         method: "POST", headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ contents: [{ parts: [{text: promptText}, {inline_data: { mime_type: "image/jpeg", data: base64Data.split(',')[1] }}] }] })
@@ -737,7 +760,6 @@
         function startHotDataListeners() {
             const cleanPhone = String(resSession.phone).replace(/^0+/, '');
             
-            // إضافة كلاس الـ animation للهيدر
             const headerObj = document.getElementById('mainAppHeader');
             if(headerObj) headerObj.classList.add('active');
 
@@ -765,4 +787,58 @@
                         liveCount++;
                         let barClass = '', statusText = '', actionBtns = '';
                         
-                        let drvName = globalDriversMap[o.
+                        let drvName = globalDriversMap[o.driverPhone.replace(/[^\d]/g, '').replace(/^0+/, '')] || 'كابتن';
+                        let callBtnHtml = o.driverPhone && !['system_routing','pending_driver','manual_pending'].includes(o.driverPhone)
+                            ? `<a href="tel:${o.driverPhone}" class="btn btn-sm bg-light text-primary fw-bold rounded-pill px-3 shadow-sm border"><i data-lucide="phone-call" style="width:14px;"></i> اتصال</a>` : '';
+
+                        let cancelBtnHtml = (o.status !== 'picked_up' && o.status !== 'completed' && o.status !== 'deleted') 
+                            ? `<button class="btn btn-sm bg-danger text-white mt-3 w-100 fw-bold border-0 rounded-pill shadow-sm" onclick="cancelOrderGrace('${o.id}')">إلغاء الطلب نهائياً ✕</button>` : '';
+
+                        if(o.status === 'pending_driver' || o.status === 'manual_pending') { barClass = ''; statusText = 'يبحث عن كابتن 🔍'; }
+                        else if(['accepted','heading'].includes(o.status)) { barClass = 'heading'; statusText = `الكابتن (${drvName}) متوجه إليك 🛵`; actionBtns = o.ready_for_pickup ? `<div class="text-success fw-bold text-center mt-3">✓ أُبلغ الكابتن بالجاهزية</div>` : `<button class="btn btn-sm btn-success mt-3 w-100 fw-bold rounded-pill shadow-sm" onclick="markReady('${o.id}')">الطلب جاهز للكابتن 🔔</button>`; }
+                        else if(o.status === 'arrived_at_res') { barClass = 'arrived'; statusText = `الكابتن (${drvName}) بالمطعم 📍`; actionBtns = `<div class="text-warning fw-bold text-center mt-3">سلم الطلب للكابتن</div>`; }
+                        else if(o.status === 'picked_up') { barClass = 'picked'; statusText = `الكابتن (${drvName}) بالطريق للزبون 💨`; }
+
+                        liveHTML += `
+                            <div class="order-card" id="card-${o.id}">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="fw-bold m-0 text-dark">#${o.id.substring(0,5)} <span class="badge bg-light text-dark ms-1 border shadow-sm">${o.area}</span></h6>
+                                    <div class="text-end">
+                                        <div class="fw-bold text-success fs-5 mb-2">${o.price > 0 ? o.price.toLocaleString() + ' د.ع' : '<i data-lucide="scan-line" style="width:16px;"></i> بالصورة'}</div>
+                                        ${callBtnHtml}
+                                    </div>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill ${barClass}"></div></div>
+                                <div class="text-center fw-bold text-accent" style="font-size:1rem;">${statusText}</div>
+                                ${actionBtns}
+                                ${cancelBtnHtml}
+                            </div>`;
+                    }
+                });
+
+                document.getElementById('liveOrdersContainer').innerHTML = liveHTML || `<div class="text-center text-muted mt-5 fw-bold opacity-50"><i data-lucide="check-circle" style="width:50px;height:50px;margin-bottom:10px;"></i><br>تم توصيل جميع الطلبات! انطلق وأرسل المزيد.</div>`;
+                document.getElementById('activeCount').innerText = liveCount;
+                document.getElementById('archiveContainer').innerHTML = archiveHTML || `<div class="text-center text-muted">لا يوجد طلبات منجزة اليوم.</div>`;
+                document.getElementById('statTodayOrders').innerText = todayOrdersCount;
+                document.getElementById('todayTotalSales').innerHTML = todaySales.toLocaleString();
+                lucide.createIcons();
+            });
+
+            db.ref(`ledgers/restaurants/${cleanPhone}`).on('value', snap => {
+                const ledger = snap.val() || { debt: 0 };
+                document.getElementById('statDebt').innerText = (ledger.debt || 0).toLocaleString();
+            });
+        }
+
+        function markReady(orderId) { db.ref(`active_orders/${orderId}`).update({ ready_for_pickup: true }); showToast("تم إبلاغ الكابتن 🔔"); }
+        window.cancelOrderGrace = function(orderId) {
+            if(confirm("هل أنت متأكد من إلغاء هذا الطلب نهائياً؟")) {
+                const card = document.getElementById(`card-${orderId}`);
+                if(card) { card.style.opacity = '0'; setTimeout(()=>card.style.display='none', 300); }
+                db.ref(`active_orders/${orderId}`).update({ status: 'deleted' });
+            }
+        };
+
+    </script>
+</body> 
+</html>

@@ -2,24 +2,27 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>نحلة 🐝 | لوحة المطعم الفاخرة</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        // إدارة الإصدارات لضمان التحديث التلقائي
-        const CURRENT_APP_VERSION = "36.5";
+        const CURRENT_APP_VERSION = "37.0";
         if (localStorage.getItem('hut_res_app_version') !== CURRENT_APP_VERSION) {
             localStorage.setItem('hut_res_app_version', CURRENT_APP_VERSION);
-            if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(regs => { for (let reg of regs) reg.unregister(); }); }
+            if ('caches' in window) { caches.keys().then(names => { for (let name of names) caches.delete(name); }); }
+            if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(regs => { for (let r of regs) r.unregister(); }); }
             location.reload(true);
         }
     </script>
@@ -44,11 +47,18 @@
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--bg-color);
+            background-image: radial-gradient(circle at top right, var(--nahla-yellow-light) 0%, transparent 50%),
+                              radial-gradient(circle at bottom left, #E5E7EB 0%, transparent 50%);
+            background-attachment: fixed;
             color: var(--accent);
             margin: 0; padding: 0;
             -webkit-tap-highlight-color: transparent;
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
+        .hidden-section { display: none !important; }
+
+        /* حاويات الزجاج */
         .glass-panel {
             background: var(--glass-bg);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -56,6 +66,7 @@
             border-radius: 24px;
         }
 
+        /* الأزرار العصرية */
         .btn-nahla {
             background: var(--nahla-yellow); color: var(--accent);
             border: none; border-radius: 18px; padding: 16px 20px;
@@ -66,69 +77,95 @@
         .btn-nahla:active { transform: scale(0.97); background: var(--nahla-yellow-dark); }
         .btn-nahla:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        .hidden-section { display: none !important; }
-
-        /* شاشة المصادقة */
-        #loginSection { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: radial-gradient(circle at top, var(--nahla-yellow-light) 0%, var(--bg-color) 80%); }
+        /* شاشة المصادقة والتسجيل */
+        #loginSection { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .login-card { width: 100%; max-width: 400px; padding: 40px 25px; text-align: center; }
-        .auth-input {
+        .auth-input, .custom-input {
             width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 16px;
             border: 2px solid #E5E7EB; background: #F9FAFB;
-            font-weight: 700; font-size: 1.1rem; text-align: center; transition: 0.3s;
+            font-weight: 700; font-size: 1.05rem; transition: 0.3s;
         }
-        .auth-input:focus { border-color: var(--nahla-yellow); outline: none; background: white; }
+        .auth-input:focus, .custom-input:focus { border-color: var(--nahla-yellow); outline: none; background: white; box-shadow: 0 0 0 4px rgba(255,193,7,0.1); }
+        .auth-input.text-center { text-align: center; }
+
+        /* نظام العمولة الديناميكي */
+        .commission-type-toggle { display: flex; background: rgba(15, 23, 42, 0.04); border-radius: 16px; padding: 5px; margin-bottom: 15px; }
+        .comm-type-btn { flex: 1; text-align: center; padding: 10px 5px; font-weight: 700; color: #64748b; border-radius: 12px; cursor: pointer; transition: 0.3s ease; font-size: 0.85rem; }
+        .comm-type-btn.active { background: white; color: var(--accent); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
 
         /* الهيدر والإحصائيات */
         .app-header { background: white; padding: 25px 20px 35px 20px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; }
         .stat-card { background: var(--bg-color); border-radius: 16px; padding: 12px 5px; text-align: center; }
+        
+        /* اللوجو المتحرك (من الكود السابق) */
+        .custom-s-logo { width: 42px; height: 42px; position: relative; }
+        .custom-s-logo svg { width: 100%; height: 100%; stroke: #cbd5e1; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; transition: stroke 0.5s ease; }
+        .app-header.active .custom-s-logo svg path, .app-header.active .custom-s-logo svg circle { stroke: url(#magicGradient); filter: drop-shadow(0 2px 8px rgba(255, 193, 7, 0.5)); }
 
         /* التبويبات */
         .nav-tabs-custom { display: flex; padding: 20px 20px 5px 20px; gap: 12px; overflow-x: auto; scrollbar-width: none; }
         .nav-tabs-custom::-webkit-scrollbar { display: none; }
         .nav-tab { padding: 12px 24px; border-radius: 20px; font-weight: 800; background: white; color: #6B7280; white-space: nowrap; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         .nav-tab.active { background: var(--accent); color: var(--nahla-yellow); box-shadow: 0 4px 15px rgba(17,24,39,0.2); }
-
         .tab-content { padding: 20px 20px 100px 20px; }
 
-        /* نماذج الإدخال العصرية */
-        .input-group-custom { margin-bottom: 20px; position: relative; }
-        .input-group-custom label { display: block; font-weight: 800; margin-bottom: 10px; color: var(--accent); font-size: 0.95rem; }
-        .form-control-nahla {
-            width: 100%; padding: 16px 16px 16px 45px; border-radius: 16px; border: 2px solid #E5E7EB;
-            background: white; font-weight: 700; font-size: 1.05rem; transition: 0.3s;
-        }
-        .form-control-nahla:focus { border-color: var(--nahla-yellow); outline: none; box-shadow: 0 0 0 4px rgba(255,193,7,0.1); }
-        .input-icon { position: absolute; left: 16px; bottom: 16px; color: #9CA3AF; pointer-events: none; }
+        /* اللصق الذكي */
+        .smart-paste-btn { background: rgba(34, 197, 94, 0.1); color: #15803d; border: 1px dashed rgba(34, 197, 94, 0.3); border-radius: 16px; padding: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s; margin-bottom: 20px; }
+        .smart-paste-btn:active { transform: scale(0.98); background: rgba(34, 197, 94, 0.2); }
+        #pasteModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); z-index: 10000; display: none; align-items: center; justify-content: center; }
+        .paste-modal-content { background: rgba(255,255,255,0.95); border-radius: 24px; padding: 25px; width: 90%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center; }
+
+        /* القائمة المنسدلة الذكية */
+        .smart-dropdown-wrapper { position: relative; width: 100%; }
+        .search-icon-inside { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #9CA3AF; pointer-events: none; }
+        .smart-dropdown-list { position: absolute; top: 100%; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 10px 35px rgba(0,0,0,0.1); max-height: 200px; overflow-y: auto; z-index: 100; margin-top: 5px; border: 1px solid #E5E7EB; display: none; padding: 6px; }
+        .smart-dropdown-list.show { display: block; animation: slideDown 0.2s ease; }
+        .dropdown-item-area { padding: 12px; border-radius: 12px; font-size: 0.95rem; font-weight: 700; color: var(--accent); cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; }
+        .dropdown-item-area:hover, .dropdown-item-area:active { background: #F1F5F9; }
+        .area-price-tag { font-size: 0.8rem; background: var(--bg-color); padding: 4px 8px; border-radius: 8px; color: var(--success); }
+
+        /* رقم الهاتف الذكي */
+        .smart-phone-wrap { position: relative; }
+        .phone-clean-badge { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); background: var(--success); color: white; border-radius: 50%; width: 24px; height: 24px; display: none; align-items: center; justify-content: center; pointer-events: none; }
+        .smart-phone-wrap.cleaned .phone-clean-badge { display: flex; }
 
         /* زر الكاميرا العملاق */
-        .camera-card {
-            background: #F8FAFC; border: 3px dashed #CBD5E1; border-radius: 24px; padding: 40px 20px;
-            text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 15px;
-        }
+        .camera-card { background: #F8FAFC; border: 3px dashed #CBD5E1; border-radius: 24px; padding: 40px 20px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .camera-card:active { background: #F1F5F9; border-color: var(--nahla-yellow); }
         .camera-icon-wrapper { background: var(--nahla-yellow-light); color: var(--warning); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* شريط تقدم الطلب وتحسينات الرادار */
-        .order-card { padding: 22px; margin-bottom: 18px; border: 1px solid #F3F4F6; background: white; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);}
+        /* شريط تقدم الطلب */
+        .order-card { padding: 22px; margin-bottom: 18px; border: 1px solid #F3F4F6; background: white; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: opacity 0.3s;}
         .progress-track { height: 6px; background: #F3F4F6; border-radius: 3px; margin: 15px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--nahla-yellow); border-radius: 3px; transition: width 0.5s ease; }
         .progress-fill.heading { background: #3B82F6; width: 33%; }
         .progress-fill.arrived { background: var(--warning); width: 66%; }
         .progress-fill.picked { background: var(--success); width: 100%; }
-        
+
         /* Toast */
-        .toast-nahla {
-            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            background: var(--accent); color: white; padding: 14px 24px;
-            border-radius: 30px; font-weight: 800; font-size: 1rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 100000;
-            display: flex; align-items: center; gap: 10px; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
+        .toast-nahla { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 14px 24px; border-radius: 30px; font-weight: 800; font-size: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 100000; display: flex; align-items: center; gap: 10px; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         .toast-nahla.show { top: 40px; }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
+
+    <div id="pasteModal">
+        <div class="paste-modal-content">
+            <div style="background: rgba(34, 197, 94, 0.1); color: #15803d; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                <i data-lucide="message-square-dashed" style="width:30px;height:30px;"></i>
+            </div>
+            <h4 class="fw-black mb-2 text-dark">لصق رسالة الزبون</h4>
+            <p class="text-muted fw-bold mb-3" style="font-size: 0.85rem;">سيقوم الذكاء الاصطناعي بتعبئة الحقول أوتوماتيكياً لاستخراج المنطقة وتفاصيل العنوان الدقيقة.</p>
+            <textarea id="pasteTextInput" class="custom-input mb-3" rows="5" placeholder="مثال: أريد توصيل لحي الجامعة قرب مول بغداد، الحساب 15000، رقمي 077..."></textarea>
+            <div class="d-flex gap-2">
+                <button class="btn btn-light fw-bold w-50" style="border-radius: 16px; padding: 12px;" onclick="closePasteModal()">إلغاء</button>
+                <button class="btn fw-bold text-white w-50" id="processPasteBtn" style="border-radius: 16px; background: #15803d; padding: 12px;" onclick="processPastedText()">تحليل ✨</button>
+            </div>
+        </div>
+    </div>
 
     <div id="loginSection">
         <div class="login-card glass-panel" id="authBox">
@@ -140,39 +177,80 @@
             <h2 class="fw-bold m-0 text-dark">نحلة 🐝</h2>
             <p class="text-muted fw-bold mb-4">بوابة شركاء النجاح</p>
 
-            <input type="tel" id="checkPhone" class="auth-input" placeholder="رقم هاتف المطعم (07...)">
-            <input type="password" id="checkPassword" class="auth-input" placeholder="كلمة المرور">
+            <input type="tel" id="checkPhone" class="auth-input text-center" placeholder="رقم هاتف المطعم (07...)" dir="ltr">
+            <input type="password" id="checkPassword" class="auth-input text-center" placeholder="كلمة المرور">
             <button id="mainAuthBtn" class="btn-nahla mb-3" onclick="authAction()">دخول <i data-lucide="log-in"></i></button>
 
-            <div id="registerFields" class="hidden-section border-top pt-4 mt-3">
-                <h6 class="text-danger fw-bold mb-3">تسجيل مطعم جديد:</h6>
-                <input type="text" id="regName" class="auth-input" placeholder="الاسم التجاري للمطعم">
-                <input type="text" id="regArea" class="auth-input" placeholder="منطقة المطعم الأساسية">
-                <select id="regPayType" class="auth-input">
-                    <option value="المطعم يدفع">نظام الدفع: المطعم يدفع للكابتن</option>
-                    <option value="مناصفة">نظام الدفع: مناصفة مع الكابتن</option>
+            <div id="registerFields" class="hidden-section border-top pt-4 mt-3 text-start">
+                <h6 class="text-danger fw-bold mb-3 text-center">إكمال تسجيل المطعم:</h6>
+                <input type="text" id="regName" class="custom-input" placeholder="الاسم التجاري للمطعم">
+                <input type="text" id="regArea" class="custom-input" placeholder="منطقة المطعم الأساسية">
+                
+                <div class="mb-3">
+                    <label class="fw-bold mb-2 text-muted" style="font-size: 0.85rem;"><i data-lucide="map-pin" style="width:14px;"></i> حدد موقع المطعم بدقة:</label>
+                    <div class="d-flex gap-2 mb-2">
+                        <input type="text" id="mapSearchInput" class="custom-input py-2 mb-0" placeholder="ابحث عن المنطقة..." style="font-size: 0.9rem; flex: 1;">
+                        <button type="button" class="btn text-white fw-bold rounded-4 px-3" onclick="searchLocation()" style="background: var(--accent);">بحث</button>
+                    </div>
+                    <div class="position-relative">
+                        <div id="pickerMap" style="height: 180px; border-radius: 16px; border: 1px solid #E5E7EB;"></div>
+                        <img src="https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png" alt="Pin" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -100%); z-index: 1000; pointer-events: none; width: 25px; height: 35px;">
+                        <button type="button" class="btn btn-sm bg-white text-primary position-absolute shadow fw-bold d-flex align-items-center gap-1" style="bottom: 10px; right: 10px; z-index: 1000; border-radius: 12px;" onclick="forceLocateMe()">
+                            <i data-lucide="crosshair" style="width:14px;"></i> موقعي
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="fw-bold mb-2 text-muted" style="font-size: 0.85rem;">نظام العمولة:</label>
+                    <div class="commission-type-toggle" id="commissionTypeToggle">
+                        <div class="comm-type-btn active" id="commTypeFixed" onclick="switchCommissionType('fixed')">💰 ثابت</div>
+                        <div class="comm-type-btn" id="commTypeSplit" onclick="switchCommissionType('split')">📊 مناصفة</div>
+                        <div class="comm-type-btn" id="commTypeMonthly" onclick="switchCommissionType('monthly')">📅 شهري</div>
+                    </div>
+                    <div id="commFixedFields"><input type="number" id="regCommFixed" class="custom-input" placeholder="مبلغ العمولة للطلب (د.ع)" oninput="updateCommissionString()"></div>
+                    <div id="commSplitFields" class="hidden-section d-flex gap-2">
+                        <input type="number" id="regCommSplitDriver" class="custom-input w-50" placeholder="نصيب السائق" oninput="updateCommissionString()">
+                        <input type="number" id="regCommSplitRes" class="custom-input w-50" placeholder="نصيب المطعم" oninput="updateCommissionString()">
+                    </div>
+                    <div id="commMonthlyFields" class="hidden-section"><input type="number" id="regCommMonthlyAmount" class="custom-input" placeholder="الاشتراك الشهري (د.ع)" oninput="updateCommissionString()"></div>
+                    <input type="hidden" id="regCommFinal" value="">
+                </div>
+
+                <select id="regPayType" class="custom-input mb-3">
+                    <option value="المطعم يدفع">المطعم يدفع للكابتن</option>
+                    <option value="مناصفة">الدفع مناصفة مع الكابتن</option>
                 </select>
-                <input type="text" id="regComm" class="auth-input" placeholder="العمولة (مثال: 2500 أو شهري)">
-                <textarea id="regPriceList" class="auth-input" rows="3" placeholder="مناطق التوصيل (مثال: التحرير, الجامعة, تسعين)"></textarea>
-                <button class="btn-nahla mt-2 bg-dark text-white" onclick="submitRegistration()">إرسال الطلب</button>
+
+                <textarea id="regPriceList" class="custom-input" rows="3" placeholder="الصق أسعار التوصيل الخاصة بك (سيتم استخراجها كقائمة منسدلة)."></textarea>
+                
+                <button class="btn-nahla mt-3 bg-dark text-white" onclick="submitRegistration()">إرسال طلب الانضمام 🚀</button>
             </div>
         </div>
 
         <div id="waitingBox" class="hidden-section text-center mt-4">
             <i data-lucide="loader-2" class="fa-spin text-warning" style="width:45px;height:45px;"></i>
-            <h5 class="fw-bold mt-3">يتم تهيئة لوحة التحكم...</h5>
+            <h5 class="fw-bold mt-3 text-dark">يتم تهيئة لوحة التحكم...</h5>
         </div>
     </div>
 
     <div id="dashboardSection" class="hidden-section">
         
-        <div class="app-header">
+        <div class="app-header" id="mainAppHeader">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h3 class="fw-bold m-0" id="headerResName" style="color:var(--accent);">مطعم ...</h3>
-                    <div class="badge bg-success mt-2 px-3 py-2 rounded-pill shadow-sm"><span style="width:8px;height:8px;background:white;border-radius:50%;display:inline-block;margin-left:6px;animation:pulse 2s infinite;"></span> متصل بالشبكة</div>
+                    <div class="badge bg-success mt-2 px-3 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2"><span style="width:8px;height:8px;background:white;border-radius:50%;animation:pulse 2s infinite;"></span> متصل بالرادار</div>
                 </div>
-                <div class="bg-light p-3 rounded-circle shadow-sm" onclick="logout()" style="cursor:pointer;"><i data-lucide="power" class="text-danger"></i></div>
+                <div class="d-flex flex-column align-items-center">
+                    <div class="custom-s-logo mb-2">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <defs><linearGradient id="magicGradient" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#FFC107"><animate attributeName="offset" values="-1; 1; -1" dur="3s" repeatCount="indefinite" /></stop><stop offset="50%" stop-color="#F5B041"><animate attributeName="offset" values="0; 2; 0" dur="3s" repeatCount="indefinite" /></stop><stop offset="100%" stop-color="#EF4444"><animate attributeName="offset" values="1; 3; 1" dur="3s" repeatCount="indefinite" /></stop></linearGradient></defs>
+                            <circle cx="16" cy="5" r="2.5" /><circle cx="8" cy="19" r="2.5" /><path d="M16 8 C 16 11, 8 13, 8 16" />
+                        </svg>
+                    </div>
+                    <div class="bg-light p-2 rounded-circle shadow-sm" onclick="logout()" style="cursor:pointer;"><i data-lucide="power" class="text-danger" style="width:16px;"></i></div>
+                </div>
             </div>
             
             <div class="stats-grid">
@@ -203,28 +281,51 @@
                 <div class="glass-panel p-4 mb-4">
                     
                     <div class="d-flex bg-light p-1 rounded-pill mb-4 border">
-                        <button class="btn w-50 fw-bold rounded-pill border-0 shadow-sm bg-white" id="btnModeManual" onclick="switchOrderMode('manual')">إدخال نصي</button>
+                        <button class="btn w-50 fw-bold rounded-pill border-0 shadow-sm bg-white active" id="btnModeManual" onclick="switchOrderMode('manual')">إدخال نصي ✍️</button>
                         <button class="btn w-50 fw-bold rounded-pill border-0 text-muted" id="btnModePhoto" onclick="switchOrderMode('photo')">تصوير ذكي 🤖</button>
                     </div>
 
                     <div id="manualOrderForm">
-                        <div class="input-group-custom">
-                            <label>منطقة الزبون (مطلوب)</label>
-                            <input type="text" id="customerArea" class="form-control-nahla" placeholder="اكتب منطقة التوصيل..." list="areaDatalist">
-                            <i data-lucide="map-pin" class="input-icon"></i>
-                            <datalist id="areaDatalist"></datalist>
-                        </div>
                         
-                        <div class="input-group-custom">
-                            <label>إجمالي الحساب للوصل (مطلوب)</label>
-                            <input type="number" id="orderPrice" class="form-control-nahla" placeholder="مثال: 15000">
-                            <i data-lucide="banknote" class="input-icon"></i>
+                        <div class="smart-paste-btn" onclick="openPasteModal()">
+                            <i data-lucide="clipboard-paste" style="width:18px;"></i> الصق رسالة الواتساب للتعبئة السريعة
                         </div>
 
                         <div class="input-group-custom">
-                            <label>هاتف الزبون وتفاصيل إضافية</label>
-                            <input type="text" id="customerDetails" class="form-control-nahla" placeholder="07... - قرب الجامع">
-                            <i data-lucide="align-right" class="input-icon"></i>
+                            <label>منطقة الزبون (مطلوب)</label>
+                            <div class="smart-dropdown-wrapper" id="smartDropdownWrap">
+                                <i data-lucide="map-pin" class="search-icon-inside" style="right: 16px; left: auto;"></i>
+                                <input type="text" id="areaDisplayInput" class="custom-input" style="padding-right: 45px; text-align: right;" placeholder="اختر من القائمة أو ابحث..." autocomplete="off" onfocus="openDropdown()" oninput="filterDropdown()">
+                                <div class="smart-dropdown-list" id="smartDropdownList"></div>
+                            </div>
+                            <input type="hidden" id="customerArea" value="">
+                            
+                            <div id="priceHint" class="text-success small fw-bold mt-2 hidden-section px-2" style="font-size: 0.85rem;"></div>
+                            
+                            <div id="customAreaSection" class="hidden-section mt-3 p-3 rounded-4" style="background: rgba(15, 23, 42, 0.03);">
+                                <div class="d-flex gap-2">
+                                    <input type="text" id="customAreaName" class="custom-input w-50 mb-0" placeholder="اسم المنطقة">
+                                    <input type="number" id="customAreaPrice" class="custom-input w-50 mb-0" placeholder="السعر (د.ع)">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group-custom">
+                            <label>المبلغ المطلوب للوصل مع التوصيل (مطلوب)</label>
+                            <input type="number" id="orderPrice" class="custom-input" placeholder="مثال: 15000">
+                        </div>
+
+                        <div class="input-group-custom">
+                            <label>رقم هاتف الزبون</label>
+                            <div class="smart-phone-wrap" id="customerPhoneWrap">
+                                <input type="tel" id="customerPhone" class="custom-input" placeholder="07XX..." dir="ltr" oninput="handleSmartPhone(this)" onpaste="handleSmartPhonePaste(event)" style="text-align: center; letter-spacing: 2px;">
+                                <span class="phone-clean-badge"><i data-lucide="check" style="width:14px;"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="input-group-custom">
+                            <label>تفاصيل الطلب (أقرب نقطة دالة، مكونات)</label>
+                            <input type="text" id="customerDetails" class="custom-input" placeholder="مثال: قرب الجامع...">
                         </div>
                     </div>
 
@@ -253,7 +354,7 @@
 
             <div id="tab-archive" class="hidden-section">
                 <div class="glass-panel p-3">
-                    <h5 class="fw-bold mb-3">تم توصيلها بنجاح 🏆</h5>
+                    <h5 class="fw-bold mb-3 text-dark">تم توصيلها بنجاح 🏆</h5>
                     <div id="archiveContainer"></div>
                 </div>
             </div>
@@ -274,19 +375,24 @@
         const _P1 = "AIzaSy"; const _P2 = "BKMRsl"; const _P3 = "Ko5hg5"; const _P4 = "m11gHy"; const _P5 = "4ZdM7_efktiDwxU";
         const getGeminiKey = () => _P1 + _P2 + _P3 + _P4 + _P5;
 
-        // مناطق كركوك المحدثة للذكاء الاصطناعي
         const KIRKUK_AREAS = "طريق بغداد, رحيماوا, تسعين, دوميز, القادسية, الشورجة, الماس, الإسكان, غرناطة, الواسطي, حي العسكري, حي النور, حي المعلمين, حي النداء, شاطرلو, المصلى, عرفة, بنجا علي, حي الخضراء, حي الصناعي, طريق المطار, حي القادسية الثانية, حي العروبة, حي النصر, ساحة طيران, شارع القدس, شوراو";
 
         const firebaseConfig = { databaseURL: "https://nahla-delivery-6b06f-default-rtdb.europe-west1.firebasedatabase.app" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 2. الحالة
+        // 2. الحالة العامة (State)
         let resSession = JSON.parse(localStorage.getItem('hut_res_session')) || null;
         let isRegistering = false;
         let currentOrderMode = 'manual';
         let base64Receipt = null;
-        let globalDriversMap = {}; // لحفظ أسماء الكباتن
+        let globalDriversMap = {}; 
+        let myCustomPriceList = {};
+        
+        // متغيرات التسجيل
+        let pickerMap;
+        let regLat = 35.468; let regLng = 44.392;
+        let currentCommissionType = 'fixed';
 
         window.onload = () => { if (resSession && (Date.now() - resSession.timestamp < 24*3600000)) enterDashboard(); };
 
@@ -298,16 +404,95 @@
             t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500);
         }
 
-        function normalizePhone(phone) {
-            if (!phone) return ""; let p = String(phone).trim();
-            const ar = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-            for (let i = 0; i < 10; i++) p = p.replace(new RegExp(ar[i], 'g'), String(i));
-            let clean = p.replace(/\D/g, ''); 
-            if (clean.startsWith('0')) clean = clean.substring(1); 
-            return clean;
+        // ==========================================
+        // أدوات التسجيل المتقدمة (الخريطة، العمولة)
+        // ==========================================
+        function initPickerMap() {
+            if (!document.getElementById('pickerMap')) return;
+            if (pickerMap) { setTimeout(() => pickerMap.invalidateSize(), 500); return; }
+            pickerMap = L.map('pickerMap', { zoomControl: false }).setView([regLat, regLng], 14);
+            L.control.zoom({ position: 'bottomleft' }).addTo(pickerMap);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(pickerMap);
+            pickerMap.on('move', function () { regLat = pickerMap.getCenter().lat; regLng = pickerMap.getCenter().lng; });
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    regLat = pos.coords.latitude; regLng = pos.coords.longitude; pickerMap.setView([regLat, regLng], 16);
+                }, null, { timeout: 5000 });
+            }
         }
 
-        // 3. المصادقة
+        function searchLocation() {
+            const query = document.getElementById('mapSearchInput').value.trim(); if (!query) return;
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ", كركوك, العراق")}&limit=1`)
+                .then(r => r.json()).then(data => {
+                    if (data && data.length > 0) { regLat = parseFloat(data[0].lat); regLng = parseFloat(data[0].lon); if (pickerMap) pickerMap.flyTo([regLat, regLng], 16); }
+                    else { alert("لم يتم العثور على المكان."); }
+                }).catch(() => { alert("حدث خطأ أثناء البحث."); });
+        }
+
+        function forceLocateMe() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    regLat = pos.coords.latitude; regLng = pos.coords.longitude; pickerMap.flyTo([regLat, regLng], 16);
+                }, () => { alert("يرجى التأكد من تشغيل الـ GPS."); }, { enableHighAccuracy: true, timeout: 10000 });
+            }
+        }
+
+        window.switchCommissionType = function(type) {
+            currentCommissionType = type;
+            document.querySelectorAll('.comm-type-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('commTypeFixed').classList.toggle('active', type === 'fixed');
+            document.getElementById('commTypeSplit').classList.toggle('active', type === 'split');
+            document.getElementById('commTypeMonthly').classList.toggle('active', type === 'monthly');
+
+            document.getElementById('commFixedFields').classList.add('hidden-section');
+            document.getElementById('commSplitFields').classList.add('hidden-section');
+            document.getElementById('commMonthlyFields').classList.add('hidden-section');
+
+            if (type === 'fixed') document.getElementById('commFixedFields').classList.remove('hidden-section');
+            else if (type === 'split') document.getElementById('commSplitFields').classList.remove('hidden-section');
+            else if (type === 'monthly') document.getElementById('commMonthlyFields').classList.remove('hidden-section');
+            updateCommissionString();
+        };
+
+        window.updateCommissionString = function() {
+            let finalValue = '';
+            if (currentCommissionType === 'fixed') finalValue = document.getElementById('regCommFixed').value.trim();
+            else if (currentCommissionType === 'split') {
+                const driver = document.getElementById('regCommSplitDriver').value.trim(); const res = document.getElementById('regCommSplitRes').value.trim();
+                if (driver && res) finalValue = `${driver}/${res}`;
+            } else if (currentCommissionType === 'monthly') {
+                const amount = document.getElementById('regCommMonthlyAmount').value.trim();
+                if (amount) finalValue = `شهري ${amount}`;
+            }
+            document.getElementById('regCommFinal').value = finalValue;
+        };
+
+        function parseCustomPriceList(rawText) {
+            if (!rawText || rawText.trim() === "") return "{}";
+            let resultObj = {};
+            let text = rawText.replace(/[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, ' ');
+            text.split('\n').forEach(line => {
+                if (line.trim() === "") return;
+                line.split(/[+،,]/).forEach(sub => {
+                    const match = sub.trim().match(/(.+?)\s*(\d+)\s*$/);
+                    if (match && match.length >= 3) {
+                        const area = match[1].replace(/[-._!@#$%^&*()=]+$/g, '').trim();
+                        const price = match[2].trim();
+                        if (area && price) resultObj[area] = parseInt(price);
+                    } else {
+                        // مجرد اسم منطقة بدون سعر
+                        const area = sub.replace(/[-._!@#$%^&*()=]+$/g, '').trim();
+                        if(area) resultObj[area] = 0;
+                    }
+                });
+            });
+            return JSON.stringify(resultObj);
+        }
+
+        // ==========================================
+        // المصادقة
+        // ==========================================
         async function authAction() {
             let phone = document.getElementById('checkPhone').value.replace(/[^\d]/g, ''); if(phone.startsWith('0')) phone = phone.substring(1);
             let pass = document.getElementById('checkPassword').value.trim();
@@ -316,18 +501,24 @@
             const btn = document.getElementById('mainAuthBtn'); btn.innerHTML = "جاري الاتصال... ⏳"; btn.disabled = true;
 
             if (isRegistering) {
-                const regData = { action: 'RESTAURANT_REG', token: API_TOKEN, phone: '0'+phone, password: pass, name: document.getElementById('regName').value, area: document.getElementById('regArea').value, pay: document.getElementById('regPayType').value, comm: document.getElementById('regComm').value, priceList: document.getElementById('regPriceList').value };
+                updateCommissionString();
+                const commFinal = document.getElementById('regCommFinal').value;
+                const regData = { action: 'RESTAURANT_REG', token: API_TOKEN, phone: '0'+phone, password: pass, name: document.getElementById('regName').value, area: document.getElementById('regArea').value, pay: document.getElementById('regPayType').value, comm: commFinal, lat: regLat, lng: regLng, priceList: parseCustomPriceList(document.getElementById('regPriceList').value) };
                 try { await fetch(API_URL, { method: 'POST', body: JSON.stringify(regData) }); document.getElementById('authBox').classList.add('hidden-section'); document.getElementById('waitingBox').classList.remove('hidden-section'); } catch(e) { showToast("فشل التسجيل.", false); }
             } else {
                 try {
                     const res = await fetch(`${API_URL}?action=checkRes&phone=${phone}&password=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
                     const data = await res.json();
                     if (data.status === 'active' || data.status === 'inactive') {
-                        resSession = { phone: '0'+phone, name: data.name, payType: data.payType, comm: data.comm, timestamp: Date.now() };
+                        resSession = { phone: '0'+phone, name: data.name, payType: data.payType, comm: data.comm, priceList: data.priceList, timestamp: Date.now() };
                         localStorage.setItem('hut_res_session', JSON.stringify(resSession)); enterDashboard();
                     } else if (data.status === 'pending' || data.status === 'waiting') {
                         document.getElementById('authBox').classList.add('hidden-section'); document.getElementById('waitingBox').classList.remove('hidden-section');
-                    } else { isRegistering = true; document.getElementById('registerFields').classList.remove('hidden-section'); btn.innerHTML = "إكمال التسجيل"; showToast("يرجى إكمال البيانات.", false); }
+                    } else { 
+                        isRegistering = true; document.getElementById('registerFields').classList.remove('hidden-section'); 
+                        btn.innerHTML = "إرسال طلب الانضمام 🚀"; showToast("الرقم غير مسجل، أكمل البيانات.", false); 
+                        setTimeout(initPickerMap, 300);
+                    }
                 } catch(e) { showToast("خطأ بالاتصال", false); }
             }
             btn.disabled = false; if(!isRegistering) btn.innerHTML = "دخول <i data-lucide='log-in'></i>"; lucide.createIcons();
@@ -335,18 +526,19 @@
 
         function logout() { localStorage.removeItem('hut_res_session'); location.reload(); }
 
-        // 4. الدخول وتهيئة الواجهة
+        // ==========================================
+        // الدخول وإعداد الواجهة
+        // ==========================================
         function enterDashboard() {
             document.getElementById('loginSection').classList.add('hidden-section');
             document.getElementById('dashboardSection').classList.remove('hidden-section');
             document.getElementById('headerResName').innerText = resSession.name;
             
-            // جلب أسماء الكباتن في الخلفية
+            // جلب أسماء الكباتن
             fetch(`${API_URL}?action=getGlobalData&token=${API_TOKEN}`)
-                .then(r => r.json())
-                .then(data => { (data.drivers || []).forEach(d => { if(d[2]) globalDriversMap[normalizePhone(d[2])] = d[1]; }); })
-                .catch(e=>{});
+                .then(r => r.json()).then(data => { (data.drivers || []).forEach(d => { if(d[2]) globalDriversMap[d[2].replace(/[^\d]/g, '').replace(/^0+/, '')] = d[1]; }); }).catch(e=>{});
 
+            parseAndPopulateAreas();
             startHotDataListeners();
         }
 
@@ -366,6 +558,87 @@
             document.getElementById('photoOrderForm').classList.toggle('hidden-section', mode!=='photo');
         }
 
+        // ==========================================
+        // أدوات الإدخال الذكية (Dropdown, Phone, Paste)
+        // ==========================================
+        function parseAndPopulateAreas() {
+            const listData = resSession.priceList || "{}";
+            try { myCustomPriceList = JSON.parse(listData); } catch(e) { myCustomPriceList = {}; }
+            buildCustomAreaDropdown();
+        }
+
+        function buildCustomAreaDropdown() {
+            const listContainer = document.getElementById('smartDropdownList'); listContainer.innerHTML = '';
+            let html = '';
+            Object.keys(myCustomPriceList).sort().forEach(area => {
+                const price = myCustomPriceList[area] || 0;
+                html += `<div class="dropdown-item-area" onclick="selectDropdownArea('${area}', ${price})"><span>${area}</span><span class="area-price-tag">${price} د.ع</span></div>`;
+            });
+            html += `<div class="dropdown-item-area text-primary mt-1" onclick="selectDropdownArea('أخرى')">منطقة غير مدرجة بالقائمة</div>`;
+            listContainer.innerHTML = html;
+        }
+
+        function openDropdown() { document.getElementById('smartDropdownList').classList.add('show'); document.getElementById('areaDisplayInput').value = ''; filterDropdown(); }
+        function filterDropdown() {
+            const input = document.getElementById('areaDisplayInput').value.toLowerCase();
+            const items = document.querySelectorAll('.dropdown-item-area');
+            items.forEach(item => { if (item.innerText.toLowerCase().includes(input) || item.innerText.includes("غير مدرجة")) item.style.display = 'flex'; else item.style.display = 'none'; });
+        }
+        function selectDropdownArea(areaName, price = null) {
+            document.getElementById('customerArea').value = areaName; document.getElementById('areaDisplayInput').value = areaName;
+            document.getElementById('smartDropdownList').classList.remove('show');
+            const priceHint = document.getElementById('priceHint'); const customSec = document.getElementById('customAreaSection');
+            if (areaName === "أخرى") { priceHint.classList.add('hidden-section'); customSec.classList.remove('hidden-section'); }
+            else { customSec.classList.add('hidden-section'); if(price) { priceHint.classList.remove('hidden-section'); priceHint.innerText = `التوصيل: ${price} د.ع`; document.getElementById('orderPrice').value = price; } }
+        }
+        document.addEventListener('click', function(e) { const wrap = document.getElementById('smartDropdownWrap'); const list = document.getElementById('smartDropdownList'); if (wrap && !wrap.contains(e.target)) list.classList.remove('show'); });
+
+        window.normalizeCustomerPhone = function(raw) {
+            if (!raw) return { clean: '', changed: false };
+            const original = raw; const ar = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩']; const fa = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+            let p = raw; for (let i = 0; i < 10; i++) { p = p.replace(new RegExp(ar[i], 'g'), String(i)); p = p.replace(new RegExp(fa[i], 'g'), String(i)); }
+            p = p.replace(/[^\d+]/g, ''); p = p.replace(/^\+9640?/, '0'); p = p.replace(/^009640?/, '0'); p = p.replace(/^9640?/, '0');
+            if (/^7[0-9]{8,9}$/.test(p)) p = '0' + p;
+            const changed = (p !== original.replace(/[^\d+]/g, '') && p.length > 0);
+            return { clean: p, changed };
+        }
+        function handleSmartPhone(input) { const { clean, changed } = normalizeCustomerPhone(input.value); const wrap = document.getElementById('customerPhoneWrap'); if (changed && clean.length >= 10) { input.value = clean; wrap.classList.add('cleaned'); } else { wrap.classList.remove('cleaned'); } }
+        function handleSmartPhonePaste(e) { e.preventDefault(); const pasted = (e.clipboardData || window.clipboardData).getData('text'); const { clean, changed } = normalizeCustomerPhone(pasted); document.getElementById('customerPhone').value = clean || pasted; handleSmartPhone(document.getElementById('customerPhone')); }
+
+        // --- اللصق الذكي بالذكاء الاصطناعي ---
+        async function fetchGeminiWithRetry(payload) {
+            try {
+                let res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getGeminiKey()}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                let data = await res.json(); return data;
+            } catch(e) { return {error: true}; }
+        }
+
+        function openPasteModal() { document.getElementById('pasteModal').style.display = 'flex'; document.getElementById('pasteTextInput').value = ''; }
+        function closePasteModal() { document.getElementById('pasteModal').style.display = 'none'; }
+        
+        async function processPastedText() {
+            const text = document.getElementById('pasteTextInput').value.trim(); if (!text) return;
+            const btn = document.getElementById('processPasteBtn'); btn.innerHTML = `جاري الفهم... ⏳`; btn.disabled = true;
+
+            const areaNames = Object.keys(myCustomPriceList).length > 0 ? Object.keys(myCustomPriceList).join('، ') : KIRKUK_AREAS;
+            const promptText = `استخرج: السعر (price) كرقم، الهاتف (phone)، المنطقة (area) بناءً على [${areaNames}] أو غيرها، التفاصيل (details) لأقرب نقطة من هذه الرسالة: "${text}". أرجع JSON فقط {price, phone, area, details}`;
+
+            try {
+                const data = await fetchGeminiWithRetry({ "contents": [{ "parts": [{ "text": promptText }] }], "generationConfig": { "response_mime_type": "application/json" } });
+                let cleanJson = JSON.parse(data.candidates[0].content.parts[0].text.replace(/```json/g, "").replace(/```/g, "").trim());
+                
+                if (cleanJson.phone) { document.getElementById('customerPhone').value = cleanJson.phone; handleSmartPhone(document.getElementById('customerPhone')); }
+                if (cleanJson.price) { document.getElementById('orderPrice').value = String(cleanJson.price).replace(/\D/g, ''); }
+                if (cleanJson.details) { document.getElementById('customerDetails').value = cleanJson.details; }
+                if (cleanJson.area) { selectDropdownArea(cleanJson.area); }
+                closePasteModal(); showToast("✨ تمت التعبئة الذكية!");
+            } catch (e) { showToast("لم نتمكن من فهم الرسالة تلقائياً.", false); }
+            btn.innerHTML = `تحليل ✨`; btn.disabled = false;
+        }
+
+        // ==========================================
+        // معالجة الصور (ImgBB + Gemini OCR)
+        // ==========================================
         function handlePhotoSelect(event) {
             const file = event.target.files[0]; if(!file) return;
             const reader = new FileReader();
@@ -385,7 +658,9 @@
             document.getElementById('receiptPhoto').value = '';
         }
 
-        // 5. الإرسال الفوري والمعالجة بالخلفية (Optimistic UI & Background Processing)
+        // ==========================================
+        // الإرسال السريع (Optimistic UI & Background Processing)
+        // ==========================================
         async function submitOrder() {
             const orderId = 'HUT-' + Date.now();
             const orderPayload = {
@@ -396,90 +671,76 @@
             };
 
             if (currentOrderMode === 'manual') {
-                const area = document.getElementById('customerArea').value;
+                let finalArea = document.getElementById('customerArea').value;
+                if (finalArea === "أخرى") {
+                    const cName = document.getElementById('customAreaName').value.trim(); const cPrice = document.getElementById('customAreaPrice').value.trim();
+                    if (!cName) return showToast("⚠️ يرجى تحديد اسم المنطقة", false);
+                    finalArea = `${cName} (توصيل: ${cPrice})`;
+                } else if (myCustomPriceList[finalArea]) { finalArea = `${finalArea} (توصيل: ${myCustomPriceList[finalArea]})`; }
+
                 const price = Number(document.getElementById('orderPrice').value);
-                if (!area || !price) return showToast("⚠️ يرجى إدخال المنطقة والمبلغ", false);
+                const phone = document.getElementById('customerPhone').value.replace(/[^\d]/g, '');
+                if (!finalArea || !price) return showToast("⚠️ يرجى إدخال المنطقة والمبلغ", false);
                 
-                orderPayload.area = area; orderPayload.price = price; orderPayload.details = document.getElementById('customerDetails').value;
+                orderPayload.area = finalArea; orderPayload.price = price; orderPayload.details = document.getElementById('customerDetails').value + (phone ? ` | هاتف: ${phone}` : "");
                 
-                // إرسال مباشر
                 db.ref(`active_orders/${orderId}`).set(orderPayload);
                 fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'NEW_ORDER', order: orderPayload, token: API_TOKEN }) }).catch(()=>{});
-                
                 showToast("🚀 تم الإرسال للرادار!");
-                document.getElementById('customerArea').value = ''; document.getElementById('orderPrice').value = ''; document.getElementById('customerDetails').value = '';
+                resetForms();
                 
             } else {
                 if (!base64Receipt) return showToast("⚠️ يرجى تصوير الوصل أولاً", false);
 
-                // 1. Optimistic Update (تحديث الواجهة وإرسال مبدئي فوراً)
-                orderPayload.area = "جاري قراءة المنطقة 🤖...";
-                orderPayload.price = 0;
-                orderPayload.details = "طلب بوصل مصور";
-                orderPayload.photoUrl = "processing";
-
-                db.ref(`active_orders/${orderId}`).set(orderPayload); // حفظ مبدئي ليظهر عند الكباتن
-                
+                orderPayload.area = "جاري قراءة المنطقة 🤖..."; orderPayload.price = 0; orderPayload.details = "طلب بوصل مصور"; orderPayload.photoUrl = "processing";
+                db.ref(`active_orders/${orderId}`).set(orderPayload); 
                 showToast("🚀 تم استلام الطلب! جاري استخراج المنطقة في الخلفية...");
                 
-                // حفظ نسخة من الصورة للمعالجة ومسح الواجهة فوراً
-                const b64Data = base64Receipt;
-                clearPhotoPreview();
-
-                // 2. Background Processing (العمل بالخلفية)
+                const b64Data = base64Receipt; resetForms();
                 processBackgroundAI(orderId, b64Data);
             }
         }
 
+        function resetForms() {
+            document.getElementById('customerArea').value = ''; document.getElementById('areaDisplayInput').value = ''; document.getElementById('customAreaSection').classList.add('hidden-section'); document.getElementById('priceHint').classList.add('hidden-section');
+            document.getElementById('orderPrice').value = ''; document.getElementById('customerPhone').value = ''; document.getElementById('customerDetails').value = ''; document.getElementById('customerPhoneWrap').classList.remove('cleaned');
+            clearPhotoPreview();
+        }
+
         async function processBackgroundAI(orderId, base64Data) {
             try {
-                // أ. الرفع للصور (ImgBB)
                 let uploadedUrl = null;
                 try {
-                    let bImg = base64Data.split(',')[1]; let fd = new FormData(); fd.append("image", bImg);
+                    let fd = new FormData(); fd.append("image", base64Data.split(',')[1]);
                     let res = await fetch("https://api.imgbb.com/1/upload?key=" + IMGBB_KEY, { method: "POST", body: fd });
                     let data = await res.json(); uploadedUrl = data.data.url;
                 } catch(e) {}
 
-                // ب. الذكاء الاصطناعي لاستخراج المنطقة حصراً (Monster Mode Prompt)
                 let extractedArea = "غير محدد";
                 try {
-                    let bImgClean = base64Data.split(',')[1];
-                    let promptText = `أنت خبير ذكاء اصطناعي متخصص في قراءة وصولات المطاعم العراقية (في كركوك).
-مهمتك: استخراج "منطقة توصيل الزبون" فقط من الصورة.
-ملاحظات هامة جداً للبحث:
-1. ابحث عن كلمة "العنوان" أو "Road" أو "شارع" أو "حي".
-2. اقرأ الكتابات بخط اليد في أعلى أو أسفل الوصل (غالباً تكون هي المنطقة مثل "ساحة طيران").
-3. تجاهل اسم المطعم تماماً وتجاهل تفاصيل الوجبات.
-4. طابق المنطقة التي وجدتها مع هذه القائمة: [${KIRKUK_AREAS}].
-5. أرجع اسم المنطقة الأقرب المطابق من القائمة فقططططط (مثال: "حي الواسطي") وإذا لم تجدها واضحة أرجع "غير محدد".`;
-
+                    let promptText = `أنت خبير ذكاء اصطناعي. استخرج "منطقة توصيل الزبون" فقط من الصورة. تجاهل اسم المطعم. طابق مع [${KIRKUK_AREAS}]. أرجع اسم المنطقة الأقرب المطابق فقططط وإذا لم تجد أرجع "غير محدد".`;
                     let aiResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getGeminiKey(), {
                         method: "POST", headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ contents: [{ parts: [{text: promptText}, {inline_data: { mime_type: "image/jpeg", data: bImgClean }}] }] })
+                        body: JSON.stringify({ contents: [{ parts: [{text: promptText}, {inline_data: { mime_type: "image/jpeg", data: base64Data.split(',')[1] }}] }] })
                     });
                     let aiResult = await aiResponse.json();
-                    if(aiResult.candidates && aiResult.candidates[0].content.parts[0].text) {
-                        extractedArea = aiResult.candidates[0].content.parts[0].text.replace(/[\n\r\*_]/g, '').trim();
-                    }
+                    if(aiResult.candidates && aiResult.candidates[0].content.parts[0].text) { extractedArea = aiResult.candidates[0].content.parts[0].text.replace(/[\n\r\*_]/g, '').trim(); }
                 } catch(e) { console.error("AI Error"); }
 
-                // جـ. تحديث الطلب الصامت
-                db.ref(`active_orders/${orderId}`).update({
-                    area: extractedArea,
-                    photoUrl: uploadedUrl || base64Data
-                });
-
-            } catch(e) {
-                db.ref(`active_orders/${orderId}`).update({ area: "غير محدد (فشل القراءة)" });
-            }
+                db.ref(`active_orders/${orderId}`).update({ area: extractedArea, photoUrl: uploadedUrl || base64Data });
+            } catch(e) { db.ref(`active_orders/${orderId}`).update({ area: "غير محدد (فشل القراءة)" }); }
         }
 
-        // 6. المستمعات (الرادار والإحصائيات)
+        // ==========================================
+        // المستمعات (الرادار المباشر والإحصائيات)
+        // ==========================================
         function startHotDataListeners() {
             const cleanPhone = String(resSession.phone).replace(/^0+/, '');
+            
+            // إضافة كلاس الـ animation للهيدر
+            const headerObj = document.getElementById('mainAppHeader');
+            if(headerObj) headerObj.classList.add('active');
 
-            // استماع للطلبات والمبيعات اليومية
             db.ref('active_orders').on('value', snap => {
                 const allOrders = snap.val() || {};
                 let liveHTML = '', archiveHTML = '', liveCount = 0, todayOrdersCount = 0, todaySales = 0;
@@ -497,74 +758,11 @@
                             <div class="glass-panel p-3 mb-2 border-end border-5 border-success">
                                 <div class="d-flex justify-content-between">
                                     <h6 class="fw-bold m-0">#${o.id.substring(0,5)} | ${o.area}</h6>
-                                    <span class="text-success fw-bold">${o.price} د.ع</span>
+                                    <span class="text-success fw-bold">${o.price > 0 ? o.price.toLocaleString() : 'بوصل'} د.ع</span>
                                 </div>
                             </div>`;
                     } else {
                         liveCount++;
                         let barClass = '', statusText = '', actionBtns = '';
                         
-                        // اسم الكابتن وزر الاتصال
-                        let drvName = globalDriversMap[normalizePhone(o.driverPhone)] || 'كابتن';
-                        let callBtnHtml = o.driverPhone && o.driverPhone !== 'system_routing' && o.driverPhone !== 'pending_driver'
-                            ? `<a href="tel:${o.driverPhone}" class="btn btn-sm bg-light text-primary fw-bold rounded-pill px-3 shadow-sm border"><i data-lucide="phone-call" style="width:14px;"></i> اتصال بالكابتن</a>` : '';
-
-                        // زر الحذف (متاح دائماً باستثناء حالة picked_up أو completed)
-                        let cancelBtnHtml = (o.status !== 'picked_up' && o.status !== 'completed' && o.status !== 'deleted') 
-                            ? `<button class="btn btn-sm bg-danger text-white mt-3 w-100 fw-bold border-0 rounded-pill shadow-sm" onclick="cancelOrder('${o.id}')">إلغاء الطلب نهائياً ✕</button>` : '';
-
-                        if(o.status === 'pending_driver' || o.status === 'manual_pending') { 
-                            barClass = ''; statusText = 'يبحث عن كابتن 🔍'; 
-                        }
-                        else if(['accepted','heading'].includes(o.status)) { 
-                            barClass = 'heading'; statusText = `الكابتن (${drvName}) متوجه إليك 🛵`; 
-                            actionBtns = o.ready_for_pickup ? `<div class="text-success fw-bold text-center mt-3">✓ أُبلغ الكابتن بالجاهزية</div>` : `<button class="btn btn-sm btn-success mt-3 w-100 fw-bold rounded-pill shadow-sm" onclick="markReady('${o.id}')">الطلب جاهز للكابتن 🔔</button>`;
-                        }
-                        else if(o.status === 'arrived_at_res') { 
-                            barClass = 'arrived'; statusText = `الكابتن (${drvName}) بالمطعم 📍`; 
-                            actionBtns = `<div class="text-warning fw-bold text-center mt-3">سلم الطلب للكابتن</div>`;
-                        }
-                        else if(o.status === 'picked_up') { 
-                            barClass = 'picked'; statusText = `الكابتن (${drvName}) بالطريق للزبون 💨`; 
-                        }
-
-                        liveHTML += `
-                            <div class="order-card">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h6 class="fw-bold m-0 text-dark">#${o.id.substring(0,5)} <span class="badge bg-light text-dark ms-1 border shadow-sm">${o.area}</span></h6>
-                                    <div class="text-end">
-                                        <div class="fw-bold text-success fs-5 mb-2">${o.price > 0 ? o.price.toLocaleString() + ' د.ع' : '<i data-lucide="scan-line" style="width:16px;"></i> بالصورة'}</div>
-                                        ${callBtnHtml}
-                                    </div>
-                                </div>
-                                <div class="progress-track"><div class="progress-fill ${barClass}"></div></div>
-                                <div class="text-center fw-bold text-accent" style="font-size:1rem;">${statusText}</div>
-                                ${actionBtns}
-                                ${cancelBtnHtml}
-                            </div>`;
-                    }
-                });
-
-                document.getElementById('liveOrdersContainer').innerHTML = liveHTML || `<div class="text-center text-muted mt-5 fw-bold opacity-50"><i data-lucide="check-circle" style="width:50px;height:50px;margin-bottom:10px;"></i><br>لا توجد طلبات نشطة، انطلق وأرسل طلباتك!</div>`;
-                document.getElementById('activeCount').innerText = liveCount;
-                document.getElementById('archiveContainer').innerHTML = archiveHTML || `<div class="text-center text-muted">لا يوجد طلبات منجزة اليوم.</div>`;
-                
-                // تحديث مبيعات اليوم من الـ Active Orders
-                document.getElementById('statTodayOrders').innerText = todayOrdersCount;
-                document.getElementById('todayTotalSales').innerHTML = todaySales.toLocaleString();
-                lucide.createIcons();
-            });
-
-            // استماع الديون المتراكمة للمطعم
-            db.ref(`ledgers/restaurants/${cleanPhone}`).on('value', snap => {
-                const ledger = snap.val() || { debt: 0 };
-                document.getElementById('statDebt').innerText = (ledger.debt || 0).toLocaleString();
-            });
-        }
-
-        function markReady(orderId) { db.ref(`active_orders/${orderId}`).update({ ready_for_pickup: true }); showToast("تم إبلاغ الكابتن 🔔"); }
-        function cancelOrder(orderId) { if(confirm("هل أنت متأكد من إلغاء هذا الطلب نهائياً؟")) db.ref(`active_orders/${orderId}`).update({ status: 'deleted' }); }
-
-    </script>
-</body> 
-</html>
+                        let drvName = globalDriversMap[o.

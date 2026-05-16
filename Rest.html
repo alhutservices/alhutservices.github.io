@@ -31,12 +31,13 @@
     
     <title>مطاعم نحلة 🐝 | النظام السحابي</title>
 
-    <meta name="theme-color" content="#111827"> 
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#FFC107"> 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="نظام نحلة">
+    <meta name="apple-mobile-web-app-title" content="نحلة للمطاعم">
     <meta name="mobile-web-app-capable" content="yes">
-
+    <link rel="manifest" href="manifest_rest.json">
     <link rel="apple-touch-icon" href="rest-logo.png">
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -711,6 +712,17 @@
         </div>
     </div>
 </div>
+
+<!-- ============ Service Worker للتطبيق التقدمي (PWA) ============ -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw_restaurant.js')
+                .then(reg => console.log('SW registered:', reg.scope))
+                .catch(err => console.warn('SW registration failed:', err));
+        });
+    }
+</script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";

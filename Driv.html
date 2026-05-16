@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نحلة 🐝 | تطبيق الكابتن V37.0</title>
+    <title>نحلة 🐝 | تطبيق الكابتن V37.1</title>
     
     <!-- الخطوط والأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -11,14 +11,15 @@
     
     <!-- Bootstrap 5 RTL -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
-    
-    <!-- Firebase SDK (V8 for simple single-file deployment) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Firebase SDK (V8) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
         /* =========================================
-           🐝 الهوية البصرية لشركة نحلة (Driver Theme)
+           🐝 الهوية البصرية لشركة نحلة (Driver Premium UI)
            ========================================= */
         :root {
             --nahla-yellow: #FFC107;
@@ -29,124 +30,150 @@
             --danger: #EF4444;
             --warning: #F59E0B;
             --bg-color: #F3F4F6;
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
         }
 
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--bg-color);
-            background-image: radial-gradient(circle at top right, var(--nahla-yellow-light) 0%, transparent 50%),
-                              radial-gradient(circle at bottom left, #E5E7EB 0%, transparent 50%);
-            background-attachment: fixed;
             color: var(--accent);
             margin: 0; padding: 0;
             -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
         }
 
-        /* حاويات الزجاج الفاخرة */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            border-radius: 20px;
-        }
+        .hidden-section { display: none !important; }
 
-        /* الأزرار العصرية المخصصة للهواتف */
+        /* الأزرار العصرية */
         .btn-nahla {
             background: var(--nahla-yellow); color: var(--accent);
-            border: none; border-radius: 16px; padding: 14px 20px;
-            font-weight: 800; font-size: 1.1rem; transition: all 0.2s ease;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            width: 100%;
+            border: none; border-radius: 16px; padding: 16px 20px;
+            font-weight: 800; font-size: 1.15rem; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
         }
         .btn-nahla:active { transform: scale(0.96); background: var(--nahla-yellow-dark); }
-        .btn-nahla:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+        .btn-nahla:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none;}
 
-        /* الشاشات */
-        .screen {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: opacity 0.4s ease;
+        /* شاشة المصادقة */
+        #auth-screen { 
+            min-height: 100vh; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; padding: 20px; 
+            background: radial-gradient(circle at top, var(--nahla-yellow-light) 0%, var(--bg-color) 70%);
         }
-        .hidden-section { display: none !important; }
-        
-        /* 1. شاشة الدخول والتسجيل */
-        #auth-screen { justify-content: center; padding: 20px; }
-        .auth-box { padding: 30px 20px; text-align: center; }
+        .auth-box { 
+            width: 100%; max-width: 400px; padding: 40px 25px; 
+            background: white; border-radius: 30px; box-shadow: var(--glass-shadow);
+            text-align: center;
+        }
         .auth-input {
-            background: rgba(255,255,255,0.9); border: 2px solid #E5E7EB; border-radius: 14px;
-            padding: 14px; text-align: center; font-weight: bold; font-size: 1.1rem;
-            width: 100%; margin-bottom: 15px; transition: 0.3s;
+            width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 16px;
+            border: 2px solid #E5E7EB; background: #F9FAFB;
+            font-weight: 700; font-size: 1.1rem; text-align: center; transition: 0.3s;
         }
-        .auth-input:focus { border-color: var(--nahla-yellow); outline: none; box-shadow: 0 0 0 4px rgba(255,193,7,0.2); }
+        .auth-input:focus { border-color: var(--nahla-yellow); outline: none; background: white; }
 
-        /* 2. الهيدر (Header) */
+        /* الهيدر العلوي */
         .app-header {
-            padding: 20px 20px 30px 20px;
-            background: var(--accent); color: white;
-            border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 20px rgba(17,24,39,0.1);
-            position: relative;
+            background: white; padding: 20px 20px 30px 20px;
+            border-bottom-left-radius: 35px; border-bottom-right-radius: 35px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            position: sticky; top: 0; z-index: 100;
         }
-        .status-dot { width: 12px; height: 12px; background: var(--success); border-radius: 50%; display: inline-block; box-shadow: 0 0 10px var(--success); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .driver-info h4 { margin: 0; font-weight: 800; color: var(--accent); }
+        .status-badge { 
+            background: #D1FAE5; color: var(--success); padding: 6px 12px; 
+            border-radius: 20px; font-weight: 800; font-size: 0.85rem; 
+            display: flex; align-items: center; gap: 6px;
+        }
+        .status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block; animation: blink 2s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        /* المحفظة العائمة */
         .wallet-card {
-            background: white; color: var(--accent);
-            border-radius: 16px; padding: 15px;
-            position: absolute; bottom: -30px; left: 20px; right: 20px;
-            box-shadow: var(--glass-shadow);
+            background: var(--accent); color: white;
+            border-radius: 20px; padding: 20px; margin: -20px 20px 20px 20px;
+            position: relative; z-index: 101; box-shadow: 0 10px 30px rgba(17,24,39,0.2);
             display: flex; justify-content: space-between; align-items: center;
         }
+        .wallet-card h2 { margin: 0; font-weight: 900; color: var(--nahla-yellow); }
 
-        /* 3. منطقة الطلبات */
-        .main-content { flex: 1; padding: 50px 20px 20px 20px; overflow-y: auto; }
-        .order-card {
-            padding: 20px; margin-bottom: 15px; position: relative; overflow: hidden;
-            border-right: 6px solid var(--nahla-yellow);
+        /* المحتوى والطلبات */
+        .main-content { padding: 10px 20px 100px 20px; }
+        
+        .task-card {
+            background: white; border-radius: 24px; padding: 20px; margin-bottom: 20px;
+            box-shadow: var(--glass-shadow); border: 1px solid #F3F4F6;
+            position: relative; overflow: hidden;
         }
-        .order-card.ready-pulse { animation: readyPulse 1.5s infinite; border-right-color: var(--success); }
-        @keyframes readyPulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+        .task-card::before {
+            content: ''; position: absolute; top: 0; right: 0; width: 6px; height: 100%;
+            background: var(--nahla-yellow);
+        }
+        .task-card.ready-pulse::before { background: var(--success); }
+        .task-card.ready-pulse { animation: subtlePulse 2s infinite; }
+        @keyframes subtlePulse { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.2); } 70% { box-shadow: 0 0 0 10px rgba(16,185,129,0); } 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
+
+        .task-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .res-name { font-size: 1.3rem; font-weight: 900; color: var(--accent); margin: 0; }
+        .order-id { background: #F3F4F6; color: #6B7280; padding: 4px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; }
         
-        .order-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 5px; }
-        .order-detail { font-size: 0.95rem; color: #4B5563; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .task-info-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+        .icon-box { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .icon-box.dest { background: #FEF3C7; color: #D97706; }
+        .icon-box.money { background: #D1FAE5; color: #059669; }
+        .icon-box.info { background: #E0E7FF; color: #2563EB; }
         
-        .btn-status {
+        .info-text { display: flex; flex-direction: column; }
+        .info-label { font-size: 0.8rem; color: #6B7280; font-weight: 600; }
+        .info-value { font-size: 1.05rem; font-weight: 800; color: var(--accent); }
+
+        .btn-receipt {
             background: #F3F4F6; color: var(--accent); border: none; border-radius: 12px;
-            padding: 12px; font-weight: 700; width: 100%; margin-top: 10px; transition: 0.2s;
+            padding: 10px; font-weight: 700; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px; transition: 0.2s;
         }
-        .btn-status.action-arrive { background: #DBEAFE; color: #2563EB; }
-        .btn-status.action-pickup { background: var(--nahla-yellow-light); color: var(--warning); }
-        .btn-status.action-finish { background: #D1FAE5; color: var(--success); }
+        .btn-receipt:active { background: #E5E7EB; }
 
-        /* 4. رادار الإنذار (Full Screen Overlay) */
+        .btn-status-update {
+            border: none; border-radius: 16px; padding: 16px; font-weight: 800; font-size: 1.1rem;
+            width: 100%; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .action-arrive { background: var(--accent); color: white; }
+        .action-pickup { background: var(--warning); color: white; }
+        .action-finish { background: var(--success); color: white; }
+        .btn-status-update:active { transform: scale(0.97); }
+
+        /* رادار الطلب (Uber Style) */
         #orderAlertOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(17, 24, 39, 0.95); backdrop-filter: blur(10px);
-            z-index: 99999; display: flex; align-items: center; justify-content: center; flex-direction: column;
-            color: white; padding: 20px; text-align: center;
+            background: rgba(17, 24, 39, 0.98); z-index: 99999; 
+            display: flex; flex-direction: column; justify-content: space-between; padding: 30px 20px;
         }
-        .pulse-ring {
-            width: 120px; height: 120px; background: var(--nahla-yellow); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; margin-bottom: 30px;
+        .alert-header { text-align: center; color: white; margin-top: 40px; }
+        .alert-pulse {
+            width: 100px; height: 100px; background: var(--nahla-yellow); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 30px auto;
             animation: radarPulse 1.5s infinite;
         }
-        @keyframes radarPulse { 0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7); } 70% { box-shadow: 0 0 0 30px rgba(255, 193, 7, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); } }
+        @keyframes radarPulse { 0% { box-shadow: 0 0 0 0 rgba(255,193,7,0.6); } 70% { box-shadow: 0 0 0 40px rgba(255,193,7,0); } 100% { box-shadow: 0 0 0 0 rgba(255,193,7,0); } }
         
-        .timer-circle { font-size: 2rem; font-weight: 900; margin: 20px 0; color: var(--nahla-yellow); }
-
-        /* Toast Notifications */
-        .toast-nahla {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: var(--accent); color: white; padding: 12px 24px;
-            border-radius: 30px; font-weight: bold; font-size: 0.9rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2); z-index: 10000;
-            display: flex; align-items: center; gap: 8px; opacity: 0; transition: 0.3s;
+        .alert-card {
+            background: white; border-radius: 24px; padding: 25px; margin-bottom: 20px; text-align: right;
         }
-        .toast-nahla.show { opacity: 1; bottom: 40px; }
+        .timer-bar { height: 6px; background: #E5E7EB; border-radius: 3px; margin-top: 20px; overflow: hidden; }
+        .timer-fill { height: 100%; background: var(--nahla-yellow); width: 100%; transition: width 1s linear; }
+
+        /* Toast */
+        .toast-nahla {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            background: var(--accent); color: white; padding: 14px 24px;
+            border-radius: 30px; font-weight: 800; font-size: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 100000;
+            display: flex; align-items: center; gap: 10px; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-nahla.show { top: 40px; }
     </style>
 </head>
 <body>
@@ -157,25 +184,24 @@
 
     <!-- 🔐 شاشة المصادقة -->
     <div id="auth-screen" class="screen">
-        <div class="auth-box glass-panel">
+        <div class="auth-box">
             <div class="mb-4 d-flex justify-content-center">
-                <div style="background:var(--nahla-yellow); padding:15px; border-radius:20px; box-shadow:0 10px 20px rgba(255,193,7,0.3);">
-                    <i data-lucide="bike" style="width:40px; height:40px; color:var(--accent);"></i>
+                <div style="background:var(--nahla-yellow); padding:20px; border-radius:24px; box-shadow:0 10px 25px rgba(255,193,7,0.4);">
+                    <i data-lucide="bike" style="width:45px; height:45px; color:var(--accent);"></i>
                 </div>
             </div>
-            <h2 class="fw-bold mb-1">نحلة كركوك 🐝</h2>
-            <p class="text-muted mb-4">تطبيق الكباتن V37.0</p>
+            <h2 class="fw-bold mb-1 text-dark">نحلة كركوك 🐝</h2>
+            <p class="text-muted mb-4 fw-bold">نسخة الكباتن (Premium)</p>
             
-            <input type="tel" id="login-phone" class="auth-input" placeholder="رقم الهاتف (مثال: 078...)">
+            <input type="tel" id="login-phone" class="auth-input" placeholder="رقم الهاتف (07...)">
             <input type="password" id="login-pass" class="auth-input" placeholder="كلمة المرور">
             
-            <button id="btnLogin" class="btn-nahla mt-2" onclick="loginDriver()">
+            <button id="btnLogin" class="btn-nahla mt-3" onclick="loginDriver()">
                 تسجيل الدخول <i data-lucide="arrow-left"></i>
             </button>
-            
-            <div class="mt-4">
-                <a href="#" class="text-muted fw-bold text-decoration-none" onclick="toggleReg()">سائق جديد؟ سجل الآن</a>
-            </div>
+        </div>
+        <div id="offlineBanner" class="bg-danger text-white px-4 py-2 rounded-pill mt-4 fw-bold hidden-section shadow">
+            ⚠️ لا يوجد اتصال بالإنترنت
         </div>
     </div>
 
@@ -184,100 +210,124 @@
         
         <!-- الهيدر -->
         <div class="app-header">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <h5 class="fw-bold m-0" id="driver-name">كابتن ...</h5>
-                    <small class="text-white-50">وردية نشطة</small>
+            <div class="header-content">
+                <div class="driver-info">
+                    <h4 id="driver-name">كابتن</h4>
+                    <div class="status-badge mt-2"><span class="status-dot"></span> متصل بالرادار</div>
                 </div>
-                <div class="text-end">
-                    <span class="status-dot"></span> <span class="fw-bold ms-1">متصل</span>
-                    <i data-lucide="power" class="ms-3 text-danger" onclick="logout()" style="cursor:pointer;"></i>
-                </div>
-            </div>
-            
-            <!-- بطاقة المحفظة -->
-            <div class="wallet-card">
-                <div>
-                    <small class="text-muted d-block fw-bold mb-1">الديون والعمولات</small>
-                    <h3 class="m-0 fw-bold" style="color:var(--danger);" id="statDebt">0 <small class="fs-6">د.ع</small></h3>
-                </div>
-                <div style="background:rgba(255,193,7,0.2); padding:10px; border-radius:12px;">
-                    <i data-lucide="wallet" style="color:var(--warning);"></i>
+                <div class="bg-light p-2 rounded-circle shadow-sm" onclick="logout()" style="cursor:pointer;">
+                    <i data-lucide="power" class="text-danger"></i>
                 </div>
             </div>
         </div>
-
-        <!-- حالة عدم الاتصال (Offline Banner) -->
-        <div id="offlineBanner" class="bg-danger text-white text-center py-1 fw-bold hidden-section" style="font-size:0.85rem; margin-top:35px;">
-            ⚠️ أنت غير متصل بالإنترنت! جاري حفظ العمليات...
+        
+        <!-- بطاقة المحفظة -->
+        <div class="wallet-card">
+            <div>
+                <small class="text-white-50 fw-bold d-block mb-1">الرصيد / الديون المستحقة</small>
+                <h2 id="statDebt">0 <small class="fs-5 text-white-50">د.ع</small></h2>
+            </div>
+            <div style="background:rgba(255,255,255,0.1); padding:15px; border-radius:16px;">
+                <i data-lucide="wallet" style="color:var(--nahla-yellow); width:28px; height:28px;"></i>
+            </div>
         </div>
 
         <!-- قائمة الطلبات -->
         <div class="main-content" id="active-orders-container">
-            <div class="text-center text-muted mt-5 fw-bold" id="empty-state">
-                <i data-lucide="radar" style="width:40px;height:40px;opacity:0.3;margin-bottom:10px;"></i><br>
-                في انتظار طلبات جديدة...<br><small>المحرك الذكي يبحث لك عن أقرب طلب</small>
+            <div class="text-center text-muted mt-5 fw-bold" id="empty-state" style="opacity: 0.5;">
+                <div style="background:#E5E7EB; width:80px; height:80px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 15px auto;">
+                    <i data-lucide="radar" style="width:40px;height:40px;color:#9CA3AF;"></i>
+                </div>
+                <h5>أنت متصل بالإنترنت</h5>
+                <small>المحرك الذكي يبحث لك عن طلب...</small>
             </div>
-            <!-- تُضاف الطلبات هنا عبر JS -->
+            <!-- تُضاف المهام هنا -->
         </div>
     </div>
 
-    <!-- 🚨 رادار الإنذار (طلب جديد) -->
+    <!-- 🚨 رادار الإنذار (Uber Style) -->
     <div id="orderAlertOverlay" class="hidden-section">
-        <div class="pulse-ring">
-            <i data-lucide="bell-ring" style="width:50px;height:50px;color:var(--accent);"></i>
+        <div class="alert-header">
+            <div class="alert-pulse"><i data-lucide="bell-ring" style="width:45px;height:45px;color:var(--accent);"></i></div>
+            <h1 class="fw-bold mb-1">طلب جديد متاح!</h1>
+            <p class="text-white-50 fw-bold" id="alert-timer-text">أمامك <span id="alert-timer" class="text-warning">60</span> ثانية للقبول</p>
         </div>
-        <h2 class="fw-bold mb-2">طلب جديد!</h2>
-        <h4 class="mb-4 text-warning fw-bold" id="alert-res-name">اسم المطعم</h4>
         
-        <div class="glass-panel w-100 p-3 mb-4 text-start" style="background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.2);">
-            <div class="d-flex gap-2 mb-2"><i data-lucide="map-pin" class="text-warning"></i> <span id="alert-area">المنطقة</span></div>
-            <div class="d-flex gap-2 mb-2"><i data-lucide="banknote" class="text-success"></i> <span id="alert-price">0 د.ع</span></div>
-            <div class="d-flex gap-2"><i data-lucide="info" class="text-info"></i> <span id="alert-details" style="font-size:0.9rem;">تفاصيل...</span></div>
+        <div class="w-100">
+            <div class="alert-card">
+                <h3 class="fw-bold text-dark mb-4 border-bottom pb-3" id="alert-res-name">اسم المطعم</h3>
+                
+                <div class="task-info-row">
+                    <div class="icon-box dest"><i data-lucide="map-pin"></i></div>
+                    <div class="info-text">
+                        <span class="info-label">منطقة التوصيل</span>
+                        <span class="info-value" id="alert-area">المنطقة</span>
+                    </div>
+                </div>
+                <div class="task-info-row">
+                    <div class="icon-box money"><i data-lucide="banknote"></i></div>
+                    <div class="info-text">
+                        <span class="info-label">المبلغ المطلوب (مع التوصيل)</span>
+                        <span class="info-value text-success" id="alert-price">0 د.ع</span>
+                    </div>
+                </div>
+                <div class="task-info-row">
+                    <div class="icon-box info"><i data-lucide="file-text"></i></div>
+                    <div class="info-text">
+                        <span class="info-label">تفاصيل الطلب / هاتف الزبون</span>
+                        <span class="info-value fs-6" id="alert-details">...</span>
+                    </div>
+                </div>
+                <div class="timer-bar"><div class="timer-fill" id="alert-progress"></div></div>
+            </div>
+            
+            <button id="btnAcceptOrder" class="btn-nahla py-4 fs-3 shadow-lg" onclick="acceptOrder()">
+                تأكيد الاستلام ✅
+            </button>
         </div>
-
-        <div class="timer-circle" id="alert-timer">60</div>
-        
-        <button id="btnAcceptOrder" class="btn-nahla py-3 fs-4" onclick="acceptOrder()">
-            استلام الطلب الآن ✅
-        </button>
     </div>
 
-    <!-- Toast -->
-    <div id="toast" class="toast-nahla">
-        <i data-lucide="check-circle"></i> <span id="toast-msg">تم بنجاح!</span>
+    <!-- Modal لعرض الوصل -->
+    <div class="modal fade" id="receiptModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0" style="background:transparent;">
+                <div class="modal-header border-0 pb-0 justify-content-end">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" style="background-color:rgba(0,0,0,0.5); padding:15px; border-radius:50%;"></button>
+                </div>
+                <div class="modal-body text-center p-0">
+                    <img id="receiptImage" src="" class="img-fluid rounded-4 shadow-lg w-100" style="max-height: 80vh; object-fit: contain; background:black;">
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- إشعار عائم -->
+    <div id="toast" class="toast-nahla"><i data-lucide="check-circle" id="toast-icon"></i> <span id="toast-msg">تم!</span></div>
 
     <!-- ==========================================
-         🐝 المنطق البرمجي للكابتن (V37.0 Backend)
+         🐝 المنطق البرمجي للكابتن (V37.1 Backend)
          ========================================== -->
     <script>
         lucide.createIcons();
 
-        // 1️⃣ الإعدادات الثابتة (كما وفرتها)
+        // 1️⃣ الإعدادات
         const API_URL = "https://script.google.com/macros/s/AKfycbyA5NXtyt_PelH9IKtZyBLd9UH0x_sn3dKKiak7N2mHahYUAN7Mz7ocYUB3BE4_mby4Ag/exec";
         const API_TOKEN = "NAHLA_SECURE_TOKEN_2026";
         
-        const firebaseConfig = {
-            databaseURL: "https://nahla-delivery-6b06f-default-rtdb.europe-west1.firebasedatabase.app"
-        };
+        const firebaseConfig = { databaseURL: "https://nahla-delivery-6b06f-default-rtdb.europe-west1.firebasedatabase.app" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 2️⃣ المتغيرات المحلية (State)
+        // 2️⃣ المتغيرات (State)
         let driverData = JSON.parse(localStorage.getItem('hut_driver_session')) || null;
         let activeOrders = JSON.parse(localStorage.getItem('hut_active_orders')) || [];
-        let offlineActionQueue = JSON.parse(localStorage.getItem('hut_offline_queue')) || [];
         let readyNotifiedOrders = new Set();
-        
-        let currentOrderData = null; // للطلب الوارد حالياً
+        let currentOrderData = null;
         let countdownInterval;
         let lastSentLat = null; let lastSentLng = null;
 
-        // تهيئة التطبيق عند الفتح
         window.onload = () => {
             if (driverData) {
-                // الكابتن مسجل دخول مسبقاً
                 document.getElementById('auth-screen').classList.add('hidden-section');
                 document.getElementById('app-screen').classList.remove('hidden-section');
                 document.getElementById('driver-name').innerText = driverData.name || "كابتن نحلة";
@@ -285,234 +335,155 @@
             }
         };
 
-        // 3️⃣ دوال الواجهة المساعدة
-        function showToast(msg) {
+        function showToast(msg, isSuccess = true) {
+            document.getElementById('toast-msg').innerText = msg;
+            document.getElementById('toast-icon').setAttribute('data-lucide', isSuccess ? 'check-circle' : 'alert-circle');
+            lucide.createIcons();
             const t = document.getElementById('toast');
-            document.getElementById('toast-msg').innerHTML = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
+            t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        // 4️⃣ تسجيل الدخول (Login)
+        // 3️⃣ الدخول
         async function loginDriver() {
             const phone = document.getElementById('login-phone').value.trim();
             const pass = document.getElementById('login-pass').value.trim();
             const btn = document.getElementById('btnLogin');
             
-            if(!phone || !pass) return showToast("أدخل البيانات كاملة");
-            btn.innerHTML = "جاري التحقق... <i class='fa-spin' data-lucide='loader'></i>"; lucide.createIcons();
-            btn.disabled = true;
+            if(!phone || !pass) return showToast("أدخل البيانات كاملة", false);
+            btn.innerHTML = "جاري التحقق... ⏳"; btn.disabled = true;
 
             try {
-                // تفعيل الصوت هنا (يتطلب تفاعل المستخدم الأول)
                 document.getElementById('alertSound').play().then(() => document.getElementById('alertSound').pause()).catch(e=>{});
 
                 const res = await fetch(`${API_URL}?action=checkDriver&phone=${phone}&password=${pass}&token=${API_TOKEN}`);
                 const data = await res.json();
                 
                 if (data.status === "active") {
-                    // بدء الشفت في الخادم
                     const shiftRes = await fetch(`${API_URL}?action=START_SHIFT&phone=${phone}&token=${API_TOKEN}`);
                     const shiftData = await shiftRes.json();
-
-                    driverData = {
-                        phone: phone, name: data.name, shift: data.shift,
-                        shiftEnd: shiftData.shift_end || new Date(Date.now() + 10*3600000).toISOString()
-                    };
+                    driverData = { phone: phone, name: data.name, shift: data.shift, shiftEnd: shiftData.shift_end || new Date(Date.now() + 10*3600000).toISOString() };
                     localStorage.setItem('hut_driver_session', JSON.stringify(driverData));
-                    
-                    showToast("تم الدخول وبدء الوردية!");
+                    showToast("تم الدخول بنجاح!");
                     setTimeout(()=> location.reload(), 1000);
-                } else if (data.status === "banned") {
-                    showToast("❌ حسابك محظور. راجع الإدارة.");
-                } else if (data.status === "pending") {
-                    showToast("⏳ حسابك قيد المراجعة.");
-                } else {
-                    showToast("❌ بيانات خاطئة أو حساب غير موجود.");
-                }
-            } catch(e) { showToast("خطأ في الاتصال بالشبكة."); }
-            btn.innerHTML = "تسجيل الدخول <i data-lucide='arrow-left'></i>"; lucide.createIcons();
-            btn.disabled = false;
+                } else { showToast(data.status === "banned" ? "❌ الحساب محظور" : "❌ بيانات خاطئة", false); }
+            } catch(e) { showToast("خطأ في الاتصال بالشبكة.", false); }
+            btn.innerHTML = "تسجيل الدخول <i data-lucide='arrow-left'></i>"; btn.disabled = false; lucide.createIcons();
         }
 
-        function logout() {
-            localStorage.removeItem('hut_driver_session');
-            localStorage.removeItem('hut_active_orders');
-            location.reload();
-        }
+        function logout() { localStorage.removeItem('hut_driver_session'); localStorage.removeItem('hut_active_orders'); location.reload(); }
 
-        // 5️⃣ تهيئة التطبيق الأساسي (بعد الدخول)
+        // 4️⃣ التهيئة والتتبع
         function initApp() {
-            displayActiveOrders();
-            startLocationTracking();
-            startFirebaseListeners();
-            
-            // مستمعو الإنترنت (Offline Queue)
+            displayActiveOrders(); startLocationTracking(); startFirebaseListeners();
             window.addEventListener('online', () => { document.getElementById('offlineBanner').classList.add('hidden-section'); });
             window.addEventListener('offline', () => { document.getElementById('offlineBanner').classList.remove('hidden-section'); });
         }
 
-        // 6️⃣ تتبع الموقع الجغرافي
         function startLocationTracking() {
             if ("geolocation" in navigator) {
                 navigator.geolocation.watchPosition((position) => {
-                    lastSentLat = position.coords.latitude;
-                    lastSentLng = position.coords.longitude;
-                    
-                    // تحديث Firebase مباشرة (الموقع والحالة)
-                    const updates = {};
-                    updates[`drivers_locations/${driverData.phone}/lat`] = lastSentLat;
-                    updates[`drivers_locations/${driverData.phone}/lng`] = lastSentLng;
-                    updates[`drivers_locations/${driverData.phone}/status`] = 'active';
-                    updates[`drivers_locations/${driverData.phone}/last_update`] = new Date().toISOString();
-                    db.ref().update(updates).catch(()=>{});
-
-                    // تحديث احتياطي لـ Google Script (كل فترة)
-                    syncLocationToScript(lastSentLat, lastSentLng);
-
-                }, (error) => console.error(error), { enableHighAccuracy: true, maximumAge: 10000 });
+                    lastSentLat = position.coords.latitude; lastSentLng = position.coords.longitude;
+                    db.ref(`drivers_locations/${driverData.phone}`).update({ lat: lastSentLat, lng: lastSentLng, status: 'active', last_update: new Date().toISOString() }).catch(()=>{});
+                    if (Date.now() - (window.lastScriptSync||0) > 900000) { fetch(`${API_URL}?action=DRIVER_UPDATE&phone=${driverData.phone}&lat=${lastSentLat}&lng=${lastSentLng}&token=${API_TOKEN}`).catch(()=>{}); window.lastScriptSync = Date.now(); }
+                }, (e) => console.error(e), { enableHighAccuracy: true, maximumAge: 10000 });
             }
         }
 
-        let lastScriptSync = 0;
-        function syncLocationToScript(lat, lng) {
-            if (Date.now() - lastScriptSync < 900000) return; // مزامنة Script كل 15 دقيقة فقط لتخفيف الضغط
-            fetch(`${API_URL}?action=DRIVER_UPDATE&phone=${driverData.phone}&lat=${lat}&lng=${lng}&token=${API_TOKEN}`).catch(()=>{});
-            lastScriptSync = Date.now();
-        }
-
-        // 7️⃣ مستمعو Firebase (الحقيقي الفوري)
+        // 5️⃣ المستمعات والرادار
         function startFirebaseListeners() {
             const cleanPhone = String(driverData.phone).replace(/^0+/, '');
 
-            // أ. استماع الطلبات النشطة (الرادار)
             db.ref('active_orders').on('value', (snapshot) => {
                 const fbOrders = snapshot.val() || {};
-                
-                // فحص هل هناك طلب موجه لي ولم أقبله بعد؟
-                let foundNew = false;
+                let needsRender = false;
+
                 Object.values(fbOrders).forEach(o => {
-                    const oPhone = String(o.driverPhone).replace(/^0+/, '');
-                    if (oPhone === cleanPhone && (o.status === 'pending_driver' || o.status === 'manual_pending')) {
-                        const alreadyAccepted = activeOrders.find(localO => localO.id === o.id);
-                        if (!alreadyAccepted) {
-                            foundNew = true;
-                            triggerOrderAlert(o); // إطلاق الإنذار!
-                        }
+                    if (String(o.driverPhone).replace(/^0+/, '') === cleanPhone && (o.status === 'pending_driver' || o.status === 'manual_pending')) {
+                        if (!activeOrders.find(localO => localO.id === o.id)) triggerOrderAlert(o);
                     }
                 });
 
-                // فحص تحديثات للطلبات التي أمتلكها (إلغاء من الإدارة، طلب جاهز)
-                let needsRender = false;
                 activeOrders.forEach(localO => {
                     const fbOrder = fbOrders[localO.id];
                     if (!fbOrder || fbOrder.status === 'deleted' || fbOrder.status === 'completed') {
-                        // الطلب تم حذفه أو إنهاؤه من مكان آخر
-                        activeOrders = activeOrders.filter(x => x.id !== localO.id);
-                        needsRender = true;
-                        showToast(`تم إزالة الطلب ${localO.resName} من الإدارة.`);
+                        activeOrders = activeOrders.filter(x => x.id !== localO.id); needsRender = true;
+                        if(fbOrder && fbOrder.status==='deleted') showToast(`⚠️ تم إلغاء الطلب من قبل الإدارة.`);
                     } else if (fbOrder.ready_for_pickup && !localO.readyForPickup) {
-                        // إشعار المطعم بأن الطلب جاهز
                         localO.readyForPickup = true; needsRender = true;
-                        document.getElementById('readySound').play().catch(()=>{});
-                        showToast(`🍽️ طلب ${localO.resName} جاهز للاستلام!`);
+                        document.getElementById('readySound').play().catch(()=>{}); showToast(`🍽️ الطلب جاهز في المطعم!`);
                     }
                 });
                 
-                if (needsRender) {
-                    localStorage.setItem('hut_active_orders', JSON.stringify(activeOrders));
-                    displayActiveOrders();
-                }
+                if (needsRender) { localStorage.setItem('hut_active_orders', JSON.stringify(activeOrders)); displayActiveOrders(); }
             });
 
-            // ب. استماع الديون (Ledger)
             db.ref(`ledgers/drivers/${driverData.phone}`).on('value', (snap) => {
                 const ledger = snap.val() || { debt: 0 };
                 const todayISO = new Date().toISOString().split('T')[0];
-                
                 db.ref(`daily_ledgers/${driverData.phone}/${todayISO}`).on('value', (dailySnap) => {
-                    const dailyData = dailySnap.val() || {};
                     let liveDebtToday = 0;
-                    Object.values(dailyData).forEach(d => liveDebtToday += (parseFloat(d.comm) || 0));
-                    
-                    const totalDebt = (parseFloat(ledger.debt) || 0) + liveDebtToday;
-                    document.getElementById('statDebt').innerHTML = `${totalDebt} <small class="fs-6">د.ع</small>`;
+                    Object.values(dailySnap.val() || {}).forEach(d => liveDebtToday += (parseFloat(d.comm) || 0));
+                    document.getElementById('statDebt').innerHTML = `${(parseFloat(ledger.debt) || 0) + liveDebtToday} <small class="fs-5 text-white-50">د.ع</small>`;
                 });
             });
         }
 
-        // 8️⃣ منطق استلام الطلب (Radar Alert)
         function triggerOrderAlert(fbOrder) {
-            if (document.getElementById('orderAlertOverlay').classList.contains('hidden-section') === false) return; // إنذار شغال أصلاً
-            
+            if (!document.getElementById('orderAlertOverlay').classList.contains('hidden-section')) return;
             currentOrderData = fbOrder;
+            
             document.getElementById('alert-res-name').innerText = fbOrder.restaurant || "مطعم";
             document.getElementById('alert-area').innerText = fbOrder.area || "غير محدد";
-            document.getElementById('alert-price').innerText = (fbOrder.price || 0) + " د.ع";
-            document.getElementById('alert-details').innerText = fbOrder.details || "لا توجد تفاصيل";
+            document.getElementById('alert-price').innerText = (fbOrder.price > 0) ? (fbOrder.price + " د.ع") : "حسب الوصل";
+            
+            let extraInfo = fbOrder.details || "";
+            if(fbOrder.photoUrl && fbOrder.photoUrl !== "processing") extraInfo += " 📸 (يوجد صورة للوصل)";
+            document.getElementById('alert-details').innerText = extraInfo;
             
             document.getElementById('orderAlertOverlay').classList.remove('hidden-section');
             document.getElementById('btnAcceptOrder').disabled = false;
-            document.getElementById('btnAcceptOrder').innerHTML = "استلام الطلب الآن ✅";
+            document.getElementById('btnAcceptOrder').innerHTML = "تأكيد الاستلام ✅";
             
-            document.getElementById('alertSound').currentTime = 0;
-            document.getElementById('alertSound').play().catch(()=>{});
+            document.getElementById('alertSound').currentTime = 0; document.getElementById('alertSound').play().catch(()=>{});
 
-            let timeLeft = 60;
-            document.getElementById('alert-timer').innerText = timeLeft;
+            let timeLeft = 60; document.getElementById('alert-timer').innerText = timeLeft;
+            document.getElementById('alert-progress').style.width = '100%';
+            
             countdownInterval = setInterval(() => {
                 timeLeft--; document.getElementById('alert-timer').innerText = timeLeft;
+                document.getElementById('alert-progress').style.width = `${(timeLeft/60)*100}%`;
                 if (timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    document.getElementById('alertSound').pause();
+                    clearInterval(countdownInterval); document.getElementById('alertSound').pause();
                     document.getElementById('orderAlertOverlay').classList.add('hidden-section');
-                    // السيرفر سيسحبه آلياً بواسطة الـ Watchdog
                 }
             }, 1000);
         }
 
-        // الكابتن يضغط "استلام الطلب"
         async function acceptOrder() {
             const btn = document.getElementById('btnAcceptOrder');
-            btn.disabled = true; btn.innerHTML = "جاري التأمين...";
-            
-            clearInterval(countdownInterval);
-            document.getElementById('alertSound').pause();
+            btn.disabled = true; btn.innerHTML = "جاري التأمين... ⏳";
+            clearInterval(countdownInterval); document.getElementById('alertSound').pause();
 
             try {
-                // تحديث Firebase بقبولي
-                await db.ref(`active_orders/${currentOrderData.id}`).update({
-                    status: 'accepted', driverPhone: driverData.phone, last_update: new Date().toISOString()
-                });
-
-                // إضافته للمحلي
-                const newOrder = {
+                await db.ref(`active_orders/${currentOrderData.id}`).update({ status: 'accepted', driverPhone: driverData.phone, last_update: new Date().toISOString() });
+                
+                activeOrders.push({
                     id: currentOrderData.id, resName: currentOrderData.restaurant, area: currentOrderData.area,
                     details: currentOrderData.details, price: currentOrderData.price,
-                    state: 'heading', // متوجه للمطعم
-                    acceptedTime: Date.now(), readyForPickup: currentOrderData.ready_for_pickup || false,
-                    comm: currentOrderData.comm || '0', payType: currentOrderData.payType || ''
-                };
-                
-                activeOrders.push(newOrder);
+                    state: 'heading', acceptedTime: Date.now(), readyForPickup: currentOrderData.ready_for_pickup || false,
+                    comm: currentOrderData.comm || '0', payType: currentOrderData.payType || '', photoUrl: currentOrderData.photoUrl || null
+                });
                 localStorage.setItem('hut_active_orders', JSON.stringify(activeOrders));
                 
                 document.getElementById('orderAlertOverlay').classList.add('hidden-section');
-                displayActiveOrders();
-                showToast("✅ تم تأمين الطلب بنجاح. انطلق!");
-
-            } catch (error) {
-                showToast("❌ خطأ في تأمين الطلب. قد يكون سُحب.");
-                document.getElementById('orderAlertOverlay').classList.add('hidden-section');
-            }
+                displayActiveOrders(); showToast("✅ تم تأمين الطلب بنجاح. انطلق!");
+            } catch (e) { showToast("❌ سُحب الطلب أو خطأ بالشبكة", false); document.getElementById('orderAlertOverlay').classList.add('hidden-section'); }
         }
 
-        // 9️⃣ رسم وتحديث شاشة الطلبات النشطة
+        // 6️⃣ رسم الطلبات (Tasks) وتحديث الحالة
         function displayActiveOrders() {
             const container = document.getElementById('active-orders-container');
             const emptyState = document.getElementById('empty-state');
-            
-            // تنظيف الحاوية
             Array.from(container.children).forEach(child => { if(child.id !== 'empty-state') child.remove(); });
             
             if (activeOrders.length === 0) { emptyState.classList.remove('hidden-section'); return; }
@@ -520,99 +491,103 @@
 
             activeOrders.forEach(order => {
                 const card = document.createElement('div');
-                card.className = `glass-panel order-card ${order.readyForPickup && order.state !== 'picked_up' ? 'ready-pulse' : ''}`;
+                card.className = `task-card ${order.readyForPickup && order.state !== 'picked_up' ? 'ready-pulse' : ''}`;
                 
-                // تحديد الزر والإجراء حسب الحالة
-                let actionBtnHTML = '';
+                let actionBtnHTML = '', statusIcon = '';
                 if (order.state === 'heading') {
-                    actionBtnHTML = `<button class="btn-status action-arrive" onclick="updateOrderStatus('${order.id}', 'arrive', this)"><i data-lucide="map-pin"></i> تأكيد الوصول للمطعم</button>`;
+                    statusIcon = `<i data-lucide="navigation" class="text-primary"></i>`;
+                    actionBtnHTML = `<button class="btn-status-update action-arrive" onclick="updateOrderStatus('${order.id}', 'arrive', this)"><i data-lucide="map-pin"></i> تأكيد الوصول للمطعم</button>`;
                 } else if (order.state === 'arrived') {
-                    actionBtnHTML = `<button class="btn-status action-pickup" onclick="updateOrderStatus('${order.id}', 'pickup', this)"><i data-lucide="package"></i> تم استلام الطلب</button>`;
+                    statusIcon = `<i data-lucide="store" class="text-warning"></i>`;
+                    actionBtnHTML = `<button class="btn-status-update action-pickup" onclick="updateOrderStatus('${order.id}', 'pickup', this)"><i data-lucide="package"></i> تم استلام الطلب من المطعم</button>`;
                 } else if (order.state === 'picked_up') {
-                    actionBtnHTML = `<button class="btn-status action-finish" onclick="updateOrderStatus('${order.id}', 'finish', this)"><i data-lucide="check-circle"></i> إنهاء (تسليم للعميل)</button>`;
+                    statusIcon = `<i data-lucide="truck" class="text-success"></i>`;
+                    actionBtnHTML = `<button class="btn-status-update action-finish" onclick="updateOrderStatus('${order.id}', 'finish', this)"><i data-lucide="check-circle"></i> إنهاء وتسليم للزبون</button>`;
+                }
+
+                // زر الوصل
+                let receiptBtn = '';
+                if(order.photoUrl && order.photoUrl !== 'processing') {
+                    receiptBtn = `<button class="btn-receipt" onclick="viewPhoto('${order.photoUrl}')"><i data-lucide="image" class="text-primary"></i> عرض صورة الوصل</button>`;
                 }
 
                 card.innerHTML = `
-                    <div class="d-flex justify-content-between align-items-start">
+                    <div class="task-header">
                         <div>
-                            <div class="order-title">${order.resName}</div>
-                            <div class="order-detail"><i data-lucide="map"></i> ${order.area}</div>
-                            <div class="order-detail"><i data-lucide="banknote" class="text-success"></i> ${order.price} د.ع (المطلوب)</div>
-                            ${order.readyForPickup && order.state !== 'picked_up' ? `<div class="badge bg-success mb-2"><i data-lucide="flame" style="width:12px;"></i> الطلب جاهز استلمه الآن!</div>` : ''}
+                            <h3 class="res-name">${order.resName}</h3>
+                            ${order.readyForPickup && order.state !== 'picked_up' ? `<div class="badge bg-success mt-2 fs-6"><i data-lucide="flame" style="width:14px;"></i> الطلب جاهز للاستلام!</div>` : ''}
                         </div>
-                        <div class="text-end">
-                            <span class="badge bg-light text-dark shadow-sm">#${order.id.substring(0,5)}</span>
+                        <span class="order-id">#${order.id.substring(0,6)}</span>
+                    </div>
+
+                    <div class="task-info-row">
+                        <div class="icon-box dest"><i data-lucide="map-pin"></i></div>
+                        <div class="info-text">
+                            <span class="info-label">منطقة توصيل الزبون</span>
+                            <span class="info-value text-dark">${order.area}</span>
                         </div>
                     </div>
-                    <div class="mt-2 pt-2 border-top border-light">
-                        <small class="text-muted d-block mb-2"><b>التفاصيل:</b> ${order.details}</small>
-                        ${actionBtnHTML}
+                    
+                    <div class="task-info-row">
+                        <div class="icon-box money"><i data-lucide="banknote"></i></div>
+                        <div class="info-text">
+                            <span class="info-label">المبلغ المطلوب للوصل</span>
+                            <span class="info-value text-success">${order.price > 0 ? order.price + ' د.ع' : 'تأكد من الوصل'}</span>
+                        </div>
                     </div>
+
+                    <div class="task-info-row mb-3">
+                        <div class="icon-box info"><i data-lucide="info"></i></div>
+                        <div class="info-text">
+                            <span class="info-label">رقم الزبون وتفاصيل أخرى</span>
+                            <span class="info-value" style="font-size:0.95rem; line-height:1.4;">${order.details}</span>
+                        </div>
+                    </div>
+
+                    ${receiptBtn}
+                    ${actionBtnHTML}
                 `;
                 container.appendChild(card);
             });
             lucide.createIcons();
         }
 
-        // 🔟 تغيير حالة الطلب (Arrive -> Pickup -> Finish)
+        // عرض صورة الوصل (Modal)
+        function viewPhoto(url) {
+            document.getElementById('receiptImage').src = url;
+            new bootstrap.Modal(document.getElementById('receiptModal')).show();
+        }
+
         async function updateOrderStatus(orderId, action, btn) {
-            const order = activeOrders.find(o => o.id === orderId);
-            if (!order) return;
-            
-            btn.disabled = true; btn.innerHTML = "جاري التحديث...";
+            const order = activeOrders.find(o => o.id === orderId); if (!order) return;
+            btn.disabled = true; btn.innerHTML = "جاري التحديث... ⏳";
 
             try {
                 if (action === 'arrive') {
                     order.state = 'arrived';
                     await db.ref(`active_orders/${orderId}`).update({ status: 'arrived_at_res', last_update: new Date().toISOString() });
-                } 
-                else if (action === 'pickup') {
+                } else if (action === 'pickup') {
                     order.state = 'picked_up'; order.pickupTime = Date.now();
                     await db.ref(`active_orders/${orderId}`).update({ status: 'picked_up', last_update: new Date().toISOString() });
-                } 
-                else if (action === 'finish') {
-                    // حماية: يجب أن يمر دقيقة على الأقل من الاستلام
-                    if (Date.now() - (order.pickupTime || 0) < 60000) {
-                        showToast("⚠️ يجب الانتظار دقيقة للوصول للعميل");
-                        btn.disabled = false; btn.innerHTML = "إنهاء (تسليم للعميل)";
-                        return;
+                } else if (action === 'finish') {
+                    if (Date.now() - (order.pickupTime || 0) < 30000) { // حماية 30 ثانية
+                        showToast("⚠️ يجب الانتظار للوصول للعميل", false);
+                        btn.disabled = false; btn.innerHTML = "إنهاء وتسليم للزبون"; return;
                     }
-
-                    // حساب العمولة حسب قواعد V88.0.0
-                    let driverCommission = 0;
-                    const commStr = String(order.comm).toLowerCase();
+                    let driverCommission = 0; const commStr = String(order.comm).toLowerCase();
                     if (!commStr.includes('شهري') && !commStr.includes('monthly')) {
-                        if (commStr.includes('/')) {
-                            driverCommission = parseFloat(commStr.split('/')[0].replace(/\D/g, '')) || 0;
-                        } else {
-                            let val = parseFloat(commStr.replace(/\D/g, '')) || 0;
-                            if (String(order.payType).includes("مناصفة")) driverCommission = val / 2;
-                        }
+                        if (commStr.includes('/')) driverCommission = parseFloat(commStr.split('/')[0].replace(/\D/g, '')) || 0;
+                        else { let val = parseFloat(commStr.replace(/\D/g, '')) || 0; if (String(order.payType).includes("مناصفة")) driverCommission = val / 2; }
                     }
-
                     const todayISO = new Date().toISOString().split('T')[0];
-                    const updates = {};
-                    updates[`active_orders/${orderId}/status`] = 'completed';
-                    updates[`active_orders/${orderId}/last_update`] = new Date().toISOString();
-                    // إضافة إلى الخزنة اليومية
-                    updates[`daily_ledgers/${driverData.phone}/${todayISO}/${orderId}`] = {
-                        orderId: orderId, resName: order.resName, price: order.price, comm: driverCommission, timestamp: Date.now()
-                    };
-
-                    await db.ref().update(updates);
-                    
-                    // إزالة من المحلي
-                    activeOrders = activeOrders.filter(o => o.id !== orderId);
-                    showToast("🎉 عاشت إيدك! تم التسليم.");
+                    await db.ref().update({
+                        [`active_orders/${orderId}/status`]: 'completed', [`active_orders/${orderId}/last_update`]: new Date().toISOString(),
+                        [`daily_ledgers/${driverData.phone}/${todayISO}/${orderId}`]: { orderId: orderId, resName: order.resName, price: order.price, comm: driverCommission, timestamp: Date.now() }
+                    });
+                    activeOrders = activeOrders.filter(o => o.id !== orderId); showToast("🎉 تم إنجاز المهمة بطل!");
                 }
-                
-                // حفظ ورسم
-                localStorage.setItem('hut_active_orders', JSON.stringify(activeOrders));
-                displayActiveOrders();
-            } catch (error) {
-                showToast("❌ فشل التحديث. تأكد من الإنترنت.");
-                btn.disabled = false; btn.innerHTML = "إعادة المحاولة";
-            }
+                localStorage.setItem('hut_active_orders', JSON.stringify(activeOrders)); displayActiveOrders();
+            } catch (e) { showToast("❌ فشل التحديث. تأكد من الإنترنت.", false); btn.disabled = false; btn.innerHTML = "إعادة المحاولة"; }
         }
     </script>
 </body>

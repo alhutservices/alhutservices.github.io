@@ -2,27 +2,24 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>نحلة 🐝 | لوحة المطعم الفاخرة</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-        const CURRENT_APP_VERSION = "37.2";
+        // إدارة الإصدارات لضمان التحديث التلقائي
+        const CURRENT_APP_VERSION = "38.0";
         if (localStorage.getItem('hut_res_app_version') !== CURRENT_APP_VERSION) {
             localStorage.setItem('hut_res_app_version', CURRENT_APP_VERSION);
-            if ('caches' in window) { caches.keys().then(names => { for (let name of names) caches.delete(name); }); }
-            if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(regs => { for (let r of regs) r.unregister(); }); }
+            if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(regs => { for (let reg of regs) reg.unregister(); }); }
             location.reload(true);
         }
     </script>
@@ -47,16 +44,10 @@
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--bg-color);
-            background-image: radial-gradient(circle at top right, var(--nahla-yellow-light) 0%, transparent 50%),
-                              radial-gradient(circle at bottom left, #E5E7EB 0%, transparent 50%);
-            background-attachment: fixed;
             color: var(--accent);
             margin: 0; padding: 0;
             -webkit-tap-highlight-color: transparent;
-            padding-bottom: env(safe-area-inset-bottom);
         }
-
-        .hidden-section { display: none !important; }
 
         .glass-panel {
             background: var(--glass-bg);
@@ -75,39 +66,68 @@
         .btn-nahla:active { transform: scale(0.97); background: var(--nahla-yellow-dark); }
         .btn-nahla:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        #loginSection { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .hidden-section { display: none !important; }
+
+        /* شاشة المصادقة */
+        #loginSection { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: radial-gradient(circle at top, var(--nahla-yellow-light) 0%, var(--bg-color) 80%); }
         .login-card { width: 100%; max-width: 400px; padding: 40px 25px; text-align: center; }
-        .auth-input, .custom-input {
+        .auth-input {
             width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 16px;
             border: 2px solid #E5E7EB; background: #F9FAFB;
-            font-weight: 700; font-size: 1.05rem; transition: 0.3s;
+            font-weight: 700; font-size: 1.1rem; text-align: center; transition: 0.3s;
         }
-        .auth-input:focus, .custom-input:focus { border-color: var(--nahla-yellow); outline: none; background: white; box-shadow: 0 0 0 4px rgba(255,193,7,0.1); }
-        .auth-input.text-center { text-align: center; }
+        .auth-input:focus { border-color: var(--nahla-yellow); outline: none; background: white; }
 
-        .commission-type-toggle { display: flex; background: rgba(15, 23, 42, 0.04); border-radius: 16px; padding: 5px; margin-bottom: 15px; }
-        .comm-type-btn { flex: 1; text-align: center; padding: 10px 5px; font-weight: 700; color: #64748b; border-radius: 12px; cursor: pointer; transition: 0.3s ease; font-size: 0.85rem; }
-        .comm-type-btn.active { background: white; color: var(--accent); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-
+        /* الهيدر والإحصائيات */
         .app-header { background: white; padding: 25px 20px 35px 20px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; }
         .stat-card { background: var(--bg-color); border-radius: 16px; padding: 12px 5px; text-align: center; }
-        
-        .custom-s-logo { width: 42px; height: 42px; position: relative; }
-        .custom-s-logo svg { width: 100%; height: 100%; stroke: #cbd5e1; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; transition: stroke 0.5s ease; }
-        .app-header.active .custom-s-logo svg path, .app-header.active .custom-s-logo svg circle { stroke: url(#magicGradient); filter: drop-shadow(0 2px 8px rgba(255, 193, 7, 0.5)); }
 
+        /* التبويبات */
         .nav-tabs-custom { display: flex; padding: 20px 20px 5px 20px; gap: 12px; overflow-x: auto; scrollbar-width: none; }
         .nav-tabs-custom::-webkit-scrollbar { display: none; }
         .nav-tab { padding: 12px 24px; border-radius: 20px; font-weight: 800; background: white; color: #6B7280; white-space: nowrap; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         .nav-tab.active { background: var(--accent); color: var(--nahla-yellow); box-shadow: 0 4px 15px rgba(17,24,39,0.2); }
+
         .tab-content { padding: 20px 20px 100px 20px; }
 
-        .smart-paste-btn { background: rgba(34, 197, 94, 0.1); color: #15803d; border: 1px dashed rgba(34, 197, 94, 0.3); border-radius: 16px; padding: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s; margin-bottom: 20px; }
-        .smart-paste-btn:active { transform: scale(0.98); background: rgba(34, 197, 94, 0.2); }
-        #pasteModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); z-index: 10000; display: none; align-items: center; justify-content: center; }
-        .paste-modal-content { background: rgba(255,255,255,0.95); border-radius: 24px; padding: 25px; width: 90%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center; }
+        /* نماذج الإدخال العصرية */
+        .input-group-custom { margin-bottom: 20px; position: relative; }
+        .input-group-custom label { display: block; font-weight: 800; margin-bottom: 10px; color: var(--accent); font-size: 0.95rem; }
+        .form-control-nahla {
+            width: 100%; padding: 16px 16px 16px 45px; border-radius: 16px; border: 2px solid #E5E7EB;
+            background: white; font-weight: 700; font-size: 1.05rem; transition: 0.3s;
+        }
+        .form-control-nahla:focus { border-color: var(--nahla-yellow); outline: none; box-shadow: 0 0 0 4px rgba(255,193,7,0.1); }
+        .input-icon { position: absolute; left: 16px; bottom: 16px; color: #9CA3AF; pointer-events: none; }
 
+        /* زر الكاميرا العملاق */
+        .camera-card {
+            background: #F8FAFC; border: 3px dashed #CBD5E1; border-radius: 24px; padding: 40px 20px;
+            text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 15px;
+        }
+        .camera-card:active { background: #F1F5F9; border-color: var(--nahla-yellow); }
+        .camera-icon-wrapper { background: var(--nahla-yellow-light); color: var(--warning); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+        /* شريط تقدم الطلب وتحسينات الرادار */
+        .order-card { padding: 22px; margin-bottom: 18px; border: 1px solid #F3F4F6; background: white; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: opacity 0.3s;}
+        .progress-track { height: 6px; background: #F3F4F6; border-radius: 3px; margin: 15px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--nahla-yellow); border-radius: 3px; transition: width 0.5s ease; }
+        .progress-fill.heading { background: #3B82F6; width: 33%; }
+        .progress-fill.arrived { background: var(--warning); width: 66%; }
+        .progress-fill.picked { background: var(--success); width: 100%; }
+        
+        /* Toast */
+        .toast-nahla {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            background: var(--accent); color: white; padding: 14px 24px;
+            border-radius: 30px; font-weight: 800; font-size: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 100000;
+            display: flex; align-items: center; gap: 10px; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-nahla.show { top: 40px; }
+        
+        /* القائمة المنسدلة الذكية */
         .smart-dropdown-wrapper { position: relative; width: 100%; }
         .search-icon-inside { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #9CA3AF; pointer-events: none; }
         .smart-dropdown-list { position: absolute; top: 100%; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 10px 35px rgba(0,0,0,0.1); max-height: 200px; overflow-y: auto; z-index: 100; margin-top: 5px; border: 1px solid #E5E7EB; display: none; padding: 6px; }
@@ -116,43 +136,15 @@
         .dropdown-item-area:hover, .dropdown-item-area:active { background: #F1F5F9; }
         .area-price-tag { font-size: 0.8rem; background: var(--bg-color); padding: 4px 8px; border-radius: 8px; color: var(--success); }
 
-        .smart-phone-wrap { position: relative; }
-        .phone-clean-badge { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); background: var(--success); color: white; border-radius: 50%; width: 24px; height: 24px; display: none; align-items: center; justify-content: center; pointer-events: none; }
-        .smart-phone-wrap.cleaned .phone-clean-badge { display: flex; }
-
-        .camera-card { background: #F8FAFC; border: 3px dashed #CBD5E1; border-radius: 24px; padding: 40px 20px; text-align: center; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .camera-card:active { background: #F1F5F9; border-color: var(--nahla-yellow); }
-        .camera-icon-wrapper { background: var(--nahla-yellow-light); color: var(--warning); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-
-        .order-card { padding: 22px; margin-bottom: 18px; border: 1px solid #F3F4F6; background: white; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: opacity 0.3s;}
-        .progress-track { height: 6px; background: #F3F4F6; border-radius: 3px; margin: 15px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--nahla-yellow); border-radius: 3px; transition: width 0.5s ease; }
-        .progress-fill.heading { background: #3B82F6; width: 33%; }
-        .progress-fill.arrived { background: var(--warning); width: 66%; }
-        .progress-fill.picked { background: var(--success); width: 100%; }
-
-        .toast-nahla { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 14px 24px; border-radius: 30px; font-weight: 800; font-size: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 100000; display: flex; align-items: center; gap: 10px; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-        .toast-nahla.show { top: 40px; }
+        /* نظام العمولة */
+        .commission-type-toggle { display: flex; background: rgba(15, 23, 42, 0.04); border-radius: 16px; padding: 5px; margin-bottom: 15px; }
+        .comm-type-btn { flex: 1; text-align: center; padding: 10px 5px; font-weight: 700; color: #64748b; border-radius: 12px; cursor: pointer; transition: 0.3s ease; font-size: 0.85rem; }
+        .comm-type-btn.active { background: white; color: var(--accent); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
 
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-
-    <div id="pasteModal">
-        <div class="paste-modal-content">
-            <div style="background: rgba(34, 197, 94, 0.1); color: #15803d; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
-                <i data-lucide="message-square-dashed" style="width:30px;height:30px;"></i>
-            </div>
-            <h4 class="fw-black mb-2 text-dark">لصق رسالة الزبون</h4>
-            <p class="text-muted fw-bold mb-3" style="font-size: 0.85rem;">سيقوم الذكاء الاصطناعي بتعبئة الحقول أوتوماتيكياً لاستخراج المنطقة وتفاصيل العنوان الدقيقة.</p>
-            <textarea id="pasteTextInput" class="custom-input mb-3" rows="5" placeholder="مثال: أريد توصيل لحي الجامعة قرب مول بغداد، الحساب 15000، رقمي 077..."></textarea>
-            <div class="d-flex gap-2">
-                <button class="btn btn-light fw-bold w-50" style="border-radius: 16px; padding: 12px;" onclick="closePasteModal()">إلغاء</button>
-                <button class="btn fw-bold text-white w-50" id="processPasteBtn" style="border-radius: 16px; background: #15803d; padding: 12px;" onclick="processPastedText()">تحليل ✨</button>
-            </div>
-        </div>
-    </div>
 
     <div id="loginSection">
         <div class="login-card glass-panel" id="authBox">
@@ -174,21 +166,6 @@
                 <input type="text" id="regArea" class="custom-input" placeholder="منطقة المطعم الأساسية">
                 
                 <div class="mb-3">
-                    <label class="fw-bold mb-2 text-muted" style="font-size: 0.85rem;"><i data-lucide="map-pin" style="width:14px;"></i> حدد موقع المطعم بدقة:</label>
-                    <div class="d-flex gap-2 mb-2">
-                        <input type="text" id="mapSearchInput" class="custom-input py-2 mb-0" placeholder="ابحث عن المنطقة..." style="font-size: 0.9rem; flex: 1;">
-                        <button type="button" class="btn text-white fw-bold rounded-4 px-3" onclick="searchLocation()" style="background: var(--accent);">بحث</button>
-                    </div>
-                    <div class="position-relative">
-                        <div id="pickerMap" style="height: 180px; border-radius: 16px; border: 1px solid #E5E7EB;"></div>
-                        <img src="https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png" alt="Pin" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -100%); z-index: 1000; pointer-events: none; width: 25px; height: 35px;">
-                        <button type="button" class="btn btn-sm bg-white text-primary position-absolute shadow fw-bold d-flex align-items-center gap-1" style="bottom: 10px; right: 10px; z-index: 1000; border-radius: 12px;" onclick="forceLocateMe()">
-                            <i data-lucide="crosshair" style="width:14px;"></i> موقعي
-                        </button>
-                    </div>
-                </div>
-
-                <div class="mb-3">
                     <label class="fw-bold mb-2 text-muted" style="font-size: 0.85rem;">نظام العمولة:</label>
                     <div class="commission-type-toggle" id="commissionTypeToggle">
                         <div class="comm-type-btn active" id="commTypeFixed" onclick="switchCommissionType('fixed')">💰 ثابت</div>
@@ -209,7 +186,7 @@
                     <option value="مناصفة">الدفع مناصفة مع الكابتن</option>
                 </select>
 
-                <textarea id="regPriceList" class="custom-input" rows="3" placeholder="الصق أسعار التوصيل الخاصة بك (سيتم استخراجها كقائمة منسدلة)."></textarea>
+                <textarea id="regPriceList" class="custom-input" rows="3" placeholder="مناطق التوصيل (مثال: التحرير, الجامعة, تسعين)"></textarea>
                 
                 <button class="btn-nahla mt-3 bg-dark text-white" onclick="submitRegistration()">إرسال طلب الانضمام 🚀</button>
             </div>
@@ -230,12 +207,6 @@
                     <div class="badge bg-success mt-2 px-3 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2"><span style="width:8px;height:8px;background:white;border-radius:50%;animation:pulse 2s infinite;"></span> متصل بالرادار</div>
                 </div>
                 <div class="d-flex flex-column align-items-center">
-                    <div class="custom-s-logo mb-2">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <defs><linearGradient id="magicGradient" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#FFC107"><animate attributeName="offset" values="-1; 1; -1" dur="3s" repeatCount="indefinite" /></stop><stop offset="50%" stop-color="#F5B041"><animate attributeName="offset" values="0; 2; 0" dur="3s" repeatCount="indefinite" /></stop><stop offset="100%" stop-color="#EF4444"><animate attributeName="offset" values="1; 3; 1" dur="3s" repeatCount="indefinite" /></stop></linearGradient></defs>
-                            <circle cx="16" cy="5" r="2.5" /><circle cx="8" cy="19" r="2.5" /><path d="M16 8 C 16 11, 8 13, 8 16" />
-                        </svg>
-                    </div>
                     <div class="bg-light p-2 rounded-circle shadow-sm" onclick="logout()" style="cursor:pointer;"><i data-lucide="power" class="text-danger" style="width:16px;"></i></div>
                 </div>
             </div>
@@ -268,16 +239,11 @@
                 <div class="glass-panel p-4 mb-4">
                     
                     <div class="d-flex bg-light p-1 rounded-pill mb-4 border">
-                        <button class="btn w-50 fw-bold rounded-pill border-0 shadow-sm bg-white active" id="btnModeManual" onclick="switchOrderMode('manual')">إدخال نصي ✍️</button>
-                        <button class="btn w-50 fw-bold rounded-pill border-0 text-muted" id="btnModePhoto" onclick="switchOrderMode('photo')">تصوير ذكي 🤖</button>
+                        <button class="btn w-50 fw-bold rounded-pill border-0 shadow-sm bg-white active" id="btnModeManual" onclick="switchOrderMode('manual')">إدخال نصي</button>
+                        <button class="btn w-50 fw-bold rounded-pill border-0 text-muted" id="btnModePhoto" onclick="switchOrderMode('photo')">تصوير الوصل 📸</button>
                     </div>
 
                     <div id="manualOrderForm">
-                        
-                        <div class="smart-paste-btn" onclick="openPasteModal()">
-                            <i data-lucide="clipboard-paste" style="width:18px;"></i> الصق رسالة الواتساب للتعبئة السريعة
-                        </div>
-
                         <div class="input-group-custom">
                             <label>منطقة الزبون (مطلوب)</label>
                             <div class="smart-dropdown-wrapper" id="smartDropdownWrap">
@@ -299,30 +265,29 @@
                         
                         <div class="input-group-custom">
                             <label>المبلغ المطلوب للوصل مع التوصيل (مطلوب)</label>
-                            <input type="number" id="orderPrice" class="custom-input" placeholder="مثال: 15000">
+                            <input type="number" id="orderPrice" class="form-control-nahla" placeholder="مثال: 15000">
                         </div>
 
                         <div class="input-group-custom">
-                            <label>رقم هاتف الزبون</label>
-                            <div class="smart-phone-wrap" id="customerPhoneWrap">
-                                <input type="tel" id="customerPhone" class="custom-input" placeholder="07XX..." dir="ltr" oninput="handleSmartPhone(this)" onpaste="handleSmartPhonePaste(event)" style="text-align: center; letter-spacing: 2px;">
-                                <span class="phone-clean-badge"><i data-lucide="check" style="width:14px;"></i></span>
-                            </div>
-                        </div>
-
-                        <div class="input-group-custom">
-                            <label>تفاصيل الطلب (أقرب نقطة دالة، مكونات)</label>
-                            <input type="text" id="customerDetails" class="custom-input" placeholder="مثال: قرب الجامع...">
+                            <label>هاتف الزبون وتفاصيل إضافية</label>
+                            <input type="text" id="customerDetails" class="form-control-nahla" placeholder="07... - قرب الجامع">
                         </div>
                     </div>
 
                     <div id="photoOrderForm" class="hidden-section">
+                        <div class="input-group-custom">
+                            <label>حدد منطقة التوصيل (مطلوب)</label>
+                            <select id="photoAreaSelect" class="form-control-nahla mb-3">
+                                <option value="">-- اختر منطقة التوصيل --</option>
+                            </select>
+                        </div>
+                        
                         <input type="file" id="receiptPhoto" accept="image/*" capture="environment" class="d-none" onchange="handlePhotoSelect(event)">
                         <label for="receiptPhoto" class="camera-card w-100">
-                            <div class="camera-icon-wrapper"><i data-lucide="scan-line" style="width:35px;height:35px;"></i></div>
+                            <div class="camera-icon-wrapper"><i data-lucide="camera" style="width:35px;height:35px;"></i></div>
                             <div>
                                 <h5 class="fw-bold m-0 text-dark">التقط صورة للوصل</h5>
-                                <p class="text-muted m-0 mt-1 fs-6">الذكاء الاصطناعي سيقرأ منطقة الزبون فوراً</p>
+                                <p class="text-muted m-0 mt-1 fs-6">سيرى الكابتن صورة الوصل مع المنطقة التي حددتها</p>
                             </div>
                         </label>
                         <div class="position-relative mt-3 hidden-section" id="previewContainer">
@@ -357,15 +322,10 @@
     <script>
         lucide.createIcons();
 
-        // 1. الإعدادات والمفاتيح
+        // 1. الإعدادات
         const API_URL = "https://script.google.com/macros/s/AKfycbyA5NXtyt_PelH9IKtZyBLd9UH0x_sn3dKKiak7N2mHahYUAN7Mz7ocYUB3BE4_mby4Ag/exec";
         const API_TOKEN = "NAHLA_SECURE_TOKEN_2026";
         const IMGBB_KEY = "1a0e61277eabce5db06f677dfe8d66ee"; 
-        
-        const _P1 = "AIzaSy"; const _P2 = "BKMRsl"; const _P3 = "Ko5hg5"; const _P4 = "m11gHy"; const _P5 = "4ZdM7_efktiDwxU";
-        const getGeminiKey = () => _P1 + _P2 + _P3 + _P4 + _P5;
-
-        const KIRKUK_AREAS = "طريق بغداد, رحيماوا, تسعين, دوميز, القادسية, الشورجة, الماس, الإسكان, غرناطة, الواسطي, حي العسكري, حي النور, حي المعلمين, حي النداء, شاطرلو, المصلى, عرفة, بنجا علي, حي الخضراء, حي الصناعي, طريق المطار, حي القادسية الثانية, حي العروبة, حي النصر, ساحة طيران, شارع القدس, شوراو";
 
         const firebaseConfig = { databaseURL: "https://nahla-delivery-6b06f-default-rtdb.europe-west1.firebasedatabase.app" };
         firebase.initializeApp(firebaseConfig);
@@ -378,14 +338,10 @@
         let base64Receipt = null;
         let globalDriversMap = {}; 
         let myCustomPriceList = {};
-        
-        let pickerMap;
-        let regLat = 35.468; let regLng = 44.392;
         let currentCommissionType = 'fixed';
 
         window.onload = () => { if (resSession && (Date.now() - resSession.timestamp < 24*3600000)) enterDashboard(); };
 
-        // حل مشكلة انهيار الـ Toast بوضع الأيقونة داخل span
         function showToast(msg, isSuccess = true) {
             document.getElementById('toast-msg').innerText = msg;
             const iconName = isSuccess ? 'check-circle' : 'alert-circle';
@@ -394,36 +350,6 @@
             
             const t = document.getElementById('toast');
             t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500);
-        }
-
-        // ==========================================
-        // أدوات التسجيل والخرائط
-        // ==========================================
-        function initPickerMap() {
-            if (!document.getElementById('pickerMap')) return;
-            if (pickerMap) { setTimeout(() => pickerMap.invalidateSize(), 500); return; }
-            pickerMap = L.map('pickerMap', { zoomControl: false }).setView([regLat, regLng], 14);
-            L.control.zoom({ position: 'bottomleft' }).addTo(pickerMap);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(pickerMap);
-            pickerMap.on('move', function () { regLat = pickerMap.getCenter().lat; regLng = pickerMap.getCenter().lng; });
-            setTimeout(() => pickerMap.invalidateSize(), 500); // تحديث الخريطة بعد الظهور
-        }
-
-        function searchLocation() {
-            const query = document.getElementById('mapSearchInput').value.trim(); if (!query) return;
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ", كركوك, العراق")}&limit=1`)
-                .then(r => r.json()).then(data => {
-                    if (data && data.length > 0) { regLat = parseFloat(data[0].lat); regLng = parseFloat(data[0].lon); if (pickerMap) pickerMap.flyTo([regLat, regLng], 16); }
-                    else { alert("لم يتم العثور على المكان."); }
-                }).catch(() => { alert("حدث خطأ أثناء البحث."); });
-        }
-
-        function forceLocateMe() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => {
-                    regLat = pos.coords.latitude; regLng = pos.coords.longitude; pickerMap.flyTo([regLat, regLng], 16);
-                }, () => { alert("يرجى التأكد من تشغيل الـ GPS."); }, { enableHighAccuracy: true, timeout: 10000 });
-            }
         }
 
         window.switchCommissionType = function(type) {
@@ -493,7 +419,7 @@
                 if (isRegistering) {
                     updateCommissionString();
                     const commFinal = document.getElementById('regCommFinal').value;
-                    const regData = { action: 'RESTAURANT_REG', token: API_TOKEN, phone: '0'+phone, password: pass, name: document.getElementById('regName').value, area: document.getElementById('regArea').value, pay: document.getElementById('regPayType').value, comm: commFinal, lat: regLat, lng: regLng, priceList: parseCustomPriceList(document.getElementById('regPriceList').value) };
+                    const regData = { action: 'RESTAURANT_REG', token: API_TOKEN, phone: '0'+phone, password: pass, name: document.getElementById('regName').value, area: document.getElementById('regArea').value, pay: document.getElementById('regPayType').value, comm: commFinal, lat: 35.468, lng: 44.392, priceList: parseCustomPriceList(document.getElementById('regPriceList').value) };
                     
                     const req = await fetch(API_URL, { method: 'POST', body: JSON.stringify(regData) });
                     document.getElementById('authBox').classList.add('hidden-section'); document.getElementById('waitingBox').classList.remove('hidden-section');
@@ -511,8 +437,7 @@
                     } else { 
                         isRegistering = true; document.getElementById('registerFields').classList.remove('hidden-section'); 
                         btn.innerHTML = "إرسال طلب الانضمام 🚀"; showToast("الرقم غير مسجل، أكمل البيانات للتسجيل.", false); 
-                        setTimeout(initPickerMap, 300);
-                        return; // لا تعيد تفعيل الزر لشكله القديم
+                        return;
                     }
                 }
             } catch(e) {
@@ -557,9 +482,6 @@
             document.getElementById('photoOrderForm').classList.toggle('hidden-section', mode!=='photo');
         }
 
-        // ==========================================
-        // أدوات الإدخال الذكية 
-        // ==========================================
         function parseAndPopulateAreas() {
             const listData = resSession.priceList || "{}";
             myCustomPriceList = {};
@@ -575,12 +497,16 @@
 
         function buildCustomAreaDropdown() {
             const listContainer = document.getElementById('smartDropdownList'); listContainer.innerHTML = '';
+            const photoSelect = document.getElementById('photoAreaSelect'); photoSelect.innerHTML = '<option value="">-- اختر منطقة التوصيل --</option>';
+            
             let html = '';
             Object.keys(myCustomPriceList).sort().forEach(area => {
                 const price = myCustomPriceList[area] || 0;
                 html += `<div class="dropdown-item-area" onclick="selectDropdownArea('${area}', ${price})"><span>${area}</span><span class="area-price-tag">${price > 0 ? price + ' د.ع' : 'بدون تسعيرة'}</span></div>`;
+                photoSelect.innerHTML += `<option value="${area}" data-price="${price}">${area} ${price > 0 ? '(' + price + ' د.ع)' : ''}</option>`;
             });
             html += `<div class="dropdown-item-area text-primary mt-1" onclick="selectDropdownArea('أخرى')">منطقة غير مدرجة بالقائمة</div>`;
+            photoSelect.innerHTML += `<option value="أخرى" data-price="0">منطقة غير مدرجة</option>`;
             listContainer.innerHTML = html;
         }
 
@@ -598,49 +524,6 @@
             else { customSec.classList.add('hidden-section'); if(price > 0) { priceHint.classList.remove('hidden-section'); priceHint.innerText = `التوصيل: ${price} د.ع`; document.getElementById('orderPrice').value = price; } else { priceHint.classList.add('hidden-section'); } }
         }
         document.addEventListener('click', function(e) { const wrap = document.getElementById('smartDropdownWrap'); const list = document.getElementById('smartDropdownList'); if (wrap && !wrap.contains(e.target)) list.classList.remove('show'); });
-
-        window.normalizeCustomerPhone = function(raw) {
-            if (!raw) return { clean: '', changed: false };
-            const original = raw; const ar = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩']; const fa = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
-            let p = raw; for (let i = 0; i < 10; i++) { p = p.replace(new RegExp(ar[i], 'g'), String(i)); p = p.replace(new RegExp(fa[i], 'g'), String(i)); }
-            p = p.replace(/[^\d+]/g, ''); p = p.replace(/^\+9640?/, '0'); p = p.replace(/^009640?/, '0'); p = p.replace(/^9640?/, '0');
-            if (/^7[0-9]{8,9}$/.test(p)) p = '0' + p;
-            const changed = (p !== original.replace(/[^\d+]/g, '') && p.length > 0);
-            return { clean: p, changed };
-        }
-        function handleSmartPhone(input) { const { clean, changed } = normalizeCustomerPhone(input.value); const wrap = document.getElementById('customerPhoneWrap'); if (changed && clean.length >= 10) { input.value = clean; wrap.classList.add('cleaned'); } else { wrap.classList.remove('cleaned'); } }
-        function handleSmartPhonePaste(e) { e.preventDefault(); const pasted = (e.clipboardData || window.clipboardData).getData('text'); const { clean, changed } = normalizeCustomerPhone(pasted); document.getElementById('customerPhone').value = clean || pasted; handleSmartPhone(document.getElementById('customerPhone')); }
-
-        // --- اللصق الذكي عبر Gemini ---
-        async function fetchGeminiWithRetry(payload) {
-            try {
-                let res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getGeminiKey()}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                let data = await res.json(); return data;
-            } catch(e) { return {error: true}; }
-        }
-
-        function openPasteModal() { document.getElementById('pasteModal').style.display = 'flex'; document.getElementById('pasteTextInput').value = ''; }
-        function closePasteModal() { document.getElementById('pasteModal').style.display = 'none'; }
-        
-        async function processPastedText() {
-            const text = document.getElementById('pasteTextInput').value.trim(); if (!text) return;
-            const btn = document.getElementById('processPasteBtn'); btn.innerHTML = `جاري الفهم... ⏳`; btn.disabled = true;
-
-            const areaNames = Object.keys(myCustomPriceList).length > 0 ? Object.keys(myCustomPriceList).join('، ') : KIRKUK_AREAS;
-            const promptText = `استخرج: السعر (price) كرقم، الهاتف (phone)، المنطقة (area) بناءً على [${areaNames}] أو غيرها، التفاصيل (details) لأقرب نقطة من هذه الرسالة: "${text}". أرجع JSON فقط {price, phone, area, details}`;
-
-            try {
-                const data = await fetchGeminiWithRetry({ "contents": [{ "parts": [{ "text": promptText }] }], "generationConfig": { "response_mime_type": "application/json" } });
-                let cleanJson = JSON.parse(data.candidates[0].content.parts[0].text.replace(/```json/g, "").replace(/```/g, "").trim());
-                
-                if (cleanJson.phone) { document.getElementById('customerPhone').value = cleanJson.phone; handleSmartPhone(document.getElementById('customerPhone')); }
-                if (cleanJson.price) { document.getElementById('orderPrice').value = String(cleanJson.price).replace(/\D/g, ''); }
-                if (cleanJson.details) { document.getElementById('customerDetails').value = cleanJson.details; }
-                if (cleanJson.area) { selectDropdownArea(cleanJson.area); }
-                closePasteModal(); showToast("✨ تمت التعبئة الذكية!");
-            } catch (e) { showToast("لم نتمكن من فهم الرسالة تلقائياً.", false); }
-            btn.innerHTML = `تحليل ✨`; btn.disabled = false;
-        }
 
         // ==========================================
         // معالجة وإرسال الطلب 
@@ -688,10 +571,11 @@
                     } else if (myCustomPriceList[finalArea] > 0) { finalArea = `${finalArea} (توصيل: ${myCustomPriceList[finalArea]})`; }
 
                     const price = Number(document.getElementById('orderPrice').value);
-                    const phone = document.getElementById('customerPhone').value.replace(/[^\d]/g, '');
+                    const phone = document.getElementById('customerPhone') ? document.getElementById('customerPhone').value.replace(/[^\d]/g, '') : "";
+                    const details = document.getElementById('customerDetails') ? document.getElementById('customerDetails').value : "";
                     if (!finalArea || !price) { btn.disabled = false; btn.innerHTML = originalBtnText; return showToast("⚠️ يرجى إدخال المنطقة والمبلغ", false); }
                     
-                    orderPayload.area = finalArea; orderPayload.price = price; orderPayload.details = document.getElementById('customerDetails').value + (phone ? ` | هاتف: ${phone}` : "");
+                    orderPayload.area = finalArea; orderPayload.price = price; orderPayload.details = details + (phone ? ` | هاتف: ${phone}` : "");
                     
                     await db.ref(`active_orders/${orderId}`).set(orderPayload);
                     fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'NEW_ORDER', order: orderPayload, token: API_TOKEN }) }).catch(()=>{});
@@ -702,12 +586,39 @@
                 } else {
                     if (!base64Receipt) { btn.disabled = false; btn.innerHTML = originalBtnText; return showToast("⚠️ يرجى تصوير الوصل أولاً", false); }
 
-                    orderPayload.area = "جاري قراءة المنطقة 🤖..."; orderPayload.price = 0; orderPayload.details = "طلب بوصل مصور"; orderPayload.photoUrl = "processing";
+                    const selectedArea = document.getElementById('photoAreaSelect').value;
+                    if (!selectedArea) { btn.disabled = false; btn.innerHTML = originalBtnText; return showToast("⚠️ يرجى اختيار المنطقة", false); }
+
+                    let finalArea = selectedArea;
+                    let finalPrice = 0;
+                    
+                    if (selectedArea !== "أخرى") {
+                        finalPrice = myCustomPriceList[selectedArea] || 0;
+                        if(finalPrice > 0) finalArea = `${selectedArea} (توصيل: ${finalPrice})`;
+                    }
+
+                    orderPayload.area = finalArea; 
+                    orderPayload.price = finalPrice; 
+                    orderPayload.details = "طلب بوصل مصور"; 
+                    orderPayload.photoUrl = "processing";
+
                     await db.ref(`active_orders/${orderId}`).set(orderPayload); 
                     
                     showToast("🚀 تم استلام الطلب! وتوجيهه للرادار.");
                     const b64Data = base64Receipt; resetForms();
-                    processBackgroundAI(orderId, b64Data);
+                    
+                    try {
+                        let fd = new FormData(); fd.append("image", b64Data.split(',')[1]);
+                        let res = await fetch("https://api.imgbb.com/1/upload?key=" + IMGBB_KEY, { method: "POST", body: fd });
+                        let data = await res.json(); 
+                        if(data && data.data && data.data.url) {
+                            db.ref(`active_orders/${orderId}`).update({ photoUrl: data.data.url });
+                        } else {
+                            db.ref(`active_orders/${orderId}`).update({ photoUrl: b64Data });
+                        }
+                    } catch(e) {
+                        db.ref(`active_orders/${orderId}`).update({ photoUrl: b64Data });
+                    }
                 }
             } catch(e) {
                 showToast("❌ خطأ في الإرسال. تأكد من اتصال الإنترنت.", false);
@@ -718,40 +629,12 @@
 
         function resetForms() {
             document.getElementById('customerArea').value = ''; document.getElementById('areaDisplayInput').value = ''; document.getElementById('customAreaSection').classList.add('hidden-section'); document.getElementById('priceHint').classList.add('hidden-section');
-            document.getElementById('orderPrice').value = ''; document.getElementById('customerPhone').value = ''; document.getElementById('customerDetails').value = ''; document.getElementById('customerPhoneWrap').classList.remove('cleaned');
+            if(document.getElementById('orderPrice')) document.getElementById('orderPrice').value = ''; 
+            if(document.getElementById('customerPhone')) document.getElementById('customerPhone').value = ''; 
+            if(document.getElementById('customerDetails')) document.getElementById('customerDetails').value = '';
             document.getElementById('customAreaName').value = ''; document.getElementById('customAreaPrice').value = '';
+            document.getElementById('photoAreaSelect').value = '';
             clearPhotoPreview();
-        }
-
-        async function processBackgroundAI(orderId, base64Data) {
-            try {
-                let uploadedUrl = null;
-                try {
-                    let fd = new FormData(); fd.append("image", base64Data.split(',')[1]);
-                    let res = await fetch("https://api.imgbb.com/1/upload?key=" + IMGBB_KEY, { method: "POST", body: fd });
-                    let data = await res.json(); uploadedUrl = data.data.url;
-                } catch(e) {}
-
-                let extractedArea = "غير محدد";
-                try {
-                    let promptText = `أنت خبير ذكاء اصطناعي متخصص في قراءة وصولات المطاعم العراقية (في كركوك).
-مهمتك: استخراج "منطقة توصيل الزبون" فقط من الصورة.
-1. ابحث عن كلمة "العنوان" أو "Road" أو "شارع" أو "حي".
-2. اقرأ الكتابات بخط اليد في أعلى أو أسفل الوصل (غالباً تكون هي المنطقة مثل "ساحة طيران").
-3. تجاهل اسم المطعم تماماً وتجاهل الوجبات.
-4. طابق المنطقة مع: [${KIRKUK_AREAS}].
-5. أرجع اسم المنطقة الأقرب فقط. وإذا لم تجدها أرجع "غير محدد".`;
-
-                    let aiResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getGeminiKey(), {
-                        method: "POST", headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ contents: [{ parts: [{text: promptText}, {inline_data: { mime_type: "image/jpeg", data: base64Data.split(',')[1] }}] }] })
-                    });
-                    let aiResult = await aiResponse.json();
-                    if(aiResult.candidates && aiResult.candidates[0].content.parts[0].text) { extractedArea = aiResult.candidates[0].content.parts[0].text.replace(/[\n\r\*_]/g, '').trim(); }
-                } catch(e) { console.error("AI Error"); }
-
-                db.ref(`active_orders/${orderId}`).update({ area: extractedArea, photoUrl: uploadedUrl || base64Data });
-            } catch(e) { db.ref(`active_orders/${orderId}`).update({ area: "غير محدد (فشل القراءة)" }); }
         }
 
         // ==========================================
@@ -760,9 +643,6 @@
         function startHotDataListeners() {
             const cleanPhone = String(resSession.phone).replace(/^0+/, '');
             
-            const headerObj = document.getElementById('mainAppHeader');
-            if(headerObj) headerObj.classList.add('active');
-
             db.ref('active_orders').on('value', snap => {
                 const allOrders = snap.val() || {};
                 let liveHTML = '', archiveHTML = '', liveCount = 0, todayOrdersCount = 0, todaySales = 0;

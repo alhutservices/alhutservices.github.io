@@ -5,21 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>نحلة 🐝 | لوحة المطعم الفاخرة</title>
     
-    <!-- الخطوط والأيقونات -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- Bootstrap 5 RTL -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Firebase SDK (V8) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
         // إدارة الإصدارات لضمان التحديث التلقائي
-        const CURRENT_APP_VERSION = "36.0";
+        const CURRENT_APP_VERSION = "36.5";
         if (localStorage.getItem('hut_res_app_version') !== CURRENT_APP_VERSION) {
             localStorage.setItem('hut_res_app_version', CURRENT_APP_VERSION);
             if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(regs => { for (let reg of regs) reg.unregister(); }); }
@@ -83,11 +80,12 @@
 
         /* الهيدر والإحصائيات */
         .app-header { background: white; padding: 25px 20px 35px 20px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); position: sticky; top: 0; z-index: 100; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .stat-card { background: var(--bg-color); border-radius: 20px; padding: 15px; text-align: center; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .stat-card { background: var(--bg-color); border-radius: 16px; padding: 12px 5px; text-align: center; }
 
         /* التبويبات */
-        .nav-tabs-custom { display: flex; padding: 20px 20px 5px 20px; gap: 12px; overflow-x: auto; }
+        .nav-tabs-custom { display: flex; padding: 20px 20px 5px 20px; gap: 12px; overflow-x: auto; scrollbar-width: none; }
+        .nav-tabs-custom::-webkit-scrollbar { display: none; }
         .nav-tab { padding: 12px 24px; border-radius: 20px; font-weight: 800; background: white; color: #6B7280; white-space: nowrap; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         .nav-tab.active { background: var(--accent); color: var(--nahla-yellow); box-shadow: 0 4px 15px rgba(17,24,39,0.2); }
 
@@ -111,14 +109,14 @@
         .camera-card:active { background: #F1F5F9; border-color: var(--nahla-yellow); }
         .camera-icon-wrapper { background: var(--nahla-yellow-light); color: var(--warning); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* شريط تقدم الطلب */
-        .order-card { padding: 20px; margin-bottom: 15px; border: 1px solid #F3F4F6; }
+        /* شريط تقدم الطلب وتحسينات الرادار */
+        .order-card { padding: 22px; margin-bottom: 18px; border: 1px solid #F3F4F6; background: white; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);}
         .progress-track { height: 6px; background: #F3F4F6; border-radius: 3px; margin: 15px 0; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--nahla-yellow); border-radius: 3px; transition: width 0.5s ease; }
         .progress-fill.heading { background: #3B82F6; width: 33%; }
         .progress-fill.arrived { background: var(--warning); width: 66%; }
         .progress-fill.picked { background: var(--success); width: 100%; }
-
+        
         /* Toast */
         .toast-nahla {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
@@ -132,7 +130,6 @@
 </head>
 <body>
 
-    <!-- 🔐 شاشة المصادقة -->
     <div id="loginSection">
         <div class="login-card glass-panel" id="authBox">
             <div class="mb-4 d-flex justify-content-center">
@@ -167,32 +164,33 @@
         </div>
     </div>
 
-    <!-- 🚀 لوحة التحكم الرئيسية -->
     <div id="dashboardSection" class="hidden-section">
         
-        <!-- الهيدر -->
         <div class="app-header">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h3 class="fw-bold m-0" id="headerResName" style="color:var(--accent);">مطعم ...</h3>
                     <div class="badge bg-success mt-2 px-3 py-2 rounded-pill shadow-sm"><span style="width:8px;height:8px;background:white;border-radius:50%;display:inline-block;margin-left:6px;animation:pulse 2s infinite;"></span> متصل بالشبكة</div>
                 </div>
-                <div class="bg-light p-3 rounded-circle" onclick="logout()" style="cursor:pointer;"><i data-lucide="power" class="text-danger"></i></div>
+                <div class="bg-light p-3 rounded-circle shadow-sm" onclick="logout()" style="cursor:pointer;"><i data-lucide="power" class="text-danger"></i></div>
             </div>
             
             <div class="stats-grid">
                 <div class="stat-card">
-                    <small class="text-muted fw-bold d-block">الطلبات المنجزة</small>
-                    <h3 class="fw-bold m-0 text-dark" id="statMonthOrders">0</h3>
+                    <small class="text-muted fw-bold d-block">المنجزة اليوم</small>
+                    <h4 class="fw-bold m-0 text-dark" id="statTodayOrders">0</h4>
                 </div>
                 <div class="stat-card">
                     <small class="text-muted fw-bold d-block">المبيعات (د.ع)</small>
-                    <h3 class="fw-bold m-0 text-success" id="todayTotalSales">0</h3>
+                    <h4 class="fw-bold m-0 text-success" id="todayTotalSales">0</h4>
+                </div>
+                <div class="stat-card">
+                    <small class="text-muted fw-bold d-block">الديون (د.ع)</small>
+                    <h4 class="fw-bold m-0 text-danger" id="statDebt">0</h4>
                 </div>
             </div>
         </div>
 
-        <!-- التبويبات -->
         <div class="nav-tabs-custom">
             <div class="nav-tab active" onclick="switchTab('tab-new-order', this)"><i data-lucide="rocket"></i> إرسال سريع</div>
             <div class="nav-tab" onclick="switchTab('tab-live-orders', this)"><i data-lucide="activity"></i> النشطة (<span id="activeCount">0</span>)</div>
@@ -201,7 +199,6 @@
 
         <div class="tab-content">
             
-            <!-- 1️⃣ إرسال طلب جديد -->
             <div id="tab-new-order">
                 <div class="glass-panel p-4 mb-4">
                     
@@ -210,7 +207,6 @@
                         <button class="btn w-50 fw-bold rounded-pill border-0 text-muted" id="btnModePhoto" onclick="switchOrderMode('photo')">تصوير ذكي 🤖</button>
                     </div>
 
-                    <!-- الوضع اليدوي -->
                     <div id="manualOrderForm">
                         <div class="input-group-custom">
                             <label>منطقة الزبون (مطلوب)</label>
@@ -232,11 +228,10 @@
                         </div>
                     </div>
 
-                    <!-- وضع صورة الوصل الذكي -->
                     <div id="photoOrderForm" class="hidden-section">
                         <input type="file" id="receiptPhoto" accept="image/*" capture="environment" class="d-none" onchange="handlePhotoSelect(event)">
                         <label for="receiptPhoto" class="camera-card w-100">
-                            <div class="camera-icon-wrapper"><i data-lucide="scan" style="width:35px;height:35px;"></i></div>
+                            <div class="camera-icon-wrapper"><i data-lucide="scan-line" style="width:35px;height:35px;"></i></div>
                             <div>
                                 <h5 class="fw-bold m-0 text-dark">التقط صورة للوصل</h5>
                                 <p class="text-muted m-0 mt-1 fs-6">الذكاء الاصطناعي سيقرأ منطقة الزبون فوراً</p>
@@ -244,7 +239,7 @@
                         </label>
                         <div class="position-relative mt-3 hidden-section" id="previewContainer">
                             <img id="photoPreview" class="rounded-4 w-100 shadow-sm" style="max-height: 250px; object-fit: cover;">
-                            <button class="btn btn-danger position-absolute top-0 start-0 m-2 rounded-circle p-2" onclick="clearPhotoPreview()"><i data-lucide="x"></i></button>
+                            <button class="btn btn-danger position-absolute top-0 start-0 m-2 rounded-circle p-2 shadow" onclick="clearPhotoPreview()"><i data-lucide="x"></i></button>
                         </div>
                     </div>
 
@@ -252,12 +247,10 @@
                 </div>
             </div>
 
-            <!-- 2️⃣ الطلبات النشطة -->
             <div id="tab-live-orders" class="hidden-section">
                 <div id="liveOrdersContainer"></div>
             </div>
 
-            <!-- 3️⃣ أرشيف اليوم -->
             <div id="tab-archive" class="hidden-section">
                 <div class="glass-panel p-3">
                     <h5 class="fw-bold mb-3">تم توصيلها بنجاح 🏆</h5>
@@ -268,12 +261,8 @@
         </div>
     </div>
 
-    <!-- إشعار عائم -->
     <div id="toast" class="toast-nahla"><i data-lucide="check-circle" id="toast-icon"></i> <span id="toast-msg">تم!</span></div>
 
-    <!-- ==========================================
-         🐝 المنطق البرمجي (V36.0 Silicon Valley Level)
-         ========================================== -->
     <script>
         lucide.createIcons();
 
@@ -285,8 +274,8 @@
         const _P1 = "AIzaSy"; const _P2 = "BKMRsl"; const _P3 = "Ko5hg5"; const _P4 = "m11gHy"; const _P5 = "4ZdM7_efktiDwxU";
         const getGeminiKey = () => _P1 + _P2 + _P3 + _P4 + _P5;
 
-        // مناطق كركوك الشاملة للذكاء الاصطناعي
-        const KIRKUK_AREAS = "طريق بغداد, رحيماوا, تسعين, دوميز, القادسية, الشورجة, الماس, الإسكان, غرناطة, الواسطي, حي العسكري, حي النور, حي المعلمين, حي النداء, شاطرلو, المصلى, عرفة, بنجا علي, حي الخضراء, حي الصناعي, طريق المطار, حي القادسية الثانية, حي العروبة, حي النصر";
+        // مناطق كركوك المحدثة للذكاء الاصطناعي
+        const KIRKUK_AREAS = "طريق بغداد, رحيماوا, تسعين, دوميز, القادسية, الشورجة, الماس, الإسكان, غرناطة, الواسطي, حي العسكري, حي النور, حي المعلمين, حي النداء, شاطرلو, المصلى, عرفة, بنجا علي, حي الخضراء, حي الصناعي, طريق المطار, حي القادسية الثانية, حي العروبة, حي النصر, ساحة طيران, شارع القدس, شوراو";
 
         const firebaseConfig = { databaseURL: "https://nahla-delivery-6b06f-default-rtdb.europe-west1.firebasedatabase.app" };
         firebase.initializeApp(firebaseConfig);
@@ -297,6 +286,7 @@
         let isRegistering = false;
         let currentOrderMode = 'manual';
         let base64Receipt = null;
+        let globalDriversMap = {}; // لحفظ أسماء الكباتن
 
         window.onload = () => { if (resSession && (Date.now() - resSession.timestamp < 24*3600000)) enterDashboard(); };
 
@@ -306,6 +296,15 @@
             lucide.createIcons();
             const t = document.getElementById('toast');
             t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3500);
+        }
+
+        function normalizePhone(phone) {
+            if (!phone) return ""; let p = String(phone).trim();
+            const ar = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+            for (let i = 0; i < 10; i++) p = p.replace(new RegExp(ar[i], 'g'), String(i));
+            let clean = p.replace(/\D/g, ''); 
+            if (clean.startsWith('0')) clean = clean.substring(1); 
+            return clean;
         }
 
         // 3. المصادقة
@@ -336,11 +335,18 @@
 
         function logout() { localStorage.removeItem('hut_res_session'); location.reload(); }
 
-        // 4. الدخول
+        // 4. الدخول وتهيئة الواجهة
         function enterDashboard() {
             document.getElementById('loginSection').classList.add('hidden-section');
             document.getElementById('dashboardSection').classList.remove('hidden-section');
             document.getElementById('headerResName').innerText = resSession.name;
+            
+            // جلب أسماء الكباتن في الخلفية
+            fetch(`${API_URL}?action=getGlobalData&token=${API_TOKEN}`)
+                .then(r => r.json())
+                .then(data => { (data.drivers || []).forEach(d => { if(d[2]) globalDriversMap[normalizePhone(d[2])] = d[1]; }); })
+                .catch(e=>{});
+
             startHotDataListeners();
         }
 
@@ -427,7 +433,7 @@
 
         async function processBackgroundAI(orderId, base64Data) {
             try {
-                // أ. الرفع للصور
+                // أ. الرفع للصور (ImgBB)
                 let uploadedUrl = null;
                 try {
                     let bImg = base64Data.split(',')[1]; let fd = new FormData(); fd.append("image", bImg);
@@ -435,18 +441,26 @@
                     let data = await res.json(); uploadedUrl = data.data.url;
                 } catch(e) {}
 
-                // ب. الذكاء الاصطناعي لاستخراج المنطقة حصراً
+                // ب. الذكاء الاصطناعي لاستخراج المنطقة حصراً (Monster Mode Prompt)
                 let extractedArea = "غير محدد";
                 try {
                     let bImgClean = base64Data.split(',')[1];
-                    let promptText = `أنت مساعد ذكي. اقرأ هذا الوصل واستخرج اسم "منطقة التوصيل" للزبون فقط. تجاهل اسم المطعم. اختر أقرب منطقة مطابقة من هذه القائمة (مناطق كركوك): ${KIRKUK_AREAS}. أرجع اسم المنطقة فقط وبدون أي كلمات أخرى. إذا لم تجدها أرجع "غير محدد".`;
+                    let promptText = `أنت خبير ذكاء اصطناعي متخصص في قراءة وصولات المطاعم العراقية (في كركوك).
+مهمتك: استخراج "منطقة توصيل الزبون" فقط من الصورة.
+ملاحظات هامة جداً للبحث:
+1. ابحث عن كلمة "العنوان" أو "Road" أو "شارع" أو "حي".
+2. اقرأ الكتابات بخط اليد في أعلى أو أسفل الوصل (غالباً تكون هي المنطقة مثل "ساحة طيران").
+3. تجاهل اسم المطعم تماماً وتجاهل تفاصيل الوجبات.
+4. طابق المنطقة التي وجدتها مع هذه القائمة: [${KIRKUK_AREAS}].
+5. أرجع اسم المنطقة الأقرب المطابق من القائمة فقططططط (مثال: "حي الواسطي") وإذا لم تجدها واضحة أرجع "غير محدد".`;
+
                     let aiResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getGeminiKey(), {
                         method: "POST", headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ contents: [{ parts: [{text: promptText}, {inline_data: { mime_type: "image/jpeg", data: bImgClean }}] }] })
                     });
                     let aiResult = await aiResponse.json();
                     if(aiResult.candidates && aiResult.candidates[0].content.parts[0].text) {
-                        extractedArea = aiResult.candidates[0].content.parts[0].text.replace(/[\n\r]/g, '').trim();
+                        extractedArea = aiResult.candidates[0].content.parts[0].text.replace(/[\n\r\*_]/g, '').trim();
                     }
                 } catch(e) { console.error("AI Error"); }
 
@@ -461,58 +475,95 @@
             }
         }
 
-        // 6. المستمعات (الرادار)
+        // 6. المستمعات (الرادار والإحصائيات)
         function startHotDataListeners() {
             const cleanPhone = String(resSession.phone).replace(/^0+/, '');
 
+            // استماع للطلبات والمبيعات اليومية
             db.ref('active_orders').on('value', snap => {
                 const allOrders = snap.val() || {};
-                let liveHTML = '', archiveHTML = '', liveCount = 0, archCount = 0, sales = 0;
+                let liveHTML = '', archiveHTML = '', liveCount = 0, todayOrdersCount = 0, todaySales = 0;
                 
-                const myOrders = Object.values(allOrders).filter(o => o.resPhone === resSession.phone || o.restaurant === resSession.name).sort((a,b)=> new Date(b.timestamp) - new Date(a.timestamp));
+                const myOrders = Object.values(allOrders)
+                    .filter(o => o.resPhone === resSession.phone || o.restaurant === resSession.name)
+                    .sort((a,b)=> new Date(b.timestamp) - new Date(a.timestamp));
 
                 myOrders.forEach(o => {
                     if (o.status === 'deleted') return;
+                    
                     if (o.status === 'completed' || o.status === 'مكتمل') {
-                        archCount++; sales += Number(o.price||0);
-                        archiveHTML += `<div class="glass-panel p-3 mb-2 border-end border-5 border-success"><div class="d-flex justify-content-between"><h6 class="fw-bold m-0">#${o.id.substring(0,5)} | ${o.area}</h6><span class="text-success fw-bold">${o.price} د.ع</span></div></div>`;
+                        todayOrdersCount++; todaySales += Number(o.price||0);
+                        archiveHTML += `
+                            <div class="glass-panel p-3 mb-2 border-end border-5 border-success">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="fw-bold m-0">#${o.id.substring(0,5)} | ${o.area}</h6>
+                                    <span class="text-success fw-bold">${o.price} د.ع</span>
+                                </div>
+                            </div>`;
                     } else {
                         liveCount++;
-                        let barClass = '', statusText = '', btnAction = '';
-                        if(o.status === 'pending_driver' || o.status === 'manual_pending') { barClass = ''; statusText = 'يبحث عن كابتن 🔍'; btnAction = `<button class="btn btn-sm bg-light text-danger mt-2 w-100 fw-bold border-0" onclick="cancelOrder('${o.id}')">إلغاء الطلب ✕</button>`;}
-                        else if(['accepted','heading'].includes(o.status)) { barClass = 'heading'; statusText = `الكابتن متوجه 🛵 (${o.driverPhone})`; btnAction = o.ready_for_pickup ? `<div class="text-success fw-bold text-center mt-2">✓ أُبلغ الكابتن بالجاهزية</div>` : `<button class="btn btn-sm btn-success mt-2 w-100 fw-bold" onclick="markReady('${o.id}')">الطلب جاهز للكابتن 🔔</button>`;}
-                        else if(o.status === 'arrived_at_res') { barClass = 'arrived'; statusText = 'الكابتن بالمطعم 📍'; btnAction = `<div class="text-warning fw-bold text-center mt-2">سلم الطلب للكابتن</div>`;}
-                        else if(o.status === 'picked_up') { barClass = 'picked'; statusText = 'بالطريق للزبون 💨'; }
+                        let barClass = '', statusText = '', actionBtns = '';
+                        
+                        // اسم الكابتن وزر الاتصال
+                        let drvName = globalDriversMap[normalizePhone(o.driverPhone)] || 'كابتن';
+                        let callBtnHtml = o.driverPhone && o.driverPhone !== 'system_routing' && o.driverPhone !== 'pending_driver'
+                            ? `<a href="tel:${o.driverPhone}" class="btn btn-sm bg-light text-primary fw-bold rounded-pill px-3 shadow-sm border"><i data-lucide="phone-call" style="width:14px;"></i> اتصال بالكابتن</a>` : '';
+
+                        // زر الحذف (متاح دائماً باستثناء حالة picked_up أو completed)
+                        let cancelBtnHtml = (o.status !== 'picked_up' && o.status !== 'completed' && o.status !== 'deleted') 
+                            ? `<button class="btn btn-sm bg-danger text-white mt-3 w-100 fw-bold border-0 rounded-pill shadow-sm" onclick="cancelOrder('${o.id}')">إلغاء الطلب نهائياً ✕</button>` : '';
+
+                        if(o.status === 'pending_driver' || o.status === 'manual_pending') { 
+                            barClass = ''; statusText = 'يبحث عن كابتن 🔍'; 
+                        }
+                        else if(['accepted','heading'].includes(o.status)) { 
+                            barClass = 'heading'; statusText = `الكابتن (${drvName}) متوجه إليك 🛵`; 
+                            actionBtns = o.ready_for_pickup ? `<div class="text-success fw-bold text-center mt-3">✓ أُبلغ الكابتن بالجاهزية</div>` : `<button class="btn btn-sm btn-success mt-3 w-100 fw-bold rounded-pill shadow-sm" onclick="markReady('${o.id}')">الطلب جاهز للكابتن 🔔</button>`;
+                        }
+                        else if(o.status === 'arrived_at_res') { 
+                            barClass = 'arrived'; statusText = `الكابتن (${drvName}) بالمطعم 📍`; 
+                            actionBtns = `<div class="text-warning fw-bold text-center mt-3">سلم الطلب للكابتن</div>`;
+                        }
+                        else if(o.status === 'picked_up') { 
+                            barClass = 'picked'; statusText = `الكابتن (${drvName}) بالطريق للزبون 💨`; 
+                        }
 
                         liveHTML += `
-                            <div class="order-card glass-panel">
+                            <div class="order-card">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h6 class="fw-bold m-0 text-dark">#${o.id.substring(0,5)} <span class="badge bg-light text-dark ms-1">${o.area}</span></h6>
-                                    <span class="fw-bold text-primary">${o.price > 0 ? o.price + ' د.ع' : 'بالصورة'}</span>
+                                    <h6 class="fw-bold m-0 text-dark">#${o.id.substring(0,5)} <span class="badge bg-light text-dark ms-1 border shadow-sm">${o.area}</span></h6>
+                                    <div class="text-end">
+                                        <div class="fw-bold text-success fs-5 mb-2">${o.price > 0 ? o.price.toLocaleString() + ' د.ع' : '<i data-lucide="scan-line" style="width:16px;"></i> بالصورة'}</div>
+                                        ${callBtnHtml}
+                                    </div>
                                 </div>
                                 <div class="progress-track"><div class="progress-fill ${barClass}"></div></div>
-                                <div class="text-center fw-bold text-muted" style="font-size:0.95rem;">${statusText}</div>
-                                ${btnAction}
+                                <div class="text-center fw-bold text-accent" style="font-size:1rem;">${statusText}</div>
+                                ${actionBtns}
+                                ${cancelBtnHtml}
                             </div>`;
                     }
                 });
 
-                document.getElementById('liveOrdersContainer').innerHTML = liveHTML || `<div class="text-center text-muted mt-5 fw-bold opacity-50"><i data-lucide="check-circle" style="width:50px;height:50px;margin-bottom:10px;"></i><br>تم توصيل جميع الطلبات!</div>`;
+                document.getElementById('liveOrdersContainer').innerHTML = liveHTML || `<div class="text-center text-muted mt-5 fw-bold opacity-50"><i data-lucide="check-circle" style="width:50px;height:50px;margin-bottom:10px;"></i><br>لا توجد طلبات نشطة، انطلق وأرسل طلباتك!</div>`;
                 document.getElementById('activeCount').innerText = liveCount;
                 document.getElementById('archiveContainer').innerHTML = archiveHTML || `<div class="text-center text-muted">لا يوجد طلبات منجزة اليوم.</div>`;
-                document.getElementById('archiveCount').innerText = archCount;
-                document.getElementById('todayTotalSales').innerHTML = sales.toLocaleString();
+                
+                // تحديث مبيعات اليوم من الـ Active Orders
+                document.getElementById('statTodayOrders').innerText = todayOrdersCount;
+                document.getElementById('todayTotalSales').innerHTML = todaySales.toLocaleString();
                 lucide.createIcons();
             });
 
+            // استماع الديون المتراكمة للمطعم
             db.ref(`ledgers/restaurants/${cleanPhone}`).on('value', snap => {
-                const ledger = snap.val() || { completed_orders: 0 };
-                document.getElementById('statMonthOrders').innerText = ledger.completed_orders;
+                const ledger = snap.val() || { debt: 0 };
+                document.getElementById('statDebt').innerText = (ledger.debt || 0).toLocaleString();
             });
         }
 
-        function markReady(orderId) { db.ref(`active_orders/${orderId}`).update({ ready_for_pickup: true }); showToast("تم التنبيه 🔔"); }
-        function cancelOrder(orderId) { if(confirm("إلغاء الطلب نهائياً؟")) db.ref(`active_orders/${orderId}`).update({ status: 'deleted' }); }
+        function markReady(orderId) { db.ref(`active_orders/${orderId}`).update({ ready_for_pickup: true }); showToast("تم إبلاغ الكابتن 🔔"); }
+        function cancelOrder(orderId) { if(confirm("هل أنت متأكد من إلغاء هذا الطلب نهائياً؟")) db.ref(`active_orders/${orderId}`).update({ status: 'deleted' }); }
 
     </script>
 </body> 

@@ -3,7 +3,7 @@
 <head>
     <script>
         // --- إدارة الإصدارات المتقدمة ---
-        const CURRENT_APP_VERSION = "88.0.Driver";
+        const CURRENT_APP_VERSION = "38.0.Driver";
         try {
             if (localStorage.getItem('nahla_drv_ver') !== CURRENT_APP_VERSION) {
                 localStorage.setItem('nahla_drv_ver', CURRENT_APP_VERSION);
@@ -30,7 +30,7 @@
 
     <style>
         /* =========================================
-           🐝 الهوية البصرية العالمية (Uber/Deliveroo Style)
+           🐝 الهوية البصرية العالمية لـ نحلة
            ========================================= */
         :root {
             --nahla-yellow: #FFC107;
@@ -76,17 +76,18 @@
         .dash-header { background: var(--accent); color: white; padding: max(20px, env(safe-area-inset-top)) 20px 80px 20px; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; position: relative; }
         .driver-greeting { font-size: 1.4rem; font-weight: 900; margin: 0; }
         
-        .earnings-card { background: white; border-radius: 24px; padding: 25px; margin: -50px 20px 20px 20px; position: relative; z-index: 10; box-shadow: var(--glass-shadow); display: flex; justify-content: space-between; align-items: center; }
-        .earnings-val { font-size: 2.2rem; font-weight: 900; color: var(--accent); margin: 0; line-height: 1; }
+        .earnings-card { background: white; border-radius: 24px; padding: 25px; margin: -50px 20px 20px 20px; position: relative; z-index: 10; box-shadow: var(--glass-shadow); display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s;}
+        .earnings-card:active { transform: scale(0.98); }
+        .earnings-val { font-size: 2.2rem; font-weight: 900; color: var(--danger); margin: 0; line-height: 1; }
         .earnings-lbl { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; }
 
         /* -------------------------------------
            زر الـ GO (الرادار) - نمط أوبر
            ------------------------------------- */
-        .go-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; margin-top: 20px; transition: 0.4s; }
+        .go-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; margin-top: 10px; transition: 0.4s; }
         .go-btn-wrapper { position: relative; width: 160px; height: 160px; display: flex; align-items: center; justify-content: center; }
         
-        .go-btn { width: 120px; height: 120px; border-radius: 50%; border: none; background: var(--nahla-yellow); color: var(--accent); font-weight: 900; font-size: 2rem; cursor: pointer; position: relative; z-index: 10; box-shadow: 0 15px 35px rgba(255,193,7,0.4); transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .go-btn { width: 120px; height: 120px; border-radius: 50%; border: none; background: var(--nahla-yellow); color: var(--accent); font-weight: 900; font-size: 2.2rem; cursor: pointer; position: relative; z-index: 10; box-shadow: 0 15px 35px rgba(255,193,7,0.4); transition: 0.3s; display: flex; align-items: center; justify-content: center; }
         .go-btn:active { transform: scale(0.9); }
         .go-btn.online { background: var(--danger); color: white; box-shadow: 0 15px 35px rgba(239,68,68,0.4); }
 
@@ -99,15 +100,16 @@
         .go-container.is-online .status-text { color: var(--success); }
 
         /* -------------------------------------
-           بطاقات المهام (Task Cards)
+           بطاقات المهام (Task Cards - Timeline)
            ------------------------------------- */
         .tasks-container { padding: 0 15px 20px 15px; }
         .task-card { background: white; border-radius: 28px; padding: 25px; margin-bottom: 20px; box-shadow: var(--glass-shadow); position: relative; overflow: hidden; border: 1px solid #F3F4F6; }
-        .task-card.urgent { animation: borderPulse 2s infinite; }
+        .task-card.ready-pulse { animation: borderPulse 2s infinite; }
         @keyframes borderPulse { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.3); } 70% { box-shadow: 0 0 0 15px rgba(16,185,129,0); } 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
 
         .task-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid #F3F4F6; padding-bottom: 15px; }
-        .task-price { font-size: 1.8rem; font-weight: 900; color: var(--accent); line-height: 1; }
+        .task-price { font-size: 1.8rem; font-weight: 900; color: var(--success); line-height: 1; }
+        .order-id { background: #F3F4F6; color: #6B7280; padding: 4px 10px; border-radius: 10px; font-size: 0.85rem; font-weight: 800; }
         
         /* مسار الرحلة المتصل */
         .route-path { position: relative; padding-right: 30px; margin-bottom: 25px; }
@@ -118,9 +120,10 @@
         .route-node.pickup::before { border-color: var(--nahla-yellow); }
         .route-node.dropoff::before { border-color: var(--success); }
         
-        .node-label { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 2px; }
-        .node-value { font-size: 1.15rem; font-weight: 900; color: var(--accent); line-height: 1.3; }
+        .node-label { font-size: 0.85rem; font-weight: 800; color: var(--text-muted); margin-bottom: 2px; }
+        .node-value { font-size: 1.2rem; font-weight: 900; color: var(--accent); line-height: 1.3; }
 
+        /* أزرار الإجراءات داخل البطاقة */
         .btn-action-big { width: 100%; border-radius: 20px; padding: 20px; font-weight: 900; font-size: 1.3rem; color: white; border: none; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 10px; }
         .btn-action-big:active:not(:disabled) { transform: scale(0.96); }
         .btn-action-big.stage-1 { background: var(--accent); box-shadow: 0 10px 20px rgba(17,24,39,0.2); }
@@ -128,12 +131,15 @@
         .btn-action-big.stage-3 { background: var(--success); box-shadow: 0 10px 20px rgba(16,185,129,0.2); }
         .btn-action-big:disabled { background: #9CA3AF !important; box-shadow: none !important; opacity: 0.8; }
 
-        .quick-actions { display: flex; gap: 10px; margin-top: 10px; margin-bottom: 20px; }
-        .btn-circle-action { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer; transition: 0.2s; }
-        .btn-circle-action:active { transform: scale(0.9); }
+        .quick-actions { display: flex; gap: 10px; margin-top: 10px; margin-bottom: 5px; }
+        .btn-circle-action { height: 40px; border-radius: 12px; padding: 0 15px; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; cursor: pointer; transition: 0.2s; font-weight: 700; font-size: 0.85rem;}
+        .btn-circle-action:active { transform: scale(0.95); }
         .btn-circle-action.call { background: #E0E7FF; color: #2563EB; }
         .btn-circle-action.map { background: #FEF3C7; color: #D97706; }
         .btn-circle-action.whatsapp { background: #D1FAE5; color: #059669; }
+
+        .btn-photo-view { background: #F3F4F6; color: var(--accent); border: none; border-radius: 16px; padding: 15px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 20px; }
+        .btn-photo-view:active { background: #E5E7EB; }
 
         /* -------------------------------------
            رادار استقبال الطلب (Incoming Screen)
@@ -142,30 +148,30 @@
         .incoming-map-bg { position: absolute; inset: 0; opacity: 0.1; background-image: radial-gradient(circle at 50% 50%, var(--nahla-yellow) 0%, transparent 60%); z-index: -1; animation: pulseBg 3s infinite; }
         @keyframes pulseBg { 0%, 100% { opacity: 0.1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(1.1); } }
         
-        .timer-huge { font-size: 4.5rem; font-weight: 900; color: var(--nahla-yellow); line-height: 1; margin-top: 10vh; margin-bottom: auto;}
+        .timer-huge { font-size: 5rem; font-weight: 900; color: var(--nahla-yellow); line-height: 1; margin-top: 15vh; margin-bottom: auto;}
         
         .incoming-card { background: white; color: var(--accent); border-radius: 32px; padding: 30px; text-align: right; box-shadow: 0 -10px 40px rgba(0,0,0,0.5); }
         .incoming-price { font-size: 2.5rem; font-weight: 900; color: var(--success); line-height: 1; margin-bottom: 20px; text-align: center; border-bottom: 2px dashed #E5E7EB; padding-bottom: 20px;}
         
-        .incoming-btn { background: var(--nahla-yellow); color: var(--accent); border: none; border-radius: 20px; padding: 22px; font-weight: 900; font-size: 1.5rem; width: 100%; box-shadow: 0 10px 25px rgba(255,193,7,0.4); margin-top: 25px; transition: 0.2s;}
+        .incoming-btn { background: var(--nahla-yellow); color: var(--accent); border: none; border-radius: 20px; padding: 22px; font-weight: 900; font-size: 1.5rem; width: 100%; box-shadow: 0 10px 25px rgba(255,193,7,0.4); margin-top: 25px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px;}
         .incoming-btn:active { transform: scale(0.96); background: var(--nahla-yellow-dark); }
         
         /* -------------------------------------
-           عناصر مساعدة
+           عناصر مساعدة وتنبيهات
            ------------------------------------- */
-        .toast-nahla { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 16px 24px; border-radius: 30px; font-weight: 800; font-size: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100000; display: flex; align-items: center; gap: 12px; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); white-space: nowrap; }
-        .toast-nahla.show { top: 50px; }
-        .progress-bar-wrap { height: 8px; background: #F3F4F6; border-radius: 4px; overflow: hidden; margin-top: 15px;}
-        .progress-bar-fill { height: 100%; background: var(--nahla-yellow); width: 100%; transition: width 1s linear;}
-        
-        /* Ledger Modal */
+        .toast-nahla { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--success); color: white; padding: 16px 24px; border-radius: 30px; font-weight: 800; font-size: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100000; display: flex; align-items: center; gap: 12px; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); white-space: nowrap; }
+        .toast-nahla.error { background: var(--danger); }
+        .toast-nahla.show { top: 40px; }
+
+        /* شاشة السجل (Ledger Modal Slide-up) */
         #ledgerModal { position: fixed; inset: 0; background: var(--bg-light); z-index: 50000; overflow-y: auto; padding: 20px; animation: slideUp 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .ledger-item { background: white; border-radius: 16px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #E5E7EB; }
     </style>
 </head>
 <body>
 
-    <div id="offlineBanner" class="hidden-section" style="position: fixed; top: 0; width: 100%; background: var(--danger); color: white; text-align: center; z-index: 99999; padding: env(safe-area-inset-top) 10px 10px; font-weight: 900;">
+    <div id="offlineBanner" class="hidden-section" style="position: fixed; top: 0; width: 100%; background: var(--danger); color: white; text-align: center; z-index: 99999; padding: max(10px, env(safe-area-inset-top)) 10px 10px 10px; font-weight: 900;">
         ⚠️ لا يوجد اتصال بالإنترنت، جاري الحفظ محلياً
     </div>
 
@@ -180,7 +186,7 @@
                     <i data-lucide="navigation" style="width:45px; height:45px; color:var(--accent);"></i>
                 </div>
                 <h1 class="fw-black text-dark m-0" style="font-size: 2.2rem;">نحلة 🐝</h1>
-                <p class="text-muted fw-bold">المنصة الرسمية للكباتن</p>
+                <p class="text-muted fw-bold">تطبيق الكباتن</p>
             </div>
             
             <input type="tel" id="driverPhone" class="auth-input phone" placeholder="07XXXXXXXXX" dir="ltr" autocomplete="off">
@@ -197,7 +203,7 @@
             </div>
 
             <button id="mainAuthBtn" class="btn-main mt-3" onclick="initAudioAndAuth()">
-                تسجيل الدخول <i data-lucide="arrow-left"></i>
+                الدخول للميدان <i data-lucide="arrow-left"></i>
             </button>
         </div>
 
@@ -211,7 +217,7 @@
     <div id="dashboardPage" class="hidden-section">
         
         <div class="dash-header">
-            <div class="d-flex justify-content-between align-items-start">
+            <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <p class="text-white-50 fw-bold mb-0">مرحباً بك،</p>
                     <h2 class="driver-greeting" id="driverNameDisplay">كابتن ...</h2>
@@ -222,10 +228,10 @@
             </div>
         </div>
         
-        <div class="earnings-card" onclick="openLedger()" style="cursor: pointer;">
+        <div class="earnings-card" onclick="openLedger()">
             <div>
-                <p class="earnings-lbl">المطلوب تسديده للإدارة (د.ع)</p>
-                <h2 class="earnings-val text-danger" id="statDebt">0</h2>
+                <p class="earnings-lbl">المطلوب تسديده للمكتب</p>
+                <h2 class="earnings-val" id="statDebt">0 <small class="fs-5 text-muted">د.ع</small></h2>
             </div>
             <div style="background: #F3F4F6; padding: 15px; border-radius: 20px;">
                 <i data-lucide="wallet" style="color:var(--accent); width:32px; height:32px;"></i>
@@ -237,11 +243,11 @@
                 <div class="go-btn-wrapper">
                     <div class="radar-ring"></div>
                     <div class="radar-ring"></div>
-                    <button id="mainGoBtn" class="go-btn" onclick="toggleOnlineStatus()">ابدأ</button>
+                    <button id="mainGoBtn" class="go-btn" onclick="toggleOnlineStatus()">GO</button>
                 </div>
                 <h4 class="status-text" id="radarStatusText">غير متصل</h4>
-                <div id="shiftTimerBadge" class="badge bg-light text-dark border mt-2 px-3 py-2 fw-bold shadow-sm hidden-section">
-                    <i data-lucide="clock" style="width:14px; margin-left:4px;"></i> <span id="shiftTimeText">---</span>
+                <div id="shiftTimerBadge" class="badge bg-white text-dark border mt-2 px-3 py-2 fw-bold shadow-sm hidden-section fs-6">
+                    <i data-lucide="clock" style="width:16px; margin-left:4px;"></i> <span id="shiftTimeText">---</span>
                 </div>
             </div>
 
@@ -255,33 +261,33 @@
         <h1 class="timer-huge" id="seconds">60</h1>
         
         <div class="incoming-card">
-            <p class="text-center text-muted fw-bold mb-1">المبلغ المطلوب للوصل</p>
+            <p class="text-center text-muted fw-bold mb-1">المبلغ المطلوب للوصل (مع التوصيل)</p>
             <h2 class="incoming-price" id="alertPrice">0 د.ع</h2>
             
             <div class="d-flex align-items-center gap-3 mb-4 mt-4">
-                <div style="width:45px;height:45px;background:#F3F4F6;border-radius:14px;display:flex;align-items:center;justify-content:center;"><i data-lucide="store" style="color:var(--accent);"></i></div>
-                <div>
+                <div style="width:50px;height:50px;background:#F3F4F6;border-radius:16px;display:flex;align-items:center;justify-content:center;"><i data-lucide="store" style="color:var(--accent);"></i></div>
+                <div class="text-end w-100">
                     <span style="font-size:0.85rem;color:#6B7280;font-weight:700;">استلام من</span>
-                    <h4 class="fw-black m-0" style="color:var(--accent);font-size:1.3rem;" id="alertResName">المطعم</h4>
+                    <h4 class="fw-black m-0" style="color:var(--accent);font-size:1.4rem;" id="alertResName">المطعم</h4>
                 </div>
             </div>
             
             <div class="d-flex align-items-center gap-3">
-                <div style="width:45px;height:45px;background:#FEF3C7;border-radius:14px;display:flex;align-items:center;justify-content:center;"><i data-lucide="map-pin" style="color:#D97706;"></i></div>
-                <div>
+                <div style="width:50px;height:50px;background:#FEF3C7;border-radius:16px;display:flex;align-items:center;justify-content:center;"><i data-lucide="map-pin" style="color:#D97706;"></i></div>
+                <div class="text-end w-100">
                     <span style="font-size:0.85rem;color:#6B7280;font-weight:700;">تسليم إلى</span>
-                    <h4 class="fw-black m-0" style="color:var(--accent);font-size:1.3rem;" id="alertArea">المنطقة</h4>
+                    <h4 class="fw-black m-0" style="color:var(--accent);font-size:1.4rem;" id="alertArea">المنطقة</h4>
                 </div>
             </div>
             
-            <p class="mt-4 mb-0 fw-bold text-muted" style="font-size:0.9rem;" id="alertDetails">...</p>
+            <p class="mt-4 mb-0 fw-bold text-muted text-center" style="font-size:0.95rem;" id="alertDetails">...</p>
             
             <div class="progress-bar-wrap"><div class="progress-bar-fill" id="alert-progress"></div></div>
             
-            <button id="btnAcceptMain" class="incoming-btn" onclick="acceptOrder()">قبول الطلب</button>
+            <button id="btnAcceptMain" class="incoming-btn" onclick="acceptOrder()">قبول الطلب ✅</button>
             
             <div class="d-flex gap-2 mt-3">
-                <button class="btn btn-light fw-bold flex-fill py-3 rounded-4 border" onclick="muteAlarmOnly()">إسكات الصوت 🔕</button>
+                <button class="btn btn-light fw-bold flex-fill py-3 rounded-4 border" onclick="muteAlarmOnly()">إسكات 🔕</button>
                 <button class="btn btn-danger fw-bold flex-fill py-3 rounded-4" onclick="declineOrder()">تجاهل ✕</button>
             </div>
         </div>
@@ -289,12 +295,12 @@
 
     <div id="ledgerModal" class="hidden-section">
         <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
-            <h2 class="fw-black m-0 text-dark">سجل أرباح اليوم</h2>
+            <h2 class="fw-black m-0 text-dark">سجل المنجزات 🏆</h2>
             <button class="btn btn-light rounded-circle p-3 border shadow-sm" onclick="closeLedger()"><i data-lucide="x"></i></button>
         </div>
         <div class="glass-panel text-center pb-4 mb-4 pt-4 border border-light">
             <h6 class="text-muted fw-bold mb-2 fs-5">إجمالي المبالغ المحصلة (كاش)</h6>
-            <h1 class="fw-black text-success m-0" style="font-size: 3.5rem;" id="ledgerTotalCash">0</h1>
+            <h1 class="fw-black text-success m-0" style="font-size: 3rem;" id="ledgerTotalCash">0 <small class="fs-4">د.ع</small></h1>
         </div>
         <div id="ledgerList"></div>
     </div>
@@ -308,7 +314,7 @@
         </div>
     </div>
 
-    <div id="toast" class="toast-nahla"><span id="toast-icon-wrap"><i data-lucide="info"></i></span> <span id="toast-msg">تم!</span></div>
+    <div id="toast" class="toast-nahla"><span id="toast-icon-wrap"><i data-lucide="check-circle"></i></span> <span id="toast-msg">تم!</span></div>
 
     <script>
         lucide.createIcons();
@@ -331,20 +337,19 @@
         let readyNotifiedOrders = new Set();
         let offlineActionQueue = JSON.parse(localStorage.getItem('hut_offline_queue') || '[]');
         
-        // منع الانهيار بسبب أيقونات التوست
-        function showToast(msg, isSuccess = true) {
+        function showToast(msg, type = 'success') {
             document.getElementById('toast-msg').innerHTML = msg;
-            document.getElementById('toast-icon-wrap').innerHTML = `<i data-lucide="${isSuccess ? 'check-circle' : 'alert-circle'}"></i>`;
+            document.getElementById('toast-icon-wrap').innerHTML = `<i data-lucide="${type==='success' ? 'check-circle' : 'alert-circle'}"></i>`;
             lucide.createIcons({root: document.getElementById('toast-icon-wrap')});
             const t = document.getElementById('toast');
-            t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 4000);
+            t.className = `toast-nahla ${type === 'error' ? 'error' : ''} show`;
+            setTimeout(() => t.classList.remove('show'), 4000);
         }
 
-        // أوفلاين كيو لمعالجة الانقطاعات
+        // أوفلاين كيو
         function saveToOfflineQueue(url) {
             offlineActionQueue.push({ url, timestamp: Date.now() });
-            localStorage.setItem('hut_offline_queue', JSON.stringify(offlineActionQueue));
-            processOfflineQueue();
+            localStorage.setItem('hut_offline_queue', JSON.stringify(offlineActionQueue)); processOfflineQueue();
         }
         async function processOfflineQueue() {
             if (offlineActionQueue.length === 0 || !navigator.onLine) return;
@@ -356,11 +361,18 @@
         }
         setInterval(processOfflineQueue, 10000);
 
-        // فتح التطبيقات الخارجية (واتساب، اتصال، خرائط)
+        function calculateDistanceMeters(lat1, lon1, lat2, lon2) {
+            if (!lat1 || !lon1 || !lat2 || !lon2) return 9999;
+            const R = 6371e3; const p1 = lat1 * Math.PI/180, p2 = lat2 * Math.PI/180;
+            const dp = (lat2-lat1) * Math.PI/180, dl = (lon2-lon1) * Math.PI/180;
+            const a  = Math.sin(dp/2)*Math.sin(dp/2) + Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)*Math.sin(dl/2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        }
+
         window.openSafeLink = function(url) { if (window.AndroidRadar && window.AndroidRadar.openExternalApp) window.AndroidRadar.openExternalApp(url); else window.open(url, '_blank'); };
         window.openSmartWhatsapp = function(phone, resName, area, price) {
             if (!phone) return; const cleanArea = area.split('(')[0].trim();
-            const msg = encodeURIComponent(`مرحباً 🌹\nمعك كابتن ${driverData?.name || ''} من نحلة للتوصيل 🐝.\nطلبك من (${resName}) متجه لـ ${cleanArea}.\nالمبلغ: ${price} د.ع\nفضلاً، أرسل موقعك (Location) 📍.`);
+            const msg = encodeURIComponent(`مرحباً 🌹\nمعك كابتن ${driverData?.name || ''} من نحلة للتوصيل 🐝.\nطلبك من (${resName}) متجه لـ ${cleanArea}.\nالمبلغ: ${price} د.ع\nفضلاً، أرسل موقعك 📍.`);
             window.openSafeLink(`https://wa.me/${phone.startsWith('0')?'964'+phone.substring(1):phone}?text=${msg}`);
         };
 
@@ -385,18 +397,18 @@
         async function authAction() {
             let phone = document.getElementById('driverPhone').value.replace(/^0+/, '');
             let pass = document.getElementById('driverPassword').value.trim();
-            if(!phone || !pass) return showToast("أدخل البيانات كاملة", false);
+            if(!phone || !pass) return showToast("أدخل البيانات كاملة", "error");
 
             const btn = document.getElementById('mainAuthBtn'); const origHtml = btn.innerHTML;
-            btn.innerHTML = "جاري التحقق... ⏳"; btn.disabled = true;
+            btn.innerHTML = `<div class="spinner-border spinner-border-sm text-white"></div>`; btn.disabled = true;
 
             if (isRegistering) {
                 const name = document.getElementById('driverName').value.trim(); const shift = document.getElementById('regShift').value;
-                if(!name) { btn.disabled = false; btn.innerHTML = origHtml; return showToast("أدخل الاسم", false); }
+                if(!name) { btn.disabled = false; btn.innerHTML = origHtml; return showToast("أدخل الاسم", "error"); }
                 try {
                     await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'DRIVER_REG', token: API_TOKEN, name, phone, password: pass, shift }) });
                     localStorage.setItem('hut_driver_pending', phone); sessionStorage.setItem('hut_driver_pending_pass', btoa(pass)); showWaitingRoom();
-                } catch(e) { showToast("خطأ شبكة", false); }
+                } catch(e) { showToast("خطأ شبكة", "error"); }
             } else {
                 try {
                     const res = await fetch(`${API_URL}?action=checkDriver&phone=${phone}&password=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
@@ -406,14 +418,14 @@
                         localStorage.setItem('hut_driver_session', JSON.stringify(driverData));
                         sessionStorage.setItem('hut_driver_pass', btoa(pass));
                         showToast("تم الدخول بنجاح! 🚀"); setTimeout(()=> location.reload(), 1000);
-                    } else if (data.status === "banned") { showToast("❌ حساب محظور", false);
+                    } else if (data.status === "banned") { showToast("حساب محظور", "error");
                     } else if (data.status === "pending" || data.status === "waiting") {
                         localStorage.setItem('hut_driver_pending', phone); sessionStorage.setItem('hut_driver_pending_pass', btoa(pass)); showWaitingRoom();
                     } else {
                         isRegistering = true; document.getElementById('loginPassContainer').classList.add('hidden-section'); document.getElementById('registerFields').classList.remove('hidden-section');
                         document.getElementById('driverPhone').disabled = true; btn.innerHTML = `إنشاء حساب جديد`;
                     }
-                } catch(e) { showToast("خطأ اتصال", false); }
+                } catch(e) { showToast("خطأ اتصال", "error"); }
             }
             btn.disabled = false; if(!isRegistering) btn.innerHTML = origHtml;
         }
@@ -444,7 +456,7 @@
         }
 
         window.logout = function() {
-            if (activeOrders.length > 0) return showToast("⚠️ أنهِ الطلبات النشطة أولاً", false);
+            if (activeOrders.length > 0) return showToast("أنهِ الطلبات النشطة أولاً", "error");
             if (confirm("تأكيد تسجيل الخروج؟")) { isOnline = false; updateFirebaseLocation(); localStorage.removeItem('hut_driver_session'); location.reload(); }
         };
 
@@ -453,7 +465,7 @@
             const btn = document.getElementById('mainGoBtn'); const container = document.getElementById('radarSection'); const statusTxt = document.getElementById('radarStatusText');
             
             if (!isOnline || forceOnline) {
-                btn.innerHTML = `<div class="spinner-border spinner-border-sm"></div>`; btn.disabled = true;
+                btn.innerHTML = `<div class="spinner-border spinner-border-sm text-dark"></div>`; btn.disabled = true;
                 try {
                     const res = await fetch(`${API_URL}?action=START_SHIFT&phone=${driverData.phone}&token=${API_TOKEN}`);
                     const data = await res.json();
@@ -462,11 +474,11 @@
                         isOnline = true; btn.innerHTML = "إيقاف"; btn.classList.add('online'); container.classList.add('is-online'); statusTxt.innerText = "يبحث عن طلبات...";
                         document.getElementById('shiftTimerBadge').classList.remove('hidden-section'); startShiftTimer();
                         updateFirebaseLocation(); adjustHeartbeat(); displayActiveOrders();
-                    } else { showToast(data.msg, false); btn.innerHTML = "ابدأ"; }
-                } catch(e) { showToast("فشل الاتصال", false); btn.innerHTML = "ابدأ"; }
+                    } else { showToast(data.msg, "error"); btn.innerHTML = "GO"; }
+                } catch(e) { showToast("فشل الاتصال", "error"); btn.innerHTML = "GO"; }
                 btn.disabled = false;
             } else {
-                isOnline = false; btn.innerHTML = "ابدأ"; btn.classList.remove('online'); container.classList.remove('is-online'); statusTxt.innerText = "غير متصل";
+                isOnline = false; btn.innerHTML = "GO"; btn.classList.remove('online'); container.classList.remove('is-online'); statusTxt.innerText = "غير متصل";
                 document.getElementById('shiftTimerBadge').classList.add('hidden-section'); if(shiftTimerInterval) clearInterval(shiftTimerInterval);
                 updateFirebaseLocation(); adjustHeartbeat(); displayActiveOrders();
             }
@@ -516,7 +528,7 @@
                     const fbOrder = fbOrders[localO.id];
                     if (!fbOrder || ['deleted','completed','مكتمل'].includes(fbOrder.status)) {
                         activeOrders = activeOrders.filter(x => x.id !== localO.id); needsRender = true;
-                        if(fbOrder && fbOrder.status==='deleted') showToast("تم إلغاء الطلب من الإدارة", false);
+                        if(fbOrder && fbOrder.status==='deleted') showToast("تم إلغاء الطلب من الإدارة", "error");
                     } else if (fbOrder.ready_for_pickup && !localO.readyForPickup) {
                         localO.readyForPickup = true; needsRender = true;
                         document.getElementById('readySound').play().catch(()=>{}); showToast(`🍽️ الطلب جاهز في ${localO.resName}!`);
@@ -552,11 +564,11 @@
             
             document.getElementById('alertResName').innerText = fbOrder.restaurant || "مطعم";
             document.getElementById('alertArea').innerText = fbOrder.area || "غير محدد";
-            document.getElementById('alertPrice').innerText = (fbOrder.price > 0) ? (fbOrder.price.toLocaleString() + " د.ع") : "قيمة الفاتورة بالصورة";
-            document.getElementById('alertDetails').innerText = fbOrder.details + (fbOrder.photoUrl && fbOrder.photoUrl !== "processing" ? " 📸 (مرفق صورة)" : "");
+            document.getElementById('alertPrice').innerText = (fbOrder.price > 0) ? (fbOrder.price.toLocaleString() + " د.ع") : "تأكد من الوصل";
+            document.getElementById('alertDetails').innerHTML = fbOrder.details + (fbOrder.photoUrl && fbOrder.photoUrl !== "processing" ? ' <span class="badge bg-primary ms-1">📸 مرفق صورة</span>' : "");
             
             document.getElementById('incomingOrderOverlay').classList.remove('hidden-section');
-            document.getElementById('btnAcceptMain').disabled = false; document.getElementById('btnAcceptMain').innerHTML = "قبول الطلب";
+            document.getElementById('btnAcceptMain').disabled = false; document.getElementById('btnAcceptMain').innerHTML = "قبول الطلب ✅";
             
             document.getElementById('alertSound').currentTime = 0; document.getElementById('alertSound').play().catch(()=>{});
 
@@ -587,7 +599,7 @@
 
             try {
                 // جلب معلومات المطعم للاتصال لو ناقصة
-                if (!currentOrderData.resPhone) {
+                if (!currentOrderData.resPhone || !currentOrderData.resLat) {
                     const r = await fetch(`${API_URL}?action=getGlobalData&token=${API_TOKEN}`); const data = await r.json();
                     const resInfo = data.restaurants.find(x => x[1] === currentOrderData.resName);
                     if (resInfo) { currentOrderData.resPhone = resInfo[2]; currentOrderData.resLat = resInfo[6]; currentOrderData.resLng = resInfo[7]; currentOrderData.comm = parseFloat(resInfo[5]) || 0; currentOrderData.payType = resInfo[8] || "المطعم يدفع"; }
@@ -601,7 +613,7 @@
                 localStorage.setItem('hut_active_orders', JSON.stringify(activeOrders));
                 document.getElementById('incomingOrderOverlay').classList.add('hidden-section');
                 adjustHeartbeat(); displayActiveOrders(); showToast("🚀 توكل على الله!");
-            } catch (e) { showToast("❌ سُحب الطلب لكابتن آخر", false); document.getElementById('incomingOrderOverlay').classList.add('hidden-section'); }
+            } catch (e) { showToast("❌ سُحب الطلب لكابتن آخر", "error"); document.getElementById('incomingOrderOverlay').classList.add('hidden-section'); }
         };
 
         // 7️⃣ بطاقات المهام (Task Cards Bottom-Sheet Style)
@@ -667,13 +679,19 @@
             const order = activeOrders.find(o => String(o.id) === String(id)); if (!order) return;
             const origHtml = btnElement.innerHTML; btnElement.innerHTML = `<div class="spinner-border spinner-border-sm text-white"></div>`; btnElement.disabled = true;
 
+            // حماية المسافة (يجب أن يكون قريباً من المطعم)
+            if (action === 'arrive' && order.resLat && order.resLng && driverData?.currentLat && driverData?.currentLng) {
+                const dist = calculateDistanceMeters(driverData.currentLat, driverData.currentLng, order.resLat, order.resLng);
+                if (dist > 150) { showToast(`⚠️ أنت تبعد ${Math.round(dist)} متر عن المطعم!`, "error"); btnElement.innerHTML = origHtml; btnElement.disabled = false; return; }
+            }
+
             try {
                 if (action === 'arrive') {
                     order.state = 'arrived'; await db.ref(`active_orders/${id}`).update({ status: 'arrived_at_res', last_update: new Date().toISOString() }); localStorage.setItem('hut_active_orders', JSON.stringify(activeOrders)); displayActiveOrders();
                 } else if (action === 'pickup') {
                     order.state = 'picked_up'; order.pickupTime = Date.now(); await db.ref(`active_orders/${id}`).update({ status: 'picked_up', last_update: new Date().toISOString() }); localStorage.setItem('hut_active_orders', JSON.stringify(activeOrders)); displayActiveOrders();
                 } else if (action === 'finish') {
-                    if (Date.now() - order.pickupTime < 60000) { showToast("⚠️ يجب مرور دقيقة للوصول للعميل", false); btnElement.innerHTML = origHtml; btnElement.disabled = false; return; }
+                    if (Date.now() - order.pickupTime < 60000) { showToast("⚠️ يجب مرور دقيقة للوصول للعميل", "error"); btnElement.innerHTML = origHtml; btnElement.disabled = false; return; }
                     
                     let drvComm = 0; let commStr = String(order.comm).toLowerCase();
                     if (!commStr.includes('شهري') && !commStr.includes('monthly')) {
@@ -685,7 +703,7 @@
                     
                     readyNotifiedOrders.delete(String(id)); activeOrders = activeOrders.filter(o => String(o.id) !== String(id)); localStorage.setItem('hut_active_orders', JSON.stringify(activeOrders)); adjustHeartbeat(); displayActiveOrders(); showToast("🎉 تمت المهمة بنجاح بطل!");
                 }
-            } catch (e) { showToast("❌ فشل التحديث.", false); btnElement.innerHTML = origHtml; btnElement.disabled = false; }
+            } catch (e) { showToast("❌ فشل التحديث.", "error"); btnElement.innerHTML = origHtml; btnElement.disabled = false; }
         };
 
         window.openLedger = function() { document.getElementById('ledgerModal').classList.remove('hidden-section'); };

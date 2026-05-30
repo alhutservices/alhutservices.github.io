@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>غرفة العمليات | الحوت 👑</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary:#FF385C; --dark:#222222; --mid:#717171; --light:#DDDDDD; --bg:#F7F7F7; --green:#10b981; --blue:#3b82f6; --purple:#8b5cf6; --radius:16px; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--dark); }
+
+        /* Auth overlay */
+        #authOverlay { position:fixed; inset:0; z-index:1000; background:white; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px; transition:0.5s; }
+        .auth-logo { font-size:4rem; margin-bottom:16px; }
+        .auth-title { font-size:1.5rem; font-weight:900; margin-bottom:8px; }
+        .auth-sub { color:var(--mid); font-size:0.88rem; margin-bottom:32px; }
+        .auth-input { width:100%; max-width:300px; padding:16px; border:1.5px solid var(--light); border-radius:12px; font-family:'Tajawal',sans-serif; font-size:1.2rem; font-weight:900; text-align:center; letter-spacing:0.3em; outline:none; transition:0.2s; margin-bottom:12px; }
+        .auth-input:focus { border-color:var(--dark); }
+        .auth-btn { width:100%; max-width:300px; background:var(--dark); color:white; border:none; padding:16px; border-radius:12px; font-weight:900; font-size:1rem; cursor:pointer; transition:0.2s; font-family:'Tajawal',sans-serif; }
+        .auth-btn:hover { background:var(--primary); }
+        .auth-error { color:#dc2626; font-size:0.82rem; font-weight:700; margin-top:8px; min-height:20px; }
+
+        /* Main */
+        #mainContent { opacity:0; transition:opacity 1s; }
+        .navbar { background:white; border-bottom:1px solid var(--light); padding:0 24px; height:72px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 1px 12px rgba(0,0,0,0.06); }
+        .logo { font-size:1.3rem; font-weight:900; color:var(--primary); display:flex; align-items:center; gap:8px; }
+        .admin-badge { background:rgba(255,56,92,0.1); color:var(--primary); padding:6px 14px; border-radius:20px; font-size:0.78rem; font-weight:800; }
+        .refresh-btn { background:var(--bg); border:1.5px solid var(--light); border-radius:10px; padding:8px 16px; font-weight:700; font-size:0.82rem; cursor:pointer; transition:0.2s; font-family:'Tajawal',sans-serif; display:flex; align-items:center; gap:6px; }
+        .refresh-btn:hover { border-color:var(--dark); }
+
+        .stats-bar { background:white; border-bottom:1px solid var(--light); padding:16px 24px; display:flex; gap:16px; overflow-x:auto; }
+        .stat-pill { background:var(--bg); border-radius:12px; padding:12px 18px; min-width:120px; white-space:nowrap; }
+        .stat-num { font-size:1.4rem; font-weight:900; margin-bottom:2px; }
+        .stat-name { font-size:0.72rem; color:var(--mid); font-weight:700; }
+
+        .tabs-bar { background:white; border-bottom:1px solid var(--light); padding:0 24px; display:flex; gap:0; position:sticky; top:72px; z-index:90; }
+        .tab-btn { padding:16px 22px; font-weight:700; font-size:0.9rem; cursor:pointer; color:var(--mid); border-bottom:2px solid transparent; transition:0.2s; }
+        .tab-btn.active { color:var(--dark); border-bottom-color:var(--dark); }
+
+        .main { max-width:900px; margin:0 auto; padding:24px; }
+
+        .order-card { background:white; border-radius:var(--radius); border:1px solid var(--light); margin-bottom:14px; overflow:hidden; }
+        .order-card.status-new { border-right:4px solid var(--blue); }
+        .order-card.status-done { border-right:4px solid var(--green); background:#f9fefb; }
+        .order-card.status-trouble { border-right:4px solid var(--purple); }
+        .card-top { padding:14px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--bg); }
+        .status-badge { padding:3px 10px; border-radius:20px; font-size:0.7rem; font-weight:800; }
+        .badge-new { background:rgba(59,130,246,0.1); color:var(--blue); }
+        .badge-done { background:rgba(16,185,129,0.1); color:var(--green); }
+        .badge-trouble { background:rgba(139,92,246,0.1); color:var(--purple); }
+        .order-id-txt { font-size:0.73rem; color:var(--mid); font-weight:700; }
+        .card-body { padding:14px 18px; }
+        .service-name { font-size:1.05rem; font-weight:900; margin-bottom:8px; }
+        .order-info-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; margin-bottom:14px; font-size:0.82rem; color:var(--mid); font-weight:600; }
+        .card-actions { display:flex; gap:8px; flex-wrap:wrap; }
+        .act-btn { padding:9px 16px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; border:none; font-family:'Tajawal',sans-serif; display:flex; align-items:center; gap:5px; transition:0.2s; }
+        .btn-done { background:#dcfce7; color:#166534; } .btn-done:hover{background:#bbf7d0;}
+        .btn-reset { background:#dbeafe; color:#1d4ed8; } .btn-reset:hover{background:#bfdbfe;}
+        .btn-delete { background:#fee2e2; color:#dc2626; } .btn-delete:hover{background:#fecaca;}
+
+        .office-card { background:white; border-radius:var(--radius); border:1px solid var(--light); padding:18px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; }
+        .office-info .name { font-weight:900; }
+        .office-info .meta { font-size:0.8rem; color:var(--mid); font-weight:600; margin-top:3px; }
+        .office-status { padding:4px 12px; border-radius:20px; font-size:0.72rem; font-weight:800; margin-top:4px; display:inline-block; }
+        .s-active { background:#dcfce7; color:#166534; }
+        .s-pending { background:#fef9c3; color:#854d0e; }
+        .s-blocked { background:#fee2e2; color:#dc2626; }
+        .office-actions { display:flex; gap:8px; }
+    </style>
+</head>
+<body>
+
+<!-- Auth -->
+<div id="authOverlay">
+    <div class="auth-logo">🐋</div>
+    <h1 class="auth-title">غرفة العمليات</h1>
+    <p class="auth-sub">Master Control Room — الحوت</p>
+    <input type="password" id="masterKey" class="auth-input" placeholder="••••" autofocus>
+    <button class="auth-btn" onclick="checkKey()"><i class="fas fa-key"></i> تأكيد الدخول</button>
+    <div class="auth-error" id="authError"></div>
+</div>
+
+<div id="mainContent">
+    <nav class="navbar">
+        <div class="logo"><span>🐋</span> غرفة العمليات</div>
+        <div style="display:flex;gap:10px;align-items:center;">
+            <span class="admin-badge"><i class="fas fa-shield-alt"></i> مدير النظام</span>
+            <button class="refresh-btn" onclick="loadData()"><i class="fas fa-sync-alt"></i> تحديث</button>
+        </div>
+    </nav>
+
+    <div class="stats-bar" id="statsBar">
+        <div class="stat-pill"><div class="stat-num" id="statTotal">—</div><div class="stat-name">إجمالي الطلبات</div></div>
+        <div class="stat-pill"><div class="stat-num" id="statNew">—</div><div class="stat-name">قيد الانتظار</div></div>
+        <div class="stat-pill"><div class="stat-num" id="statDone">—</div><div class="stat-name">مكتملة</div></div>
+        <div class="stat-pill"><div class="stat-num" id="statOffices">—</div><div class="stat-name">شركاء نشطون</div></div>
+    </div>
+
+    <div class="tabs-bar">
+        <div class="tab-btn active" id="btnOrders" onclick="switchTab('orders')"><i class="fas fa-satellite-dish"></i> مراقبة الطلبات</div>
+        <div class="tab-btn" id="btnOffices" onclick="switchTab('offices')"><i class="fas fa-handshake"></i> شركاء الخدمة</div>
+    </div>
+
+    <div class="main" id="content">
+        <div style="text-align:center;padding:60px;color:var(--mid);">جاري تحميل البيانات...</div>
+    </div>
+</div>
+
+<script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
+    const MASTER_PASS = "2026";
+    let currentTab = 'orders';
+    let data = { orders:[], offices:[] };
+
+    function checkKey() {
+        const pass = document.getElementById('masterKey').value;
+        if(pass === MASTER_PASS) {
+            const ov = document.getElementById('authOverlay');
+            ov.style.opacity = '0';
+            ov.style.pointerEvents = 'none';
+            document.getElementById('mainContent').style.opacity = '1';
+            loadData();
+            setInterval(loadData, 40000);
+        } else {
+            document.getElementById('authError').innerText = '⚠️ رمز غير صحيح';
+            document.getElementById('masterKey').value = '';
+        }
+    }
+
+    async function loadData() {
+        try {
+            const res = await fetch(`${scriptURL}?action=getAdminFullData&t=${Date.now()}`, {method:'GET',redirect:'follow'});
+            data = await res.json();
+            updateStats();
+            render();
+        } catch(e) {
+            document.getElementById('content').innerHTML = '<div style="text-align:center;padding:40px;color:#dc2626;font-weight:700;">❌ فشل الاتصال</div>';
+        }
+    }
+
+    function updateStats() {
+        document.getElementById('statTotal').innerText = data.orders.length;
+        document.getElementById('statNew').innerText = data.orders.filter(o=>o.status==='قيد الانتظار'||o.status==='طلب جديد').length;
+        document.getElementById('statDone').innerText = data.orders.filter(o=>(o.status||'').includes('✅')).length;
+        document.getElementById('statOffices').innerText = (data.offices||[]).filter(o=>o.status==='نشط'||o.status==='مفعل').length;
+    }
+
+    function render() {
+        const c = document.getElementById('content');
+        if(currentTab === 'orders') {
+            const html = data.orders.slice().reverse().map(o => {
+                const id = o.id||o.order_id;
+                const isTrouble = (o.status||'').includes('⚠️');
+                const isDone = (o.status||'').includes('✅');
+                const cls = isDone?'status-done':isTrouble?'status-trouble':'status-new';
+                const badgeCls = isDone?'badge-done':isTrouble?'badge-trouble':'badge-new';
+                const svcEmoji = (o.service||'').includes('فندق')?'🏨':(o.service||'').includes('تدريب')?'🎓':(o.service||'').includes('زفاف')?'💍':'🚗';
+                return `
+                <div class="order-card ${cls}">
+                    <div class="card-top">
+                        <span class="status-badge ${badgeCls}">${o.status||'غير محدد'}</span>
+                        <span class="order-id-txt">#${id}</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="service-name">${svcEmoji} ${o.car||'خدمة'}</div>
+                        <div class="order-info-grid">
+                            <span>👤 ${o.name||'—'}</span>
+                            <span>📍 ${o.province||o.prov||'—'}</span>
+                            <span>📞 ${o.phone||'—'}</span>
+                            <span>🏢 ${o.office||'بدون مكتب'}</span>
+                        </div>
+                        <div style="font-weight:900;color:var(--green);margin-bottom:12px;">${Number(o.price||o.total_price||0).toLocaleString()} د.ع</div>
+                        <div class="card-actions">
+                            <button class="act-btn btn-done" onclick="doAction('complete','${id}')"><i class="fas fa-check"></i> إتمام</button>
+                            <button class="act-btn btn-reset" onclick="doAction('adminReset','${id}')"><i class="fas fa-redo"></i> إعادة</button>
+                            <button class="act-btn btn-delete" onclick="doAction('deleteOrder','${id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('') || '<div style="text-align:center;padding:60px;color:var(--mid);">لا توجد طلبات</div>';
+            c.innerHTML = html;
+        } else {
+            const html = (data.offices||[]).slice().reverse().map(of => {
+                const statusClass = of.status==='نشط'||of.status==='مفعل' ? 's-active' : of.status==='محظور' ? 's-blocked' : 's-pending';
+                return `
+                <div class="office-card">
+                    <div class="office-info">
+                        <div class="name">${of.name}</div>
+                        <div class="meta">📍 ${of.city} · ID: ${of.id}</div>
+                        <span class="office-status ${statusClass}">${of.status}</span>
+                    </div>
+                    <div class="office-actions">
+                        ${of.status!=='نشط'&&of.status!=='مفعل'?`<button class="act-btn btn-done" onclick="doAction('approveOffice','${of.id}')"><i class="fas fa-check"></i> تفعيل</button>`:''}
+                        <button class="act-btn btn-reset" onclick="doAction('blockOffice','${of.id}')">حظر</button>
+                        <button class="act-btn btn-delete" onclick="doAction('deleteOffice','${of.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
+            }).join('') || '<div style="text-align:center;padding:60px;color:var(--mid);">لا يوجد شركاء</div>';
+            c.innerHTML = html;
+        }
+    }
+
+    async function doAction(act, id) {
+        if(!confirm('تأكيد هذا الإجراء الإداري؟')) return;
+        try {
+            const res = await fetch(`${scriptURL}?action=${act}&id=${id}`, {method:'GET',redirect:'follow'});
+            const result = await res.json();
+            if(result.success) loadData();
+            else alert('فشل: '+result.message);
+        } catch(e) { alert('خطأ في الاتصال'); }
+    }
+
+    function switchTab(t) {
+        currentTab=t;
+        document.getElementById('btnOrders').classList.toggle('active',t==='orders');
+        document.getElementById('btnOffices').classList.toggle('active',t==='offices');
+        render();
+    }
+
+    document.getElementById('masterKey').addEventListener('keypress', e => { if(e.key==='Enter') checkKey(); });
+</script>
+</body>
+</html>

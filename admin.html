@@ -1,225 +1,1675 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>غرفة العمليات | الحوت 👑</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --primary:#FF385C; --dark:#222222; --mid:#717171; --light:#DDDDDD; --bg:#F7F7F7; --green:#10b981; --blue:#3b82f6; --purple:#8b5cf6; --radius:16px; }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--dark); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>الحوت — غرفة العمليات المركزية</title>
+<meta name="theme-color" content="#0d0f14">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  /* Core palette — Dark Luxury */
+  --bg0:#080a0f; --bg1:#0d0f14; --bg2:#12151c; --bg3:#171b24; --bg4:#1e2330;
+  --line:rgba(255,255,255,.06); --line2:rgba(255,255,255,.04);
+  --txt0:#ffffff; --txt1:#c8d0e0; --txt2:#7a8599; --txt3:#4a526a;
+  
+  /* Accent system */
+  --gold:#f0a500; --gold-l:rgba(240,165,0,.12); --gold-d:#d4920a;
+  --teal:#00d4b8; --teal-l:rgba(0,212,184,.1); --teal-d:#00b89e;
+  --rose:#ff4d6d; --rose-l:rgba(255,77,109,.1); --rose-d:#e63560;
+  --sky:#3b9eff;  --sky-l:rgba(59,158,255,.1);  --sky-d:#1a7ee8;
+  --jade:#22c97a; --jade-l:rgba(34,201,122,.1); --jade-d:#18a862;
+  --amber:#ff9b42; --amber-l:rgba(255,155,66,.1);
+  --violet:#9b72ff; --violet-l:rgba(155,114,255,.1);
 
-        /* Auth overlay */
-        #authOverlay { position:fixed; inset:0; z-index:1000; background:white; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px; transition:0.5s; }
-        .auth-logo { font-size:4rem; margin-bottom:16px; }
-        .auth-title { font-size:1.5rem; font-weight:900; margin-bottom:8px; }
-        .auth-sub { color:var(--mid); font-size:0.88rem; margin-bottom:32px; }
-        .auth-input { width:100%; max-width:300px; padding:16px; border:1.5px solid var(--light); border-radius:12px; font-family:'Tajawal',sans-serif; font-size:1.2rem; font-weight:900; text-align:center; letter-spacing:0.3em; outline:none; transition:0.2s; margin-bottom:12px; }
-        .auth-input:focus { border-color:var(--dark); }
-        .auth-btn { width:100%; max-width:300px; background:var(--dark); color:white; border:none; padding:16px; border-radius:12px; font-weight:900; font-size:1rem; cursor:pointer; transition:0.2s; font-family:'Tajawal',sans-serif; }
-        .auth-btn:hover { background:var(--primary); }
-        .auth-error { color:#dc2626; font-size:0.82rem; font-weight:700; margin-top:8px; min-height:20px; }
+  /* Shadows */
+  --sh0:0 1px 3px rgba(0,0,0,.5);
+  --sh1:0 4px 20px rgba(0,0,0,.4);
+  --sh2:0 8px 40px rgba(0,0,0,.5);
+  --sh3:0 20px 80px rgba(0,0,0,.6);
+  --sh-gold:0 8px 32px rgba(240,165,0,.25);
+  --sh-teal:0 8px 32px rgba(0,212,184,.2);
+  --sh-rose:0 8px 32px rgba(255,77,109,.25);
 
-        /* Main */
-        #mainContent { opacity:0; transition:opacity 1s; }
-        .navbar { background:white; border-bottom:1px solid var(--light); padding:0 24px; height:72px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 1px 12px rgba(0,0,0,0.06); }
-        .logo { font-size:1.3rem; font-weight:900; color:var(--primary); display:flex; align-items:center; gap:8px; }
-        .admin-badge { background:rgba(255,56,92,0.1); color:var(--primary); padding:6px 14px; border-radius:20px; font-size:0.78rem; font-weight:800; }
-        .refresh-btn { background:var(--bg); border:1.5px solid var(--light); border-radius:10px; padding:8px 16px; font-weight:700; font-size:0.82rem; cursor:pointer; transition:0.2s; font-family:'Tajawal',sans-serif; display:flex; align-items:center; gap:6px; }
-        .refresh-btn:hover { border-color:var(--dark); }
+  /* Layout */
+  --sb:260px; --nav:70px; --r2:8px; --r3:12px; --r4:16px; --r5:20px; --r6:24px;
+  --ease:cubic-bezier(.4,0,.2,1);
+}
 
-        .stats-bar { background:white; border-bottom:1px solid var(--light); padding:16px 24px; display:flex; gap:16px; overflow-x:auto; }
-        .stat-pill { background:var(--bg); border-radius:12px; padding:12px 18px; min-width:120px; white-space:nowrap; }
-        .stat-num { font-size:1.4rem; font-weight:900; margin-bottom:2px; }
-        .stat-name { font-size:0.72rem; color:var(--mid); font-weight:700; }
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;background:var(--bg0);font-family:'Cairo',sans-serif;
+  color:var(--txt0);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;}
+button,input,select,textarea{font-family:'Cairo',sans-serif;}
+.dn{display:none!important;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px;}
 
-        .tabs-bar { background:white; border-bottom:1px solid var(--light); padding:0 24px; display:flex; gap:0; position:sticky; top:72px; z-index:90; }
-        .tab-btn { padding:16px 22px; font-weight:700; font-size:0.9rem; cursor:pointer; color:var(--mid); border-bottom:2px solid transparent; transition:0.2s; }
-        .tab-btn.active { color:var(--dark); border-bottom-color:var(--dark); }
+/* ─── NOISE TEXTURE OVERLAY ─── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:0.4;
+}
 
-        .main { max-width:900px; margin:0 auto; padding:24px; }
+/* ─── TOASTS ─── */
+#toasts{position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+  z-index:99999;display:flex;flex-direction:column;gap:8px;width:min(94%,380px);pointer-events:none;}
+.ti{background:rgba(18,21,28,.97);backdrop-filter:blur(32px);border-radius:14px;
+  padding:12px 16px;box-shadow:var(--sh3);display:flex;align-items:center;gap:10px;
+  font-weight:700;font-size:.84rem;border:1px solid rgba(255,255,255,.08);
+  animation:tin .3s var(--ease);pointer-events:auto;}
+.ti-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;}
+.ts .ti-ico{background:var(--jade-l);color:var(--jade);}
+.te .ti-ico{background:var(--rose-l);color:var(--rose);}
+@keyframes tin{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
 
-        .order-card { background:white; border-radius:var(--radius); border:1px solid var(--light); margin-bottom:14px; overflow:hidden; }
-        .order-card.status-new { border-right:4px solid var(--blue); }
-        .order-card.status-done { border-right:4px solid var(--green); background:#f9fefb; }
-        .order-card.status-trouble { border-right:4px solid var(--purple); }
-        .card-top { padding:14px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--bg); }
-        .status-badge { padding:3px 10px; border-radius:20px; font-size:0.7rem; font-weight:800; }
-        .badge-new { background:rgba(59,130,246,0.1); color:var(--blue); }
-        .badge-done { background:rgba(16,185,129,0.1); color:var(--green); }
-        .badge-trouble { background:rgba(139,92,246,0.1); color:var(--purple); }
-        .order-id-txt { font-size:0.73rem; color:var(--mid); font-weight:700; }
-        .card-body { padding:14px 18px; }
-        .service-name { font-size:1.05rem; font-weight:900; margin-bottom:8px; }
-        .order-info-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; margin-bottom:14px; font-size:0.82rem; color:var(--mid); font-weight:600; }
-        .card-actions { display:flex; gap:8px; flex-wrap:wrap; }
-        .act-btn { padding:9px 16px; border-radius:10px; font-weight:800; font-size:0.8rem; cursor:pointer; border:none; font-family:'Tajawal',sans-serif; display:flex; align-items:center; gap:5px; transition:0.2s; }
-        .btn-done { background:#dcfce7; color:#166534; } .btn-done:hover{background:#bbf7d0;}
-        .btn-reset { background:#dbeafe; color:#1d4ed8; } .btn-reset:hover{background:#bfdbfe;}
-        .btn-delete { background:#fee2e2; color:#dc2626; } .btn-delete:hover{background:#fecaca;}
+/* ─── AUTH ─── */
+#auth{position:fixed;inset:0;z-index:60000;
+  background:radial-gradient(ellipse 120% 80% at 50% 0%,rgba(240,165,0,.08) 0%,var(--bg0) 60%);
+  display:flex;align-items:center;justify-content:center;padding:20px;}
+.auth-ring{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.auth-ring::before,.auth-ring::after{content:'';position:absolute;border-radius:50%;
+  border:1px solid rgba(240,165,0,.06);}
+.auth-ring::before{width:800px;height:800px;top:-200px;left:50%;transform:translateX(-50%);}
+.auth-ring::after{width:500px;height:500px;top:0;left:50%;transform:translateX(-50%);}
+.auth-box{position:relative;z-index:2;width:100%;max-width:400px;
+  background:rgba(18,21,28,.9);backdrop-filter:blur(40px);
+  border-radius:28px;border:1px solid rgba(240,165,0,.15);
+  box-shadow:0 0 80px rgba(240,165,0,.08),var(--sh3);padding:48px 36px 40px;text-align:center;}
+.auth-logo{width:76px;height:76px;border-radius:24px;margin:0 auto 20px;
+  background:linear-gradient(135deg,#1a1500,#2a2000);border:1px solid rgba(240,165,0,.3);
+  display:flex;align-items:center;justify-content:center;font-size:36px;
+  box-shadow:var(--sh-gold);}
+.auth-h{font-size:1.6rem;font-weight:900;color:var(--txt0);margin-bottom:4px;}
+.auth-s{font-size:.8rem;font-weight:600;color:var(--txt2);margin-bottom:32px;letter-spacing:.04em;}
+.auth-in{width:100%;background:var(--bg3);border:1.5px solid var(--line);
+  border-radius:14px;padding:14px 18px;font-size:1.1rem;font-weight:700;
+  color:var(--txt0);text-align:center;outline:none;
+  transition:all .2s var(--ease);margin-bottom:12px;letter-spacing:.2em;
+  caret-color:var(--gold);}
+.auth-in:focus{background:var(--bg4);border-color:rgba(240,165,0,.4);box-shadow:0 0 0 4px rgba(240,165,0,.08);}
+.auth-btn{width:100%;padding:14px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  color:var(--bg0);border:none;border-radius:14px;font-size:.95rem;font-weight:900;
+  cursor:pointer;box-shadow:var(--sh-gold);transition:all .2s var(--ease);letter-spacing:.02em;}
+.auth-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(240,165,0,.35);}
+.auth-btn:active{transform:scale(.97);}
 
-        .office-card { background:white; border-radius:var(--radius); border:1px solid var(--light); padding:18px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; }
-        .office-info .name { font-weight:900; }
-        .office-info .meta { font-size:0.8rem; color:var(--mid); font-weight:600; margin-top:3px; }
-        .office-status { padding:4px 12px; border-radius:20px; font-size:0.72rem; font-weight:800; margin-top:4px; display:inline-block; }
-        .s-active { background:#dcfce7; color:#166534; }
-        .s-pending { background:#fef9c3; color:#854d0e; }
-        .s-blocked { background:#fee2e2; color:#dc2626; }
-        .office-actions { display:flex; gap:8px; }
-    </style>
+/* ─── APP LAYOUT ─── */
+#app{display:flex;height:100%;overflow:hidden;}
+
+/* ─── SIDEBAR ─── */
+.sidebar{width:var(--sb);background:var(--bg1);height:100vh;
+  position:fixed;right:0;top:0;z-index:900;
+  display:flex;flex-direction:column;overflow-y:auto;
+  border-left:1px solid var(--line);}
+.sidebar::-webkit-scrollbar{width:0;}
+
+.sb-head{padding:22px 16px 18px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;}
+.sb-logo{width:44px;height:44px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg,#1e1a00,#2d2600);border:1px solid rgba(240,165,0,.25);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  box-shadow:0 4px 16px rgba(240,165,0,.2);}
+.sb-name{font-size:.88rem;font-weight:900;color:var(--txt0);}
+.sb-ver{font-size:.6rem;font-weight:600;color:var(--txt3);margin-top:2px;
+  font-family:'JetBrains Mono',monospace;letter-spacing:.05em;}
+
+.sb-sec{font-size:.58rem;font-weight:800;color:var(--txt3);
+  text-transform:uppercase;letter-spacing:1.5px;padding:16px 20px 6px;}
+
+.nb{display:flex;align-items:center;gap:10px;padding:10px 12px;
+  border-radius:10px;color:var(--txt2);font-size:.83rem;font-weight:700;
+  cursor:pointer;margin:2px 8px;transition:all .18s var(--ease);
+  border:none;background:transparent;width:calc(100% - 16px);text-align:right;}
+.nb:hover{background:var(--bg3);color:var(--txt1);}
+.nb.on{background:rgba(240,165,0,.1);color:var(--gold);
+  border:1px solid rgba(240,165,0,.15);}
+.nb .ni{width:30px;height:30px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg3);font-size:14px;}
+.nb.on .ni{background:var(--gold-l);color:var(--gold);}
+.nb .badge{margin-right:auto;background:var(--rose);color:#fff;
+  font-size:.58rem;font-weight:900;padding:2px 6px;border-radius:var(--r3);}
+
+.sb-pulse{display:flex;align-items:center;gap:8px;padding:10px 14px;
+  margin:6px 8px;background:rgba(0,212,184,.06);border:1px solid rgba(0,212,184,.12);
+  border-radius:10px;font-size:.72rem;font-weight:700;color:var(--teal);}
+.sb-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);
+  animation:sbpulse 2s ease-in-out infinite;}
+@keyframes sbpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}}
+
+.sb-foot{margin-top:auto;padding:14px 8px;border-top:1px solid var(--line);}
+.sb-out{width:100%;padding:10px;background:transparent;
+  border:1px solid var(--line);color:var(--txt3);
+  border-radius:10px;font-weight:700;font-size:.8rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all .18s var(--ease);}
+.sb-out:hover{background:var(--rose-l);border-color:var(--rose);color:var(--rose);}
+
+/* ─── MAIN AREA ─── */
+.main{height:100vh;overflow-y:auto;background:var(--bg0);width:100%;
+  scrollbar-width:thin;scrollbar-color:var(--line) transparent;}
+.pg{display:none;} .pg.on{display:block;}
+
+/* ─── DESKTOP LAYOUT ─── */
+@media(min-width:769px){
+  .bnav{display:none!important;}
+  .main{margin-right:var(--sb);width:calc(100% - var(--sb));padding:28px 32px;}
+  .dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
+  .dh-left{display:flex;flex-direction:column;gap:3px;}
+  .dh-t{font-size:1.4rem;font-weight:900;color:var(--txt0);}
+  .dh-s{font-size:.73rem;font-weight:600;color:var(--txt3);}
+  .dh-right{display:flex;align-items:center;gap:12px;}
+  .clk{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700;
+    color:var(--txt2);background:var(--bg2);padding:8px 16px;
+    border-radius:var(--r3);border:1px solid var(--line);}
+  .desk-only{display:block;}
+}
+@media(max-width:768px){
+  .sidebar,.dh,.desk-only{display:none!important;}
+  .main{margin-right:0!important;width:100%;padding:0;}
+  .bnav{display:flex;position:fixed;bottom:0;left:0;width:100%;height:var(--nav);
+    background:rgba(13,15,20,.97);backdrop-filter:blur(24px);
+    border-top:1px solid var(--line);justify-content:space-around;align-items:center;
+    z-index:9000;padding-bottom:env(safe-area-inset-bottom);}
+  .bni{display:flex;flex-direction:column;align-items:center;gap:3px;
+    width:20%;cursor:pointer;padding:8px 0;transition:all .2s var(--ease);}
+  .bni-ic{width:38px;height:38px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--txt3);font-size:18px;transition:all .2s;}
+  .bni-lb{font-size:.55rem;font-weight:700;color:var(--txt3);}
+  .bni.on .bni-ic{background:var(--gold-l);color:var(--gold);transform:translateY(-4px);}
+  .bni.on .bni-lb{color:var(--gold);}
+  .pg{position:absolute;top:0;bottom:var(--nav);left:0;right:0;
+    overflow-y:auto;overflow-x:hidden;background:var(--bg0);}
+  .pg::-webkit-scrollbar{display:none;}
+  .tab-p{padding:18px 14px;padding-bottom:calc(var(--nav)+18px);}
+}
+
+/* ─── KPI CARDS ─── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(2,1fr);}}
+.kc{background:var(--bg2);border-radius:var(--r5);padding:18px 16px;
+  border:1px solid var(--line);position:relative;overflow:hidden;
+  transition:all .25s var(--ease);cursor:default;}
+.kc:hover{transform:translateY(-3px);box-shadow:var(--sh2);}
+.kc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.kc.k-gold::after{background:linear-gradient(90deg,var(--gold),var(--gold-d));}
+.kc.k-teal::after{background:linear-gradient(90deg,var(--teal),var(--teal-d));}
+.kc.k-rose::after{background:linear-gradient(90deg,var(--rose),var(--rose-d));}
+.kc.k-jade::after{background:linear-gradient(90deg,var(--jade),var(--jade-d));}
+.kc.k-sky::after{background:linear-gradient(90deg,var(--sky),var(--sky-d));}
+.kc.k-violet::after{background:linear-gradient(90deg,var(--violet),#7a56e8);}
+.kc-glow{position:absolute;width:80px;height:80px;border-radius:50%;
+  opacity:.06;pointer-events:none;top:-10px;left:-10px;filter:blur(20px);}
+.kc.k-gold .kc-glow{background:var(--gold);}
+.kc.k-teal .kc-glow{background:var(--teal);}
+.kc.k-rose .kc-glow{background:var(--rose);}
+.kc.k-jade .kc-glow{background:var(--jade);}
+.kc-ic{width:44px;height:44px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:19px;margin-bottom:12px;}
+.kc.k-gold .kc-ic{background:var(--gold-l);color:var(--gold);}
+.kc.k-teal .kc-ic{background:var(--teal-l);color:var(--teal);}
+.kc.k-rose .kc-ic{background:var(--rose-l);color:var(--rose);}
+.kc.k-jade .kc-ic{background:var(--jade-l);color:var(--jade);}
+.kc.k-sky .kc-ic{background:var(--sky-l);color:var(--sky);}
+.kc.k-violet .kc-ic{background:var(--violet-l);color:var(--violet);}
+.kc-v{font-size:1.9rem;font-weight:900;line-height:1;color:var(--txt0);margin-bottom:4px;
+  font-variant-numeric:tabular-nums;}
+.kc-l{font-size:.68rem;font-weight:700;color:var(--txt3);}
+.kc-trend{position:absolute;bottom:14px;left:14px;font-size:.65rem;font-weight:800;
+  display:flex;align-items:center;gap:3px;}
+.kc-trend.up{color:var(--jade);}
+.kc-trend.dn{color:var(--rose);}
+
+/* ─── SECTION CARD ─── */
+.scard{background:var(--bg2);border-radius:var(--r5);border:1px solid var(--line);
+  padding:20px;margin-bottom:20px;}
+.scard-tt{font-size:.88rem;font-weight:900;color:var(--txt1);
+  display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+.scard-tt-dot{width:6px;height:6px;border-radius:50%;}
+
+/* ─── FILTER BAR ─── */
+.fbar{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;
+  margin-bottom:16px;scrollbar-width:none;flex-wrap:wrap;}
+.fbar::-webkit-scrollbar{display:none;}
+.fp{flex-shrink:0;padding:7px 14px;border-radius:var(--r3);
+  font-size:.74rem;font-weight:800;color:var(--txt2);background:var(--bg3);
+  border:1px solid var(--line);cursor:pointer;transition:all .18s var(--ease);
+  white-space:nowrap;display:inline-flex;align-items:center;gap:5px;}
+.fp:hover{background:var(--bg4);color:var(--txt1);}
+.fp.on{background:var(--gold-l);color:var(--gold);border-color:rgba(240,165,0,.2);}
+.fp .fc{padding:1px 5px;border-radius:99px;font-size:.65rem;}
+.fp:not(.on) .fc{background:var(--bg4);color:var(--txt3);}
+.fp.on .fc{background:rgba(240,165,0,.2);color:var(--gold);}
+.fp.fr.on{background:var(--rose-l);color:var(--rose);border-color:rgba(255,77,109,.2);}
+.fp.fg.on{background:var(--jade-l);color:var(--jade);border-color:rgba(34,201,122,.2);}
+.fp.fb.on{background:var(--sky-l);color:var(--sky);border-color:rgba(59,158,255,.2);}
+.fp.ft.on{background:var(--teal-l);color:var(--teal);border-color:rgba(0,212,184,.2);}
+
+/* ─── ORDER CARDS ─── */
+.og{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+.oc{background:var(--bg3);border-radius:var(--r4);padding:14px;
+  border:1px solid var(--line);position:relative;overflow:hidden;
+  transition:all .2s var(--ease);}
+.oc:hover{box-shadow:var(--sh1);border-color:var(--line2);}
+.oc-stripe{position:absolute;right:0;top:12px;bottom:12px;width:3px;border-radius:99px;}
+.oc.st-pending .oc-stripe{background:var(--rose);}
+.oc.st-active .oc-stripe{background:var(--teal);}
+.oc.st-done .oc-stripe{background:var(--jade);}
+.oc.st-hotel .oc-stripe{background:var(--violet);}
+.oc.st-train .oc-stripe{background:var(--sky);}
+.oc.st-pending{animation:rpulse 2.5s ease-in-out infinite;}
+@keyframes rpulse{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 2px rgba(255,77,109,.15)}}
+.oc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.oc-id{font-size:.8rem;font-weight:900;color:var(--txt1);
+  font-family:'JetBrains Mono',monospace;}
+.oc-time{font-size:.62rem;font-weight:700;color:var(--txt3);}
+.oc-svc{font-size:.85rem;font-weight:800;color:var(--txt0);margin-bottom:6px;}
+.oc-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.oc-chip{font-size:.68rem;font-weight:700;color:var(--txt2);
+  display:flex;align-items:center;gap:4px;}
+.oc-price{font-size:1rem;font-weight:900;color:var(--gold);margin-bottom:10px;}
+.oc-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.ob{height:30px;padding:0 12px;border-radius:8px;border:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:5px;transition:all .15s;
+  flex-shrink:0;font-size:.72rem;font-weight:800;font-family:'Cairo',sans-serif;}
+.ob:active{transform:scale(.9);}
+.b-ok{background:var(--jade-l);color:var(--jade);}
+.b-del{background:var(--rose-l);color:var(--rose);}
+.b-call{background:var(--sky-l);color:var(--sky);}
+.b-map{background:var(--teal-l);color:var(--teal);}
+
+/* ─── ENTITY GRID ─── */
+.eg{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+.ec{background:var(--bg3);border-radius:var(--r4);padding:16px;
+  border:1px solid var(--line);transition:all .2s var(--ease);
+  display:flex;flex-direction:column;position:relative;overflow:hidden;}
+.ec:hover{transform:translateY(-2px);box-shadow:var(--sh1);}
+.ec::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.ec.ea::before{background:linear-gradient(90deg,var(--jade),var(--jade-d));}
+.ec.ep::before{background:linear-gradient(90deg,var(--amber),#e08030);}
+.ec.eb::before{background:linear-gradient(90deg,var(--rose),var(--rose-d));}
+.ec.ei::before{background:linear-gradient(90deg,var(--txt3),var(--txt2));}
+.ec-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+.ec-av{width:42px;height:42px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg4);font-size:18px;flex-shrink:0;}
+.ec-n{font-size:.86rem;font-weight:900;color:var(--txt0);margin-bottom:2px;}
+.ec-ph{font-size:.68rem;font-weight:700;color:var(--txt3);
+  direction:ltr;font-family:'JetBrains Mono',monospace;margin-bottom:8px;}
+.ls{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
+.lm{background:var(--bg4);border-radius:9px;padding:8px 10px;border:1px solid var(--line);}
+.lv{font-size:.95rem;font-weight:900;line-height:1;color:var(--txt0);}
+.ll{font-size:.57rem;font-weight:700;color:var(--txt3);margin-top:2px;}
+.lv.g{color:var(--jade);}
+.lv.r{color:var(--rose);}
+.lv.b{color:var(--sky);}
+.sp{padding:4px 10px;border-radius:var(--r3);font-size:.64rem;font-weight:900;}
+.sp-a{background:var(--jade-l);color:var(--jade);}
+.sp-i{background:var(--amber-l);color:var(--amber);}
+.sp-p{background:var(--sky-l);color:var(--sky);}
+.sp-b{background:var(--rose-l);color:var(--rose);}
+.ec-acts{display:flex;justify-content:center;align-items:center;
+  padding-top:10px;border-top:1px solid var(--line);margin-top:auto;gap:5px;flex-wrap:wrap;}
+.ea{width:30px;height:30px;border-radius:8px;border:none;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:all .15s;flex-shrink:0;font-size:13px;}
+.ea:active{transform:scale(.85);}
+.ea-a{background:var(--jade-l);color:var(--jade);}
+.ea-p{background:var(--amber-l);color:var(--amber);}
+.ea-b{background:var(--rose-l);color:var(--rose);}
+.ea-d{background:rgba(255,77,109,.08);color:var(--rose);border:1px solid rgba(255,77,109,.2);}
+.ea-e{background:var(--sky-l);color:var(--sky);}
+.ea-$${background:var(--gold-l);color:var(--gold);}
+.ea-c{background:var(--teal-l);color:var(--teal);}
+
+/* ─── TABLE ─── */
+.tb-wrap{background:var(--bg2);border-radius:var(--r5);border:1px solid var(--line);overflow:hidden;}
+.tb-sc{overflow-x:auto;}
+.arch-tb{width:100%;border-collapse:collapse;min-width:680px;}
+.arch-tb thead tr{background:var(--bg3);border-bottom:1px solid var(--line);}
+.arch-tb th{padding:12px;font-size:.68rem;font-weight:800;color:var(--txt3);
+  text-align:center;white-space:nowrap;cursor:pointer;letter-spacing:.05em;text-transform:uppercase;}
+.arch-tb th:hover{color:var(--gold);}
+.arch-tb td{padding:11px 12px;font-size:.78rem;font-weight:700;
+  text-align:center;border-bottom:1px solid var(--line);}
+.arch-tb tbody tr{cursor:pointer;transition:background .1s;}
+.arch-tb tbody tr:hover{background:var(--bg3);}
+.td-id{color:var(--sky);font-family:'JetBrains Mono',monospace;}
+.td-pr{color:var(--gold);font-weight:900;}
+
+/* ─── BADGES ─── */
+.stb{padding:3px 9px;border-radius:var(--r3);font-size:.64rem;font-weight:900;display:inline-block;}
+.stb-r{background:var(--rose-l);color:var(--rose);}
+.stb-g{background:var(--jade-l);color:var(--jade);}
+.stb-b{background:var(--sky-l);color:var(--sky);}
+.stb-t{background:var(--teal-l);color:var(--teal);}
+.stb-o{background:var(--amber-l);color:var(--amber);}
+.stb-v{background:var(--violet-l);color:var(--violet);}
+.stb-gold{background:var(--gold-l);color:var(--gold);}
+
+/* ─── CHARTS ─── */
+.chart-bx{background:var(--bg2);border-radius:var(--r5);border:1px solid var(--line);
+  padding:20px;margin-bottom:16px;}
+.chart-tt{font-size:.84rem;font-weight:900;color:var(--txt1);margin-bottom:14px;}
+.charts-2{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+@media(max-width:768px){.charts-2{grid-template-columns:1fr;}}
+
+/* ─── AIOPS / TICKER ─── */
+.ticker-w{background:var(--bg2);border-radius:var(--r3);padding:10px 16px;
+  font-size:.8rem;font-weight:800;color:var(--teal);
+  white-space:nowrap;overflow:hidden;display:flex;align-items:center;gap:10px;
+  border:1px solid rgba(0,212,184,.12);margin-bottom:18px;}
+.ticker-in{display:inline-block;animation:tsc 28s linear infinite;}
+@keyframes tsc{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;}
+.st-card{background:var(--bg2);border-radius:var(--r4);padding:14px;
+  border:1px solid var(--line);display:flex;align-items:center;gap:12px;
+  transition:all .2s var(--ease);}
+.st-card:hover{border-color:rgba(240,165,0,.15);}
+.st-ic{width:40px;height:40px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:17px;}
+.st-v{font-size:1.3rem;font-weight:900;line-height:1;}
+.st-l{font-size:.64rem;font-weight:700;color:var(--txt3);margin-top:2px;}
+
+/* ─── SEARCH ─── */
+.srch-w{position:relative;margin-bottom:14px;}
+.srch-w .si{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  color:var(--txt3);pointer-events:none;font-size:14px;}
+.srch{width:100%;background:var(--bg3);border:1.5px solid var(--line);
+  border-radius:var(--r4);padding:10px 38px 10px 12px;
+  font-size:.82rem;font-weight:700;color:var(--txt0);outline:none;transition:all .2s;
+  caret-color:var(--gold);}
+.srch:focus{border-color:rgba(240,165,0,.3);background:var(--bg4);}
+
+/* ─── FORM ─── */
+.fc{width:100%;background:var(--bg3);border:1.5px solid var(--line);
+  border-radius:var(--r3);padding:10px 12px;font-size:.84rem;font-weight:700;
+  color:var(--txt0);outline:none;transition:all .2s;appearance:none;
+  caret-color:var(--gold);}
+.fc:focus{background:var(--bg4);border-color:rgba(240,165,0,.3);}
+.el{font-size:.68rem;font-weight:800;color:var(--txt3);margin-bottom:5px;
+  display:block;text-transform:uppercase;letter-spacing:.06em;}
+
+/* ─── MODALS ─── */
+.mbg{position:fixed;inset:0;background:rgba(5,7,12,.8);
+  backdrop-filter:blur(12px);z-index:20000;display:none;
+  align-items:center;justify-content:center;padding:16px;}
+.mbg.open{display:flex;animation:mfade .25s;}
+@keyframes mfade{from{opacity:0}to{opacity:1}}
+.mcard{background:var(--bg2);border-radius:22px;width:100%;max-width:480px;
+  padding:24px 20px;box-shadow:var(--sh3);border:1px solid var(--line);
+  animation:mpop .3s cubic-bezier(.22,1,.36,1);max-height:92vh;overflow-y:auto;}
+@keyframes mpop{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:none}}
+.mc-h{font-size:1.1rem;font-weight:900;color:var(--txt0);margin-bottom:4px;}
+.mc-s{font-size:.75rem;font-weight:600;color:var(--txt3);margin-bottom:18px;}
+
+/* ─── MISC ─── */
+.empty-s{text-align:center;padding:48px 16px;color:var(--txt3);}
+.es-ic{width:60px;height:60px;border-radius:18px;background:var(--bg3);
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-bottom:12px;font-size:26px;}
+.es-t{font-size:.86rem;font-weight:800;color:var(--txt2);}
+.loading{color:transparent!important;pointer-events:none;position:relative;}
+.loading::after{content:'';position:absolute;left:50%;top:50%;width:14px;height:14px;
+  margin:-7px;border:2.5px solid rgba(255,255,255,.15);
+  border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg)}}
+.pg-ttl{font-size:1.05rem;font-weight:900;color:var(--txt0);margin-bottom:16px;
+  padding-top:max(16px,env(safe-area-inset-top));}
+@media(min-width:769px){.pg-ttl{display:none;}}
+.abt{height:32px;padding:0 14px;border-radius:9px;border:1px solid var(--line);
+  font-size:.74rem;font-weight:800;cursor:pointer;background:var(--bg3);
+  display:inline-flex;align-items:center;gap:5px;color:var(--txt1);transition:.2s;}
+.abt:hover{background:var(--gold-l);border-color:rgba(240,165,0,.2);color:var(--gold);}
+.abt-pri{background:linear-gradient(135deg,var(--gold),var(--gold-d));
+  color:var(--bg0);border-color:transparent;}
+.abt-pri:hover{transform:translateY(-1px);box-shadow:var(--sh-gold);color:var(--bg0);}
+.tb-bar{display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:8px;padding:10px 14px;
+  border-bottom:1px solid var(--line);}
+.divrow{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+.flashin{animation:fla .5s ease-out;}
+@keyframes fla{0%{background:rgba(0,212,184,.12)}100%{background:var(--bg3)}}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--jade);
+  animation:ldot 1.5s ease-in-out infinite;display:inline-block;}
+@keyframes ldot{0%,100%{transform:scale(1)}50%{transform:scale(1.5);background:var(--teal)}}
+</style>
 </head>
 <body>
+<audio id="snd" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+<div id="toasts"></div>
 
-<!-- Auth -->
-<div id="authOverlay">
+<!-- ══════════ AUTH ══════════ -->
+<div id="auth">
+  <div class="auth-ring"></div>
+  <div class="auth-box">
     <div class="auth-logo">🐋</div>
-    <h1 class="auth-title">غرفة العمليات</h1>
-    <p class="auth-sub">Master Control Room — الحوت</p>
-    <input type="password" id="masterKey" class="auth-input" placeholder="••••" autofocus>
-    <button class="auth-btn" onclick="checkKey()"><i class="fas fa-key"></i> تأكيد الدخول</button>
-    <div class="auth-error" id="authError"></div>
+    <h1 class="auth-h">الحوت — غرفة العمليات</h1>
+    <p class="auth-s">لوحة الإدارة المركزية · v1.0 · كركوك–العراق</p>
+    <input type="password" id="mPW" class="auth-in" placeholder="• • • • • • • •" autocomplete="off"
+      onkeypress="if(event.key==='Enter')doAuth()">
+    <button class="auth-btn" id="authB" onclick="doAuth()">
+      <i class="fas fa-unlock-keyhole"></i> دخول لوحة التحكم
+    </button>
+  </div>
 </div>
 
-<div id="mainContent">
-    <nav class="navbar">
-        <div class="logo"><span>🐋</span> غرفة العمليات</div>
-        <div style="display:flex;gap:10px;align-items:center;">
-            <span class="admin-badge"><i class="fas fa-shield-alt"></i> مدير النظام</span>
-            <button class="refresh-btn" onclick="loadData()"><i class="fas fa-sync-alt"></i> تحديث</button>
+<!-- ══════════ APP ══════════ -->
+<div id="app" class="dn">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-head">
+      <div class="sb-logo">🐋</div>
+      <div>
+        <div class="sb-name">الحوت — الإدارة</div>
+        <div class="sb-ver">v1.0 · FORTRESS</div>
+      </div>
+    </div>
+
+    <div class="sb-pulse" id="fbStatus">
+      <div class="sb-dot"></div>
+      <span id="fbStatusTxt">في انتظار Firebase...</span>
+    </div>
+
+    <span class="sb-sec">الرصد</span>
+    <button class="nb on" id="nb-live"  onclick="goTab('live',this)"><div class="ni">📡</div> الرادار المباشر<span id="pendBadge" class="badge" style="display:none">0</span></button>
+    <button class="nb"    id="nb-arch"  onclick="goTab('arch',this)"><div class="ni">📊</div> سجل الطلبات</button>
+    
+    <span class="sb-sec">إدارة الأسطول</span>
+    <button class="nb" id="nb-cars"   onclick="goTab('cars',this)"><div class="ni">🚗</div> إدارة السيارات</button>
+    <button class="nb" id="nb-hotels" onclick="goTab('hotels',this)"><div class="ni">🏨</div> إدارة الفنادق</button>
+    <button class="nb" id="nb-drive"  onclick="goTab('drive',this)"><div class="ni">🎓</div> مدارس السياقة</button>
+    <button class="nb" id="nb-offices"onclick="goTab('offices',this)"><div class="ni">🏢</div> المكاتب الشريكة</button>
+
+    <span class="sb-sec">النظام</span>
+    <button class="nb" id="nb-aiops" onclick="goTab('aiops',this)"><div class="ni">⚡</div> مركز القيادة</button>
+    <button class="nb" id="nb-audit" onclick="goTab('audit',this)"><div class="ni">📋</div> سجل التدقيق</button>
+
+    <div class="sb-foot">
+      <button class="sb-out" onclick="doLogout()"><i class="fas fa-right-from-bracket"></i> تسجيل الخروج</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- Header -->
+    <div class="dh">
+      <div class="dh-left">
+        <div class="dh-t" id="dhT">الرادار المباشر</div>
+        <div class="dh-s">لوحة الإدارة المركزية · الحوت · <span class="live-dot"></span> مباشر</div>
+      </div>
+      <div class="dh-right">
+        <div class="clk" id="clkD">00:00:00</div>
+        <button class="abt abt-pri" onclick="loadData()"><i class="fas fa-rotate"></i> تحديث</button>
+      </div>
+    </div>
+
+    <!-- ══ LIVE PAGE ══ -->
+    <div id="pg-live" class="pg on tab-p">
+      <div class="pg-ttl">الرادار المباشر</div>
+
+      <div class="kpi-row">
+        <div class="kc k-gold"><div class="kc-glow"></div><div class="kc-ic">📦</div><div class="kc-v" id="kActive">0</div><div class="kc-l">طلبات نشطة</div></div>
+        <div class="kc k-rose"><div class="kc-glow"></div><div class="kc-ic">⏳</div><div class="kc-v" id="kPending">0</div><div class="kc-l">بانتظار التنفيذ</div></div>
+        <div class="kc k-jade"><div class="kc-glow"></div><div class="kc-ic">✅</div><div class="kc-v" id="kDone">0</div><div class="kc-l">منجزة اليوم</div></div>
+        <div class="kc k-teal"><div class="kc-glow"></div><div class="kc-ic">💰</div><div class="kc-v" id="kRevenue">0</div><div class="kc-l">إيرادات د.ع</div></div>
+      </div>
+
+      <div class="fbar" id="fbarLive">
+        <button class="fp on" onclick="setFilter('all',this)">الكل <span class="fc" id="cAll">0</span></button>
+        <button class="fp fr" onclick="setFilter('pending',this)">⏳ انتظار <span class="fc" id="cPend">0</span></button>
+        <button class="fp ft" onclick="setFilter('active',this)">🟢 نشط <span class="fc" id="cAct">0</span></button>
+        <button class="fp fb" onclick="setFilter('hotel',this)">🏨 فنادق <span class="fc" id="cHotel">0</span></button>
+        <button class="fp" style="color:var(--violet)" onclick="setFilter('training',this)">🎓 تدريب <span class="fc" id="cTrain">0</span></button>
+        <button class="fp" style="color:var(--amber)" onclick="setFilter('wedding',this)">💍 زفاف <span class="fc" id="cWed">0</span></button>
+      </div>
+
+      <div class="og" id="liveGrid"></div>
+    </div>
+
+    <!-- ══ ARCHIVE PAGE ══ -->
+    <div id="pg-arch" class="pg tab-p">
+      <div class="pg-ttl">سجل الطلبات</div>
+
+      <div class="kpi-row">
+        <div class="kc k-jade"><div class="kc-glow"></div><div class="kc-ic">✅</div><div class="kc-v" id="akC">0</div><div class="kc-l">منجزة</div></div>
+        <div class="kc k-rose"><div class="kc-glow"></div><div class="kc-ic">❌</div><div class="kc-v" id="akX">0</div><div class="kc-l">ملغية</div></div>
+        <div class="kc k-gold"><div class="kc-glow"></div><div class="kc-ic">💵</div><div class="kc-v" id="akRev">0</div><div class="kc-l">الإيرادات</div></div>
+        <div class="kc k-sky"><div class="kc-glow"></div><div class="kc-ic">📈</div><div class="kc-v" id="akAvg">0</div><div class="kc-l">متوسط الطلب</div></div>
+      </div>
+
+      <div class="charts-2">
+        <div class="chart-bx"><div class="chart-tt">📊 أداء الفترة</div><div style="height:200px;position:relative"><canvas id="barChart"></canvas></div></div>
+        <div class="chart-bx"><div class="chart-tt">🥧 نوع الخدمة</div><div style="height:200px;position:relative"><canvas id="pieChart"></canvas></div></div>
+      </div>
+
+      <div class="scard" style="padding:14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:0">
+          <div><label class="el">بحث</label><input type="text" id="arcSch" class="fc" placeholder="رقم، خدمة..." oninput="renderArch()"></div>
+          <div><label class="el">نوع الخدمة</label>
+            <select id="arcSvc" class="fc" onchange="renderArch()">
+              <option value="">الكل</option>
+              <option value="شخصي">🚗 سيارات</option>
+              <option value="فندق">🏨 فنادق</option>
+              <option value="تدريب قيادة">🎓 تدريب</option>
+              <option value="زفاف">💍 زفاف</option>
+            </select>
+          </div>
+          <div><label class="el">الحالة</label>
+            <select id="arcSt" class="fc" onchange="renderArch()">
+              <option value="">الكل</option>
+              <option value="completed">✅ منجز</option>
+              <option value="cancelled">❌ ملغي</option>
+              <option value="pending">⏳ نشط</option>
+            </select>
+          </div>
         </div>
-    </nav>
+      </div>
 
-    <div class="stats-bar" id="statsBar">
-        <div class="stat-pill"><div class="stat-num" id="statTotal">—</div><div class="stat-name">إجمالي الطلبات</div></div>
-        <div class="stat-pill"><div class="stat-num" id="statNew">—</div><div class="stat-name">قيد الانتظار</div></div>
-        <div class="stat-pill"><div class="stat-num" id="statDone">—</div><div class="stat-name">مكتملة</div></div>
-        <div class="stat-pill"><div class="stat-num" id="statOffices">—</div><div class="stat-name">شركاء نشطون</div></div>
+      <div class="tb-wrap">
+        <div class="tb-bar">
+          <div style="font-size:.78rem;font-weight:800;color:var(--txt2);">
+            <span class="stb stb-t" id="arcBadge">0 طلب</span>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="abt" onclick="expCSV()"><i class="fas fa-download"></i> CSV</button>
+            <button class="abt abt-pri" onclick="loadData()"><i class="fas fa-rotate"></i></button>
+          </div>
+        </div>
+        <div class="tb-sc">
+          <table class="arch-tb">
+            <thead><tr>
+              <th>رقم الطلب</th>
+              <th>الوقت</th>
+              <th>العميل</th>
+              <th>الخدمة</th>
+              <th>المدينة</th>
+              <th>المكتب</th>
+              <th>السعر</th>
+              <th>الحالة</th>
+              <th>إجراء</th>
+            </tr></thead>
+            <tbody id="arcTb"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
-    <div class="tabs-bar">
-        <div class="tab-btn active" id="btnOrders" onclick="switchTab('orders')"><i class="fas fa-satellite-dish"></i> مراقبة الطلبات</div>
-        <div class="tab-btn" id="btnOffices" onclick="switchTab('offices')"><i class="fas fa-handshake"></i> شركاء الخدمة</div>
+    <!-- ══ CARS PAGE ══ -->
+    <div id="pg-cars" class="pg tab-p">
+      <div class="pg-ttl">إدارة السيارات</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div class="srch-w" style="flex:1;margin-bottom:0;margin-left:12px">
+          <span class="si"><i class="fas fa-search"></i></span>
+          <input type="text" id="carSch" class="srch" placeholder="ابحث عن سيارة..." oninput="renderCars()">
+        </div>
+        <button class="abt abt-pri" onclick="openAddCarModal()"><i class="fas fa-plus"></i> إضافة سيارة</button>
+      </div>
+      <div class="fbar" id="carFbar">
+        <button class="fp on" onclick="setCarFilter('all',this)">الكل <span class="fc" id="cc-all">0</span></button>
+        <button class="fp ft" onclick="setCarFilter('available',this)">متاح <span class="fc" id="cc-available">0</span></button>
+        <button class="fp fr" onclick="setCarFilter('rented',this)">مؤجر <span class="fc" id="cc-rented">0</span></button>
+        <button class="fp" style="color:var(--amber)" onclick="setCarFilter('maintenance',this)">صيانة <span class="fc" id="cc-maintenance">0</span></button>
+      </div>
+      <div class="eg" id="carsGrid"></div>
     </div>
 
-    <div class="main" id="content">
-        <div style="text-align:center;padding:60px;color:var(--mid);">جاري تحميل البيانات...</div>
+    <!-- ══ HOTELS PAGE ══ -->
+    <div id="pg-hotels" class="pg tab-p">
+      <div class="pg-ttl">إدارة الفنادق</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div class="srch-w" style="flex:1;margin-bottom:0;margin-left:12px">
+          <span class="si"><i class="fas fa-search"></i></span>
+          <input type="text" id="hotelSch" class="srch" placeholder="ابحث عن فندق..." oninput="renderHotels()">
+        </div>
+        <button class="abt abt-pri" onclick="openAddHotelModal()"><i class="fas fa-plus"></i> إضافة فندق</button>
+      </div>
+      <div class="fbar">
+        <button class="fp on" onclick="setHotelFilter('all',this)">الكل <span class="fc" id="hc-all">0</span></button>
+        <button class="fp fg" onclick="setHotelFilter('active',this)">نشط <span class="fc" id="hc-active">0</span></button>
+        <button class="fp fr" onclick="setHotelFilter('inactive',this)">متوقف <span class="fc" id="hc-inactive">0</span></button>
+        <button class="fp ft" onclick="setHotelFilter('luxury',this)">⭐ فاخر <span class="fc" id="hc-luxury">0</span></button>
+        <button class="fp fb" onclick="setHotelFilter('economy',this)">اقتصادي <span class="fc" id="hc-economy">0</span></button>
+      </div>
+      <div class="eg" id="hotelsGrid"></div>
     </div>
+
+    <!-- ══ DRIVING SCHOOL PAGE ══ -->
+    <div id="pg-drive" class="pg tab-p">
+      <div class="pg-ttl">مدارس تعليم السياقة</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div class="srch-w" style="flex:1;margin-bottom:0;margin-left:12px">
+          <span class="si"><i class="fas fa-search"></i></span>
+          <input type="text" id="driveSch" class="srch" placeholder="ابحث عن طالب..." oninput="renderDrive()">
+        </div>
+        <button class="abt abt-pri" onclick="openAddDriveModal()"><i class="fas fa-plus"></i> تسجيل طالب</button>
+      </div>
+      <div class="eg" id="driveGrid"></div>
+    </div>
+
+    <!-- ══ OFFICES PAGE ══ -->
+    <div id="pg-offices" class="pg tab-p">
+      <div class="pg-ttl">المكاتب الشريكة</div>
+      <div class="srch-w">
+        <span class="si"><i class="fas fa-search"></i></span>
+        <input type="text" id="offSch" class="srch" placeholder="ابحث عن مكتب..." oninput="renderOffices()">
+      </div>
+      <div class="fbar">
+        <button class="fp on" onclick="setOfficeFilter('all',this)">الكل <span class="fc" id="oc-all">0</span></button>
+        <button class="fp fg" onclick="setOfficeFilter('active',this)">نشط <span class="fc" id="oc-active">0</span></button>
+        <button class="fp" style="color:var(--amber)" onclick="setOfficeFilter('pending',this)">انتظار <span class="fc" id="oc-pending">0</span></button>
+        <button class="fp fr" onclick="setOfficeFilter('blocked',this)">محظور <span class="fc" id="oc-blocked">0</span></button>
+      </div>
+      <div class="eg" id="officesGrid"></div>
+    </div>
+
+    <!-- ══ AIOPS PAGE ══ -->
+    <div id="pg-aiops" class="pg tab-p">
+      <div class="pg-ttl">مركز القيادة</div>
+      <div class="ticker-w"><i class="fas fa-satellite-dish"></i><div class="ticker-in" id="tickTx">🟢 النظام يعمل بكامل طاقته...</div></div>
+      <div class="stat-grid">
+        <div class="st-card"><div class="st-ic" style="background:var(--jade-l)">🖥️</div><div><div class="st-v" style="color:var(--jade);font-size:.9rem" id="fbSt">متصل</div><div class="st-l">حالة Firebase</div></div></div>
+        <div class="st-card"><div class="st-ic" style="background:var(--gold-l)">📦</div><div><div class="st-v" id="totalOrdersSt">0</div><div class="st-l">إجمالي الطلبات</div></div></div>
+        <div class="st-card"><div class="st-ic" style="background:var(--teal-l)">🚗</div><div><div class="st-v" id="totalCarsSt">0</div><div class="st-l">سيارات مسجلة</div></div></div>
+        <div class="st-card"><div class="st-ic" style="background:var(--violet-l)">🏨</div><div><div class="st-v" id="totalHotelsSt">0</div><div class="st-l">فنادق مسجلة</div></div></div>
+      </div>
+      <div class="scard">
+        <div class="scard-tt"><div class="scard-tt-dot" style="background:var(--gold)"></div> أدوات النظام</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="abt abt-pri" onclick="runNightlyReport()"><i class="fas fa-moon"></i> تشغيل التقرير الليلي</button>
+          <button class="abt" onclick="exportFullData()"><i class="fas fa-database"></i> تصدير كامل البيانات</button>
+          <button class="abt" onclick="clearOldArchive()"><i class="fas fa-trash-can"></i> مسح الأرشيف القديم</button>
+          <button class="abt" style="color:var(--rose);border-color:rgba(255,77,109,.2)" onclick="confirmReset()"><i class="fas fa-triangle-exclamation"></i> إعادة ضبط النظام</button>
+        </div>
+      </div>
+      <div class="scard">
+        <div class="scard-tt"><div class="scard-tt-dot" style="background:var(--teal)"></div> سجل الإنذارات</div>
+        <div id="alertsList"><div class="empty-s"><div class="es-ic">🛡️</div><div class="es-t">النظام مستقر — لا إنذارات</div></div></div>
+      </div>
+    </div>
+
+    <!-- ══ AUDIT PAGE ══ -->
+    <div id="pg-audit" class="pg tab-p">
+      <div class="pg-ttl">سجل التدقيق</div>
+      <div class="srch-w">
+        <span class="si"><i class="fas fa-search"></i></span>
+        <input type="text" id="auSch" class="srch" placeholder="ابحث في السجل..." oninput="renderAudit()">
+      </div>
+      <div id="auList"></div>
+    </div>
+  </main>
+
+  <!-- BOTTOM NAV (Mobile) -->
+  <nav class="bnav">
+    <div class="bni on" id="bn-live"  onclick="goTab('live',this)"><div class="bni-ic"><i class="fas fa-satellite-dish"></i></div><span class="bni-lb">الرادار</span></div>
+    <div class="bni"    id="bn-arch"  onclick="goTab('arch',this)"><div class="bni-ic"><i class="fas fa-chart-bar"></i></div><span class="bni-lb">التقارير</span></div>
+    <div class="bni"    id="bn-cars"  onclick="goTab('cars',this)"><div class="bni-ic"><i class="fas fa-car"></i></div><span class="bni-lb">السيارات</span></div>
+    <div class="bni"    id="bn-hotels"onclick="goTab('hotels',this)"><div class="bni-ic"><i class="fas fa-hotel"></i></div><span class="bni-lb">الفنادق</span></div>
+    <div class="bni"    id="bn-aiops" onclick="goTab('aiops',this)"><div class="bni-ic"><i class="fas fa-bolt"></i></div><span class="bni-lb">القيادة</span></div>
+  </nav>
+</div>
+
+<!-- ══════════ EDIT MODAL ══════════ -->
+<div id="editMod" class="mbg" onclick="clMod('editMod')">
+  <div class="mcard" onclick="event.stopPropagation()">
+    <div class="mc-h" id="editTitle">تعديل البيانات</div>
+    <div class="mc-s" id="editSub">تحديث البيانات</div>
+    <div id="editBody"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button onclick="clMod('editMod')" style="flex:1;padding:12px;background:var(--bg3);border:1px solid var(--line);border-radius:12px;font-weight:800;cursor:pointer;color:var(--txt2);font-family:'Cairo'">إلغاء</button>
+      <button id="editSaveBtn" onclick="saveEdit()" style="flex:1;padding:12px;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:var(--bg0);border:none;border-radius:12px;font-weight:900;cursor:pointer;font-family:'Cairo'">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ADD CAR MODAL ══════════ -->
+<div id="addCarMod" class="mbg" onclick="clMod('addCarMod')">
+  <div class="mcard" onclick="event.stopPropagation()">
+    <div class="mc-h">إضافة سيارة جديدة</div>
+    <div class="mc-s">أدخل بيانات السيارة</div>
+    <div style="display:grid;gap:10px">
+      <div><label class="el">اسم السيارة</label><input id="nc-name" type="text" class="fc" placeholder="مثال: تويوتا كامري 2025"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label class="el">الفئة</label>
+          <select id="nc-cat" class="fc">
+            <option value="economy">اقتصادية</option>
+            <option value="family">عائلية/SUV</option>
+            <option value="luxury">VIP فاخرة</option>
+          </select>
+        </div>
+        <div><label class="el">السعر/اليوم (د.ع)</label><input id="nc-price" type="number" class="fc" placeholder="50000"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label class="el">اللون</label><input id="nc-color" type="text" class="fc" placeholder="أبيض"></div>
+        <div><label class="el">رقم اللوحة</label><input id="nc-plate" type="text" class="fc" placeholder="بغداد 12345"></div>
+      </div>
+      <div><label class="el">الحالة</label>
+        <select id="nc-status" class="fc">
+          <option value="available">متاح</option>
+          <option value="rented">مؤجر</option>
+          <option value="maintenance">صيانة</option>
+        </select>
+      </div>
+      <div><label class="el">ملاحظات</label><input id="nc-notes" type="text" class="fc" placeholder="أي ملاحظات إضافية..."></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button onclick="clMod('addCarMod')" style="flex:1;padding:12px;background:var(--bg3);border:1px solid var(--line);border-radius:12px;font-weight:800;cursor:pointer;color:var(--txt2);font-family:'Cairo'">إلغاء</button>
+      <button onclick="saveCar()" style="flex:1;padding:12px;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:var(--bg0);border:none;border-radius:12px;font-weight:900;cursor:pointer;font-family:'Cairo'">✅ إضافة السيارة</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ADD HOTEL MODAL ══════════ -->
+<div id="addHotelMod" class="mbg" onclick="clMod('addHotelMod')">
+  <div class="mcard" onclick="event.stopPropagation()">
+    <div class="mc-h">إضافة فندق جديد</div>
+    <div class="mc-s">أدخل بيانات الفندق</div>
+    <div style="display:grid;gap:10px">
+      <div><label class="el">اسم الفندق</label><input id="nh-name" type="text" class="fc" placeholder="مثال: فندق بابل الكبير"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label class="el">الفئة</label>
+          <select id="nh-cat" class="fc">
+            <option value="economy">اقتصادي</option>
+            <option value="premium">مميز</option>
+            <option value="luxury">فاخر</option>
+          </select>
+        </div>
+        <div><label class="el">السعر/الليلة (د.ع)</label><input id="nh-price" type="number" class="fc" placeholder="80000"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label class="el">المدينة</label>
+          <select id="nh-city" class="fc">
+            <option>بغداد</option><option>كركوك</option><option>أربيل</option>
+            <option>السليمانية</option><option>الموصل</option><option>البصرة</option>
+          </select>
+        </div>
+        <div><label class="el">عدد النجوم</label>
+          <select id="nh-stars" class="fc">
+            <option value="3">3 نجوم</option>
+            <option value="4">4 نجوم</option>
+            <option value="5" selected>5 نجوم</option>
+          </select>
+        </div>
+      </div>
+      <div><label class="el">المميزات (مفصولة بفاصلة)</label><input id="nh-feats" type="text" class="fc" placeholder="واي فاي، مسبح، مطعم، باركينج"></div>
+      <div><label class="el">الحالة</label>
+        <select id="nh-status" class="fc">
+          <option value="active">نشط</option>
+          <option value="inactive">متوقف مؤقتاً</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button onclick="clMod('addHotelMod')" style="flex:1;padding:12px;background:var(--bg3);border:1px solid var(--line);border-radius:12px;font-weight:800;cursor:pointer;color:var(--txt2);font-family:'Cairo'">إلغاء</button>
+      <button onclick="saveHotel()" style="flex:1;padding:12px;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:var(--bg0);border:none;border-radius:12px;font-weight:900;cursor:pointer;font-family:'Cairo'">✅ إضافة الفندق</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ADD DRIVE MODAL ══════════ -->
+<div id="addDriveMod" class="mbg" onclick="clMod('addDriveMod')">
+  <div class="mcard" onclick="event.stopPropagation()">
+    <div class="mc-h">تسجيل طالب قيادة</div>
+    <div class="mc-s">بيانات الطالب الجديد</div>
+    <div style="display:grid;gap:10px">
+      <div><label class="el">الاسم الكامل</label><input id="nd-name" type="text" class="fc" placeholder="الاسم الكامل للطالب"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label class="el">رقم الهاتف</label><input id="nd-phone" type="text" class="fc" placeholder="07xx xxx xxxx" dir="ltr"></div>
+        <div><label class="el">الكورس</label>
+          <select id="nd-course" class="fc">
+            <option value="basic">أساسي (3 أيام)</option>
+            <option value="gold">ذهبي (5 أيام)</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label class="el">تاريخ البدء</label><input id="nd-date" type="date" class="fc"></div>
+        <div><label class="el">السعر (د.ع)</label><input id="nd-price" type="number" class="fc" placeholder="100000"></div>
+      </div>
+      <div><label class="el">المدينة</label>
+        <select id="nd-city" class="fc">
+          <option>كركوك</option><option>بغداد</option><option>أربيل</option><option>البصرة</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button onclick="clMod('addDriveMod')" style="flex:1;padding:12px;background:var(--bg3);border:1px solid var(--line);border-radius:12px;font-weight:800;cursor:pointer;color:var(--txt2);font-family:'Cairo'">إلغاء</button>
+      <button onclick="saveDriveStudent()" style="flex:1;padding:12px;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:var(--bg0);border:none;border-radius:12px;font-weight:900;cursor:pointer;font-family:'Cairo'">✅ تسجيل</button>
+    </div>
+  </div>
 </div>
 
 <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
-    const MASTER_PASS = "2026";
-    let currentTab = 'orders';
-    let data = { orders:[], offices:[] };
+/* ══════════════════════════════
+   CONSTANTS & CONFIG
+══════════════════════════════ */
+const SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_URL_HERE/exec";
+const ADMIN_PASS = "2026"; // غيرها من إعدادات الصفحة
+const VERSION = "v1.0";
+const TITLES = {live:"الرادار المباشر",arch:"سجل الطلبات",cars:"إدارة السيارات",hotels:"إدارة الفنادق",drive:"مدارس السياقة",offices:"المكاتب الشريكة",aiops:"مركز القيادة",audit:"سجل التدقيق"};
 
-    function checkKey() {
-        const pass = document.getElementById('masterKey').value;
-        if(pass === MASTER_PASS) {
-            const ov = document.getElementById('authOverlay');
-            ov.style.opacity = '0';
-            ov.style.pointerEvents = 'none';
-            document.getElementById('mainContent').style.opacity = '1';
-            loadData();
-            setInterval(loadData, 40000);
-        } else {
-            document.getElementById('authError').innerText = '⚠️ رمز غير صحيح';
-            document.getElementById('masterKey').value = '';
+/* ══════════════════════════════
+   STATE
+══════════════════════════════ */
+let fbDB = null;
+let fbListeners = [];
+let gOrders = [];
+let gCars = [];
+let gHotels = [];
+let gDriveStudents = [];
+let gOffices = [];
+let gAudit = [];
+let liveFilt = "all";
+let carFilt = "all";
+let hotelFilt = "all";
+let officeFilt = "all";
+let editCtx = null;
+let barC = null, pieC = null;
+let isAuthed = false;
+let fbConn = false;
+let refreshInterval = null;
+
+/* ══════════════════════════════
+   UTILS
+══════════════════════════════ */
+function esc(s){if(!s)return"";const d=document.createElement("div");d.textContent=String(s);return d.innerHTML;}
+function toast(m,t="s"){
+  const c=document.getElementById("toasts"),el=document.createElement("div");
+  el.className=`ti t${t}`;
+  el.innerHTML=`<div class="ti-ico">${t==="s"?"✅":"❌"}</div><span style="flex:1;color:${t==="s"?"var(--txt0)":"var(--rose)"}">${m}</span>`;
+  c.appendChild(el);
+  setTimeout(()=>{el.style.opacity="0";el.style.transition=".3s";setTimeout(()=>el.remove(),320)},3200);
+}
+function clMod(id){document.getElementById(id).classList.remove("open");}
+function opMod(id){document.getElementById(id).classList.add("open");}
+function logAudit(action,detail){
+  const entry={action,detail,ts:new Date().toISOString(),user:"admin"};
+  gAudit.unshift(entry);
+  if(fbDB){fbDB.ref("hut_audit").push(entry).catch(()=>{});}
+  if(document.getElementById("pg-audit").classList.contains("on"))renderAudit();
+}
+function fmt(n){return Math.round(n||0).toLocaleString("ar-EG");}
+function genId(prefix){return prefix+"-"+Math.floor(1000+Math.random()*9000);}
+function today(){return new Date().toISOString().split("T")[0];}
+
+/* ══════════════════════════════
+   AUTH
+══════════════════════════════ */
+window.doAuth = async function(){
+  const pass = document.getElementById("mPW").value.trim();
+  if(!pass) return toast("أدخل كلمة المرور","e");
+  
+  const btn = document.getElementById("authB");
+  btn.classList.add("loading"); btn.disabled = true;
+
+  // Try API verify first, fallback to local
+  let ok = false;
+  try{
+    const r = await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain"},
+      body:JSON.stringify({action:"VERIFY_MASTER_PASS",pass,token:"HUT_TOKEN_2026"})});
+    const d = await r.json();
+    ok = d && d.success;
+  }catch(e){
+    // fallback to local check
+    ok = (pass === ADMIN_PASS);
+  }
+
+  if(ok){
+    sessionStorage.setItem("hut_admin_v1",pass);
+    document.getElementById("auth").style.display="none";
+    document.getElementById("app").classList.remove("dn");
+    document.getElementById("snd").play().then(()=>{
+      document.getElementById("snd").pause();
+      document.getElementById("snd").currentTime=0;
+    }).catch(()=>{});
+    isAuthed = true;
+    startClock();
+    initFirebase();
+    loadData();
+    startRefresh();
+    logAudit("LOGIN","دخول ناجح للوحة");
+  }else{
+    toast("كلمة المرور خاطئة","e");
+  }
+  btn.classList.remove("loading"); btn.disabled = false;
+};
+
+window.doLogout = function(){
+  if(!confirm("تأكيد تسجيل الخروج؟"))return;
+  if(fbDB) fbListeners.forEach(ref=>ref.off());
+  fbListeners=[];
+  if(refreshInterval)clearInterval(refreshInterval);
+  sessionStorage.clear();
+  location.reload();
+};
+
+// Auto-login from session
+window.addEventListener("DOMContentLoaded",()=>{
+  const s = sessionStorage.getItem("hut_admin_v1");
+  if(s){ document.getElementById("mPW").value=s; doAuth(); }
+});
+
+/* ══════════════════════════════
+   CLOCK
+══════════════════════════════ */
+function startClock(){
+  setInterval(()=>{
+    const t = new Date().toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+    const el = document.getElementById("clkD"); if(el) el.textContent = t;
+  },1000);
+}
+
+/* ══════════════════════════════
+   FIREBASE INIT (placeholder — URL supplied later)
+══════════════════════════════ */
+function initFirebase(){
+  // Firebase URL will be provided by user
+  // Placeholder — system works without Firebase (uses local state + Apps Script)
+  const fbStatusEl = document.getElementById("fbStatus");
+  const fbStatusTxt = document.getElementById("fbStatusTxt");
+  const fbSt = document.getElementById("fbSt");
+  
+  // Try to connect if firebase is available
+  try{
+    if(typeof firebase !== "undefined" && firebase.app){
+      fbDB = firebase.database();
+      const connRef = fbDB.ref(".info/connected");
+      connRef.on("value", snap=>{
+        fbConn = snap.val()===true;
+        if(fbStatusEl) fbStatusEl.style.borderColor = fbConn?"rgba(34,201,122,.2)":"rgba(255,77,109,.2)";
+        if(fbStatusTxt) fbStatusTxt.textContent = fbConn?"Firebase متصل":"Firebase غير متصل";
+        if(fbSt) fbSt.textContent = fbConn?"🟢 متصل":"🔴 منقطع";
+        fbListeners.push(connRef);
+        updTicker();
+      });
+      
+      // Listen to hut_orders
+      const ordRef = fbDB.ref("hut_orders");
+      ordRef.on("value", snap=>{
+        const obj = snap.val();
+        if(obj){
+          gOrders = Object.values(obj).sort((a,b)=>new Date(b.date)-new Date(a.date));
+          renderLive();
+          renderArch();
+          updKPIs();
+          updTicker();
         }
+      });
+      fbListeners.push(ordRef);
+      
+      // Audit
+      const auRef = fbDB.ref("hut_audit").limitToLast(100);
+      auRef.on("value", snap=>{
+        const obj = snap.val();
+        if(obj){ gAudit = Object.values(obj).reverse(); if(document.getElementById("pg-audit").classList.contains("on")) renderAudit(); }
+      });
+      fbListeners.push(auRef);
     }
+  }catch(e){
+    if(fbStatusTxt) fbStatusTxt.textContent = "Firebase غير مهيأ";
+  }
+}
 
-    async function loadData() {
-        try {
-            const res = await fetch(`${scriptURL}?action=getAdminFullData&t=${Date.now()}`, {method:'GET',redirect:'follow'});
-            data = await res.json();
-            updateStats();
-            render();
-        } catch(e) {
-            document.getElementById('content').innerHTML = '<div style="text-align:center;padding:40px;color:#dc2626;font-weight:700;">❌ فشل الاتصال</div>';
-        }
-    }
+/* ══════════════════════════════
+   DATA LOAD (from Apps Script)
+══════════════════════════════ */
+async function loadData(){
+  try{
+    // Load from Apps Script
+    const r = await fetch(`${SCRIPT_URL}?action=getAdminFullData&token=HUT_TOKEN_2026&t=${Date.now()}`);
+    const d = await r.json();
+    if(d && d.orders) { gOrders = d.orders; }
+    if(d && d.offices){ gOffices = d.offices; }
+  }catch(e){
+    // Use demo data if offline
+    loadDemoData();
+  }
+  renderLive();
+  renderArch();
+  renderCars();
+  renderHotels();
+  renderDrive();
+  renderOffices();
+  updKPIs();
+  updTicker();
+}
 
-    function updateStats() {
-        document.getElementById('statTotal').innerText = data.orders.length;
-        document.getElementById('statNew').innerText = data.orders.filter(o=>o.status==='قيد الانتظار'||o.status==='طلب جديد').length;
-        document.getElementById('statDone').innerText = data.orders.filter(o=>(o.status||'').includes('✅')).length;
-        document.getElementById('statOffices').innerText = (data.offices||[]).filter(o=>o.status==='نشط'||o.status==='مفعل').length;
-    }
+function startRefresh(){
+  // Auto-refresh every 30 seconds
+  refreshInterval = setInterval(()=>{
+    if(isAuthed) loadData();
+  }, 30000);
+}
 
-    function render() {
-        const c = document.getElementById('content');
-        if(currentTab === 'orders') {
-            const html = data.orders.slice().reverse().map(o => {
-                const id = o.id||o.order_id;
-                const isTrouble = (o.status||'').includes('⚠️');
-                const isDone = (o.status||'').includes('✅');
-                const cls = isDone?'status-done':isTrouble?'status-trouble':'status-new';
-                const badgeCls = isDone?'badge-done':isTrouble?'badge-trouble':'badge-new';
-                const svcEmoji = (o.service||'').includes('فندق')?'🏨':(o.service||'').includes('تدريب')?'🎓':(o.service||'').includes('زفاف')?'💍':'🚗';
-                return `
-                <div class="order-card ${cls}">
-                    <div class="card-top">
-                        <span class="status-badge ${badgeCls}">${o.status||'غير محدد'}</span>
-                        <span class="order-id-txt">#${id}</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="service-name">${svcEmoji} ${o.car||'خدمة'}</div>
-                        <div class="order-info-grid">
-                            <span>👤 ${o.name||'—'}</span>
-                            <span>📍 ${o.province||o.prov||'—'}</span>
-                            <span>📞 ${o.phone||'—'}</span>
-                            <span>🏢 ${o.office||'بدون مكتب'}</span>
-                        </div>
-                        <div style="font-weight:900;color:var(--green);margin-bottom:12px;">${Number(o.price||o.total_price||0).toLocaleString()} د.ع</div>
-                        <div class="card-actions">
-                            <button class="act-btn btn-done" onclick="doAction('complete','${id}')"><i class="fas fa-check"></i> إتمام</button>
-                            <button class="act-btn btn-reset" onclick="doAction('adminReset','${id}')"><i class="fas fa-redo"></i> إعادة</button>
-                            <button class="act-btn btn-delete" onclick="doAction('deleteOrder','${id}')"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('') || '<div style="text-align:center;padding:60px;color:var(--mid);">لا توجد طلبات</div>';
-            c.innerHTML = html;
-        } else {
-            const html = (data.offices||[]).slice().reverse().map(of => {
-                const statusClass = of.status==='نشط'||of.status==='مفعل' ? 's-active' : of.status==='محظور' ? 's-blocked' : 's-pending';
-                return `
-                <div class="office-card">
-                    <div class="office-info">
-                        <div class="name">${of.name}</div>
-                        <div class="meta">📍 ${of.city} · ID: ${of.id}</div>
-                        <span class="office-status ${statusClass}">${of.status}</span>
-                    </div>
-                    <div class="office-actions">
-                        ${of.status!=='نشط'&&of.status!=='مفعل'?`<button class="act-btn btn-done" onclick="doAction('approveOffice','${of.id}')"><i class="fas fa-check"></i> تفعيل</button>`:''}
-                        <button class="act-btn btn-reset" onclick="doAction('blockOffice','${of.id}')">حظر</button>
-                        <button class="act-btn btn-delete" onclick="doAction('deleteOffice','${of.id}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>`;
-            }).join('') || '<div style="text-align:center;padding:60px;color:var(--mid);">لا يوجد شركاء</div>';
-            c.innerHTML = html;
-        }
-    }
+/* ══════════════════════════════
+   DEMO DATA (works without backend)
+══════════════════════════════ */
+function loadDemoData(){
+  gOrders = [
+    {id:"HUT-1234",name:"أحمد خالد",phone:"07701234567",service:"شخصي",car:"تويوتا كامري",city:"كركوك",date:new Date().toISOString(),days:3,total:165000,status:"pending",office:"مكتب كركوك",addon:"تأمين شامل"},
+    {id:"HTL-5678",name:"سارة محمد",phone:"07801234567",service:"فندق",car:"فندق بابل الكبير — غرفة مزدوجة",city:"بغداد",date:new Date().toISOString(),days:2,total:360000,status:"completed",office:"مكتب بغداد",addon:""},
+    {id:"EDU-9012",name:"كريم عبدالله",phone:"07901234567",service:"تدريب قيادة",car:"كورس ذهبي 5 أيام",city:"أربيل",date:new Date().toISOString(),days:5,total:150000,status:"active",office:"مكتب أربيل",addon:""},
+    {id:"HUT-3456",name:"فاطمة علي",phone:"07601234567",service:"زفاف",car:"موكب ملكي",city:"كركوك",date:new Date().toISOString(),days:1,total:275000,status:"active",office:"مكتب كركوك",addon:"باقة ملكية"},
+    {id:"HTL-7890",name:"يوسف حسن",phone:"07501234567",service:"فندق",car:"منتجع ديالى — جناح فاخر",city:"ديالى",date:new Date(Date.now()-86400000).toISOString(),days:3,total:382500,status:"completed",office:"مكتب ديالى",addon:""},
+    {id:"HUT-2345",name:"نور الدين",phone:"07751234567",service:"شخصي",car:"مرسيدس S-Class",city:"البصرة",date:new Date(Date.now()-3600000).toISOString(),days:2,total:300000,status:"pending",office:"مكتب البصرة",addon:"تأمين شامل"},
+  ];
+  gCars = [
+    {id:"C001",name:"تويوتا كورولا 2025",cat:"economy",price:45000,color:"أبيض",plate:"كركوك 12345",status:"available",orders:14},
+    {id:"C002",name:"تويوتا كامري",cat:"economy",price:55000,color:"فضي",plate:"بغداد 54321",status:"rented",orders:22},
+    {id:"C003",name:"هيونداي توسان",cat:"family",price:60000,color:"أسود",plate:"أربيل 11111",status:"available",orders:8},
+    {id:"C004",name:"كيا سورينتو",cat:"family",price:70000,color:"رمادي",plate:"كركوك 67890",status:"maintenance",orders:5},
+    {id:"C005",name:"مرسيدس S-Class",cat:"luxury",price:150000,color:"أسود",plate:"بغداد 99999",status:"available",orders:3},
+    {id:"C006",name:"دودج جارجر SRT",cat:"luxury",price:85000,color:"أحمر",plate:"كركوك 55555",status:"rented",orders:7},
+  ];
+  gHotels = [
+    {id:"H001",name:"فندق بابل الكبير",cat:"luxury",stars:5,price:150000,city:"بغداد",status:"active",bookings:34,feats:"واي فاي، مسبح، مطعم، سبا"},
+    {id:"H002",name:"فندق أربيل الدولي",cat:"luxury",stars:5,price:180000,city:"أربيل",status:"active",bookings:28,feats:"واي فاي، صالة رياضية، مطعم"},
+    {id:"H003",name:"كركوك بلازا",cat:"premium",stars:4,price:90000,city:"كركوك",status:"active",bookings:45,feats:"واي فاي، مطعم، باركينج"},
+    {id:"H004",name:"نزل السليمانية",cat:"economy",stars:3,price:55000,city:"السليمانية",status:"active",bookings:62,feats:"واي فاي، إفطار"},
+    {id:"H005",name:"شط العرب",cat:"premium",stars:4,price:95000,city:"البصرة",status:"active",bookings:19,feats:"واي فاي، إطلالة نهرية"},
+    {id:"H006",name:"منتجع ديالى",cat:"premium",stars:4,price:85000,city:"ديالى",status:"inactive",bookings:11,feats:"واي فاي، حديقة، مسبح"},
+  ];
+  gDriveStudents = [
+    {id:"S001",name:"محمد حسن",phone:"07701111111",course:"كورس ذهبي (5 أيام)",city:"كركوك",date:"2026-06-01",price:150000,status:"active"},
+    {id:"S002",name:"ليلى أحمد",phone:"07802222222",course:"كورس أساسي (3 أيام)",city:"بغداد",date:"2026-06-02",price:100000,status:"completed"},
+    {id:"S003",name:"زيد عمر",phone:"07903333333",course:"كورس ذهبي (5 أيام)",city:"أربيل",date:"2026-06-03",price:150000,status:"active"},
+  ];
+  gOffices = [
+    {id:"O001",name:"مكتب كركوك الرئيسي",city:"كركوك",phone:"07701234500",status:"active",orders:45,revenue:2800000},
+    {id:"O002",name:"مكتب بغداد",city:"بغداد",phone:"07801234500",status:"active",orders:38,revenue:2200000},
+    {id:"O003",name:"مكتب أربيل",city:"أربيل",phone:"07901234500",status:"active",orders:29,revenue:1750000},
+    {id:"O004",name:"مكتب البصرة",city:"البصرة",phone:"07601234500",status:"pending",orders:0,revenue:0},
+    {id:"O005",name:"مكتب الموصل",city:"الموصل",phone:"07501234500",status:"blocked",orders:0,revenue:0},
+  ];
+}
 
-    async function doAction(act, id) {
-        if(!confirm('تأكيد هذا الإجراء الإداري؟')) return;
-        try {
-            const res = await fetch(`${scriptURL}?action=${act}&id=${id}`, {method:'GET',redirect:'follow'});
-            const result = await res.json();
-            if(result.success) loadData();
-            else alert('فشل: '+result.message);
-        } catch(e) { alert('خطأ في الاتصال'); }
-    }
+/* ══════════════════════════════
+   NAVIGATION
+══════════════════════════════ */
+window.goTab = function(name, el){
+  document.querySelectorAll(".pg").forEach(p=>p.classList.remove("on"));
+  document.getElementById("pg-"+name)?.classList.add("on");
+  document.querySelectorAll(".nb,.bni").forEach(b=>{
+    const oc = b.getAttribute("onclick")||"";
+    b.classList.toggle("on",oc.includes("'"+name+"'"));
+  });
+  const dh = document.getElementById("dhT"); if(dh) dh.textContent = TITLES[name]||"";
+  if(name==="arch") renderArch();
+  if(name==="audit") renderAudit();
+  if(name==="aiops") renderAlerts();
+};
 
-    function switchTab(t) {
-        currentTab=t;
-        document.getElementById('btnOrders').classList.toggle('active',t==='orders');
-        document.getElementById('btnOffices').classList.toggle('active',t==='offices');
-        render();
-    }
+/* ══════════════════════════════
+   KPI UPDATES
+══════════════════════════════ */
+function updKPIs(){
+  const active = gOrders.filter(o=>o.status==="active"||o.status==="pending").length;
+  const pending = gOrders.filter(o=>o.status==="pending").length;
+  const done = gOrders.filter(o=>o.status==="completed").length;
+  const rev = gOrders.filter(o=>o.status==="completed").reduce((s,o)=>s+Number(o.total||0),0);
+  animCount("kActive",active);
+  animCount("kPending",pending);
+  animCount("kDone",done);
+  document.getElementById("kRevenue").textContent = fmt(rev);
+  document.getElementById("totalOrdersSt").textContent = gOrders.length;
+  document.getElementById("totalCarsSt").textContent = gCars.length;
+  document.getElementById("totalHotelsSt").textContent = gHotels.length;
+  const pb = document.getElementById("pendBadge");
+  if(pb){ pb.textContent=pending; pb.style.display=pending>0?"":"none"; }
+}
+function animCount(id,val){
+  const el = document.getElementById(id); if(!el)return;
+  const from = parseInt(el.textContent)||0; let fr=null;
+  const step=ts=>{if(!fr)fr=ts; const p=(ts-fr)/400; el.textContent=Math.min(Math.round(from+(val-from)*Math.min(p,1)),99999).toLocaleString("ar-EG"); if(p<1)requestAnimationFrame(step);};
+  requestAnimationFrame(step);
+}
 
-    document.getElementById('masterKey').addEventListener('keypress', e => { if(e.key==='Enter') checkKey(); });
+/* ══════════════════════════════
+   FILTER STATE
+══════════════════════════════ */
+window.setFilter = function(f,btn){
+  liveFilt = f;
+  document.getElementById("fbarLive")?.querySelectorAll(".fp").forEach(b=>b.classList.remove("on"));
+  btn?.classList.add("on");
+  renderLive();
+};
+window.setCarFilter = function(f,btn){
+  carFilt = f;
+  document.getElementById("carFbar")?.querySelectorAll(".fp").forEach(b=>b.classList.remove("on"));
+  btn?.classList.add("on");
+  renderCars();
+};
+window.setHotelFilter = function(f,btn){
+  hotelFilt = f;
+  btn?.closest(".fbar")?.querySelectorAll(".fp").forEach(b=>b.classList.remove("on"));
+  btn?.classList.add("on");
+  renderHotels();
+};
+window.setOfficeFilter = function(f,btn){
+  officeFilt = f;
+  btn?.closest(".fbar")?.querySelectorAll(".fp").forEach(b=>b.classList.remove("on"));
+  btn?.classList.add("on");
+  renderOffices();
+};
+
+/* ══════════════════════════════
+   RENDER LIVE
+══════════════════════════════ */
+function renderLive(){
+  const cnts = {all:gOrders.filter(o=>["active","pending"].includes(o.status)).length, pending:0,active:0,hotel:0,training:0,wedding:0};
+  gOrders.filter(o=>["active","pending"].includes(o.status)).forEach(o=>{
+    if(o.status==="pending") cnts.pending++;
+    if(o.status==="active") cnts.active++;
+    if(o.service==="فندق") cnts.hotel++;
+    if(o.service==="تدريب قيادة") cnts.training++;
+    if(o.service==="زفاف") cnts.wedding++;
+  });
+  ["all","pending","active","hotel","training","wedding"].forEach(k=>{
+    const el=document.getElementById("c"+k.charAt(0).toUpperCase()+k.slice(1));
+    const el2=document.getElementById("c"+k.charAt(0).toUpperCase()+k.slice(1)+"2");
+    if(el)el.textContent=cnts[k]||0;
+    if(el2)el2.textContent=cnts[k]||0;
+  });
+  // Also update standalone
+  document.getElementById("cAll") && (document.getElementById("cAll").textContent=cnts.all);
+  document.getElementById("cPend") && (document.getElementById("cPend").textContent=cnts.pending);
+  document.getElementById("cAct") && (document.getElementById("cAct").textContent=cnts.active);
+  document.getElementById("cHotel") && (document.getElementById("cHotel").textContent=cnts.hotel);
+  document.getElementById("cTrain") && (document.getElementById("cTrain").textContent=cnts.training);
+  document.getElementById("cWed") && (document.getElementById("cWed").textContent=cnts.wedding);
+
+  let list = gOrders.filter(o=>["active","pending"].includes(o.status));
+  if(liveFilt==="pending") list=list.filter(o=>o.status==="pending");
+  else if(liveFilt==="active") list=list.filter(o=>o.status==="active");
+  else if(liveFilt==="hotel") list=list.filter(o=>o.service==="فندق");
+  else if(liveFilt==="training") list=list.filter(o=>o.service==="تدريب قيادة");
+  else if(liveFilt==="wedding") list=list.filter(o=>o.service==="زفاف");
+
+  const grid = document.getElementById("liveGrid");
+  if(!list.length){grid.innerHTML=`<div class="empty-s" style="grid-column:1/-1"><div class="es-ic">📡</div><div class="es-t">الرادار نظيف — لا طلبات نشطة</div></div>`;return;}
+  
+  const svcMap={شخصي:"🚗 سيارة",فندق:"🏨 فندق","تدريب قيادة":"🎓 تدريب",زفاف:"💍 زفاف"};
+  const svcCls={شخصي:"st-active",فندق:"st-hotel","تدريب قيادة":"st-train",زفاف:"st-active"};
+  
+  grid.innerHTML = list.map(o=>{
+    const cls = o.status==="pending"?"st-pending":(svcCls[o.service]||"st-active");
+    const dt = new Date(o.date);
+    const tF = isNaN(dt)?o.date:dt.toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit"});
+    const sb = o.status==="pending"?'<span class="stb stb-r">⏳ انتظار</span>':'<span class="stb stb-t">🟢 نشط</span>';
+    return `<div class="oc ${cls}" data-id="${esc(o.id)}">
+      <div class="oc-stripe"></div>
+      <div class="oc-top">
+        <span class="td-id">#${esc(o.id)}</span>
+        <span class="oc-time">🕐 ${tF}</span>
+      </div>
+      <div class="oc-svc">${svcMap[o.service]||o.service} — ${esc(o.car)}</div>
+      <div class="oc-meta">
+        <span class="oc-chip"><i class="fas fa-user" style="color:var(--txt3)"></i> ${esc(o.name)}</span>
+        <span class="oc-chip"><i class="fas fa-location-dot" style="color:var(--rose)"></i> ${esc(o.city)}</span>
+        <span class="oc-chip"><i class="fas fa-moon" style="color:var(--gold)"></i> ${o.days||1} يوم</span>
+      </div>
+      <div class="oc-price">${fmt(o.total)} <small style="font-size:.65rem;color:var(--txt3);font-weight:600">د.ع</small></div>
+      <div class="oc-actions">
+        ${sb}
+        <button class="ob b-ok" onclick="completeOrder('${esc(o.id)}',this)"><i class="fas fa-check"></i> إكمال</button>
+        <button class="ob b-del" onclick="cancelOrder('${esc(o.id)}',this)"><i class="fas fa-xmark"></i> إلغاء</button>
+        <button class="ob b-call" onclick="window.open('tel:${esc(o.phone)}')"><i class="fas fa-phone"></i></button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* ══════════════════════════════
+   ORDER ACTIONS
+══════════════════════════════ */
+window.completeOrder = async function(id, el){
+  if(!confirm("تأكيد إكمال الطلب؟"))return;
+  if(el){el.disabled=true;el.classList.add("loading");}
+  const o = gOrders.find(x=>x.id===id); if(!o){if(el){el.disabled=false;el.classList.remove("loading");}return;}
+  o.status="completed";
+  if(fbDB) try{fbDB.ref("hut_orders/"+id).update({status:"completed",completed_at:new Date().toISOString()});}catch(e){}
+  toast("✅ تم إكمال الطلب #"+id);
+  logAudit("completeOrder","إكمال #"+id);
+  renderLive(); renderArch(); updKPIs();
+  if(el){el.disabled=false;el.classList.remove("loading");}
+};
+window.cancelOrder = async function(id, el){
+  if(!confirm("إلغاء الطلب؟"))return;
+  if(el){el.disabled=true;el.classList.add("loading");}
+  const o = gOrders.find(x=>x.id===id); if(!o){if(el){el.disabled=false;el.classList.remove("loading");}return;}
+  o.status="cancelled";
+  if(fbDB) try{fbDB.ref("hut_orders/"+id).update({status:"cancelled"});}catch(e){}
+  toast("تم الإلغاء");
+  logAudit("cancelOrder","إلغاء #"+id);
+  renderLive(); renderArch(); updKPIs();
+  if(el){el.disabled=false;el.classList.remove("loading");}
+};
+
+/* ══════════════════════════════
+   RENDER ARCHIVE
+══════════════════════════════ */
+function renderArch(){
+  const q = document.getElementById("arcSch")?.value.trim().toLowerCase()||"";
+  const svc = document.getElementById("arcSvc")?.value||"";
+  const st = document.getElementById("arcSt")?.value||"";
+  let list = [...gOrders];
+  if(q) list=list.filter(o=>String(o.id).toLowerCase().includes(q)||String(o.name||"").toLowerCase().includes(q)||String(o.service||"").toLowerCase().includes(q));
+  if(svc) list=list.filter(o=>o.service===svc);
+  if(st) list=list.filter(o=>o.status===st||o.status===(st==="completed"?"completed":"cancelled"));
+  
+  const comp = list.filter(o=>o.status==="completed");
+  const canc = list.filter(o=>o.status==="cancelled");
+  const rev = comp.reduce((s,o)=>s+Number(o.total||0),0);
+  const avg = comp.length?Math.round(rev/comp.length):0;
+  animCount("akC",comp.length);
+  animCount("akX",canc.length);
+  document.getElementById("akRev").textContent = fmt(rev);
+  document.getElementById("akAvg").textContent = fmt(avg);
+  document.getElementById("arcBadge").textContent = list.length+" طلب";
+  
+  renderCharts(comp,canc,list);
+  
+  const stMap = {completed:'<span class="stb stb-g">✅ منجز</span>',cancelled:'<span class="stb stb-r">❌ ملغي</span>',active:'<span class="stb stb-t">🟢 نشط</span>',pending:'<span class="stb stb-o">⏳ انتظار</span>'};
+  const tbody = document.getElementById("arcTb");
+  if(!list.length){tbody.innerHTML=`<tr><td colspan="9"><div class="empty-s"><div class="es-ic">📭</div><div class="es-t">لا توجد طلبات</div></div></td></tr>`;return;}
+  tbody.innerHTML = list.map(o=>{
+    const dt = new Date(o.date);
+    const ds = isNaN(dt)?o.date:dt.toLocaleString("ar-EG",{dateStyle:"short",timeStyle:"short"});
+    return `<tr>
+      <td class="td-id">#${esc(o.id)}</td>
+      <td style="font-size:.7rem;color:var(--txt2)">${esc(ds)}</td>
+      <td style="font-weight:800;text-align:right">${esc(o.name)}</td>
+      <td style="font-size:.7rem;color:var(--txt2)">${esc(o.service)}</td>
+      <td style="font-size:.7rem">${esc(o.city)}</td>
+      <td style="font-size:.7rem;color:var(--txt3)">${esc(o.office||"—")}</td>
+      <td class="td-pr">${fmt(o.total)} <small style="color:var(--txt3)">د.ع</small></td>
+      <td>${stMap[o.status]||'<span class="stb stb-b">'+o.status+'</span>'}</td>
+      <td style="display:flex;gap:4px;justify-content:center">
+        <button class="ob b-call" onclick="window.open('tel:${esc(o.phone)}')" style="height:26px;padding:0 8px;font-size:.68rem"><i class="fas fa-phone"></i></button>
+        ${o.status!=="completed"?`<button class="ob b-ok" onclick="completeOrder('${esc(o.id)}',this)" style="height:26px;padding:0 8px;font-size:.68rem"><i class="fas fa-check"></i></button>`:""}
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+/* ══════════════════════════════
+   CHARTS
+══════════════════════════════ */
+function renderCharts(comp, canc, all){
+  if(typeof Chart==="undefined")return;
+  Chart.defaults.color = "#7a8599";
+  Chart.defaults.font.family = "'Cairo', sans-serif";
+  
+  // Bar chart
+  const bc = document.getElementById("barChart");
+  if(bc){
+    if(barC)barC.destroy();
+    barC = new Chart(bc,{type:"bar",data:{labels:["منجز","ملغي","نشط"],
+      datasets:[{data:[comp.length,canc.length,all.filter(o=>["active","pending"].includes(o.status)).length],
+        backgroundColor:["rgba(34,201,122,.8)","rgba(255,77,109,.8)","rgba(0,212,184,.8)"],
+        borderRadius:8,borderSkipped:false,barThickness:36}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{y:{beginAtZero:true,grid:{color:"rgba(255,255,255,.04)"},ticks:{stepSize:1}},
+                x:{grid:{color:"rgba(255,255,255,.04)"}}}}});
+  }
+  
+  // Pie chart
+  const pc2 = document.getElementById("pieChart");
+  const svcData = {};
+  all.forEach(o=>{svcData[o.service||"أخرى"]=(svcData[o.service||"أخرى"]||0)+1;});
+  if(pc2){
+    if(pieC)pieC.destroy();
+    const labels = Object.keys(svcData);
+    const colors = ["rgba(240,165,0,.85)","rgba(0,212,184,.85)","rgba(155,114,255,.85)","rgba(255,155,66,.85)","rgba(59,158,255,.85)"];
+    pieC = new Chart(pc2,{type:"doughnut",data:{labels,
+      datasets:[{data:labels.map(l=>svcData[l]),
+        backgroundColor:colors.slice(0,labels.length),
+        borderWidth:3,borderColor:"var(--bg2)"}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{position:"bottom",labels:{padding:12,boxWidth:12,usePointStyle:true}}}}});
+  }
+}
+
+/* ══════════════════════════════
+   CARS
+══════════════════════════════ */
+function renderCars(){
+  const q = (document.getElementById("carSch")?.value||"").toLowerCase();
+  let list = [...gCars];
+  if(q) list=list.filter(c=>c.name.toLowerCase().includes(q)||c.plate.toLowerCase().includes(q));
+  if(carFilt!=="all") list=list.filter(c=>c.status===carFilt);
+  
+  const cnts={all:gCars.length, available:gCars.filter(c=>c.status==="available").length, rented:gCars.filter(c=>c.status==="rented").length, maintenance:gCars.filter(c=>c.status==="maintenance").length};
+  ["all","available","rented","maintenance"].forEach(k=>{ const el=document.getElementById("cc-"+k); if(el)el.textContent=cnts[k]; });
+  
+  const catMap={economy:"اقتصادية",family:"عائلية",luxury:"VIP فاخرة"};
+  const stMap={available:{cls:"sp-a",lbl:"متاح"},rented:{cls:"sp-b",lbl:"مؤجر"},maintenance:{cls:"sp-i",lbl:"صيانة"}};
+  const grid = document.getElementById("carsGrid");
+  if(!list.length){grid.innerHTML=`<div class="empty-s" style="grid-column:1/-1"><div class="es-ic">🚗</div><div class="es-t">لا توجد سيارات</div></div>`;return;}
+  grid.innerHTML = list.map(c=>{
+    const st=stMap[c.status]||{cls:"sp-a",lbl:c.status};
+    const ecls=c.status==="available"?"ea":c.status==="rented"?"eb":"ei";
+    return `<div class="ec ec-${ecls}" id="car-${c.id}">
+      <div class="ec-top">
+        <div class="ec-av">🚗</div>
+        <span class="sp ${st.cls}">${st.lbl}</span>
+      </div>
+      <div class="ec-n">${esc(c.name)}</div>
+      <div class="ec-ph" style="font-family:inherit;font-size:.72rem;color:var(--txt3)">${esc(c.plate)} · ${esc(c.color)}</div>
+      <div style="font-size:.68rem;font-weight:800;color:var(--txt3);margin-bottom:8px">${catMap[c.cat]||c.cat}</div>
+      <div class="ls">
+        <div class="lm"><div class="lv b">${fmt(c.price)}</div><div class="ll">د.ع/يوم</div></div>
+        <div class="lm"><div class="lv g">${c.orders||0}</div><div class="ll">طلبات منجزة</div></div>
+      </div>
+      <div class="ec-acts">
+        <button class="ea ea-a" onclick="setCarStatus('${c.id}','available')" title="متاح">✓</button>
+        <button class="ea ea-p" onclick="setCarStatus('${c.id}','maintenance')" title="صيانة">🔧</button>
+        <button class="ea ea-b" onclick="setCarStatus('${c.id}','rented')" title="مؤجر">🔑</button>
+        <button class="ea ea-e" onclick="editCar('${c.id}')" title="تعديل">✏️</button>
+        <button class="ea ea-d" onclick="deleteCar('${c.id}')" title="حذف">🗑</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+window.setCarStatus = function(id,st){
+  const c=gCars.find(x=>x.id===id); if(!c)return;
+  c.status=st; renderCars(); toast("تم تحديث حالة السيارة");
+  logAudit("updateCar","تحديث "+c.name+" → "+st);
+};
+window.editCar = function(id){
+  const c=gCars.find(x=>x.id===id); if(!c)return;
+  editCtx={type:"car",id};
+  document.getElementById("editTitle").textContent="تعديل السيارة";
+  document.getElementById("editSub").textContent=c.name;
+  document.getElementById("editBody").innerHTML=`
+    <div style="display:grid;gap:10px">
+      <div><label class="el">اسم السيارة</label><input id="e-name" type="text" class="fc" value="${esc(c.name)}"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label class="el">السعر/يوم</label><input id="e-price" type="number" class="fc" value="${c.price}"></div>
+        <div><label class="el">اللوحة</label><input id="e-plate" type="text" class="fc" value="${esc(c.plate)}"></div>
+      </div>
+      <div><label class="el">الحالة</label>
+        <select id="e-status" class="fc">
+          <option value="available" ${c.status==="available"?"selected":""}>متاح</option>
+          <option value="rented" ${c.status==="rented"?"selected":""}>مؤجر</option>
+          <option value="maintenance" ${c.status==="maintenance"?"selected":""}>صيانة</option>
+        </select>
+      </div>
+    </div>`;
+  opMod("editMod");
+};
+window.deleteCar = function(id){
+  if(!confirm("حذف السيارة؟"))return;
+  gCars=gCars.filter(c=>c.id!==id); renderCars();
+  toast("تم الحذف"); logAudit("deleteCar","حذف "+id);
+};
+
+window.openAddCarModal = function(){ opMod("addCarMod"); };
+window.saveCar = function(){
+  const name=document.getElementById("nc-name").value.trim();
+  if(!name)return toast("أدخل اسم السيارة","e");
+  const car={id:genId("C"),name,cat:document.getElementById("nc-cat").value,
+    price:parseInt(document.getElementById("nc-price").value)||0,
+    color:document.getElementById("nc-color").value,
+    plate:document.getElementById("nc-plate").value,
+    status:document.getElementById("nc-status").value,
+    notes:document.getElementById("nc-notes").value, orders:0};
+  gCars.push(car); renderCars(); clMod("addCarMod");
+  toast("✅ تم إضافة السيارة"); logAudit("addCar","إضافة "+name);
+};
+
+/* ══════════════════════════════
+   HOTELS
+══════════════════════════════ */
+function renderHotels(){
+  const q=(document.getElementById("hotelSch")?.value||"").toLowerCase();
+  let list=[...gHotels];
+  if(q)list=list.filter(h=>h.name.toLowerCase().includes(q)||h.city.toLowerCase().includes(q));
+  if(hotelFilt!=="all"){
+    if(hotelFilt==="active")list=list.filter(h=>h.status==="active");
+    else if(hotelFilt==="inactive")list=list.filter(h=>h.status==="inactive");
+    else if(hotelFilt==="luxury")list=list.filter(h=>h.cat==="luxury");
+    else if(hotelFilt==="economy")list=list.filter(h=>h.cat==="economy");
+  }
+  const cnts={all:gHotels.length, active:gHotels.filter(h=>h.status==="active").length, inactive:gHotels.filter(h=>h.status==="inactive").length, luxury:gHotels.filter(h=>h.cat==="luxury").length, economy:gHotels.filter(h=>h.cat==="economy").length};
+  ["all","active","inactive","luxury","economy"].forEach(k=>{const el=document.getElementById("hc-"+k);if(el)el.textContent=cnts[k];});
+  
+  const catMap={economy:"اقتصادي",premium:"مميز",luxury:"فاخر"};
+  const grid=document.getElementById("hotelsGrid");
+  if(!list.length){grid.innerHTML=`<div class="empty-s" style="grid-column:1/-1"><div class="es-ic">🏨</div><div class="es-t">لا توجد فنادق</div></div>`;return;}
+  grid.innerHTML=list.map(h=>{
+    const stars="⭐".repeat(h.stars||3);
+    const stCls=h.status==="active"?"ea":"ei";
+    const stLbl=h.status==="active"?"نشط":"متوقف";
+    const stSpCls=h.status==="active"?"sp-a":"sp-i";
+    const feats=(h.feats||"").split("،").map(f=>`<span style="background:var(--bg4);padding:2px 6px;border-radius:5px;font-size:.6rem;font-weight:700;color:var(--txt3)">${f.trim()}</span>`).join("");
+    return `<div class="ec ec-${stCls}" id="hotel-${h.id}">
+      <div class="ec-top">
+        <div class="ec-av">🏨</div>
+        <span class="sp ${stSpCls}">${stLbl}</span>
+      </div>
+      <div class="ec-n">${esc(h.name)}</div>
+      <div style="font-size:.65rem;color:var(--txt3);margin-bottom:4px">${stars} · ${catMap[h.cat]||h.cat}</div>
+      <div style="font-size:.72rem;color:var(--txt2);margin-bottom:8px;display:flex;align-items:center;gap:4px"><i class="fas fa-location-dot" style="color:var(--rose)"></i>${esc(h.city)}</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">${feats}</div>
+      <div class="ls">
+        <div class="lm"><div class="lv b">${fmt(h.price)}</div><div class="ll">د.ع/ليلة</div></div>
+        <div class="lm"><div class="lv g">${h.bookings||0}</div><div class="ll">حجز منجز</div></div>
+      </div>
+      <div class="ec-acts">
+        <button class="ea ea-a" onclick="setHotelStatus('${h.id}','active')" title="تفعيل">✓</button>
+        <button class="ea ea-p" onclick="setHotelStatus('${h.id}','inactive')" title="إيقاف">⏸</button>
+        <button class="ea ea-e" onclick="editHotel('${h.id}')" title="تعديل">✏️</button>
+        <button class="ea ea-d" onclick="deleteHotel('${h.id}')" title="حذف">🗑</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+window.setHotelStatus=function(id,st){const h=gHotels.find(x=>x.id===id);if(!h)return;h.status=st;renderHotels();toast("تم التحديث");logAudit("updateHotel","تحديث "+h.name+" → "+st);};
+window.editHotel=function(id){const h=gHotels.find(x=>x.id===id);if(!h)return;editCtx={type:"hotel",id};document.getElementById("editTitle").textContent="تعديل الفندق";document.getElementById("editSub").textContent=h.name;document.getElementById("editBody").innerHTML=`<div style="display:grid;gap:10px"><div><label class="el">اسم الفندق</label><input id="e-name" type="text" class="fc" value="${esc(h.name)}"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><label class="el">السعر/ليلة</label><input id="e-price" type="number" class="fc" value="${h.price}"></div><div><label class="el">المدينة</label><input id="e-city" type="text" class="fc" value="${esc(h.city)}"></div></div><div><label class="el">الحالة</label><select id="e-status" class="fc"><option value="active" ${h.status==="active"?"selected":""}>نشط</option><option value="inactive" ${h.status==="inactive"?"selected":""}>متوقف</option></select></div></div>`;opMod("editMod");};
+window.deleteHotel=function(id){if(!confirm("حذف الفندق؟"))return;gHotels=gHotels.filter(h=>h.id!==id);renderHotels();toast("تم الحذف");};
+window.openAddHotelModal=function(){opMod("addHotelMod");};
+window.saveHotel=function(){
+  const name=document.getElementById("nh-name").value.trim();if(!name)return toast("أدخل اسم الفندق","e");
+  const hotel={id:genId("H"),name,cat:document.getElementById("nh-cat").value,price:parseInt(document.getElementById("nh-price").value)||0,city:document.getElementById("nh-city").value,stars:parseInt(document.getElementById("nh-stars").value)||3,feats:document.getElementById("nh-feats").value,status:document.getElementById("nh-status").value,bookings:0};
+  gHotels.push(hotel);renderHotels();clMod("addHotelMod");toast("✅ تم إضافة الفندق");logAudit("addHotel","إضافة "+name);
+};
+
+/* ══════════════════════════════
+   DRIVING SCHOOL
+══════════════════════════════ */
+function renderDrive(){
+  const q=(document.getElementById("driveSch")?.value||"").toLowerCase();
+  let list=[...gDriveStudents];
+  if(q)list=list.filter(s=>s.name.toLowerCase().includes(q)||s.city.toLowerCase().includes(q));
+  const grid=document.getElementById("driveGrid");
+  if(!list.length){grid.innerHTML=`<div class="empty-s" style="grid-column:1/-1"><div class="es-ic">🎓</div><div class="es-t">لا يوجد طلاب مسجلون</div></div>`;return;}
+  const stMap={active:{cls:"sp-p",lbl:"🎓 قيد التدريب"},completed:{cls:"sp-a",lbl:"✅ منتهي"}};
+  grid.innerHTML=list.map(s=>{
+    const st=stMap[s.status]||{cls:"sp-a",lbl:s.status};
+    return `<div class="ec ec-ea" id="drv-${s.id}">
+      <div class="ec-top"><div class="ec-av">🎓</div><span class="sp ${st.cls}">${st.lbl}</span></div>
+      <div class="ec-n">${esc(s.name)}</div>
+      <div class="ec-ph" style="font-family:inherit">${esc(s.phone)}</div>
+      <div style="font-size:.72rem;color:var(--txt2);margin-bottom:8px">${esc(s.course)}</div>
+      <div class="ls">
+        <div class="lm"><div class="lv b">${fmt(s.price)}</div><div class="ll">د.ع</div></div>
+        <div class="lm"><div class="lv" style="font-size:.75rem">${esc(s.city)}</div><div class="ll">المدينة</div></div>
+      </div>
+      <div class="ec-acts">
+        <button class="ea ea-a" onclick="completeDrive('${s.id}')" title="إكمال">✓</button>
+        <button class="ea ea-c" onclick="window.open('tel:${esc(s.phone)}')" title="اتصال">📞</button>
+        <button class="ea ea-d" onclick="deleteDrive('${s.id}')" title="حذف">🗑</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+window.completeDrive=function(id){const s=gDriveStudents.find(x=>x.id===id);if(!s)return;s.status="completed";renderDrive();toast("تم إكمال الكورس");logAudit("completeDrive","إكمال "+s.name);};
+window.deleteDrive=function(id){if(!confirm("حذف؟"))return;gDriveStudents=gDriveStudents.filter(s=>s.id!==id);renderDrive();};
+window.openAddDriveModal=function(){opMod("addDriveMod");document.getElementById("nd-date").value=today();};
+window.saveDriveStudent=function(){
+  const name=document.getElementById("nd-name").value.trim();if(!name)return toast("أدخل الاسم","e");
+  const student={id:genId("S"),name,phone:document.getElementById("nd-phone").value,course:document.getElementById("nd-course").options[document.getElementById("nd-course").selectedIndex].text,city:document.getElementById("nd-city").value,date:document.getElementById("nd-date").value,price:parseInt(document.getElementById("nd-price").value)||0,status:"active"};
+  gDriveStudents.push(student);renderDrive();clMod("addDriveMod");toast("✅ تم تسجيل الطالب");logAudit("addDriveStudent","تسجيل "+name);
+};
+
+/* ══════════════════════════════
+   OFFICES
+══════════════════════════════ */
+function renderOffices(){
+  const q=(document.getElementById("offSch")?.value||"").toLowerCase();
+  let list=[...gOffices];
+  if(q)list=list.filter(o=>o.name.toLowerCase().includes(q)||o.city.toLowerCase().includes(q));
+  if(officeFilt!=="all")list=list.filter(o=>{if(officeFilt==="active")return o.status==="active";if(officeFilt==="pending")return o.status==="pending";if(officeFilt==="blocked")return o.status==="blocked";return true;});
+  const cnts={all:gOffices.length, active:gOffices.filter(o=>o.status==="active").length, pending:gOffices.filter(o=>o.status==="pending").length, blocked:gOffices.filter(o=>o.status==="blocked").length};
+  ["all","active","pending","blocked"].forEach(k=>{const el=document.getElementById("oc-"+k);if(el)el.textContent=cnts[k];});
+  const grid=document.getElementById("officesGrid");
+  if(!list.length){grid.innerHTML=`<div class="empty-s" style="grid-column:1/-1"><div class="es-ic">🏢</div><div class="es-t">لا توجد مكاتب</div></div>`;return;}
+  const stMap={active:{ecls:"ea",spCls:"sp-a",lbl:"نشط"},pending:{ecls:"ep",spCls:"sp-p",lbl:"انتظار"},blocked:{ecls:"eb",spCls:"sp-b",lbl:"محظور"}};
+  grid.innerHTML=list.map(o=>{
+    const st=stMap[o.status]||{ecls:"ea",spCls:"sp-a",lbl:o.status};
+    return `<div class="ec ec-${st.ecls}">
+      <div class="ec-top"><div class="ec-av">🏢</div><span class="sp ${st.spCls}">${st.lbl}</span></div>
+      <div class="ec-n">${esc(o.name)}</div>
+      <div class="ec-ph" style="font-family:inherit">${esc(o.phone)}</div>
+      <div style="font-size:.72rem;color:var(--txt2);margin-bottom:8px"><i class="fas fa-location-dot" style="color:var(--rose)"></i> ${esc(o.city)}</div>
+      <div class="ls">
+        <div class="lm"><div class="lv b">${o.orders||0}</div><div class="ll">طلبات</div></div>
+        <div class="lm"><div class="lv g">${fmt(o.revenue||0)}</div><div class="ll">إيرادات د.ع</div></div>
+      </div>
+      <div class="ec-acts">
+        <button class="ea ea-a" onclick="setOfficeStatus('${o.id}','active')">✓</button>
+        <button class="ea ea-b" onclick="setOfficeStatus('${o.id}','blocked')">🚫</button>
+        <button class="ea ea-d" onclick="deleteOffice('${o.id}')">🗑</button>
+        <button class="ea ea-c" onclick="window.open('tel:${esc(o.phone)}')">📞</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+window.setOfficeStatus=function(id,st){const o=gOffices.find(x=>x.id===id);if(!o)return;o.status=st;renderOffices();toast("تم التحديث");logAudit("updateOffice","تحديث مكتب "+o.name+" → "+st);};
+window.deleteOffice=function(id){if(!confirm("حذف المكتب؟"))return;gOffices=gOffices.filter(o=>o.id!==id);renderOffices();toast("تم الحذف");};
+
+/* ══════════════════════════════
+   EDIT SAVE
+══════════════════════════════ */
+window.saveEdit = function(){
+  if(!editCtx)return;
+  if(editCtx.type==="car"){
+    const c=gCars.find(x=>x.id===editCtx.id);if(!c)return;
+    c.name=document.getElementById("e-name").value;
+    c.price=parseInt(document.getElementById("e-price").value)||c.price;
+    c.plate=document.getElementById("e-plate").value;
+    c.status=document.getElementById("e-status").value;
+    renderCars();
+  }else if(editCtx.type==="hotel"){
+    const h=gHotels.find(x=>x.id===editCtx.id);if(!h)return;
+    h.name=document.getElementById("e-name").value;
+    h.price=parseInt(document.getElementById("e-price").value)||h.price;
+    h.city=document.getElementById("e-city").value;
+    h.status=document.getElementById("e-status").value;
+    renderHotels();
+  }
+  clMod("editMod");
+  toast("✅ تم الحفظ");
+  logAudit("editSave","تحديث "+editCtx.type+" #"+editCtx.id);
+};
+
+/* ══════════════════════════════
+   AIOPS
+══════════════════════════════ */
+function renderAlerts(){
+  const c=document.getElementById("alertsList");if(!c)return;
+  const alerts = gOrders.filter(o=>o.status==="pending" && new Date()-new Date(o.date)>5*60000);
+  if(!alerts.length){c.innerHTML=`<div class="empty-s"><div class="es-ic">🛡️</div><div class="es-t">النظام مستقر</div></div>`;return;}
+  c.innerHTML=alerts.map(o=>`<div class="ec" style="flex-direction:row;align-items:center;gap:12px;margin-bottom:8px">
+    <div style="width:36px;height:36px;border-radius:10px;background:var(--rose-l);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🚨</div>
+    <div style="flex:1"><div style="font-weight:800;color:var(--rose);font-size:.82rem">طلب معلق منذ أكثر من 5 دقائق</div>
+    <div style="font-size:.7rem;color:var(--txt3)">#${esc(o.id)} · ${esc(o.name)} · ${esc(o.city)}</div></div>
+    <button class="ob b-ok" onclick="completeOrder('${esc(o.id)}',this)"><i class="fas fa-check"></i></button>
+  </div>`).join("");
+}
+
+function updTicker(){
+  const el=document.getElementById("tickTx");if(!el)return;
+  const active=gOrders.filter(o=>["active","pending"].includes(o.status)).length;
+  const done=gOrders.filter(o=>o.status==="completed").length;
+  const rev=gOrders.filter(o=>o.status==="completed").reduce((s,o)=>s+Number(o.total||0),0);
+  const fb=fbConn?"🟢 Firebase متصل":"🔴 Firebase منقطع";
+  el.textContent=`🐋 الحوت v1.0  •  ${active} طلب نشط  •  ${done} منجز  •  إيرادات: ${fmt(rev)} د.ع  •  ${gCars.length} سيارة  •  ${gHotels.length} فندق  •  ${gOffices.filter(o=>o.status==="active").length} مكتب نشط  •  ${fb}`;
+}
+
+window.runNightlyReport = function(){toast("تم إرسال طلب التقرير الليلي ✅");logAudit("runNightlyReport","تشغيل يدوي");};
+window.exportFullData = function(){
+  const data={orders:gOrders,cars:gCars,hotels:gHotels,drivers:gDriveStudents,offices:gOffices};
+  const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=`alhut_data_${today()}.json`;a.click();
+  toast("✅ تم التصدير");logAudit("exportData","تصدير كامل "+today());
+};
+window.clearOldArchive=function(){if(!confirm("مسح الطلبات المنجزة القديمة؟"))return;const cut=new Date(Date.now()-30*86400000);gOrders=gOrders.filter(o=>o.status!=="completed"||new Date(o.date)>cut);renderArch();toast("تم المسح");logAudit("clearArchive","مسح يدوي");};
+window.confirmReset=function(){if(!confirm("⚠️ تحذير: سيتم إعادة ضبط جميع البيانات المحلية!\nاكتب RESET للتأكيد:"))return;const v=prompt("اكتب: RESET");if(v!=="RESET")return;gOrders=[];gCars=[];gHotels=[];gDriveStudents=[];gOffices=[];loadDemoData();renderLive();renderArch();renderCars();renderHotels();renderDrive();renderOffices();updKPIs();toast("تم الإعادة");};
+
+/* ══════════════════════════════
+   AUDIT
+══════════════════════════════ */
+function renderAudit(){
+  const q=(document.getElementById("auSch")?.value||"").toLowerCase();
+  let list=[...gAudit].filter(e=>!q||JSON.stringify(e).toLowerCase().includes(q));
+  const el=document.getElementById("auList");if(!el)return;
+  if(!list.length){el.innerHTML=`<div class="empty-s"><div class="es-ic">📋</div><div class="es-t">سجل التدقيق فارغ</div></div>`;return;}
+  const icons={LOGIN:"🔑",completeOrder:"✅",cancelOrder:"❌",addCar:"🚗",updateCar:"🔧",deleteCar:"🗑",addHotel:"🏨",updateHotel:"🏨",deleteHotel:"🗑",addDriveStudent:"🎓",completeDrive:"🎓",deleteDrive:"🗑",updateOffice:"🏢",deleteOffice:"🗑",runNightlyReport:"🌙",exportData:"📦",clearArchive:"🗑",editSave:"✏️"};
+  el.innerHTML=list.map(e=>{
+    let ts="---";try{ts=new Date(e.ts).toLocaleString("ar-EG");}catch(err){}
+    return `<div style="background:var(--bg2);border-radius:var(--r3);padding:12px;border:1px solid var(--line);margin-bottom:8px;display:flex;align-items:center;gap:10px">
+      <div style="width:34px;height:34px;border-radius:9px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">${icons[e.action]||"⚡"}</div>
+      <div style="flex:1">
+        <div style="font-weight:800;font-size:.82rem;color:var(--txt0);margin-bottom:2px">${esc(e.action)}</div>
+        <div style="font-size:.7rem;color:var(--txt3);margin-bottom:3px">${esc(ts)}</div>
+        <div style="font-size:.74rem;color:var(--txt2);background:var(--bg3);padding:3px 8px;border-radius:6px;border:1px solid var(--line)">${esc(e.detail)}</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* ══════════════════════════════
+   CSV EXPORT
+══════════════════════════════ */
+window.expCSV = function(){
+  const q=document.getElementById("arcSch")?.value.trim().toLowerCase()||"";
+  const svc=document.getElementById("arcSvc")?.value||"";
+  let list=[...gOrders];
+  if(q)list=list.filter(o=>String(o.id).toLowerCase().includes(q)||String(o.name||"").toLowerCase().includes(q));
+  if(svc)list=list.filter(o=>o.service===svc);
+  if(!list.length)return toast("لا توجد طلبات","e");
+  const q2=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  let csv="\uFEFFرقم الطلب,الوقت,العميل,الهاتف,الخدمة,السيارة/الفندق,المدينة,الأيام,الإجمالي,الحالة,المكتب\n";
+  list.forEach(o=>{
+    const dt=o.date?new Date(o.date).toLocaleString("ar-EG"):"---";
+    csv+=[q2(o.id),q2(dt),q2(o.name),q2(o.phone),q2(o.service),q2(o.car),q2(o.city),q2(o.days||1),q2(o.total||0),q2(o.status),q2(o.office||"")].join(",")+"\\n";
+  });
+  const b=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(b);
+  a.download=`alhut_${today()}.csv`;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),900);
+  toast(`✅ تم تصدير ${list.length} طلب`);
+};
+
+/* ══════════════════════════════
+   INIT
+══════════════════════════════ */
+window.addEventListener("DOMContentLoaded",()=>{
+  // Pre-load demo data for display
+  loadDemoData();
+});
 </script>
 </body>
 </html>

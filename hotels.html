@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlTag">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فنادق الحوت | أفضل فنادق العراق</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF385C;
+            --primary-dark: #E31C5F;
+            --dark: #222222;
+            --mid: #717171;
+            --light: #DDDDDD;
+            --bg: #F7F7F7;
+            --white: #FFFFFF;
+            --shadow: 0 6px 20px rgba(0,0,0,0.12);
+            --radius: 16px;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--dark); }
+
+        .navbar {
+            background:white;
+            border-bottom:1px solid var(--light);
+            padding:0 24px;
+            height:72px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            position:sticky; top:0; z-index:100;
+            box-shadow: 0 1px 12px rgba(0,0,0,0.06);
+        }
+        .logo { font-size:1.3rem; font-weight:900; color:var(--primary); text-decoration:none; display:flex; align-items:center; gap:8px; }
+        .back-btn {
+            display:flex; align-items:center; gap:8px;
+            color:var(--dark); text-decoration:none;
+            font-weight:700; font-size:0.9rem;
+            padding:10px 18px; border-radius:12px;
+            border:1.5px solid var(--light);
+            transition:0.2s;
+        }
+        .back-btn:hover { border-color:var(--dark); }
+
+        .page-hero {
+            background:linear-gradient(135deg, #fff5f7 0%, #ffffff 100%);
+            padding:40px 24px;
+            text-align:center;
+            border-bottom:1px solid var(--light);
+        }
+        .page-hero h1 { font-size:2rem; font-weight:900; margin-bottom:8px; }
+        .page-hero p { color:var(--mid); font-size:1rem; }
+
+        .filters-bar {
+            background:white;
+            border-bottom:1px solid var(--light);
+            padding:16px 24px;
+            display:flex;
+            gap:12px;
+            overflow-x:auto;
+            -webkit-overflow-scrolling:touch;
+        }
+        .filter-pill {
+            padding:10px 20px;
+            border-radius:24px;
+            border:1.5px solid var(--light);
+            background:white;
+            font-weight:700;
+            font-size:0.85rem;
+            cursor:pointer;
+            white-space:nowrap;
+            transition:0.2s;
+            display:flex; align-items:center; gap:6px;
+        }
+        .filter-pill:hover { border-color:var(--dark); }
+        .filter-pill.active {
+            background:var(--dark);
+            color:white;
+            border-color:var(--dark);
+        }
+
+        .main-content {
+            max-width:1200px;
+            margin:0 auto;
+            padding:32px 24px;
+        }
+
+        .results-info {
+            font-size:0.9rem;
+            color:var(--mid);
+            margin-bottom:24px;
+            font-weight:600;
+        }
+        .results-info strong { color:var(--dark); }
+
+        .hotels-grid {
+            display:grid;
+            grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+            gap:28px;
+        }
+
+        .hotel-card {
+            background:white;
+            border-radius:var(--radius);
+            overflow:hidden;
+            transition:0.25s;
+            border:1px solid var(--light);
+            cursor:pointer;
+            text-decoration:none;
+            color:var(--dark);
+            display:block;
+        }
+        .hotel-card:hover {
+            box-shadow:var(--shadow);
+            transform:translateY(-4px);
+        }
+        .hotel-img {
+            width:100%;
+            height:200px;
+            object-fit:cover;
+            background:linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:4rem;
+        }
+        .hotel-body { padding:16px; }
+        .hotel-rating {
+            display:flex; align-items:center; gap:4px;
+            font-size:0.82rem; font-weight:700; margin-bottom:6px;
+            color:var(--dark);
+        }
+        .hotel-rating i { color:#FF385C; }
+        .hotel-name { font-size:1rem; font-weight:800; margin-bottom:4px; }
+        .hotel-location { font-size:0.85rem; color:var(--mid); margin-bottom:12px; display:flex; align-items:center; gap:4px; }
+        .hotel-features {
+            display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;
+        }
+        .feature-tag {
+            background:var(--bg);
+            padding:4px 10px;
+            border-radius:8px;
+            font-size:0.75rem;
+            font-weight:700;
+            color:var(--mid);
+        }
+        .hotel-footer {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding-top:12px;
+            border-top:1px solid var(--bg);
+        }
+        .hotel-price { font-size:1rem; font-weight:900; }
+        .hotel-price span { font-size:0.8rem; font-weight:500; color:var(--mid); }
+        .book-btn {
+            background:var(--primary);
+            color:white;
+            border:none;
+            padding:10px 20px;
+            border-radius:12px;
+            font-weight:800;
+            font-size:0.85rem;
+            cursor:pointer;
+            transition:0.2s;
+        }
+        .book-btn:hover { background:var(--primary-dark); }
+
+        @media(max-width:640px) {
+            .hotels-grid { grid-template-columns:1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="index.html" class="logo"><span>🐋</span> <span id="logoText">الحوت</span></a>
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> <span id="backText">رجوع</span></a>
+</nav>
+
+<div class="page-hero">
+    <h1 id="pageTitle">🏨 فنادق الحوت</h1>
+    <p id="pageSubTitle">أفضل الفنادق في جميع محافظات العراق</p>
+</div>
+
+<div class="filters-bar" id="filtersBar"></div>
+
+<div class="main-content">
+    <div class="results-info" id="resultsInfo"></div>
+    <div class="hotels-grid" id="hotelsGrid"></div>
+</div>
+
+<script>
+    const p = new URLSearchParams(window.location.search);
+    const lang = p.get('lang') || 'ar';
+    const city = p.get('city') || 'بغداد';
+    const date = p.get('date') || '';
+    const days = p.get('days') || '1';
+
+    const hotelData = [
+        { id:'h1', name:{ar:'فندق بابل الكبير',ku:'هۆتێلی بابل',tr:'Babil Büyük Oteli',en:'Babylon Grand Hotel'}, stars:5, cat:'luxury', price:150000, city:'بغداد', features:{ar:['واي فاي','مسبح','مطعم','باركينج'],en:['WiFi','Pool','Restaurant','Parking'],tr:['WiFi','Havuz','Restoran','Otopark'],ku:['ئینتەرنێت','مەلەوانگە','چێشتخانە','پارکینگ']}, icon:'🏰' },
+        { id:'h2', name:{ar:'فندق أربيل الدولي',ku:'هۆتێلی هەولێری نێودەوڵەتی',tr:'Erbil Uluslararası Oteli',en:'Erbil International Hotel'}, stars:5, cat:'luxury', price:180000, city:'أربيل', features:{ar:['واي فاي','صالة رياضية','سبا','مطعم'],en:['WiFi','Gym','Spa','Restaurant'],tr:['WiFi','Spor Salonu','Spa','Restoran'],ku:['ئینتەرنێت','جیمناستیک','سپا','چێشتخانە']}, icon:'🏔️' },
+        { id:'h3', name:{ar:'فندق كركوك بلازا',ku:'هۆتێلی کەرکوک پلازا',tr:'Kerkük Plaza Oteli',en:'Kirkuk Plaza Hotel'}, stars:4, cat:'premium', price:90000, city:'كركوك', features:{ar:['واي فاي','مطعم','باركينج'],en:['WiFi','Restaurant','Parking'],tr:['WiFi','Restoran','Otopark'],ku:['ئینتەرنێت','چێشتخانە','پارکینگ']}, icon:'💎' },
+        { id:'h4', name:{ar:'نزل السليمانية السياحي',ku:'هۆتێلی سلێمانی تووریستی',tr:'Süleymaniye Turizm Oteli',en:'Sulaymaniyah Tourist Hotel'}, stars:3, cat:'economy', price:55000, city:'السليمانية', features:{ar:['واي فاي','إفطار'],en:['WiFi','Breakfast'],tr:['WiFi','Kahvaltı'],ku:['ئینتەرنێت','ناشتا']}, icon:'🌲' },
+        { id:'h5', name:{ar:'فندق شط العرب - البصرة',ku:'هۆتێلی شەتتولعەرەب',tr:'Şattülarap Oteli - Basra',en:'Shatt Al-Arab Hotel - Basra'}, stars:4, cat:'premium', price:95000, city:'البصرة', features:{ar:['واي فاي','إطلالة نهرية','مطعم'],en:['WiFi','River View','Restaurant'],tr:['WiFi','Nehir Manzarası','Restoran'],ku:['ئینتەرنێت','دیمەنی ڕووبار','چێشتخانە']}, icon:'⚓' },
+        { id:'h6', name:{ar:'فندق الموصل الكلاسيك',ku:'هۆتێلی مووسڵ کلاسیک',tr:'Musul Klasik Oteli',en:'Mosul Classic Hotel'}, stars:3, cat:'economy', price:50000, city:'الموصل', features:{ar:['واي فاي','إفطار','باركينج'],en:['WiFi','Breakfast','Parking'],tr:['WiFi','Kahvaltı','Otopark'],ku:['ئینتەرنێت','ناشتا','پارکینگ']}, icon:'🏹' },
+        { id:'h7', name:{ar:'فندق الأنبار الصحراوي',ku:'هۆتێلی ئەنبار',tr:'Anbar Çöl Oteli',en:'Anbar Desert Hotel'}, stars:3, cat:'economy', price:45000, city:'الأنبار', features:{ar:['واي فاي','إفطار'],en:['WiFi','Breakfast'],tr:['WiFi','Kahvaltı'],ku:['ئینتەرنێت','ناشتا']}, icon:'🌴' },
+        { id:'h8', name:{ar:'منتجع ديالى الخضراء',ku:'ڕیزۆرتی دیالە',tr:'Diyala Yeşil Tatil Köyü',en:'Diyala Green Resort'}, stars:4, cat:'premium', price:85000, city:'ديالى', features:{ar:['واي فاي','حديقة','مسبح'],en:['WiFi','Garden','Pool'],tr:['WiFi','Bahçe','Havuz'],ku:['ئینتەرنێت','باخچە','مەلەوانگە']}, icon:'🍊' },
+    ];
+
+    const ui = {
+        ar:{ dir:'rtl', logo:'الحوت', back:'رجوع', title:'🏨 فنادق الحوت', sub:'أفضل الفنادق في جميع محافظات العراق', filters:['الكل','اقتصادي','مميز','فاخر'], cats:['all','economy','premium','luxury'], catLabels:{all:'الكل',economy:'اقتصادي',premium:'مميز',luxury:'فاخر'}, perNight:'/ الليلة', curr:'د.ع', book:'احجز الآن', results:' فندق متاح في ', stars:'نجوم', filt:'تصفية حسب الفئة' },
+        ku:{ dir:'rtl', logo:'ئەلحووت', back:'گەڕانەوە', title:'🏨 هۆتێلەکان', sub:'باشترین هۆتێلەکان لە عێراق', filters:['هەموو','ئابووری','تایبەت','ناوازە'], cats:['all','economy','premium','luxury'], catLabels:{all:'هەموو',economy:'ئابووری',premium:'تایبەت',luxury:'ناوازە'}, perNight:'/ شەو', curr:'د.ع', book:'کرێ بکە', results:' هۆتێل هەیە لە ', stars:'ئەستێرە', filt:'پاڵاوتن' },
+        tr:{ dir:'ltr', logo:'AL-HUT', back:'Geri', title:'🏨 Al-Hut Otelleri', sub:'Irak\'ın tüm illerinde en iyi oteller', filters:['Tümü','Ekonomik','Premium','Lüks'], cats:['all','economy','premium','luxury'], catLabels:{all:'Tümü',economy:'Ekonomik',premium:'Premium',luxury:'Lüks'}, perNight:'/ gece', curr:'IQD', book:'Rezervasyon', results:' otel mevcut — ', stars:'yıldız', filt:'Filtrele' },
+        en:{ dir:'ltr', logo:'AL-HUT', back:'Back', title:'🏨 Al-Hut Hotels', sub:'Best hotels across all Iraqi provinces', filters:['All','Economy','Premium','Luxury'], cats:['all','economy','premium','luxury'], catLabels:{all:'All',economy:'Economy',premium:'Premium',luxury:'Luxury'}, perNight:'/ night', curr:'IQD', book:'Book Now', results:' hotels in ', stars:'stars', filt:'Filter by category' },
+    };
+
+    let activeCat = 'all';
+
+    function init() {
+        const l = ui[lang] || ui.ar;
+        document.getElementById('htmlTag').dir = l.dir;
+        document.getElementById('logoText').innerText = l.logo;
+        document.getElementById('backText').innerText = l.back;
+        document.getElementById('pageTitle').innerText = l.title;
+        document.getElementById('pageSubTitle').innerText = l.sub;
+
+        // Filters
+        const fb = document.getElementById('filtersBar');
+        fb.innerHTML = l.cats.map((cat, i) => `
+            <div class="filter-pill ${cat==='all'?'active':''}" onclick="filterHotels('${cat}')" id="filter-${cat}">
+                ${l.filters[i]}
+            </div>
+        `).join('');
+
+        renderHotels();
+    }
+
+    function filterHotels(cat) {
+        activeCat = cat;
+        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+        document.getElementById('filter-'+cat).classList.add('active');
+        renderHotels();
+    }
+
+    function renderHotels() {
+        const l = ui[lang] || ui.ar;
+        let filtered = hotelData.filter(h => (activeCat === 'all' || h.cat === activeCat));
+        
+        document.getElementById('resultsInfo').innerHTML = `<strong>${filtered.length}</strong>${l.results}<strong>${city}</strong>`;
+
+        const grid = document.getElementById('hotelsGrid');
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--mid);font-weight:700;">لا توجد فنادق بهذه الفئة 🐋</div>`;
+            return;
+        }
+
+        grid.innerHTML = filtered.map(h => {
+            const name = h.name[lang] || h.name.ar;
+            const feats = h.features[lang] || h.features.ar;
+            const stars = '⭐'.repeat(h.stars);
+            return `
+            <div class="hotel-card" onclick="selectHotel('${h.id}','${name}',${h.price})">
+                <div class="hotel-img">${h.icon}</div>
+                <div class="hotel-body">
+                    <div class="hotel-rating"><i class="fas fa-star"></i> ${h.stars} ${l.stars} · ${stars}</div>
+                    <div class="hotel-name">${name}</div>
+                    <div class="hotel-location"><i class="fas fa-map-marker-alt" style="color:var(--primary)"></i> ${h.city}</div>
+                    <div class="hotel-features">${feats.map(f=>`<span class="feature-tag">${f}</span>`).join('')}</div>
+                    <div class="hotel-footer">
+                        <div class="hotel-price">${h.price.toLocaleString()} <small>${l.curr}</small> <span>${l.perNight}</span></div>
+                        <button class="book-btn">${l.book}</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function selectHotel(id, name, price) {
+        const total = parseInt(price) * parseInt(days);
+        window.location.href = `booking_hotel.html?hotel_id=${id}&hotel_name=${encodeURIComponent(name)}&hotel_price=${price}&city=${encodeURIComponent(city)}&date=${date}&days=${days}&lang=${lang}&total_price=${total}&type=hotel`;
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>
+

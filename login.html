@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>بوابة الشركاء | الحوت</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary:#FF385C; --primary-dark:#E31C5F; --dark:#222222; --mid:#717171; --light:#DDDDDD; --bg:#F7F7F7; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Tajawal',sans-serif; background:var(--bg); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+        .container { max-width:440px; width:100%; }
+        .header { text-align:center; margin-bottom:32px; }
+        .logo { font-size:2.5rem; margin-bottom:12px; }
+        .logo-text { font-size:1.8rem; font-weight:900; color:var(--dark); }
+        .logo-text span { color:var(--primary); }
+        .subtitle { color:var(--mid); font-size:0.9rem; margin-top:6px; }
+        .card { background:white; border-radius:24px; padding:36px 32px; box-shadow:0 8px 40px rgba(0,0,0,0.1); border:1px solid var(--light); }
+        .card-title { font-size:1.2rem; font-weight:900; margin-bottom:24px; }
+        .field-group { margin-bottom:18px; }
+        .field-label { display:block; font-size:0.78rem; font-weight:800; color:var(--mid); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.04em; }
+        .field-wrap { position:relative; }
+        .field-icon { position:absolute; right:16px; top:50%; transform:translateY(-50%); color:var(--mid); font-size:0.95rem; }
+        [dir="ltr"] .field-icon { right:auto; left:16px; }
+        .field-input { width:100%; padding:14px 48px 14px 16px; border:1.5px solid var(--light); border-radius:12px; font-family:'Tajawal',sans-serif; font-size:0.95rem; font-weight:600; color:var(--dark); outline:none; transition:0.2s; background:white; }
+        [dir="ltr"] .field-input { padding:14px 16px 14px 48px; }
+        .field-input:focus { border-color:var(--dark); }
+        .login-btn { width:100%; background:var(--primary); color:white; border:none; padding:16px; border-radius:12px; font-weight:900; font-size:1rem; cursor:pointer; transition:0.2s; font-family:'Tajawal',sans-serif; margin-top:8px; display:flex; align-items:center; justify-content:center; gap:8px; }
+        .login-btn:hover { background:var(--primary-dark); }
+        .login-btn:disabled { opacity:0.5; cursor:not-allowed; }
+        .error-msg { color:#dc2626; font-size:0.82rem; font-weight:700; margin-top:12px; text-align:center; min-height:20px; }
+        .divider { height:1px; background:var(--light); margin:24px 0; }
+        .back-link { display:block; text-align:center; color:var(--mid); font-size:0.85rem; font-weight:700; text-decoration:none; transition:0.2s; }
+        .back-link:hover { color:var(--primary); }
+        .badge { display:inline-flex; align-items:center; gap:6px; background:rgba(255,56,92,0.08); color:var(--primary); padding:6px 14px; border-radius:20px; font-size:0.78rem; font-weight:800; margin-bottom:20px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">🐋</div>
+        <div class="logo-text">ال<span>حوت</span></div>
+        <div class="subtitle">بوابة الشركاء والمكاتب</div>
+    </div>
+
+    <div class="card">
+        <div class="badge"><i class="fas fa-shield-alt"></i> نظام الرادار الآمن</div>
+        <div class="card-title">تسجيل دخول الشركاء</div>
+
+        <div class="field-group">
+            <label class="field-label">اسم المكتب</label>
+            <div class="field-wrap">
+                <i class="fas fa-building field-icon"></i>
+                <input id="officeName" type="text" class="field-input" placeholder="اسم مكتبك الرسمي">
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">المدينة</label>
+            <div class="field-wrap">
+                <i class="fas fa-map-marker-alt field-icon"></i>
+                <select id="citySelect" class="field-input">
+                    <option value="" disabled selected>اختر المدينة</option>
+                    <option value="كركوك">كركوك</option>
+                    <option value="بغداد">بغداد</option>
+                    <option value="أربيل">أربيل</option>
+                    <option value="السليمانية">السليمانية</option>
+                    <option value="الموصل">الموصل</option>
+                    <option value="البصرة">البصرة</option>
+                    <option value="الأنبار">الأنبار</option>
+                    <option value="ديالى">ديالى</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">كود الوصول</label>
+            <div class="field-wrap">
+                <i class="fas fa-fingerprint field-icon"></i>
+                <input id="idNumber" type="password" class="field-input" placeholder="••••••">
+            </div>
+        </div>
+
+        <button id="loginBtn" class="login-btn" onclick="registerOffice()">
+            <i class="fas fa-satellite-dish"></i> تفعيل الرادار
+        </button>
+        <div class="error-msg" id="errorMsg"></div>
+
+        <div class="divider"></div>
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> العودة للموقع الرئيسي</a>
+    </div>
+</div>
+
+<script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
+
+    async function registerOffice() {
+        const btn = document.getElementById('loginBtn');
+        const officeName = document.getElementById('officeName').value.trim();
+        const city = document.getElementById('citySelect').value;
+        const id = document.getElementById('idNumber').value.trim();
+        const errorEl = document.getElementById('errorMsg');
+        errorEl.innerText = '';
+        if(!officeName || !id || !city) { errorEl.innerText = '⚠️ يرجى إدخال جميع البيانات.'; return; }
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> جاري التحقق...';
+        try {
+            const finalURL = `${scriptURL}?action=checkOfficeStatus&id=${id}&name=${encodeURIComponent(officeName)}&city=${encodeURIComponent(city)}&t=${Date.now()}`;
+            const res = await fetch(finalURL, { method:'GET', redirect:'follow' });
+            const result = await res.json();
+            if(result.status === 'نشط') {
+                localStorage.setItem('whale_office_data', JSON.stringify({name:officeName, city, id}));
+                window.location.href = 'dashboard.html';
+            } else if(result.status === 'محظور') {
+                errorEl.innerText = '⛔ هذا الحساب محظور من قبل الإدارة.';
+            } else {
+                errorEl.innerText = '⏳ الحساب قيد المراجعة أو البيانات غير مطابقة.';
+            }
+        } catch(e) {
+            errorEl.innerText = '❌ فشل الاتصال بخادم الحوت.';
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-satellite-dish"></i> تفعيل الرادار';
+        }
+    }
+
+    document.addEventListener('keypress', e => { if(e.key === 'Enter') registerOffice(); });
+</script>
+</body>
+</html>

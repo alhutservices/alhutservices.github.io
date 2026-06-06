@@ -6,11 +6,12 @@
     <title>شركاء الحوت | بوابة الأعمال</title>
     
     <meta name="theme-color" content="#002349">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
@@ -30,40 +31,38 @@
         
         #loadingOverlay { position: fixed; inset: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); z-index: 30000; display: flex; align-items: center; justify-content: center; flex-direction: column; color: var(--primary); }
         
-        /* --- AUTH SCREEN --- */
         .login-wrapper { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, #001124 0%, #002349 100%); padding: 20px; }
-        .login-card { background: var(--card-bg); border-radius: 30px; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        .custom-input { background: #f1f5f9; border: 2px solid transparent; border-radius: 16px; padding: 14px; font-weight: 700; width: 100%; font-size: 1rem; color: var(--primary); margin-bottom: 15px; transition: 0.3s; }
+        .login-card { background: var(--card-bg); border-radius: 30px; padding: 30px 25px; width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
+        
+        .form-label { font-weight: 800; font-size: 0.85rem; color: var(--primary); margin-bottom: 6px; display: block; text-align: right; }
+        .custom-input { background: #f1f5f9; border: 2px solid transparent; border-radius: 16px; padding: 12px 14px; font-weight: 700; width: 100%; font-size: 0.95rem; color: var(--primary); margin-bottom: 15px; transition: 0.3s; }
         .custom-input:focus { background: white; border-color: var(--accent); outline: none; box-shadow: 0 0 0 4px rgba(212,175,55,0.15); }
+        
         .btn-action { background: var(--primary); color: white; border: none; border-radius: 16px; padding: 16px; font-weight: 900; width: 100%; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; box-shadow: 0 10px 20px rgba(0,35,73,0.3); }
         .btn-action:active { transform: scale(0.96); box-shadow: none; }
         
-        /* --- DASHBOARD HEADER --- */
+        /* Commission Toggle Styles */
+        .commission-type-toggle { display: flex; background: rgba(0,35,73,0.05); border-radius: 14px; padding: 5px; margin-bottom: 12px; }
+        .comm-type-btn { flex: 1; text-align: center; padding: 10px 5px; font-weight: 800; color: var(--text-muted); border-radius: 10px; cursor: pointer; transition: 0.3s ease; font-size: 0.8rem; }
+        .comm-type-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+
+        /* Dashboard Styles */
         .dash-header { background: var(--primary); color: white; padding: max(30px, env(safe-area-inset-top)) 20px 50px 20px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 10px 30px rgba(0,35,73,0.15); position: relative; z-index: 10; }
         .status-badge { padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); }
         .status-badge.online { background: var(--success); }
-        
-        /* --- STATS & CARDS --- */
         .stats-wrapper { margin-top: -30px; position: relative; z-index: 15; }
         .stat-box { background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; border: 1px solid var(--border); }
+        
         .order-card { background: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); border: 1px solid var(--border); margin-bottom: 15px; border-right: 5px solid var(--accent); }
+        .upload-box { border: 2px dashed var(--accent); border-radius: 16px; padding: 30px 20px; text-align: center; cursor: pointer; color: var(--primary); background: rgba(212,175,55,0.05); margin-bottom: 15px; }
         
-        /* --- ALARM OVERLAY (RINGING) --- */
-        #orderAlertOverlay { position: fixed; inset: 0; background: rgba(0,35,73,0.95); backdrop-filter: blur(10px); z-index: 40000; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: max(50px, env(safe-area-inset-top)) 20px 40px 20px; text-align: center; overflow-y: auto; }
-        .alert-pulse { width: 100px; height: 100px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; animation: pulseGold 1.5s infinite; color: var(--primary); }
-        @keyframes pulseGold { 0% { box-shadow: 0 0 0 0 rgba(212,175,55,0.7); } 70% { box-shadow: 0 0 0 30px rgba(212,175,55,0); } 100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); } }
-        .btn-accept { background: var(--success); color: white; border-radius: 20px; padding: 20px; font-weight: 900; font-size: 1.3rem; width: 100%; border: none; box-shadow: 0 10px 25px rgba(16,185,129,0.4); margin-bottom: 15px; transition: 0.2s; }
-        .btn-accept:active { transform: scale(0.96); }
-
-        /* --- ADD ITEM SECTION --- */
-        .upload-box { border: 2px dashed var(--accent); border-radius: 16px; padding: 30px 20px; text-align: center; cursor: pointer; color: var(--primary); background: rgba(212,175,55,0.05); margin-bottom: 15px; transition: 0.3s; }
-        .upload-box:active { background: rgba(212,175,55,0.1); }
-        
-        /* --- BOTTOM NAV --- */
         .bnav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); border-radius: 24px 24px 0 0; justify-content: space-around; align-items: center; z-index: 9000; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -5px 25px rgba(0,0,0,0.05); }
         .bni { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 33%; cursor: pointer; color: var(--text-muted); }
         .bni.on { color: var(--primary); font-weight: 900; }
         .bni.on i { color: var(--accent); }
+
+        #orderAlertOverlay { position: fixed; inset: 0; background: rgba(0,35,73,0.95); backdrop-filter: blur(10px); z-index: 40000; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: max(50px, env(safe-area-inset-top)) 20px 40px 20px; text-align: center; overflow-y: auto; }
+        .btn-accept { background: var(--success); color: white; border-radius: 20px; padding: 20px; font-weight: 900; font-size: 1.3rem; width: 100%; border: none; box-shadow: 0 10px 25px rgba(16,185,129,0.4); margin-bottom: 15px; transition: 0.2s; }
     </style>
 </head>
 <body>
@@ -78,11 +77,10 @@
 
 <div id="orderAlertOverlay" class="hidden-section">
     <div>
-        <div class="alert-pulse"><i data-lucide="bell-ringing" size="48"></i></div>
-        <h1 class="fw-black mb-2">طلب جديد!</h1>
+        <i data-lucide="bell-ringing" size="64" color="var(--accent)"></i>
+        <h1 class="fw-black mb-2 mt-3">طلب جديد!</h1>
         <p class="fw-bold text-white opacity-75 fs-5">لديك طلب حجز جديد بانتظار الموافقة</p>
     </div>
-    
     <div style="background: white; color: var(--text-main); border-radius: 20px; padding: 25px; margin: 20px 0; text-align: right;">
         <h5 class="fw-black text-primary mb-3" id="alertServiceType">🚗 تأجير سيارة</h5>
         <div class="d-flex justify-content-between mb-2"><span class="text-muted">العميل:</span><strong id="alertCustName">---</strong></div>
@@ -93,7 +91,6 @@
             <span class="text-muted">الإجمالي:</span><h3 class="fw-black text-success m-0" id="alertPrice">0 د.ع</h3>
         </div>
     </div>
-    
     <div>
         <button class="btn-accept" onclick="acceptIncomingOrder()">قبول الطلب فوراً <i data-lucide="check-circle" class="ms-2"></i></button>
         <button class="btn btn-link text-white w-100 fw-bold text-decoration-none fs-5" onclick="rejectIncomingOrder()">تجاهل الطلب</button>
@@ -102,14 +99,14 @@
 
 <div id="loginSection" class="login-wrapper">
     <div class="text-center mb-4 w-100">
-        <div class="d-inline-flex p-3 bg-white rounded-circle shadow mb-3"><i data-lucide="store" size="40" color="var(--primary)"></i></div>
+        <div class="d-inline-flex p-3 bg-white rounded-circle shadow mb-3"><i data-lucide="building" size="40" color="var(--primary)"></i></div>
         <h2 class="fw-black text-white m-0">بوابة الشركاء</h2>
-        <p class="text-white opacity-75 fw-bold mt-1">بالتعاون مع منصة الحوت</p>
+        <p class="text-white opacity-75 fw-bold mt-1">منصة الحوت السحابية</p>
     </div>
 
     <div class="login-card" id="authBox">
         <div id="loginForm">
-            <h5 class="fw-black text-center mb-4">تسجيل الدخول</h5>
+            <h4 class="fw-black text-center mb-4">تسجيل الدخول</h4>
             <input type="text" id="loginName" class="custom-input text-center" placeholder="اسم المنشأة أو رقم الهاتف">
             <input type="password" id="loginPass" class="custom-input text-center" placeholder="كلمة المرور">
             <button class="btn-action mt-2" onclick="doLogin()">دخول المنصة <i data-lucide="log-in"></i></button>
@@ -119,20 +116,56 @@
         </div>
 
         <div id="registerForm" class="hidden-section">
-            <h5 class="fw-black text-center mb-4">تسجيل شريك جديد</h5>
+            <h4 class="fw-black text-center mb-4">تسجيل شريك جديد</h4>
+            
+            <label class="form-label">نوع الشراكة</label>
             <select id="regType" class="custom-input mb-3" onchange="updateRegUI()">
                 <option value="CarOffice">🏢 مكتب تأجير سيارات</option>
-                <option value="Individual">🚗 فرد (أؤجر سيارتي الخاصة)</option>
+                <option value="Individual">🚗 أفراد (أؤجر سيارتي الخاصة)</option>
                 <option value="Hotel">🏨 فندق / شقق فندقية</option>
             </select>
-            <input type="text" id="regName" class="custom-input" placeholder="الاسم التجاري / اسمك">
-            <input type="tel" id="regPhone" class="custom-input" placeholder="رقم الهاتف (للتواصل)">
-            <select id="regCity" class="custom-input mb-3">
-                <option value="بغداد">بغداد</option><option value="أربيل">أربيل</option><option value="كركوك">كركوك</option>
-            </select>
-            <input type="password" id="regPass" class="custom-input" placeholder="إنشاء كلمة مرور">
             
-            <button class="btn-action mt-2" onclick="doRegister()">إرسال طلب الانضمام <i data-lucide="send"></i></button>
+            <label class="form-label">الاسم التجاري / اسمك الكامل</label>
+            <input type="text" id="regName" class="custom-input" placeholder="اسم المنشأة">
+            
+            <label class="form-label">رقم هاتف التواصل والواتساب</label>
+            <input type="tel" id="regPhone" class="custom-input" placeholder="07XXXXXXXXX" dir="ltr" style="text-align: right;">
+            
+            <label class="form-label">المدينة</label>
+            <select id="regCity" class="custom-input mb-3">
+                <option value="كركوك">كركوك</option><option value="بغداد">بغداد</option><option value="أربيل">أربيل</option><option value="السليمانية">السليمانية</option>
+            </select>
+            
+            <label class="form-label">كلمة المرور</label>
+            <input type="password" id="regPass" class="custom-input" placeholder="أنشئ كلمة مرور قوية">
+
+            <label class="form-label mt-2"><i data-lucide="map-pin" size="14"></i> حدد الموقع الدقيق (GPS):</label>
+            <div class="position-relative mb-3">
+                <div id="pickerMap" style="height: 180px; border-radius: 16px; border: 2px solid var(--border); z-index: 1;"></div>
+                <img src="https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png" alt="Pin" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -100%); z-index: 1000; width: 25px; pointer-events: none;">
+                <button type="button" class="btn btn-sm bg-white text-primary position-absolute shadow-sm fw-bold" style="bottom: 10px; right: 10px; z-index: 1000; border-radius: 8px;" onclick="forceLocateMe()"><i data-lucide="crosshair" size="14"></i> موقعي</button>
+            </div>
+
+            <label class="form-label mt-2">نظام العمولة المفضل:</label>
+            <div class="commission-type-toggle">
+                <div class="comm-type-btn active" id="commTypeFixed" onclick="switchCommissionType('fixed')">ثابت 💰</div>
+                <div class="comm-type-btn" id="commTypeSplit" onclick="switchCommissionType('split')">نسبة/مناصفة 📊</div>
+                <div class="comm-type-btn" id="commTypeMonthly" onclick="switchCommissionType('monthly')">اشتراك شهري 📅</div>
+            </div>
+            
+            <div id="commFixedFields">
+                <input type="number" id="regCommFixed" class="custom-input" placeholder="مثال: 5000 (للقطعة/لليوم)" oninput="updateCommissionString()">
+            </div>
+            <div id="commSplitFields" class="hidden-section row g-2">
+                <div class="col-6"><input type="number" id="regCommSplitPlat" class="custom-input" placeholder="للمنصة" oninput="updateCommissionString()"></div>
+                <div class="col-6"><input type="number" id="regCommSplitRes" class="custom-input" placeholder="للمكتب" oninput="updateCommissionString()"></div>
+            </div>
+            <div id="commMonthlyFields" class="hidden-section">
+                <input type="number" id="regCommMonthlyAmount" class="custom-input" placeholder="المبلغ الشهري (د.ع)" oninput="updateCommissionString()">
+            </div>
+            <input type="hidden" id="regCommFinal" value="">
+
+            <button class="btn-action mt-4" onclick="doRegister()">إرسال طلب الانضمام <i data-lucide="send"></i></button>
             <div class="text-center mt-3">
                 <a href="#" onclick="toggleAuthMode()" class="text-decoration-none fw-bold text-muted">لدي حساب بالفعل</a>
             </div>
@@ -189,22 +222,22 @@
                 <div id="carFields">
                     <input type="text" id="carName" class="custom-input py-2" placeholder="اسم وموديل السيارة (مثال: توسان 2024)">
                     <div class="row g-2">
-                        <div class="col-6"><input type="number" id="carPrice" class="custom-input py-2" placeholder="السعر اليومي"></div>
+                        <div class="col-6"><input type="number" id="carPrice" class="custom-input py-2" placeholder="السعر اليومي (د.ع)"></div>
                         <div class="col-6">
                             <select id="carCat" class="custom-input py-2">
                                 <option value="economy">اقتصادية</option><option value="luxury">فخمة (VIP)</option><option value="family">عائلية</option><option value="wedding">زفاف</option>
                             </select>
                         </div>
-                        <div class="col-6"><input type="text" id="carColor" class="custom-input py-2" placeholder="اللون"></div>
-                        <div class="col-6"><input type="text" id="carPlate" class="custom-input py-2" placeholder="رقم اللوحة (المرور)"></div>
+                        <div class="col-6"><input type="text" id="carColor" class="custom-input py-2" placeholder="اللون (مثال: أبيض)"></div>
+                        <div class="col-6"><input type="text" id="carPlate" class="custom-input py-2" placeholder="رقم اللوحة"></div>
                     </div>
                 </div>
 
                 <div id="hotelFields" class="hidden-section text-center text-muted fw-bold py-3">
-                    لتحديث أسعار الغرف أو إضافة صور الفندق، يرجى ملء الحقول ورفع الصورة. سيتم تحديث ملف فندقك.
+                    لتحديث أسعار الغرف أو إضافة صور الفندق، يرجى ملء الحقول ورفع الصورة. سيتم تحديث ملف فندقك في المنصة المركزية.
                 </div>
                 
-                <button class="btn-action py-3 mt-2" onclick="saveInventoryItem()">حفظ ونشر في المنصة <i data-lucide="upload-cloud"></i></button>
+                <button class="btn-action py-3 mt-3" onclick="saveInventoryItem()">حفظ ونشر في المنصة <i data-lucide="upload-cloud"></i></button>
             </div>
         </div>
     </div>
@@ -218,7 +251,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     import { getStorage, ref as storageRef, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     lucide.createIcons();
@@ -241,14 +274,21 @@
     const db = getDatabase(app);
     const storage = getStorage(app);
 
-    let pData = null; // Partner Data
+    let pData = null; 
     let ringingOrder = null;
     let base64Img = null;
+    let pickerMap;
+    let regLat = 35.468; 
+    let regLng = 44.392;
+    let currentCommissionType = 'fixed';
 
     // ── UI TOGGLES ──
     window.toggleAuthMode = () => {
         document.getElementById('loginForm').classList.toggle('hidden-section');
         document.getElementById('registerForm').classList.toggle('hidden-section');
+        if(!document.getElementById('registerForm').classList.contains('hidden-section')) {
+            setTimeout(window.initPickerMap, 300); // Initialize map when form opens
+        }
     };
 
     window.updateRegUI = () => {
@@ -276,6 +316,62 @@
         document.getElementById('loadingOverlay').style.display = state ? 'flex' : 'none';
     }
 
+    // ── LEAFLET MAP LOGIC ──
+    window.initPickerMap = function() {
+        if (!document.getElementById('pickerMap')) return;
+        if (pickerMap) { setTimeout(() => pickerMap.invalidateSize(), 300); return; }
+        pickerMap = L.map('pickerMap', { zoomControl: false }).setView([regLat, regLng], 13);
+        L.control.zoom({ position: 'bottomleft' }).addTo(pickerMap);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(pickerMap);
+        pickerMap.on('move', function () { 
+            regLat = pickerMap.getCenter().lat;
+            regLng = pickerMap.getCenter().lng; 
+        });
+    };
+
+    window.forceLocateMe = function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                regLat = pos.coords.latitude; regLng = pos.coords.longitude;
+                pickerMap.flyTo([regLat, regLng], 16);
+            }, () => { alert("يرجى التأكد من تشغيل الـ GPS."); }, { enableHighAccuracy: true });
+        }
+    };
+
+    // ── COMMISSION LOGIC ──
+    window.switchCommissionType = function(type) {
+        currentCommissionType = type;
+        document.querySelectorAll('.comm-type-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('commTypeFixed').classList.toggle('active', type === 'fixed');
+        document.getElementById('commTypeSplit').classList.toggle('active', type === 'split');
+        document.getElementById('commTypeMonthly').classList.toggle('active', type === 'monthly');
+
+        document.getElementById('commFixedFields').classList.add('hidden-section');
+        document.getElementById('commSplitFields').classList.add('hidden-section');
+        document.getElementById('commMonthlyFields').classList.add('hidden-section');
+
+        if (type === 'fixed') document.getElementById('commFixedFields').classList.remove('hidden-section');
+        else if (type === 'split') document.getElementById('commSplitFields').classList.remove('hidden-section');
+        else if (type === 'monthly') document.getElementById('commMonthlyFields').classList.remove('hidden-section');
+        
+        window.updateCommissionString();
+    };
+
+    window.updateCommissionString = function() {
+        let finalValue = '';
+        if (currentCommissionType === 'fixed') finalValue = document.getElementById('regCommFixed').value.trim();
+        else if (currentCommissionType === 'split') {
+            const p = document.getElementById('regCommSplitPlat').value.trim();
+            const r = document.getElementById('regCommSplitRes').value.trim();
+            if (p && r) finalValue = `${p}/${r}`;
+        } 
+        else if (currentCommissionType === 'monthly') {
+            const a = document.getElementById('regCommMonthlyAmount').value.trim();
+            if (a) finalValue = `شهري ${a}`;
+        }
+        document.getElementById('regCommFinal').value = finalValue;
+    };
+
     // ── AUTHENTICATION ──
     window.onload = () => {
         const saved = localStorage.getItem('hut_partner_session');
@@ -289,12 +385,10 @@
         
         showLoad(true);
         try {
-            // Check Car Office first
             let res = await fetch(`${API_URL}?action=checkCarOffice&name=${name}&pass=${pass}&token=${API_TOKEN}`);
             let data = await res.json();
             let pType = 'car';
             
-            // If not found, check Hotel
             if(data.status === "not_found") {
                 res = await fetch(`${API_URL}?action=checkHotel&name=${name}&pass=${pass}&token=${API_TOKEN}`);
                 data = await res.json();
@@ -318,20 +412,23 @@
         const phone = document.getElementById('regPhone').value.trim();
         const city = document.getElementById('regCity').value;
         const pass = document.getElementById('regPass').value;
+        const comm = document.getElementById('regCommFinal').value;
         
-        if(!name || !phone || !pass) return alert("أكمل جميع الحقول");
+        if(!name || !phone || !pass || !comm) return alert("أكمل جميع الحقول المطلوبة (بما فيها العمولة)");
+        if (Math.abs(regLat - 35.468) < 0.001 && Math.abs(regLng - 44.392) < 0.001) return alert("الرجاء تحريك الدبوس لتحديد موقعك الدقيق.");
+
         const action = rawType === 'Hotel' ? 'REGISTER_HOTEL' : 'REGISTER_CAR_OFFICE';
         
-        showLoad(true);
+        showLoad(true, "جاري الإرسال...");
         try {
             const res = await fetch(API_URL, {
                 method: 'POST',
-                body: JSON.stringify({ action, token: API_TOKEN, name, phone, city, pass })
+                body: JSON.stringify({ action, token: API_TOKEN, name, phone, city, pass, lat: regLat, lng: regLng, comm_type: currentCommissionType, comm_val: comm })
             });
             const data = await res.json();
             showLoad(false);
             if(data.success) {
-                alert("تم إرسال طلبك للإدارة، سيتم مراجعته وتفعيله قريباً.");
+                alert("تم إرسال طلب الانضمام! الإدارة ستوافق عليه قريباً.");
                 toggleAuthMode();
             } else { alert(data.msg); }
         } catch(e) { showLoad(false); alert("خطأ اتصال"); }
@@ -347,6 +444,8 @@
         
         // Fetch Live Ledgers
         const ledgerPath = pData.type === 'hotel' ? 'hotels' : 'car_offices';
+        const cleanPhone = pData.id.replace(/\D/g, ''); // Fallback if using phone as ledger key
+        
         onValue(ref(db, `ledgers/${ledgerPath}/${pData.id}`), snap => {
             const l = snap.val() || { completed_orders: 0, debt: 0 };
             document.getElementById('statOrders').innerText = l.completed_orders || 0;
@@ -366,11 +465,9 @@
             let hasRinging = false;
             
             Object.values(orders).forEach(o => {
-                // Filter logic
                 if(pData.type === 'hotel' && o.hotel_id !== pData.id) return; 
                 if(pData.type === 'car' && o.city !== pData.city && o.status === 'pending') return;
                 
-                // My active/completed orders
                 if(o.office === pData.name || (pData.type==='hotel' && o.status !== 'pending')) {
                     const isDone = o.status === 'completed' || o.status === 'cancelled';
                     html += `
@@ -386,7 +483,6 @@
                     `;
                 }
                 
-                // Ringing logic (New pending for me)
                 if(o.status === 'pending') {
                     if(pData.type === 'hotel' && o.hotel_id === pData.id) triggerRing(o, 'hotel');
                     if(pData.type === 'car' && o.city === pData.city) triggerRing(o, 'car');
@@ -402,7 +498,7 @@
 
     // ── ALARM SYSTEM ──
     function triggerRing(o, type) {
-        if(document.getElementById('orderAlertOverlay').classList.contains('hidden-section') === false) return; // Already ringing
+        if(document.getElementById('orderAlertOverlay').classList.contains('hidden-section') === false) return; 
         ringingOrder = o;
         
         document.getElementById('alertServiceType').innerText = type === 'car' ? `🚗 طلب تأجير: ${o.car}` : `🏨 حجز غرفة: ${o.room_type}`;
@@ -475,7 +571,6 @@
         showLoad(true, "جاري رفع البيانات والصور للسحابة...");
         let photoUrl = "";
         
-        // 1. Upload Image if exists
         if(base64Img) {
             try {
                 const b64Data = base64Img.split(',')[1];
@@ -486,7 +581,6 @@
             } catch(e) { alert("فشل رفع الصورة"); return showLoad(false); }
         }
 
-        // 2. Send to Backend (V9.2)
         try {
             if(pData.type === 'car') {
                 const payload = {
@@ -501,16 +595,14 @@
                 await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
                 alert("تم إضافة السيارة لأسطولك وعرضها للزبائن!");
             } else {
-                // Hotels update photo info
                 await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateEntityInfo', entityType: 'Hotel', id: pData.id, updates: { photo_url: photoUrl }, pass: pData.pass, token: API_TOKEN }) });
                 alert("تم تحديث واجهة الفندق بنجاح!");
             }
             
-            // Reset form
             document.getElementById('carName').value = ""; document.getElementById('carPrice').value = ""; document.getElementById('carPlate').value = "";
             document.getElementById('imgPreview').classList.add('hidden-section'); base64Img = null;
             showLoad(false);
-            switchMainTab('radar', document.querySelector('.bni')); // Go back to radar
+            switchMainTab('radar', document.querySelector('.bni'));
         } catch(e) { showLoad(false); alert("فشل إرسال البيانات للسيرفر"); }
     };
 </script>

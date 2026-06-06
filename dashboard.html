@@ -1,1566 +1,518 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<script>
-const V="1.0",VK="alhut_partners_v1";
-try{if(localStorage.getItem(VK)!==V){localStorage.setItem(VK,V);if("caches"in window)caches.keys().then(n=>n.forEach(k=>caches.delete(k)));}}catch(e){}
-</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-<title>شركاء الحوت | بوابة الأعمال</title>
-<meta name="theme-color" content="#0a0f1a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>شركاء الحوت | بوابة الأعمال</title>
+    
+    <meta name="theme-color" content="#002349">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root { 
+            --primary: #002349; 
+            --accent: #D4AF37; 
+            --success: #10b981; 
+            --danger: #ef4444; 
+            --bg-light: #f8fafc; 
+            --card-bg: #ffffff; 
+            --text-main: #0f172a; 
+            --text-muted: #64748b; 
+            --border: #e2e8f0; 
+        }
+        body { background: var(--bg-light); font-family: 'Tajawal', sans-serif; color: var(--text-main); -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; overflow-x: hidden; }
+        .hidden-section { display: none !important; }
+        
+        #loadingOverlay { position: fixed; inset: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); z-index: 30000; display: flex; align-items: center; justify-content: center; flex-direction: column; color: var(--primary); }
+        
+        /* --- AUTH SCREEN --- */
+        .login-wrapper { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, #001124 0%, #002349 100%); padding: 20px; }
+        .login-card { background: var(--card-bg); border-radius: 30px; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .custom-input { background: #f1f5f9; border: 2px solid transparent; border-radius: 16px; padding: 14px; font-weight: 700; width: 100%; font-size: 1rem; color: var(--primary); margin-bottom: 15px; transition: 0.3s; }
+        .custom-input:focus { background: white; border-color: var(--accent); outline: none; box-shadow: 0 0 0 4px rgba(212,175,55,0.15); }
+        .btn-action { background: var(--primary); color: white; border: none; border-radius: 16px; padding: 16px; font-weight: 900; width: 100%; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; box-shadow: 0 10px 20px rgba(0,35,73,0.3); }
+        .btn-action:active { transform: scale(0.96); box-shadow: none; }
+        
+        /* --- DASHBOARD HEADER --- */
+        .dash-header { background: var(--primary); color: white; padding: max(30px, env(safe-area-inset-top)) 20px 50px 20px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 10px 30px rgba(0,35,73,0.15); position: relative; z-index: 10; }
+        .status-badge { padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); }
+        .status-badge.online { background: var(--success); }
+        
+        /* --- STATS & CARDS --- */
+        .stats-wrapper { margin-top: -30px; position: relative; z-index: 15; }
+        .stat-box { background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; border: 1px solid var(--border); }
+        .order-card { background: var(--card-bg); border-radius: 20px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); border: 1px solid var(--border); margin-bottom: 15px; border-right: 5px solid var(--accent); }
+        
+        /* --- ALARM OVERLAY (RINGING) --- */
+        #orderAlertOverlay { position: fixed; inset: 0; background: rgba(0,35,73,0.95); backdrop-filter: blur(10px); z-index: 40000; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: max(50px, env(safe-area-inset-top)) 20px 40px 20px; text-align: center; overflow-y: auto; }
+        .alert-pulse { width: 100px; height: 100px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; animation: pulseGold 1.5s infinite; color: var(--primary); }
+        @keyframes pulseGold { 0% { box-shadow: 0 0 0 0 rgba(212,175,55,0.7); } 70% { box-shadow: 0 0 0 30px rgba(212,175,55,0); } 100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); } }
+        .btn-accept { background: var(--success); color: white; border-radius: 20px; padding: 20px; font-weight: 900; font-size: 1.3rem; width: 100%; border: none; box-shadow: 0 10px 25px rgba(16,185,129,0.4); margin-bottom: 15px; transition: 0.2s; }
+        .btn-accept:active { transform: scale(0.96); }
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
-<!-- Leaflet -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-
-<style>
-/* ═══════════════════════════════════════════
-   DESIGN TOKENS — Pearl & Midnight
-   (مكاتب وفنادق = احترافي ناعم فاخر)
-═══════════════════════════════════════════ */
-:root {
-  /* Backgrounds — White Pearl System */
-  --bg0: #f8f9fc;
-  --bg1: #ffffff;
-  --bg2: #f1f4f9;
-  --bg3: #e8ecf2;
-
-  /* Brand */
-  --navy:   #0e1c35;
-  --navy-d: #08111f;
-  --navy-l: rgba(14,28,53,.08);
-  --navy-g: linear-gradient(135deg, #0e1c35, #1a3260);
-
-  /* Gold accent */
-  --gold:   #c9960c;
-  --gold-b: #f0c040;
-  --gold-l: rgba(201,150,12,.1);
-  --gold-g: linear-gradient(135deg, #c9960c, #f0c040, #c9960c);
-
-  /* Status */
-  --jade:   #059669;
-  --jade-l: rgba(5,150,105,.1);
-  --rose:   #e11d48;
-  --rose-l: rgba(225,29,72,.1);
-  --sky:    #0284c7;
-  --sky-l:  rgba(2,132,199,.1);
-  --amber:  #d97706;
-  --amber-l:rgba(217,119,6,.1);
-
-  /* Text */
-  --txt0: #0e1c35;
-  --txt1: #374151;
-  --txt2: #6b7280;
-  --txt3: #9ca3af;
-  --txt4: #d1d5db;
-
-  /* Lines & shadows */
-  --line:  rgba(14,28,53,.08);
-  --line2: rgba(14,28,53,.04);
-  --sh-xs: 0 1px 4px rgba(14,28,53,.06);
-  --sh-sm: 0 2px 12px rgba(14,28,53,.08);
-  --sh-md: 0 8px 32px rgba(14,28,53,.1);
-  --sh-lg: 0 20px 60px rgba(14,28,53,.14);
-  --sh-gold: 0 6px 24px rgba(201,150,12,.22);
-  --sh-navy: 0 8px 28px rgba(14,28,53,.28);
-
-  /* Sizes */
-  --nav-h: 70px;
-  --r3: 12px;
-  --r4: 16px;
-  --r5: 20px;
-  --r6: 24px;
-  --r7: 28px;
-  --r8: 32px;
-}
-
-*, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html, body {
-  height: 100%;
-  background: var(--bg0);
-  font-family: 'Cairo', sans-serif;
-  color: var(--txt0);
-  overflow-x: hidden;
-  overscroll-behavior: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-font-smoothing: antialiased;
-}
-
-button, input, select, textarea { font-family: 'Cairo', sans-serif; }
-.dn { display: none !important; }
-::-webkit-scrollbar { width: 0; height: 0; }
-
-/* ─── SUBTLE PATTERN ─── */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
-  pointer-events: none;
-  background-image:
-    radial-gradient(circle at 20% 80%, rgba(201,150,12,.04) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(14,28,53,.04) 0%, transparent 50%);
-}
-
-/* ─── TOASTS ─── */
-#toasts {
-  position: fixed; top: max(16px, env(safe-area-inset-top));
-  left: 50%; transform: translateX(-50%);
-  z-index: 99999; display: flex; flex-direction: column; gap: 8px;
-  width: min(94%, 380px); pointer-events: none;
-}
-.ti {
-  background: rgba(255,255,255,.97); backdrop-filter: blur(20px);
-  border-radius: 16px; padding: 14px 18px;
-  box-shadow: var(--sh-md); border: 1px solid var(--line);
-  display: flex; align-items: center; gap: 12px;
-  font-weight: 700; font-size: .85rem;
-  animation: tin .35s cubic-bezier(.34,1.56,.64,1);
-  pointer-events: auto;
-}
-.ti-ico { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-.ts .ti-ico { background: var(--jade-l); color: var(--jade); }
-.te .ti-ico { background: var(--rose-l); color: var(--rose); }
-@keyframes tin { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
-
-/* ─── LOADING ─── */
-#loadingOverlay {
-  position: fixed; inset: 0; z-index: 50000;
-  background: rgba(255,255,255,.9); backdrop-filter: blur(12px);
-  display: flex; align-items: center; justify-content: center; flex-direction: column;
-}
-.ld-ring {
-  width: 48px; height: 48px; border-radius: 50%;
-  border: 4px solid var(--line); border-top-color: var(--gold);
-  animation: spin .8s linear infinite; margin-bottom: 16px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.ld-txt { font-size: .85rem; font-weight: 700; color: var(--txt2); }
-
-/* ══════════════════════════════════════
-   AUTH SCREENS
-══════════════════════════════════════ */
-#authPage {
-  min-height: 100vh; display: flex; flex-direction: column;
-  position: relative; z-index: 1;
-}
-
-/* ── Auth Header ── */
-.auth-hero {
-  background: var(--navy-g);
-  padding: max(52px, env(safe-area-inset-top)) 24px 60px;
-  position: relative; overflow: hidden; flex-shrink: 0;
-}
-.auth-hero::before {
-  content: ''; position: absolute; inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-}
-.auth-hero-content { position: relative; z-index: 1; text-align: center; }
-.auth-whale {
-  width: 72px; height: 72px; border-radius: 22px;
-  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 36px; margin-bottom: 16px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.1);
-}
-.auth-brand { font-size: 1.7rem; font-weight: 900; color: #fff; letter-spacing: -.02em; margin-bottom: 4px; }
-.auth-tagline { font-size: .82rem; font-weight: 600; color: rgba(255,255,255,.55); }
-
-/* ── Auth Toggle Tabs ── */
-.auth-tab-row {
-  display: flex; background: rgba(255,255,255,.06); border-radius: 14px; padding: 4px;
-  margin: 20px 24px 0;
-}
-.auth-tab {
-  flex: 1; padding: 10px; border-radius: 11px;
-  font-size: .82rem; font-weight: 800; color: rgba(255,255,255,.5);
-  cursor: pointer; text-align: center; transition: .2s;
-}
-.auth-tab.on { background: #fff; color: var(--navy); box-shadow: var(--sh-sm); }
-
-/* ── Form Container ── */
-.auth-form-wrap {
-  flex: 1; background: var(--bg0);
-  border-radius: 28px 28px 0 0;
-  margin-top: -20px;
-  padding: 28px 20px calc(24px + env(safe-area-inset-bottom));
-  overflow-y: auto;
-}
-.auth-form { display: none; }
-.auth-form.on { display: block; }
-
-/* ── Form Fields ── */
-.field-group { margin-bottom: 16px; }
-.field-label {
-  font-size: .72rem; font-weight: 900; color: var(--txt2);
-  text-transform: uppercase; letter-spacing: 1.2px;
-  margin-bottom: 7px; display: block;
-}
-.field-in {
-  width: 100%; background: var(--bg1);
-  border: 1.5px solid var(--line); border-radius: var(--r4);
-  padding: 13px 16px; font-size: .9rem; font-weight: 700;
-  color: var(--txt0); outline: none; transition: .2s;
-  box-shadow: var(--sh-xs);
-}
-.field-in:focus { background: #fff; border-color: var(--gold); box-shadow: 0 0 0 4px var(--gold-l); }
-.field-in::placeholder { color: var(--txt4); font-weight: 600; }
-.field-in[type="password"] { letter-spacing: 4px; }
-.field-in[type="password"]::placeholder { letter-spacing: 0; }
-select.field-in { appearance: none; cursor: pointer; }
-
-/* ── Partner Type Cards ── */
-.type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-.type-card {
-  background: var(--bg1); border: 2px solid var(--line);
-  border-radius: var(--r4); padding: 16px 12px; text-align: center;
-  cursor: pointer; transition: .2s;
-}
-.type-card.on { border-color: var(--navy); background: var(--navy-l); }
-.type-card .tc-ico { font-size: 1.8rem; margin-bottom: 6px; }
-.type-card .tc-name { font-size: .78rem; font-weight: 900; color: var(--txt0); }
-.type-card .tc-sub { font-size: .62rem; font-weight: 700; color: var(--txt3); margin-top: 2px; }
-.type-card.on .tc-name { color: var(--navy); }
-
-/* ── Commission Toggle ── */
-.comm-tabs { display: flex; background: var(--bg2); border-radius: 12px; padding: 4px; margin-bottom: 12px; }
-.comm-tab {
-  flex: 1; text-align: center; padding: 9px 6px;
-  font-size: .72rem; font-weight: 800; color: var(--txt3);
-  border-radius: 9px; cursor: pointer; transition: .2s;
-}
-.comm-tab.on { background: var(--bg1); color: var(--navy); box-shadow: var(--sh-xs); }
-
-/* ── Map Picker ── */
-.map-picker-wrap { position: relative; border-radius: var(--r4); overflow: hidden; height: 180px; border: 1.5px solid var(--line); box-shadow: var(--sh-xs); }
-.map-pin-overlay {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -100%);
-  z-index: 1000; pointer-events: none;
-  width: 28px; filter: drop-shadow(0 4px 8px rgba(0,0,0,.3));
-}
-.btn-locate {
-  position: absolute; bottom: 10px; right: 10px; z-index: 1001;
-  background: var(--bg1); border: 1px solid var(--line);
-  border-radius: 10px; padding: 6px 12px;
-  font-size: .72rem; font-weight: 800; color: var(--navy);
-  cursor: pointer; box-shadow: var(--sh-sm); display: flex; align-items: center; gap: 5px;
-}
-
-/* ── Submit Button ── */
-.btn-submit {
-  width: 100%; padding: 16px; border: none; border-radius: var(--r5);
-  background: var(--navy-g); color: #fff;
-  font-size: .95rem; font-weight: 900; cursor: pointer;
-  transition: .2s; box-shadow: var(--sh-navy);
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  margin-top: 8px;
-}
-.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(14,28,53,.35); }
-.btn-submit:active { transform: scale(.97); }
-.btn-submit.gold { background: var(--gold-g); color: var(--navy-d); box-shadow: var(--sh-gold); }
-
-/* ── Auth divider ── */
-.auth-divider { display: flex; align-items: center; gap: 10px; margin: 20px 0; }
-.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
-.auth-divider span { font-size: .72rem; font-weight: 700; color: var(--txt3); }
-
-.auth-err { color: var(--rose); font-size: .78rem; font-weight: 700; text-align: center; min-height: 20px; margin-top: 10px; }
-
-/* ── Wait Room ── */
-.wait-room {
-  text-align: center; padding: 40px 20px;
-  background: var(--bg1); border-radius: var(--r6);
-  border: 1px solid var(--line); box-shadow: var(--sh-sm);
-}
-.wait-pulse { width: 64px; height: 64px; border-radius: 50%; background: var(--amber-l); border: 2px solid rgba(217,119,6,.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; animation: wp 2s ease-in-out infinite; }
-@keyframes wp { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-
-/* ══════════════════════════════════════
-   DASHBOARD
-══════════════════════════════════════ */
-#dashPage {
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  position: relative; z-index: 1;
-}
-
-/* ── Header ── */
-.dash-header {
-  background: var(--navy-g);
-  padding: max(48px, env(safe-area-inset-top)) 20px 64px;
-  position: relative; overflow: hidden; flex-shrink: 0;
-}
-.dash-header::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(240,192,64,.07) 0%, transparent 60%);
-}
-.dh-row { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; }
-.dh-name { font-size: 1.2rem; font-weight: 900; color: #fff; margin-bottom: 6px; }
-.dh-type {
-  font-size: .72rem; font-weight: 800;
-  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18);
-  color: rgba(255,255,255,.85); padding: 4px 12px; border-radius: 99px;
-  display: inline-flex; align-items: center; gap: 5px;
-}
-.dh-type.hotel { background: rgba(240,192,64,.18); border-color: rgba(240,192,64,.3); color: var(--gold-b); }
-.dh-conn { display: flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 800; color: rgba(255,255,255,.5); margin-top: 6px; }
-.dh-conn-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--jade); animation: blink 2s infinite; }
-.dh-conn-dot.off { background: var(--rose); animation: none; }
-@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
-.btn-logout {
-  width: 38px; height: 38px; border-radius: 12px;
-  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
-  color: rgba(255,255,255,.7); display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: .2s; font-size: 18px;
-}
-.btn-logout:active { background: rgba(225,29,72,.2); }
-
-/* ── KPI cards ── */
-.kpi-row {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; margin: -36px 16px 0; position: relative; z-index: 10;
-}
-.kc {
-  background: var(--bg1); border-radius: var(--r5);
-  border: 1px solid var(--line); padding: 16px 14px;
-  box-shadow: var(--sh-md);
-  display: flex; align-items: center; gap: 12px;
-}
-.kc-ic {
-  width: 44px; height: 44px; border-radius: 13px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px; flex-shrink: 0;
-}
-.kc.k-jade .kc-ic { background: var(--jade-l); }
-.kc.k-rose .kc-ic { background: var(--rose-l); }
-.kc-v { font-size: 1.5rem; font-weight: 900; color: var(--txt0); line-height: 1; }
-.kc.k-jade .kc-v { color: var(--jade); }
-.kc.k-rose .kc-v { color: var(--rose); }
-.kc-l { font-size: .67rem; font-weight: 700; color: var(--txt3); margin-top: 4px; }
-
-/* ── Content wrapper ── */
-.dash-content {
-  flex: 1; padding: 20px 16px calc(var(--nav-h) + 20px);
-  margin-top: 20px;
-}
-
-/* ── Section headers ── */
-.sec-hd {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 14px;
-}
-.sec-title { font-size: .88rem; font-weight: 900; color: var(--txt0); display: flex; align-items: center; gap: 7px; }
-.sec-title .st-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
-.sec-badge { font-size: .65rem; font-weight: 900; background: var(--rose-l); color: var(--rose); padding: 3px 9px; border-radius: 99px; }
-.sec-badge.ok { background: var(--jade-l); color: var(--jade); }
-
-/* ── Order Cards ── */
-.order-card {
-  background: var(--bg1); border-radius: var(--r5);
-  border: 1px solid var(--line); padding: 16px 16px 14px;
-  box-shadow: var(--sh-xs); margin-bottom: 10px;
-  position: relative; overflow: hidden; transition: .18s;
-}
-.order-card:hover { box-shadow: var(--sh-sm); }
-.order-card::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 4px; border-radius: 0 var(--r5) var(--r5) 0; }
-.oc-pending::before  { background: var(--amber); }
-.oc-active::before   { background: var(--sky); }
-.oc-completed::before{ background: var(--jade); }
-.oc-cancelled::before{ background: var(--txt4); }
-.oc-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-.oc-id { font-family: 'JetBrains Mono', monospace; font-size: .75rem; font-weight: 700; color: var(--gold); }
-.oc-time { font-size: .65rem; font-weight: 700; color: var(--txt3); margin-top: 2px; }
-.oc-stb { padding: 4px 10px; border-radius: 99px; font-size: .65rem; font-weight: 900; }
-.stb-amber { background: var(--amber-l); color: var(--amber); }
-.stb-sky   { background: var(--sky-l); color: var(--sky); }
-.stb-jade  { background: var(--jade-l); color: var(--jade); }
-.stb-gray  { background: var(--bg3); color: var(--txt3); }
-.oc-svc { font-size: .92rem; font-weight: 900; color: var(--txt0); margin-bottom: 5px; }
-.oc-detail { font-size: .75rem; font-weight: 700; color: var(--txt2); line-height: 1.7; margin-bottom: 10px; }
-.oc-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--line); }
-.oc-price { font-size: .95rem; font-weight: 900; color: var(--jade); }
-.oc-action-row { display: flex; gap: 7px; }
-.oc-btn {
-  padding: 7px 14px; border-radius: 10px; border: none;
-  font-size: .72rem; font-weight: 900; cursor: pointer; transition: .15s;
-  display: flex; align-items: center; gap: 5px;
-}
-.oc-btn:active { transform: scale(.93); }
-.oc-btn.jade { background: var(--jade-l); color: var(--jade); }
-.oc-btn.navy { background: var(--navy-l); color: var(--navy); }
-.oc-btn.rose { background: var(--rose-l); color: var(--rose); }
-.empty-card { background: var(--bg1); border-radius: var(--r5); border: 1px dashed var(--line); padding: 40px 20px; text-align: center; color: var(--txt3); font-size: .85rem; font-weight: 700; }
-
-/* ── Inventory cards ── */
-.inv-card {
-  background: var(--bg1); border-radius: var(--r5);
-  border: 1px solid var(--line); overflow: hidden; box-shadow: var(--sh-xs);
-  margin-bottom: 14px;
-}
-.inv-img-wrap { width: 100%; height: 150px; position: relative; background: var(--bg2); }
-.inv-img { width: 100%; height: 150px; object-fit: cover; display: block; }
-.inv-no-img { height: 150px; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--txt4); }
-.inv-body { padding: 14px 16px; }
-.inv-name { font-size: .95rem; font-weight: 900; color: var(--txt0); margin-bottom: 4px; }
-.inv-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-.inv-tag { font-size: .68rem; font-weight: 800; background: var(--bg2); color: var(--txt2); padding: 3px 9px; border-radius: 7px; }
-.inv-price { font-size: 1.1rem; font-weight: 900; color: var(--jade); }
-
-/* ── ADD Form ── */
-.add-form {
-  background: var(--bg1); border-radius: var(--r6);
-  border: 1px solid var(--line); padding: 20px 16px;
-  box-shadow: var(--sh-sm); margin-bottom: 14px;
-}
-.add-form-title { font-size: .9rem; font-weight: 900; color: var(--txt0); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-
-/* ── Upload Zone ── */
-.upload-zone {
-  border: 2px dashed var(--line); border-radius: var(--r4);
-  background: var(--bg2); height: 140px;
-  display: flex; align-items: center; justify-content: center;
-  flex-direction: column; gap: 8px; cursor: pointer;
-  transition: .2s; margin-bottom: 14px; position: relative;
-  overflow: hidden;
-}
-.upload-zone:hover { border-color: var(--gold); background: var(--gold-l); }
-.upload-zone.has-img { border-style: solid; }
-.uz-preview { position: absolute; inset: 0; object-fit: cover; width: 100%; height: 100%; }
-.uz-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: .2s; }
-.upload-zone:hover .uz-overlay { opacity: 1; }
-.uz-change { color: #fff; font-size: .78rem; font-weight: 900; }
-.uz-icon { font-size: 2rem; color: var(--txt4); }
-.uz-label { font-size: .78rem; font-weight: 700; color: var(--txt3); }
-
-/* ── Ledger / Stats ── */
-.ledger-card {
-  background: var(--bg1); border-radius: var(--r5);
-  border: 1px solid var(--line); padding: 18px 16px;
-  box-shadow: var(--sh-xs); margin-bottom: 10px;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.lc-left .lc-id { font-family: 'JetBrains Mono', monospace; font-size: .72rem; font-weight: 700; color: var(--gold); }
-.lc-left .lc-name { font-size: .85rem; font-weight: 900; color: var(--txt0); margin-top: 2px; }
-.lc-left .lc-date { font-size: .65rem; font-weight: 700; color: var(--txt3); margin-top: 2px; }
-.lc-right .lc-amount { font-size: 1rem; font-weight: 900; color: var(--jade); text-align: left; }
-.lc-right .lc-comm { font-size: .65rem; font-weight: 700; color: var(--rose); margin-top: 2px; text-align: left; }
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-.sg-card { background: var(--bg1); border-radius: var(--r4); border: 1px solid var(--line); padding: 14px 10px; text-align: center; box-shadow: var(--sh-xs); }
-.sg-v { font-size: 1.3rem; font-weight: 900; line-height: 1; color: var(--txt0); }
-.sg-v.g { color: var(--jade); }
-.sg-v.r { color: var(--rose); }
-.sg-v.y { color: var(--amber); }
-.sg-l { font-size: .62rem; font-weight: 700; color: var(--txt3); margin-top: 5px; }
-
-/* ─── BOTTOM NAV ─── */
-.bnav {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  height: var(--nav-h); background: rgba(255,255,255,.97);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid var(--line);
-  border-radius: 22px 22px 0 0;
-  display: flex; justify-content: space-around; align-items: center;
-  z-index: 9000; padding-bottom: env(safe-area-inset-bottom);
-  box-shadow: 0 -4px 20px rgba(14,28,53,.05);
-}
-.bni { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 8px 18px; }
-.bni-ic { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--txt3); transition: .18s; }
-.bni-lb { font-size: .6rem; font-weight: 700; color: var(--txt3); transition: .18s; }
-.bni.on .bni-ic { background: var(--navy-l); color: var(--navy); transform: translateY(-2px); }
-.bni.on .bni-lb { color: var(--navy); font-weight: 900; }
-.bni-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rose); position: absolute; top: 0; right: 0; display: none; }
-.bni-dot.on { display: block; }
-
-/* ══════════════════════════════════════
-   NEW ORDER ALERT OVERLAY
-══════════════════════════════════════ */
-#alertOverlay {
-  position: fixed; inset: 0; z-index: 40000;
-  background: var(--navy-d);
-  display: flex; flex-direction: column; justify-content: space-between;
-  padding: max(52px, env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));
-  text-align: center; overflow-y: auto;
-}
-.ao-top { }
-.ao-pulse {
-  width: 88px; height: 88px; border-radius: 50%;
-  background: rgba(240,192,64,.15); border: 2px solid rgba(240,192,64,.3);
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 20px; font-size: 38px;
-  animation: aopulse 1.8s ease-in-out infinite;
-}
-@keyframes aopulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(240,192,64,.3); }
-  50% { box-shadow: 0 0 0 20px rgba(240,192,64,0); }
-}
-.ao-title { font-size: 1.7rem; font-weight: 900; color: #fff; margin-bottom: 4px; }
-.ao-sub { font-size: .85rem; font-weight: 700; color: rgba(255,255,255,.5); }
-.ao-card {
-  background: var(--bg1); border-radius: 22px; padding: 24px 20px;
-  margin: 24px 0; text-align: right;
-  box-shadow: 0 20px 60px rgba(0,0,0,.3);
-}
-.ao-card-title { font-size: .78rem; font-weight: 900; color: var(--txt2); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
-.ao-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
-.ao-row:last-child { border-bottom: none; }
-.ao-lbl { font-size: .75rem; font-weight: 700; color: var(--txt3); }
-.ao-val { font-size: .85rem; font-weight: 900; color: var(--txt0); }
-.ao-price { font-size: 1.3rem; font-weight: 900; color: var(--jade); }
-.ao-actions { flex-shrink: 0; }
-.btn-accept {
-  width: 100%; padding: 18px; border: none; border-radius: 18px;
-  background: var(--jade); color: #fff;
-  font-size: 1.05rem; font-weight: 900; cursor: pointer;
-  box-shadow: 0 10px 30px rgba(5,150,105,.4);
-  margin-bottom: 12px; transition: .2s;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-}
-.btn-accept:active { transform: scale(.97); }
-.btn-mute {
-  width: 100%; padding: 13px; border-radius: 14px;
-  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
-  color: rgba(255,255,255,.6); font-size: .85rem; font-weight: 800;
-  cursor: pointer; margin-bottom: 10px; transition: .2s;
-}
-.btn-reject { background: transparent; border: none; color: rgba(255,255,255,.35); font-size: .82rem; font-weight: 700; cursor: pointer; width: 100%; padding: 8px; }
-
-/* ── Misc ── */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.loading-btn { color: transparent !important; pointer-events: none; position: relative; }
-.loading-btn::after { content: ''; position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px; border: 2.5px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
-</style>
+        /* --- ADD ITEM SECTION --- */
+        .upload-box { border: 2px dashed var(--accent); border-radius: 16px; padding: 30px 20px; text-align: center; cursor: pointer; color: var(--primary); background: rgba(212,175,55,0.05); margin-bottom: 15px; transition: 0.3s; }
+        .upload-box:active { background: rgba(212,175,55,0.1); }
+        
+        /* --- BOTTOM NAV --- */
+        .bnav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); border-radius: 24px 24px 0 0; justify-content: space-around; align-items: center; z-index: 9000; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -5px 25px rgba(0,0,0,0.05); }
+        .bni { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 33%; cursor: pointer; color: var(--text-muted); }
+        .bni.on { color: var(--primary); font-weight: 900; }
+        .bni.on i { color: var(--accent); }
+    </style>
 </head>
 <body>
-<!-- Sounds -->
-<audio id="sndAlert" loop src="https://actions.google.com/sounds/v1/alarms/submarine_dive_horn.ogg" preload="auto"></audio>
-<audio id="sndSuccess" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg" preload="auto"></audio>
-<audio id="sndWelcome" src="https://actions.google.com/sounds/v1/water/water_drop.ogg" preload="auto"></audio>
 
-<!-- TOASTS -->
-<div id="toasts"></div>
+<audio id="alertSound" loop src="https://actions.google.com/sounds/v1/alarms/submarine_dive_horn.ogg"></audio>
+<audio id="successSound" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg"></audio>
 
-<!-- LOADING -->
-<div id="loadingOverlay" class="dn">
-  <div class="ld-ring"></div>
-  <div class="ld-txt" id="ldTxt">جاري الاتصال...</div>
+<div id="loadingOverlay" class="hidden-section">
+    <div class="spinner-grow mb-3" style="width: 3rem; height: 3rem; color: var(--accent);"></div>
+    <h5 class="fw-bold" id="loadText">جاري الاتصال بالنظام...</h5>
 </div>
 
-<!-- ══════════════════════════════════════
-     AUTH PAGE
-══════════════════════════════════════ -->
-<div id="authPage">
-  <!-- Hero Header -->
-  <div class="auth-hero">
-    <div class="auth-hero-content">
-      <div class="auth-whale">🐋</div>
-      <div class="auth-brand">بوابة الشركاء</div>
-      <div class="auth-tagline">منصة الحوت السحابية · V9.2</div>
+<div id="orderAlertOverlay" class="hidden-section">
+    <div>
+        <div class="alert-pulse"><i data-lucide="bell-ringing" size="48"></i></div>
+        <h1 class="fw-black mb-2">طلب جديد!</h1>
+        <p class="fw-bold text-white opacity-75 fs-5">لديك طلب حجز جديد بانتظار الموافقة</p>
     </div>
-    <div class="auth-tab-row">
-      <div class="auth-tab on" id="atab-login" onclick="switchAuthTab('login')">تسجيل الدخول</div>
-      <div class="auth-tab" id="atab-register" onclick="switchAuthTab('register')">انضم كشريك</div>
+    
+    <div style="background: white; color: var(--text-main); border-radius: 20px; padding: 25px; margin: 20px 0; text-align: right;">
+        <h5 class="fw-black text-primary mb-3" id="alertServiceType">🚗 تأجير سيارة</h5>
+        <div class="d-flex justify-content-between mb-2"><span class="text-muted">العميل:</span><strong id="alertCustName">---</strong></div>
+        <div class="d-flex justify-content-between mb-2"><span class="text-muted">المدينة:</span><strong id="alertCity">---</strong></div>
+        <div class="d-flex justify-content-between mb-2"><span class="text-muted">التاريخ:</span><strong id="alertDate">---</strong></div>
+        <hr>
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="text-muted">الإجمالي:</span><h3 class="fw-black text-success m-0" id="alertPrice">0 د.ع</h3>
+        </div>
     </div>
-  </div>
-
-  <!-- Forms -->
-  <div class="auth-form-wrap">
-
-    <!-- LOGIN FORM -->
-    <div id="form-login" class="auth-form on">
-      <div class="field-group">
-        <label class="field-label">اسم المنشأة أو رقم الهاتف</label>
-        <input type="text" id="loginName" class="field-in" placeholder="أدخل اسم مكتبك أو فندقك" autocomplete="off">
-      </div>
-      <div class="field-group">
-        <label class="field-label">كلمة المرور</label>
-        <input type="password" id="loginPass" class="field-in" placeholder="••••••••" autocomplete="off"
-          onkeypress="if(event.key==='Enter')doLogin()">
-      </div>
-      <div class="auth-err" id="loginErr"></div>
-      <button class="btn-submit" id="loginBtn" onclick="doLogin()">
-        دخول المنصة <span>→</span>
-      </button>
+    
+    <div>
+        <button class="btn-accept" onclick="acceptIncomingOrder()">قبول الطلب فوراً <i data-lucide="check-circle" class="ms-2"></i></button>
+        <button class="btn btn-link text-white w-100 fw-bold text-decoration-none fs-5" onclick="rejectIncomingOrder()">تجاهل الطلب</button>
     </div>
-
-    <!-- REGISTER FORM -->
-    <div id="form-register" class="auth-form">
-      <!-- Partner type -->
-      <div class="field-group">
-        <label class="field-label">نوع الشراكة</label>
-        <div class="type-grid">
-          <div class="type-card on" id="tc-car" onclick="selectType('car',this)">
-            <div class="tc-ico">🚗</div>
-            <div class="tc-name">مكتب سيارات</div>
-            <div class="tc-sub">شركات وأفراد</div>
-          </div>
-          <div class="type-card" id="tc-hotel" onclick="selectType('hotel',this)">
-            <div class="tc-ico">🏨</div>
-            <div class="tc-name">فندق / شقق</div>
-            <div class="tc-sub">جميع الفئات</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <label class="field-label">الاسم التجاري</label>
-        <input type="text" id="regName" class="field-in" placeholder="اسم مكتبك أو فندقك الرسمي" autocomplete="off">
-      </div>
-      <div class="grid-2" style="gap:10px;margin-bottom:16px">
-        <div class="field-group" style="margin-bottom:0">
-          <label class="field-label">رقم الهاتف</label>
-          <input type="tel" id="regPhone" class="field-in" placeholder="07XXXXXXXXX" dir="ltr" style="text-align:right">
-        </div>
-        <div class="field-group" style="margin-bottom:0">
-          <label class="field-label">المدينة</label>
-          <select id="regCity" class="field-in">
-            <option value="كركوك">كركوك</option>
-            <option value="بغداد">بغداد</option>
-            <option value="أربيل">أربيل</option>
-            <option value="السليمانية">السليمانية</option>
-            <option value="الموصل">الموصل</option>
-            <option value="النجف">النجف</option>
-            <option value="كربلاء">كربلاء</option>
-          </select>
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">كلمة المرور</label>
-        <input type="password" id="regPass" class="field-in" placeholder="أنشئ كلمة مرور قوية">
-      </div>
-
-      <!-- Map Picker -->
-      <div class="field-group">
-        <label class="field-label">📍 الموقع الدقيق</label>
-        <div class="map-picker-wrap">
-          <div id="pickerMap" style="width:100%;height:180px;"></div>
-          <img class="map-pin-overlay" src="https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png" alt="📍">
-          <button type="button" class="btn-locate" onclick="locateMe()">📡 موقعي</button>
-        </div>
-      </div>
-
-      <!-- Commission System -->
-      <div class="field-group">
-        <label class="field-label">نظام العمولة</label>
-        <div class="comm-tabs">
-          <div class="comm-tab on" id="ct-fixed" onclick="setCommType('fixed',this)">💰 ثابت</div>
-          <div class="comm-tab" id="ct-split" onclick="setCommType('split',this)">📊 مناصفة</div>
-          <div class="comm-tab" id="ct-monthly" onclick="setCommType('monthly',this)">📅 شهري</div>
-        </div>
-        <div id="cf-fixed">
-          <input type="number" id="cv-fixed" class="field-in" placeholder="مبلغ العمولة للطلب (د.ع)" oninput="buildComm()">
-        </div>
-        <div id="cf-split" class="dn grid-2" style="gap:8px">
-          <input type="number" id="cv-plat" class="field-in" placeholder="حصة المنصة" oninput="buildComm()">
-          <input type="number" id="cv-part" class="field-in" placeholder="حصة الشريك" oninput="buildComm()">
-        </div>
-        <div id="cf-monthly" class="dn">
-          <input type="number" id="cv-monthly" class="field-in" placeholder="المبلغ الشهري (د.ع)" oninput="buildComm()">
-        </div>
-        <input type="hidden" id="commFinal">
-      </div>
-
-      <!-- Hotel extras -->
-      <div id="hotel-extras" class="dn">
-        <div class="field-group">
-          <label class="field-label">أسعار الغرف (د.ع)</label>
-          <div class="grid-2" style="gap:8px;margin-bottom:8px">
-            <input type="number" id="pSingle" class="field-in" placeholder="غرفة مفردة">
-            <input type="number" id="pDouble" class="field-in" placeholder="غرفة مزدوجة">
-          </div>
-          <input type="number" id="pSuite" class="field-in" placeholder="جناح فاخر">
-        </div>
-        <div class="field-group">
-          <label class="field-label">المميزات</label>
-          <input type="text" id="hFeatures" class="field-in" placeholder="واي فاي، مواقف، مسبح...">
-        </div>
-      </div>
-
-      <div class="auth-err" id="regErr"></div>
-      <button class="btn-submit" id="regBtn" onclick="doRegister()">
-        إرسال طلب الانضمام 📨
-      </button>
-    </div>
-
-    <!-- WAIT ROOM -->
-    <div id="form-wait" class="auth-form">
-      <div class="wait-room">
-        <div class="wait-pulse">⏳</div>
-        <div style="font-size:1rem;font-weight:900;color:var(--txt0);margin-bottom:8px">طلبك قيد المراجعة</div>
-        <div style="font-size:.82rem;font-weight:700;color:var(--txt2);margin-bottom:20px">ستُفعّل حسابك فور موافقة فريق الحوت<br>وستتم إعادة توجيهك تلقائياً</div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:8px;font-size:.75rem;font-weight:700;color:var(--jade)">
-          <div style="width:6px;height:6px;border-radius:50%;background:var(--jade);animation:blink 1.5s infinite"></div>
-          جاري الفحص التلقائي...
-        </div>
-      </div>
-    </div>
-
-  </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     DASHBOARD PAGE
-══════════════════════════════════════ -->
-<div id="dashPage" class="dn">
-
-  <!-- New Order Alert Overlay -->
-  <div id="alertOverlay" class="dn">
-    <div class="ao-top">
-      <div class="ao-pulse">🔔</div>
-      <div class="ao-title" id="ao-title">طلب جديد!</div>
-      <div class="ao-sub" id="ao-sub">تأجير سيارة</div>
-    </div>
-    <div class="ao-card">
-      <div class="ao-card-title">📋 تفاصيل الطلب</div>
-      <div class="ao-row"><span class="ao-lbl">العميل</span><span class="ao-val" id="ao-name">—</span></div>
-      <div class="ao-row"><span class="ao-lbl">الخدمة</span><span class="ao-val" id="ao-svc">—</span></div>
-      <div class="ao-row"><span class="ao-lbl">المدينة</span><span class="ao-val" id="ao-city">—</span></div>
-      <div class="ao-row"><span class="ao-lbl">التاريخ</span><span class="ao-val" id="ao-date">—</span></div>
-      <div class="ao-row"><span class="ao-lbl">الأيام</span><span class="ao-val" id="ao-days">—</span></div>
-      <div class="ao-row" style="border-bottom:none;padding-top:14px">
-        <span class="ao-lbl">الإجمالي</span><span class="ao-price" id="ao-price">0 د.ع</span>
-      </div>
-    </div>
-    <div class="ao-actions">
-      <button class="btn-mute" onclick="muteAlert()">🔕 إسكات الصوت</button>
-      <button class="btn-accept" id="btnAccept" onclick="acceptOrder()">
-        ✅ قبول الطلب فوراً
-      </button>
-      <button class="btn-reject" onclick="rejectOrder()">تجاهل هذا الطلب</button>
-    </div>
-  </div>
-
-  <!-- Header -->
-  <div class="dash-header">
-    <div class="dh-row">
-      <div>
-        <div class="dh-name" id="dh-name">—</div>
-        <div class="dh-type" id="dh-type">🚗 مكتب سيارات</div>
-        <div class="dh-conn"><div class="dh-conn-dot" id="dh-dot"></div><span id="dh-conn-txt">جاري الاتصال...</span></div>
-      </div>
-      <button class="btn-logout" onclick="doLogout()" title="خروج">🚪</button>
-    </div>
-  </div>
-
-  <!-- KPI Cards -->
-  <div class="kpi-row">
-    <div class="kc k-jade">
-      <div class="kc-ic">✅</div>
-      <div><div class="kc-v" id="kc-orders">0</div><div class="kc-l">عمليات مكتملة</div></div>
-    </div>
-    <div class="kc k-rose">
-      <div class="kc-ic">💸</div>
-      <div><div class="kc-v" id="kc-debt">0</div><div class="kc-l">ديون للمنصة (د.ع)</div></div>
-    </div>
-  </div>
-
-  <!-- Content -->
-  <div class="dash-content">
-
-    <!-- TAB: RADAR -->
-    <div id="tab-radar">
-      <div class="sec-hd">
-        <div class="sec-title"><div class="st-dot"></div>الطلبات الواردة</div>
-        <div class="sec-badge" id="radar-badge" style="display:none">0 جديد</div>
-      </div>
-      <div id="ordersContainer">
-        <div class="empty-card">📡 الرادار يعمل — لا طلبات حالياً</div>
-      </div>
+<div id="loginSection" class="login-wrapper">
+    <div class="text-center mb-4 w-100">
+        <div class="d-inline-flex p-3 bg-white rounded-circle shadow mb-3"><i data-lucide="store" size="40" color="var(--primary)"></i></div>
+        <h2 class="fw-black text-white m-0">بوابة الشركاء</h2>
+        <p class="text-white opacity-75 fw-bold mt-1">بالتعاون مع منصة الحوت</p>
     </div>
 
-    <!-- TAB: INVENTORY -->
-    <div id="tab-inventory" class="dn">
-      <!-- Add form -->
-      <div class="add-form" id="addCarForm">
-        <div class="add-form-title">🚗 إضافة سيارة للأسطول</div>
-        <label class="upload-zone" id="uz-car" for="imgCar">
-          <input type="file" id="imgCar" accept="image/*" class="dn" onchange="previewImg('car',this)">
-          <img class="uz-preview" id="uz-car-img" style="display:none">
-          <div class="uz-overlay"><div class="uz-change">تغيير الصورة</div></div>
-          <div class="uz-icon" id="uz-car-icon">📷</div>
-          <div class="uz-label" id="uz-car-label">ارفع صورة السيارة</div>
-        </label>
-
-        <div class="field-group">
-          <label class="field-label">اسم السيارة والموديل</label>
-          <input type="text" id="carName" class="field-in" placeholder="مثال: تويوتا كورولا 2024">
+    <div class="login-card" id="authBox">
+        <div id="loginForm">
+            <h5 class="fw-black text-center mb-4">تسجيل الدخول</h5>
+            <input type="text" id="loginName" class="custom-input text-center" placeholder="اسم المنشأة أو رقم الهاتف">
+            <input type="password" id="loginPass" class="custom-input text-center" placeholder="كلمة المرور">
+            <button class="btn-action mt-2" onclick="doLogin()">دخول المنصة <i data-lucide="log-in"></i></button>
+            <div class="text-center mt-4">
+                <a href="#" onclick="toggleAuthMode()" class="text-decoration-none fw-bold text-muted">ليس لديك حساب؟ <span style="color:var(--primary)">سجل كشريك الآن</span></a>
+            </div>
         </div>
-        <div class="grid-2" style="gap:8px;margin-bottom:14px">
-          <div>
-            <label class="field-label">السعر اليومي (د.ع)</label>
-            <input type="number" id="carPrice" class="field-in" placeholder="55000">
-          </div>
-          <div>
-            <label class="field-label">الفئة</label>
-            <select id="carCat" class="field-in">
-              <option value="economy">اقتصادية</option>
-              <option value="family">عائلية</option>
-              <option value="luxury">فخمة VIP</option>
-              <option value="wedding">زفاف</option>
+
+        <div id="registerForm" class="hidden-section">
+            <h5 class="fw-black text-center mb-4">تسجيل شريك جديد</h5>
+            <select id="regType" class="custom-input mb-3" onchange="updateRegUI()">
+                <option value="CarOffice">🏢 مكتب تأجير سيارات</option>
+                <option value="Individual">🚗 فرد (أؤجر سيارتي الخاصة)</option>
+                <option value="Hotel">🏨 فندق / شقق فندقية</option>
             </select>
-          </div>
-          <div>
-            <label class="field-label">اللون</label>
-            <input type="text" id="carColor" class="field-in" placeholder="أبيض">
-          </div>
-          <div>
-            <label class="field-label">رقم اللوحة</label>
-            <input type="text" id="carPlate" class="field-in" placeholder="بغداد 12345">
-          </div>
+            <input type="text" id="regName" class="custom-input" placeholder="الاسم التجاري / اسمك">
+            <input type="tel" id="regPhone" class="custom-input" placeholder="رقم الهاتف (للتواصل)">
+            <select id="regCity" class="custom-input mb-3">
+                <option value="بغداد">بغداد</option><option value="أربيل">أربيل</option><option value="كركوك">كركوك</option>
+            </select>
+            <input type="password" id="regPass" class="custom-input" placeholder="إنشاء كلمة مرور">
+            
+            <button class="btn-action mt-2" onclick="doRegister()">إرسال طلب الانضمام <i data-lucide="send"></i></button>
+            <div class="text-center mt-3">
+                <a href="#" onclick="toggleAuthMode()" class="text-decoration-none fw-bold text-muted">لدي حساب بالفعل</a>
+            </div>
         </div>
-        <button class="btn-submit gold" onclick="saveCar()">نشر السيارة في المنصة ⬆</button>
-      </div>
-
-      <!-- Add hotel photo form -->
-      <div class="add-form dn" id="addHotelForm">
-        <div class="add-form-title">🏨 تحديث صورة الفندق</div>
-        <label class="upload-zone" id="uz-hotel" for="imgHotel">
-          <input type="file" id="imgHotel" accept="image/*" class="dn" onchange="previewImg('hotel',this)">
-          <img class="uz-preview" id="uz-hotel-img" style="display:none">
-          <div class="uz-overlay"><div class="uz-change">تغيير الصورة</div></div>
-          <div class="uz-icon">🏨</div>
-          <div class="uz-label">ارفع صورة الفندق الرئيسية</div>
-        </label>
-        <button class="btn-submit gold" onclick="saveHotelPhoto()">تحديث واجهة الفندق ⬆</button>
-      </div>
-
-      <!-- Existing fleet list -->
-      <div>
-        <div class="sec-hd" style="margin-top:20px">
-          <div class="sec-title"><div class="st-dot"></div>الأسطول المسجل</div>
-        </div>
-        <div id="fleetList">
-          <div class="empty-card">لا توجد أصول مسجلة بعد</div>
-        </div>
-      </div>
     </div>
-
-    <!-- TAB: LEDGER -->
-    <div id="tab-ledger" class="dn">
-      <div class="stats-grid">
-        <div class="sg-card"><div class="sg-v g" id="lg-comp">0</div><div class="sg-l">مكتملة</div></div>
-        <div class="sg-card"><div class="sg-v r" id="lg-debt">0</div><div class="sg-l">ديون (د.ع)</div></div>
-        <div class="sg-card"><div class="sg-v y" id="lg-rev">0</div><div class="sg-l">إيرادات</div></div>
-      </div>
-      <div class="sec-hd">
-        <div class="sec-title"><div class="st-dot"></div>سجل العمليات</div>
-      </div>
-      <div id="ledgerList">
-        <div class="empty-card">لا توجد سجلات بعد</div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Bottom Nav -->
-  <nav class="bnav">
-    <div class="bni on" onclick="setTab('radar',this)" id="bn-radar">
-      <div class="bni-ic">📡</div>
-      <span class="bni-lb">الرادار</span>
-    </div>
-    <div class="bni" onclick="setTab('inventory',this)" id="bn-inventory">
-      <div class="bni-ic">🚗</div>
-      <span class="bni-lb">الأصول</span>
-    </div>
-    <div class="bni" onclick="setTab('ledger',this)" id="bn-ledger">
-      <div class="bni-ic">📊</div>
-      <span class="bni-lb">الحسابات</span>
-    </div>
-  </nav>
 </div>
 
-<!-- ════════════════════════════════════
-     FIREBASE + LOGIC
-════════════════════════════════════ -->
-<script>
-/* ══════════════════
-   CONFIG
-══════════════════ */
-const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
-const API_TOKEN = "HUT_CLOUD_2026";
-
-/* ══════════════════
-   FIREBASE
-══════════════════ */
-try {
-  firebase.initializeApp({
-    apiKey: "AIzaSyAo1rmqUzieYZU3RIwXOAN87GkpNrp-_Hc",
-    authDomain: "alhut-for-rent.firebaseapp.com",
-    databaseURL: "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "alhut-for-rent",
-    storageBucket: "alhut-for-rent.firebasestorage.app",
-    messagingSenderId: "941542380637",
-    appId: "1:941542380637:web:9623fa6e627817ffeba9b4"
-  });
-} catch(e) {}
-
-const db      = firebase.database();
-const storage = firebase.storage();
-
-/* ══════════════════
-   STATE
-══════════════════ */
-let pData = null;
-let partnerType = "car";
-let commType = "fixed";
-let pickerMap = null;
-let regLat = 35.468, regLng = 44.392;
-let b64Car = null, b64Hotel = null;
-let ringingOrder = null;
-let alertSoundMuted = false;
-let waitInterval = null;
-let ordersSnapshot = {};
-
-/* ══════════════════
-   UTILS
-══════════════════ */
-function fmt(n) { return Math.round(Number(n)||0).toLocaleString("ar-EG"); }
-function cleanNum(v) { const n=Number(String(v||"").replace(/[^\d.-]/g,"")); return isNaN(n)?0:n; }
-
-function toast(msg, type="s") {
-  const c = document.getElementById("toasts");
-  const el = document.createElement("div");
-  el.className = `ti t${type}`;
-  el.innerHTML = `<div class="ti-ico">${type==="s"?"✅":"❌"}</div><span style="flex:1;color:var(--txt1);font-weight:700">${msg}</span>`;
-  c.appendChild(el);
-  setTimeout(()=>{el.style.opacity="0";el.style.transition=".3s";setTimeout(()=>el.remove(),300);},3500);
-}
-
-function showLoad(on, txt="جاري المعالجة...") {
-  document.getElementById("ldTxt").textContent = txt;
-  document.getElementById("loadingOverlay").classList.toggle("dn", !on);
-}
-
-function setLoadingBtn(btn, on) {
-  if (!btn) return;
-  if (on) btn.classList.add("loading-btn");
-  else btn.classList.remove("loading-btn");
-  btn.disabled = on;
-}
-
-function unlockAudio() {
-  ["sndAlert","sndSuccess","sndWelcome"].forEach(id => {
-    const a = document.getElementById(id);
-    if (a) { a.volume = 0; const p = a.play(); if (p) p.then(()=>{a.pause();a.currentTime=0;a.volume=1;}).catch(()=>{}); }
-  });
-  document.removeEventListener("touchstart", unlockAudio);
-  document.removeEventListener("click", unlockAudio);
-}
-document.addEventListener("touchstart", unlockAudio);
-document.addEventListener("click", unlockAudio);
-
-/* ══════════════════
-   AUTH UI
-══════════════════ */
-function switchAuthTab(tab) {
-  ["login","register","wait"].forEach(t => document.getElementById("form-"+t).classList.remove("on"));
-  document.getElementById("form-"+tab).classList.add("on");
-  ["login","register"].forEach(t => document.getElementById("atab-"+t)?.classList.remove("on"));
-  const at = document.getElementById("atab-"+tab);
-  if (at) at.classList.add("on");
-  if (tab === "register") initPickerMap();
-}
-
-function selectType(type, card) {
-  partnerType = type;
-  document.querySelectorAll(".type-card").forEach(c => c.classList.remove("on"));
-  card.classList.add("on");
-  document.getElementById("hotel-extras").classList.toggle("dn", type !== "hotel");
-}
-
-function setCommType(type, btn) {
-  commType = type;
-  document.querySelectorAll(".comm-tab").forEach(b => b.classList.remove("on"));
-  btn.classList.add("on");
-  ["fixed","split","monthly"].forEach(t => document.getElementById("cf-"+t).classList.add("dn"));
-  document.getElementById("cf-"+type).classList.remove("dn");
-  buildComm();
-}
-
-function buildComm() {
-  let v = "";
-  if (commType === "fixed")   v = (document.getElementById("cv-fixed")?.value||"").trim();
-  if (commType === "split") {
-    const p = (document.getElementById("cv-plat")?.value||"").trim();
-    const r = (document.getElementById("cv-part")?.value||"").trim();
-    if (p&&r) v = `${p}/${r}`;
-  }
-  if (commType === "monthly") {
-    const m = (document.getElementById("cv-monthly")?.value||"").trim();
-    if (m) v = `شهري ${m}`;
-  }
-  document.getElementById("commFinal").value = v;
-}
-
-/* ══════════════════
-   MAP
-══════════════════ */
-function initPickerMap() {
-  if (!document.getElementById("pickerMap")) return;
-  if (pickerMap) { setTimeout(()=>pickerMap.invalidateSize(),300); return; }
-  pickerMap = L.map("pickerMap", { zoomControl: false }).setView([regLat, regLng], 13);
-  L.control.zoom({ position: "bottomleft" }).addTo(pickerMap);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",{ maxZoom:19 }).addTo(pickerMap);
-  pickerMap.on("move", () => { const c = pickerMap.getCenter(); regLat = c.lat; regLng = c.lng; });
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(p => { regLat = p.coords.latitude; regLng = p.coords.longitude; pickerMap.setView([regLat,regLng],15); }, ()=>{}, { enableHighAccuracy: true, timeout: 6000 });
-  }
-}
-
-function locateMe() {
-  if (!navigator.geolocation) return toast("الجهاز لا يدعم GPS", "e");
-  showLoad(true, "جاري تحديد الموقع...");
-  navigator.geolocation.getCurrentPosition(p => {
-    showLoad(false); regLat = p.coords.latitude; regLng = p.coords.longitude;
-    if (pickerMap) pickerMap.flyTo([regLat,regLng],16);
-  }, () => { showLoad(false); toast("يرجى تشغيل GPS", "e"); }, { enableHighAccuracy: true });
-}
-
-/* ══════════════════
-   LOGIN
-══════════════════ */
-async function doLogin() {
-  const name = document.getElementById("loginName").value.trim();
-  const pass = document.getElementById("loginPass").value.trim();
-  if (!name || !pass) { document.getElementById("loginErr").textContent = "أدخل الاسم وكلمة المرور"; return; }
-  document.getElementById("loginErr").textContent = "";
-  const btn = document.getElementById("loginBtn");
-  setLoadingBtn(btn, true);
-  showLoad(true, "جاري التحقق من الحساب...");
-
-  try {
-    // Try car office first
-    let res = await fetch(`${API_URL}?action=checkCarOffice&name=${encodeURIComponent(name)}&pass=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
-    let data = await res.json();
-    let type = "car";
-
-    if (data.status === "not_found" || data.status === "wrong_password") {
-      // Try hotel
-      res = await fetch(`${API_URL}?action=checkHotel&name=${encodeURIComponent(name)}&pass=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
-      data = await res.json();
-      type = "hotel";
-    }
-
-    showLoad(false);
-
-    if (data.status === "wrong_password") { document.getElementById("loginErr").textContent = "❌ كلمة المرور خاطئة"; return; }
-    if (data.status === "not_found")      { document.getElementById("loginErr").textContent = "❌ الحساب غير موجود في النظام"; return; }
-    if (data.status === "blocked")        { document.getElementById("loginErr").textContent = "⛔ هذا الحساب موقوف من الإدارة"; return; }
-    if (data.status === "rate_limited")   { document.getElementById("loginErr").textContent = "🔒 محظور مؤقتاً — حاول بعد 15 دقيقة"; return; }
-
-    if (data.status === "pending") {
-      pData = { name: data.name||name, type, id: data.id||name, city: data.city||"", pass };
-      localStorage.setItem("hut_p_sess", JSON.stringify(pData));
-      switchAuthTab("wait");
-      startWaitPolling();
-      return;
-    }
-
-    if (data.status === "active" || data.status === "inactive") {
-      pData = { name: data.name||name, type, id: data.id||name, city: data.city||"", pass, comm_type: data.comm_type, comm_val: data.comm_val, debt: data.debt||0, total_orders: type==="car"?data.total_orders:data.total_bookings };
-      localStorage.setItem("hut_p_sess", JSON.stringify(pData));
-      startDashboard();
-    }
-  } catch(e) {
-    showLoad(false);
-    document.getElementById("loginErr").textContent = "فشل الاتصال — تحقق من الشبكة";
-  } finally { setLoadingBtn(btn, false); }
-}
-
-/* ══════════════════
-   REGISTER
-══════════════════ */
-async function doRegister() {
-  const name    = document.getElementById("regName").value.trim();
-  const phone   = document.getElementById("regPhone").value.trim();
-  const city    = document.getElementById("regCity").value;
-  const pass    = document.getElementById("regPass").value.trim();
-  const comm    = document.getElementById("commFinal").value.trim();
-
-  if (!name || !phone || !pass) { document.getElementById("regErr").textContent = "أكمل الحقول الأساسية"; return; }
-  if (!comm) { document.getElementById("regErr").textContent = "حدد نظام العمولة المناسب"; return; }
-  if (Math.abs(regLat-35.468)<0.01 && Math.abs(regLng-44.392)<0.01) {
-    document.getElementById("regErr").textContent = "حرّك الدبوس على الخريطة لتحديد موقعك الدقيق";
-    return;
-  }
-
-  document.getElementById("regErr").textContent = "";
-  const btn = document.getElementById("regBtn");
-  setLoadingBtn(btn, true);
-  showLoad(true, "جاري إرسال طلب الانضمام...");
-
-  const action = partnerType === "hotel" ? "REGISTER_HOTEL" : "REGISTER_CAR_OFFICE";
-  const body = { action, token: API_TOKEN, name, phone, city, pass, lat: regLat, lng: regLng, comm_type: commType, comm_val: comm };
-
-  if (partnerType === "hotel") {
-    body.price_single = cleanNum(document.getElementById("pSingle")?.value);
-    body.price_double = cleanNum(document.getElementById("pDouble")?.value);
-    body.price_suite  = cleanNum(document.getElementById("pSuite")?.value);
-    body.features     = document.getElementById("hFeatures")?.value || "";
-    body.stars        = 4; body.cat = "premium";
-  }
-
-  try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
-    const data = await res.json();
-    showLoad(false);
-    if (data.success) {
-      pData = { name, type: partnerType, id: data.id||name, city, pass };
-      localStorage.setItem("hut_p_sess", JSON.stringify(pData));
-      switchAuthTab("wait");
-      startWaitPolling();
-    } else { document.getElementById("regErr").textContent = data.msg || "فشل الإرسال"; }
-  } catch(e) { showLoad(false); document.getElementById("regErr").textContent = "فشل الاتصال"; }
-  finally { setLoadingBtn(btn, false); }
-}
-
-/* ══════════════════
-   WAIT POLLING
-══════════════════ */
-function startWaitPolling() {
-  if (waitInterval) clearInterval(waitInterval);
-  waitInterval = setInterval(async () => {
-    if (!pData) return;
-    try {
-      const action = pData.type === "hotel" ? "checkHotel" : "checkCarOffice";
-      const res = await fetch(`${API_URL}?action=${action}&name=${encodeURIComponent(pData.name)}&pass=${encodeURIComponent(pData.pass)}&token=${API_TOKEN}`);
-      const data = await res.json();
-      if (data.status === "active") {
-        clearInterval(waitInterval);
-        pData = { ...pData, ...data, type: pData.type };
-        localStorage.setItem("hut_p_sess", JSON.stringify(pData));
-        const s = document.getElementById("sndWelcome"); if(s){s.currentTime=0;s.play().catch(()=>{});}
-        startDashboard();
-      }
-    } catch(e) {}
-  }, 15000);
-}
-
-/* ══════════════════
-   DASHBOARD START
-══════════════════ */
-function startDashboard() {
-  document.getElementById("authPage").classList.add("dn");
-  document.getElementById("dashPage").classList.remove("dn");
-
-  document.getElementById("dh-name").textContent = pData.name;
-  const typeEl = document.getElementById("dh-type");
-  typeEl.textContent = pData.type === "hotel" ? "🏨 فندق شريك" : "🚗 مكتب تأجير سيارات";
-  typeEl.className = "dh-type" + (pData.type === "hotel" ? " hotel" : "");
-
-  document.getElementById("kc-debt").textContent = fmt(pData.debt || 0);
-
-  // Update inventory tab label
-  const bnInv = document.getElementById("bn-inventory");
-  if (bnInv) bnInv.querySelector(".bni-lb").textContent = pData.type === "hotel" ? "الصور" : "الأسطول";
-  if (pData.type === "hotel") {
-    document.getElementById("addCarForm")?.classList.add("dn");
-    document.getElementById("addHotelForm")?.classList.remove("dn");
-    document.getElementById("fleetList")?.classList.add("dn");
-    const ic = document.getElementById("bn-inventory")?.querySelector(".bni-ic");
-    if (ic) ic.textContent = "🏨";
-  }
-
-  startFirebaseListeners();
-  loadLedgerData();
-}
-
-/* ══════════════════
-   FIREBASE LISTENERS
-══════════════════ */
-function startFirebaseListeners() {
-  db.ref(".info/connected").on("value", snap => {
-    const conn = snap.val();
-    const dot = document.getElementById("dh-dot");
-    const txt = document.getElementById("dh-conn-txt");
-    if (dot) dot.className = "dh-conn-dot" + (conn ? "" : " off");
-    if (txt) txt.textContent = conn ? "متصل بالرادار" : "غير متصل";
-  });
-
-  // Ledger
-  const ledPath = pData.type === "hotel" ? "hotels" : "car_offices";
-  const pId = String(pData.id || "").replace(/\D/g, "") || pData.name.replace(/\s/g,"_");
-  db.ref(`ledgers/${ledPath}/${pId}`).on("value", snap => {
-    const l = snap.val() || { completed_orders: 0, debt: 0 };
-    document.getElementById("kc-orders").textContent = l.completed_orders || 0;
-    document.getElementById("kc-debt").textContent   = fmt(l.debt || 0);
-    document.getElementById("lg-comp").textContent   = l.completed_orders || 0;
-    document.getElementById("lg-debt").textContent   = fmt(l.debt || 0);
-  });
-
-  // Orders
-  const streamPath = pData.type === "hotel" ? "hut_hotel_bookings" : "hut_car_orders";
-  db.ref(streamPath).on("value", snap => {
-    const raw = snap.val() || {};
-    ordersSnapshot = raw;
-    processOrders(raw);
-  });
-}
-
-/* ══════════════════
-   PROCESS ORDERS
-══════════════════ */
-function processOrders(raw) {
-  const all = Object.values(raw);
-  let pendingToRing = null;
-
-  const myOrders = all.filter(o => {
-    if (pData.type === "car") {
-      const isActive = o.office === pData.name;
-      const isPendingInCity = o.status === "pending" && o.city === pData.city && !o.office;
-      if (isPendingInCity && !pendingToRing) pendingToRing = o;
-      return isActive || isPendingInCity;
-    } else {
-      // Hotel: only our bookings
-      const mine = o.hotel_name === pData.name || o.hotel_id === pData.id;
-      if (mine && o.status === "pending" && !pendingToRing) pendingToRing = o;
-      return mine;
-    }
-  });
-
-  renderOrders(myOrders);
-
-  // Trigger alert for first pending
-  if (pendingToRing) {
-    triggerAlert(pendingToRing);
-  } else {
-    document.getElementById("alertOverlay").classList.add("dn");
-    document.getElementById("sndAlert").pause();
-  }
-}
-
-function renderOrders(orders) {
-  const container = document.getElementById("ordersContainer");
-  const badge = document.getElementById("radar-badge");
-
-  const pending = orders.filter(o => o.status === "pending");
-  if (pending.length > 0) {
-    badge.style.display = "block";
-    badge.textContent = pending.length + " جديد";
-    badge.className = "sec-badge";
-  } else {
-    badge.style.display = "none";
-  }
-
-  if (!orders.length) {
-    container.innerHTML = `<div class="empty-card">📡 الرادار يعمل — لا طلبات حالياً</div>`;
-    return;
-  }
-
-  const sorted = orders.slice().sort((a,b) => new Date(b.created_at||b.timestamp||0) - new Date(a.created_at||a.timestamp||0));
-
-  container.innerHTML = sorted.map(o => {
-    const isHotel = pData.type === "hotel";
-    const svc = isHotel ? (o.room_type||"حجز غرفة") : (o.car||"تأجير سيارة");
-    const name = isHotel ? (o.guest_name||o.name||"—") : (o.name||"—");
-    const dateStr = isHotel ? (o.date_arrive||"—") : (o.date||"—");
-    const days = isHotel ? (o.nights||1)+"ليلة" : (o.days||1)+"يوم";
-    const price = fmt(o.total||o.price||0);
-
-    let stbCls = "stb-gray", stbTxt = o.status || "—";
-    if (o.status==="pending")   { stbCls="stb-amber"; stbTxt="قيد الانتظار"; }
-    if (o.status==="active"||o.status==="confirmed") { stbCls="stb-sky"; stbTxt="جاري التنفيذ"; }
-    if (o.status==="completed") { stbCls="stb-jade"; stbTxt="مكتمل"; }
-    if (o.status==="cancelled"||o.status==="rejected") { stbCls="stb-gray"; stbTxt="ملغي"; }
-
-    let cardCls = "order-card ";
-    if (o.status==="pending") cardCls+="oc-pending";
-    else if (o.status==="active"||o.status==="confirmed") cardCls+="oc-active";
-    else if (o.status==="completed") cardCls+="oc-completed";
-    else cardCls+="oc-cancelled";
-
-    const actions = [];
-    if (!isHotel && (o.status==="active")) {
-      actions.push(`<button class="oc-btn jade" onclick="completeOrder('${o.id}')">✅ تسليم</button>`);
-    }
-    if (isHotel && o.status==="confirmed") {
-      actions.push(`<button class="oc-btn jade" onclick="checkoutGuest('${o.id}')">🚪 مغادرة</button>`);
-    }
-    if (o.status==="pending") {
-      actions.push(`<button class="oc-btn navy" onclick="acceptOrderById('${o.id}')">قبول</button>`);
-      actions.push(`<button class="oc-btn rose" onclick="rejectOrderById('${o.id}')">رفض</button>`);
-    }
-
-    return `
-      <div class="${cardCls}">
-        <div class="oc-head">
-          <div>
-            <div class="oc-id">#${o.id}</div>
-            <div class="oc-time">${dateStr} · ${days}</div>
-          </div>
-          <span class="oc-stb ${stbCls}">${stbTxt}</span>
+<div id="dashboardPage" class="hidden-section">
+    <div class="dash-header">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h3 class="fw-black m-0 mb-1" id="partnerNameDisplay">...</h3>
+                <div class="status-badge online" id="onlineBadge"><i data-lucide="wifi" size="14"></i> متصل بالرادار</div>
+            </div>
+            <button class="btn btn-light rounded-circle p-2 text-danger border-0 shadow-sm" onclick="logout()"><i data-lucide="power" size="18"></i></button>
         </div>
-        <div class="oc-svc">${pData.type==="car"?"🚗":"🏨"} ${svc}</div>
-        <div class="oc-detail">👤 ${name}${o.city?" · 📍 "+o.city:""}</div>
-        <div class="oc-footer">
-          <div class="oc-price">${price} <small style="font-size:.65rem;font-weight:600;color:var(--txt3)">د.ع</small></div>
-          <div class="oc-action-row">${actions.join("")}</div>
+    </div>
+    
+    <div class="container pb-5 mb-5">
+        <div class="row g-3 px-1 stats-wrapper">
+            <div class="col-6">
+                <div class="stat-box">
+                    <h6 class="text-muted fw-bold mb-1 fs-6">العمليات المنجزة</h6>
+                    <h3 class="fw-black m-0 text-success" id="statOrders">0</h3>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="stat-box">
+                    <h6 class="text-muted fw-bold mb-1 fs-6">الديون للمنصة</h6>
+                    <h4 class="fw-black text-danger m-0" id="statDebt">0 <small>د.ع</small></h4>
+                </div>
+            </div>
         </div>
-      </div>
-    `;
-  }).join("");
-}
 
-/* ══════════════════
-   ALERT
-══════════════════ */
-function triggerAlert(o) {
-  if (!document.getElementById("alertOverlay").classList.contains("dn")) return;
-  ringingOrder = o;
-  alertSoundMuted = false;
+        <div id="tab-radar" class="mt-4">
+            <h5 class="fw-black mb-3 d-flex align-items-center gap-2"><i data-lucide="radar" color="var(--accent)"></i> الرادار المباشر</h5>
+            <div id="activeOrdersBox">
+                <div class="text-center text-muted fw-bold py-5 bg-white rounded-4 border">لا توجد طلبات نشطة حالياً.</div>
+            </div>
+        </div>
 
-  const isHotel = pData.type === "hotel";
-  document.getElementById("ao-title").textContent = isHotel ? "حجز جديد!" : "طلب جديد!";
-  document.getElementById("ao-sub").textContent   = isHotel ? "حجز فندقي" : "طلب تأجير سيارة";
-  document.getElementById("ao-name").textContent  = isHotel ? (o.guest_name||o.name||"—") : (o.name||"—");
-  document.getElementById("ao-svc").textContent   = isHotel ? (o.room_type||"غرفة") : (o.car||"سيارة");
-  document.getElementById("ao-city").textContent  = o.city||"—";
-  document.getElementById("ao-date").textContent  = isHotel ? (o.date_arrive||"—") : (o.date||"—");
-  document.getElementById("ao-days").textContent  = isHotel ? (o.nights||1)+" ليلة" : (o.days||1)+" يوم";
-  document.getElementById("ao-price").textContent = fmt(o.total||o.price||0) + " د.ع";
+        <div id="tab-inventory" class="mt-4 hidden-section">
+            <h5 class="fw-black mb-3 d-flex align-items-center gap-2"><i data-lucide="layers" color="var(--accent)"></i> إدارة الأصول</h5>
+            <div class="order-card">
+                <h6 class="fw-bold text-center mb-3" id="invTitle">إضافة سيارة للأسطول</h6>
+                
+                <label class="upload-box d-block">
+                    <input type="file" id="itemImage" accept="image/*" class="d-none" onchange="previewItemImage(this)">
+                    <i data-lucide="image-plus" size="40" class="mb-2"></i>
+                    <div class="fw-bold">اضغط لرفع صورة فخمة</div>
+                    <img id="imgPreview" class="w-100 rounded-3 mt-3 hidden-section" style="object-fit: cover; max-height: 200px;">
+                </label>
+                
+                <div id="carFields">
+                    <input type="text" id="carName" class="custom-input py-2" placeholder="اسم وموديل السيارة (مثال: توسان 2024)">
+                    <div class="row g-2">
+                        <div class="col-6"><input type="number" id="carPrice" class="custom-input py-2" placeholder="السعر اليومي"></div>
+                        <div class="col-6">
+                            <select id="carCat" class="custom-input py-2">
+                                <option value="economy">اقتصادية</option><option value="luxury">فخمة (VIP)</option><option value="family">عائلية</option><option value="wedding">زفاف</option>
+                            </select>
+                        </div>
+                        <div class="col-6"><input type="text" id="carColor" class="custom-input py-2" placeholder="اللون"></div>
+                        <div class="col-6"><input type="text" id="carPlate" class="custom-input py-2" placeholder="رقم اللوحة (المرور)"></div>
+                    </div>
+                </div>
 
-  document.getElementById("alertOverlay").classList.remove("dn");
-  const s = document.getElementById("sndAlert");
-  if (s) { s.currentTime = 0; s.play().catch(()=>{}); }
-}
+                <div id="hotelFields" class="hidden-section text-center text-muted fw-bold py-3">
+                    لتحديث أسعار الغرف أو إضافة صور الفندق، يرجى ملء الحقول ورفع الصورة. سيتم تحديث ملف فندقك.
+                </div>
+                
+                <button class="btn-action py-3 mt-2" onclick="saveInventoryItem()">حفظ ونشر في المنصة <i data-lucide="upload-cloud"></i></button>
+            </div>
+        </div>
+    </div>
 
-window.muteAlert = function() {
-  alertSoundMuted = true;
-  const s = document.getElementById("sndAlert"); if(s) { s.pause(); s.currentTime=0; }
-};
+    <nav class="bnav">
+        <div class="bni on" onclick="switchMainTab('radar', this)"><i data-lucide="radar"></i><span>الرادار</span></div>
+        <div class="bni" onclick="switchMainTab('inventory', this)"><i data-lucide="layers"></i><span>الأصول</span></div>
+        <div class="bni" onclick="alert('سجل الحسابات قيد التطوير للنسخة القادمة')"><i data-lucide="wallet"></i><span>الحسابات</span></div>
+    </nav>
+</div>
 
-window.rejectOrder = function() {
-  const s = document.getElementById("sndAlert"); if(s) s.pause();
-  document.getElementById("alertOverlay").classList.add("dn");
-  ringingOrder = null;
-};
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getStorage, ref as storageRef, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-window.acceptOrder = async function() {
-  if (!ringingOrder) return;
-  const btn = document.getElementById("btnAccept");
-  setLoadingBtn(btn, true);
-  const s = document.getElementById("sndAlert"); if(s) s.pause();
-  await _doAccept(ringingOrder.id);
-  document.getElementById("alertOverlay").classList.add("dn");
-  ringingOrder = null;
-  setLoadingBtn(btn, false);
-};
+    lucide.createIcons();
 
-window.acceptOrderById = async function(id) { await _doAccept(id); };
-window.rejectOrderById = async function(id) {
-  if (!confirm("رفض هذا الطلب؟")) return;
-  try {
-    const action = pData.type === "hotel" ? "rejectBooking" : "cancelRequest";
-    await fetch(API_URL, { method: "POST", body: JSON.stringify({ action, id, token: API_TOKEN }) });
-    toast("تم رفض الطلب");
-  } catch(e) { toast("فشل الإرسال", "e"); }
-};
+    // ── CONFIGURATION (Linked to V9.2) ──
+    const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
+    const API_TOKEN = "HUT_CLOUD_2026";
 
-async function _doAccept(id) {
-  try {
-    const action = pData.type === "hotel" ? "confirmBooking" : "claimOrder";
-    const body = { action, id, token: API_TOKEN };
-    if (pData.type === "car") body.office = pData.name;
-    else body.hotel = pData.name;
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
-    const data = await res.json();
-    if (data.success) {
-      toast("✅ تم قبول الطلب بنجاح!");
-      const s = document.getElementById("sndSuccess"); if(s){s.currentTime=0;s.play().catch(()=>{});}
-    } else { toast(data.msg || "فشل القبول", "e"); }
-  } catch(e) { toast("تم الإرسال — جاري المزامنة"); }
-}
+    const fbConfig = {
+      apiKey: "AIzaSyAo1rmqUzieYZU3RIwXOAN87GkpNrp-_Hc",
+      authDomain: "alhut-for-rent.firebaseapp.com",
+      databaseURL: "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "alhut-for-rent",
+      storageBucket: "alhut-for-rent.firebasestorage.app",
+      messagingSenderId: "941542380637",
+      appId: "1:941542380637:web:9623fa6e627817ffeba9b4"
+    };
 
-window.completeOrder = async function(id) {
-  if (!confirm("تأكيد تسليم السيارة وإتمام الطلب؟")) return;
-  try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "completeOrder", id, office: pData.name, token: API_TOKEN }) });
-    const data = await res.json();
-    if (data.success) toast("🎉 تم إتمام الطلب بنجاح!");
-    else toast(data.msg||"فشل", "e");
-  } catch(e) { toast("تم الإرسال"); }
-};
+    const app = initializeApp(fbConfig);
+    const db = getDatabase(app);
+    const storage = getStorage(app);
 
-window.checkoutGuest = async function(id) {
-  if (!confirm("تأكيد مغادرة النزيل وإغلاق الحجز؟")) return;
-  try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "checkoutGuest", id, hotel: pData.name, token: API_TOKEN }) });
-    const data = await res.json();
-    if (data.success) toast("🎉 تم تسجيل المغادرة بنجاح!");
-    else toast(data.msg||"فشل", "e");
-  } catch(e) { toast("تم الإرسال"); }
-};
+    let pData = null; // Partner Data
+    let ringingOrder = null;
+    let base64Img = null;
 
-/* ══════════════════
-   INVENTORY
-══════════════════ */
-function previewImg(type, input) {
-  if (!input.files?.length) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const src = e.target.result;
-    if (type === "car") { b64Car = src; }
-    else { b64Hotel = src; }
-    const img = document.getElementById(`uz-${type}-img`);
-    const icon = document.getElementById(`uz-${type}-icon`);
-    const lbl  = document.getElementById(`uz-${type}-label`);
-    if (img)  { img.src = src; img.style.display = "block"; }
-    if (icon) icon.style.display = "none";
-    if (lbl)  lbl.style.display = "none";
-    document.getElementById(`uz-${type}`).classList.add("has-img");
-  };
-  reader.readAsDataURL(input.files[0]);
-}
-window.previewImg = previewImg;
+    // ── UI TOGGLES ──
+    window.toggleAuthMode = () => {
+        document.getElementById('loginForm').classList.toggle('hidden-section');
+        document.getElementById('registerForm').classList.toggle('hidden-section');
+    };
 
-async function uploadToStorage(b64, path) {
-  if (!b64) return "";
-  try {
-    const b64data = b64.includes(",") ? b64.split(",")[1] : b64;
-    const ref = storage.ref(path);
-    const snapshot = await ref.putString(b64data, "base64", { contentType: "image/jpeg" });
-    return await snapshot.ref.getDownloadURL();
-  } catch(e) { console.error("Upload failed:", e); return ""; }
-}
+    window.updateRegUI = () => {
+        const t = document.getElementById('regType').value;
+        document.getElementById('regName').placeholder = t === 'Individual' ? 'اسمك الكامل' : 'الاسم التجاري للمنشأة';
+    };
 
-window.saveCar = async function() {
-  const name  = document.getElementById("carName").value.trim();
-  const price = document.getElementById("carPrice").value.trim();
-  const plate = document.getElementById("carPlate").value.trim();
-  const cat   = document.getElementById("carCat").value;
-  const color = document.getElementById("carColor").value.trim();
+    window.switchMainTab = (tab, btn) => {
+        document.getElementById('tab-radar').classList.add('hidden-section');
+        document.getElementById('tab-inventory').classList.add('hidden-section');
+        document.getElementById('tab-' + tab).classList.remove('hidden-section');
+        
+        document.querySelectorAll('.bni').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+        
+        if(pData && pData.type === 'hotel') {
+            document.getElementById('carFields').classList.add('hidden-section');
+            document.getElementById('hotelFields').classList.remove('hidden-section');
+            document.getElementById('invTitle').innerText = 'تحديث صور الفندق';
+        }
+    };
 
-  if (!name || !price || !plate) { toast("أكمل اسم السيارة والسعر واللوحة", "e"); return; }
+    function showLoad(state, txt="جاري المعالجة...") {
+        document.getElementById('loadText').innerText = txt;
+        document.getElementById('loadingOverlay').style.display = state ? 'flex' : 'none';
+    }
 
-  showLoad(true, "جاري رفع البيانات...");
-  let photoUrl = "";
-  if (b64Car) {
-    photoUrl = await uploadToStorage(b64Car, `inventory/${pData.id||pData.name}/${Date.now()}.jpg`);
-  }
+    // ── AUTHENTICATION ──
+    window.onload = () => {
+        const saved = localStorage.getItem('hut_partner_session');
+        if(saved) { pData = JSON.parse(saved); initDashboard(); }
+    };
 
-  try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({
-      action: "ADD_CAR_TO_FLEET", token: API_TOKEN,
-      office_id: pData.id, name, price, plate, cat, color, photo_url: photoUrl
-    })});
-    const data = await res.json();
-    showLoad(false);
-    if (data.success) {
-      toast("🚗 تم إضافة السيارة للأسطول بنجاح!");
-      document.getElementById("carName").value = "";
-      document.getElementById("carPrice").value = "";
-      document.getElementById("carPlate").value = "";
-      document.getElementById("carColor").value = "";
-      b64Car = null;
-      const img = document.getElementById("uz-car-img");
-      if(img) img.style.display="none";
-      const ico = document.getElementById("uz-car-icon");
-      if(ico) ico.style.display="";
-      const lbl = document.getElementById("uz-car-label");
-      if(lbl) lbl.style.display="";
-      document.getElementById("uz-car")?.classList.remove("has-img");
-    } else { toast(data.msg || "فشل الإضافة", "e"); }
-  } catch(e) { showLoad(false); toast("فشل الإرسال", "e"); }
-};
+    window.doLogin = async () => {
+        const name = document.getElementById('loginName').value.trim();
+        const pass = document.getElementById('loginPass').value.trim();
+        if(!name || !pass) return alert("أدخل بيانات الدخول");
+        
+        showLoad(true);
+        try {
+            // Check Car Office first
+            let res = await fetch(`${API_URL}?action=checkCarOffice&name=${name}&pass=${pass}&token=${API_TOKEN}`);
+            let data = await res.json();
+            let pType = 'car';
+            
+            // If not found, check Hotel
+            if(data.status === "not_found") {
+                res = await fetch(`${API_URL}?action=checkHotel&name=${name}&pass=${pass}&token=${API_TOKEN}`);
+                data = await res.json();
+                pType = 'hotel';
+            }
+            
+            showLoad(false);
+            if(data.status === "wrong_password") return alert("كلمة المرور خاطئة");
+            if(data.status === "not_found") return alert("الحساب غير موجود");
+            if(data.status === "banned") return alert("الحساب موقوف");
+            
+            pData = { id: data.id, name: data.name, type: pType, city: data.city, pass: pass };
+            localStorage.setItem('hut_partner_session', JSON.stringify(pData));
+            initDashboard();
+        } catch(e) { showLoad(false); alert("خطأ في الاتصال"); }
+    };
 
-window.saveHotelPhoto = async function() {
-  if (!b64Hotel) { toast("ارفع صورة الفندق أولاً", "e"); return; }
-  showLoad(true, "جاري رفع الصورة...");
-  const photoUrl = await uploadToStorage(b64Hotel, `hotels/${pData.id||pData.name}/${Date.now()}.jpg`);
-  if (!photoUrl) { showLoad(false); toast("فشل رفع الصورة", "e"); return; }
-  try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({
-      action: "updateEntityInfo", token: API_TOKEN,
-      entityType: "Hotel", id: pData.id, pass: pData.pass,
-      updates: { photo_url: photoUrl }
-    })});
-    const data = await res.json();
-    showLoad(false);
-    if (data.success) toast("🏨 تم تحديث صورة الفندق بنجاح!");
-    else toast(data.msg||"فشل", "e");
-  } catch(e) { showLoad(false); toast("فشل الإرسال", "e"); }
-};
+    window.doRegister = async () => {
+        const rawType = document.getElementById('regType').value;
+        const name = document.getElementById('regName').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const city = document.getElementById('regCity').value;
+        const pass = document.getElementById('regPass').value;
+        
+        if(!name || !phone || !pass) return alert("أكمل جميع الحقول");
+        const action = rawType === 'Hotel' ? 'REGISTER_HOTEL' : 'REGISTER_CAR_OFFICE';
+        
+        showLoad(true);
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action, token: API_TOKEN, name, phone, city, pass })
+            });
+            const data = await res.json();
+            showLoad(false);
+            if(data.success) {
+                alert("تم إرسال طلبك للإدارة، سيتم مراجعته وتفعيله قريباً.");
+                toggleAuthMode();
+            } else { alert(data.msg); }
+        } catch(e) { showLoad(false); alert("خطأ اتصال"); }
+    };
 
-/* ══════════════════
-   LEDGER
-══════════════════ */
-async function loadLedgerData() {
-  // Loaded via Firebase realtime above — just fetch past orders for history
-  try {
-    const action = pData.type === "car" ? "getCarOrders" : "getHotelBookings";
-    const param  = pData.type === "car" ? `office=${encodeURIComponent(pData.name)}` : `hotel_name=${encodeURIComponent(pData.name)}`;
-    const res = await fetch(`${API_URL}?action=${action}&${param}&token=${API_TOKEN}`);
-    const data = await res.json();
-    if (!Array.isArray(data)) return;
+    window.logout = () => { if(confirm("تسجيل الخروج؟")) { localStorage.clear(); location.reload(); } };
 
-    const completed = data.filter(o => o.status === "completed");
-    const totalRev  = completed.reduce((s,o) => s + cleanNum(o.total), 0);
-    document.getElementById("lg-rev").textContent = fmt(totalRev);
+    // ── DASHBOARD & FIREBASE ──
+    function initDashboard() {
+        document.getElementById('loginSection').classList.add('hidden-section');
+        document.getElementById('dashboardPage').classList.remove('hidden-section');
+        document.getElementById('partnerNameDisplay').innerText = pData.name;
+        
+        // Fetch Live Ledgers
+        const ledgerPath = pData.type === 'hotel' ? 'hotels' : 'car_offices';
+        onValue(ref(db, `ledgers/${ledgerPath}/${pData.id}`), snap => {
+            const l = snap.val() || { completed_orders: 0, debt: 0 };
+            document.getElementById('statOrders').innerText = l.completed_orders || 0;
+            document.getElementById('statDebt').innerHTML = `${l.debt || 0} <small>د.ع</small>`;
+        });
 
-    if (!completed.length) return;
-    document.getElementById("ledgerList").innerHTML = completed.slice(0,30).map(o => {
-      const isHotel = pData.type === "hotel";
-      const name   = isHotel ? (o.guest_name||"—") : (o.name||"—");
-      const date   = isHotel ? (o.date_arrive||"—") : (o.date||"—");
-      const price  = fmt(o.total||0);
-      return `
-        <div class="ledger-card">
-          <div class="lc-left">
-            <div class="lc-id">#${o.id}</div>
-            <div class="lc-name">${name}</div>
-            <div class="lc-date">${date}</div>
-          </div>
-          <div class="lc-right">
-            <div class="lc-amount">${price} <small style="font-size:.62rem;font-weight:600">د.ع</small></div>
-          </div>
-        </div>`;
-    }).join("");
-  } catch(e) {}
-}
+        startRadarListener();
+    }
 
-/* ══════════════════
-   NAVIGATION
-══════════════════ */
-function setTab(name, btn) {
-  ["radar","inventory","ledger"].forEach(t => {
-    document.getElementById("tab-"+t)?.classList.add("dn");
-    document.getElementById("bn-"+t)?.classList.remove("on");
-  });
-  document.getElementById("tab-"+name)?.classList.remove("dn");
-  if (btn) btn.classList.add("on");
-  else document.getElementById("bn-"+name)?.classList.add("on");
-  if (name === "ledger") loadLedgerData();
-}
-window.setTab = setTab;
+    // ── RADAR ENGINE (LISTENING TO ORDERS) ──
+    function startRadarListener() {
+        const streamPath = pData.type === 'hotel' ? 'hut_hotel_bookings' : 'hut_car_orders';
+        
+        onValue(ref(db, streamPath), snap => {
+            const orders = snap.val() || {};
+            let html = '';
+            let hasRinging = false;
+            
+            Object.values(orders).forEach(o => {
+                // Filter logic
+                if(pData.type === 'hotel' && o.hotel_id !== pData.id) return; 
+                if(pData.type === 'car' && o.city !== pData.city && o.status === 'pending') return;
+                
+                // My active/completed orders
+                if(o.office === pData.name || (pData.type==='hotel' && o.status !== 'pending')) {
+                    const isDone = o.status === 'completed' || o.status === 'cancelled';
+                    html += `
+                        <div class="order-card">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-black">#${o.id}</span>
+                                <span class="badge ${isDone?'bg-secondary':'bg-success'}">${isDone?'مغلق':'نشط'}</span>
+                            </div>
+                            <div class="fw-bold text-primary mb-1">${o.car || o.room_type}</div>
+                            <div class="text-muted small">${o.name || o.guest_name} | ${o.date || o.date_arrive}</div>
+                            ${!isDone && pData.type==='car' ? `<button class="btn btn-sm btn-outline-success mt-3 w-100 fw-bold" onclick="completeOrder('${o.id}')">تم إنهاء التأجير ✓</button>` : ''}
+                        </div>
+                    `;
+                }
+                
+                // Ringing logic (New pending for me)
+                if(o.status === 'pending') {
+                    if(pData.type === 'hotel' && o.hotel_id === pData.id) triggerRing(o, 'hotel');
+                    if(pData.type === 'car' && o.city === pData.city) triggerRing(o, 'car');
+                    hasRinging = true;
+                }
+            });
+            
+            if(!hasRinging) document.getElementById('orderAlertOverlay').classList.add('hidden-section');
+            if(html) document.getElementById('activeOrdersBox').innerHTML = html;
+            else document.getElementById('activeOrdersBox').innerHTML = `<div class="text-center text-muted fw-bold py-5 bg-white rounded-4 border">لا توجد طلبات.</div>`;
+        });
+    }
 
-window.doLogout = function() {
-  if (!confirm("تأكيد تسجيل الخروج؟")) return;
-  try { db.ref("hut_car_orders").off(); db.ref("hut_hotel_bookings").off(); } catch(e) {}
-  localStorage.removeItem("hut_p_sess");
-  location.reload();
-};
+    // ── ALARM SYSTEM ──
+    function triggerRing(o, type) {
+        if(document.getElementById('orderAlertOverlay').classList.contains('hidden-section') === false) return; // Already ringing
+        ringingOrder = o;
+        
+        document.getElementById('alertServiceType').innerText = type === 'car' ? `🚗 طلب تأجير: ${o.car}` : `🏨 حجز غرفة: ${o.room_type}`;
+        document.getElementById('alertCustName').innerText = o.name || o.guest_name;
+        document.getElementById('alertCity').innerText = o.city;
+        document.getElementById('alertDate').innerText = o.date || o.date_arrive;
+        document.getElementById('alertPrice').innerText = `${o.total} د.ع`;
+        
+        document.getElementById('orderAlertOverlay').classList.remove('hidden-section');
+        const s = document.getElementById('alertSound'); s.currentTime = 0; s.play().catch(()=>{});
+    }
 
-/* ══════════════════
-   SESSION RESTORE
-══════════════════ */
-window.onload = function() {
-  const saved = localStorage.getItem("hut_p_sess");
-  if (saved) {
-    try {
-      pData = JSON.parse(saved);
-      if (pData && pData.name) { startDashboard(); return; }
-    } catch(e) {}
-  }
-  document.getElementById("authPage").classList.remove("dn");
-};
+    window.rejectIncomingOrder = () => {
+        document.getElementById('orderAlertOverlay').classList.add('hidden-section');
+        document.getElementById('alertSound').pause();
+        ringingOrder = null;
+    };
+
+    window.acceptIncomingOrder = async () => {
+        document.getElementById('alertSound').pause();
+        showLoad(true, "جاري تأمين الحجز...");
+        
+        const action = pData.type === 'car' ? 'claimOrder' : 'confirmBooking';
+        const payload = { action, id: ringingOrder.id, token: API_TOKEN };
+        if(pData.type === 'car') payload.office = pData.name;
+        else payload.hotel = pData.name;
+        
+        try {
+            const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+            const data = await res.json();
+            showLoad(false);
+            if(data.success) {
+                document.getElementById('orderAlertOverlay').classList.add('hidden-section');
+                document.getElementById('successSound').play().catch(()=>{});
+                alert("تم قبول الطلب بنجاح! سيتم إرسال رسالة واتساب للزبون للتوجه إليك.");
+            } else { alert("عذراً، " + data.msg); document.getElementById('orderAlertOverlay').classList.add('hidden-section'); }
+        } catch(e) { showLoad(false); alert("خطأ اتصال"); }
+    };
+
+    window.completeOrder = async (id) => {
+        if(!confirm("تأكيد استلام السيارة وإنهاء الطلب؟ سيتم احتساب العمولة.")) return;
+        showLoad(true);
+        try {
+            await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'completeOrder', id, office: pData.name, token: API_TOKEN }) });
+            showLoad(false);
+        } catch(e) { showLoad(false); }
+    };
+
+    // ── INVENTORY & IMAGE UPLOAD (V9.2 FEATURE) ──
+    window.previewItemImage = (input) => {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                base64Img = e.target.result;
+                document.getElementById('imgPreview').src = base64Img;
+                document.getElementById('imgPreview').classList.remove('hidden-section');
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    };
+
+    window.saveInventoryItem = async () => {
+        if(pData.type === 'car') {
+            const name = document.getElementById('carName').value;
+            const price = document.getElementById('carPrice').value;
+            const plate = document.getElementById('carPlate').value;
+            if(!name || !price || !plate) return alert("أكمل حقول السيارة الأساسية (الاسم، السعر، اللوحة)");
+        }
+        
+        showLoad(true, "جاري رفع البيانات والصور للسحابة...");
+        let photoUrl = "";
+        
+        // 1. Upload Image if exists
+        if(base64Img) {
+            try {
+                const b64Data = base64Img.split(',')[1];
+                const uniqueName = Date.now() + "_" + Math.floor(Math.random()*1000) + ".jpg";
+                const imgRef = storageRef(storage, `inventory/${pData.id}/${uniqueName}`);
+                const snapshot = await uploadString(imgRef, b64Data, 'base64');
+                photoUrl = await getDownloadURL(snapshot.ref);
+            } catch(e) { alert("فشل رفع الصورة"); return showLoad(false); }
+        }
+
+        // 2. Send to Backend (V9.2)
+        try {
+            if(pData.type === 'car') {
+                const payload = {
+                    action: 'ADD_CAR_TO_FLEET', token: API_TOKEN, office_id: pData.id,
+                    name: document.getElementById('carName').value,
+                    cat: document.getElementById('carCat').value,
+                    price: document.getElementById('carPrice').value,
+                    color: document.getElementById('carColor').value,
+                    plate: document.getElementById('carPlate').value,
+                    photo_url: photoUrl
+                };
+                await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+                alert("تم إضافة السيارة لأسطولك وعرضها للزبائن!");
+            } else {
+                // Hotels update photo info
+                await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'updateEntityInfo', entityType: 'Hotel', id: pData.id, updates: { photo_url: photoUrl }, pass: pData.pass, token: API_TOKEN }) });
+                alert("تم تحديث واجهة الفندق بنجاح!");
+            }
+            
+            // Reset form
+            document.getElementById('carName').value = ""; document.getElementById('carPrice').value = ""; document.getElementById('carPlate').value = "";
+            document.getElementById('imgPreview').classList.add('hidden-section'); base64Img = null;
+            showLoad(false);
+            switchMainTab('radar', document.querySelector('.bni')); // Go back to radar
+        } catch(e) { showLoad(false); alert("فشل إرسال البيانات للسيرفر"); }
+    };
 </script>
 </body>
 </html>

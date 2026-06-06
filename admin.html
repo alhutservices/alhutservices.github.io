@@ -2,442 +2,1008 @@
 <html lang="ar" dir="rtl">
 <head>
 <script>
-const V="22.0",VK="alhut_admin_v22";
+const V="92.0",VK="alhut_admin_v92";
 try{if(localStorage.getItem(VK)!==V){localStorage.setItem(VK,V);if("caches"in window)caches.keys().then(n=>n.forEach(k=>caches.delete(k)));}}catch(e){}
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-<title>منصة الحوت — لوحة الإدارة العليا</title>
-<meta name="theme-color" content="#001834">
+<title>الحوت — لوحة القيادة العليا</title>
+<meta name="theme-color" content="#080c14">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-<!-- البنية التحتية البرمجية للواجهات العالمية -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAo1rmqUzieYZU3RIwXOAN87GkpNrp-_Hc&libraries=places"></script>
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!-- Leaflet -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
-<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --ink:#001124;--ink2:#002349;--ink3:#004d99;--ink4:#64748b;
-  --gold:#D4AF37;--gold-d:#aa8524;--gold-l:#fdfaf2;
-  --success:#10b981;--success-l:#ecfdf5;
-  --danger:#ef4444;--danger-l:#fef2f2;
-  --info:#3b82f6;--info-l:#eff6ff;
-  --base:#ffffff;--base2:#f8fafc;--base3:#e2e8f0;
-  --line:rgba(0,35,73,.1);--sh-md:0 12px 40px rgba(0,23,49,.08);
-  --sh-lg:0 24px 60px rgba(0,23,49,.15);
-  --sh-gold:0 8px 24px rgba(212,175,55,.2);
-  --r4:16px;--r5:24px;--rf:999px;--sb:280px;--nav:68px;
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS — Dark Luxury Theme
+═══════════════════════════════════════════════════ */
+:root {
+  /* Core Palette */
+  --bg0: #080c14;
+  --bg1: #0d1220;
+  --bg2: #111827;
+  --bg3: #1a2235;
+  --bg4: #1e2a3d;
+
+  /* Gold System */
+  --gold:   #d4a843;
+  --gold-d: #a8832e;
+  --gold-l: rgba(212,168,67,.12);
+  --gold-g: linear-gradient(135deg, #d4a843, #f0c060, #a8832e);
+
+  /* Accent System */
+  --jade:   #10b981;
+  --jade-l: rgba(16,185,129,.12);
+  --rose:   #f43f5e;
+  --rose-l: rgba(244,63,94,.12);
+  --sky:    #38bdf8;
+  --sky-l:  rgba(56,189,248,.12);
+  --amber:  #f59e0b;
+  --amber-l:rgba(245,158,11,.12);
+  --violet: #8b5cf6;
+  --violet-l:rgba(139,92,246,.12);
+
+  /* Text */
+  --txt0: #f8fafc;
+  --txt1: #cbd5e1;
+  --txt2: #64748b;
+  --txt3: #334155;
+
+  /* Surfaces */
+  --line:  rgba(255,255,255,.06);
+  --line2: rgba(255,255,255,.03);
+  --sh-sm: 0 2px 8px rgba(0,0,0,.4);
+  --sh-md: 0 8px 32px rgba(0,0,0,.5);
+  --sh-lg: 0 20px 60px rgba(0,0,0,.6);
+  --sh-xl: 0 32px 80px rgba(0,0,0,.7);
+  --sh-gold: 0 8px 32px rgba(212,168,67,.25);
+
+  /* Layout */
+  --sidebar: 260px;
+  --nav-h: 68px;
+  --r3: 12px;
+  --r4: 16px;
+  --r5: 20px;
+  --r6: 24px;
+  --r7: 28px;
 }
-*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--base2);font-family:'Tajawal',sans-serif;color:var(--ink);height:100vh;overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}
-.dn{display:none!important;}
+
+*, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--bg0);
+  font-family: 'Cairo', sans-serif;
+  color: var(--txt0);
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea { font-family: 'Cairo', sans-serif; }
+.dn { display: none !important; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 99px; }
+
+/* ─── NOISE TEXTURE ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: .5;
+}
 
 /* ─── TOASTS ─── */
-#toasts{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:8px;width:min(94%,360px);}
-.ti{background:#fff;border-radius:14px;padding:14px 18px;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:12px;font-weight:700;font-size:.85rem;border:1px solid rgba(0,35,73,0.05);animation:tin .3s cubic-bezier(.18,.89,.32,1.28);}
-.ti-ico{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-.ts .ti-ico{background:var(--success-l);color:var(--success);}
-.te .ti-ico{background:var(--danger-l);color:var(--danger);}
-@keyframes tin{from{opacity:0;transform:translateY(-15px)}to{opacity:1;transform:none}}
+#toasts {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 99999; display: flex; flex-direction: column; gap: 8px;
+  width: min(94%, 380px); pointer-events: none;
+}
+.ti {
+  background: rgba(13,18,32,.97); backdrop-filter: blur(24px);
+  border-radius: 14px; padding: 14px 18px;
+  box-shadow: var(--sh-lg); border: 1px solid var(--line);
+  display: flex; align-items: center; gap: 12px;
+  font-weight: 700; font-size: .85rem;
+  animation: tin .3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: auto;
+}
+.ti-ico {
+  width: 32px; height: 32px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.ts .ti-ico { background: var(--jade-l); color: var(--jade); }
+.te .ti-ico { background: var(--rose-l); color: var(--rose); }
+.ti .ti-msg { flex: 1; color: var(--txt1); }
+@keyframes tin { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: none; } }
 
-/* ─── LIVE STATUS BAR ─── */
-#fbSt{position:fixed;bottom:calc(var(--nav) + 14px);left:16px;background:var(--base);border-radius:var(--rf);padding:6px 14px;box-shadow:var(--sh-md);display:flex;align-items:center;gap:8px;font-weight:700;font-size:.75rem;z-index:800;border:1px solid var(--line);}
-.fb-dot{width:8px;height:8px;border-radius:50%;background:var(--success);animation:blink 1.5s infinite;}
-.fb-dot.off{background:var(--danger);animation:none;}
-@keyframes blink{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.2);opacity:0.4}}
-@media(min-width:769px){#fbSt{left:calc(var(--sb) + 16px);bottom:16px;}}
-
-/* ─── AUTHENTICATION SHIELD ─── */
-#auth{position:fixed;inset:0;z-index:60000;background:linear-gradient(135deg,#001124 0%,#002349 100%);display:flex;align-items:center;justify-content:center;padding:20px;}
-.auth-box{width:100%;max-width:400px;background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-radius:32px;box-shadow:var(--sh-lg);padding:45px 35px;text-align:center;}
-.auth-mark{width:76px;height:76px;border-radius:24px;background:linear-gradient(135deg,var(--ink2),var(--ink));display:inline-flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:36px;box-shadow:var(--sh-md);}
-.auth-h{font-size:1.6rem;font-weight:900;color:var(--ink);margin-bottom:4px;}
-.auth-s{font-size:.8rem;font-weight:700;color:var(--ink4);margin-bottom:30px;}
-.auth-in{width:100%;background:var(--base2);border:2px solid var(--base3);border-radius:16px;padding:14px;font-size:1.2rem;font-weight:900;color:var(--ink);text-align:center;outline:none;transition:0.2s;margin-bottom:15px;letter-spacing:4px;}
-.auth-in:focus{background:#fff;border-color:var(--gold);box-shadow:0 0 0 4px rgba(212,175,55,0.15);}
-.auth-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--ink2),var(--ink));color:#fff;border:none;border-radius:16px;font-size:1rem;font-weight:900;cursor:pointer;transition:0.2s;box-shadow:0 4px 15px rgba(0,35,73,0.3);}
-.auth-btn:active{transform:scale(.97);}
+/* ─── AUTH SHIELD ─── */
+#auth {
+  position: fixed; inset: 0; z-index: 60000;
+  background: var(--bg0);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  overflow: hidden;
+}
+#auth::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(212,168,67,.08) 0%, transparent 60%),
+              radial-gradient(ellipse 40% 60% at 80% 100%, rgba(56,189,248,.05) 0%, transparent 60%);
+}
+.auth-box {
+  width: 100%; max-width: 420px;
+  background: rgba(13,18,32,.9);
+  backdrop-filter: blur(40px);
+  border-radius: 32px;
+  box-shadow: var(--sh-xl), 0 0 0 1px rgba(212,168,67,.15);
+  padding: 48px 40px 40px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.auth-crown {
+  width: 84px; height: 84px;
+  border-radius: 26px;
+  background: linear-gradient(135deg, rgba(212,168,67,.15), rgba(212,168,67,.05));
+  border: 1px solid rgba(212,168,67,.3);
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+  font-size: 40px;
+  box-shadow: var(--sh-gold), inset 0 1px 0 rgba(255,255,255,.05);
+  position: relative;
+}
+.auth-crown::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 27px;
+  background: var(--gold-g);
+  opacity: .15;
+}
+.auth-h {
+  font-size: 1.8rem; font-weight: 900;
+  background: var(--gold-g);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 6px;
+  letter-spacing: -.02em;
+}
+.auth-s { font-size: .8rem; font-weight: 600; color: var(--txt2); margin-bottom: 36px; }
+.auth-in {
+  width: 100%;
+  background: rgba(255,255,255,.04);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-size: 1.4rem; font-weight: 900;
+  color: var(--txt0); text-align: center; letter-spacing: 6px;
+  outline: none; transition: .2s; margin-bottom: 16px;
+  caret-color: var(--gold);
+}
+.auth-in:focus {
+  background: rgba(212,168,67,.06);
+  border-color: rgba(212,168,67,.4);
+  box-shadow: 0 0 0 4px rgba(212,168,67,.08);
+}
+.auth-btn {
+  width: 100%; padding: 14px;
+  background: var(--gold-g);
+  color: var(--bg0); border: none; border-radius: 14px;
+  font-size: .95rem; font-weight: 900; cursor: pointer;
+  transition: .2s;
+  box-shadow: var(--sh-gold);
+  letter-spacing: .02em;
+}
+.auth-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(212,168,67,.4); }
+.auth-btn:active { transform: scale(.97); }
+.auth-err { color: var(--rose); font-size: .78rem; font-weight: 700; min-height: 22px; margin-top: 10px; }
 
 /* ─── LAYOUT ─── */
-#app{display:flex;height:100%;overflow:hidden;}
+#app { display: flex; height: 100vh; overflow: hidden; position: relative; z-index: 1; }
 
-/* ─── SIDEBAR (DESKTOP) ─── */
-.sidebar{width:var(--sb);background:var(--ink);height:100vh;position:fixed;right:0;top:0;z-index:900;display:flex;flex-direction:column;}
-.sidebar-head{padding:26px 20px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:12px;}
-.sidebar-logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:var(--sh-gold);}
-.sidebar-name{font-size:.95rem;font-weight:900;color:#fff;}
-.sidebar-ver{font-size:.65rem;font-weight:700;color:var(--gold);margin-top:2px;}
-.sidebar-sec{font-size:.65rem;font-weight:900;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:1.5px;padding:16px 20px 6px;}
-.nb{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;color:rgba(255,255,255,.6);font-size:.85rem;font-weight:700;cursor:pointer;margin:2px 12px;transition:0.2s;border:none;background:transparent;width:calc(100% - 24px);text-align:right;}
-.nb:hover{background:rgba(255,255,255,.04);color:#fff;}
-.nb.on{background:rgba(212,175,55,.15);color:var(--gold);border:1px solid rgba(212,175,55,.25);font-weight:900;}
-.nb .ni{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);font-size:14px;}
-.nb.on .ni{background:rgba(212,175,55,.2);}
-.nb .badge{margin-right:auto;background:var(--danger);color:#fff;font-size:.6rem;font-weight:900;padding:2px 6px;border-radius:var(--rf);}
-.sidebar-foot{margin-top:auto;padding:20px 12px;border-top:1px solid rgba(255,255,255,.05);}
-.sidebar-out{width:100%;padding:11px;background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);border-radius:12px;font-weight:700;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:0.2s;}
-.sidebar-out:hover{background:var(--danger-l);border-color:var(--danger);color:var(--danger);}
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: var(--sidebar); height: 100vh;
+  background: rgba(8,12,20,.98);
+  backdrop-filter: blur(40px);
+  border-left: 1px solid var(--line);
+  position: fixed; right: 0; top: 0; z-index: 900;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.sb-head {
+  padding: 28px 22px 22px;
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 14px;
+  flex-shrink: 0;
+}
+.sb-logo {
+  width: 46px; height: 46px; border-radius: 16px;
+  background: var(--gold-g);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  box-shadow: var(--sh-gold);
+  flex-shrink: 0;
+}
+.sb-title { font-size: 1rem; font-weight: 900; color: var(--txt0); }
+.sb-ver {
+  font-size: .62rem; font-weight: 700;
+  color: var(--gold); background: var(--gold-l);
+  padding: 2px 8px; border-radius: 6px;
+  display: inline-block; margin-top: 4px;
+}
+.sb-section {
+  font-size: .62rem; font-weight: 900; color: var(--txt3);
+  text-transform: uppercase; letter-spacing: 2px;
+  padding: 18px 22px 6px;
+}
+.sb-nav { flex: 1; overflow-y: auto; padding: 8px 12px; }
+.sbn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border-radius: 12px;
+  color: var(--txt2); font-size: .83rem; font-weight: 700;
+  cursor: pointer; margin-bottom: 2px;
+  transition: .18s;
+  border: none; background: transparent;
+  width: 100%; text-align: right;
+  position: relative;
+}
+.sbn:hover { background: rgba(255,255,255,.04); color: var(--txt1); }
+.sbn.on {
+  background: var(--gold-l);
+  color: var(--gold);
+  border: 1px solid rgba(212,168,67,.2);
+  font-weight: 900;
+}
+.sbn .sbi {
+  width: 30px; height: 30px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.04); font-size: 14px;
+  flex-shrink: 0;
+}
+.sbn.on .sbi { background: rgba(212,168,67,.2); }
+.sbn .sbn-badge {
+  margin-right: auto;
+  background: var(--rose); color: #fff;
+  font-size: .6rem; font-weight: 900;
+  padding: 2px 7px; border-radius: 99px;
+}
+.sb-foot {
+  padding: 16px 12px 20px;
+  border-top: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.sb-status {
+  background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.2);
+  border-radius: 12px; padding: 10px 12px;
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 10px;
+}
+.sb-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--jade);
+  animation: sbpulse 2s infinite;
+}
+.sb-dot.off { background: var(--rose); animation: none; }
+@keyframes sbpulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,.4); }
+  50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+}
+.sb-st-txt { font-size: .75rem; font-weight: 800; color: var(--jade); }
+.sb-st-txt.off { color: var(--rose); }
+.sb-logout {
+  width: 100%; padding: 11px; border-radius: 12px;
+  background: transparent; border: 1px solid var(--line);
+  color: var(--txt2); font-size: .82rem; font-weight: 800;
+  cursor: pointer; transition: .2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.sb-logout:hover { background: var(--rose-l); border-color: rgba(244,63,94,.2); color: var(--rose); }
 
-/* ─── MAIN CONTAINER ─── */
-.main{height:100vh;overflow-y:auto;background:var(--base2);width:100%;}
-@media(min-width:769px){
-  .bnav{display:none!important;}
-  .main{margin-right:var(--sb);width:calc(100% - var(--sb));padding:30px 35px;}
-  .dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;}
-  .dh-t{font-size:1.6rem;font-weight:900;color:var(--ink);}
-  .dh-s{font-size:.8rem;font-weight:700;color:var(--ink4);margin-top:3px;}
-  .dh-cl{background:var(--base);padding:8px 22px;border-radius:var(--rf);font-weight:900;font-size:1rem;color:var(--ink2);border:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,0.02);}
-  .map-wrap{width:100%;height:440px;border-radius:var(--r5);overflow:hidden;box-shadow:var(--sh-md);border:4px solid var(--base);position:relative;}
-  .mob-hdr,.mob-st,.sheet-h{display:none!important;}
+/* ─── MAIN CONTENT ─── */
+.main {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--bg0);
+  margin-right: var(--sidebar);
+}
+.tab-page { display: none; padding: 28px 32px 40px; }
+.tab-page.on { display: block; }
+.pg-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 28px;
+}
+.pg-title { font-size: 1.5rem; font-weight: 900; color: var(--txt0); letter-spacing: -.02em; }
+.pg-sub { font-size: .78rem; font-weight: 600; color: var(--txt2); margin-top: 4px; }
+.clock-badge {
+  background: rgba(255,255,255,.04); border: 1px solid var(--line);
+  border-radius: 10px; padding: 8px 16px;
+  font-size: .9rem; font-weight: 900; color: var(--txt1);
+  font-family: 'JetBrains Mono', monospace;
 }
 
-/* ─── MOBILE CONTAINER ─── */
-@media(max-width:768px){
-  .sidebar,.dh,.desk-only{display:none!important;}
-  .main{margin-right:0;width:100%;padding:0;overflow:hidden;}
-  .bnav{display:flex;position:fixed;bottom:0;left:0;width:100%;height:var(--nav);background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-top:1px solid var(--line);border-radius:24px 24px 0 0;justify-content:space-around;align-items:center;z-index:9000;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -5px 25px rgba(0,23,49,.05);}
-  .bni{display:flex;flex-direction:column;align-items:center;gap:2px;width:20%;cursor:pointer;padding:6px 0;}
-  .bni-ic{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--ink4);font-size:16px;}
-  .bni-lb{font-size:.65rem;font-weight:700;color:var(--ink4);}
-  .bni.on .bni-ic{background:linear-gradient(135deg,var(--ink2),var(--ink));color:#fff;box-shadow:var(--sh-md);}
-  .bni.on .bni-lb{color:var(--ink2);font-weight:900;}
-  .bni-dot{position:absolute;top:6px;right:calc(50% - 16px);width:6px;height:6px;background:var(--danger);border-radius:50%;display:none;}
-  .bni-dot.on{display:block;}
-  .pg{position:absolute;top:0;bottom:var(--nav);left:0;right:0;overflow-y:auto;background:var(--base2);-webkit-overflow-scrolling:touch;}
-  .pg::-webkit-scrollbar{display:none;}
-  #pg-live.on{display:flex!important;flex-direction:column;overflow:hidden;}
-  .map-wrap{position:relative;width:100%;flex:1;min-height:45vh;}
-  .mob-hdr{position:absolute;top:max(12px,env(safe-area-inset-top));left:12px;right:12px;z-index:20;display:flex;justify-content:space-between;align-items:center;pointer-events:none;}
-  .mob-hdr>*{pointer-events:auto;}
-  .pill{background:rgba(255,255,255,.96);backdrop-filter:blur(10px);padding:8px 16px;border-radius:var(--rf);display:flex;align-items:center;gap:8px;box-shadow:var(--sh-md);font-weight:900;font-size:.8rem;color:var(--ink2);}
-  .mob-st{position:absolute;top:calc(max(12px,env(safe-area-inset-top)) + 52px);right:12px;z-index:20;display:flex;flex-direction:column;gap:5px;}
-  .mst{background:rgba(255,255,255,.96);backdrop-filter:blur(10px);padding:6px 12px;border-radius:var(--rf);font-weight:800;font-size:.75rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);display:flex;align-items:center;gap:6px;}
-  .b-sheet{position:absolute;bottom:0;left:0;right:0;background:var(--base2);border-radius:28px 28px 0 0;z-index:15;display:flex;flex-direction:column;box-shadow:0 -10px 35px rgba(0,23,49,.08);height:48%;overflow:hidden;}
-  .sheet-h{width:40px;height:5px;background:var(--base3);border-radius:99px;margin:12px auto 0;flex-shrink:0;}
-  .sheet-sc{overflow-y:auto;flex:1;padding:12px 16px 16px;-webkit-overflow-scrolling:touch;}
-  .tab-p{padding:20px 16px;padding-top:max(20px,env(safe-area-inset-top));padding-bottom:calc(var(--nav) + 20px);}
+/* ─── KPI CARDS ─── */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+@media(max-width:1200px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+.kc {
+  background: var(--bg1); border-radius: var(--r5);
+  border: 1px solid var(--line);
+  padding: 20px 18px; display: flex; align-items: center; gap: 16px;
+  position: relative; overflow: hidden; transition: .2s; cursor: default;
+}
+.kc:hover { transform: translateY(-2px); border-color: rgba(212,168,67,.15); box-shadow: var(--sh-md); }
+.kc::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.kc.k-gold::before { background: var(--gold-g); }
+.kc.k-jade::before { background: var(--jade); }
+.kc.k-rose::before { background: var(--rose); }
+.kc.k-sky::before  { background: var(--sky); }
+.kc.k-violet::before { background: var(--violet); }
+.kc-ic {
+  width: 50px; height: 50px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.k-gold .kc-ic  { background: var(--gold-l); }
+.k-jade .kc-ic  { background: var(--jade-l); }
+.k-rose .kc-ic  { background: var(--rose-l); }
+.k-sky .kc-ic   { background: var(--sky-l); }
+.k-violet .kc-ic{ background: var(--violet-l); }
+.kc-v { font-size: 2rem; font-weight: 900; line-height: 1; color: var(--txt0); }
+.kc-l { font-size: .7rem; font-weight: 700; color: var(--txt2); margin-top: 5px; }
+.kc-trend { font-size: .7rem; font-weight: 800; color: var(--jade); margin-top: 2px; }
+
+/* ─── SECTION TITLE ─── */
+.sec-title {
+  font-size: .75rem; font-weight: 900; color: var(--txt2);
+  text-transform: uppercase; letter-spacing: 2px;
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sec-title::after {
+  content: ''; flex: 1; height: 1px; background: var(--line);
 }
 
-.pg{display:none;} .pg.on{display:block;}
+/* ─── LIVE MAP PAGE ─── */
+#pg-live { padding: 0; display: none; height: 100vh; }
+#pg-live.on { display: flex; flex-direction: column; }
+.live-header {
+  padding: 20px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg1);
+  flex-shrink: 0;
+}
+.live-kpis { display: flex; gap: 12px; }
+.lk {
+  background: rgba(255,255,255,.04); border: 1px solid var(--line);
+  border-radius: 12px; padding: 10px 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.lk-v { font-size: 1.2rem; font-weight: 900; color: var(--txt0); }
+.lk-l { font-size: .68rem; font-weight: 700; color: var(--txt2); margin-top: 2px; }
+.live-body { display: flex; flex: 1; overflow: hidden; }
+#amap { flex: 1; height: 100%; }
+.live-panel {
+  width: 360px; background: var(--bg1); border-right: 1px solid var(--line);
+  display: flex; flex-direction: column; overflow: hidden;
+  flex-shrink: 0;
+}
+.lp-head {
+  padding: 16px 20px; border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 8px;
+}
+.lp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--jade); animation: sbpulse 1.5s infinite; }
+.lp-title { font-size: .88rem; font-weight: 900; color: var(--txt0); }
+.lp-count { margin-right: auto; background: var(--rose); color: #fff; font-size: .62rem; font-weight: 900; padding: 2px 8px; border-radius: 99px; display: none; }
+.lp-count.show { display: block; }
+.fbar {
+  display: flex; gap: 6px; padding: 12px 16px;
+  border-bottom: 1px solid var(--line); overflow-x: auto;
+  scrollbar-width: none; flex-shrink: 0;
+}
+.fbar::-webkit-scrollbar { display: none; }
+.fp {
+  flex-shrink: 0; padding: 6px 12px; border-radius: 99px;
+  font-size: .72rem; font-weight: 800; color: var(--txt2);
+  background: rgba(255,255,255,.04); border: 1px solid var(--line);
+  cursor: pointer; transition: .15s; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.fp:hover { color: var(--txt1); }
+.fp.on { background: var(--gold-l); color: var(--gold); border-color: rgba(212,168,67,.25); font-weight: 900; }
+.fp .fc-n { padding: 1px 6px; border-radius: 99px; font-size: .65rem; font-weight: 900; background: rgba(255,255,255,.08); }
+.fp.on .fc-n { background: rgba(212,168,67,.2); color: var(--gold); }
+.lp-list { flex: 1; overflow-y: auto; padding: 12px 16px; }
+.lp-empty { text-align: center; padding: 40px 20px; color: var(--txt2); font-size: .85rem; font-weight: 700; }
 
-/* ─── ENTERPRISE KPI GRID ─── */
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:25px;}
-@media(max-width:992px){.kpi-row{grid-template-columns:repeat(2,1fr);}}
-.kc{background:var(--base);border-radius:var(--r4);padding:20px 18px;border:1px solid rgba(0,35,73,0.03);box-shadow:var(--sh-xs);display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;transition:0.2s;}
-.kc:hover{transform:translateY(-2px);box-shadow:var(--sh-md);}
-.kc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
-.kc.kb::before{background:var(--ink3);}
-.kc.kg::before{background:var(--gold);}
-.kc.ko::before{background:var(--success);}
-.kc.kv::before{background:var(--info);}
-.kc-ic{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-.kc-v{font-size:1.8rem;font-weight:900;color:var(--ink);line-height:1;}
-.kc-l{font-size:.75rem;font-weight:700;color:var(--ink4);margin-top:4px;}
+/* ─── ORDER CARDS ─── */
+.oc {
+  background: rgba(255,255,255,.03); border-radius: var(--r4);
+  border: 1px solid var(--line); margin-bottom: 10px;
+  overflow: hidden; transition: .2s; position: relative;
+}
+.oc:hover { border-color: rgba(212,168,67,.15); background: rgba(255,255,255,.05); }
+.oc::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 3px; border-radius: 0 var(--r4) var(--r4) 0; }
+.oc.op::before  { background: var(--rose); }
+.oc.oa::before  { background: var(--sky); }
+.oc.ocm::before { background: var(--jade); }
+.oc.ocx::before { background: var(--txt3); }
+.oc-head { padding: 12px 14px 8px; display: flex; align-items: center; justify-content: space-between; }
+.oc-id { font-size: .75rem; font-weight: 900; color: var(--gold); font-family: 'JetBrains Mono', monospace; }
+.oc-stb { padding: 3px 8px; border-radius: 99px; font-size: .62rem; font-weight: 900; }
+.oc-stb.r { background: var(--rose-l); color: var(--rose); }
+.oc-stb.b { background: var(--sky-l); color: var(--sky); }
+.oc-stb.g { background: var(--jade-l); color: var(--jade); }
+.oc-stb.d { background: rgba(255,255,255,.06); color: var(--txt2); }
+.oc-body { padding: 6px 14px 12px; }
+.oc-title { font-size: .88rem; font-weight: 900; color: var(--txt0); margin-bottom: 4px; }
+.oc-detail { font-size: .72rem; font-weight: 700; color: var(--txt2); margin-bottom: 8px; line-height: 1.6; }
+.oc-footer { padding: 8px 14px 10px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+.oc-price { font-size: .92rem; font-weight: 900; color: var(--jade); }
+.oc-actions { display: flex; gap: 5px; }
+.ob {
+  width: 28px; height: 28px; border-radius: 8px;
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: .15s; font-size: 12px; font-weight: 900;
+}
+.ob:active { transform: scale(.88); }
+.ob-ok  { background: var(--jade-l); color: var(--jade); }
+.ob-del { background: var(--rose-l); color: var(--rose); }
 
-/* ─── SMART FILTERS BAR ─── */
-.fbar{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;scrollbar-width:none;}
-.fbar::-webkit-scrollbar{display:none;}
-.fp{flex-shrink:0;padding:8px 16px;border-radius:var(--rf);font-size:.8rem;font-weight:800;color:var(--ink3);background:var(--base);border:1px solid var(--line);cursor:pointer;transition:0.15s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
-.fp:hover{background:var(--info-l);color:var(--info);}
-.fp.on{background:linear-gradient(135deg,var(--ink2),var(--ink));color:#fff;border-color:transparent;box-shadow:var(--sh-md);}
-.fp .fc{padding:2px 6px;border-radius:99px;font-size:.7rem;font-weight:900;}
-.fp:not(.on) .fc{background:var(--info-l);color:var(--info);}
-.fp.on .fc{background:rgba(255,255,255,.2);color:#fff;}
-.fp.fg.on{background:linear-gradient(135deg,var(--success),#047857);box-shadow:0 4px 14px rgba(16,185,129,0.2);}
-.fp.fr.on{background:linear-gradient(135deg,var(--danger),#dc2626);box-shadow:0 4px 14px rgba(239,68,68,0.2);}
-.fp.fy.on{background:linear-gradient(135deg,var(--gold),var(--gold-d));box-shadow:0 4px 14px rgba(212,175,55,0.2);}
+/* ─── CHART SECTION ─── */
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+@media(max-width:900px) { .chart-grid { grid-template-columns: 1fr; } }
+.chart-box {
+  background: var(--bg1); border-radius: var(--r5);
+  border: 1px solid var(--line); padding: 20px;
+  position: relative;
+}
+.chart-tt { font-size: .82rem; font-weight: 900; color: var(--txt1); margin-bottom: 16px; }
+.chart-inner { position: relative; height: 200px; }
 
-/* ─── CARD LOGISTICS ─── */
-.og{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-@media(max-width:540px){.og{grid-template-columns:1fr;}}
-@media(min-width:1200px){.og{grid-template-columns:repeat(3,1fr);}}
-.oc{background:var(--base);border-radius:20px;padding:16px;border:1px solid rgba(0,35,73,0.03);box-shadow:var(--sh-xs);position:relative;overflow:hidden;transition:0.2s;display:flex;flex-direction:column;gap:10px;}
-.oc:hover{box-shadow:var(--sh-md);transform:translateY(-2px);}
-.oc::after{content:'';position:absolute;right:0;top:12px;bottom:12px;width:4px;border-radius:99px;}
-.op::after{background:var(--danger);}
-.oa::after{background:var(--info);}
-.ocmp::after{background:var(--success);}
-.ocxl::after{background:var(--ink4);}
-.oc-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px dashed var(--base3);padding-bottom:10px;}
-.oc-id{font-weight:900;font-size:1rem;color:var(--ink);}
-.oc-tm{font-size:.7rem;font-weight:700;color:var(--ink4);margin-top:2px;}
-.oc-row{display:flex;justify-content:space-between;align-items:center;}
-.oc-title{font-weight:800;font-size:.9rem;color:var(--ink);}
-.oc-price{font-weight:900;font-size:1.05rem;color:var(--success);}
-.oc-details{font-size:.75rem;font-weight:700;color:var(--ink4);background:var(--base2);padding:8px 12px;border-radius:12px;border:1px solid rgba(0,35,73,0.02);}
-.oc-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:10px;border-top:1px solid var(--base2);}
-.stb{padding:4px 10px;border-radius:var(--rf);font-size:.68rem;font-weight:900;display:inline-block;}
-.stb-r{background:var(--danger-l);color:var(--danger);border:1px solid rgba(239,68,68,0.15);}
-.stb-g{background:var(--success-l);color:var(--success);border:1px solid rgba(16,185,129,0.15);}
-.stb-b{background:var(--info-l);color:var(--info);border:1px solid rgba(59,130,246,0.15);}
-.stb-neutral{background:var(--base3);color:var(--ink4);}
+/* ─── TABLE ─── */
+.tb-wrap { background: var(--bg1); border-radius: var(--r5); border: 1px solid var(--line); overflow: hidden; }
+.tb-header {
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  gap: 12px; flex-wrap: wrap;
+}
+.tb-title-block { display: flex; align-items: center; gap: 10px; }
+.tb-tt { font-size: .88rem; font-weight: 900; color: var(--txt0); }
+.tb-count { background: var(--gold-l); color: var(--gold); font-size: .65rem; font-weight: 900; padding: 3px 9px; border-radius: 99px; }
+.search-in {
+  background: rgba(255,255,255,.05); border: 1px solid var(--line);
+  border-radius: 10px; padding: 8px 14px; font-size: .8rem;
+  font-weight: 700; color: var(--txt0); outline: none; width: 200px;
+  transition: .2s;
+}
+.search-in:focus { background: rgba(255,255,255,.07); border-color: rgba(212,168,67,.3); }
+.search-in::placeholder { color: var(--txt3); }
+.type-sel {
+  background: rgba(255,255,255,.05); border: 1px solid var(--line);
+  border-radius: 10px; padding: 8px 14px; font-size: .8rem;
+  font-weight: 700; color: var(--txt1); outline: none;
+}
+.type-sel option { background: var(--bg2); color: var(--txt0); }
+.export-btn {
+  padding: 8px 18px; border-radius: 10px; border: none;
+  background: var(--gold-g); color: var(--bg0);
+  font-size: .78rem; font-weight: 900; cursor: pointer;
+  transition: .2s; white-space: nowrap;
+  box-shadow: var(--sh-gold);
+}
+.export-btn:hover { transform: translateY(-1px); }
+.tb-sc { overflow-x: auto; }
+.main-table { width: 100%; border-collapse: collapse; min-width: 750px; }
+.main-table th {
+  padding: 12px 14px; font-size: .7rem; font-weight: 900;
+  color: var(--txt2); background: rgba(255,255,255,.02);
+  border-bottom: 1px solid var(--line); text-align: right;
+  text-transform: uppercase; letter-spacing: 1px;
+  white-space: nowrap;
+}
+.main-table td {
+  padding: 12px 14px; font-size: .8rem; font-weight: 700;
+  border-bottom: 1px solid var(--line); color: var(--txt1);
+  white-space: nowrap;
+}
+.main-table tbody tr:hover { background: rgba(255,255,255,.02); }
+.main-table tbody tr:last-child td { border-bottom: none; }
+td.mono { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-size: .75rem; }
+td.hi { color: var(--jade); font-weight: 900; }
+.stb { padding: 3px 9px; border-radius: 99px; font-size: .65rem; font-weight: 900; }
+.stb-g { background: var(--jade-l); color: var(--jade); }
+.stb-r { background: var(--rose-l); color: var(--rose); }
+.stb-b { background: var(--sky-l); color: var(--sky); }
+.stb-y { background: var(--amber-l); color: var(--amber); }
+.stb-d { background: rgba(255,255,255,.06); color: var(--txt2); }
 
-.ob{width:32px;height:32px;border-radius:10px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:0.15s;font-size:14px;}
-.ob:active{transform:scale(.88);}
-.b-ok{background:var(--success-l);color:var(--success);}
-.b-cxl{background:var(--danger-l);color:var(--danger);}
+/* ─── PARTNERS GRID ─── */
+.entity-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media(max-width:1100px) { .entity-grid { grid-template-columns: repeat(2, 1fr); } }
+@media(max-width:700px)  { .entity-grid { grid-template-columns: 1fr; } }
+.ec {
+  background: var(--bg1); border-radius: var(--r5);
+  border: 1px solid var(--line); overflow: hidden;
+  transition: .2s; position: relative;
+  display: flex; flex-direction: column;
+}
+.ec:hover { border-color: rgba(212,168,67,.2); transform: translateY(-2px); box-shadow: var(--sh-md); }
+.ec-status-bar { height: 3px; flex-shrink: 0; }
+.ec.s-active .ec-status-bar { background: var(--jade); }
+.ec.s-pending .ec-status-bar { background: var(--amber); }
+.ec.s-blocked .ec-status-bar { background: var(--rose); }
+.ec-img {
+  width: 100%; height: 120px;
+  object-fit: cover; display: block;
+}
+.ec-no-img {
+  width: 100%; height: 120px;
+  background: rgba(255,255,255,.03);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem; color: var(--txt3);
+  border-bottom: 1px solid var(--line);
+}
+.ec-body { padding: 16px; flex: 1; }
+.ec-name { font-size: .95rem; font-weight: 900; color: var(--txt0); margin-bottom: 6px; }
+.ec-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.ec-city {
+  font-size: .68rem; font-weight: 800; color: var(--gold);
+  background: var(--gold-l); padding: 3px 9px; border-radius: 7px;
+}
+.ec-ph { font-size: .72rem; font-weight: 700; color: var(--txt2); direction: ltr; }
+.ec-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.est {
+  background: rgba(255,255,255,.03); border-radius: 10px;
+  padding: 8px 6px; text-align: center;
+  border: 1px solid var(--line);
+}
+.est-v { font-size: .95rem; font-weight: 900; color: var(--txt0); line-height: 1; }
+.est-v.g { color: var(--jade); }
+.est-v.r { color: var(--rose); }
+.est-v.y { color: var(--amber); }
+.est-l { font-size: .58rem; font-weight: 700; color: var(--txt3); margin-top: 4px; }
+.ec-comm { font-size: .72rem; font-weight: 700; color: var(--txt2); background: rgba(255,255,255,.03); border-radius: 8px; padding: 6px 10px; margin-bottom: 12px; border: 1px solid var(--line); }
+.ec-actions {
+  padding: 12px 16px; border-top: 1px solid var(--line);
+  display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end;
+}
+.ea {
+  padding: 7px 12px; border-radius: 9px; border: none;
+  font-size: .72rem; font-weight: 800; cursor: pointer;
+  transition: .15s; display: flex; align-items: center; gap: 5px;
+}
+.ea:active { transform: scale(.93); }
+.ea-ok   { background: var(--jade-l); color: var(--jade); }
+.ea-blk  { background: var(--rose-l); color: var(--rose); }
+.ea-rst  { background: var(--gold-l); color: var(--gold); }
+.ea-edit { background: var(--sky-l); color: var(--sky); }
 
-/* ─── PARTNERS NET GRID ─── */
-.eg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
-@media(max-width:540px){.eg{grid-template-columns:1fr;}}
-@media(min-width:769px){.eg{grid-template-columns:repeat(3,1fr);gap:16px;}}
-@media(min-width:1400px){.eg{grid-template-columns:repeat(4,1fr);}}
-.ec{background:var(--base);border-radius:20px;padding:18px;box-shadow:var(--sh-xs);border:1px solid rgba(0,35,73,0.02);display:flex;flex-direction:column;position:relative;overflow:hidden;gap:12px;transition:0.2s;}
-.ec:hover{transform:translateY(-2px);box-shadow:var(--sh-md);}
-.ec::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
-.ec.active::before{background:var(--success);}
-.ec.pending::before{background:var(--gold);}
-.ec.blocked::before{background:var(--danger);}
-.ec-img-wrap{width:100%;height:110px;border-radius:12px;overflow:hidden;background:var(--base2);position:relative;border:1px solid var(--base3);}
-.ec-img{width:100%;height:110px;object-fit:cover;}
-.ec-no-img{display:flex;align-items:center;justify-content:center;height:100%;font-size:2rem;color:var(--base3);}
-.ec-name{font-weight:900;font-size:.9rem;color:var(--ink);}
-.ec-city{font-size:.7rem;font-weight:800;color:var(--gold);background:var(--gold-l);padding:2px 8px;border-radius:8px;width:fit-content;}
-.ls{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.lm{background:var(--base2);border-radius:12px;padding:8px;text-align:center;border:1px solid rgba(0,35,73,0.01);}
-.lv{font-size:1.1rem;font-weight:900;line-height:1;}
-.lv.g{color:var(--success);}
-.lv.r{color:var(--danger);}
-.ll{font-size:.6rem;font-weight:700;color:var(--ink4);margin-top:4px;}
-.ec-foot{display:flex;gap:4px;margin-top:auto;padding-top:10px;border-top:1px solid var(--base2);justify-content:flex-end;}
+/* ─── FILTERS / TABS ─── */
+.entity-filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.ef {
+  padding: 7px 16px; border-radius: 99px; border: 1px solid var(--line);
+  background: rgba(255,255,255,.04); color: var(--txt2);
+  font-size: .75rem; font-weight: 800; cursor: pointer; transition: .15s;
+  display: flex; align-items: center; gap: 6px;
+}
+.ef:hover { color: var(--txt1); }
+.ef.on { background: var(--gold-l); color: var(--gold); border-color: rgba(212,168,67,.25); }
+.ef.jade.on { background: var(--jade-l); color: var(--jade); border-color: rgba(16,185,129,.25); }
+.ef.rose.on { background: var(--rose-l); color: var(--rose); border-color: rgba(244,63,94,.25); }
+.ef.amber.on { background: var(--amber-l); color: var(--amber); border-color: rgba(245,158,11,.25); }
+.ef-n { font-size: .62rem; background: rgba(255,255,255,.08); padding: 2px 6px; border-radius: 99px; }
 
-/* ─── ARCHIVE REPORT TABLE ─── */
-.tb-box{background:var(--base);border-radius:16px;padding:16px;box-shadow:var(--sh-xs);border:1px solid rgba(0,35,73,0.02);margin-bottom:16px;}
-.fc{width:100%;background:var(--base2);border:2px solid var(--base3);border-radius:12px;padding:10px 14px;font-size:.85rem;font-weight:700;color:var(--ink);outline:none;transition:0.2s;appearance:none;}
-.fc:focus{background:#fff;border-color:var(--ink3);box-shadow:0 0 0 3px var(--info-l);}
-.el{font-size:.7rem;font-weight:800;color:var(--ink4);margin-bottom:4px;display:block;}
-.tb-wrap{background:var(--base);border-radius:16px;box-shadow:var(--sh-xs);border:1px solid rgba(0,35,73,0.02);overflow:hidden;}
-.tb-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--base);border-bottom:1px solid var(--base3);flex-wrap:wrap;gap:8px;}
-.tb-info{font-size:.8rem;font-weight:800;color:var(--ink2);}
-.tb-badge{background:var(--info-l);color:var(--info);padding:2px 10px;border-radius:var(--rf);font-size:.7rem;font-weight:900;}
-.abt{height:36px;padding:0 16px;border-radius:10px;border:none;font-size:.75rem;font-weight:800;cursor:pointer;background:var(--ink2);color:#fff;transition:0.2s;}
-.abt:active{transform:scale(.96);}
-.tb-sc{overflow-x:auto;}
-.arch-tb{width:100%;border-collapse:collapse;min-width:800px;}
-.arch-tb th{padding:12px;font-size:.75rem;font-weight:800;color:var(--ink4);background:var(--base2);border-bottom:2px solid var(--base3);text-align:center;}
-.arch-tb td{padding:12px;font-size:.8rem;font-weight:700;text-align:center;border-bottom:1px solid var(--base3);}
-.arch-tb tbody tr:hover{background:var(--info-l);}
+/* ─── ARCH KPI ─── */
+.arch-kpi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+.ak {
+  background: var(--bg1); border-radius: var(--r4);
+  border: 1px solid var(--line); padding: 18px 16px;
+  display: flex; align-items: center; gap: 14px;
+}
+.ak-ic { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.ak-v { font-size: 1.6rem; font-weight: 900; color: var(--txt0); line-height: 1; }
+.ak-v.g { color: var(--jade); }
+.ak-v.r { color: var(--rose); }
+.ak-v.y { color: var(--gold); }
+.ak-l { font-size: .68rem; font-weight: 700; color: var(--txt2); margin-top: 5px; }
 
-/* ─── MODAL ENGINES ─── */
-.mbg{position:fixed;inset:0;background:rgba(0,17,36,0.6);backdrop-filter:blur(8px);z-index:20000;display:none;align-items:center;justify-content:center;padding:16px;}
-.mbg.open{display:flex;}
-.mcard{background:#fff;border-radius:28px;width:100%;max-width:480px;padding:26px 22px;box-shadow:var(--sh-lg);animation:mpop .3s cubic-bezier(.34,1.56,.64,1);max-height:92vh;overflow-y:auto;}
-@keyframes mpop{from{opacity:0;transform:scale(0.92) translateY(10px)}to{opacity:1;transform:none}}
+/* ─── MODALS ─── */
+.modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.7); backdrop-filter: blur(8px);
+  z-index: 20000; display: none;
+  align-items: center; justify-content: center; padding: 20px;
+}
+.modal-bg.open { display: flex; }
+.modal-card {
+  background: var(--bg2); border-radius: var(--r6);
+  border: 1px solid var(--line);
+  width: 100%; max-width: 480px; padding: 28px 24px;
+  box-shadow: var(--sh-xl);
+  animation: mpop .3s cubic-bezier(.34,1.56,.64,1);
+  max-height: 92vh; overflow-y: auto;
+}
+@keyframes mpop { from { opacity: 0; transform: scale(.9) translateY(10px); } to { opacity: 1; transform: none; } }
+.modal-title { font-size: 1.05rem; font-weight: 900; color: var(--txt0); text-align: center; margin-bottom: 6px; }
+.modal-sub { font-size: .75rem; font-weight: 700; color: var(--txt2); text-align: center; margin-bottom: 24px; }
+.fc {
+  width: 100%; background: rgba(255,255,255,.05);
+  border: 1.5px solid var(--line); border-radius: 12px;
+  padding: 11px 14px; font-size: .85rem; font-weight: 700;
+  color: var(--txt0); outline: none; transition: .2s;
+  margin-bottom: 12px;
+}
+.fc:focus { background: rgba(255,255,255,.07); border-color: rgba(212,168,67,.3); }
+.fc option { background: var(--bg2); }
+.el { font-size: .68rem; font-weight: 800; color: var(--txt2); margin-bottom: 6px; display: block; }
+.m-actions { display: flex; gap: 10px; margin-top: 8px; }
+.m-cancel { flex: 1; padding: 12px; background: rgba(255,255,255,.05); border: 1px solid var(--line); border-radius: 12px; color: var(--txt1); font-size: .85rem; font-weight: 800; cursor: pointer; }
+.m-save { flex: 1; padding: 12px; background: var(--gold-g); border: none; border-radius: 12px; color: var(--bg0); font-size: .85rem; font-weight: 900; cursor: pointer; box-shadow: var(--sh-gold); }
 
-/* ─── RADAR COMPONENT ─── */
-.rt{font-size:.95rem;font-weight:900;color:var(--ink);display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-.rt-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 1.4s infinite;}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(212,175,55,0.5)}70%{box-shadow:0 0 0 10px rgba(212,175,55,0)}100%{box-shadow:0 0 0 0 rgba(212,175,55,0)}}
-.leaflet-popup-content-wrapper{border-radius:14px;font-family:'Tajawal',sans-serif;box-shadow:var(--sh-md);}
-.popup-title{font-weight:900;color:var(--ink);font-size:.85rem;margin-bottom:4px;}
-.popup-sub{font-size:.7rem;font-weight:700;color:var(--ink4);}
+/* ─── LOADING SPINNER ─── */
+.loading { color: transparent !important; pointer-events: none; position: relative; }
+.loading::after {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  width: 16px; height: 16px; margin: -8px;
+  border: 2.5px solid rgba(255,255,255,.2);
+  border-top-color: var(--bg0);
+  border-radius: 50%; animation: spin .6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-.fab{position:absolute;left:12px;width:42px;height:42px;border-radius:12px;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:var(--sh-md);cursor:pointer;z-index:1200;border:1px solid var(--line);font-size:16px;}
-.fab-exp{top:12px;} .fab-cxl{top:60px;background:var(--danger-l);color:var(--danger);border-color:rgba(239,68,68,0.2);display:none;}
-.map-wrap.fs{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;z-index:9998!important;border-radius:0!important;border:none!important;margin:0!important;}
-.loading{color:transparent!important;pointer-events:none;position:relative;}
-.loading::after{content:'';position:absolute;left:50%;top:50%;width:16px;height:16px;margin:-8px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
+/* ─── MOBILE NAV ─── */
+@media(max-width:768px) {
+  .sidebar { display: none !important; }
+  .main { margin-right: 0; padding-bottom: var(--nav-h); }
+  .tab-page { padding: 16px; padding-bottom: calc(var(--nav-h) + 20px); }
+  .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .arch-kpi { grid-template-columns: 1fr; gap: 10px; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .entity-grid { grid-template-columns: 1fr; }
+  .live-panel { display: none; }
+  #pg-live { padding-bottom: var(--nav-h); }
+  .live-header { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+  .lk { padding: 7px 12px; }
+  .lk-v { font-size: 1rem; }
+  .bnav { display: flex; }
+}
+.bnav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  height: var(--nav-h); background: rgba(8,12,20,.97);
+  backdrop-filter: blur(20px); border-top: 1px solid var(--line);
+  justify-content: space-around; align-items: center;
+  z-index: 9000; padding-bottom: env(safe-area-inset-bottom);
+}
+.bni { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 8px 14px; }
+.bni-ic { width: 36px; height: 36px; border-radius: 11px; display: flex; align-items: center; justify-content: center; color: var(--txt3); font-size: 16px; transition: .18s; }
+.bni-lb { font-size: .6rem; font-weight: 700; color: var(--txt3); }
+.bni.on .bni-ic { background: var(--gold-l); color: var(--gold); }
+.bni.on .bni-lb { color: var(--gold); font-weight: 900; }
+
+/* ─── MAP POPUP ─── */
+.leaflet-popup-content-wrapper { background: var(--bg2); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--sh-md); color: var(--txt0); }
+.leaflet-popup-content { margin: 12px 14px; font-family: 'Cairo', sans-serif; }
+.popup-title { font-weight: 900; font-size: .85rem; color: var(--txt0); margin-bottom: 4px; }
+.popup-sub { font-size: .72rem; font-weight: 700; color: var(--txt2); }
+.leaflet-popup-tip { background: var(--bg2); }
+.leaflet-popup-close-button { color: var(--txt2) !important; }
+
+/* ─── MISC ─── */
+.empty-msg { text-align: center; padding: 40px 20px; color: var(--txt3); font-size: .85rem; font-weight: 700; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
 </style>
 </head>
 <body>
 
+<!-- TOASTS -->
 <div id="toasts"></div>
-<div id="fbSt"><span class="fb-dot" id="fbDot"></span><span id="fbTxt">متصل بالرادار</span></div>
 
-<!-- SECURITY AUTH LAYER -->
+<!-- ═══════════════ AUTH ═══════════════ -->
 <div id="auth">
   <div class="auth-box">
-    <div class="auth-mark">🐋</div>
-    <div class="auth-h">منصة الحوت السحابية</div>
-    <div class="auth-s">الإدارة العليا المحمية — Fortress V22.0</div>
-    <input type="password" id="mPW" class="auth-in" placeholder="••••" autocomplete="off" onkeypress="if(event.key==='Enter')doAuth()">
+    <div class="auth-crown">🐋</div>
+    <div class="auth-h">منصة الحوت</div>
+    <div class="auth-s">لوحة القيادة العليا · V9.2 Enterprise</div>
+    <input type="password" id="mPW" class="auth-in" placeholder="••••" autocomplete="off"
+      onkeypress="if(event.key==='Enter')doAuth()">
     <button class="auth-btn" id="authB" onclick="doAuth()">دخول النظام الآمن</button>
+    <div class="auth-err" id="authErr"></div>
   </div>
 </div>
 
-<!-- CENTRAL CORE APP -->
+<!-- ═══════════════ APP ═══════════════ -->
 <div id="app" class="dn">
+
+  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-head">
-      <div class="sidebar-logo">🐋</div>
-      <div><div class="sidebar-name">منصة الحوت</div><div class="sidebar-ver">V22.0 • الإدارة العامة</div></div>
+    <div class="sb-head">
+      <div class="sb-logo">🐋</div>
+      <div>
+        <div class="sb-title">منصة الحوت</div>
+        <div class="sb-ver">V9.2 · الإدارة العليا</div>
+      </div>
     </div>
-    <span class="sidebar-sec">الرصد الجغرافي</span>
-    <button class="nb on" id="nb-live" onclick="goTab('live',this)"><div class="ni">🗺️</div> الرصد الميداني</button>
-    <button class="nb" id="nb-orders" onclick="goTab('orders',this)"><div class="ni">📊</div> التقارير والحسابات</button>
-    <span class="sidebar-sec">إدارة الشركاء والمخزون</span>
-    <button class="nb" id="nb-offices" onclick="goTab('offices',this)"><div class="ni">🚗</div> مكاتب السيارات</button>
-    <button class="nb" id="nb-hotels" onclick="goTab('hotels',this)"><div class="ni">🏨</div> قطاع الفنادق</button>
-    <div class="sidebar-foot"><button class="sidebar-out" onclick="doLogout()">🚪 مغادرة النظام</button></div>
+    <nav class="sb-nav">
+      <div class="sb-section">المراقبة الحية</div>
+      <button class="sbn on" id="sbn-live" onclick="goTab('live',this)">
+        <div class="sbi">🗺️</div> الرادار الميداني
+      </button>
+      <div class="sb-section">التقارير والحسابات</div>
+      <button class="sbn" id="sbn-reports" onclick="goTab('reports',this)">
+        <div class="sbi">📊</div> السجلات المالية
+      </button>
+      <div class="sb-section">إدارة الشركاء</div>
+      <button class="sbn" id="sbn-offices" onclick="goTab('offices',this)">
+        <div class="sbi">🚗</div> مكاتب السيارات
+        <span class="sbn-badge dn" id="badge-offices">0</span>
+      </button>
+      <button class="sbn" id="sbn-hotels" onclick="goTab('hotels',this)">
+        <div class="sbi">🏨</div> قطاع الفنادق
+        <span class="sbn-badge dn" id="badge-hotels">0</span>
+      </button>
+    </nav>
+    <div class="sb-foot">
+      <div class="sb-status">
+        <div class="sb-dot" id="fbDot"></div>
+        <div class="sb-st-txt" id="fbTxt">جاري الاتصال...</div>
+      </div>
+      <button class="sb-logout" onclick="doLogout()">🚪 مغادرة النظام</button>
+    </div>
   </aside>
 
-  <main class="main">
-    <div class="dh">
-      <div><div class="dh-t" id="dhT">لوحة القيادة العليا</div><div class="dh-s">الرصد المركزي السحابي — العراق، 2026</div></div>
-      <div class="dh-cl" id="clkD">00:00</div>
-    </div>
+  <!-- MAIN -->
+  <main class="main" id="mainArea">
 
-    <!-- PAGE 1: LIVE RADAR MAP -->
-    <div id="pg-live" class="pg on">
-      <div class="kpi-row desk-only">
-        <div class="kc kb"><div class="kc-ic" style="background:var(--info-l);color:var(--info)">📦</div><div><div class="kc-v" id="kpi-active">0</div><div class="kc-l">حجوزات نشطة</div></div></div>
-        <div class="kc kg"><div class="kc-ic" style="background:var(--gold-l);color:var(--gold)">🚗</div><div><div class="kc-v" id="kpi-offices">0</div><div class="kc-l">مكاتب السيارات</div></div></div>
-        <div class="kc ko"><div class="kc-ic" style="background:var(--success-l);color:var(--success)">🏨</div><div><div class="kc-v" id="kpi-hotels">0</div><div class="kc-l">الفنادق المتصلة</div></div></div>
-        <div class="kc kv"><div class="kc-ic" style="background:rgba(0,35,73,0.04);color:var(--ink2)">✨</div><div><div class="kc-v" id="kpi-done">0</div><div class="kc-l">المنجزة اليوم</div></div></div>
-      </div>
-
-      <div class="map-wrap" id="mapWrap">
-        <div class="mob-hdr">
-          <div class="pill">🐋 منصة الحوت الإدارية</div>
-          <div class="pill" id="clkM">00:00</div>
-        </div>
-        <div class="mob-st">
-          <div class="mst">📦 <span id="m-kpi-active">0</span></div>
-          <div class="mst">🚗 <span id="m-kpi-offices">0</span></div>
-          <div class="mst">🏨 <span id="m-kpi-hotels">0</span></div>
-        </div>
-        <div id="amap" style="width:100%;height:100%"></div>
-        <div class="fab fab-exp" onclick="togFS()">⛶</div>
-        <div class="fab fab-cxl" id="btnCxl" onclick="cxlTrack()">✕</div>
-      </div>
-
-      <!-- BOTTOM SHEET FOR MOBILE / DESKTOP LIST -->
-      <div class="b-sheet">
-        <div class="sheet-h"></div>
-        <div class="sheet-sc">
-          <div class="rt"><div class="rt-dot"></div> رادار الحجوزات الفوري</div>
-          <div class="fbar">
-            <button class="fp on" onclick="doFilt('all',this)">الكل <span class="fc" id="f-all">0</span></button>
-            <button class="fp fr" onclick="doFilt('pending',this)">معلق <span class="fc" id="f-pending">0</span></button>
-            <button class="fp fg" onclick="doFilt('active',this)">جاري التنفيذ <span class="fc" id="f-active">0</span></button>
+    <!-- ── PAGE: LIVE MAP ── -->
+    <div id="pg-live" class="tab-page on" style="padding:0; height:100vh; display:flex; flex-direction:column;">
+      <div class="live-header">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="font-size:.95rem;font-weight:900;color:var(--txt0);">الرادار الميداني</div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:.7rem;font-weight:700;color:var(--jade)">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--jade);animation:sbpulse 1.5s infinite;"></div>
+            مباشر
           </div>
-          <div id="radM" class="og"></div>
         </div>
+        <div class="live-kpis">
+          <div class="lk"><div><div class="lk-v" id="lk-active">0</div><div class="lk-l">نشطة</div></div></div>
+          <div class="lk"><div><div class="lk-v" id="lk-offices">0</div><div class="lk-l">مكتب</div></div></div>
+          <div class="lk"><div><div class="lk-v" id="lk-hotels">0</div><div class="lk-l">فندق</div></div></div>
+          <div class="lk"><div><div class="lk-v" id="lk-done">0</div><div class="lk-l">منجزة اليوم</div></div></div>
+        </div>
+        <div class="clock-badge" id="clkBadge">--:--</div>
+      </div>
+      <div class="live-body" style="flex:1;overflow:hidden;">
+        <!-- ORDER PANEL -->
+        <div class="live-panel">
+          <div class="lp-head">
+            <div class="lp-dot"></div>
+            <div class="lp-title">الطلبات الواردة</div>
+            <div class="lp-count" id="lp-cnt">0</div>
+          </div>
+          <div class="fbar">
+            <button class="fp on" onclick="setLiveFilt('all',this)">الكل <span class="fc-n" id="fn-all">0</span></button>
+            <button class="fp" onclick="setLiveFilt('pending',this)">معلق <span class="fc-n" id="fn-pend">0</span></button>
+            <button class="fp" onclick="setLiveFilt('active',this)">جاري <span class="fc-n" id="fn-act">0</span></button>
+          </div>
+          <div class="lp-list" id="lp-list">
+            <div class="lp-empty">⏳ في انتظار بيانات Firebase...</div>
+          </div>
+        </div>
+        <!-- MAP -->
+        <div id="amap" style="flex:1;"></div>
       </div>
     </div>
 
-    <!-- PAGE 2: FINANCIAL REPORTS & ARCHIVE -->
-    <div id="pg-orders" class="pg tab-p">
+    <!-- ── PAGE: REPORTS ── -->
+    <div id="pg-reports" class="tab-page">
+      <div class="pg-header">
+        <div><div class="pg-title">السجلات المالية</div><div class="pg-sub">تقارير الطلبات والعمولات والإيرادات</div></div>
+        <div class="clock-badge" id="clkBadge2">--:--</div>
+      </div>
+
       <div class="arch-kpi">
-        <div class="ak akb"><div class="ak-ic b" style="background:var(--info-l);color:var(--info)">📈</div><div class="ak-n" id="ar-comp">0</div><div class="ak-l">حجوزات مكتملة</div></div>
-        <div class="ak aka"><div class="ak-ic r" style="background:var(--danger-l);color:var(--danger)">💵</div><div class="ak-n" id="ar-debt">0 <small style="font-size:0.6rem">د.ع</small></div><div class="ak-l">العمولات المستحقة</div></div>
-      </div>
-      <div class="chart-bx" style="background:#fff; padding:15px; border-radius:16px; margin-bottom:15px">
-        <div class="chart-tt">📊 إحصائيات الأداء المالي والتشغيلي</div>
-        <div style="height:220px; position:relative"><canvas id="dchart"></canvas></div>
-      </div>
-      <div class="tb-box">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
-          <div><label class="el">البحث في السجل</label><input type="text" id="arcSch" class="fc" placeholder="رقم الحجز، الاسم..." oninput="renderArch()"></div>
-          <div><label class="el">تصفية حسب النوع</label><select id="arcType" class="fc" onchange="renderArch()"><option value="all">كل الحجوزات</option><option value="car">تأجير سيارات</option><option value="hotel">حجوزات فنادق</option></select></div>
+        <div class="ak">
+          <div class="ak-ic" style="background:var(--jade-l)">✅</div>
+          <div><div class="ak-v g" id="rp-comp">0</div><div class="ak-l">طلبات مكتملة</div></div>
+        </div>
+        <div class="ak">
+          <div class="ak-ic" style="background:var(--rose-l)">💸</div>
+          <div><div class="ak-v r" id="rp-debt">0</div><div class="ak-l">عمولات مستحقة (د.ع)</div></div>
+        </div>
+        <div class="ak">
+          <div class="ak-ic" style="background:var(--gold-l)">📈</div>
+          <div><div class="ak-v y" id="rp-rev">0</div><div class="ak-l">إجمالي الإيرادات (د.ع)</div></div>
         </div>
       </div>
+
+      <div class="chart-grid">
+        <div class="chart-box">
+          <div class="chart-tt">📊 أداء الطلبات حسب النوع</div>
+          <div class="chart-inner"><canvas id="chart-orders"></canvas></div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-tt">💰 توزيع الإيرادات</div>
+          <div class="chart-inner"><canvas id="chart-revenue"></canvas></div>
+        </div>
+      </div>
+
       <div class="tb-wrap">
-        <div class="tb-bar">
-          <div class="tb-info">📋 الحجوزات المؤرشفة: <span class="tb-badge" id="arcBdg">0 طلب</span></div>
-          <button class="abt" onclick="expCSV()">⬇ تصدير تقرير CSV</button>
+        <div class="tb-header">
+          <div class="tb-title-block">
+            <div class="tb-tt">سجل الحجوزات</div>
+            <div class="tb-count" id="tb-count">0 سجل</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <input type="text" class="search-in" placeholder="🔍 بحث..." id="arcSch" oninput="renderArchTable()">
+            <select class="type-sel" id="arcType" onchange="renderArchTable()">
+              <option value="all">كل الطلبات</option>
+              <option value="car">🚗 السيارات</option>
+              <option value="hotel">🏨 الفنادق</option>
+            </select>
+            <button class="export-btn" onclick="expCSV()">⬇ تصدير CSV</button>
+          </div>
         </div>
         <div class="tb-sc">
-          <table class="arch-tb">
+          <table class="main-table">
             <thead>
               <tr>
                 <th>المعرف</th>
                 <th>التاريخ</th>
-                <th>العميل/النزيل</th>
+                <th>العميل</th>
                 <th>النوع</th>
-                <th>الجهة المكلفة</th>
-                <th>الإجمالي</th>
+                <th>الجهة</th>
+                <th>المبلغ</th>
                 <th>الحالة</th>
+                <th>إجراء</th>
               </tr>
             </thead>
-            <tbody id="arcTb"></tbody>
+            <tbody id="arcTbody"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- PAGE 3: CAR OFFICES NET -->
-    <div id="pg-offices" class="pg tab-p">
-      <div class="srch-w" style="margin-bottom:15px"><input type="text" id="sOff" class="fc" placeholder="🔍 ابحث عن مكتب سيارات..." oninput="filtEntities('OFFICE')"></div>
-      <div class="fbar" id="offFbar">
-        <button class="fp on" onclick="setEntityFilter('OFFICE','all',this)">الكل</button>
-        <button class="fp fg" onclick="setEntityFilter('OFFICE','active',this)">نشط</button>
-        <button class="fp fy" onclick="setEntityFilter('OFFICE','pending',this)">قيد الموافقة</button>
-        <button class="fp fr" onclick="setEntityFilter('OFFICE','blocked',this)">موقوف</button>
+    <!-- ── PAGE: OFFICES ── -->
+    <div id="pg-offices" class="tab-page">
+      <div class="pg-header">
+        <div><div class="pg-title">مكاتب السيارات</div><div class="pg-sub">إدارة الشركاء وضبط الصلاحيات</div></div>
+        <input type="text" class="search-in" placeholder="🔍 ابحث عن مكتب..." id="sOff" oninput="renderOffices()">
       </div>
-      <div class="eg" id="officesList"></div>
+      <div class="entity-filters" id="offFilt">
+        <button class="ef on" onclick="setEntFilt('office','all',this)">الكل <span class="ef-n" id="eof-all">0</span></button>
+        <button class="ef jade" onclick="setEntFilt('office','active',this)">✅ نشط <span class="ef-n" id="eof-act">0</span></button>
+        <button class="ef amber" onclick="setEntFilt('office','pending',this)">⏳ معلق <span class="ef-n" id="eof-pend">0</span></button>
+        <button class="ef rose" onclick="setEntFilt('office','blocked',this)">🚫 موقوف <span class="ef-n" id="eof-blk">0</span></button>
+      </div>
+      <div class="entity-grid" id="officesList"></div>
     </div>
 
-    <!-- PAGE 4: HOTELS NET -->
-    <div id="pg-hotels" class="pg tab-p">
-      <div class="srch-w" style="margin-bottom:15px"><input type="text" id="sHot" class="fc" placeholder="🔍 ابحث عن فندق..." oninput="filtEntities('HOTEL')"></div>
-      <div class="fbar" id="hotFbar">
-        <button class="fp on" onclick="setEntityFilter('HOTEL','all',this)">الكل</button>
-        <button class="fp fg" onclick="setEntityFilter('HOTEL','active',this)">نشط</button>
-        <button class="fp fy" onclick="setEntityFilter('HOTEL','pending',this)">قيد الموافقة</button>
-        <button class="fp fr" onclick="setEntityFilter('HOTEL','blocked',this)">موقوف</button>
+    <!-- ── PAGE: HOTELS ── -->
+    <div id="pg-hotels" class="tab-page">
+      <div class="pg-header">
+        <div><div class="pg-title">قطاع الفنادق</div><div class="pg-sub">إدارة الفنادق الشريكة وضبط التسعير</div></div>
+        <input type="text" class="search-in" placeholder="🔍 ابحث عن فندق..." id="sHot" oninput="renderHotels()">
       </div>
-      <div class="eg" id="hotelsList"></div>
+      <div class="entity-filters" id="hotFilt">
+        <button class="ef on" onclick="setEntFilt('hotel','all',this)">الكل <span class="ef-n" id="ehot-all">0</span></button>
+        <button class="ef jade" onclick="setEntFilt('hotel','active',this)">✅ نشط <span class="ef-n" id="ehot-act">0</span></button>
+        <button class="ef amber" onclick="setEntFilt('hotel','pending',this)">⏳ معلق <span class="ef-n" id="ehot-pend">0</span></button>
+        <button class="ef rose" onclick="setEntFilt('hotel','blocked',this)">🚫 موقوف <span class="ef-n" id="ehot-blk">0</span></button>
+      </div>
+      <div class="entity-grid" id="hotelsList"></div>
     </div>
+
   </main>
 
-  <!-- BOTTOM NAVIGATION FOR MOBILE DEVICES -->
+  <!-- BOTTOM NAV -->
   <nav class="bnav">
-    <div class="bni on" onclick="goTab('live',this)"><div class="bni-ic">🗺️</div><span class="bni-lb">الميدان</span><div class="bni-dot" id="bnDot"></div></div>
-    <div class="bni" onclick="goTab('orders',this)"><div class="bni-ic">📊</div><span class="bni-lb">الحسابات</span></div>
+    <div class="bni on" onclick="goTab('live',this)"><div class="bni-ic">🗺️</div><span class="bni-lb">الرادار</span></div>
+    <div class="bni" onclick="goTab('reports',this)"><div class="bni-ic">📊</div><span class="bni-lb">التقارير</span></div>
     <div class="bni" onclick="goTab('offices',this)"><div class="bni-ic">🚗</div><span class="bni-lb">المكاتب</span></div>
     <div class="bni" onclick="goTab('hotels',this)"><div class="bni-ic">🏨</div><span class="bni-lb">الفنادق</span></div>
   </nav>
 </div>
 
-<!-- PARTNER CONTROL MODAL -->
-<div id="editMod" class="mbg" onclick="clMod('editMod')">
-  <div class="mcard" onclick="event.stopPropagation()">
-    <div style="width:44px;height:44px;border-radius:12px;background:var(--info-l);display:flex;align-items:center;justify-content:center;color:var(--info);margin:0 auto 12px;font-size:20px">✏️</div>
-    <h4 id="mCardTitle" style="font-weight:900;text-align:center;margin-bottom:4px">تعديل معلومات الشريك</h4>
-    <p id="mCardSub" style="font-size:.75rem;font-weight:700;color:var(--ink4);text-align:center;margin-bottom:20px">التحكم بالإدارة والصلاحيات</p>
-    
-    <label class="el">الاسم التجاري / الفندق</label>
-    <input type="text" id="mName" class="fc" style="margin-bottom:12px">
-    
-    <label class="el">كلمة مرور جديدة (اتركها فارغة لعدم التغيير)</label>
-    <input type="text" id="mPass" class="fc" style="margin-bottom:20px" placeholder="••••••••">
-    
-    <div style="display:flex;gap:8px">
-      <button onclick="clMod('editMod')" class="fc" style="background:var(--base2);border:none;flex:1;cursor:pointer">إلغاء</button>
-      <button id="mSaveBtn" onclick="savePartnerEdit()" class="fc" style="background:var(--ink2);color:#fff;border:none;flex:1;cursor:pointer">💾 حفظ التغييرات</button>
+<!-- ═══════════════ EDIT MODAL ═══════════════ -->
+<div id="editModal" class="modal-bg" onclick="closeMod('editModal')">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div class="modal-title" id="mod-title">تعديل بيانات الشريك</div>
+    <div class="modal-sub" id="mod-sub">إدارة المعلومات والصلاحيات</div>
+
+    <label class="el">الاسم التجاري</label>
+    <input type="text" class="fc" id="mod-name">
+
+    <label class="el">كلمة المرور الجديدة (اتركها فارغة للإبقاء)</label>
+    <input type="text" class="fc" id="mod-pass" placeholder="كلمة مرور قوية...">
+
+    <div id="mod-hotel-extra" class="dn">
+      <div class="grid-2">
+        <div>
+          <label class="el">سعر المفردة (د.ع)</label>
+          <input type="number" class="fc" id="mod-p-single">
+        </div>
+        <div>
+          <label class="el">سعر المزدوجة (د.ع)</label>
+          <input type="number" class="fc" id="mod-p-double">
+        </div>
+      </div>
+      <label class="el">سعر الجناح (د.ع)</label>
+      <input type="number" class="fc" id="mod-p-suite">
+      <label class="el">المميزات</label>
+      <input type="text" class="fc" id="mod-features" placeholder="واي فاي، مواقف، ...">
+      <label class="el">رابط صورة الفندق</label>
+      <input type="text" class="fc" id="mod-photo" placeholder="https://...">
+    </div>
+
+    <div id="mod-office-extra" class="dn">
+      <div class="grid-2">
+        <div>
+          <label class="el">نوع العمولة</label>
+          <select class="fc" id="mod-comm-type">
+            <option value="fixed">ثابت</option>
+            <option value="split">مناصفة</option>
+            <option value="monthly">اشتراك شهري</option>
+          </select>
+        </div>
+        <div>
+          <label class="el">قيمة العمولة</label>
+          <input type="text" class="fc" id="mod-comm-val" placeholder="مثال: 2000">
+        </div>
+      </div>
+    </div>
+
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeMod('editModal')">إلغاء</button>
+      <button class="m-save" id="mod-save-btn" onclick="saveEdit()">💾 حفظ التغييرات</button>
     </div>
   </div>
 </div>
 
+<!-- ════════════════════ SCRIPTS ════════════════════ -->
 <script>
-/* ══════════════════════════════════════
-   GLOBAL ARCHITECTURE CONFIGURATION
-══════════════════════════════════════ */
-const API_URL = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
+/* ══════════════════════════════════════════════════
+   CONSTANTS
+══════════════════════════════════════════════════ */
+const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
 const API_TOKEN = "HUT_CLOUD_2026";
 
-let MP = ""; // Master Pass Session
-let gD = null; // Global Sheets State
+/* ══════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════ */
+let MP = "";
+let gD = null;
 let activeTab = "live";
 let carOrdersFB = [], hotelBookingsFB = [];
-let map, officesCluster, hotelsCluster;
-let markersMap = { offices: {}, hotels: {} };
-let offFilter = "all", hotFilter = "all";
-let currentEditType = "", currentEditId = "";
-let chartInstance = null;
+let map, markersLayer;
+let liveFilt = "all";
+let offFiltMode = "all", hotFiltMode = "all";
+let editCtx = { type: "", id: "", data: null };
+let charts = {};
+let isFirstLoad = true;
 
-// FIREBASE INITIALIZER
+/* ══════════════════════════════════════════════════
+   FIREBASE
+══════════════════════════════════════════════════ */
 try {
   firebase.initializeApp({
     apiKey: "AIzaSyAo1rmqUzieYZU3RIwXOAN87GkpNrp-_Hc",
@@ -448,459 +1014,673 @@ try {
     messagingSenderId: "941542380637",
     appId: "1:941542380637:web:9623fa6e627817ffeba9b4"
   });
-} catch(e) { console.error("Firebase init crash", e); }
-const db = firebase.database();
+} catch(e) {}
 
-/* ══════════════════════════════════════
-   SECURITY SHIELD (AUTHENTICATION)
-══════════════════════════════════════ */
+const db = firebase.database();
+db.ref(".info/connected").on("value", snap => {
+  const conn = snap.val();
+  const dot = document.getElementById("fbDot");
+  const txt = document.getElementById("fbTxt");
+  if (dot) dot.className = "sb-dot" + (conn ? "" : " off");
+  if (txt) { txt.textContent = conn ? "رادار متصل" : "غير متصل"; txt.className = "sb-st-txt" + (conn ? "" : " off"); }
+});
+
+/* ══════════════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════════════ */
+function cleanNum(v) { const n = Number(String(v||"").replace(/[^\d.-]/g,"")); return isNaN(n) ? 0 : n; }
+function fmt(n) { return Math.round(cleanNum(n)).toLocaleString("ar-EG"); }
+function timeAgo(d) {
+  const diff = Date.now() - new Date(d).getTime();
+  const m = Math.floor(diff/60000);
+  if (m < 1) return "الآن";
+  if (m < 60) return `منذ ${m}د`;
+  if (m < 1440) return `منذ ${Math.floor(m/60)}س`;
+  return new Date(d).toLocaleDateString("ar-EG");
+}
+
+function toast(msg, type = "s") {
+  const c = document.getElementById("toasts");
+  const el = document.createElement("div");
+  el.className = `ti t${type}`;
+  el.innerHTML = `<div class="ti-ico">${type==="s"?"✅":"❌"}</div><span class="ti-msg">${msg}</span>`;
+  c.appendChild(el);
+  setTimeout(() => { el.style.opacity="0"; el.style.transition=".3s"; setTimeout(()=>el.remove(), 300); }, 3500);
+}
+
+function setLoading(el, on) {
+  if (!el) return;
+  if (on) el.classList.add("loading");
+  else el.classList.remove("loading");
+  el.disabled = on;
+}
+
+/* ══════════════════════════════════════════════════
+   CLOCK
+══════════════════════════════════════════════════ */
+function startClock() {
+  function tick() {
+    const t = new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    ["clkBadge", "clkBadge2"].forEach(id => { const e = document.getElementById(id); if(e) e.textContent = t; });
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+/* ══════════════════════════════════════════════════
+   AUTH
+══════════════════════════════════════════════════ */
 window.doAuth = async function() {
   const pass = document.getElementById("mPW").value.trim();
-  if(!pass) return showToast("أدخل رمز المرور الإداري", "e");
+  if (!pass) { document.getElementById("authErr").textContent = "أدخل رمز المرور الإداري"; return; }
   MP = pass;
   const btn = document.getElementById("authB");
-  btn.classList.add("loading"); btn.disabled = true;
+  setLoading(btn, true);
+  document.getElementById("authErr").textContent = "";
 
   try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "VERIFY_MASTER_PASS", pass, token: API_TOKEN }) });
+    const res = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "VERIFY_MASTER_PASS", pass, token: API_TOKEN })
+    });
     const data = await res.json();
-    if(data.success) {
+
+    if (data.success) {
       document.getElementById("auth").style.display = "none";
       document.getElementById("app").classList.remove("dn");
       startClock();
       initMap();
       loadSystemData();
-      listenToFirebaseRealtime();
-    } else { MP = ""; showToast("رمز إدارة خاطئ ومرفوض", "e"); }
-  } catch(e) { MP = ""; showToast("فشل الاتصال بالسيرفر السحابي", "e"); }
-  finally { btn.classList.remove("loading"); btn.disabled = false; }
+      startFirebaseListeners();
+    } else {
+      MP = "";
+      document.getElementById("authErr").textContent = "❌ رمز إدارة خاطئ أو منتهي الصلاحية";
+    }
+  } catch(e) {
+    MP = "";
+    document.getElementById("authErr").textContent = "فشل الاتصال — تحقق من الشبكة";
+  } finally {
+    setLoading(btn, false);
+  }
 };
 
-function startClock() {
-  setInterval(() => {
-    const t = new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" });
-    document.getElementById("clkD").textContent = t;
-    document.getElementById("clkM").textContent = t;
-  }, 1000);
-}
-
-function showToast(m, type="s") {
-  const c = document.getElementById("toasts");
-  const el = document.createElement("div");
-  el.className = `ti t${type === "s" ? "s" : "e"}`;
-  el.innerHTML = `<div class="ti-ico">${type === "s" ? "✅" : "❌"}</div><span style="flex:1">${m}</span>`;
-  c.appendChild(el);
-  setTimeout(() => { el.style.opacity = "0"; el.style.transition = ".3s"; setTimeout(() => el.remove(), 300); }, 3000);
-}
-
-/* ──────────────────────────────────────────────────────────────────────
-   DATA CORE LOADING
-──────────────────────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   DATA LOADING
+══════════════════════════════════════════════════ */
 async function loadSystemData() {
   try {
     const res = await fetch(`${API_URL}?action=getAdminFullData&token=${API_TOKEN}&_t=${Date.now()}`);
     gD = await res.json();
-    if(gD && gD.success) {
-      document.getElementById("kpi-offices").textContent = gD.carOffices.length;
-      document.getElementById("kpi-hotels").textContent = gD.hotels.length;
-      document.getElementById("m-kpi-offices").textContent = gD.carOffices.length;
-      document.getElementById("m-kpi-hotels").textContent = gD.hotels.length;
-      
-      renderPartnersList("OFFICE");
-      renderPartnersList("HOTEL");
-      renderArch();
-      syncStaticMarkersOnMap();
-    }
-  } catch(e) { showToast("خطأ في مزامنة البيانات المالية", "e"); }
+    if (!gD || !gD.success) return;
+
+    // Sidebar badges for pending
+    const offPend = (gD.carOffices||[]).filter(x=>x.status==="pending").length;
+    const hotPend = (gD.hotels||[]).filter(x=>x.status==="pending").length;
+    const badgeOff = document.getElementById("badge-offices");
+    const badgeHot = document.getElementById("badge-hotels");
+    if (badgeOff) { badgeOff.textContent = offPend; badgeOff.classList.toggle("dn", offPend===0); }
+    if (badgeHot) { badgeHot.textContent = hotPend; badgeHot.classList.toggle("dn", hotPend===0); }
+
+    // Live KPIs
+    document.getElementById("lk-offices").textContent = (gD.carOffices||[]).filter(x=>x.status==="active").length;
+    document.getElementById("lk-hotels").textContent  = (gD.hotels||[]).filter(x=>x.status==="active").length;
+    const doneCar = (gD.carOrders||[]).filter(o=>o.status==="completed").length;
+    const doneHot = (gD.hotelBookings||[]).filter(b=>b.status==="completed").length;
+    document.getElementById("lk-done").textContent = doneCar + doneHot;
+
+    // Report KPIs
+    const tDebt = (gD.carOffices||[]).reduce((s,x)=>s+cleanNum(x.debt),0) + (gD.hotels||[]).reduce((s,x)=>s+cleanNum(x.debt),0);
+    const tRev  = (gD.carOrders||[]).filter(o=>o.status==="completed").reduce((s,o)=>s+cleanNum(o.total),0)
+                + (gD.hotelBookings||[]).filter(b=>b.status==="completed").reduce((s,b)=>s+cleanNum(b.total),0);
+    document.getElementById("rp-comp").textContent = fmt(doneCar + doneHot);
+    document.getElementById("rp-debt").textContent = fmt(tDebt) + " د.ع";
+    document.getElementById("rp-rev").textContent  = fmt(tRev) + " د.ع";
+
+    // Render pages
+    renderArchTable();
+    renderOffices();
+    renderHotels();
+    placeStaticMarkers();
+    renderCharts();
+    if (isFirstLoad) { isFirstLoad = false; }
+  } catch(e) { toast("خطأ في تحميل البيانات", "e"); }
 }
 
-/* ──────────────────────────────────────────────────────────────────────
-   REALTIME FIREBASE RADAR STREAM
-──────────────────────────────────────────────────────────────────────── */
-function listenToFirebaseRealtime() {
-  // Car Orders Realtime Stream
+/* ══════════════════════════════════════════════════
+   FIREBASE REALTIME LISTENERS
+══════════════════════════════════════════════════ */
+function startFirebaseListeners() {
   db.ref("hut_car_orders").on("value", snap => {
-    const data = snap.val() || {};
-    carOrdersFB = Object.values(data);
-    updateRadarDashboard();
+    carOrdersFB = snap.val() ? Object.values(snap.val()) : [];
+    refreshLivePanel();
   });
-
-  // Hotel Bookings Realtime Stream
   db.ref("hut_hotel_bookings").on("value", snap => {
-    const data = snap.val() || {};
-    hotelBookingsFB = Object.values(data);
-    updateRadarDashboard();
+    hotelBookingsFB = snap.val() ? Object.values(snap.val()) : [];
+    refreshLivePanel();
   });
 }
 
-let currentFilterMode = "all";
-window.doFilt = function(mode, btn) {
-  currentFilterMode = mode;
-  document.querySelectorAll(".fbar .fp").forEach(b => b.classList.remove("on"));
-  btn.classList.add("on");
-  updateRadarDashboard();
-};
-
-function updateRadarDashboard() {
-  const container = document.getElementById("radM");
-  if(!container) return;
-
-  let merged = [];
-  carOrdersFB.forEach(o => merged.push({ id: o.id, type: "car", title: o.car, entity: o.office || "جاري التحديد...", city: o.city, price: o.total, status: o.status, date: o.date, original: o }));
-  hotelBookingsFB.forEach(b => merged.push({ id: b.id, type: "hotel", title: b.hotel_name + " — " + b.room_type, entity: b.hotel_name, city: b.city, price: b.total, status: b.status, date: b.date_arrive, original: b }));
-
-  // الفلترة والعدادات
-  const cAll = merged.length;
-  const cPending = merged.filter(x => x.status === "pending").length;
-  const cActive = merged.filter(x => x.status === "active" || x.status === "confirmed").length;
-
-  document.getElementById("f-all").textContent = cAll;
-  document.getElementById("f-pending").textContent = cPending;
-  document.getElementById("f-active").textContent = cActive;
-  document.getElementById("kpi-active").textContent = cPending + cActive;
-  document.getElementById("m-kpi-active").textContent = cPending + cActive;
-
-  if(currentFilterMode === "pending") merged = merged.filter(x => x.status === "pending");
-  if(currentFilterMode === "active") merged = merged.filter(x => x.status === "active" || x.status === "confirmed");
-
-  if(merged.length === 0) {
-    container.innerHTML = `<div class="empty-s" style="grid-column:1/-1; text-align:center; padding:30px; color:var(--ink4)">الرادار نظيف تماماً 🐋</div>`;
-    return;
-  }
-
-  let html = "";
-  merged.forEach(x => {
-    let statusClass = "ocmp", statusText = "مكتمل";
-    if(x.status === "pending") { statusClass = "op"; statusText = "قيد المراجعة"; }
-    if(x.status === "active" || x.status === "confirmed") { statusClass = "oa"; statusText = "جاري التنفيذ"; }
-    if(x.status === "cancelled" || x.status === "rejected") { statusClass = "ocxl"; statusText = "ملغي/مرفوض"; }
-
-    html += `
-      <div class="oc ${statusClass}">
-        <div class="oc-head">
-          <div><div class="oc-id">#${x.id}</div><div class="oc-tm">📅 ${x.date}</div></div>
-          <span class="stb ${x.status==='pending'?'stb-r':x.status==='completed'?'stb-g':'stb-b'}">${statusText}</span>
-        </div>
-        <div class="oc-row">
-          <div class="oc-title">${x.type==='car'?'🚗':'🏨'} ${x.title}</div>
-          <div class="oc-price">${cleanNum(x.price).toLocaleString()} ع.د</div>
-        </div>
-        <div class="oc-details">📍 المدينة: ${x.city} <br> 🏢 الجهة: ${x.entity}</div>
-        <div class="oc-foot">
-          <button class="ob b-cxl" onclick="adminKillOrder('${x.type}','${x.id}')">✕</button>
-          <button class="ob b-ok" onclick="adminForceComplete('${x.type}','${x.id}')">✓</button>
-        </div>
-      </div>
-    `;
-  });
-  container.innerHTML = html;
+function getMergedOrders() {
+  const list = [];
+  carOrdersFB.forEach(o => list.push({
+    id: o.id, type: "car",
+    title: (o.car||"سيارة").substring(0,40),
+    entity: o.office||"جاري التحديد",
+    city: o.city||"—", price: cleanNum(o.total),
+    status: o.status, date: o.date||o.created_at||"", raw: o
+  }));
+  hotelBookingsFB.forEach(b => list.push({
+    id: b.id, type: "hotel",
+    title: (b.hotel_name||"فندق"),
+    entity: b.hotel_name||"—",
+    city: b.city||"—", price: cleanNum(b.total),
+    status: b.status, date: b.date_arrive||b.created_at||"", raw: b
+  }));
+  return list.sort((a,b) => new Date(b.date) - new Date(a.date));
 }
 
-window.adminForceComplete = function(type, id) {
-  if(!confirm("تأكيد إكمال الحجز يدوياً من الإدارة؟")) return;
-  const actionUrl = type === "car" ? "completeOrder" : "confirmBooking";
-  const pLoad = type === "car" ? { action: actionUrl, id: id, office: "الإدارة العامة", token: API_TOKEN } : { action: actionUrl, id: id, hotel: "الإدارة العامة", token: API_TOKEN };
-  
-  fetch(API_URL, { method: "POST", body: JSON.stringify(pLoad) })
-    .then(() => { showToast("تم تحديث حالة الحجز بنجاح"); loadSystemData(); })
-    .catch(() => showToast("تم الإرسال والمزامنة"));
-};
+function refreshLivePanel() {
+  const all = getMergedOrders();
+  const pend = all.filter(x => x.status === "pending").length;
+  const act  = all.filter(x => ["active","confirmed"].includes(x.status)).length;
 
-window.adminKillOrder = function(type, id) {
-  if(!confirm("تأكيد إلغاء هذا الحجز نهائياً؟")) return;
-  fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "cancelRequest", id: id, token: API_TOKEN }) })
-    .then(() => { showToast("تم إلغاء الحجز المحدّد"); loadSystemData(); })
-    .catch(() => showToast("تم إرسال أمر الإلغاء"));
-};
+  document.getElementById("fn-all").textContent  = all.length;
+  document.getElementById("fn-pend").textContent = pend;
+  document.getElementById("fn-act").textContent  = act;
+  document.getElementById("lk-active").textContent = pend + act;
 
-/* ──────────────────────────────────────────────────────────────────────
-   GEOGRAPHIC LIVE MAP (LEAFLET ENGINE)
-──────────────────────────────────────────────────────────────────────── */
-function initMap() {
-  map = L.map("amap", { zoomControl: false, attributionControl: false }).setView([35.468, 44.392], 12);
-  L.control.zoom({ position: "bottomleft" }).addTo(map);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", { maxZoom: 19 }).addTo(map);
-  
-  officesCluster = L.layerGroup().addTo(map);
-  hotelsCluster = L.layerGroup().addTo(map);
-  setTimeout(() => map.invalidateSize(), 300);
-}
+  const cntEl = document.getElementById("lp-cnt");
+  if (cntEl) { cntEl.textContent = pend; cntEl.classList.toggle("show", pend > 0); }
 
-function syncStaticMarkersOnMap() {
-  if(!map || !gD) return;
-  
-  // تنظيف الخريطة
-  Object.values(markersMap.offices).forEach(m => officesCluster.removeLayer(m));
-  Object.values(markersMap.hotels).forEach(m => hotelsCluster.removeLayer(m));
-  markersMap = { offices: {}, hotels: {} };
+  let filtered = all;
+  if (liveFilt === "pending") filtered = all.filter(x => x.status === "pending");
+  if (liveFilt === "active")  filtered = all.filter(x => ["active","confirmed"].includes(x.status));
 
-  // رسم مكاتب السيارات
-  gD.carOffices.forEach(off => {
-    const lat = parseFloat(off.lat), lng = parseFloat(off.lng);
-    if(lat && lng) {
-      const ico = L.divIcon({ className: "", html: `<div class="dm" style="background:var(--ink2); color:#fff; border-radius:50%; border:2px solid #fff; width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-size:12px; box-shadow:var(--sh-xs)">🚗</div>`, iconSize: [30, 30] });
-      const m = L.marker([lat, lng], { icon: ico }).bindPopup(`<div class="popup-title">${off.name}</div><div class="popup-sub">مكتب سيارات مفعّل في ${off.city}</div>`);
-      officesCluster.addLayer(m);
-      markersMap.offices[off.id] = m;
-    }
-  });
-
-  // رسم الفنادق
-  gD.hotels.forEach(hot => {
-    const lat = parseFloat(hot.lat), lng = parseFloat(hot.lng);
-    if(lat && lng) {
-      const ico = L.divIcon({ className: "", html: `<div class="dm" style="background:var(--success); color:#fff; border-radius:50%; border:2px solid #fff; width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-size:12px; box-shadow:var(--sh-xs)">🏨</div>`, iconSize: [30, 30] });
-      const m = L.marker([lat, lng], { icon: ico }).bindPopup(`<div class="popup-title">${hot.name}</div><div class="popup-sub">فندق ${hot.stars} نجوم — في ${hot.city}</div>`);
-      hotelsCluster.addLayer(m);
-      markersMap.hotels[hot.id] = m;
-    }
-  });
-}
-
-window.togFS = function() {
-  const w = document.getElementById("mapWrap");
-  isFS = !isFS;
-  w.classList.toggle("fs", isFS);
-  document.querySelector(".b-sheet").style.display = isFS ? "none" : "flex";
-  setTimeout(() => map.invalidateSize(), 300);
-};
-
-window.cxlTrack = () => { map.setView([35.468, 44.392], 12); };
-
-/* ──────────────────────────────────────────────────────────────────────
-   PARTNERS NET GRIDS (OFFICES & HOTELS)
-──────────────────────────────────────────────────────────────────────── */
-window.setEntityFilter = function(type, filter, btn) {
-  if(type === "OFFICE") offFilter = filter; else hotFilter = filter;
-  btn.closest(".fbar").querySelectorAll(".fp").forEach(b => b.classList.remove("on"));
-  btn.classList.add("on");
-  renderPartnersList(type);
-};
-
-function renderPartnersList(type) {
-  if(!gD) return;
-  const list = type === "OFFICE" ? gD.carOffices : gD.hotels;
-  const filt = type === "OFFICE" ? offFilter : hotFilter;
-  const searchQ = document.getElementById(type === "OFFICE" ? "sOff" : "sHot").value.toLowerCase().trim();
-  const container = document.getElementById(type === "OFFICE" ? "officesList" : "hotelsList");
-
-  let filtered = list.filter(x => x.status !== "deleted");
-  if(searchQ) filtered = filtered.filter(x => x.name.toLowerCase().includes(searchQ) || x.phone.includes(searchQ));
-  if(filt !== "all") filtered = filtered.filter(x => x.status === filt);
-
-  if(filtered.length === 0) {
-    container.innerHTML = `<div class="empty-s" style="grid-column:1/-1; text-align:center; padding:30px;"><div class="es-t">لا توجد نتائج مخصصة</div></div>`;
+  const list = document.getElementById("lp-list");
+  if (!filtered.length) {
+    list.innerHTML = `<div class="lp-empty">🐋 الرادار نظيف تماماً</div>`;
     return;
   }
 
   let html = "";
   filtered.forEach(x => {
-    let statusLabel = "نشط", statusClass = "active";
-    if(x.status === "pending") { statusLabel = "معلق"; statusClass = "pending"; }
-    if(x.status === "blocked") { statusLabel = "موقوف"; statusClass = "blocked"; }
-
-    const totalOrders = type === "OFFICE" ? (x.total_orders || 0) : (x.total_bookings || 0);
-    const totalRev = x.total_rev || 0;
-    const imgHtml = x.photo_url ? `<img class="ec-img" src="${x.photo_url}">` : `<div class="ec-no-img">${type==='OFFICE'?'🚗':'🏨'}</div>`;
+    let sc = "ocm", sl = "مكتمل", stb = "g";
+    if (x.status === "pending")  { sc = "op"; sl = "معلق"; stb = "r"; }
+    if (["active","confirmed"].includes(x.status)) { sc = "oa"; sl = "جاري التنفيذ"; stb = "b"; }
+    if (["cancelled","rejected"].includes(x.status)) { sc = "ocx"; sl = "ملغي"; stb = "d"; }
 
     html += `
-      <div class="ec ${statusClass}" id="card-${type}-${x.id}">
-        <div class="ec-img-wrap">${imgHtml}</div>
-        <div class="ec-name">${x.name}</div>
-        <div class="ec-city">${x.city}</div>
-        <div class="ec-ph" dir="ltr">${x.phone}</div>
-        <div class="ls">
-          <div class="lm"><div class="lv b">${totalOrders}</div><div class="ll">العمليات</div></div>
-          <div class="lm"><div class="lv g">${cleanNum(totalRev).toLocaleString()}</div><div class="ll">الإيرادات</div></div>
-          <div class="lm" style="grid-column: 1/3;"><div class="lv r">${cleanNum(x.debt).toLocaleString()} ع.د</div><div class="ll">الديون المستحقة للمنصة</div></div>
+      <div class="oc ${sc}">
+        <div class="oc-head">
+          <div class="oc-id">#${x.id}</div>
+          <span class="oc-stb ${stb}">${sl}</span>
         </div>
-        <div class="ec-foot">
-          <button class="ea ea-a" onclick="partnerQuickStatus('${type}','${x.id}','active')">✓</button>
-          <button class="ea ea-b" onclick="partnerQuickStatus('${type}','${x.id}','blocked')">🚫</button>
-          <button class="ea ea-d" onclick="partnerQuickStatus('${type}','${x.id}','deleted')">🗑</button>
-          <button class="ea ea-money" onclick="partnerResetDebt('${type}','${x.id}')">💵</button>
-          <button class="ea ea-e" onclick="opPartnerEdit('${type}','${x.id}','${x.name}')">✏️</button>
+        <div class="oc-body">
+          <div class="oc-title">${x.type==="car"?"🚗":"🏨"} ${x.title}</div>
+          <div class="oc-detail">📍 ${x.city} · 🏢 ${x.entity}</div>
+        </div>
+        <div class="oc-footer">
+          <div class="oc-price">${fmt(x.price)} د.ع</div>
+          <div class="oc-actions">
+            <button class="ob ob-ok" title="إكمال" onclick="forceComplete('${x.type}','${x.id}',this)">✓</button>
+            <button class="ob ob-del" title="إلغاء" onclick="forceCancel('${x.id}',this)">✕</button>
+          </div>
         </div>
       </div>
     `;
   });
-  container.innerHTML = html;
+  list.innerHTML = html;
 }
 
-window.partnerQuickStatus = function(type, id, status) {
-  if(status === "deleted" && !confirm("⚠️ حذف نهائي وشامل للحساب؟")) return;
-  const entityType = type === "OFFICE" ? "CarOffice" : "Hotel";
-  
-  fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "ADMIN_UPDATE_STATUS", entityType, id, status, token: API_TOKEN, pass: MP }) })
-    .then(() => { showToast("تم تحديث حالة الشريك إدارياً"); loadSystemData(); })
-    .catch(() => showToast("تم إرسال التحديث بنجاح"));
+window.setLiveFilt = function(f, btn) {
+  liveFilt = f;
+  document.querySelectorAll(".fbar .fp").forEach(b => b.classList.remove("on"));
+  btn.classList.add("on");
+  refreshLivePanel();
 };
 
-window.partnerResetDebt = function(type, id) {
-  if(!confirm("تأكيد استلام المبالغ وتصفير الديون المتراكمة على هذا الشريك؟")) return;
-  const entityType = type === "OFFICE" ? "CarOffice" : "Hotel";
-  
-  fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "resetDebt", entityType, id, token: API_TOKEN, pass: MP }) })
-    .then(() => { showToast("تم تصفير الديون بنجاح ✅"); loadSystemData(); })
-    .catch(() => showToast("تم تصفير الديون ومزامنة جدول الحسابات"));
-};
-
-window.opPartnerEdit = function(type, id, name) {
-  currentEditType = type; currentEditId = id;
-  document.getElementById("mCardSub").textContent = "الشريك: " + name;
-  document.getElementById("mName").value = name;
-  document.getElementById("mPass").value = "";
-  opMod("editMod");
-};
-
-window.savePartnerEdit = async function() {
-  const name = document.getElementById("mName").value.trim();
-  const pass = document.getElementById("mPass").value.trim();
-  if(!name) return alert("الاسم مطلوب");
-  
-  const btn = document.getElementById("mSaveBtn");
-  btn.classList.add("loading");
-  
-  const entityType = currentEditType === "OFFICE" ? "CarOffice" : "Hotel";
-  const updates = { name };
-  if(pass) updates.pass = pass;
-
+/* ══════════════════════════════════════════════════
+   ORDER ACTIONS
+══════════════════════════════════════════════════ */
+window.forceComplete = async function(type, id, btn) {
+  if (!confirm("تأكيد إكمال الطلب يدوياً؟")) return;
+  setLoading(btn, true);
+  const action = type === "car" ? "completeOrder" : "confirmBooking";
+  const body = type === "car"
+    ? { action, id, office: "الإدارة العامة", token: API_TOKEN }
+    : { action, id, hotel: "الإدارة العامة", token: API_TOKEN };
   try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateEntityInfo", entityType, id: currentEditId, updates, token: API_TOKEN, pass: MP }) });
-    const data = await res.json();
-    if(data.success) { showToast("تم تحديث البيانات"); clMod("editMod"); loadSystemData(); }
-  } catch(e) { showToast("مزامنة التعديل تمت بنجاح"); clMod("editMod"); }
-  finally { btn.classList.remove("loading"); }
+    await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
+    toast("تم تحديث حالة الطلب بنجاح");
+    loadSystemData();
+  } catch(e) { toast("تم الإرسال", "s"); }
+  finally { setLoading(btn, false); }
 };
 
-window.filtEntities = function(type) { renderPartnersList(type); };
+window.forceCancel = async function(id, btn) {
+  if (!confirm("تأكيد إلغاء هذا الطلب نهائياً؟")) return;
+  setLoading(btn, true);
+  try {
+    await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "cancelRequest", id, token: API_TOKEN }) });
+    toast("تم إلغاء الطلب");
+    loadSystemData();
+  } catch(e) { toast("تم الإرسال"); }
+  finally { setLoading(btn, false); }
+};
 
-/* ──────────────────────────────────────────────────────────────────────
-   SECTION 14 ▸ ARCHIVE REPORT & ACCOUNTING ENGINE
-──────────────────────────────────────────────────────────────────────── */
-function renderArch() {
-  if(!gD) return;
-  const searchQ = document.getElementById("arcSch").value.toLowerCase().trim();
-  const typeFilter = document.getElementById("arcType").value;
-  const container = document.getElementById("arcTb");
+/* ══════════════════════════════════════════════════
+   MAP
+══════════════════════════════════════════════════ */
+function initMap() {
+  map = L.map("amap", { zoomControl: false, attributionControl: false }).setView([35.468, 44.392], 11);
+  L.control.zoom({ position: "bottomright" }).addTo(map);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", { maxZoom: 19 }).addTo(map);
+  markersLayer = L.layerGroup().addTo(map);
+  setTimeout(() => map.invalidateSize(), 400);
+}
+
+function placeStaticMarkers() {
+  if (!map || !gD) return;
+  markersLayer.clearLayers();
+
+  (gD.carOffices||[]).forEach(off => {
+    const lat = parseFloat(off.lat), lng = parseFloat(off.lng);
+    if (!lat || !lng || Math.abs(lat) < 1) return;
+    const ico = L.divIcon({
+      className: "",
+      html: `<div style="background:#1e40af;border:2px solid #d4a843;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,.5)">🚗</div>`,
+      iconSize: [32,32], iconAnchor: [16,16]
+    });
+    L.marker([lat,lng], { icon: ico })
+      .bindPopup(`<div class="popup-title">${off.name}</div><div class="popup-sub">📍 ${off.city} · 📊 ${off.total_orders||0} طلب</div>`)
+      .addTo(markersLayer);
+  });
+
+  (gD.hotels||[]).forEach(h => {
+    const lat = parseFloat(h.lat), lng = parseFloat(h.lng);
+    if (!lat || !lng || Math.abs(lat) < 1) return;
+    const ico = L.divIcon({
+      className: "",
+      html: `<div style="background:#065f46;border:2px solid #d4a843;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,.5)">🏨</div>`,
+      iconSize: [32,32], iconAnchor: [16,16]
+    });
+    L.marker([lat,lng], { icon: ico })
+      .bindPopup(`<div class="popup-title">${h.name}</div><div class="popup-sub">⭐ ${h.stars||"—"} نجوم · 📍 ${h.city}</div>`)
+      .addTo(markersLayer);
+  });
+}
+
+/* ══════════════════════════════════════════════════
+   ARCHIVE TABLE
+══════════════════════════════════════════════════ */
+function renderArchTable() {
+  if (!gD) return;
+  const q = (document.getElementById("arcSch")?.value || "").toLowerCase().trim();
+  const tf = document.getElementById("arcType")?.value || "all";
 
   let merged = [];
-  gD.carOrders.forEach(o => merged.push({ id: o.id, type: "car", name: o.name, entity: o.office || "—", price: cleanNum(o.total), status: o.status, date: o.date, original: o }));
-  gD.hotelBookings.forEach(b => merged.push({ id: b.id, type: "hotel", name: b.guest_name, entity: b.hotel_name, price: cleanNum(b.total), status: b.status, date: b.date_arrive, original: b }));
+  (gD.carOrders||[]).forEach(o => merged.push({ id:o.id, type:"car", name:o.name||"—", entity:o.office||"—", price:cleanNum(o.total), status:o.status, date:o.date }));
+  (gD.hotelBookings||[]).forEach(b => merged.push({ id:b.id, type:"hotel", name:b.guest_name||"—", entity:b.hotel_name||"—", price:cleanNum(b.total), status:b.status, date:b.date_arrive }));
 
-  // الفلترة
-  if(typeFilter === "car") merged = merged.filter(x => x.type === "car");
-  if(typeFilter === "hotel") merged = merged.filter(x => x.type === "hotel");
-  if(searchQ) merged = merged.filter(x => x.id.toLowerCase().includes(searchQ) || x.name.toLowerCase().includes(searchQ) || x.entity.toLowerCase().includes(searchQ));
+  if (tf === "car")   merged = merged.filter(x => x.type === "car");
+  if (tf === "hotel") merged = merged.filter(x => x.type === "hotel");
+  if (q) merged = merged.filter(x =>
+    x.id.toLowerCase().includes(q) || x.name.toLowerCase().includes(q) ||
+    (x.entity||"").toLowerCase().includes(q)
+  );
 
-  // حساب العدادات المالية والتشغيلية المتقدمة
-  const tComp = merged.filter(x => x.status === "completed").length;
-  let tDebt = 0;
-  
-  // حساب تقديري سريع للعمولات من الشيت
-  if(typeFilter === "car" || typeFilter === "all") gD.carOffices.forEach(x => tDebt += cleanNum(x.debt));
-  if(typeFilter === "hotel" || typeFilter === "all") gD.hotels.forEach(x => tDebt += cleanNum(x.debt));
+  const cnt = document.getElementById("tb-count");
+  if (cnt) cnt.textContent = merged.length + " سجل";
 
-  document.getElementById("ar-comp").textContent = tComp.toLocaleString("ar-EG");
-  document.getElementById("ar-debt").textContent = tDebt.toLocaleString("ar-EG") + " ع.د";
-  document.getElementById("arcBdg").textContent = merged.length + " عملية حجز";
-
-  if(merged.length === 0) {
-    container.innerHTML = `<tr><td colspan="7" style="padding:30px; text-align:center; color:var(--ink4)">لا توجد بيانات حجوزات مؤرشفة تطابق الفلتر</td></tr>`;
+  const tbody = document.getElementById("arcTbody");
+  if (!merged.length) {
+    tbody.innerHTML = `<tr><td colspan="8" style="padding:30px;text-align:center;color:var(--txt3)">لا توجد بيانات تطابق الفلتر</td></tr>`;
     return;
   }
 
-  let html = "";
-  merged.forEach(x => {
-    html += `
+  const stMap = {
+    completed:  ["stb-g","مكتمل"],
+    pending:    ["stb-r","معلق"],
+    active:     ["stb-b","جاري"],
+    confirmed:  ["stb-b","مؤكد"],
+    cancelled:  ["stb-d","ملغي"],
+    rejected:   ["stb-d","مرفوض"],
+  };
+
+  tbody.innerHTML = merged.map(x => {
+    const [sc, sl] = stMap[x.status] || ["stb-d", x.status];
+    return `
       <tr>
-        <td style="font-family:'JetBrains Mono'; font-weight:900; color:var(--ink3)">#${x.id}</td>
-        <td>${x.date}</td>
+        <td class="mono">#${x.id}</td>
+        <td>${x.date||"—"}</td>
         <td style="font-weight:900">${x.name}</td>
-        <td>${x.type==='car'?'🚗 تأجير سيارات':'🏨 جناح فندقي'}</td>
+        <td>${x.type==="car"?"🚗 سيارات":"🏨 فنادق"}</td>
         <td style="color:var(--gold)">${x.entity}</td>
-        <td style="font-weight:900; color:var(--success)">${x.price.toLocaleString()} ع.د</td>
-        <td><span class="stb ${x.status==='completed'?'stb-g':x.status==='pending'?'stb-r':'stb-b'}">${x.status}</span></td>
-      </tr>
-    `;
-  });
-  container.innerHTML = html;
+        <td class="hi">${fmt(x.price)} د.ع</td>
+        <td><span class="stb ${sc}">${sl}</span></td>
+        <td>
+          <button class="ob ob-del" style="width:24px;height:24px;font-size:10px" onclick="forceCancel('${x.id}',this)" title="إلغاء">✕</button>
+        </td>
+      </tr>`;
+  }).join("");
 }
 
 window.expCSV = function() {
-  if(!gD) return;
-  let csv = "\uFEFFرقم الحجز,التاريخ,العميل,النوع,الجهة المكلفة,الإجمالي,الحالة\n";
-  gD.carOrders.forEach(o => { csv += `"${o.id}","${o.date}","${o.name}","سيارات","${o.office}","${o.total}","${o.status}"\n`; });
-  gD.hotelBookings.forEach(b => { csv += `"${b.id}","${b.date_arrive}","${b.guest_name}","فنادق","${b.hotel_name}","${b.total}","${b.status}"\n`; });
-
-  const b = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(b);
-  const a = document.createElement("a");
-  a.href = url; a.download = `تقرير_الحوت_${new Date().toISOString().split('T')[0]}.csv`;
+  if (!gD) return;
+  let csv = "\uFEFFرقم الحجز,التاريخ,العميل,النوع,الجهة,المبلغ,الحالة\n";
+  (gD.carOrders||[]).forEach(o => { csv += `"${o.id}","${o.date}","${o.name}","سيارات","${o.office}","${o.total}","${o.status}"\n`; });
+  (gD.hotelBookings||[]).forEach(b => { csv += `"${b.id}","${b.date_arrive}","${b.guest_name}","فنادق","${b.hotel_name}","${b.total}","${b.status}"\n`; });
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = `تقرير_الحوت_${new Date().toISOString().split("T")[0]}.csv`;
   document.body.appendChild(a); a.click(); a.remove();
+  toast("تم تصدير التقرير بنجاح ✅");
 };
 
-/* ──────────────────────────────────────────────────────────────────────
-   SECTION 14b ▸ DYNAMIC ANALYTICS (CHART ENGINE)
-──────────────────────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   CHARTS
+══════════════════════════════════════════════════ */
 function renderCharts() {
-  if(!gD || typeof Chart === "undefined") return;
-  const ctx = document.getElementById("dchart");
-  if(!ctx) return;
+  if (!gD || typeof Chart === "undefined") return;
 
-  const cComp = gD.carOrders.filter(x => x.status === "completed").length;
-  const hComp = gD.hotelBookings.filter(x => x.status === "completed").length;
-  const cPending = gD.carOrders.filter(x => x.status === "pending").length;
-  const hPending = gD.hotelBookings.filter(x => x.status === "pending").length;
+  // Destroy old
+  Object.values(charts).forEach(c => { try { c.destroy(); } catch(e) {} });
+  charts = {};
 
-  if(chartInstance) chartInstance.destroy();
-
-  chartInstance = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: ["سيارات (مكتمل)", "فنادق (مكتمل)", "سيارات (معلق)", "فنادق (معلق)"],
-      datasets: [{
-        data: [cComp, hComp, cPending, hPending],
-        backgroundColor: ["#10b981", "#3b82f6", "#ef4444", "#f59e0b"],
-        borderRadius: 8
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, grid: { color: "rgba(0,35,73,0.03)" } } }
+  const cOpts = {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: "#64748b", font: { family: "Cairo", size: 11 } }, grid: { color: "rgba(255,255,255,.05)" } },
+      y: { ticks: { color: "#64748b", font: { family: "Cairo", size: 11 } }, grid: { color: "rgba(255,255,255,.05)" }, beginAtZero: true }
     }
-  });
+  };
+
+  // Orders chart
+  const oCtx = document.getElementById("chart-orders");
+  if (oCtx) {
+    const cComp  = (gD.carOrders||[]).filter(x=>x.status==="completed").length;
+    const cPend  = (gD.carOrders||[]).filter(x=>x.status==="pending").length;
+    const hComp  = (gD.hotelBookings||[]).filter(x=>x.status==="completed").length;
+    const hPend  = (gD.hotelBookings||[]).filter(x=>x.status==="pending").length;
+    charts.orders = new Chart(oCtx, {
+      type: "bar",
+      data: {
+        labels: ["سيارات (مكتمل)", "سيارات (معلق)", "فنادق (مكتمل)", "فنادق (معلق)"],
+        datasets: [{ data: [cComp, cPend, hComp, hPend], backgroundColor: ["#10b981","#f43f5e","#38bdf8","#f59e0b"], borderRadius: 8, borderSkipped: false }]
+      },
+      options: { ...cOpts }
+    });
+  }
+
+  // Revenue chart
+  const rCtx = document.getElementById("chart-revenue");
+  if (rCtx) {
+    const carRev   = (gD.carOrders||[]).filter(o=>o.status==="completed").reduce((s,o)=>s+cleanNum(o.total),0);
+    const hotRev   = (gD.hotelBookings||[]).filter(b=>b.status==="completed").reduce((s,b)=>s+cleanNum(b.total),0);
+    const carDebt  = (gD.carOffices||[]).reduce((s,x)=>s+cleanNum(x.debt),0);
+    const hotDebt  = (gD.hotels||[]).reduce((s,x)=>s+cleanNum(x.debt),0);
+    charts.revenue = new Chart(rCtx, {
+      type: "doughnut",
+      data: {
+        labels: ["إيرادات سيارات", "إيرادات فنادق", "ديون سيارات", "ديون فنادق"],
+        datasets: [{ data: [carRev, hotRev, carDebt, hotDebt], backgroundColor: ["#10b981","#38bdf8","#f43f5e","#f59e0b"], borderColor: "rgba(0,0,0,.2)", borderWidth: 2, hoverOffset: 6 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: "bottom", labels: { color: "#64748b", font: { family: "Cairo", size: 11 }, padding: 14 } } }
+      }
+    });
+  }
 }
 
-/* ──────────────────────────────────────────────────────────────────────
-   NAVIGATION ENGINE
-──────────────────────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   PARTNERS RENDER
+══════════════════════════════════════════════════ */
+function renderOffices() {
+  if (!gD) return;
+  const q = (document.getElementById("sOff")?.value || "").toLowerCase().trim();
+  let list = (gD.carOffices||[]);
+
+  // Update count badges
+  const counts = { all: list.length, active: 0, pending: 0, blocked: 0 };
+  list.forEach(x => { if (counts[x.status] !== undefined) counts[x.status]++; });
+  ["all","act","pend","blk"].forEach((k,i) => {
+    const statuses = ["all","active","pending","blocked"];
+    const el = document.getElementById(`eof-${k}`);
+    if (el) el.textContent = counts[statuses[i]]||0;
+  });
+
+  if (q) list = list.filter(x => x.name.toLowerCase().includes(q) || (x.phone||"").includes(q));
+  if (offFiltMode !== "all") list = list.filter(x => x.status === offFiltMode);
+
+  const container = document.getElementById("officesList");
+  if (!list.length) { container.innerHTML = `<div class="empty-msg" style="grid-column:1/-1">لا توجد مكاتب تطابق البحث</div>`; return; }
+
+  container.innerHTML = list.map(off => {
+    const sc = { active: "s-active", pending: "s-pending", blocked: "s-blocked" }[off.status] || "s-pending";
+    const sl = { active: "نشط ✅", pending: "معلق ⏳", blocked: "موقوف 🚫" }[off.status] || off.status;
+    const commTxt = off.comm_type === "monthly" ? `📅 شهري: ${fmt(off.comm_val)} د.ع` : off.comm_type === "split" ? `📊 مناصفة: ${off.comm_val}` : `💰 ${fmt(off.comm_val)} د.ع/طلب`;
+    return `
+      <div class="ec ${sc}">
+        <div class="ec-status-bar"></div>
+        <div class="ec-no-img">🚗</div>
+        <div class="ec-body">
+          <div class="ec-name">${off.name}</div>
+          <div class="ec-meta">
+            <div class="ec-city">${off.city}</div>
+            <div class="ec-ph">${off.phone||"—"}</div>
+          </div>
+          <div class="ec-stats">
+            <div class="est"><div class="est-v">${off.total_orders||0}</div><div class="est-l">الطلبات</div></div>
+            <div class="est"><div class="est-v g">${fmt(off.total_rev)} <span style="font-size:.55rem">د.ع</span></div><div class="est-l">الإيرادات</div></div>
+            <div class="est"><div class="est-v r">${fmt(off.debt)}</div><div class="est-l">الديون</div></div>
+          </div>
+          <div class="ec-comm">${commTxt} · 📡 نصف القطر: ${off.radius||10} كم</div>
+          <div style="font-size:.68rem;color:var(--txt3);font-weight:700;">الحالة: <span style="color:${off.status==='active'?'var(--jade)':off.status==='pending'?'var(--amber)':'var(--rose)'}">${sl}</span></div>
+        </div>
+        <div class="ec-actions">
+          ${off.status !== "active"  ? `<button class="ea ea-ok" onclick="setStatus('CarOffice','${off.id}','active',this)">✅ تفعيل</button>` : ""}
+          ${off.status !== "blocked" ? `<button class="ea ea-blk" onclick="setStatus('CarOffice','${off.id}','blocked',this)">🚫 وقف</button>` : ""}
+          <button class="ea ea-rst" onclick="resetDebt('CarOffice','${off.id}',this)">💰 تصفير</button>
+          <button class="ea ea-edit" onclick="openEdit('office','${off.id}')">✏️</button>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+function renderHotels() {
+  if (!gD) return;
+  const q = (document.getElementById("sHot")?.value || "").toLowerCase().trim();
+  let list = (gD.hotels||[]);
+
+  const counts = { all: list.length, active: 0, pending: 0, blocked: 0 };
+  list.forEach(x => { if (counts[x.status] !== undefined) counts[x.status]++; });
+  ["all","act","pend","blk"].forEach((k,i) => {
+    const statuses = ["all","active","pending","blocked"];
+    const el = document.getElementById(`ehot-${k}`);
+    if (el) el.textContent = counts[statuses[i]]||0;
+  });
+
+  if (q) list = list.filter(x => x.name.toLowerCase().includes(q) || (x.phone||"").includes(q));
+  if (hotFiltMode !== "all") list = list.filter(x => x.status === hotFiltMode);
+
+  const container = document.getElementById("hotelsList");
+  if (!list.length) { container.innerHTML = `<div class="empty-msg" style="grid-column:1/-1">لا توجد فنادق تطابق البحث</div>`; return; }
+
+  container.innerHTML = list.map(h => {
+    const sc = { active: "s-active", pending: "s-pending", blocked: "s-blocked" }[h.status] || "s-pending";
+    const sl = { active: "نشط ✅", pending: "معلق ⏳", blocked: "موقوف 🚫" }[h.status] || h.status;
+    const imgHtml = h.photo_url ? `<img class="ec-img" src="${h.photo_url}" onerror="this.parentNode.innerHTML='<div class=\\'ec-no-img\\'>🏨</div>'">` : `<div class="ec-no-img">🏨</div>`;
+    const stars = "⭐".repeat(Math.min(parseInt(h.stars)||0, 5));
+    return `
+      <div class="ec ${sc}">
+        <div class="ec-status-bar"></div>
+        ${imgHtml}
+        <div class="ec-body">
+          <div class="ec-name">${h.name}</div>
+          <div class="ec-meta">
+            <div class="ec-city">${h.city}</div>
+            <div style="font-size:.72rem;color:var(--gold)">${stars||"—"}</div>
+            <div class="ec-ph">${h.phone||"—"}</div>
+          </div>
+          <div class="ec-stats">
+            <div class="est"><div class="est-v">${h.total_bookings||0}</div><div class="est-l">الحجوزات</div></div>
+            <div class="est"><div class="est-v g">${fmt(h.total_rev)} <span style="font-size:.55rem">د.ع</span></div><div class="est-l">الإيرادات</div></div>
+            <div class="est"><div class="est-v r">${fmt(h.debt)}</div><div class="est-l">الديون</div></div>
+          </div>
+          <div class="ec-comm" style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:.65rem;">
+            <span>🛏 مفردة: ${fmt(h.price_single)} د.ع</span>
+            <span>🛏🛏 مزدوجة: ${fmt(h.price_double)} د.ع</span>
+            <span style="grid-column:1/3">👑 جناح: ${fmt(h.price_suite)} د.ع</span>
+          </div>
+          <div style="font-size:.68rem;color:var(--txt3);font-weight:700;">الحالة: <span style="color:${h.status==='active'?'var(--jade)':h.status==='pending'?'var(--amber)':'var(--rose)'}">${sl}</span></div>
+        </div>
+        <div class="ec-actions">
+          ${h.status !== "active"  ? `<button class="ea ea-ok" onclick="setStatus('Hotel','${h.id}','active',this)">✅ تفعيل</button>` : ""}
+          ${h.status !== "blocked" ? `<button class="ea ea-blk" onclick="setStatus('Hotel','${h.id}','blocked',this)">🚫 وقف</button>` : ""}
+          <button class="ea ea-rst" onclick="resetDebt('Hotel','${h.id}',this)">💰 تصفير</button>
+          <button class="ea ea-edit" onclick="openEdit('hotel','${h.id}')">✏️</button>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+/* ══════════════════════════════════════════════════
+   ENTITY FILTERS
+══════════════════════════════════════════════════ */
+window.setEntFilt = function(type, filt, btn) {
+  if (type === "office") offFiltMode = filt;
+  else hotFiltMode = filt;
+
+  btn.closest(".entity-filters").querySelectorAll(".ef").forEach(b => b.classList.remove("on"));
+  btn.classList.add("on");
+  if (type === "office") renderOffices(); else renderHotels();
+};
+
+/* ══════════════════════════════════════════════════
+   PARTNER ACTIONS
+══════════════════════════════════════════════════ */
+window.setStatus = async function(entityType, id, status, btn) {
+  const labels = { active: "تفعيل", blocked: "توقيف" };
+  if (!confirm(`تأكيد ${labels[status]||status} الشريك؟`)) return;
+  setLoading(btn, true);
+  try {
+    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "ADMIN_UPDATE_STATUS", entityType, id, status, token: API_TOKEN, pass: MP }) });
+    const data = await res.json();
+    if (data.success) { toast("تم تحديث الحالة بنجاح ✅"); await loadSystemData(); }
+    else toast(data.msg || "فشل التحديث", "e");
+  } catch(e) { toast("تم الإرسال — ستتم المزامنة"); await loadSystemData(); }
+  finally { setLoading(btn, false); }
+};
+
+window.resetDebt = async function(entityType, id, btn) {
+  if (!confirm("تأكيد استلام المبالغ وتصفير الديون على هذا الشريك؟")) return;
+  setLoading(btn, true);
+  try {
+    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "resetDebt", entityType, id, token: API_TOKEN, pass: MP }) });
+    const data = await res.json();
+    if (data.success) { toast(`✅ تم تصفير الديون — السابق: ${fmt(data.prev_debt||0)} د.ع`); await loadSystemData(); }
+    else toast(data.msg || "فشل", "e");
+  } catch(e) { toast("تم الإرسال"); await loadSystemData(); }
+  finally { setLoading(btn, false); }
+};
+
+/* ══════════════════════════════════════════════════
+   EDIT MODAL
+══════════════════════════════════════════════════ */
+window.openEdit = function(type, id) {
+  editCtx.type = type; editCtx.id = id;
+  const list = type === "office" ? (gD?.carOffices||[]) : (gD?.hotels||[]);
+  editCtx.data = list.find(x => String(x.id) === String(id));
+  if (!editCtx.data) return toast("لم يتم العثور على البيانات", "e");
+
+  document.getElementById("mod-title").textContent = type === "office" ? "تعديل بيانات المكتب" : "تعديل بيانات الفندق";
+  document.getElementById("mod-sub").textContent   = editCtx.data.name;
+  document.getElementById("mod-name").value = editCtx.data.name || "";
+  document.getElementById("mod-pass").value = "";
+
+  const hotelExtra  = document.getElementById("mod-hotel-extra");
+  const officeExtra = document.getElementById("mod-office-extra");
+
+  if (type === "hotel") {
+    hotelExtra.classList.remove("dn"); officeExtra.classList.add("dn");
+    document.getElementById("mod-p-single").value  = editCtx.data.price_single || "";
+    document.getElementById("mod-p-double").value  = editCtx.data.price_double || "";
+    document.getElementById("mod-p-suite").value   = editCtx.data.price_suite  || "";
+    document.getElementById("mod-features").value  = editCtx.data.features     || "";
+    document.getElementById("mod-photo").value     = editCtx.data.photo_url    || "";
+  } else {
+    hotelExtra.classList.add("dn"); officeExtra.classList.remove("dn");
+    document.getElementById("mod-comm-type").value = editCtx.data.comm_type || "fixed";
+    document.getElementById("mod-comm-val").value  = editCtx.data.comm_val  || "";
+  }
+
+  document.getElementById("editModal").classList.add("open");
+};
+
+window.saveEdit = async function() {
+  const btn = document.getElementById("mod-save-btn");
+  setLoading(btn, true);
+
+  const entityType = editCtx.type === "office" ? "CarOffice" : "Hotel";
+  const updates = { name: document.getElementById("mod-name").value.trim() };
+  const pass = document.getElementById("mod-pass").value.trim();
+  if (pass) updates.pass = pass;
+
+  if (editCtx.type === "hotel") {
+    const ps = document.getElementById("mod-p-single").value; if (ps) updates.price_single = Number(ps);
+    const pd = document.getElementById("mod-p-double").value; if (pd) updates.price_double = Number(pd);
+    const pu = document.getElementById("mod-p-suite").value;  if (pu) updates.price_suite  = Number(pu);
+    const ft = document.getElementById("mod-features").value; if (ft) updates.features = ft;
+    const ph = document.getElementById("mod-photo").value;    updates.photo_url = ph;
+  } else {
+    const ct = document.getElementById("mod-comm-type").value; if (ct) updates.comm_type = ct;
+    const cv = document.getElementById("mod-comm-val").value;  if (cv) updates.comm_val  = cv;
+  }
+
+  if (!updates.name) { toast("الاسم لا يمكن أن يكون فارغاً", "e"); setLoading(btn, false); return; }
+
+  try {
+    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateEntityInfo", entityType, id: editCtx.id, updates, token: API_TOKEN, pass: MP }) });
+    const data = await res.json();
+    if (data.success) { toast("تم حفظ التغييرات بنجاح ✅"); closeMod("editModal"); await loadSystemData(); }
+    else toast(data.msg || "فشل الحفظ", "e");
+  } catch(e) { toast("تم الإرسال — ستتم المزامنة"); closeMod("editModal"); await loadSystemData(); }
+  finally { setLoading(btn, false); }
+};
+
+window.closeMod = id => document.getElementById(id).classList.remove("open");
+
+/* ══════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════ */
 window.goTab = function(name, btn) {
   activeTab = name;
-  document.querySelectorAll(".pg").forEach(p => p.classList.remove("on"));
-  const p = document.getElementById("pg-" + name); if(p) p.classList.add("on");
+  document.querySelectorAll(".tab-page").forEach(p => p.classList.remove("on"));
+  const pg = document.getElementById("pg-" + name);
+  if (pg) pg.classList.add("on");
 
-  document.querySelectorAll(".nb, .bnav .bni").forEach(b => b.classList.remove("on"));
-  if(btn) btn.classList.add("on");
+  document.querySelectorAll(".sbn, .bni").forEach(b => b.classList.remove("on"));
+  const sbn = document.getElementById("sbn-" + name);
+  if (sbn) sbn.classList.add("on");
+  if (btn) btn.classList.add("on");
 
-  document.getElementById("dhT").textContent = name === "live" ? "لوحة القيادة العليا" : name === "orders" ? "التقارير والحسابات" : name === "offices" ? "مكاتب السيارات" : "قطاع الفنادق";
-
-  if(name === "live" && map) setTimeout(() => map.invalidateSize(), 300);
-  if(name === "orders") { renderArch(); renderCharts(); }
-  if(name === "offices" || name === "hotels") renderPartnersList(name === "offices" ? "OFFICE" : "HOTEL");
+  if (name === "live" && map) setTimeout(() => map.invalidateSize(), 300);
+  if (name === "reports") { renderArchTable(); renderCharts(); }
+  if (name === "offices") renderOffices();
+  if (name === "hotels")  renderHotels();
 };
 
 window.doLogout = function() {
-  if(!confirm("تأكيد تسجيل الخروج؟")) return;
-  db.ref("hut_car_orders").off();
-  db.ref("hut_hotel_bookings").off();
-  MP = ""; sessionStorage.clear(); localStorage.clear(); location.reload();
+  if (!confirm("تأكيد مغادرة النظام؟")) return;
+  try { db.ref("hut_car_orders").off(); db.ref("hut_hotel_bookings").off(); } catch(e) {}
+  MP = ""; gD = null;
+  location.reload();
 };
 
-window.opMod = (id) => document.getElementById(id).classList.add("open");
-window.clMod = (id) => document.getElementById(id).classList.remove("open");
+// Auto-refresh every 3 minutes
+setInterval(() => { if (gD) loadSystemData(); }, 180000);
 </script>
 </body>
 </html>

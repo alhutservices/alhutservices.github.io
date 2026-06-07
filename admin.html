@@ -2,728 +2,475 @@
 <html lang="ar" dir="rtl">
 <head>
 <script>
-const V="92.0",VK="alhut_admin_v92";
+const V="2.0",VK="alhut_admin_v2";
 try{if(localStorage.getItem(VK)!==V){localStorage.setItem(VK,V);if("caches"in window)caches.keys().then(n=>n.forEach(k=>caches.delete(k)));}}catch(e){}
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-<title>الحوت — لوحة القيادة العليا</title>
-<meta name="theme-color" content="#080c14">
+<title>الحوت — لوحة القيادة V2</title>
+<meta name="theme-color" content="#F7F7F7">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<!-- Leaflet -->
+<!-- Leaflet + MarkerCluster -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
-/* ═══════════════════════════════════════════════════
-   DESIGN TOKENS — Dark Luxury Theme
-═══════════════════════════════════════════════════ */
-:root {
-  /* Core Palette */
-  --bg0: #080c14;
-  --bg1: #0d1220;
-  --bg2: #111827;
-  --bg3: #1a2235;
-  --bg4: #1e2a3d;
-
-  /* Gold System */
-  --gold:   #d4a843;
-  --gold-d: #a8832e;
-  --gold-l: rgba(212,168,67,.12);
-  --gold-g: linear-gradient(135deg, #d4a843, #f0c060, #a8832e);
-
-  /* Accent System */
-  --jade:   #10b981;
-  --jade-l: rgba(16,185,129,.12);
-  --rose:   #f43f5e;
-  --rose-l: rgba(244,63,94,.12);
-  --sky:    #38bdf8;
-  --sky-l:  rgba(56,189,248,.12);
-  --amber:  #f59e0b;
-  --amber-l:rgba(245,158,11,.12);
-  --violet: #8b5cf6;
-  --violet-l:rgba(139,92,246,.12);
-
-  /* Text */
-  --txt0: #f8fafc;
-  --txt1: #cbd5e1;
-  --txt2: #64748b;
-  --txt3: #334155;
-
-  /* Surfaces */
-  --line:  rgba(255,255,255,.06);
-  --line2: rgba(255,255,255,.03);
-  --sh-sm: 0 2px 8px rgba(0,0,0,.4);
-  --sh-md: 0 8px 32px rgba(0,0,0,.5);
-  --sh-lg: 0 20px 60px rgba(0,0,0,.6);
-  --sh-xl: 0 32px 80px rgba(0,0,0,.7);
-  --sh-gold: 0 8px 32px rgba(212,168,67,.25);
-
-  /* Layout */
-  --sidebar: 260px;
-  --nav-h: 68px;
-  --r3: 12px;
-  --r4: 16px;
-  --r5: 20px;
-  --r6: 24px;
-  --r7: 28px;
+/* ═══════════════════════════════════════════════════════════
+   DESIGN SYSTEM — Airbnb Clean Light
+   Primary: #FF385C  BG: #F7F7F7  Success: #00A699
+═══════════════════════════════════════════════════════════ */
+:root{
+  --bg:      #F7F7F7;
+  --white:   #FFFFFF;
+  --border:  #DDDDDD;
+  --light:   #EEEEEE;
+  --red:     #FF385C;
+  --red-d:   #E31C5F;
+  --red-l:   #FFF0F2;
+  --red-m:   rgba(255,56,92,.12);
+  --red-g:   linear-gradient(135deg,#FF385C,#E31C5F);
+  --green:   #00A699;
+  --green-l: #E6F7F6;
+  --green-m: rgba(0,166,153,.12);
+  --amber:   #FC642D;
+  --amber-l: #FFF3EE;
+  --amber-m: rgba(252,100,45,.12);
+  --blue:    #0066CC;
+  --blue-l:  #EEF5FF;
+  --blue-m:  rgba(0,102,204,.1);
+  --violet:  #6B46C1;
+  --violet-l:#F3F0FF;
+  --violet-m:rgba(107,70,193,.1);
+  --tx0:     #222222;
+  --tx1:     #484848;
+  --tx2:     #717171;
+  --tx3:     #AAAAAA;
+  --tx4:     #CCCCCC;
+  --sh-card: 0 1px 2px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.05);
+  --sh-nav:  0 -1px 0 rgba(0,0,0,.06);
+  --sh-modal:0 8px 28px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.08);
+  --sh-btn:  0 4px 12px rgba(255,56,92,.3);
+  --r2:8px;--r3:12px;--r4:16px;--r5:20px;--r6:24px;
+  --sidebar:252px;
 }
 
-*, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg);font-family:'Cairo',sans-serif;color:var(--tx0);overflow:hidden;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;}
+button,input,select,textarea{font-family:'Cairo',sans-serif;}
+.dn{display:none!important;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
 
-html, body {
-  height: 100%;
-  background: var(--bg0);
-  font-family: 'Cairo', sans-serif;
-  color: var(--txt0);
-  overflow: hidden;
-  overscroll-behavior: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-font-smoothing: antialiased;
-}
+/* ══ TOASTS ══ */
+#toasts{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:8px;width:min(94%,380px);pointer-events:none;}
+.ti{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:12px 16px;box-shadow:var(--sh-modal);display:flex;align-items:center;gap:10px;font-size:.82rem;font-weight:700;animation:tiIn .3s cubic-bezier(.34,1.56,.64,1);pointer-events:auto;}
+.ti-ic{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.ts .ti-ic{background:var(--green-l);color:var(--green);}
+.te .ti-ic{background:var(--red-l);color:var(--red);}
+.ti-msg{flex:1;color:var(--tx1);}
+@keyframes tiIn{from{opacity:0;transform:translateY(-10px) scale(.95)}to{opacity:1;transform:none}}
 
-button, input, select, textarea { font-family: 'Cairo', sans-serif; }
-.dn { display: none !important; }
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 99px; }
+/* ══ NEW ORDER SIDE TOAST ══ */
+#newOrderToast{
+  position:fixed;right:20px;top:80px;z-index:88000;
+  width:300px;background:var(--white);
+  border:1.5px solid var(--border);border-right:4px solid var(--red);
+  border-radius:var(--r4);box-shadow:var(--sh-modal);
+  padding:16px;
+  transform:translateX(340px);
+  transition:transform .4s cubic-bezier(.34,1.2,.64,1);
+  display:flex;gap:10px;
+}
+#newOrderToast.show{transform:translateX(0);}
+.not-ic{width:40px;height:40px;border-radius:12px;background:var(--red-l);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.not-body{flex:1;min-width:0;}
+.not-title{font-size:.8rem;font-weight:900;color:var(--tx0);margin-bottom:3px;}
+.not-sub{font-size:.7rem;font-weight:600;color:var(--tx2);line-height:1.5;}
+.not-go{width:100%;margin-top:9px;padding:6px;background:var(--red-g);color:#fff;border:none;border-radius:8px;font-size:.72rem;font-weight:900;cursor:pointer;font-family:'Cairo',sans-serif;}
+.not-close{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--tx3);font-size:16px;cursor:pointer;line-height:1;}
 
-/* ─── NOISE TEXTURE ─── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity: .5;
-}
+/* ══ LOADING ══ */
+#loadScr{position:fixed;inset:0;z-index:60000;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
+.ld-whale{font-size:2.8rem;animation:ldW 1.6s ease-in-out infinite;}
+@keyframes ldW{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.ld-bar{width:120px;height:3px;background:var(--border);border-radius:99px;overflow:hidden;}
+.ld-prog{height:100%;background:var(--red-g);border-radius:99px;animation:ldP 1.4s ease-in-out infinite;}
+@keyframes ldP{0%{width:0%;margin-left:0%}50%{width:60%;margin-left:20%}100%{width:0%;margin-left:100%}}
+.ld-txt{font-size:.76rem;font-weight:800;color:var(--tx2);}
 
-/* ─── TOASTS ─── */
-#toasts {
-  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-  z-index: 99999; display: flex; flex-direction: column; gap: 8px;
-  width: min(94%, 380px); pointer-events: none;
-}
-.ti {
-  background: rgba(13,18,32,.97); backdrop-filter: blur(24px);
-  border-radius: 14px; padding: 14px 18px;
-  box-shadow: var(--sh-lg); border: 1px solid var(--line);
-  display: flex; align-items: center; gap: 12px;
-  font-weight: 700; font-size: .85rem;
-  animation: tin .3s cubic-bezier(.34,1.56,.64,1);
-  pointer-events: auto;
-}
-.ti-ico {
-  width: 32px; height: 32px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; flex-shrink: 0;
-}
-.ts .ti-ico { background: var(--jade-l); color: var(--jade); }
-.te .ti-ico { background: var(--rose-l); color: var(--rose); }
-.ti .ti-msg { flex: 1; color: var(--txt1); }
-@keyframes tin { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: none; } }
+/* ══ AUTH ══ */
+#auth{position:fixed;inset:0;z-index:70000;background:var(--white);display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden;}
+#auth::before{content:'';position:absolute;top:0;left:0;right:0;height:50vh;background:var(--red-g);clip-path:ellipse(70% 55% at 50% 0);}
+.auth-card{width:100%;max-width:400px;background:var(--white);border-radius:var(--r6);box-shadow:var(--sh-modal);padding:40px 32px;text-align:center;position:relative;z-index:1;}
+.auth-logo{width:76px;height:76px;background:var(--red-g);border-radius:22px;display:inline-flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:18px;box-shadow:var(--sh-btn);}
+.auth-h{font-size:1.6rem;font-weight:900;color:var(--tx0);margin-bottom:5px;letter-spacing:-.02em;}
+.auth-s{font-size:.76rem;font-weight:600;color:var(--tx2);margin-bottom:28px;}
+.auth-in{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:14px 18px;font-size:1.3rem;font-weight:900;color:var(--tx0);text-align:center;letter-spacing:8px;outline:none;transition:.2s;margin-bottom:14px;caret-color:var(--red);}
+.auth-in:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);background:var(--red-l);}
+.auth-btn{width:100%;padding:14px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r4);font-size:.92rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);transition:.2s;}
+.auth-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,56,92,.4);}
+.auth-btn:active{transform:scale(.97);}
+.auth-err{color:var(--red);font-size:.76rem;font-weight:700;min-height:22px;margin-top:10px;}
+.btn-ld{color:transparent!important;pointer-events:none;position:relative;}
+.btn-ld::after{content:'';position:absolute;left:50%;top:50%;width:17px;height:17px;margin:-8.5px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-/* ─── AUTH SHIELD ─── */
-#auth {
-  position: fixed; inset: 0; z-index: 60000;
-  background: var(--bg0);
-  display: flex; align-items: center; justify-content: center; padding: 20px;
-  overflow: hidden;
-}
-#auth::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(212,168,67,.08) 0%, transparent 60%),
-              radial-gradient(ellipse 40% 60% at 80% 100%, rgba(56,189,248,.05) 0%, transparent 60%);
-}
-.auth-box {
-  width: 100%; max-width: 420px;
-  background: rgba(13,18,32,.9);
-  backdrop-filter: blur(40px);
-  border-radius: 32px;
-  box-shadow: var(--sh-xl), 0 0 0 1px rgba(212,168,67,.15);
-  padding: 48px 40px 40px;
-  text-align: center;
-  position: relative;
-  z-index: 1;
-}
-.auth-crown {
-  width: 84px; height: 84px;
-  border-radius: 26px;
-  background: linear-gradient(135deg, rgba(212,168,67,.15), rgba(212,168,67,.05));
-  border: 1px solid rgba(212,168,67,.3);
-  display: inline-flex; align-items: center; justify-content: center;
-  margin-bottom: 24px;
-  font-size: 40px;
-  box-shadow: var(--sh-gold), inset 0 1px 0 rgba(255,255,255,.05);
-  position: relative;
-}
-.auth-crown::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: 27px;
-  background: var(--gold-g);
-  opacity: .15;
-}
-.auth-h {
-  font-size: 1.8rem; font-weight: 900;
-  background: var(--gold-g);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 6px;
-  letter-spacing: -.02em;
-}
-.auth-s { font-size: .8rem; font-weight: 600; color: var(--txt2); margin-bottom: 36px; }
-.auth-in {
-  width: 100%;
-  background: rgba(255,255,255,.04);
-  border: 1.5px solid var(--line);
-  border-radius: 14px;
-  padding: 14px 18px;
-  font-size: 1.4rem; font-weight: 900;
-  color: var(--txt0); text-align: center; letter-spacing: 6px;
-  outline: none; transition: .2s; margin-bottom: 16px;
-  caret-color: var(--gold);
-}
-.auth-in:focus {
-  background: rgba(212,168,67,.06);
-  border-color: rgba(212,168,67,.4);
-  box-shadow: 0 0 0 4px rgba(212,168,67,.08);
-}
-.auth-btn {
-  width: 100%; padding: 14px;
-  background: var(--gold-g);
-  color: var(--bg0); border: none; border-radius: 14px;
-  font-size: .95rem; font-weight: 900; cursor: pointer;
-  transition: .2s;
-  box-shadow: var(--sh-gold);
-  letter-spacing: .02em;
-}
-.auth-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(212,168,67,.4); }
-.auth-btn:active { transform: scale(.97); }
-.auth-err { color: var(--rose); font-size: .78rem; font-weight: 700; min-height: 22px; margin-top: 10px; }
+/* ══ APP LAYOUT ══ */
+#app{display:flex;height:100vh;overflow:hidden;}
 
-/* ─── LAYOUT ─── */
-#app { display: flex; height: 100vh; overflow: hidden; position: relative; z-index: 1; }
+/* ══ SIDEBAR ══ */
+.sidebar{
+  width:var(--sidebar);height:100vh;
+  background:var(--white);border-left:1px solid var(--border);
+  position:fixed;right:0;top:0;z-index:900;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:2px 0 12px rgba(0,0,0,.05);
+}
+.sb-head{padding:24px 18px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.sb-logo{width:42px;height:42px;border-radius:14px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:var(--sh-btn);}
+.sb-title{font-size:.92rem;font-weight:900;color:var(--tx0);}
+.sb-ver{font-size:.58rem;font-weight:800;color:var(--red);background:var(--red-l);border:1px solid rgba(255,56,92,.15);padding:2px 7px;border-radius:6px;display:inline-block;margin-top:3px;}
+.sb-sec{font-size:.58rem;font-weight:900;color:var(--tx3);text-transform:uppercase;letter-spacing:2px;padding:14px 18px 5px;flex-shrink:0;}
+.sb-nav{flex:1;overflow-y:auto;padding:6px 10px;}
+.sbn{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:var(--r3);color:var(--tx2);font-size:.8rem;font-weight:700;cursor:pointer;margin-bottom:2px;transition:.15s;border:none;background:transparent;width:100%;text-align:right;position:relative;}
+.sbn:hover{background:var(--bg);color:var(--tx1);}
+.sbn.on{background:var(--red-l);color:var(--red);font-weight:900;border:1px solid rgba(255,56,92,.15);}
+.sbn-ic{width:28px;height:28px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.sbn.on .sbn-ic{background:var(--red-m);}
+.sbn-badge{margin-right:auto;background:var(--red);color:#fff;font-size:.58rem;font-weight:900;padding:2px 7px;border-radius:99px;}
+.sbn-badge.amber{background:var(--amber);}
+.sb-foot{padding:12px 10px 16px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-conn{background:var(--green-l);border:1px solid rgba(0,166,153,.2);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.sb-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:sbP 2s infinite;}
+@keyframes sbP{0%,100%{box-shadow:0 0 0 0 rgba(0,166,153,.4)}50%{box-shadow:0 0 0 5px rgba(0,166,153,0)}}
+.sb-dot.off{background:#ef4444;animation:none;}
+.sb-ct{font-size:.72rem;font-weight:800;color:var(--green);}
+.sb-ct.off{color:#ef4444;}
+.sb-logout{width:100%;padding:10px;border-radius:var(--r3);background:transparent;border:1.5px solid var(--border);color:var(--tx2);font-size:.8rem;font-weight:800;cursor:pointer;transition:.18s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.sb-logout:hover{background:var(--red-l);border-color:rgba(255,56,92,.2);color:var(--red);}
 
-/* ─── SIDEBAR ─── */
-.sidebar {
-  width: var(--sidebar); height: 100vh;
-  background: rgba(8,12,20,.98);
-  backdrop-filter: blur(40px);
-  border-left: 1px solid var(--line);
-  position: fixed; right: 0; top: 0; z-index: 900;
-  display: flex; flex-direction: column;
-  overflow: hidden;
-}
-.sb-head {
-  padding: 28px 22px 22px;
-  border-bottom: 1px solid var(--line);
-  display: flex; align-items: center; gap: 14px;
-  flex-shrink: 0;
-}
-.sb-logo {
-  width: 46px; height: 46px; border-radius: 16px;
-  background: var(--gold-g);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px;
-  box-shadow: var(--sh-gold);
-  flex-shrink: 0;
-}
-.sb-title { font-size: 1rem; font-weight: 900; color: var(--txt0); }
-.sb-ver {
-  font-size: .62rem; font-weight: 700;
-  color: var(--gold); background: var(--gold-l);
-  padding: 2px 8px; border-radius: 6px;
-  display: inline-block; margin-top: 4px;
-}
-.sb-section {
-  font-size: .62rem; font-weight: 900; color: var(--txt3);
-  text-transform: uppercase; letter-spacing: 2px;
-  padding: 18px 22px 6px;
-}
-.sb-nav { flex: 1; overflow-y: auto; padding: 8px 12px; }
-.sbn {
-  display: flex; align-items: center; gap: 10px;
-  padding: 11px 14px; border-radius: 12px;
-  color: var(--txt2); font-size: .83rem; font-weight: 700;
-  cursor: pointer; margin-bottom: 2px;
-  transition: .18s;
-  border: none; background: transparent;
-  width: 100%; text-align: right;
-  position: relative;
-}
-.sbn:hover { background: rgba(255,255,255,.04); color: var(--txt1); }
-.sbn.on {
-  background: var(--gold-l);
-  color: var(--gold);
-  border: 1px solid rgba(212,168,67,.2);
-  font-weight: 900;
-}
-.sbn .sbi {
-  width: 30px; height: 30px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,.04); font-size: 14px;
-  flex-shrink: 0;
-}
-.sbn.on .sbi { background: rgba(212,168,67,.2); }
-.sbn .sbn-badge {
-  margin-right: auto;
-  background: var(--rose); color: #fff;
-  font-size: .6rem; font-weight: 900;
-  padding: 2px 7px; border-radius: 99px;
-}
-.sb-foot {
-  padding: 16px 12px 20px;
-  border-top: 1px solid var(--line);
-  flex-shrink: 0;
-}
-.sb-status {
-  background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.2);
-  border-radius: 12px; padding: 10px 12px;
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 10px;
-}
-.sb-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--jade);
-  animation: sbpulse 2s infinite;
-}
-.sb-dot.off { background: var(--rose); animation: none; }
-@keyframes sbpulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,.4); }
-  50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
-}
-.sb-st-txt { font-size: .75rem; font-weight: 800; color: var(--jade); }
-.sb-st-txt.off { color: var(--rose); }
-.sb-logout {
-  width: 100%; padding: 11px; border-radius: 12px;
-  background: transparent; border: 1px solid var(--line);
-  color: var(--txt2); font-size: .82rem; font-weight: 800;
-  cursor: pointer; transition: .2s;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.sb-logout:hover { background: var(--rose-l); border-color: rgba(244,63,94,.2); color: var(--rose); }
+/* ══ MAIN ══ */
+.main{flex:1;height:100vh;overflow-y:auto;margin-right:var(--sidebar);background:var(--bg);}
+.tab-page{display:none;padding:24px 28px 40px;}
+.tab-page.on{display:block;}
+.pg-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:10px;}
+.pg-title{font-size:1.4rem;font-weight:900;color:var(--tx0);letter-spacing:-.02em;}
+.pg-sub{font-size:.74rem;font-weight:600;color:var(--tx2);margin-top:3px;}
+.clk{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);padding:7px 14px;font-size:.88rem;font-weight:900;color:var(--tx0);font-family:'IBM Plex Mono',monospace;box-shadow:var(--sh-card);}
 
-/* ─── MAIN CONTENT ─── */
-.main {
-  flex: 1;
-  height: 100vh;
-  overflow-y: auto;
-  background: var(--bg0);
-  margin-right: var(--sidebar);
-}
-.tab-page { display: none; padding: 28px 32px 40px; }
-.tab-page.on { display: block; }
-.pg-header {
-  display: flex; justify-content: space-between; align-items: flex-start;
-  margin-bottom: 28px;
-}
-.pg-title { font-size: 1.5rem; font-weight: 900; color: var(--txt0); letter-spacing: -.02em; }
-.pg-sub { font-size: .78rem; font-weight: 600; color: var(--txt2); margin-top: 4px; }
-.clock-badge {
-  background: rgba(255,255,255,.04); border: 1px solid var(--line);
-  border-radius: 10px; padding: 8px 16px;
-  font-size: .9rem; font-weight: 900; color: var(--txt1);
-  font-family: 'JetBrains Mono', monospace;
-}
+/* ══ KPI ══ */
+.kpi-g{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+@media(max-width:1200px){.kpi-g{grid-template-columns:repeat(2,1fr);}}
+.kc{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:18px 16px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;box-shadow:var(--sh-card);transition:.18s;}
+.kc:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.kc::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kc.kr::after{background:var(--red);}
+.kc.kg::after{background:var(--green);}
+.kc.ka::after{background:var(--amber);}
+.kc.kb::after{background:var(--blue);}
+.kc.kv::after{background:var(--violet);}
+.kc-ic{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.kr .kc-ic{background:var(--red-l);}
+.kg .kc-ic{background:var(--green-l);}
+.ka .kc-ic{background:var(--amber-l);}
+.kb .kc-ic{background:var(--blue-l);}
+.kv .kc-ic{background:var(--violet-l);}
+.kc-v{font-size:1.9rem;font-weight:900;line-height:1;color:var(--tx0);}
+.kc-l{font-size:.65rem;font-weight:700;color:var(--tx2);margin-top:4px;}
 
-/* ─── KPI CARDS ─── */
-.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
-@media(max-width:1200px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
-.kc {
-  background: var(--bg1); border-radius: var(--r5);
-  border: 1px solid var(--line);
-  padding: 20px 18px; display: flex; align-items: center; gap: 16px;
-  position: relative; overflow: hidden; transition: .2s; cursor: default;
-}
-.kc:hover { transform: translateY(-2px); border-color: rgba(212,168,67,.15); box-shadow: var(--sh-md); }
-.kc::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
-.kc.k-gold::before { background: var(--gold-g); }
-.kc.k-jade::before { background: var(--jade); }
-.kc.k-rose::before { background: var(--rose); }
-.kc.k-sky::before  { background: var(--sky); }
-.kc.k-violet::before { background: var(--violet); }
-.kc-ic {
-  width: 50px; height: 50px; border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; flex-shrink: 0;
-}
-.k-gold .kc-ic  { background: var(--gold-l); }
-.k-jade .kc-ic  { background: var(--jade-l); }
-.k-rose .kc-ic  { background: var(--rose-l); }
-.k-sky .kc-ic   { background: var(--sky-l); }
-.k-violet .kc-ic{ background: var(--violet-l); }
-.kc-v { font-size: 2rem; font-weight: 900; line-height: 1; color: var(--txt0); }
-.kc-l { font-size: .7rem; font-weight: 700; color: var(--txt2); margin-top: 5px; }
-.kc-trend { font-size: .7rem; font-weight: 800; color: var(--jade); margin-top: 2px; }
+/* ══ SECTIONS ══ */
+.sec-tt{font-size:.7rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.sec-tt::after{content:'';flex:1;height:1px;background:var(--border);}
 
-/* ─── SECTION TITLE ─── */
-.sec-title {
-  font-size: .75rem; font-weight: 900; color: var(--txt2);
-  text-transform: uppercase; letter-spacing: 2px;
-  margin-bottom: 14px;
-  display: flex; align-items: center; gap: 8px;
-}
-.sec-title::after {
-  content: ''; flex: 1; height: 1px; background: var(--line);
-}
+/* ══ LIVE MAP ══ */
+#pg-live{padding:0;height:100vh;display:none;flex-direction:column;}
+#pg-live.on{display:flex;}
+.live-hdr{padding:18px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--white);flex-shrink:0;box-shadow:var(--sh-card);flex-wrap:wrap;gap:10px;}
+.live-kpis{display:flex;gap:10px;}
+.lk{background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:8px 14px;display:flex;align-items:center;gap:9px;}
+.lk-v{font-size:1.15rem;font-weight:900;color:var(--tx0);}
+.lk-l{font-size:.62rem;font-weight:700;color:var(--tx2);margin-top:2px;}
+.live-body{display:flex;flex:1;overflow:hidden;}
+#amap{flex:1;}
+.live-panel{width:340px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
+.lp-hd{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.lp-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:sbP 1.5s infinite;}
+.lp-title{font-size:.84rem;font-weight:900;color:var(--tx0);}
+.lp-cnt{margin-right:auto;background:var(--red);color:#fff;font-size:.6rem;font-weight:900;padding:2px 7px;border-radius:99px;display:none;}
+.lp-cnt.show{display:block;}
+.fbar{display:flex;gap:5px;padding:10px 14px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;flex-shrink:0;}
+.fbar::-webkit-scrollbar{display:none;}
+.fp{flex-shrink:0;padding:5px 11px;border-radius:99px;font-size:.7rem;font-weight:800;color:var(--tx2);background:var(--bg);border:1px solid var(--border);cursor:pointer;transition:.15s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;}
+.fp.on{background:var(--red-l);color:var(--red);border-color:rgba(255,56,92,.2);font-weight:900;}
+.fp .fc-n{font-size:.62rem;font-weight:900;background:rgba(0,0,0,.07);padding:1px 5px;border-radius:99px;}
+.fp.on .fc-n{background:rgba(255,56,92,.15);color:var(--red);}
+.lp-list{flex:1;overflow-y:auto;padding:10px 14px;}
+.lp-empty{text-align:center;padding:36px 16px;color:var(--tx3);font-size:.82rem;font-weight:700;}
 
-/* ─── LIVE MAP PAGE ─── */
-#pg-live { padding: 0; display: none; height: 100vh; }
-#pg-live.on { display: flex; flex-direction: column; }
-.live-header {
-  padding: 20px 28px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--line);
-  background: var(--bg1);
-  flex-shrink: 0;
-}
-.live-kpis { display: flex; gap: 12px; }
-.lk {
-  background: rgba(255,255,255,.04); border: 1px solid var(--line);
-  border-radius: 12px; padding: 10px 16px;
-  display: flex; align-items: center; gap: 10px;
-}
-.lk-v { font-size: 1.2rem; font-weight: 900; color: var(--txt0); }
-.lk-l { font-size: .68rem; font-weight: 700; color: var(--txt2); margin-top: 2px; }
-.live-body { display: flex; flex: 1; overflow: hidden; }
-#amap { flex: 1; height: 100%; }
-.live-panel {
-  width: 360px; background: var(--bg1); border-right: 1px solid var(--line);
-  display: flex; flex-direction: column; overflow: hidden;
-  flex-shrink: 0;
-}
-.lp-head {
-  padding: 16px 20px; border-bottom: 1px solid var(--line);
-  display: flex; align-items: center; gap: 8px;
-}
-.lp-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--jade); animation: sbpulse 1.5s infinite; }
-.lp-title { font-size: .88rem; font-weight: 900; color: var(--txt0); }
-.lp-count { margin-right: auto; background: var(--rose); color: #fff; font-size: .62rem; font-weight: 900; padding: 2px 8px; border-radius: 99px; display: none; }
-.lp-count.show { display: block; }
-.fbar {
-  display: flex; gap: 6px; padding: 12px 16px;
-  border-bottom: 1px solid var(--line); overflow-x: auto;
-  scrollbar-width: none; flex-shrink: 0;
-}
-.fbar::-webkit-scrollbar { display: none; }
-.fp {
-  flex-shrink: 0; padding: 6px 12px; border-radius: 99px;
-  font-size: .72rem; font-weight: 800; color: var(--txt2);
-  background: rgba(255,255,255,.04); border: 1px solid var(--line);
-  cursor: pointer; transition: .15s; white-space: nowrap;
-  display: inline-flex; align-items: center; gap: 5px;
-}
-.fp:hover { color: var(--txt1); }
-.fp.on { background: var(--gold-l); color: var(--gold); border-color: rgba(212,168,67,.25); font-weight: 900; }
-.fp .fc-n { padding: 1px 6px; border-radius: 99px; font-size: .65rem; font-weight: 900; background: rgba(255,255,255,.08); }
-.fp.on .fc-n { background: rgba(212,168,67,.2); color: var(--gold); }
-.lp-list { flex: 1; overflow-y: auto; padding: 12px 16px; }
-.lp-empty { text-align: center; padding: 40px 20px; color: var(--txt2); font-size: .85rem; font-weight: 700; }
+/* ══ ORDER CARDS (Live Panel) ══ */
+.oc{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);margin-bottom:8px;overflow:hidden;box-shadow:var(--sh-card);transition:.18s;}
+.oc:hover{box-shadow:0 3px 12px rgba(0,0,0,.09);}
+.oc-stripe{height:3px;}
+.str-p{background:linear-gradient(90deg,var(--amber),#ffb997);}
+.str-a{background:linear-gradient(90deg,var(--blue),#60a5fa);}
+.str-c{background:linear-gradient(90deg,var(--green),#34d399);}
+.str-x{background:var(--border);}
+/* !! CANCEL PENDING stripe */
+.str-cp{background:linear-gradient(90deg,var(--red),var(--amber));}
+.oc-hd{padding:9px 12px 5px;display:flex;align-items:center;justify-content:space-between;}
+.oc-id{font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:700;color:var(--red);}
+.oc-stb{padding:3px 8px;border-radius:99px;font-size:.6rem;font-weight:900;}
+.stb-p{background:var(--amber-l);color:var(--amber);}
+.stb-a{background:var(--blue-l);color:var(--blue);}
+.stb-g{background:var(--green-l);color:var(--green);}
+.stb-x{background:var(--bg);color:var(--tx2);}
+.stb-cp{background:var(--red-l);color:var(--red);}
+.oc-bd{padding:4px 12px 9px;}
+.oc-ti{font-size:.84rem;font-weight:900;color:var(--tx0);margin-bottom:3px;}
+.oc-det{font-size:.68rem;font-weight:700;color:var(--tx2);line-height:1.6;}
+/* cancel reason pill */
+.oc-cr{font-size:.65rem;font-weight:800;background:var(--red-l);color:var(--red);border:1px solid rgba(255,56,92,.15);border-radius:6px;padding:3px 8px;margin-top:5px;display:inline-flex;align-items:center;gap:4px;}
+.oc-ft{padding:7px 12px 9px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.oc-price{font-size:.88rem;font-weight:900;color:var(--green);}
+.oc-acts{display:flex;gap:5px;}
+.ob{width:27px;height:27px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;font-size:11px;font-weight:900;font-family:'Cairo',sans-serif;}
+.ob:active{transform:scale(.87);}
+.ob-ok{background:var(--green-l);color:var(--green);}
+.ob-del{background:var(--red-l);color:var(--red);}
+.ob-wa{background:#dcfce7;color:#16a34a;}
+/* Cancel review buttons */
+.ob-back{background:var(--blue-l);color:var(--blue);}
+.ob-approve{background:var(--green-l);color:var(--green);}
+.ob-nuke{background:var(--red-l);color:var(--red);}
 
-/* ─── ORDER CARDS ─── */
-.oc {
-  background: rgba(255,255,255,.03); border-radius: var(--r4);
-  border: 1px solid var(--line); margin-bottom: 10px;
-  overflow: hidden; transition: .2s; position: relative;
-}
-.oc:hover { border-color: rgba(212,168,67,.15); background: rgba(255,255,255,.05); }
-.oc::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 3px; border-radius: 0 var(--r4) var(--r4) 0; }
-.oc.op::before  { background: var(--rose); }
-.oc.oa::before  { background: var(--sky); }
-.oc.ocm::before { background: var(--jade); }
-.oc.ocx::before { background: var(--txt3); }
-.oc-head { padding: 12px 14px 8px; display: flex; align-items: center; justify-content: space-between; }
-.oc-id { font-size: .75rem; font-weight: 900; color: var(--gold); font-family: 'JetBrains Mono', monospace; }
-.oc-stb { padding: 3px 8px; border-radius: 99px; font-size: .62rem; font-weight: 900; }
-.oc-stb.r { background: var(--rose-l); color: var(--rose); }
-.oc-stb.b { background: var(--sky-l); color: var(--sky); }
-.oc-stb.g { background: var(--jade-l); color: var(--jade); }
-.oc-stb.d { background: rgba(255,255,255,.06); color: var(--txt2); }
-.oc-body { padding: 6px 14px 12px; }
-.oc-title { font-size: .88rem; font-weight: 900; color: var(--txt0); margin-bottom: 4px; }
-.oc-detail { font-size: .72rem; font-weight: 700; color: var(--txt2); margin-bottom: 8px; line-height: 1.6; }
-.oc-footer { padding: 8px 14px 10px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
-.oc-price { font-size: .92rem; font-weight: 900; color: var(--jade); }
-.oc-actions { display: flex; gap: 5px; }
-.ob {
-  width: 28px; height: 28px; border-radius: 8px;
-  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: .15s; font-size: 12px; font-weight: 900;
-}
-.ob:active { transform: scale(.88); }
-.ob-ok  { background: var(--jade-l); color: var(--jade); }
-.ob-del { background: var(--rose-l); color: var(--rose); }
+/* ══ CANCEL TAB ══ */
+.cancel-panel{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:16px;margin-bottom:14px;box-shadow:var(--sh-card);}
+.cancel-badge{display:inline-flex;align-items:center;gap:5px;background:var(--red-l);color:var(--red);border:1px solid rgba(255,56,92,.2);border-radius:99px;font-size:.68rem;font-weight:900;padding:3px 10px;}
 
-/* ─── CHART SECTION ─── */
-.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
-@media(max-width:900px) { .chart-grid { grid-template-columns: 1fr; } }
-.chart-box {
-  background: var(--bg1); border-radius: var(--r5);
-  border: 1px solid var(--line); padding: 20px;
-  position: relative;
-}
-.chart-tt { font-size: .82rem; font-weight: 900; color: var(--txt1); margin-bottom: 16px; }
-.chart-inner { position: relative; height: 200px; }
+/* ══ CHARTS ══ */
+.chart-g{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+@media(max-width:900px){.chart-g{grid-template-columns:1fr;}}
+.ch-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:18px;box-shadow:var(--sh-card);}
+.ch-tt{font-size:.8rem;font-weight:900;color:var(--tx0);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.ch-in{position:relative;height:195px;}
 
-/* ─── TABLE ─── */
-.tb-wrap { background: var(--bg1); border-radius: var(--r5); border: 1px solid var(--line); overflow: hidden; }
-.tb-header {
-  padding: 14px 20px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid var(--line);
-  gap: 12px; flex-wrap: wrap;
-}
-.tb-title-block { display: flex; align-items: center; gap: 10px; }
-.tb-tt { font-size: .88rem; font-weight: 900; color: var(--txt0); }
-.tb-count { background: var(--gold-l); color: var(--gold); font-size: .65rem; font-weight: 900; padding: 3px 9px; border-radius: 99px; }
-.search-in {
-  background: rgba(255,255,255,.05); border: 1px solid var(--line);
-  border-radius: 10px; padding: 8px 14px; font-size: .8rem;
-  font-weight: 700; color: var(--txt0); outline: none; width: 200px;
-  transition: .2s;
-}
-.search-in:focus { background: rgba(255,255,255,.07); border-color: rgba(212,168,67,.3); }
-.search-in::placeholder { color: var(--txt3); }
-.type-sel {
-  background: rgba(255,255,255,.05); border: 1px solid var(--line);
-  border-radius: 10px; padding: 8px 14px; font-size: .8rem;
-  font-weight: 700; color: var(--txt1); outline: none;
-}
-.type-sel option { background: var(--bg2); color: var(--txt0); }
-.export-btn {
-  padding: 8px 18px; border-radius: 10px; border: none;
-  background: var(--gold-g); color: var(--bg0);
-  font-size: .78rem; font-weight: 900; cursor: pointer;
-  transition: .2s; white-space: nowrap;
-  box-shadow: var(--sh-gold);
-}
-.export-btn:hover { transform: translateY(-1px); }
-.tb-sc { overflow-x: auto; }
-.main-table { width: 100%; border-collapse: collapse; min-width: 750px; }
-.main-table th {
-  padding: 12px 14px; font-size: .7rem; font-weight: 900;
-  color: var(--txt2); background: rgba(255,255,255,.02);
-  border-bottom: 1px solid var(--line); text-align: right;
-  text-transform: uppercase; letter-spacing: 1px;
-  white-space: nowrap;
-}
-.main-table td {
-  padding: 12px 14px; font-size: .8rem; font-weight: 700;
-  border-bottom: 1px solid var(--line); color: var(--txt1);
-  white-space: nowrap;
-}
-.main-table tbody tr:hover { background: rgba(255,255,255,.02); }
-.main-table tbody tr:last-child td { border-bottom: none; }
-td.mono { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-size: .75rem; }
-td.hi { color: var(--jade); font-weight: 900; }
-.stb { padding: 3px 9px; border-radius: 99px; font-size: .65rem; font-weight: 900; }
-.stb-g { background: var(--jade-l); color: var(--jade); }
-.stb-r { background: var(--rose-l); color: var(--rose); }
-.stb-b { background: var(--sky-l); color: var(--sky); }
-.stb-y { background: var(--amber-l); color: var(--amber); }
-.stb-d { background: rgba(255,255,255,.06); color: var(--txt2); }
+/* ══ TABLE ══ */
+.tb-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);overflow:hidden;box-shadow:var(--sh-card);}
+.tb-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);gap:10px;flex-wrap:wrap;}
+.tb-tt{font-size:.85rem;font-weight:900;color:var(--tx0);}
+.tb-cnt{background:var(--red-l);color:var(--red);font-size:.62rem;font-weight:900;padding:2px 8px;border-radius:99px;margin-right:6px;}
+.si{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:7px 12px;font-size:.78rem;font-weight:700;color:var(--tx0);outline:none;width:190px;transition:.2s;}
+.si:focus{border-color:var(--red);background:var(--red-l);}
+.si::placeholder{color:var(--tx3);}
+.sel{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:7px 12px;font-size:.78rem;font-weight:700;color:var(--tx1);outline:none;}
+.sel option{background:var(--white);}
+.btn-exp{padding:7px 16px;border-radius:var(--r2);border:none;background:var(--red-g);color:#fff;font-size:.76rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);transition:.18s;white-space:nowrap;font-family:'Cairo',sans-serif;}
+.btn-exp:hover{transform:translateY(-1px);}
+.dr-wrap{display:flex;gap:7px;align-items:center;}
+.dr-sep{font-size:.7rem;font-weight:700;color:var(--tx2);}
+input[type="date"].si{width:140px;}
+.tb-sc{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;min-width:700px;}
+th{padding:11px 13px;font-size:.67rem;font-weight:900;color:var(--tx2);background:var(--bg);border-bottom:1px solid var(--border);text-align:right;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;}
+td{padding:11px 13px;font-size:.78rem;font-weight:700;border-bottom:1px solid var(--border);color:var(--tx1);white-space:nowrap;}
+tr:hover td{background:var(--bg);}
+tr:last-child td{border-bottom:none;}
+td.mono{font-family:'IBM Plex Mono',monospace;color:var(--red);font-size:.72rem;}
+td.hi{color:var(--green);font-weight:900;}
+.stb{padding:3px 8px;border-radius:99px;font-size:.62rem;font-weight:900;}
+.stb-comp{background:var(--green-l);color:var(--green);}
+.stb-pend{background:var(--amber-l);color:var(--amber);}
+.stb-act{background:var(--blue-l);color:var(--blue);}
+.stb-canc{background:var(--bg);color:var(--tx2);}
+.stb-cpnd{background:var(--red-l);color:var(--red);}
 
-/* ─── PARTNERS GRID ─── */
-.entity-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-@media(max-width:1100px) { .entity-grid { grid-template-columns: repeat(2, 1fr); } }
-@media(max-width:700px)  { .entity-grid { grid-template-columns: 1fr; } }
-.ec {
-  background: var(--bg1); border-radius: var(--r5);
-  border: 1px solid var(--line); overflow: hidden;
-  transition: .2s; position: relative;
-  display: flex; flex-direction: column;
-}
-.ec:hover { border-color: rgba(212,168,67,.2); transform: translateY(-2px); box-shadow: var(--sh-md); }
-.ec-status-bar { height: 3px; flex-shrink: 0; }
-.ec.s-active .ec-status-bar { background: var(--jade); }
-.ec.s-pending .ec-status-bar { background: var(--amber); }
-.ec.s-blocked .ec-status-bar { background: var(--rose); }
-.ec-img {
-  width: 100%; height: 120px;
-  object-fit: cover; display: block;
-}
-.ec-no-img {
-  width: 100%; height: 120px;
-  background: rgba(255,255,255,.03);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 2.5rem; color: var(--txt3);
-  border-bottom: 1px solid var(--line);
-}
-.ec-body { padding: 16px; flex: 1; }
-.ec-name { font-size: .95rem; font-weight: 900; color: var(--txt0); margin-bottom: 6px; }
-.ec-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
-.ec-city {
-  font-size: .68rem; font-weight: 800; color: var(--gold);
-  background: var(--gold-l); padding: 3px 9px; border-radius: 7px;
-}
-.ec-ph { font-size: .72rem; font-weight: 700; color: var(--txt2); direction: ltr; }
-.ec-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-.est {
-  background: rgba(255,255,255,.03); border-radius: 10px;
-  padding: 8px 6px; text-align: center;
-  border: 1px solid var(--line);
-}
-.est-v { font-size: .95rem; font-weight: 900; color: var(--txt0); line-height: 1; }
-.est-v.g { color: var(--jade); }
-.est-v.r { color: var(--rose); }
-.est-v.y { color: var(--amber); }
-.est-l { font-size: .58rem; font-weight: 700; color: var(--txt3); margin-top: 4px; }
-.ec-comm { font-size: .72rem; font-weight: 700; color: var(--txt2); background: rgba(255,255,255,.03); border-radius: 8px; padding: 6px 10px; margin-bottom: 12px; border: 1px solid var(--line); }
-.ec-actions {
-  padding: 12px 16px; border-top: 1px solid var(--line);
-  display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end;
-}
-.ea {
-  padding: 7px 12px; border-radius: 9px; border: none;
-  font-size: .72rem; font-weight: 800; cursor: pointer;
-  transition: .15s; display: flex; align-items: center; gap: 5px;
-}
-.ea:active { transform: scale(.93); }
-.ea-ok   { background: var(--jade-l); color: var(--jade); }
-.ea-blk  { background: var(--rose-l); color: var(--rose); }
-.ea-rst  { background: var(--gold-l); color: var(--gold); }
-.ea-edit { background: var(--sky-l); color: var(--sky); }
+/* ══ ENTITY CARDS ══ */
+.efil{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
+.ef{padding:6px 14px;border-radius:99px;border:1.5px solid var(--border);background:var(--white);color:var(--tx2);font-size:.72rem;font-weight:800;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:5px;}
+.ef:hover{color:var(--tx1);}
+.ef.on{background:var(--red-l);color:var(--red);border-color:rgba(255,56,92,.2);}
+.ef.jade.on{background:var(--green-l);color:var(--green);border-color:rgba(0,166,153,.2);}
+.ef.amber.on{background:var(--amber-l);color:var(--amber);border-color:rgba(252,100,45,.2);}
+.ef.rose.on{background:var(--red-l);color:var(--red);border-color:rgba(255,56,92,.2);}
+.ef-n{font-size:.6rem;font-weight:900;background:rgba(0,0,0,.07);padding:1px 5px;border-radius:99px;}
+.entity-g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media(max-width:1100px){.entity-g{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:700px){.entity-g{grid-template-columns:1fr;}}
+.ec{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);overflow:hidden;box-shadow:var(--sh-card);transition:.2s;display:flex;flex-direction:column;}
+.ec:hover{box-shadow:0 4px 18px rgba(0,0,0,.1);transform:translateY(-2px);}
+.ec-bar{height:3px;}
+.ec.s-active .ec-bar{background:var(--green);}
+.ec.s-pending .ec-bar{background:var(--amber);}
+.ec.s-blocked .ec-bar{background:var(--red);}
+.ec-img{width:100%;height:110px;object-fit:cover;}
+.ec-noimg{width:100%;height:110px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:var(--tx4);border-bottom:1px solid var(--border);}
+.ec-body{padding:14px;flex:1;}
+.ec-name{font-size:.9rem;font-weight:900;color:var(--tx0);margin-bottom:6px;}
+.ec-meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+.ec-city{font-size:.65rem;font-weight:800;color:var(--red);background:var(--red-l);padding:2px 8px;border-radius:6px;}
+.ec-ph{font-size:.7rem;font-weight:700;color:var(--tx2);direction:ltr;}
+.ec-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;}
+.est{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:7px 5px;text-align:center;}
+.est-v{font-size:.92rem;font-weight:900;color:var(--tx0);line-height:1;}
+.est-v.g{color:var(--green);}.est-v.r{color:var(--red);}.est-v.y{color:var(--amber);}
+.est-l{font-size:.56rem;font-weight:700;color:var(--tx3);margin-top:3px;}
+.ec-comm{font-size:.68rem;font-weight:700;color:var(--tx2);background:var(--bg);border-radius:7px;padding:5px 9px;margin-bottom:9px;border:1px solid var(--border);}
+.ec-acts{padding:11px 14px;border-top:1px solid var(--border);display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;}
+.ea{padding:6px 11px;border-radius:var(--r2);border:none;font-size:.7rem;font-weight:800;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:4px;font-family:'Cairo',sans-serif;}
+.ea:active{transform:scale(.93);}
+.ea-ok{background:var(--green-l);color:var(--green);}
+.ea-blk{background:var(--red-l);color:var(--red);}
+.ea-rst{background:var(--amber-l);color:var(--amber);}
+.ea-edit{background:var(--blue-l);color:var(--blue);}
+.ea-wa{background:#dcfce7;color:#16a34a;}
 
-/* ─── FILTERS / TABS ─── */
-.entity-filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-.ef {
-  padding: 7px 16px; border-radius: 99px; border: 1px solid var(--line);
-  background: rgba(255,255,255,.04); color: var(--txt2);
-  font-size: .75rem; font-weight: 800; cursor: pointer; transition: .15s;
-  display: flex; align-items: center; gap: 6px;
-}
-.ef:hover { color: var(--txt1); }
-.ef.on { background: var(--gold-l); color: var(--gold); border-color: rgba(212,168,67,.25); }
-.ef.jade.on { background: var(--jade-l); color: var(--jade); border-color: rgba(16,185,129,.25); }
-.ef.rose.on { background: var(--rose-l); color: var(--rose); border-color: rgba(244,63,94,.25); }
-.ef.amber.on { background: var(--amber-l); color: var(--amber); border-color: rgba(245,158,11,.25); }
-.ef-n { font-size: .62rem; background: rgba(255,255,255,.08); padding: 2px 6px; border-radius: 99px; }
+/* ══ SHARED FLEET ADD FORM ══ */
+.add-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:20px;margin-bottom:16px;box-shadow:var(--sh-card);}
+.add-tt{font-size:.9rem;font-weight:900;color:var(--tx0);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:12px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:12px;}
+.fld-lbl{font-size:.63rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:5px;display:block;}
+.fc{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);padding:10px 12px;font-size:.84rem;font-weight:700;color:var(--tx0);outline:none;transition:.2s;}
+.fc:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);}
+.fc::placeholder{color:var(--tx4);font-weight:500;}
+select.fc{cursor:pointer;}
+select.fc option{background:var(--white);}
+.uz{border:2px dashed var(--border);border-radius:var(--r3);background:var(--bg);height:130px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;cursor:pointer;transition:.2s;margin-bottom:12px;position:relative;overflow:hidden;}
+.uz:hover{border-color:var(--red);background:var(--red-l);}
+.uz.filled{border-style:solid;border-color:var(--border);}
+.uz-prev{position:absolute;inset:0;object-fit:cover;width:100%;height:100%;}
+.uz-ov{position:absolute;inset:0;background:rgba(255,255,255,.85);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;}
+.uz:hover .uz-ov{opacity:1;}
+.uz-ov-t{font-size:.76rem;font-weight:900;color:var(--red);}
+.uz-ico{font-size:1.9rem;color:var(--tx4);}
+.uz-lbl{font-size:.74rem;font-weight:700;color:var(--tx2);}
+.uz-sub{font-size:.6rem;font-weight:600;color:var(--tx3);}
+.comp-badge{position:absolute;top:7px;right:7px;background:var(--green);color:#fff;font-size:.6rem;font-weight:900;padding:2px 7px;border-radius:99px;opacity:0;transition:.3s;}
+.uz.filled .comp-badge{opacity:1;}
+.btn-pri{width:100%;padding:13px;border:none;border-radius:var(--r4);background:var(--red-g);color:#fff;font-size:.88rem;font-weight:900;cursor:pointer;transition:.2s;box-shadow:var(--sh-btn);display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Cairo',sans-serif;}
+.btn-pri:active{transform:scale(.97);box-shadow:none;}
 
-/* ─── ARCH KPI ─── */
-.arch-kpi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
-.ak {
-  background: var(--bg1); border-radius: var(--r4);
-  border: 1px solid var(--line); padding: 18px 16px;
-  display: flex; align-items: center; gap: 14px;
-}
-.ak-ic { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-.ak-v { font-size: 1.6rem; font-weight: 900; color: var(--txt0); line-height: 1; }
-.ak-v.g { color: var(--jade); }
-.ak-v.r { color: var(--rose); }
-.ak-v.y { color: var(--gold); }
-.ak-l { font-size: .68rem; font-weight: 700; color: var(--txt2); margin-top: 5px; }
+/* ══ BROADCAST ══ */
+.bc-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:16px;margin-bottom:16px;box-shadow:var(--sh-card);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.bc-input{flex:1;min-width:200px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:10px 14px;font-size:.84rem;font-weight:700;color:var(--tx0);outline:none;transition:.2s;}
+.bc-input:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);}
+.btn-bc{padding:10px 18px;border-radius:var(--r3);border:none;background:var(--red-g);color:#fff;font-size:.8rem;font-weight:900;cursor:pointer;white-space:nowrap;box-shadow:var(--sh-btn);font-family:'Cairo',sans-serif;transition:.18s;}
+.btn-bc:active{transform:scale(.96);}
 
-/* ─── MODALS ─── */
-.modal-bg {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,.7); backdrop-filter: blur(8px);
-  z-index: 20000; display: none;
-  align-items: center; justify-content: center; padding: 20px;
-}
-.modal-bg.open { display: flex; }
-.modal-card {
-  background: var(--bg2); border-radius: var(--r6);
-  border: 1px solid var(--line);
-  width: 100%; max-width: 480px; padding: 28px 24px;
-  box-shadow: var(--sh-xl);
-  animation: mpop .3s cubic-bezier(.34,1.56,.64,1);
-  max-height: 92vh; overflow-y: auto;
-}
-@keyframes mpop { from { opacity: 0; transform: scale(.9) translateY(10px); } to { opacity: 1; transform: none; } }
-.modal-title { font-size: 1.05rem; font-weight: 900; color: var(--txt0); text-align: center; margin-bottom: 6px; }
-.modal-sub { font-size: .75rem; font-weight: 700; color: var(--txt2); text-align: center; margin-bottom: 24px; }
-.fc {
-  width: 100%; background: rgba(255,255,255,.05);
-  border: 1.5px solid var(--line); border-radius: 12px;
-  padding: 11px 14px; font-size: .85rem; font-weight: 700;
-  color: var(--txt0); outline: none; transition: .2s;
-  margin-bottom: 12px;
-}
-.fc:focus { background: rgba(255,255,255,.07); border-color: rgba(212,168,67,.3); }
-.fc option { background: var(--bg2); }
-.el { font-size: .68rem; font-weight: 800; color: var(--txt2); margin-bottom: 6px; display: block; }
-.m-actions { display: flex; gap: 10px; margin-top: 8px; }
-.m-cancel { flex: 1; padding: 12px; background: rgba(255,255,255,.05); border: 1px solid var(--line); border-radius: 12px; color: var(--txt1); font-size: .85rem; font-weight: 800; cursor: pointer; }
-.m-save { flex: 1; padding: 12px; background: var(--gold-g); border: none; border-radius: 12px; color: var(--bg0); font-size: .85rem; font-weight: 900; cursor: pointer; box-shadow: var(--sh-gold); }
+/* ══ WHATSAPP MODAL ══ */
+#waModal{position:fixed;inset:0;z-index:45000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;padding:16px;}
+.wa-sheet{background:var(--white);border-radius:var(--r5) var(--r5) var(--r4) var(--r4);width:100%;max-width:480px;box-shadow:var(--sh-modal);animation:shUp .3s cubic-bezier(.34,1.2,.64,1);max-height:80vh;overflow-y:auto;}
+@keyframes shUp{from{transform:translateY(100%)}to{transform:none}}
+.wa-hd{padding:14px 18px 11px;border-bottom:1px solid var(--border);}
+.wa-hd-h{font-size:.9rem;font-weight:900;color:var(--tx0);margin-bottom:2px;}
+.wa-hd-s{font-size:.7rem;font-weight:600;color:var(--tx2);}
+.wa-chip{display:inline-flex;align-items:center;gap:4px;background:var(--green-l);border:1px solid rgba(0,166,153,.2);border-radius:99px;padding:3px 9px;font-size:.68rem;font-weight:800;color:var(--green);margin-top:5px;}
+.wa-tmps{padding:10px 16px;}
+.wa-tmp{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:12px 13px;margin-bottom:8px;cursor:pointer;transition:.18s;}
+.wa-tmp:hover{border-color:rgba(22,163,74,.3);background:#f0fdf4;}
+.wa-tmp:active{transform:scale(.97);}
+.wa-tmp-txt{font-size:.8rem;font-weight:700;color:var(--tx1);line-height:1.6;}
+.wa-tmp-row{display:flex;align-items:center;justify-content:space-between;margin-top:7px;}
+.wa-tmp-lbl{font-size:.63rem;font-weight:800;color:var(--tx2);}
+.wa-snd{background:#dcfce7;color:#16a34a;border:1px solid #bbf7d0;border-radius:7px;padding:4px 9px;font-size:.68rem;font-weight:900;cursor:pointer;font-family:'Cairo',sans-serif;}
+.wa-close{width:calc(100% - 32px);margin:4px 16px calc(16px + env(safe-area-inset-bottom));padding:11px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);color:var(--tx2);font-size:.8rem;font-weight:800;cursor:pointer;font-family:'Cairo',sans-serif;}
 
-/* ─── LOADING SPINNER ─── */
-.loading { color: transparent !important; pointer-events: none; position: relative; }
-.loading::after {
-  content: ''; position: absolute; left: 50%; top: 50%;
-  width: 16px; height: 16px; margin: -8px;
-  border: 2.5px solid rgba(255,255,255,.2);
-  border-top-color: var(--bg0);
-  border-radius: 50%; animation: spin .6s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+/* ══ CANCEL REVIEW MODAL ══ */
+#cancelReviewModal{position:fixed;inset:0;z-index:45000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;}
+.cr-card{background:var(--white);border-radius:var(--r5);width:100%;max-width:420px;padding:28px 24px;box-shadow:var(--sh-modal);animation:crIn .3s cubic-bezier(.34,1.3,.64,1);}
+@keyframes crIn{from{opacity:0;transform:scale(.88) translateY(10px)}to{opacity:1;transform:none}}
+.cr-icon{font-size:2.6rem;text-align:center;margin-bottom:12px;}
+.cr-title{font-size:1rem;font-weight:900;color:var(--tx0);text-align:center;margin-bottom:5px;}
+.cr-sub{font-size:.78rem;font-weight:600;color:var(--tx2);text-align:center;line-height:1.7;margin-bottom:16px;}
+.cr-info{background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:12px 14px;margin-bottom:16px;}
+.cr-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);}
+.cr-row:last-child{border-bottom:none;}
+.cr-lbl{font-size:.7rem;font-weight:700;color:var(--tx2);}
+.cr-val{font-size:.78rem;font-weight:900;color:var(--tx0);text-align:left;}
+.cr-reason-box{background:var(--red-l);border:1px solid rgba(255,56,92,.2);border-radius:var(--r2);padding:9px 12px;margin-bottom:16px;font-size:.76rem;font-weight:700;color:var(--red);line-height:1.6;}
+.cr-btns{display:flex;gap:8px;}
+.crb{flex:1;padding:11px 8px;border-radius:var(--r3);border:none;font-size:.76rem;font-weight:900;cursor:pointer;font-family:'Cairo',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;transition:.18s;}
+.crb:active{transform:scale(.95);}
+.crb-back{background:var(--blue-l);color:var(--blue);}
+.crb-ok{background:var(--green-l);color:var(--green);}
+.crb-del{background:var(--red-g);color:#fff;box-shadow:var(--sh-btn);}
 
-/* ─── MOBILE NAV ─── */
-@media(max-width:768px) {
-  .sidebar { display: none !important; }
-  .main { margin-right: 0; padding-bottom: var(--nav-h); }
-  .tab-page { padding: 16px; padding-bottom: calc(var(--nav-h) + 20px); }
-  .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .arch-kpi { grid-template-columns: 1fr; gap: 10px; }
-  .chart-grid { grid-template-columns: 1fr; }
-  .entity-grid { grid-template-columns: 1fr; }
-  .live-panel { display: none; }
-  #pg-live { padding-bottom: var(--nav-h); }
-  .live-header { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
-  .lk { padding: 7px 12px; }
-  .lk-v { font-size: 1rem; }
-  .bnav { display: flex; }
-}
-.bnav {
-  display: none; position: fixed; bottom: 0; left: 0; right: 0;
-  height: var(--nav-h); background: rgba(8,12,20,.97);
-  backdrop-filter: blur(20px); border-top: 1px solid var(--line);
-  justify-content: space-around; align-items: center;
-  z-index: 9000; padding-bottom: env(safe-area-inset-bottom);
-}
-.bni { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 8px 14px; }
-.bni-ic { width: 36px; height: 36px; border-radius: 11px; display: flex; align-items: center; justify-content: center; color: var(--txt3); font-size: 16px; transition: .18s; }
-.bni-lb { font-size: .6rem; font-weight: 700; color: var(--txt3); }
-.bni.on .bni-ic { background: var(--gold-l); color: var(--gold); }
-.bni.on .bni-lb { color: var(--gold); font-weight: 900; }
+/* ══ EDIT MODAL ══ */
+#editModal,#sharedAddModal{position:fixed;inset:0;z-index:45000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;}
+#editModal.open,#sharedAddModal.open{display:flex;}
+.mod-card{background:var(--white);border-radius:var(--r5);width:100%;max-width:480px;padding:26px 22px;box-shadow:var(--sh-modal);animation:crIn .3s cubic-bezier(.34,1.3,.64,1);max-height:92vh;overflow-y:auto;}
+.mod-title{font-size:1rem;font-weight:900;color:var(--tx0);text-align:center;margin-bottom:4px;}
+.mod-sub{font-size:.74rem;font-weight:700;color:var(--tx2);text-align:center;margin-bottom:20px;}
+.mod-acts{display:flex;gap:9px;margin-top:10px;}
+.m-cancel{flex:1;padding:11px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);color:var(--tx1);font-size:.82rem;font-weight:800;cursor:pointer;font-family:'Cairo',sans-serif;}
+.m-save{flex:1;padding:11px;background:var(--red-g);border:none;border-radius:var(--r3);color:#fff;font-size:.82rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);font-family:'Cairo',sans-serif;}
+.m-save:active{transform:scale(.97);}
+.el{font-size:.64rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:5px;display:block;margin-top:11px;}
+.el:first-of-type{margin-top:0;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-/* ─── MAP POPUP ─── */
-.leaflet-popup-content-wrapper { background: var(--bg2); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--sh-md); color: var(--txt0); }
-.leaflet-popup-content { margin: 12px 14px; font-family: 'Cairo', sans-serif; }
-.popup-title { font-weight: 900; font-size: .85rem; color: var(--txt0); margin-bottom: 4px; }
-.popup-sub { font-size: .72rem; font-weight: 700; color: var(--txt2); }
-.leaflet-popup-tip { background: var(--bg2); }
-.leaflet-popup-close-button { color: var(--txt2) !important; }
-
-/* ─── MISC ─── */
-.empty-msg { text-align: center; padding: 40px 20px; color: var(--txt3); font-size: .85rem; font-weight: 700; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+/* ══ MOBILE ══ */
+@media(max-width:768px){
+  .sidebar{display:none!important;}
+  .main{margin-right:0;padding-bottom:70px;}
+  .tab-page{padding:14px;padding-bottom:80px;}
+  .kpi-g{grid-template-columns:1fr 1fr;gap:9px;}
+  .chart-g{grid-template-columns:1fr;}
+  .entity-g{grid-template-columns:1fr;}
+  .live-panel{display:none;}
+  #pg-live{padding-bottom:70px;}
+  .live-hdr{padding:10px 14px;flex-wrap:wrap;gap:7px;}
+  .bnav{display:flex;}
+  #newOrderToast{right:10px;top:60px;width:calc(100% - 20px);}
+}
+.bnav{display:none;position:fixed;bottom:0;left:0;right:0;height:64px;background:rgba(255,255,255,.92);backdrop-filter:blur(20px);border-top:1px solid var(--border);justify-content:space-around;align-items:center;z-index:9000;padding-bottom:env(safe-area-inset-bottom);}
+.bni{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:7px 12px;}
+.bni-ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--tx3);font-size:15px;transition:.18s;}
+.bni-lb{font-size:.56rem;font-weight:700;color:var(--tx3);}
+.bni.on .bni-ic{background:var(--red-l);color:var(--red);}
+.bni.on .bni-lb{color:var(--red);font-weight:900;}
 </style>
 </head>
 <body>
-
-<!-- TOASTS -->
+<audio id="sndNew" src="https://actions.google.com/sounds/v1/alarms/submarine_dive_horn.ogg" preload="auto"></audio>
 <div id="toasts"></div>
 
-<!-- ═══════════════ AUTH ═══════════════ -->
+<!-- ══ SIDE TOAST ══ -->
+<div id="newOrderToast" role="alert">
+  <div class="not-ic">🔔</div>
+  <div class="not-body">
+    <div class="not-title" id="nt-title">طلب جديد!</div>
+    <div class="not-sub"  id="nt-sub">—</div>
+    <button class="not-go" onclick="goTabAndShowOrder()">عرض في الرادار ←</button>
+  </div>
+  <button class="not-close" onclick="hideNewOrderToast()">✕</button>
+</div>
+
+<!-- ══ LOADING ══ -->
+<div id="loadScr" class="dn">
+  <div class="ld-whale">🐋</div>
+  <div class="ld-bar"><div class="ld-prog"></div></div>
+  <div class="ld-txt" id="ldTxt">جاري المعالجة...</div>
+</div>
+
+<!-- ══ AUTH ══ -->
 <div id="auth">
-  <div class="auth-box">
-    <div class="auth-crown">🐋</div>
+  <div class="auth-card">
+    <div class="auth-logo">🐋</div>
     <div class="auth-h">منصة الحوت</div>
-    <div class="auth-s">لوحة القيادة العليا · V9.2 Enterprise</div>
+    <div class="auth-s">لوحة القيادة العليا · V2.0 Enterprise</div>
     <input type="password" id="mPW" class="auth-in" placeholder="••••" autocomplete="off"
       onkeypress="if(event.key==='Enter')doAuth()">
     <button class="auth-btn" id="authB" onclick="doAuth()">دخول النظام الآمن</button>
@@ -731,7 +478,7 @@ td.hi { color: var(--jade); font-weight: 900; }
   </div>
 </div>
 
-<!-- ═══════════════ APP ═══════════════ -->
+<!-- ══ APP ══ -->
 <div id="app" class="dn">
 
   <!-- SIDEBAR -->
@@ -740,32 +487,41 @@ td.hi { color: var(--jade); font-weight: 900; }
       <div class="sb-logo">🐋</div>
       <div>
         <div class="sb-title">منصة الحوت</div>
-        <div class="sb-ver">V9.2 · الإدارة العليا</div>
+        <div class="sb-ver">V2.0 · الإدارة العليا</div>
       </div>
     </div>
     <nav class="sb-nav">
-      <div class="sb-section">المراقبة الحية</div>
+      <div class="sb-sec">المراقبة الحية</div>
       <button class="sbn on" id="sbn-live" onclick="goTab('live',this)">
-        <div class="sbi">🗺️</div> الرادار الميداني
+        <div class="sbn-ic">🗺️</div>الرادار الميداني
       </button>
-      <div class="sb-section">التقارير والحسابات</div>
+      <!-- Cancel requests badge -->
+      <button class="sbn" id="sbn-cancels" onclick="goTab('cancels',this)">
+        <div class="sbn-ic">🗑️</div>طلبات الإلغاء
+        <span class="sbn-badge amber dn" id="badge-cancels">0</span>
+      </button>
+      <div class="sb-sec">التقارير والحسابات</div>
       <button class="sbn" id="sbn-reports" onclick="goTab('reports',this)">
-        <div class="sbi">📊</div> السجلات المالية
+        <div class="sbn-ic">📊</div>السجلات المالية
       </button>
-      <div class="sb-section">إدارة الشركاء</div>
+      <div class="sb-sec">إدارة الشركاء</div>
       <button class="sbn" id="sbn-offices" onclick="goTab('offices',this)">
-        <div class="sbi">🚗</div> مكاتب السيارات
+        <div class="sbn-ic">🚗</div>مكاتب السيارات
         <span class="sbn-badge dn" id="badge-offices">0</span>
       </button>
       <button class="sbn" id="sbn-hotels" onclick="goTab('hotels',this)">
-        <div class="sbi">🏨</div> قطاع الفنادق
+        <div class="sbn-ic">🏨</div>قطاع الفنادق
         <span class="sbn-badge dn" id="badge-hotels">0</span>
+      </button>
+      <div class="sb-sec">أسطول المنصة</div>
+      <button class="sbn" id="sbn-shared" onclick="goTab('shared',this)">
+        <div class="sbn-ic">🚙</div>سيارات المنصة
       </button>
     </nav>
     <div class="sb-foot">
-      <div class="sb-status">
+      <div class="sb-conn">
         <div class="sb-dot" id="fbDot"></div>
-        <div class="sb-st-txt" id="fbTxt">جاري الاتصال...</div>
+        <div class="sb-ct" id="fbTxt">جاري الاتصال...</div>
       </div>
       <button class="sb-logout" onclick="doLogout()">🚪 مغادرة النظام</button>
     </div>
@@ -774,143 +530,209 @@ td.hi { color: var(--jade); font-weight: 900; }
   <!-- MAIN -->
   <main class="main" id="mainArea">
 
-    <!-- ── PAGE: LIVE MAP ── -->
-    <div id="pg-live" class="tab-page on" style="padding:0; height:100vh; display:flex; flex-direction:column;">
-      <div class="live-header">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="font-size:.95rem;font-weight:900;color:var(--txt0);">الرادار الميداني</div>
-          <div style="display:flex;align-items:center;gap:5px;font-size:.7rem;font-weight:700;color:var(--jade)">
-            <div style="width:6px;height:6px;border-radius:50%;background:var(--jade);animation:sbpulse 1.5s infinite;"></div>
-            مباشر
+    <!-- ══ PAGE: LIVE MAP ══ -->
+    <div id="pg-live" class="tab-page" style="padding:0;height:100vh;display:none;flex-direction:column;">
+      <div class="live-hdr">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:.92rem;font-weight:900;color:var(--tx0)">الرادار الميداني</span>
+          <div style="display:flex;align-items:center;gap:4px;font-size:.68rem;font-weight:800;color:var(--green)">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:sbP 1.5s infinite;"></div>مباشر
           </div>
         </div>
         <div class="live-kpis">
-          <div class="lk"><div><div class="lk-v" id="lk-active">0</div><div class="lk-l">نشطة</div></div></div>
+          <div class="lk"><div><div class="lk-v" id="lk-active">0</div><div class="lk-l">نشط</div></div></div>
           <div class="lk"><div><div class="lk-v" id="lk-offices">0</div><div class="lk-l">مكتب</div></div></div>
           <div class="lk"><div><div class="lk-v" id="lk-hotels">0</div><div class="lk-l">فندق</div></div></div>
-          <div class="lk"><div><div class="lk-v" id="lk-done">0</div><div class="lk-l">منجزة اليوم</div></div></div>
+          <div class="lk"><div><div class="lk-v" id="lk-done">0</div><div class="lk-l">منجزة</div></div></div>
         </div>
-        <div class="clock-badge" id="clkBadge">--:--</div>
+        <!-- Broadcast -->
+        <div class="bc-box" style="margin:0;padding:0;background:transparent;border:none;box-shadow:none;gap:7px;">
+          <input type="text" class="bc-input" id="bcMsg" placeholder="📢 بث رسالة لكل الشركاء..." style="min-width:180px;">
+          <button class="btn-bc" onclick="sendBroadcast()">📡 بث</button>
+        </div>
+        <div class="clk" id="clk">--:--</div>
       </div>
-      <div class="live-body" style="flex:1;overflow:hidden;">
-        <!-- ORDER PANEL -->
+      <div class="live-body">
         <div class="live-panel">
-          <div class="lp-head">
+          <div class="lp-hd">
             <div class="lp-dot"></div>
             <div class="lp-title">الطلبات الواردة</div>
-            <div class="lp-count" id="lp-cnt">0</div>
+            <div class="lp-cnt" id="lp-cnt">0</div>
           </div>
           <div class="fbar">
             <button class="fp on" onclick="setLiveFilt('all',this)">الكل <span class="fc-n" id="fn-all">0</span></button>
-            <button class="fp" onclick="setLiveFilt('pending',this)">معلق <span class="fc-n" id="fn-pend">0</span></button>
-            <button class="fp" onclick="setLiveFilt('active',this)">جاري <span class="fc-n" id="fn-act">0</span></button>
+            <button class="fp" onclick="setLiveFilt('pending',this)">معلق <span class="fc-n" id="fn-p">0</span></button>
+            <button class="fp" onclick="setLiveFilt('active',this)">جاري <span class="fc-n" id="fn-a">0</span></button>
+            <button class="fp" onclick="setLiveFilt('cancel_pending',this)">إلغاء⏳ <span class="fc-n" id="fn-cp">0</span></button>
           </div>
           <div class="lp-list" id="lp-list">
-            <div class="lp-empty">⏳ في انتظار بيانات Firebase...</div>
+            <div class="lp-empty">⏳ في انتظار Firebase...</div>
           </div>
         </div>
-        <!-- MAP -->
         <div id="amap" style="flex:1;"></div>
       </div>
     </div>
 
-    <!-- ── PAGE: REPORTS ── -->
+    <!-- ══ PAGE: CANCEL REQUESTS ══ -->
+    <div id="pg-cancels" class="tab-page">
+      <div class="pg-hdr">
+        <div>
+          <div class="pg-title">طلبات الإلغاء المعلقة ⏳</div>
+          <div class="pg-sub">مراجعة طلبات الإلغاء من الشركاء والعملاء</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="cancel-badge" id="cancels-count">0 طلب</div>
+          <div class="clk" id="clk2">--:--</div>
+        </div>
+      </div>
+      <!-- Cancel cards rendered here -->
+      <div id="cancels-list">
+        <div class="lp-empty" style="background:var(--white);border-radius:var(--r4);padding:48px;text-align:center;color:var(--tx3);">
+          <div style="font-size:2rem;margin-bottom:10px">✅</div>لا توجد طلبات إلغاء معلقة
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PAGE: REPORTS ══ -->
     <div id="pg-reports" class="tab-page">
-      <div class="pg-header">
-        <div><div class="pg-title">السجلات المالية</div><div class="pg-sub">تقارير الطلبات والعمولات والإيرادات</div></div>
-        <div class="clock-badge" id="clkBadge2">--:--</div>
+      <div class="pg-hdr">
+        <div><div class="pg-title">السجلات المالية</div><div class="pg-sub">تقارير الطلبات والعمولات</div></div>
+        <div class="clk" id="clk3">--:--</div>
       </div>
-
-      <div class="arch-kpi">
-        <div class="ak">
-          <div class="ak-ic" style="background:var(--jade-l)">✅</div>
-          <div><div class="ak-v g" id="rp-comp">0</div><div class="ak-l">طلبات مكتملة</div></div>
-        </div>
-        <div class="ak">
-          <div class="ak-ic" style="background:var(--rose-l)">💸</div>
-          <div><div class="ak-v r" id="rp-debt">0</div><div class="ak-l">عمولات مستحقة (د.ع)</div></div>
-        </div>
-        <div class="ak">
-          <div class="ak-ic" style="background:var(--gold-l)">📈</div>
-          <div><div class="ak-v y" id="rp-rev">0</div><div class="ak-l">إجمالي الإيرادات (د.ع)</div></div>
-        </div>
+      <div class="kpi-g" style="grid-template-columns:repeat(3,1fr);">
+        <div class="kc kg"><div class="kc-ic">✅</div><div><div class="kc-v" id="rp-comp">0</div><div class="kc-l">طلبات مكتملة</div></div></div>
+        <div class="kc kr"><div class="kc-ic">💸</div><div><div class="kc-v" id="rp-debt">0</div><div class="kc-l">عمولات مستحقة (د.ع)</div></div></div>
+        <div class="kc ka"><div class="kc-ic">📈</div><div><div class="kc-v" id="rp-rev">0</div><div class="kc-l">إجمالي الإيرادات (د.ع)</div></div></div>
       </div>
-
-      <div class="chart-grid">
-        <div class="chart-box">
-          <div class="chart-tt">📊 أداء الطلبات حسب النوع</div>
-          <div class="chart-inner"><canvas id="chart-orders"></canvas></div>
+      <div class="chart-g">
+        <div class="ch-box">
+          <div class="ch-tt">📊 أداء الطلبات حسب النوع</div>
+          <div class="ch-in"><canvas id="chart-orders"></canvas></div>
         </div>
-        <div class="chart-box">
-          <div class="chart-tt">💰 توزيع الإيرادات</div>
-          <div class="chart-inner"><canvas id="chart-revenue"></canvas></div>
+        <div class="ch-box">
+          <div class="ch-tt">💰 توزيع الإيرادات</div>
+          <div class="ch-in"><canvas id="chart-revenue"></canvas></div>
         </div>
       </div>
-
       <div class="tb-wrap">
-        <div class="tb-header">
-          <div class="tb-title-block">
-            <div class="tb-tt">سجل الحجوزات</div>
-            <div class="tb-count" id="tb-count">0 سجل</div>
+        <div class="tb-hdr">
+          <div>
+            <span class="tb-tt">سجل الحجوزات</span>
+            <span class="tb-cnt" id="tb-cnt">0 سجل</span>
           </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-            <input type="text" class="search-in" placeholder="🔍 بحث..." id="arcSch" oninput="renderArchTable()">
-            <select class="type-sel" id="arcType" onchange="renderArchTable()">
+          <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
+            <!-- Date range filter -->
+            <div class="dr-wrap">
+              <input type="date" id="dr-from" class="si" style="width:140px" onchange="renderArchTable()">
+              <span class="dr-sep">←</span>
+              <input type="date" id="dr-to"   class="si" style="width:140px" onchange="renderArchTable()">
+            </div>
+            <input type="text" class="si" id="arcSch" placeholder="🔍 بحث..." oninput="renderArchTable()">
+            <select class="sel" id="arcType" onchange="renderArchTable()">
               <option value="all">كل الطلبات</option>
               <option value="car">🚗 السيارات</option>
               <option value="hotel">🏨 الفنادق</option>
             </select>
-            <button class="export-btn" onclick="expCSV()">⬇ تصدير CSV</button>
+            <!-- Per-partner export -->
+            <select class="sel" id="expPartnerSel">
+              <option value="all">تصدير: الكل</option>
+            </select>
+            <button class="btn-exp" onclick="expCSV()">⬇ تصدير CSV</button>
           </div>
         </div>
         <div class="tb-sc">
-          <table class="main-table">
-            <thead>
-              <tr>
-                <th>المعرف</th>
-                <th>التاريخ</th>
-                <th>العميل</th>
-                <th>النوع</th>
-                <th>الجهة</th>
-                <th>المبلغ</th>
-                <th>الحالة</th>
-                <th>إجراء</th>
-              </tr>
-            </thead>
+          <table>
+            <thead><tr>
+              <th>المعرف</th><th>التاريخ</th><th>العميل</th>
+              <th>النوع</th><th>الجهة</th><th>المبلغ</th>
+              <th>الحالة</th><th>إجراء</th>
+            </tr></thead>
             <tbody id="arcTbody"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ── PAGE: OFFICES ── -->
+    <!-- ══ PAGE: OFFICES ══ -->
     <div id="pg-offices" class="tab-page">
-      <div class="pg-header">
+      <div class="pg-hdr">
         <div><div class="pg-title">مكاتب السيارات</div><div class="pg-sub">إدارة الشركاء وضبط الصلاحيات</div></div>
-        <input type="text" class="search-in" placeholder="🔍 ابحث عن مكتب..." id="sOff" oninput="renderOffices()">
+        <input type="text" class="si" id="sOff" placeholder="🔍 بحث عن مكتب..." oninput="renderOffices()">
       </div>
-      <div class="entity-filters" id="offFilt">
+      <div class="efil" id="offFilt">
         <button class="ef on" onclick="setEntFilt('office','all',this)">الكل <span class="ef-n" id="eof-all">0</span></button>
         <button class="ef jade" onclick="setEntFilt('office','active',this)">✅ نشط <span class="ef-n" id="eof-act">0</span></button>
         <button class="ef amber" onclick="setEntFilt('office','pending',this)">⏳ معلق <span class="ef-n" id="eof-pend">0</span></button>
         <button class="ef rose" onclick="setEntFilt('office','blocked',this)">🚫 موقوف <span class="ef-n" id="eof-blk">0</span></button>
       </div>
-      <div class="entity-grid" id="officesList"></div>
+      <div class="entity-g" id="officesList"></div>
     </div>
 
-    <!-- ── PAGE: HOTELS ── -->
+    <!-- ══ PAGE: HOTELS ══ -->
     <div id="pg-hotels" class="tab-page">
-      <div class="pg-header">
-        <div><div class="pg-title">قطاع الفنادق</div><div class="pg-sub">إدارة الفنادق الشريكة وضبط التسعير</div></div>
-        <input type="text" class="search-in" placeholder="🔍 ابحث عن فندق..." id="sHot" oninput="renderHotels()">
+      <div class="pg-hdr">
+        <div><div class="pg-title">قطاع الفنادق</div><div class="pg-sub">إدارة الفنادق الشريكة</div></div>
+        <input type="text" class="si" id="sHot" placeholder="🔍 بحث عن فندق..." oninput="renderHotels()">
       </div>
-      <div class="entity-filters" id="hotFilt">
+      <div class="efil" id="hotFilt">
         <button class="ef on" onclick="setEntFilt('hotel','all',this)">الكل <span class="ef-n" id="ehot-all">0</span></button>
         <button class="ef jade" onclick="setEntFilt('hotel','active',this)">✅ نشط <span class="ef-n" id="ehot-act">0</span></button>
         <button class="ef amber" onclick="setEntFilt('hotel','pending',this)">⏳ معلق <span class="ef-n" id="ehot-pend">0</span></button>
         <button class="ef rose" onclick="setEntFilt('hotel','blocked',this)">🚫 موقوف <span class="ef-n" id="ehot-blk">0</span></button>
       </div>
-      <div class="entity-grid" id="hotelsList"></div>
+      <div class="entity-g" id="hotelsList"></div>
+    </div>
+
+    <!-- ══ PAGE: SHARED FLEET ══ -->
+    <div id="pg-shared" class="tab-page">
+      <div class="pg-hdr">
+        <div><div class="pg-title">سيارات المنصة 🚙</div><div class="pg-sub">الأسطول المشترك — متاح لجميع المكاتب والعملاء</div></div>
+      </div>
+
+      <!-- Broadcast bar on this page too -->
+      <div class="bc-box" style="margin-bottom:18px">
+        <span style="font-size:.8rem;font-weight:900;color:var(--tx0);white-space:nowrap">📢 بث رسالة</span>
+        <input type="text" class="bc-input" id="bcMsg2" placeholder="تنبيه يصل لكل الشركاء فوراً...">
+        <button class="btn-bc" onclick="sendBroadcast2()">📡 بث</button>
+      </div>
+
+      <div class="add-card">
+        <div class="add-tt">🚙 إضافة سيارة جديدة للمنصة</div>
+        <label class="uz" id="uz-sh" for="img-sh">
+          <input type="file" id="img-sh" accept="image/*" class="dn" onchange="handleSharedImg(this)">
+          <img class="uz-prev" id="uz-sh-p" style="display:none">
+          <div class="comp-badge" id="uz-sh-badge">✓ مضغوطة</div>
+          <div class="uz-ov"><div class="uz-ov-t">تغيير الصورة ✏️</div></div>
+          <div class="uz-ico" id="uz-sh-i">📷</div>
+          <div class="uz-lbl" id="uz-sh-l">ارفع صورة السيارة</div>
+          <div class="uz-sub">يُضغط ويُرفع إلى ImgBB تلقائياً</div>
+        </label>
+        <div class="grid-2">
+          <div><label class="fld-lbl">اسم السيارة والموديل</label><input type="text" id="sh-nm" class="fc" placeholder="تويوتا كورولا 2024"></div>
+          <div><label class="fld-lbl">السعر اليومي (د.ع)</label><input type="number" id="sh-pr" class="fc" placeholder="60000"></div>
+          <div><label class="fld-lbl">رقم اللوحة</label><input type="text" id="sh-pl" class="fc" placeholder="بغداد 12345"></div>
+          <div>
+            <label class="fld-lbl">الفئة</label>
+            <select id="sh-ct" class="fc">
+              <option value="economy">اقتصادية</option>
+              <option value="family">عائلية</option>
+              <option value="luxury">فخمة VIP</option>
+              <option value="wedding">زفاف</option>
+            </select>
+          </div>
+          <div><label class="fld-lbl">اللون</label><input type="text" id="sh-cl" class="fc" placeholder="أبيض فضي"></div>
+          <div style="display:flex;align-items:flex-end">
+            <button class="btn-pri" id="sh-sv" onclick="saveSharedCar()">🚙 نشر في المنصة</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-tt" style="margin-top:6px">سيارات المنصة المسجلة</div>
+      <div id="shared-fleet-list">
+        <div class="lp-empty" style="background:var(--white);border-radius:var(--r4);padding:36px;text-align:center;">
+          <div style="font-size:1.8rem;margin-bottom:8px">🚙</div>لا توجد سيارات مضافة بعد
+        </div>
+      </div>
     </div>
 
   </main>
@@ -918,769 +740,1110 @@ td.hi { color: var(--jade); font-weight: 900; }
   <!-- BOTTOM NAV -->
   <nav class="bnav">
     <div class="bni on" onclick="goTab('live',this)"><div class="bni-ic">🗺️</div><span class="bni-lb">الرادار</span></div>
+    <div class="bni" onclick="goTab('cancels',this)"><div class="bni-ic">🗑️</div><span class="bni-lb">إلغاءات</span></div>
     <div class="bni" onclick="goTab('reports',this)"><div class="bni-ic">📊</div><span class="bni-lb">التقارير</span></div>
     <div class="bni" onclick="goTab('offices',this)"><div class="bni-ic">🚗</div><span class="bni-lb">المكاتب</span></div>
-    <div class="bni" onclick="goTab('hotels',this)"><div class="bni-ic">🏨</div><span class="bni-lb">الفنادق</span></div>
+    <div class="bni" onclick="goTab('shared',this)"><div class="bni-ic">🚙</div><span class="bni-lb">أسطول</span></div>
   </nav>
 </div>
 
-<!-- ═══════════════ EDIT MODAL ═══════════════ -->
-<div id="editModal" class="modal-bg" onclick="closeMod('editModal')">
-  <div class="modal-card" onclick="event.stopPropagation()">
-    <div class="modal-title" id="mod-title">تعديل بيانات الشريك</div>
-    <div class="modal-sub" id="mod-sub">إدارة المعلومات والصلاحيات</div>
-
-    <label class="el">الاسم التجاري</label>
-    <input type="text" class="fc" id="mod-name">
-
-    <label class="el">كلمة المرور الجديدة (اتركها فارغة للإبقاء)</label>
-    <input type="text" class="fc" id="mod-pass" placeholder="كلمة مرور قوية...">
-
-    <div id="mod-hotel-extra" class="dn">
-      <div class="grid-2">
-        <div>
-          <label class="el">سعر المفردة (د.ع)</label>
-          <input type="number" class="fc" id="mod-p-single">
-        </div>
-        <div>
-          <label class="el">سعر المزدوجة (د.ع)</label>
-          <input type="number" class="fc" id="mod-p-double">
-        </div>
-      </div>
-      <label class="el">سعر الجناح (د.ع)</label>
-      <input type="number" class="fc" id="mod-p-suite">
-      <label class="el">المميزات</label>
-      <input type="text" class="fc" id="mod-features" placeholder="واي فاي، مواقف، ...">
-      <label class="el">رابط صورة الفندق</label>
-      <input type="text" class="fc" id="mod-photo" placeholder="https://...">
+<!-- ══ WHATSAPP MODAL ══ -->
+<div id="waModal" class="dn" onclick="closeWaModal()">
+  <div class="wa-sheet" onclick="event.stopPropagation()">
+    <div style="width:36px;height:4px;background:var(--border);border-radius:99px;margin:12px auto 0;"></div>
+    <div class="wa-hd">
+      <div class="wa-hd-h">مراسلة سريعة عبر واتساب</div>
+      <div class="wa-hd-s" id="wa-ctx-label">اختر قالباً</div>
+      <div class="wa-chip" id="wa-phone-chip">📱 —</div>
     </div>
+    <div class="wa-tmps" id="wa-tmps"></div>
+    <button class="wa-close" onclick="closeWaModal()">إغلاق</button>
+  </div>
+</div>
 
-    <div id="mod-office-extra" class="dn">
-      <div class="grid-2">
-        <div>
-          <label class="el">نوع العمولة</label>
-          <select class="fc" id="mod-comm-type">
-            <option value="fixed">ثابت</option>
-            <option value="split">مناصفة</option>
-            <option value="monthly">اشتراك شهري</option>
-          </select>
-        </div>
-        <div>
-          <label class="el">قيمة العمولة</label>
-          <input type="text" class="fc" id="mod-comm-val" placeholder="مثال: 2000">
-        </div>
-      </div>
-    </div>
-
-    <div class="m-actions">
-      <button class="m-cancel" onclick="closeMod('editModal')">إلغاء</button>
-      <button class="m-save" id="mod-save-btn" onclick="saveEdit()">💾 حفظ التغييرات</button>
+<!-- ══ CANCEL REVIEW MODAL ══ -->
+<div id="cancelReviewModal" class="dn" onclick="closeCancelReview()">
+  <div class="cr-card" onclick="event.stopPropagation()">
+    <div class="cr-icon">🗂️</div>
+    <div class="cr-title">مراجعة طلب الإلغاء</div>
+    <div class="cr-sub">اختر قراراً — القبول يلغي الطلب نهائياً<br>الرفض يُعيد الطلب للرادار بحالته السابقة</div>
+    <div class="cr-info" id="cr-info"></div>
+    <div class="cr-reason-box" id="cr-reason-box"></div>
+    <div class="cr-btns">
+      <button class="crb crb-back" id="crb-back" onclick="decideCancel('back')">↺ رفض — إعادة للرادار</button>
+      <button class="crb crb-ok"   id="crb-ok"   onclick="decideCancel('approve')">✅ قبول الإلغاء</button>
+      <button class="crb crb-del"  id="crb-del"  onclick="decideCancel('delete')">🗑 حذف نهائي</button>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════ SCRIPTS ════════════════════ -->
+<!-- ══ EDIT MODAL ══ -->
+<div id="editModal" onclick="closeMod('editModal')">
+  <div class="mod-card" onclick="event.stopPropagation()">
+    <div class="mod-title" id="mod-title">تعديل بيانات الشريك</div>
+    <div class="mod-sub"   id="mod-sub">—</div>
+    <label class="el">الاسم التجاري</label>
+    <input type="text" class="fc" id="mod-name">
+    <label class="el">كلمة المرور الجديدة</label>
+    <input type="text" class="fc" id="mod-pass" placeholder="اتركها فارغة للإبقاء">
+    <div id="mod-hotel-x" class="dn">
+      <div class="g2" style="gap:9px">
+        <div><label class="el">سعر مفردة</label><input type="number" class="fc" id="mod-ps"></div>
+        <div><label class="el">سعر مزدوجة</label><input type="number" class="fc" id="mod-pd"></div>
+      </div>
+      <label class="el">سعر الجناح</label><input type="number" class="fc" id="mod-pu">
+      <label class="el">المميزات</label><input type="text" class="fc" id="mod-feat" placeholder="واي فاي، مواقف...">
+      <label class="el">رابط الصورة</label><input type="text" class="fc" id="mod-photo" placeholder="https://...">
+    </div>
+    <div id="mod-office-x" class="dn">
+      <div class="g2" style="gap:9px">
+        <div>
+          <label class="el">نوع العمولة</label>
+          <select class="fc" id="mod-ct"><option value="fixed">ثابت</option><option value="split">مناصفة</option><option value="monthly">شهري</option></select>
+        </div>
+        <div><label class="el">قيمة العمولة</label><input type="text" class="fc" id="mod-cv"></div>
+      </div>
+    </div>
+    <div class="mod-acts">
+      <button class="m-cancel" onclick="closeMod('editModal')">إلغاء</button>
+      <button class="m-save" id="mod-save-btn" onclick="saveEdit()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
 <script>
-/* ══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    CONSTANTS
-══════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════ */
 const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
 const API_TOKEN = "HUT_CLOUD_2026";
+const IMGBB_KEY = "7f67d9adc91e89648de939ed301d20fe";
 
-/* ══════════════════════════════════════════════════
-   STATE
-══════════════════════════════════════════════════ */
-let MP = "";
-let gD = null;
-let activeTab = "live";
+/* ══ STATE ══ */
+let MP = "", gD = null;
 let carOrdersFB = [], hotelBookingsFB = [];
-let map, markersLayer;
+let map, clusterLayer;
 let liveFilt = "all";
 let offFiltMode = "all", hotFiltMode = "all";
-let editCtx = { type: "", id: "", data: null };
+let editCtx = {};
 let charts = {};
-let isFirstLoad = true;
+let toastTimer = null;
+let waCtx = null;      // { phone, type: "customer"|"partner", order }
+let crCtx = null;      // cancel review context
+let b64Shared = null;
 
-/* ══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    FIREBASE
-══════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════ */
+let db;
 try {
   firebase.initializeApp({
-    apiKey: "AIzaSyAo1rmqUzieYZU3RIwXOAN87GkpNrp-_Hc",
-    authDomain: "alhut-for-rent.firebaseapp.com",
-    databaseURL: "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "alhut-for-rent",
-    storageBucket: "alhut-for-rent.firebasestorage.app",
-    messagingSenderId: "941542380637",
-    appId: "1:941542380637:web:9623fa6e627817ffeba9b4"
+    apiKey:"AIzaSyAo1rmqUzieYZU3RIwXOAN87GkpNrp-_Hc",
+    authDomain:"alhut-for-rent.firebaseapp.com",
+    databaseURL:"https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId:"alhut-for-rent",
+    storageBucket:"alhut-for-rent.firebasestorage.app",
+    messagingSenderId:"941542380637",
+    appId:"1:941542380637:web:9623fa6e627817ffeba9b4"
   });
-} catch(e) {}
+  db = firebase.database();
+} catch(e) { console.warn("Firebase:", e); }
 
-const db = firebase.database();
-db.ref(".info/connected").on("value", snap => {
-  const conn = snap.val();
-  const dot = document.getElementById("fbDot");
-  const txt = document.getElementById("fbTxt");
-  if (dot) dot.className = "sb-dot" + (conn ? "" : " off");
-  if (txt) { txt.textContent = conn ? "رادار متصل" : "غير متصل"; txt.className = "sb-st-txt" + (conn ? "" : " off"); }
-});
+if(db){
+  db.ref(".info/connected").on("value", snap => {
+    const on = snap.val();
+    const dot = $("fbDot"), txt = $("fbTxt");
+    if(dot){ dot.className = "sb-dot"+(on?"":" off"); }
+    if(txt){ txt.textContent = on ? "رادار متصل" : "غير متصل"; txt.className = "sb-ct"+(on?"":" off"); }
+  });
+}
 
-/* ══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    UTILS
-══════════════════════════════════════════════════ */
-function cleanNum(v) { const n = Number(String(v||"").replace(/[^\d.-]/g,"")); return isNaN(n) ? 0 : n; }
-function fmt(n) { return Math.round(cleanNum(n)).toLocaleString("ar-EG"); }
-function timeAgo(d) {
-  const diff = Date.now() - new Date(d).getTime();
-  const m = Math.floor(diff/60000);
-  if (m < 1) return "الآن";
-  if (m < 60) return `منذ ${m}د`;
-  if (m < 1440) return `منذ ${Math.floor(m/60)}س`;
-  return new Date(d).toLocaleDateString("ar-EG");
-}
+══════════════════════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+const cleanN = v => { const n=Number(String(v||"").replace(/[^\d.-]/g,"")); return isNaN(n)?0:n; };
+const fmt   = n => Math.round(cleanN(n)).toLocaleString("ar-EG");
+function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
-function toast(msg, type = "s") {
-  const c = document.getElementById("toasts");
-  const el = document.createElement("div");
-  el.className = `ti t${type}`;
-  el.innerHTML = `<div class="ti-ico">${type==="s"?"✅":"❌"}</div><span class="ti-msg">${msg}</span>`;
+function toast(msg, type="s"){
+  const c=$("toasts");
+  const el=document.createElement("div");
+  el.className=`ti t${type}`;
+  el.innerHTML=`<div class="ti-ic">${type==="s"?"✅":"❌"}</div><span class="ti-msg">${msg}</span>`;
   c.appendChild(el);
-  setTimeout(() => { el.style.opacity="0"; el.style.transition=".3s"; setTimeout(()=>el.remove(), 300); }, 3500);
+  setTimeout(()=>{el.style.opacity="0";el.style.transition=".3s";setTimeout(()=>el.remove(),300);},3500);
 }
 
-function setLoading(el, on) {
-  if (!el) return;
-  if (on) el.classList.add("loading");
-  else el.classList.remove("loading");
-  el.disabled = on;
+function showLoad(on, msg="جاري المعالجة..."){
+  $("ldTxt").textContent = msg;
+  $("loadScr").classList.toggle("dn", !on);
 }
 
-/* ══════════════════════════════════════════════════
-   CLOCK
-══════════════════════════════════════════════════ */
-function startClock() {
-  function tick() {
-    const t = new Date().toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-    ["clkBadge", "clkBadge2"].forEach(id => { const e = document.getElementById(id); if(e) e.textContent = t; });
+function setBtn(id, loading){
+  const el=$(id); if(!el) return;
+  el.classList.toggle("btn-ld", loading);
+  el.disabled = loading;
+}
+
+/* ══ CLOCK ══ */
+function startClock(){
+  function tick(){
+    const t = new Date().toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+    ["clk","clk2","clk3"].forEach(id=>{const e=$(id);if(e)e.textContent=t;});
   }
-  tick();
-  setInterval(tick, 1000);
+  tick(); setInterval(tick, 1000);
 }
 
-/* ══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    AUTH
-══════════════════════════════════════════════════ */
-window.doAuth = async function() {
-  const pass = document.getElementById("mPW").value.trim();
-  if (!pass) { document.getElementById("authErr").textContent = "أدخل رمز المرور الإداري"; return; }
+══════════════════════════════════════════════════════ */
+window.doAuth = async function(){
+  const pass = $("mPW").value.trim();
+  if(!pass){ $("authErr").textContent="أدخل رمز المرور"; return; }
   MP = pass;
-  const btn = document.getElementById("authB");
-  setLoading(btn, true);
-  document.getElementById("authErr").textContent = "";
-
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      body: JSON.stringify({ action: "VERIFY_MASTER_PASS", pass, token: API_TOKEN })
-    });
-    const data = await res.json();
-
-    if (data.success) {
-      document.getElementById("auth").style.display = "none";
-      document.getElementById("app").classList.remove("dn");
+  setBtn("authB", true);
+  $("authErr").textContent = "";
+  try{
+    const res = await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"VERIFY_MASTER_PASS",pass,token:API_TOKEN})});
+    const d = await res.json();
+    if(d.success){
+      $("auth").style.display = "none";
+      $("app").classList.remove("dn");
       startClock();
       initMap();
       loadSystemData();
       startFirebaseListeners();
     } else {
       MP = "";
-      document.getElementById("authErr").textContent = "❌ رمز إدارة خاطئ أو منتهي الصلاحية";
+      $("authErr").textContent = "❌ رمز خاطئ أو منتهي الصلاحية";
     }
-  } catch(e) {
-    MP = "";
-    document.getElementById("authErr").textContent = "فشل الاتصال — تحقق من الشبكة";
-  } finally {
-    setLoading(btn, false);
-  }
+  } catch(e){ MP=""; $("authErr").textContent = "فشل الاتصال"; }
+  finally{ setBtn("authB", false); }
 };
 
-/* ══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    DATA LOADING
-══════════════════════════════════════════════════ */
-async function loadSystemData() {
-  try {
+══════════════════════════════════════════════════════ */
+async function loadSystemData(){
+  try{
     const res = await fetch(`${API_URL}?action=getAdminFullData&token=${API_TOKEN}&_t=${Date.now()}`);
     gD = await res.json();
-    if (!gD || !gD.success) return;
+    if(!gD?.success) return;
 
-    // Sidebar badges for pending
+    // Sidebar badges
     const offPend = (gD.carOffices||[]).filter(x=>x.status==="pending").length;
     const hotPend = (gD.hotels||[]).filter(x=>x.status==="pending").length;
-    const badgeOff = document.getElementById("badge-offices");
-    const badgeHot = document.getElementById("badge-hotels");
-    if (badgeOff) { badgeOff.textContent = offPend; badgeOff.classList.toggle("dn", offPend===0); }
-    if (badgeHot) { badgeHot.textContent = hotPend; badgeHot.classList.toggle("dn", hotPend===0); }
+    const badgeOff=$("badge-offices"), badgeHot=$("badge-hotels");
+    if(badgeOff){badgeOff.textContent=offPend;badgeOff.classList.toggle("dn",offPend===0);}
+    if(badgeHot){badgeHot.textContent=hotPend;badgeHot.classList.toggle("dn",hotPend===0);}
 
     // Live KPIs
-    document.getElementById("lk-offices").textContent = (gD.carOffices||[]).filter(x=>x.status==="active").length;
-    document.getElementById("lk-hotels").textContent  = (gD.hotels||[]).filter(x=>x.status==="active").length;
-    const doneCar = (gD.carOrders||[]).filter(o=>o.status==="completed").length;
-    const doneHot = (gD.hotelBookings||[]).filter(b=>b.status==="completed").length;
-    document.getElementById("lk-done").textContent = doneCar + doneHot;
+    $("lk-offices").textContent=(gD.carOffices||[]).filter(x=>x.status==="active").length;
+    $("lk-hotels").textContent=(gD.hotels||[]).filter(x=>x.status==="active").length;
+    const doneCar=(gD.carOrders||[]).filter(o=>o.status==="completed").length;
+    const doneHot=(gD.hotelBookings||[]).filter(b=>b.status==="completed").length;
+    $("lk-done").textContent=doneCar+doneHot;
 
-    // Report KPIs
-    const tDebt = (gD.carOffices||[]).reduce((s,x)=>s+cleanNum(x.debt),0) + (gD.hotels||[]).reduce((s,x)=>s+cleanNum(x.debt),0);
-    const tRev  = (gD.carOrders||[]).filter(o=>o.status==="completed").reduce((s,o)=>s+cleanNum(o.total),0)
-                + (gD.hotelBookings||[]).filter(b=>b.status==="completed").reduce((s,b)=>s+cleanNum(b.total),0);
-    document.getElementById("rp-comp").textContent = fmt(doneCar + doneHot);
-    document.getElementById("rp-debt").textContent = fmt(tDebt) + " د.ع";
-    document.getElementById("rp-rev").textContent  = fmt(tRev) + " د.ع";
+    // Reports KPIs
+    const tDebt=(gD.carOffices||[]).reduce((s,x)=>s+cleanN(x.debt),0)+(gD.hotels||[]).reduce((s,x)=>s+cleanN(x.debt),0);
+    const tRev=(gD.carOrders||[]).filter(o=>o.status==="completed").reduce((s,o)=>s+cleanN(o.total),0)
+              +(gD.hotelBookings||[]).filter(b=>b.status==="completed").reduce((s,b)=>s+cleanN(b.total),0);
+    $("rp-comp").textContent=fmt(doneCar+doneHot);
+    $("rp-debt").textContent=fmt(tDebt)+" د.ع";
+    $("rp-rev").textContent=fmt(tRev)+" د.ع";
 
-    // Render pages
-    renderArchTable();
-    renderOffices();
-    renderHotels();
-    placeStaticMarkers();
-    renderCharts();
-    if (isFirstLoad) { isFirstLoad = false; }
-  } catch(e) { toast("خطأ في تحميل البيانات", "e"); }
+    renderArchTable(); renderOffices(); renderHotels();
+    placeMarkers(); renderCharts();
+    buildPartnerSelector();
+    renderSharedFleet();
+  } catch(e){ toast("خطأ في تحميل البيانات","e"); }
 }
 
-/* ══════════════════════════════════════════════════
-   FIREBASE REALTIME LISTENERS
-══════════════════════════════════════════════════ */
-function startFirebaseListeners() {
+/* ══════════════════════════════════════════════════════
+   FIREBASE REALTIME LISTENERS (NO POLLING)
+══════════════════════════════════════════════════════ */
+let lastKnownOrderIds = new Set();
+
+function startFirebaseListeners(){
+  if(!db) return;
+
+  // Car orders listener
   db.ref("hut_car_orders").on("value", snap => {
     carOrdersFB = snap.val() ? Object.values(snap.val()) : [];
     refreshLivePanel();
+    checkNewOrders();
   });
+
+  // Hotel bookings listener
   db.ref("hut_hotel_bookings").on("value", snap => {
     hotelBookingsFB = snap.val() ? Object.values(snap.val()) : [];
     refreshLivePanel();
+    checkNewOrders();
+  });
+
+  // Partner ledger listener — updates debt/stats in real-time
+  db.ref("ledgers").on("value", snap => {
+    const ledgers = snap.val()||{};
+    if(!gD) return;
+    // Update carOffices debt from Firebase ledger
+    (gD.carOffices||[]).forEach(off => {
+      const key = String(off.id||"").replace(/\D/g,"")||off.name.replace(/\s+/g,"_");
+      const l = ledgers.car_offices?.[key];
+      if(l){ off.debt=l.debt||0; off.total_orders=l.completed_orders||off.total_orders; }
+    });
+    (gD.hotels||[]).forEach(h => {
+      const key = String(h.id||"").replace(/\D/g,"")||h.name.replace(/\s+/g,"_");
+      const l = ledgers.hotels?.[key];
+      if(l){ h.debt=l.debt||0; h.total_bookings=l.completed_orders||h.total_bookings; }
+    });
   });
 }
 
-function getMergedOrders() {
-  const list = [];
-  carOrdersFB.forEach(o => list.push({
-    id: o.id, type: "car",
-    title: (o.car||"سيارة").substring(0,40),
-    entity: o.office||"جاري التحديد",
-    city: o.city||"—", price: cleanNum(o.total),
-    status: o.status, date: o.date||o.created_at||"", raw: o
-  }));
-  hotelBookingsFB.forEach(b => list.push({
-    id: b.id, type: "hotel",
-    title: (b.hotel_name||"فندق"),
-    entity: b.hotel_name||"—",
-    city: b.city||"—", price: cleanNum(b.total),
-    status: b.status, date: b.date_arrive||b.created_at||"", raw: b
-  }));
-  return list.sort((a,b) => new Date(b.date) - new Date(a.date));
+function checkNewOrders(){
+  const all = getMergedOrders().filter(o=>o.status==="pending");
+  all.forEach(o => {
+    const sid = String(o.id);
+    if(!lastKnownOrderIds.has(sid)){
+      lastKnownOrderIds.add(sid);
+      showNewOrderToast(o);
+      const snd=$("sndNew");if(snd){snd.currentTime=0;snd.play().catch(()=>{});}
+    }
+  });
 }
 
-function refreshLivePanel() {
+/* ══ SIDE TOAST ══ */
+function showNewOrderToast(o){
+  $("nt-title").textContent = o.type==="car" ? "🚗 طلب تأجير جديد!" : "🏨 حجز فندقي جديد!";
+  $("nt-sub").textContent = `#${o.id} · ${o.city||"—"} · ${fmt(o.price)} د.ع`;
+  const toast = $("newOrderToast");
+  toast.classList.add("show");
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>hideNewOrderToast(), 15000);
+}
+function hideNewOrderToast(){ $("newOrderToast").classList.remove("show"); }
+function goTabAndShowOrder(){ hideNewOrderToast(); goTab("live"); }
+window.goTabAndShowOrder = goTabAndShowOrder;
+window.hideNewOrderToast = hideNewOrderToast;
+
+/* ══════════════════════════════════════════════════════
+   MERGED ORDERS
+══════════════════════════════════════════════════════ */
+function getMergedOrders(){
+  const list=[];
+  carOrdersFB.forEach(o=>list.push({
+    id:o.id, type:"car",
+    title:(o.car||"سيارة"),
+    name:o.name||"—", phone:o.phone||"",
+    entity:o.office||"جاري التحديد",
+    city:o.city||"—", price:cleanN(o.total),
+    status:o.status, date:o.date||o.created_at||"",
+    cancel_requested:o.cancel_requested||false,
+    cancel_reason:o.cancel_reason||"",
+    cancel_by:o.cancel_by||"",
+    raw:o
+  }));
+  hotelBookingsFB.forEach(b=>list.push({
+    id:b.id, type:"hotel",
+    title:(b.hotel_name||"فندق"),
+    name:b.guest_name||b.name||"—", phone:b.guest_phone||b.phone||"",
+    entity:b.hotel_name||"—",
+    city:b.city||"—", price:cleanN(b.total),
+    status:b.status, date:b.date_arrive||b.created_at||"",
+    cancel_requested:b.cancel_requested||false,
+    cancel_reason:b.cancel_reason||"",
+    cancel_by:b.cancel_by||"",
+    raw:b
+  }));
+  return list.sort((a,b)=>new Date(b.date)-new Date(a.date));
+}
+
+/* ══════════════════════════════════════════════════════
+   LIVE PANEL RENDER
+══════════════════════════════════════════════════════ */
+function refreshLivePanel(){
   const all = getMergedOrders();
-  const pend = all.filter(x => x.status === "pending").length;
-  const act  = all.filter(x => ["active","confirmed"].includes(x.status)).length;
+  const pend = all.filter(x=>x.status==="pending"&&!x.cancel_requested).length;
+  const act  = all.filter(x=>["active","confirmed"].includes(x.status)&&!x.cancel_requested).length;
+  const cp   = all.filter(x=>x.cancel_requested).length;
 
-  document.getElementById("fn-all").textContent  = all.length;
-  document.getElementById("fn-pend").textContent = pend;
-  document.getElementById("fn-act").textContent  = act;
-  document.getElementById("lk-active").textContent = pend + act;
+  $("fn-all").textContent = all.length;
+  $("fn-p").textContent   = pend;
+  $("fn-a").textContent   = act;
+  $("fn-cp").textContent  = cp;
+  $("lk-active").textContent = pend+act;
 
-  const cntEl = document.getElementById("lp-cnt");
-  if (cntEl) { cntEl.textContent = pend; cntEl.classList.toggle("show", pend > 0); }
+  const cntEl=$("lp-cnt");
+  if(cntEl){cntEl.textContent=pend;cntEl.classList.toggle("show",pend>0);}
+
+  // Update cancel badge in sidebar
+  const bc=$("badge-cancels");
+  if(bc){bc.textContent=cp;bc.classList.toggle("dn",cp===0);}
 
   let filtered = all;
-  if (liveFilt === "pending") filtered = all.filter(x => x.status === "pending");
-  if (liveFilt === "active")  filtered = all.filter(x => ["active","confirmed"].includes(x.status));
+  if(liveFilt==="pending") filtered=all.filter(x=>x.status==="pending"&&!x.cancel_requested);
+  if(liveFilt==="active")  filtered=all.filter(x=>["active","confirmed"].includes(x.status)&&!x.cancel_requested);
+  if(liveFilt==="cancel_pending") filtered=all.filter(x=>x.cancel_requested);
 
-  const list = document.getElementById("lp-list");
-  if (!filtered.length) {
-    list.innerHTML = `<div class="lp-empty">🐋 الرادار نظيف تماماً</div>`;
+  renderOrderCards(filtered, "lp-list");
+  renderCancelTab(all.filter(x=>x.cancel_requested));
+}
+
+/* ══ ORDER CARDS ══ */
+function renderOrderCards(list, containerId){
+  const container=$(containerId);
+  if(!list.length){container.innerHTML=`<div class="lp-empty">🐋 لا طلبات تطابق الفلتر</div>`;return;}
+
+  container.innerHTML = list.map(x=>{
+    const isCP = x.cancel_requested;
+    let sc,sl,strClass;
+    if(isCP){ sc="stb-cp"; sl="⏳ إلغاء معلق"; strClass="str-cp"; }
+    else if(x.status==="pending"){ sc="stb-p"; sl="معلق"; strClass="str-p"; }
+    else if(["active","confirmed"].includes(x.status)){ sc="stb-a"; sl="جاري"; strClass="str-a"; }
+    else if(x.status==="completed"){ sc="stb-g"; sl="مكتمل"; strClass="str-c"; }
+    else { sc="stb-x"; sl="ملغي"; strClass="str-x"; }
+
+    const phn = normalizePhone(x.phone);
+    const waBtn = phn ? `<button class="ob ob-wa" title="واتساب" onclick="openWaAdmin('customer',${safeJSON(x)})">💬</button>` : "";
+    const waPartnerPhone = getPartnerPhone(x);
+    const waPartnerBtn = waPartnerPhone ? `<button class="ob" style="background:#e0f2fe;color:#0369a1;font-size:11px;width:27px;height:27px;border-radius:8px;border:none;cursor:pointer" title="واتساب الشريك" onclick="openWaAdmin('partner',${safeJSON(x)})">🏢</button>` : "";
+
+    let cancelActions="";
+    if(isCP){
+      cancelActions=`
+        <button class="ob ob-back"    title="رفض الإلغاء"  onclick="openCancelReview(${safeJSON(x)})">↺</button>
+        <button class="ob ob-approve" title="قبول الإلغاء" onclick="openCancelReview(${safeJSON(x)})">✅</button>
+        <button class="ob ob-nuke"    title="حذف نهائي"    onclick="openCancelReview(${safeJSON(x)})">🗑</button>`;
+    } else {
+      cancelActions=`
+        <button class="ob ob-ok"  title="إكمال" onclick="forceComplete('${esc(x.type)}','${esc(x.id)}',this)">✓</button>
+        <button class="ob ob-del" title="إلغاء" onclick="forceCancel('${esc(x.id)}',this)">✕</button>`;
+    }
+
+    return `
+    <div class="oc">
+      <div class="oc-stripe ${strClass}"></div>
+      <div class="oc-hd">
+        <div class="oc-id">#${esc(x.id)}</div>
+        <span class="oc-stb ${sc}">${sl}</span>
+      </div>
+      <div class="oc-bd">
+        <div class="oc-ti">${x.type==="car"?"🚗":"🏨"} ${esc(x.title)}</div>
+        <div class="oc-det">👤 ${esc(x.name)} · 📍 ${esc(x.city)} · 🏢 ${esc(x.entity)}</div>
+        ${isCP?`<div class="oc-cr">🗑 ${esc(x.cancel_reason||"لا سبب")} — بواسطة: ${esc(x.cancel_by||"—")}</div>`:""}
+      </div>
+      <div class="oc-ft">
+        <div class="oc-price">${fmt(x.price)} د.ع</div>
+        <div class="oc-acts">${waBtn}${waPartnerBtn}${cancelActions}</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function safeJSON(o){return JSON.stringify(o).replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
+
+/* ══ CANCEL TAB ══ */
+function renderCancelTab(cancelList){
+  const cnt=$("cancels-count");
+  if(cnt){cnt.textContent=cancelList.length+" طلب";}
+
+  if(!cancelList.length){
+    $("cancels-list").innerHTML=`<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:48px;text-align:center;color:var(--tx3);"><div style="font-size:2.2rem;margin-bottom:10px">✅</div>لا توجد طلبات إلغاء معلقة</div>`;
     return;
   }
 
-  let html = "";
-  filtered.forEach(x => {
-    let sc = "ocm", sl = "مكتمل", stb = "g";
-    if (x.status === "pending")  { sc = "op"; sl = "معلق"; stb = "r"; }
-    if (["active","confirmed"].includes(x.status)) { sc = "oa"; sl = "جاري التنفيذ"; stb = "b"; }
-    if (["cancelled","rejected"].includes(x.status)) { sc = "ocx"; sl = "ملغي"; stb = "d"; }
-
-    html += `
-      <div class="oc ${sc}">
-        <div class="oc-head">
-          <div class="oc-id">#${x.id}</div>
-          <span class="oc-stb ${stb}">${sl}</span>
+  const html = cancelList.map(x=>{
+    const phn = normalizePhone(x.phone);
+    return `
+    <div class="cancel-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:7px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:700;color:var(--red)">#${esc(x.id)}</span>
+          <span class="stb stb-cpnd">⏳ إلغاء معلق</span>
         </div>
-        <div class="oc-body">
-          <div class="oc-title">${x.type==="car"?"🚗":"🏨"} ${x.title}</div>
-          <div class="oc-detail">📍 ${x.city} · 🏢 ${x.entity}</div>
-        </div>
-        <div class="oc-footer">
-          <div class="oc-price">${fmt(x.price)} د.ع</div>
-          <div class="oc-actions">
-            <button class="ob ob-ok" title="إكمال" onclick="forceComplete('${x.type}','${x.id}',this)">✓</button>
-            <button class="ob ob-del" title="إلغاء" onclick="forceCancel('${x.id}',this)">✕</button>
-          </div>
+        <div style="display:flex;gap:6px">
+          <button class="ea ea-edit" style="font-size:.72rem" onclick="openCancelReview(${safeJSON(x)})">🔍 مراجعة وقرار</button>
         </div>
       </div>
-    `;
-  });
-  list.innerHTML = html;
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:7px;background:var(--bg);border-radius:var(--r2);padding:11px;border:1px solid var(--border)">
+        <div><div style="font-size:.58rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">العميل</div><div style="font-size:.82rem;font-weight:900;margin-top:2px">${esc(x.name)}</div></div>
+        <div><div style="font-size:.58rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">الخدمة</div><div style="font-size:.82rem;font-weight:900;margin-top:2px">${x.type==="car"?"🚗":"🏨"} ${esc(x.title)}</div></div>
+        <div><div style="font-size:.58rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">المدينة</div><div style="font-size:.82rem;font-weight:900;margin-top:2px">📍 ${esc(x.city)}</div></div>
+        <div><div style="font-size:.58rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">المبلغ</div><div style="font-size:.82rem;font-weight:900;color:var(--green);margin-top:2px">${fmt(x.price)} د.ع</div></div>
+        <div><div style="font-size:.58rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">طالب الإلغاء</div><div style="font-size:.78rem;font-weight:700;color:var(--amber);margin-top:2px">${esc(x.cancel_by||"—")}</div></div>
+        <div><div style="font-size:.58rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">الهاتف</div><div style="font-size:.78rem;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--blue);margin-top:2px">${esc(phn||"—")}</div></div>
+      </div>
+      ${x.cancel_reason?`<div class="cr-reason-box" style="margin-top:9px;margin-bottom:0">🗑 السبب: ${esc(x.cancel_reason)}</div>`:""}
+    </div>`;
+  }).join("");
+  $("cancels-list").innerHTML = html;
 }
 
-window.setLiveFilt = function(f, btn) {
-  liveFilt = f;
-  document.querySelectorAll(".fbar .fp").forEach(b => b.classList.remove("on"));
+/* ══ CANCEL REVIEW MODAL ══ */
+function openCancelReview(order){
+  crCtx = order;
+  $("cr-info").innerHTML = `
+    <div class="cr-row"><span class="cr-lbl">المعرف</span><span class="cr-val">#${esc(order.id)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">العميل</span><span class="cr-val">${esc(order.name)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">الخدمة</span><span class="cr-val">${order.type==="car"?"🚗":"🏨"} ${esc(order.title)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">المدينة</span><span class="cr-val">📍 ${esc(order.city)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">المبلغ</span><span class="cr-val" style="color:var(--green)">${fmt(order.price)} د.ع</span></div>
+    <div class="cr-row"><span class="cr-lbl">طالب الإلغاء</span><span class="cr-val" style="color:var(--amber)">${esc(order.cancel_by||"—")}</span></div>`;
+  $("cr-reason-box").textContent = "📝 السبب: " + (order.cancel_reason||"لم يُحدَّد");
+  $("cancelReviewModal").classList.remove("dn");
+}
+function closeCancelReview(){ $("cancelReviewModal").classList.add("dn"); crCtx=null; }
+window.closeCancelReview = closeCancelReview;
+window.openCancelReview  = openCancelReview;
+
+/* Three decisions: back=reject(return to radar) / approve=cancel / delete=hard delete */
+window.decideCancel = async function(decision){
+  if(!crCtx) return;
+  const order = crCtx;
+  const sp = order.type==="hotel" ? "hut_hotel_bookings" : "hut_car_orders";
+  const confirmMsg = {
+    back:    "رفض الإلغاء وإعادة الطلب للرادار؟",
+    approve: "قبول الإلغاء وإلغاء الطلب نهائياً؟",
+    delete:  "⚠️ حذف الطلب كلياً من قاعدة البيانات؟ لا يمكن التراجع!"
+  }[decision];
+  if(!confirm(confirmMsg)) return;
+
+  ["crb-back","crb-ok","crb-del"].forEach(id=>setBtn(id,true));
+
+  try{
+    if(decision === "back"){
+      // Remove cancel flags from Firebase — order returns to radar with original status
+      if(db) await db.ref(`${sp}/${order.id}`).update({
+        cancel_requested: false,
+        cancel_reason: null,
+        cancel_by: null,
+        cancel_at: null
+      });
+      toast("↺ تم رفض الإلغاء — الطلب عاد للرادار ✅");
+
+    } else if(decision === "approve"){
+      // Send cancel/reject to API
+      const ac = order.type==="hotel" ? "rejectHotelBooking" : "cancelRequest";
+      await fetch(API_URL,{method:"POST",body:JSON.stringify({action:ac,id:order.id,token:API_TOKEN,pass:MP})});
+      // Update Firebase status
+      if(db) await db.ref(`${sp}/${order.id}`).update({status:"cancelled",cancel_requested:false});
+      toast("✅ تم قبول الإلغاء وإلغاء الطلب");
+
+    } else if(decision === "delete"){
+      // Delete from API
+      const ac = order.type==="hotel" ? "deleteBooking" : "deleteOrder";
+      await fetch(API_URL,{method:"POST",body:JSON.stringify({action:ac,id:order.id,token:API_TOKEN,pass:MP})});
+      // Hard delete from Firebase
+      if(db) await db.ref(`${sp}/${order.id}`).remove();
+      toast("🗑 تم الحذف النهائي للطلب");
+    }
+    closeCancelReview();
+    setTimeout(loadSystemData, 800);
+  } catch(e){ toast("فشل — حاول مجدداً","e"); }
+  finally{["crb-back","crb-ok","crb-del"].forEach(id=>setBtn(id,false));}
+};
+
+window.setLiveFilt = function(f, btn){
+  liveFilt=f;
+  document.querySelectorAll(".fbar .fp").forEach(b=>b.classList.remove("on"));
   btn.classList.add("on");
   refreshLivePanel();
 };
 
-/* ══════════════════════════════════════════════════
-   ORDER ACTIONS
-══════════════════════════════════════════════════ */
-window.forceComplete = async function(type, id, btn) {
-  if (!confirm("تأكيد إكمال الطلب يدوياً؟")) return;
-  setLoading(btn, true);
-  const action = type === "car" ? "completeOrder" : "confirmBooking";
-  const body = type === "car"
-    ? { action, id, office: "الإدارة العامة", token: API_TOKEN }
-    : { action, id, hotel: "الإدارة العامة", token: API_TOKEN };
-  try {
-    await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
-    toast("تم تحديث حالة الطلب بنجاح");
-    loadSystemData();
-  } catch(e) { toast("تم الإرسال", "s"); }
-  finally { setLoading(btn, false); }
+/* ══ FORCE ACTIONS ══ */
+window.forceComplete = async function(type, id, btn){
+  if(!confirm("تأكيد إكمال الطلب يدوياً؟")) return;
+  if(btn)btn.classList.add("btn-ld");
+  const action = type==="car" ? "completeOrder" : "confirmBooking";
+  const body = type==="car"
+    ? {action,id,office:"الإدارة العامة",token:API_TOKEN}
+    : {action,id,hotel:"الإدارة العامة",token:API_TOKEN};
+  try{
+    await fetch(API_URL,{method:"POST",body:JSON.stringify(body)});
+    toast("تم تحديث الطلب ✅");
+    setTimeout(loadSystemData,600);
+  }catch(e){toast("تم الإرسال","s");}
+  finally{if(btn)btn.classList.remove("btn-ld");}
 };
 
-window.forceCancel = async function(id, btn) {
-  if (!confirm("تأكيد إلغاء هذا الطلب نهائياً؟")) return;
-  setLoading(btn, true);
-  try {
-    await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "cancelRequest", id, token: API_TOKEN }) });
-    toast("تم إلغاء الطلب");
-    loadSystemData();
-  } catch(e) { toast("تم الإرسال"); }
-  finally { setLoading(btn, false); }
+window.forceCancel = async function(id, btn){
+  if(!confirm("تأكيد إلغاء الطلب؟")) return;
+  if(btn)btn.classList.add("btn-ld");
+  try{
+    await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"cancelRequest",id,token:API_TOKEN})});
+    toast("تم الإلغاء ✅");
+    setTimeout(loadSystemData,600);
+  }catch(e){toast("تم الإرسال","s");}
+  finally{if(btn)btn.classList.remove("btn-ld");}
 };
 
-/* ══════════════════════════════════════════════════
-   MAP
-══════════════════════════════════════════════════ */
-function initMap() {
-  map = L.map("amap", { zoomControl: false, attributionControl: false }).setView([35.468, 44.392], 11);
-  L.control.zoom({ position: "bottomright" }).addTo(map);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", { maxZoom: 19 }).addTo(map);
-  markersLayer = L.layerGroup().addTo(map);
-  setTimeout(() => map.invalidateSize(), 400);
+/* ══════════════════════════════════════════════════════
+   MAP — MARKERCLUSTER
+══════════════════════════════════════════════════════ */
+function initMap(){
+  map = L.map("amap",{zoomControl:false,attributionControl:false}).setView([35.468,44.392],11);
+  L.control.zoom({position:"bottomright"}).addTo(map);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",{maxZoom:19}).addTo(map);
+  clusterLayer = L.markerClusterGroup({
+    iconCreateFunction: cluster => L.divIcon({
+      html:`<div style="background:var(--red);color:#fff;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;font-family:'Cairo',sans-serif;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.2)">${cluster.getChildCount()}</div>`,
+      className:"",iconSize:[34,34]
+    })
+  });
+  map.addLayer(clusterLayer);
+  setTimeout(()=>map.invalidateSize(),400);
 }
 
-function placeStaticMarkers() {
-  if (!map || !gD) return;
-  markersLayer.clearLayers();
+function placeMarkers(){
+  if(!map||!gD) return;
+  clusterLayer.clearLayers();
 
-  (gD.carOffices||[]).forEach(off => {
-    const lat = parseFloat(off.lat), lng = parseFloat(off.lng);
-    if (!lat || !lng || Math.abs(lat) < 1) return;
+  (gD.carOffices||[]).forEach(off=>{
+    const lat=parseFloat(off.lat), lng=parseFloat(off.lng);
+    if(!lat||!lng||Math.abs(lat)<1) return;
     const ico = L.divIcon({
-      className: "",
-      html: `<div style="background:#1e40af;border:2px solid #d4a843;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,.5)">🚗</div>`,
-      iconSize: [32,32], iconAnchor: [16,16]
+      className:"",
+      html:`<div style="background:#fff;border:2px solid var(--red);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 3px 10px rgba(0,0,0,.15)">🚗</div>`,
+      iconSize:[30,30],iconAnchor:[15,15]
     });
-    L.marker([lat,lng], { icon: ico })
-      .bindPopup(`<div class="popup-title">${off.name}</div><div class="popup-sub">📍 ${off.city} · 📊 ${off.total_orders||0} طلب</div>`)
-      .addTo(markersLayer);
+    L.marker([lat,lng],{icon:ico})
+      .bindPopup(`<div class="popup-title">${off.name}</div><div class="popup-sub">📍 ${off.city} · ${off.total_orders||0} طلب · ${off.phone||"—"}</div><br><a href="https://wa.me/${normalizePhone(off.phone)}" target="_blank" style="color:#16a34a;font-weight:800;font-size:.72rem">💬 واتساب</a>`)
+      .addTo(clusterLayer);
   });
 
-  (gD.hotels||[]).forEach(h => {
-    const lat = parseFloat(h.lat), lng = parseFloat(h.lng);
-    if (!lat || !lng || Math.abs(lat) < 1) return;
+  (gD.hotels||[]).forEach(h=>{
+    const lat=parseFloat(h.lat), lng=parseFloat(h.lng);
+    if(!lat||!lng||Math.abs(lat)<1) return;
     const ico = L.divIcon({
-      className: "",
-      html: `<div style="background:#065f46;border:2px solid #d4a843;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,.5)">🏨</div>`,
-      iconSize: [32,32], iconAnchor: [16,16]
+      className:"",
+      html:`<div style="background:#fff;border:2px solid var(--green);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 3px 10px rgba(0,0,0,.15)">🏨</div>`,
+      iconSize:[30,30],iconAnchor:[15,15]
     });
-    L.marker([lat,lng], { icon: ico })
-      .bindPopup(`<div class="popup-title">${h.name}</div><div class="popup-sub">⭐ ${h.stars||"—"} نجوم · 📍 ${h.city}</div>`)
-      .addTo(markersLayer);
+    L.marker([lat,lng],{icon:ico})
+      .bindPopup(`<div class="popup-title">${h.name}</div><div class="popup-sub">⭐${h.stars||"—"} · 📍 ${h.city} · ${h.phone||"—"}</div><br><a href="https://wa.me/${normalizePhone(h.phone)}" target="_blank" style="color:#16a34a;font-weight:800;font-size:.72rem">💬 واتساب</a>`)
+      .addTo(clusterLayer);
   });
 }
 
-/* ══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    ARCHIVE TABLE
-══════════════════════════════════════════════════ */
-function renderArchTable() {
-  if (!gD) return;
-  const q = (document.getElementById("arcSch")?.value || "").toLowerCase().trim();
-  const tf = document.getElementById("arcType")?.value || "all";
+══════════════════════════════════════════════════════ */
+function renderArchTable(){
+  if(!gD) return;
+  const q    = ($("arcSch")?.value||"").toLowerCase().trim();
+  const tf   = $("arcType")?.value||"all";
+  const from = $("dr-from")?.value;
+  const to   = $("dr-to")?.value;
 
-  let merged = [];
-  (gD.carOrders||[]).forEach(o => merged.push({ id:o.id, type:"car", name:o.name||"—", entity:o.office||"—", price:cleanNum(o.total), status:o.status, date:o.date }));
-  (gD.hotelBookings||[]).forEach(b => merged.push({ id:b.id, type:"hotel", name:b.guest_name||"—", entity:b.hotel_name||"—", price:cleanNum(b.total), status:b.status, date:b.date_arrive }));
+  let merged=[];
+  (gD.carOrders||[]).forEach(o=>merged.push({id:o.id,type:"car",name:o.name||"—",entity:o.office||"—",price:cleanN(o.total),status:o.status,date:o.date||"",cancel_requested:o.cancel_requested||false}));
+  (gD.hotelBookings||[]).forEach(b=>merged.push({id:b.id,type:"hotel",name:b.guest_name||"—",entity:b.hotel_name||"—",price:cleanN(b.total),status:b.status,date:b.date_arrive||"",cancel_requested:b.cancel_requested||false}));
 
-  if (tf === "car")   merged = merged.filter(x => x.type === "car");
-  if (tf === "hotel") merged = merged.filter(x => x.type === "hotel");
-  if (q) merged = merged.filter(x =>
-    x.id.toLowerCase().includes(q) || x.name.toLowerCase().includes(q) ||
-    (x.entity||"").toLowerCase().includes(q)
-  );
+  if(tf==="car")   merged=merged.filter(x=>x.type==="car");
+  if(tf==="hotel") merged=merged.filter(x=>x.type==="hotel");
+  if(q) merged=merged.filter(x=>x.id.toLowerCase().includes(q)||x.name.toLowerCase().includes(q)||(x.entity||"").toLowerCase().includes(q));
+  if(from) merged=merged.filter(x=>x.date&&x.date>=from);
+  if(to)   merged=merged.filter(x=>x.date&&x.date<=to);
 
-  const cnt = document.getElementById("tb-count");
-  if (cnt) cnt.textContent = merged.length + " سجل";
+  const cnt=$("tb-cnt"); if(cnt) cnt.textContent=merged.length+" سجل";
 
-  const tbody = document.getElementById("arcTbody");
-  if (!merged.length) {
-    tbody.innerHTML = `<tr><td colspan="8" style="padding:30px;text-align:center;color:var(--txt3)">لا توجد بيانات تطابق الفلتر</td></tr>`;
-    return;
-  }
-
-  const stMap = {
-    completed:  ["stb-g","مكتمل"],
-    pending:    ["stb-r","معلق"],
-    active:     ["stb-b","جاري"],
-    confirmed:  ["stb-b","مؤكد"],
-    cancelled:  ["stb-d","ملغي"],
-    rejected:   ["stb-d","مرفوض"],
+  const stMap={
+    completed:["stb-comp","مكتمل"],pending:["stb-pend","معلق"],
+    active:   ["stb-act","جاري"], confirmed:["stb-act","مؤكد"],
+    cancelled:["stb-canc","ملغي"],rejected: ["stb-canc","مرفوض"],
   };
 
-  tbody.innerHTML = merged.map(x => {
-    const [sc, sl] = stMap[x.status] || ["stb-d", x.status];
-    return `
-      <tr>
-        <td class="mono">#${x.id}</td>
-        <td>${x.date||"—"}</td>
-        <td style="font-weight:900">${x.name}</td>
-        <td>${x.type==="car"?"🚗 سيارات":"🏨 فنادق"}</td>
-        <td style="color:var(--gold)">${x.entity}</td>
-        <td class="hi">${fmt(x.price)} د.ع</td>
-        <td><span class="stb ${sc}">${sl}</span></td>
-        <td>
-          <button class="ob ob-del" style="width:24px;height:24px;font-size:10px" onclick="forceCancel('${x.id}',this)" title="إلغاء">✕</button>
-        </td>
-      </tr>`;
-  }).join("");
+  $("arcTbody").innerHTML = merged.length===0
+    ? `<tr><td colspan="8" style="padding:30px;text-align:center;color:var(--tx3)">لا بيانات</td></tr>`
+    : merged.map(x=>{
+        const realSt = x.cancel_requested ? "cancel_pending" : x.status;
+        const [sc,sl] = realSt==="cancel_pending" ? ["stb-cpnd","إلغاء⏳"] : (stMap[x.status]||["stb-canc",x.status]);
+        return `<tr>
+          <td class="mono">#${esc(x.id)}</td>
+          <td>${esc(x.date)||"—"}</td>
+          <td style="font-weight:900">${esc(x.name)}</td>
+          <td>${x.type==="car"?"🚗 سيارات":"🏨 فنادق"}</td>
+          <td style="color:var(--red);font-weight:800">${esc(x.entity)}</td>
+          <td class="hi">${fmt(x.price)} د.ع</td>
+          <td><span class="stb ${sc}">${sl}</span></td>
+          <td><button class="ob ob-del" style="width:24px;height:24px;font-size:10px" onclick="forceCancel('${esc(x.id)}',this)" title="إلغاء">✕</button></td>
+        </tr>`;
+      }).join("");
 }
 
-window.expCSV = function() {
-  if (!gD) return;
-  let csv = "\uFEFFرقم الحجز,التاريخ,العميل,النوع,الجهة,المبلغ,الحالة\n";
-  (gD.carOrders||[]).forEach(o => { csv += `"${o.id}","${o.date}","${o.name}","سيارات","${o.office}","${o.total}","${o.status}"\n`; });
-  (gD.hotelBookings||[]).forEach(b => { csv += `"${b.id}","${b.date_arrive}","${b.guest_name}","فنادق","${b.hotel_name}","${b.total}","${b.status}"\n`; });
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
-  a.download = `تقرير_الحوت_${new Date().toISOString().split("T")[0]}.csv`;
+/* ══ PARTNER SELECTOR for CSV ══ */
+function buildPartnerSelector(){
+  const sel = $("expPartnerSel"); if(!sel) return;
+  const partners = new Set(["all"]);
+  (gD?.carOrders||[]).forEach(o=>o.office&&partners.add(o.office));
+  (gD?.hotelBookings||[]).forEach(b=>b.hotel_name&&partners.add(b.hotel_name));
+  sel.innerHTML = `<option value="all">تصدير: الكل</option>`
+    + [...partners].filter(p=>p!=="all").map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join("");
+}
+
+window.expCSV = function(){
+  if(!gD) return;
+  const partnerFilter = $("expPartnerSel")?.value||"all";
+  let csv="\uFEFFرقم الحجز,التاريخ,العميل,النوع,الجهة,المبلغ,الحالة\n";
+  (gD.carOrders||[]).forEach(o=>{
+    if(partnerFilter!=="all"&&o.office!==partnerFilter) return;
+    csv+=`"${o.id}","${o.date}","${o.name}","سيارات","${o.office}","${o.total}","${o.status}"\n`;
+  });
+  (gD.hotelBookings||[]).forEach(b=>{
+    if(partnerFilter!=="all"&&b.hotel_name!==partnerFilter) return;
+    csv+=`"${b.id}","${b.date_arrive}","${b.guest_name}","فنادق","${b.hotel_name}","${b.total}","${b.status}"\n`;
+  });
+  const partnerName = partnerFilter==="all" ? "الكل" : partnerFilter;
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=`تقرير_${partnerName}_${new Date().toISOString().split("T")[0]}.csv`;
   document.body.appendChild(a); a.click(); a.remove();
-  toast("تم تصدير التقرير بنجاح ✅");
+  toast("تم تصدير التقرير ✅");
 };
 
-/* ══════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════
    CHARTS
-══════════════════════════════════════════════════ */
-function renderCharts() {
-  if (!gD || typeof Chart === "undefined") return;
+══════════════════════════════════════════════════════ */
+function renderCharts(){
+  if(!gD||typeof Chart==="undefined") return;
+  Object.values(charts).forEach(c=>{try{c.destroy();}catch(e){}});
+  charts={};
 
-  // Destroy old
-  Object.values(charts).forEach(c => { try { c.destroy(); } catch(e) {} });
-  charts = {};
-
-  const cOpts = {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { ticks: { color: "#64748b", font: { family: "Cairo", size: 11 } }, grid: { color: "rgba(255,255,255,.05)" } },
-      y: { ticks: { color: "#64748b", font: { family: "Cairo", size: 11 } }, grid: { color: "rgba(255,255,255,.05)" }, beginAtZero: true }
+  const baseOpts={
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{ticks:{color:"#717171",font:{family:"Cairo",size:11}},grid:{color:"rgba(0,0,0,.06)"}},
+      y:{ticks:{color:"#717171",font:{family:"Cairo",size:11}},grid:{color:"rgba(0,0,0,.06)"},beginAtZero:true}
     }
   };
 
-  // Orders chart
-  const oCtx = document.getElementById("chart-orders");
-  if (oCtx) {
-    const cComp  = (gD.carOrders||[]).filter(x=>x.status==="completed").length;
-    const cPend  = (gD.carOrders||[]).filter(x=>x.status==="pending").length;
-    const hComp  = (gD.hotelBookings||[]).filter(x=>x.status==="completed").length;
-    const hPend  = (gD.hotelBookings||[]).filter(x=>x.status==="pending").length;
-    charts.orders = new Chart(oCtx, {
-      type: "bar",
-      data: {
-        labels: ["سيارات (مكتمل)", "سيارات (معلق)", "فنادق (مكتمل)", "فنادق (معلق)"],
-        datasets: [{ data: [cComp, cPend, hComp, hPend], backgroundColor: ["#10b981","#f43f5e","#38bdf8","#f59e0b"], borderRadius: 8, borderSkipped: false }]
+  const oCtx=$("chart-orders");
+  if(oCtx){
+    const cC=(gD.carOrders||[]).filter(x=>x.status==="completed").length;
+    const cP=(gD.carOrders||[]).filter(x=>x.status==="pending").length;
+    const hC=(gD.hotelBookings||[]).filter(x=>x.status==="completed").length;
+    const hP=(gD.hotelBookings||[]).filter(x=>x.status==="pending").length;
+    charts.orders=new Chart(oCtx,{
+      type:"bar",
+      data:{
+        labels:["سيارات (مكتمل)","سيارات (معلق)","فنادق (مكتمل)","فنادق (معلق)"],
+        datasets:[{data:[cC,cP,hC,hP],backgroundColor:["#00A699","#FC642D","#0066CC","#FF385C"],borderRadius:8,borderSkipped:false}]
       },
-      options: { ...cOpts }
+      options:{...baseOpts}
     });
   }
 
-  // Revenue chart
-  const rCtx = document.getElementById("chart-revenue");
-  if (rCtx) {
-    const carRev   = (gD.carOrders||[]).filter(o=>o.status==="completed").reduce((s,o)=>s+cleanNum(o.total),0);
-    const hotRev   = (gD.hotelBookings||[]).filter(b=>b.status==="completed").reduce((s,b)=>s+cleanNum(b.total),0);
-    const carDebt  = (gD.carOffices||[]).reduce((s,x)=>s+cleanNum(x.debt),0);
-    const hotDebt  = (gD.hotels||[]).reduce((s,x)=>s+cleanNum(x.debt),0);
-    charts.revenue = new Chart(rCtx, {
-      type: "doughnut",
-      data: {
-        labels: ["إيرادات سيارات", "إيرادات فنادق", "ديون سيارات", "ديون فنادق"],
-        datasets: [{ data: [carRev, hotRev, carDebt, hotDebt], backgroundColor: ["#10b981","#38bdf8","#f43f5e","#f59e0b"], borderColor: "rgba(0,0,0,.2)", borderWidth: 2, hoverOffset: 6 }]
+  const rCtx=$("chart-revenue");
+  if(rCtx){
+    const carRev=(gD.carOrders||[]).filter(o=>o.status==="completed").reduce((s,o)=>s+cleanN(o.total),0);
+    const hotRev=(gD.hotelBookings||[]).filter(b=>b.status==="completed").reduce((s,b)=>s+cleanN(b.total),0);
+    const carDbt=(gD.carOffices||[]).reduce((s,x)=>s+cleanN(x.debt),0);
+    const hotDbt=(gD.hotels||[]).reduce((s,x)=>s+cleanN(x.debt),0);
+    charts.revenue=new Chart(rCtx,{
+      type:"doughnut",
+      data:{
+        labels:["إيرادات سيارات","إيرادات فنادق","ديون سيارات","ديون فنادق"],
+        datasets:[{data:[carRev,hotRev,carDbt,hotDbt],backgroundColor:["#00A699","#0066CC","#FC642D","#FF385C"],borderColor:"rgba(255,255,255,.8)",borderWidth:3,hoverOffset:8}]
       },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { position: "bottom", labels: { color: "#64748b", font: { family: "Cairo", size: 11 }, padding: 14 } } }
-      }
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{color:"#717171",font:{family:"Cairo",size:11},padding:12}}}}
     });
   }
 }
 
-/* ══════════════════════════════════════════════════
-   PARTNERS RENDER
-══════════════════════════════════════════════════ */
-function renderOffices() {
-  if (!gD) return;
-  const q = (document.getElementById("sOff")?.value || "").toLowerCase().trim();
-  let list = (gD.carOffices||[]);
-
-  // Update count badges
-  const counts = { all: list.length, active: 0, pending: 0, blocked: 0 };
-  list.forEach(x => { if (counts[x.status] !== undefined) counts[x.status]++; });
-  ["all","act","pend","blk"].forEach((k,i) => {
-    const statuses = ["all","active","pending","blocked"];
-    const el = document.getElementById(`eof-${k}`);
-    if (el) el.textContent = counts[statuses[i]]||0;
+/* ══════════════════════════════════════════════════════
+   PARTNERS
+══════════════════════════════════════════════════════ */
+function renderOffices(){
+  if(!gD) return;
+  const q=($("sOff")?.value||"").toLowerCase().trim();
+  let list=(gD.carOffices||[]);
+  const counts={all:list.length,active:0,pending:0,blocked:0};
+  list.forEach(x=>{if(counts[x.status]!==undefined)counts[x.status]++;});
+  ["all","act","pend","blk"].forEach((k,i)=>{
+    const statuses=["all","active","pending","blocked"];
+    const el=$(`eof-${k}`); if(el)el.textContent=counts[statuses[i]]||0;
   });
-
-  if (q) list = list.filter(x => x.name.toLowerCase().includes(q) || (x.phone||"").includes(q));
-  if (offFiltMode !== "all") list = list.filter(x => x.status === offFiltMode);
-
-  const container = document.getElementById("officesList");
-  if (!list.length) { container.innerHTML = `<div class="empty-msg" style="grid-column:1/-1">لا توجد مكاتب تطابق البحث</div>`; return; }
-
-  container.innerHTML = list.map(off => {
-    const sc = { active: "s-active", pending: "s-pending", blocked: "s-blocked" }[off.status] || "s-pending";
-    const sl = { active: "نشط ✅", pending: "معلق ⏳", blocked: "موقوف 🚫" }[off.status] || off.status;
-    const commTxt = off.comm_type === "monthly" ? `📅 شهري: ${fmt(off.comm_val)} د.ع` : off.comm_type === "split" ? `📊 مناصفة: ${off.comm_val}` : `💰 ${fmt(off.comm_val)} د.ع/طلب`;
-    return `
-      <div class="ec ${sc}">
-        <div class="ec-status-bar"></div>
-        <div class="ec-no-img">🚗</div>
-        <div class="ec-body">
-          <div class="ec-name">${off.name}</div>
-          <div class="ec-meta">
-            <div class="ec-city">${off.city}</div>
-            <div class="ec-ph">${off.phone||"—"}</div>
-          </div>
-          <div class="ec-stats">
-            <div class="est"><div class="est-v">${off.total_orders||0}</div><div class="est-l">الطلبات</div></div>
-            <div class="est"><div class="est-v g">${fmt(off.total_rev)} <span style="font-size:.55rem">د.ع</span></div><div class="est-l">الإيرادات</div></div>
-            <div class="est"><div class="est-v r">${fmt(off.debt)}</div><div class="est-l">الديون</div></div>
-          </div>
-          <div class="ec-comm">${commTxt} · 📡 نصف القطر: ${off.radius||10} كم</div>
-          <div style="font-size:.68rem;color:var(--txt3);font-weight:700;">الحالة: <span style="color:${off.status==='active'?'var(--jade)':off.status==='pending'?'var(--amber)':'var(--rose)'}">${sl}</span></div>
-        </div>
-        <div class="ec-actions">
-          ${off.status !== "active"  ? `<button class="ea ea-ok" onclick="setStatus('CarOffice','${off.id}','active',this)">✅ تفعيل</button>` : ""}
-          ${off.status !== "blocked" ? `<button class="ea ea-blk" onclick="setStatus('CarOffice','${off.id}','blocked',this)">🚫 وقف</button>` : ""}
-          <button class="ea ea-rst" onclick="resetDebt('CarOffice','${off.id}',this)">💰 تصفير</button>
-          <button class="ea ea-edit" onclick="openEdit('office','${off.id}')">✏️</button>
-        </div>
-      </div>`;
-  }).join("");
+  if(q) list=list.filter(x=>x.name.toLowerCase().includes(q)||(x.phone||"").includes(q));
+  if(offFiltMode!=="all") list=list.filter(x=>x.status===offFiltMode);
+  const c=$("officesList");
+  if(!list.length){c.innerHTML=`<div class="lp-empty" style="grid-column:1/-1">لا مكاتب</div>`;return;}
+  c.innerHTML=list.map(off=>renderEntityCard("office",off)).join("");
 }
 
-function renderHotels() {
-  if (!gD) return;
-  const q = (document.getElementById("sHot")?.value || "").toLowerCase().trim();
-  let list = (gD.hotels||[]);
-
-  const counts = { all: list.length, active: 0, pending: 0, blocked: 0 };
-  list.forEach(x => { if (counts[x.status] !== undefined) counts[x.status]++; });
-  ["all","act","pend","blk"].forEach((k,i) => {
-    const statuses = ["all","active","pending","blocked"];
-    const el = document.getElementById(`ehot-${k}`);
-    if (el) el.textContent = counts[statuses[i]]||0;
+function renderHotels(){
+  if(!gD) return;
+  const q=($("sHot")?.value||"").toLowerCase().trim();
+  let list=(gD.hotels||[]);
+  const counts={all:list.length,active:0,pending:0,blocked:0};
+  list.forEach(x=>{if(counts[x.status]!==undefined)counts[x.status]++;});
+  ["all","act","pend","blk"].forEach((k,i)=>{
+    const statuses=["all","active","pending","blocked"];
+    const el=$(`ehot-${k}`); if(el)el.textContent=counts[statuses[i]]||0;
   });
-
-  if (q) list = list.filter(x => x.name.toLowerCase().includes(q) || (x.phone||"").includes(q));
-  if (hotFiltMode !== "all") list = list.filter(x => x.status === hotFiltMode);
-
-  const container = document.getElementById("hotelsList");
-  if (!list.length) { container.innerHTML = `<div class="empty-msg" style="grid-column:1/-1">لا توجد فنادق تطابق البحث</div>`; return; }
-
-  container.innerHTML = list.map(h => {
-    const sc = { active: "s-active", pending: "s-pending", blocked: "s-blocked" }[h.status] || "s-pending";
-    const sl = { active: "نشط ✅", pending: "معلق ⏳", blocked: "موقوف 🚫" }[h.status] || h.status;
-    const imgHtml = h.photo_url ? `<img class="ec-img" src="${h.photo_url}" onerror="this.parentNode.innerHTML='<div class=\\'ec-no-img\\'>🏨</div>'">` : `<div class="ec-no-img">🏨</div>`;
-    const stars = "⭐".repeat(Math.min(parseInt(h.stars)||0, 5));
-    return `
-      <div class="ec ${sc}">
-        <div class="ec-status-bar"></div>
-        ${imgHtml}
-        <div class="ec-body">
-          <div class="ec-name">${h.name}</div>
-          <div class="ec-meta">
-            <div class="ec-city">${h.city}</div>
-            <div style="font-size:.72rem;color:var(--gold)">${stars||"—"}</div>
-            <div class="ec-ph">${h.phone||"—"}</div>
-          </div>
-          <div class="ec-stats">
-            <div class="est"><div class="est-v">${h.total_bookings||0}</div><div class="est-l">الحجوزات</div></div>
-            <div class="est"><div class="est-v g">${fmt(h.total_rev)} <span style="font-size:.55rem">د.ع</span></div><div class="est-l">الإيرادات</div></div>
-            <div class="est"><div class="est-v r">${fmt(h.debt)}</div><div class="est-l">الديون</div></div>
-          </div>
-          <div class="ec-comm" style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:.65rem;">
-            <span>🛏 مفردة: ${fmt(h.price_single)} د.ع</span>
-            <span>🛏🛏 مزدوجة: ${fmt(h.price_double)} د.ع</span>
-            <span style="grid-column:1/3">👑 جناح: ${fmt(h.price_suite)} د.ع</span>
-          </div>
-          <div style="font-size:.68rem;color:var(--txt3);font-weight:700;">الحالة: <span style="color:${h.status==='active'?'var(--jade)':h.status==='pending'?'var(--amber)':'var(--rose)'}">${sl}</span></div>
-        </div>
-        <div class="ec-actions">
-          ${h.status !== "active"  ? `<button class="ea ea-ok" onclick="setStatus('Hotel','${h.id}','active',this)">✅ تفعيل</button>` : ""}
-          ${h.status !== "blocked" ? `<button class="ea ea-blk" onclick="setStatus('Hotel','${h.id}','blocked',this)">🚫 وقف</button>` : ""}
-          <button class="ea ea-rst" onclick="resetDebt('Hotel','${h.id}',this)">💰 تصفير</button>
-          <button class="ea ea-edit" onclick="openEdit('hotel','${h.id}')">✏️</button>
-        </div>
-      </div>`;
-  }).join("");
+  if(q) list=list.filter(x=>x.name.toLowerCase().includes(q)||(x.phone||"").includes(q));
+  if(hotFiltMode!=="all") list=list.filter(x=>x.status===hotFiltMode);
+  const c=$("hotelsList");
+  if(!list.length){c.innerHTML=`<div class="lp-empty" style="grid-column:1/-1">لا فنادق</div>`;return;}
+  c.innerHTML=list.map(h=>renderEntityCard("hotel",h)).join("");
 }
 
-/* ══════════════════════════════════════════════════
-   ENTITY FILTERS
-══════════════════════════════════════════════════ */
-window.setEntFilt = function(type, filt, btn) {
-  if (type === "office") offFiltMode = filt;
-  else hotFiltMode = filt;
+function renderEntityCard(type, e){
+  const isH=type==="hotel";
+  const sc={active:"s-active",pending:"s-pending",blocked:"s-blocked"}[e.status]||"s-pending";
+  const sl={active:"نشط ✅",pending:"معلق ⏳",blocked:"موقوف 🚫"}[e.status]||e.status;
+  const imgHtml=isH&&e.photo_url
+    ?`<img class="ec-img" src="${esc(e.photo_url)}" onerror="this.parentNode.innerHTML='<div class=\\'ec-noimg\\'>🏨</div>'">`
+    :`<div class="ec-noimg">${isH?"🏨":"🚗"}</div>`;
+  const commTxt=isH?"":e.comm_type==="monthly"?`📅 شهري: ${fmt(e.comm_val)} د.ع`
+    :e.comm_type==="split"?`📊 مناصفة: ${e.comm_val}`:`💰 ${fmt(e.comm_val)} د.ع/طلب`;
+  const phn=normalizePhone(e.phone);
+  const waBtn=phn?`<button class="ea ea-wa" onclick="openWaAdmin('partner',{phone:'${phn}',entity:'${esc(e.name)}',type:'${type}'})">💬</button>`:"";
+  const entityType=isH?"Hotel":"CarOffice";
+  return `
+  <div class="ec ${sc}">
+    <div class="ec-bar"></div>
+    ${imgHtml}
+    <div class="ec-body">
+      <div class="ec-name">${esc(e.name)}</div>
+      <div class="ec-meta">
+        <div class="ec-city">${esc(e.city)}</div>
+        ${isH?`<div style="font-size:.68rem;color:var(--amber)">${"⭐".repeat(Math.min(parseInt(e.stars)||0,5))}</div>`:""}
+        <div class="ec-ph">${esc(e.phone||"—")}</div>
+      </div>
+      <div class="ec-stats">
+        <div class="est"><div class="est-v">${isH?(e.total_bookings||0):(e.total_orders||0)}</div><div class="est-l">${isH?"الحجوزات":"الطلبات"}</div></div>
+        <div class="est"><div class="est-v g" style="font-size:.8rem">${fmt(e.total_rev||0)}</div><div class="est-l">إيرادات</div></div>
+        <div class="est"><div class="est-v r">${fmt(e.debt||0)}</div><div class="est-l">ديون</div></div>
+      </div>
+      ${isH?`<div class="ec-comm" style="display:grid;grid-template-columns:1fr 1fr;gap:3px;font-size:.63rem"><span>🛏 ${fmt(e.price_single)} د.ع</span><span>🛏🛏 ${fmt(e.price_double)} د.ع</span><span style="grid-column:1/3">👑 ${fmt(e.price_suite)} د.ع</span></div>`:`<div class="ec-comm">${commTxt}</div>`}
+      <div style="font-size:.64rem;color:var(--tx3);font-weight:700">الحالة: <span style="color:${e.status==="active"?"var(--green)":e.status==="pending"?"var(--amber)":"var(--red)"}">${sl}</span></div>
+    </div>
+    <div class="ec-acts">
+      ${e.status!=="active"?`<button class="ea ea-ok" onclick="setStatus('${entityType}','${esc(e.id)}','active',this)">✅ تفعيل</button>`:""}
+      ${e.status!=="blocked"?`<button class="ea ea-blk" onclick="setStatus('${entityType}','${esc(e.id)}','blocked',this)">🚫 وقف</button>`:""}
+      <button class="ea ea-rst" onclick="resetDebt('${entityType}','${esc(e.id)}',this)">💰 تصفير</button>
+      <button class="ea ea-edit" onclick="openEdit('${type}','${esc(e.id)}')">✏️</button>
+      ${waBtn}
+    </div>
+  </div>`;
+}
 
-  btn.closest(".entity-filters").querySelectorAll(".ef").forEach(b => b.classList.remove("on"));
+window.setEntFilt = function(type, filt, btn){
+  if(type==="office")offFiltMode=filt; else hotFiltMode=filt;
+  btn.closest(".efil").querySelectorAll(".ef").forEach(b=>b.classList.remove("on"));
   btn.classList.add("on");
-  if (type === "office") renderOffices(); else renderHotels();
+  if(type==="office")renderOffices(); else renderHotels();
 };
 
-/* ══════════════════════════════════════════════════
-   PARTNER ACTIONS
-══════════════════════════════════════════════════ */
-window.setStatus = async function(entityType, id, status, btn) {
-  const labels = { active: "تفعيل", blocked: "توقيف" };
-  if (!confirm(`تأكيد ${labels[status]||status} الشريك؟`)) return;
-  setLoading(btn, true);
-  try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "ADMIN_UPDATE_STATUS", entityType, id, status, token: API_TOKEN, pass: MP }) });
-    const data = await res.json();
-    if (data.success) { toast("تم تحديث الحالة بنجاح ✅"); await loadSystemData(); }
-    else toast(data.msg || "فشل التحديث", "e");
-  } catch(e) { toast("تم الإرسال — ستتم المزامنة"); await loadSystemData(); }
-  finally { setLoading(btn, false); }
+/* ══ ENTITY ACTIONS ══ */
+window.setStatus = async function(entityType, id, status, btn){
+  const labels={active:"تفعيل",blocked:"توقيف"};
+  if(!confirm(`تأكيد ${labels[status]||status}؟`)) return;
+  if(btn)btn.classList.add("btn-ld");
+  try{
+    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"ADMIN_UPDATE_STATUS",entityType,id,status,token:API_TOKEN,pass:MP})});
+    const d=await res.json();
+    if(d.success){toast("تم تحديث الحالة ✅");await loadSystemData();}
+    else toast(d.msg||"فشل","e");
+  }catch(e){toast("تم الإرسال","s");await loadSystemData();}
+  finally{if(btn)btn.classList.remove("btn-ld");}
 };
 
-window.resetDebt = async function(entityType, id, btn) {
-  if (!confirm("تأكيد استلام المبالغ وتصفير الديون على هذا الشريك؟")) return;
-  setLoading(btn, true);
-  try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "resetDebt", entityType, id, token: API_TOKEN, pass: MP }) });
-    const data = await res.json();
-    if (data.success) { toast(`✅ تم تصفير الديون — السابق: ${fmt(data.prev_debt||0)} د.ع`); await loadSystemData(); }
-    else toast(data.msg || "فشل", "e");
-  } catch(e) { toast("تم الإرسال"); await loadSystemData(); }
-  finally { setLoading(btn, false); }
+window.resetDebt = async function(entityType, id, btn){
+  if(!confirm("تأكيد استلام المبالغ وتصفير الديون؟")) return;
+  if(btn)btn.classList.add("btn-ld");
+  try{
+    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"resetDebt",entityType,id,token:API_TOKEN,pass:MP})});
+    const d=await res.json();
+    if(d.success){toast(`✅ تم التصفير — السابق: ${fmt(d.prev_debt||0)} د.ع`);await loadSystemData();}
+    else toast(d.msg||"فشل","e");
+  }catch(e){toast("تم الإرسال","s");await loadSystemData();}
+  finally{if(btn)btn.classList.remove("btn-ld");}
 };
 
-/* ══════════════════════════════════════════════════
-   EDIT MODAL
-══════════════════════════════════════════════════ */
-window.openEdit = function(type, id) {
-  editCtx.type = type; editCtx.id = id;
-  const list = type === "office" ? (gD?.carOffices||[]) : (gD?.hotels||[]);
-  editCtx.data = list.find(x => String(x.id) === String(id));
-  if (!editCtx.data) return toast("لم يتم العثور على البيانات", "e");
-
-  document.getElementById("mod-title").textContent = type === "office" ? "تعديل بيانات المكتب" : "تعديل بيانات الفندق";
-  document.getElementById("mod-sub").textContent   = editCtx.data.name;
-  document.getElementById("mod-name").value = editCtx.data.name || "";
-  document.getElementById("mod-pass").value = "";
-
-  const hotelExtra  = document.getElementById("mod-hotel-extra");
-  const officeExtra = document.getElementById("mod-office-extra");
-
-  if (type === "hotel") {
-    hotelExtra.classList.remove("dn"); officeExtra.classList.add("dn");
-    document.getElementById("mod-p-single").value  = editCtx.data.price_single || "";
-    document.getElementById("mod-p-double").value  = editCtx.data.price_double || "";
-    document.getElementById("mod-p-suite").value   = editCtx.data.price_suite  || "";
-    document.getElementById("mod-features").value  = editCtx.data.features     || "";
-    document.getElementById("mod-photo").value     = editCtx.data.photo_url    || "";
-  } else {
-    hotelExtra.classList.add("dn"); officeExtra.classList.remove("dn");
-    document.getElementById("mod-comm-type").value = editCtx.data.comm_type || "fixed";
-    document.getElementById("mod-comm-val").value  = editCtx.data.comm_val  || "";
+/* ══ EDIT MODAL ══ */
+window.openEdit = function(type, id){
+  editCtx={type,id};
+  const list=type==="office"?(gD?.carOffices||[]):(gD?.hotels||[]);
+  editCtx.data=list.find(x=>String(x.id)===String(id));
+  if(!editCtx.data){toast("لم توجد البيانات","e");return;}
+  $("mod-title").textContent=type==="office"?"تعديل بيانات المكتب":"تعديل بيانات الفندق";
+  $("mod-sub").textContent=editCtx.data.name;
+  $("mod-name").value=editCtx.data.name||"";
+  $("mod-pass").value="";
+  const hx=$("mod-hotel-x"), ox=$("mod-office-x");
+  if(type==="hotel"){
+    hx.classList.remove("dn");ox.classList.add("dn");
+    $("mod-ps").value=editCtx.data.price_single||"";
+    $("mod-pd").value=editCtx.data.price_double||"";
+    $("mod-pu").value=editCtx.data.price_suite||"";
+    $("mod-feat").value=editCtx.data.features||"";
+    $("mod-photo").value=editCtx.data.photo_url||"";
+  }else{
+    hx.classList.add("dn");ox.classList.remove("dn");
+    $("mod-ct").value=editCtx.data.comm_type||"fixed";
+    $("mod-cv").value=editCtx.data.comm_val||"";
   }
-
-  document.getElementById("editModal").classList.add("open");
+  $("editModal").classList.add("open");
 };
+window.closeMod = id => { const m=$(id); if(m){m.classList.remove("open");} };
 
-window.saveEdit = async function() {
-  const btn = document.getElementById("mod-save-btn");
-  setLoading(btn, true);
-
-  const entityType = editCtx.type === "office" ? "CarOffice" : "Hotel";
-  const updates = { name: document.getElementById("mod-name").value.trim() };
-  const pass = document.getElementById("mod-pass").value.trim();
-  if (pass) updates.pass = pass;
-
-  if (editCtx.type === "hotel") {
-    const ps = document.getElementById("mod-p-single").value; if (ps) updates.price_single = Number(ps);
-    const pd = document.getElementById("mod-p-double").value; if (pd) updates.price_double = Number(pd);
-    const pu = document.getElementById("mod-p-suite").value;  if (pu) updates.price_suite  = Number(pu);
-    const ft = document.getElementById("mod-features").value; if (ft) updates.features = ft;
-    const ph = document.getElementById("mod-photo").value;    updates.photo_url = ph;
-  } else {
-    const ct = document.getElementById("mod-comm-type").value; if (ct) updates.comm_type = ct;
-    const cv = document.getElementById("mod-comm-val").value;  if (cv) updates.comm_val  = cv;
+window.saveEdit = async function(){
+  setBtn("mod-save-btn",true);
+  const entityType=editCtx.type==="office"?"CarOffice":"Hotel";
+  const updates={name:$("mod-name").value.trim()};
+  const pass=$("mod-pass").value.trim(); if(pass)updates.pass=pass;
+  if(editCtx.type==="hotel"){
+    const ps=$("mod-ps").value; if(ps)updates.price_single=Number(ps);
+    const pd=$("mod-pd").value; if(pd)updates.price_double=Number(pd);
+    const pu=$("mod-pu").value; if(pu)updates.price_suite=Number(pu);
+    const ft=$("mod-feat").value; if(ft)updates.features=ft;
+    updates.photo_url=$("mod-photo").value;
+  }else{
+    const ct=$("mod-ct").value; if(ct)updates.comm_type=ct;
+    const cv=$("mod-cv").value; if(cv)updates.comm_val=cv;
   }
-
-  if (!updates.name) { toast("الاسم لا يمكن أن يكون فارغاً", "e"); setLoading(btn, false); return; }
-
-  try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "updateEntityInfo", entityType, id: editCtx.id, updates, token: API_TOKEN, pass: MP }) });
-    const data = await res.json();
-    if (data.success) { toast("تم حفظ التغييرات بنجاح ✅"); closeMod("editModal"); await loadSystemData(); }
-    else toast(data.msg || "فشل الحفظ", "e");
-  } catch(e) { toast("تم الإرسال — ستتم المزامنة"); closeMod("editModal"); await loadSystemData(); }
-  finally { setLoading(btn, false); }
+  if(!updates.name){toast("الاسم مطلوب","e");setBtn("mod-save-btn",false);return;}
+  try{
+    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"updateEntityInfo",entityType,id:editCtx.id,updates,token:API_TOKEN,pass:MP})});
+    const d=await res.json();
+    if(d.success){toast("تم الحفظ ✅");closeMod("editModal");await loadSystemData();}
+    else toast(d.msg||"فشل","e");
+  }catch(e){toast("تم الإرسال","s");closeMod("editModal");await loadSystemData();}
+  finally{setBtn("mod-save-btn",false);}
 };
 
-window.closeMod = id => document.getElementById(id).classList.remove("open");
+/* ══════════════════════════════════════════════════════
+   WHATSAPP ADMIN QUICK REPLIES
+══════════════════════════════════════════════════════ */
+function normalizePhone(p){
+  p=String(p||"").replace(/\D/g,"");
+  if(p.startsWith("0"))p="964"+p.slice(1);
+  if(p.startsWith("7"))p="964"+p;
+  return p;
+}
+function getPartnerPhone(order){
+  if(!gD) return "";
+  if(order.type==="car"){
+    const off=(gD.carOffices||[]).find(o=>o.name===order.entity);
+    return normalizePhone(off?.phone||"");
+  }
+  const h=(gD.hotels||[]).find(h=>h.name===order.entity);
+  return normalizePhone(h?.phone||"");
+}
 
-/* ══════════════════════════════════════════════════
+const waTemplates = {
+  customer:[
+    {label:"تأخير ⏳", text:"نعتذر عن التأخير، طلبك قيد المعالجة وسيتواصل معك الشريك قريباً ⏳"},
+    {label:"موقع 📍",  text:"يرجى تزويدنا بموقعك الدقيق لتسهيل وصول السيارة 📍"},
+    {label:"تأكيد ✅", text:"✅ تم تأكيد طلبك بنجاح! ستصلك رسالة من الشريك قريباً."},
+    {label:"شكر 🌟",   text:"شكراً لاختيارك منصة الحوت 🐋 نتمنى لك تجربة ممتازة 🌟"},
+  ],
+  partner:[
+    {label:"طلب معلق 🚨",   text:"🚨 يوجد طلب معلق في رادارك، يرجى قبوله فوراً لتجنب الإلغاء التلقائي."},
+    {label:"ديون 💳",        text:"💳 يرجى تسديد الديون المستحقة لتجنب إيقاف الحساب. تواصل معنا للتسوية."},
+    {label:"تنبيه جودة ⚠️", text:"⚠️ تنبيه إداري: يرجى الالتزام بمعايير جودة المنصة للحفاظ على تقييمك."},
+    {label:"ترحيب 🎉",       text:"🎉 مرحباً بك في منصة الحوت! تم تفعيل حسابك بنجاح. يسعدنا تعاونكم 🐋"},
+  ]
+};
+
+window.openWaAdmin = function(ctxType, orderOrEntity){
+  waCtx={ctxType, data:orderOrEntity};
+  let phone="";
+  if(ctxType==="customer"){
+    phone=normalizePhone(orderOrEntity.phone||orderOrEntity.raw?.phone||"");
+  }else{
+    phone=normalizePhone(orderOrEntity.phone||"");
+  }
+  const chip=$("wa-phone-chip"); if(chip) chip.textContent="📱 "+(phone||"لا رقم");
+  const ctx=$("wa-ctx-label"); if(ctx) ctx.textContent=ctxType==="customer"?"قوالب للزبون":"قوالب للشريك";
+  const tmps = waTemplates[ctxType]||waTemplates.customer;
+  $("wa-tmps").innerHTML = tmps.map((t,i)=>`
+    <div class="wa-tmp" onclick="sendWaAdminMsg(${i})">
+      <div class="wa-tmp-txt">${t.text}</div>
+      <div class="wa-tmp-row">
+        <span class="wa-tmp-lbl">${t.label}</span>
+        <button class="wa-snd" onclick="event.stopPropagation();sendWaAdminMsg(${i})">إرسال ➤</button>
+      </div>
+    </div>`).join("");
+  $("waModal").classList.remove("dn");
+};
+
+window.sendWaAdminMsg = function(idx){
+  if(!waCtx) return;
+  const tmps=waTemplates[waCtx.ctxType]||waTemplates.customer;
+  const t=tmps[idx]; if(!t) return;
+  const phone=waCtx.ctxType==="customer"
+    ?normalizePhone(waCtx.data.phone||waCtx.data.raw?.phone||"")
+    :normalizePhone(waCtx.data.phone||"");
+  if(!phone){toast("لا يوجد رقم هاتف","e");return;}
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(t.text)}`,"_blank");
+  closeWaModal(); toast("جاري فتح واتساب ✅");
+};
+function closeWaModal(){$("waModal").classList.add("dn");waCtx=null;}
+window.closeWaModal=closeWaModal;
+
+/* ══════════════════════════════════════════════════════
+   BROADCAST
+══════════════════════════════════════════════════════ */
+async function doBroadcast(msg){
+  if(!msg.trim()){toast("اكتب الرسالة أولاً","e");return;}
+  if(!db){toast("Firebase غير متصل","e");return;}
+  try{
+    await db.ref("system_broadcast").set({
+      msg:msg.trim(),ts:new Date().toISOString(),
+      by:"الإدارة العامة"
+    });
+    toast("📡 تم البث لكل الشركاء ✅");
+  }catch(e){toast("فشل البث","e");}
+}
+window.sendBroadcast  = ()=>{ const m=$("bcMsg"); doBroadcast(m.value); m.value=""; };
+window.sendBroadcast2 = ()=>{ const m=$("bcMsg2"); doBroadcast(m.value); m.value=""; };
+
+/* ══════════════════════════════════════════════════════
+   SHARED FLEET — ImgBB + Canvas
+══════════════════════════════════════════════════════ */
+function compressImage(file,maxDim=1000,quality=0.8){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onerror=rej;
+    r.onload=e=>{
+      const img=new Image();
+      img.onerror=rej;
+      img.onload=()=>{
+        let{width:w,height:h}=img;
+        if(w>maxDim||h>maxDim){if(w>h){h=Math.round(h*maxDim/w);w=maxDim;}else{w=Math.round(w*maxDim/h);h=maxDim;}}
+        const cv=document.createElement("canvas");
+        cv.width=w;cv.height=h;
+        const ctx=cv.getContext("2d");
+        ctx.fillStyle="#fff";ctx.fillRect(0,0,w,h);
+        ctx.drawImage(img,0,0,w,h);
+        res(cv.toDataURL("image/jpeg",quality));
+      };
+      img.src=e.target.result;
+    };
+    r.readAsDataURL(file);
+  });
+}
+
+async function uploadImg(b64){
+  if(!b64)return"";
+  try{
+    const rawBase64=b64.includes(",")?b64.split(",")[1]:b64;
+    const formData=new FormData();
+    formData.append("key",IMGBB_KEY);
+    formData.append("image",rawBase64);
+    const controller=new AbortController();
+    const tid=setTimeout(()=>controller.abort(),15000);
+    const res=await fetch("https://api.imgbb.com/1/upload",{method:"POST",body:formData,signal:controller.signal});
+    clearTimeout(tid);
+    const data=await res.json();
+    return(data&&data.success)?data.data.url:"";
+  }catch(e){console.warn("ImgBB:",e);return"";}
+}
+
+function handleSharedImg(input){
+  if(!input.files?.length)return;
+  const file=input.files[0];
+  const origKB=Math.round(file.size/1024);
+  const lbl=$("uz-sh-l"); if(lbl)lbl.textContent="جاري الضغط...";
+  compressImage(file)
+    .then(compressed=>{
+      b64Shared=compressed;
+      const p=$("uz-sh-p"); if(p){p.src=compressed;p.style.display="block";}
+      const i=$("uz-sh-i"); if(i)i.style.display="none";
+      if(lbl)lbl.style.display="none";
+      $("uz-sh")?.classList.add("filled");
+      const compKB=Math.round(compressed.length*0.75/1024);
+      const badge=$("uz-sh-badge"); if(badge){badge.textContent=`✓ ${compKB}KB (كان ${origKB}KB)`;badge.style.opacity="1";}
+    })
+    .catch(()=>toast("فشل معالجة الصورة","e"));
+}
+window.handleSharedImg=handleSharedImg;
+
+window.saveSharedCar = async function(){
+  const nm=$("sh-nm").value.trim(), pr=$("sh-pr").value.trim(), pl=$("sh-pl").value.trim(), ct=$("sh-ct").value, cl=$("sh-cl").value.trim();
+  if(!nm||!pr||!pl){toast("أكمل الاسم والسعر واللوحة","e");return;}
+  setBtn("sh-sv",true);
+  showLoad(true,"جاري رفع الصورة إلى ImgBB...");
+  let photoUrl="";
+  if(b64Shared)photoUrl=await uploadImg(b64Shared);
+  showLoad(true,"جاري حفظ بيانات السيارة...");
+  try{
+    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({
+      action:"ADD_CAR_TO_FLEET",token:API_TOKEN,
+      office_id:"SHARED",
+      name:nm,price:pr,plate:pl,cat:ct,color:cl,photo_url:photoUrl
+    })});
+    const d=await res.json(); showLoad(false);
+    if(d.success){
+      toast(`🚙 تمت إضافة ${nm} لأسطول المنصة!`);
+      $("sh-nm").value="";$("sh-pr").value="";$("sh-pl").value="";$("sh-cl").value="";
+      b64Shared=null;
+      const p=$("uz-sh-p");if(p)p.style.display="none";
+      const i=$("uz-sh-i");if(i){i.style.display="";i.textContent="📷";}
+      const l=$("uz-sh-l");if(l){l.style.display="";l.textContent="ارفع صورة السيارة";}
+      $("uz-sh")?.classList.remove("filled");
+      const bg=$("uz-sh-badge");if(bg)bg.style.opacity="0";
+      renderSharedFleet();
+    }else toast(d.msg||"فشل الإضافة","e");
+  }catch(e){showLoad(false);toast("فشل الاتصال","e");}
+  finally{setBtn("sh-sv",false);}
+};
+
+async function renderSharedFleet(){
+  const c=$("shared-fleet-list"); if(!c) return;
+  // Pull shared cars from gD or fetch separately
+  let shared=(gD?.carFleet||[]).filter(x=>x.office_id==="SHARED"||x.office_id===undefined);
+  if(!shared.length){
+    c.innerHTML=`<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:36px;text-align:center;color:var(--tx3);"><div style="font-size:1.8rem;margin-bottom:8px">🚙</div>لا توجد سيارات بعد</div>`;
+    return;
+  }
+  c.innerHTML=`<div class="entity-g">`+shared.map(car=>`
+    <div class="ec s-active">
+      <div class="ec-bar"></div>
+      ${car.photo_url?`<img class="ec-img" src="${esc(car.photo_url)}">`:`<div class="ec-noimg">🚙</div>`}
+      <div class="ec-body">
+        <div class="ec-name">${esc(car.name||"—")}</div>
+        <div class="ec-meta">
+          <div class="ec-city">${esc(car.cat||"—")}</div>
+          <div class="ec-ph">${esc(car.plate||"—")}</div>
+        </div>
+        <div class="ec-stats">
+          <div class="est"><div class="est-v g">${fmt(car.price)}</div><div class="est-l">د.ع/يوم</div></div>
+          <div class="est"><div class="est-v">${esc(car.color||"—")}</div><div class="est-l">اللون</div></div>
+          <div class="est"><div class="est-v">${esc(car.status||"متاح")}</div><div class="est-l">الحالة</div></div>
+        </div>
+      </div>
+    </div>`).join("")+`</div>`;
+}
+
+/* ══════════════════════════════════════════════════════
    NAVIGATION
-══════════════════════════════════════════════════ */
-window.goTab = function(name, btn) {
-  activeTab = name;
-  document.querySelectorAll(".tab-page").forEach(p => p.classList.remove("on"));
-  const pg = document.getElementById("pg-" + name);
-  if (pg) pg.classList.add("on");
-
-  document.querySelectorAll(".sbn, .bni").forEach(b => b.classList.remove("on"));
-  const sbn = document.getElementById("sbn-" + name);
-  if (sbn) sbn.classList.add("on");
-  if (btn) btn.classList.add("on");
-
-  if (name === "live" && map) setTimeout(() => map.invalidateSize(), 300);
-  if (name === "reports") { renderArchTable(); renderCharts(); }
-  if (name === "offices") renderOffices();
-  if (name === "hotels")  renderHotels();
+══════════════════════════════════════════════════════ */
+window.goTab = function(name, btn){
+  document.querySelectorAll(".tab-page").forEach(p=>p.classList.remove("on"));
+  const pg=$("pg-"+name); if(pg)pg.classList.add("on");
+  document.querySelectorAll(".sbn,.bni").forEach(b=>b.classList.remove("on"));
+  const sbn=$("sbn-"+name); if(sbn)sbn.classList.add("on");
+  if(btn)btn.classList.add("on");
+  if(name==="live"&&map) setTimeout(()=>map.invalidateSize(),300);
+  if(name==="reports"){renderArchTable();renderCharts();}
+  if(name==="offices")renderOffices();
+  if(name==="hotels")renderHotels();
+  if(name==="shared")renderSharedFleet();
 };
 
-window.doLogout = function() {
-  if (!confirm("تأكيد مغادرة النظام؟")) return;
-  try { db.ref("hut_car_orders").off(); db.ref("hut_hotel_bookings").off(); } catch(e) {}
-  MP = ""; gD = null;
-  location.reload();
+window.doLogout = function(){
+  if(!confirm("تأكيد مغادرة النظام؟"))return;
+  try{if(db){db.ref("hut_car_orders").off();db.ref("hut_hotel_bookings").off();db.ref("ledgers").off();db.ref(".info/connected").off();}}catch(e){}
+  MP="";gD=null;location.reload();
 };
 
-// Auto-refresh every 3 minutes
-setInterval(() => { if (gD) loadSystemData(); }, 180000);
+// Initial tab setup
+const liveEl=$("pg-live");
+if(liveEl){liveEl.style.display="none";liveEl.style.flexDirection="column";}
 </script>
 </body>
 </html>

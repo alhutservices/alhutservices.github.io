@@ -1,119 +1,782 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlTag">
+<html lang="ar" dir="rtl" id="htmlRoot">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>تم بنجاح | الحوت 🐋</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <style>
-        :root { --primary:#FF385C; --dark:#222222; --mid:#717171; --light:#DDDDDD; --bg:#F7F7F7; --radius:16px; }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--dark); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
-        .card { background:white; border-radius:24px; max-width:460px; width:100%; padding:40px 32px; box-shadow:0 8px 40px rgba(0,0,0,0.12); border:1px solid var(--light); text-align:center; animation:bounceIn 0.7s cubic-bezier(0.68,-0.55,0.27,1.55); }
-        @keyframes bounceIn { 0%{opacity:0;transform:scale(0.5) translateY(40px);} 100%{opacity:1;transform:scale(1) translateY(0);} }
-        .success-icon { width:80px; height:80px; background:linear-gradient(135deg,#ff385c,#e31c5f); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:2.5rem; box-shadow:0 10px 30px rgba(255,56,92,0.3); }
-        h1 { font-size:1.8rem; font-weight:900; margin-bottom:6px; }
-        .user-name { font-size:1.2rem; font-weight:800; color:var(--primary); margin-bottom:16px; }
-        .status-msg { background:#f0fff4; border:1px solid #86efac; border-radius:12px; padding:14px 18px; color:#166534; font-weight:700; font-size:0.9rem; line-height:1.6; margin-bottom:20px; }
-        .sub-msg { color:var(--mid); font-size:0.85rem; line-height:1.7; margin-bottom:28px; }
-        .order-box { border:2px dashed var(--light); border-radius:14px; padding:20px; margin-bottom:28px; }
-        .order-label { font-size:0.65rem; font-weight:800; color:var(--mid); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; }
-        .order-id { font-size:1.8rem; font-weight:900; color:var(--dark); letter-spacing:-0.02em; }
-        .sync-row { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:8px; font-size:0.78rem; font-weight:700; color:#16a34a; }
-        .back-btn { display:block; background:var(--dark); color:white; text-decoration:none; padding:16px 32px; border-radius:12px; font-weight:900; font-size:1rem; transition:0.2s; }
-        .back-btn:hover { background:var(--primary); }
-    </style>
-</head>
-<body>
-<div class="card">
-    <div class="success-icon">✅</div>
-    <h1 id="greetText">تم الحجز بنجاح!</h1>
-    <div class="user-name" id="userNameTxt"></div>
-    <div class="status-msg" id="statusMsg">تم إرسال بياناتك إلى خوادم الحوت...</div>
-    <p class="sub-msg" id="subMsg">سيقوم فريق الدعم الفني بالتواصل معك خلال دقائق.</p>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>تم بنجاح | الحوت 🐋</title>
 
-    <div class="order-box">
-        <div class="order-label">REFERENCE NUMBER</div>
-        <div class="order-id" id="orderIdTxt">—</div>
-        <div class="sync-row" id="syncRow">
-            <i class="fas fa-satellite-dish" id="syncIcon" style="animation:pulse 1s infinite;"></i>
-            <span id="syncTxt">جاري الحفظ...</span>
-        </div>
-    </div>
-
-    <a href="index.html" class="back-btn" id="backBtn">العودة للرئيسية</a>
-</div>
+<!-- Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
-@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM
+   Theme: Celebration White — Fresh & Memorable
+═══════════════════════════════════════════ */
+:root {
+  --bg:       #f0f4f8;
+  --card:     #ffffff;
+
+  /* Brand blue (matches partners app) */
+  --blue:     #2563eb;
+  --blue-d:   #1d4ed8;
+  --blue-l:   #eff6ff;
+  --blue-g:   linear-gradient(135deg,#2563eb,#1d4ed8);
+
+  /* Emerald success */
+  --green:    #059669;
+  --green-l:  #ecfdf5;
+  --green-g:  linear-gradient(135deg,#059669,#047857);
+
+  /* Gold accent */
+  --gold:     #d97706;
+  --gold-l:   #fffbeb;
+
+  /* Text */
+  --tx0:  #0f172a;
+  --tx1:  #1e293b;
+  --tx2:  #475569;
+  --tx3:  #94a3b8;
+
+  /* Borders & shadows */
+  --bdr:  rgba(15,23,42,.08);
+  --bdr2: rgba(15,23,42,.05);
+  --sh-xs:0 1px 4px rgba(15,23,42,.06);
+  --sh-sm:0 4px 16px rgba(15,23,42,.07);
+  --sh-md:0 12px 40px rgba(15,23,42,.10);
+  --sh-lg:0 24px 64px rgba(15,23,42,.12);
+  --sh-blue:0 8px 28px rgba(37,99,235,.25);
+  --sh-green:0 8px 28px rgba(5,150,105,.22);
+
+  --r3:10px;--r4:14px;--r5:18px;--r6:24px;--r7:32px;--r8:40px;
+}
+
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+  min-height:100vh;
+  background:var(--bg);
+  font-family:'Cairo',sans-serif;
+  color:var(--tx0);
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* ── Page Enter Animation ── */
+body{animation:pageIn .6s ease both;}
+@keyframes pageIn{from{opacity:0}to{opacity:1}}
+
+/* ── Background mesh ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 30% 0%,rgba(37,99,235,.07) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 50% at 80% 100%,rgba(5,150,105,.05) 0%,transparent 60%);
+}
+
+/* ── Canvas (confetti sits here) ── */
+canvas#confettiCanvas{
+  position:fixed;inset:0;z-index:100;pointer-events:none;
+}
+
+/* ── Layout ── */
+.page{
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:24px 16px;
+  position:relative;z-index:1;
+}
+
+/* ── Card ── */
+.card{
+  background:var(--card);
+  border-radius:var(--r7);
+  border:1px solid var(--bdr);
+  box-shadow:var(--sh-lg);
+  width:100%;max-width:460px;
+  overflow:hidden;
+  animation:cardIn .7s cubic-bezier(.34,1.3,.64,1) .1s both;
+}
+@keyframes cardIn{
+  from{opacity:0;transform:scale(.88) translateY(24px);}
+  to{opacity:1;transform:none;}
+}
+
+/* ── Card Header (service-themed gradient) ── */
+.card-hero{
+  padding:36px 32px 28px;
+  text-align:center;
+  position:relative;overflow:hidden;
+  background:var(--blue-g); /* default, overridden by JS */
+}
+.card-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(255,255,255,.1),transparent);
+}
+.card-hero::after{
+  content:'';
+  position:absolute;bottom:-1px;left:0;right:0;
+  height:32px;background:var(--card);
+  border-radius:32px 32px 0 0;
+}
+
+/* ── Success icon ── */
+.s-icon{
+  width:84px;height:84px;border-radius:50%;
+  background:rgba(255,255,255,.18);
+  border:2px solid rgba(255,255,255,.3);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:2.6rem;margin-bottom:16px;
+  position:relative;z-index:1;
+  animation:iconPop .6s cubic-bezier(.34,1.6,.64,1) .4s both;
+  box-shadow:0 8px 24px rgba(0,0,0,.15);
+}
+@keyframes iconPop{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:none}}
+
+.hero-title{
+  font-size:1.65rem;font-weight:900;color:#fff;
+  margin-bottom:4px;letter-spacing:-.02em;
+  position:relative;z-index:1;
+  animation:fadeUp .5s ease .5s both;
+}
+.hero-sub{
+  font-size:.82rem;font-weight:600;
+  color:rgba(255,255,255,.75);
+  position:relative;z-index:1;
+  animation:fadeUp .5s ease .55s both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── Card Body ── */
+.card-body{padding:4px 28px 32px;}
+
+/* ── Customer Name ── */
+.cust-name{
+  font-size:1.1rem;font-weight:900;
+  color:var(--blue);text-align:center;
+  margin-bottom:18px;
+  animation:fadeUp .5s ease .6s both;
+}
+
+/* ── Status Row ── */
+.status-box{
+  background:var(--green-l);
+  border:1px solid rgba(5,150,105,.2);
+  border-radius:var(--r4);
+  padding:13px 16px;
+  display:flex;align-items:flex-start;gap:10px;
+  margin-bottom:18px;
+  animation:fadeUp .5s ease .65s both;
+}
+.status-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+.status-text{font-size:.82rem;font-weight:700;color:#065f46;line-height:1.65;}
+
+/* ── Order ID Box ── */
+.order-box{
+  border:1.5px dashed var(--bdr);
+  border-radius:var(--r5);
+  padding:20px;
+  text-align:center;
+  margin-bottom:20px;
+  background:var(--bg);
+  animation:fadeUp .5s ease .7s both;
+  position:relative;overflow:hidden;
+}
+.order-box::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(37,99,235,.03),transparent);
+}
+.order-label{
+  font-size:.62rem;font-weight:900;
+  color:var(--tx3);text-transform:uppercase;letter-spacing:2px;
+  margin-bottom:6px;
+}
+.order-id{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:1.85rem;font-weight:700;
+  color:var(--tx0);letter-spacing:-.02em;
+  margin-bottom:8px;
+}
+.sync-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;font-size:.76rem;font-weight:800;
+}
+.sync-row.pending{color:var(--gold);}
+.sync-row.success{color:var(--green);}
+.sync-row.error  {color:#dc2626;}
+.sync-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:currentColor;
+  animation:syncPulse 1.2s ease-in-out infinite;
+}
+.sync-row.success .sync-dot,.sync-row.error .sync-dot{animation:none;}
+@keyframes syncPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.4}}
+
+/* ── Detail Pills ── */
+.detail-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:9px;margin-bottom:20px;
+  animation:fadeUp .5s ease .75s both;
+}
+.det{
+  background:var(--bg);border:1px solid var(--bdr);
+  border-radius:var(--r3);padding:10px 12px;
+}
+.det-lbl{font-size:.61rem;font-weight:900;color:var(--tx3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:3px;}
+.det-val{font-size:.85rem;font-weight:800;color:var(--tx0);}
+.det-val.price{color:var(--green);}
+
+/* ── Sub message ── */
+.sub-msg{
+  font-size:.8rem;font-weight:600;color:var(--tx2);
+  line-height:1.75;text-align:center;margin-bottom:24px;
+  animation:fadeUp .5s ease .8s both;
+}
+
+/* ── Actions ── */
+.actions{
+  display:flex;flex-direction:column;gap:10px;
+  animation:fadeUp .5s ease .85s both;
+}
+.btn-primary{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  padding:15px;border-radius:var(--r5);
+  background:var(--blue-g);color:#fff;
+  font-size:.92rem;font-weight:900;
+  text-decoration:none;border:none;cursor:pointer;
+  box-shadow:var(--sh-blue);transition:.2s;
+  font-family:'Cairo',sans-serif;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(37,99,235,.35);}
+.btn-primary:active{transform:scale(.97);}
+.btn-secondary{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px;border-radius:var(--r5);
+  background:var(--bg);border:1.5px solid var(--bdr);
+  color:var(--tx1);font-size:.85rem;font-weight:800;
+  text-decoration:none;cursor:pointer;transition:.18s;
+  font-family:'Cairo',sans-serif;
+}
+.btn-secondary:hover{background:#fff;border-color:rgba(37,99,235,.2);}
+.btn-secondary:active{transform:scale(.97);}
+
+/* ── Service badges (right side of hero) ── */
+.svc-badge{
+  position:absolute;top:14px;left:14px;z-index:2;
+  background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);
+  border-radius:99px;padding:4px 12px;
+  font-size:.68rem;font-weight:900;color:#fff;
+}
+
+/* ── Steps strip ── */
+.steps{
+  display:flex;align-items:stretch;gap:0;
+  margin-bottom:20px;
+  animation:fadeUp .5s ease .72s both;
+  border:1px solid var(--bdr);border-radius:var(--r4);
+  overflow:hidden;
+}
+.step{
+  flex:1;padding:11px 8px;text-align:center;
+  background:var(--bg);border-left:1px solid var(--bdr);
+  position:relative;
+}
+.step:first-child{border-left:none;}
+.step.done{background:#fff;}
+.step.active{background:var(--blue-l);}
+.step-num{
+  width:22px;height:22px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:900;margin-bottom:4px;
+}
+.step.done   .step-num{background:var(--green);color:#fff;}
+.step.active .step-num{background:var(--blue);color:#fff;animation:syncPulse 1.5s infinite;}
+.step.next   .step-num{background:var(--bdr);color:var(--tx3);}
+.step-lbl{font-size:.6rem;font-weight:800;color:var(--tx3);}
+.step.done   .step-lbl{color:var(--green);}
+.step.active .step-lbl{color:var(--blue);}
+
+/* ── Retry / error state ── */
+.retry-row{
+  display:none;align-items:center;justify-content:center;gap:8px;
+  margin-top:10px;
+}
+.retry-row.show{display:flex;}
+.btn-retry{
+  padding:6px 16px;border-radius:99px;border:1.5px solid rgba(220,38,38,.3);
+  background:var(--bg);color:#dc2626;font-size:.76rem;font-weight:900;
+  cursor:pointer;font-family:'Cairo',sans-serif;transition:.18s;
+}
+.btn-retry:hover{background:#fef2f2;}
+
+/* ── Direction helpers ── */
+[dir="ltr"] .card-hero{font-family:'Cairo',sans-serif;}
 </style>
+</head>
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+
+<div class="page">
+<div class="card">
+
+  <!-- ── Hero ── -->
+  <div class="card-hero" id="cardHero">
+    <div class="svc-badge" id="svcBadge">🐋 الحوت</div>
+    <div class="s-icon" id="sIcon">🎉</div>
+    <div class="hero-title" id="heroTitle">تم الحجز بنجاح!</div>
+    <div class="hero-sub"   id="heroSub">رقم طلبك محفوظ ومرسل للسيرفر</div>
+  </div>
+
+  <!-- ── Body ── -->
+  <div class="card-body">
+
+    <!-- Customer name -->
+    <div class="cust-name" id="custName"></div>
+
+    <!-- Status box -->
+    <div class="status-box" id="statusBox">
+      <span class="status-icon" id="statusIcon">✅</span>
+      <div class="status-text" id="statusText">تم إرسال بياناتك إلى خوادم الحوت...</div>
+    </div>
+
+    <!-- Order ID -->
+    <div class="order-box">
+      <div class="order-label" id="refLabel">REFERENCE NUMBER</div>
+      <div class="order-id"    id="orderIdEl">—</div>
+      <div class="sync-row pending" id="syncRow">
+        <div class="sync-dot" id="syncDot"></div>
+        <span id="syncTxt">جاري الحفظ في السيرفر...</span>
+      </div>
+      <div class="retry-row" id="retryRow">
+        <button class="btn-retry" onclick="retrySubmit()">↺ إعادة المحاولة</button>
+        <span style="font-size:.72rem;color:var(--tx3);font-weight:700">الطلب محفوظ لديك</span>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps" id="stepsStrip">
+      <div class="step done"   id="s1"><div class="step-num">✓</div><div class="step-lbl" id="s1l">الإدخال</div></div>
+      <div class="step done"   id="s2"><div class="step-num">✓</div><div class="step-lbl" id="s2l">الإرسال</div></div>
+      <div class="step active" id="s3"><div class="step-num">3</div><div class="step-lbl" id="s3l">الحفظ</div></div>
+      <div class="step next"   id="s4"><div class="step-num">4</div><div class="step-lbl" id="s4l">التأكيد</div></div>
+    </div>
+
+    <!-- Detail pills — car/hotel details -->
+    <div class="detail-grid" id="detailGrid"></div>
+
+    <!-- Sub message -->
+    <p class="sub-msg" id="subMsg">سيقوم فريق الدعم الفني بالتواصل معك خلال دقائق.</p>
+
+    <!-- Actions -->
+    <div class="actions" id="actionsArea">
+      <a href="index.html" class="btn-primary" id="backBtn">العودة للرئيسية</a>
+    </div>
+
+  </div><!-- /card-body -->
+</div><!-- /card -->
+</div><!-- /page -->
 
 <script>
-    const u = new URLSearchParams(window.location.search);
-    const lang = u.get('lang') || 'ar';
-    const serviceType = u.get('service');
-    const type = serviceType==='زفاف'?'wedding':(serviceType==='تدريب قيادة'?'training':(serviceType==='فندق'?'hotel':'personal'));
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxpAW6PZ9ykBmaIfuDxtxr3YOfcg95jXeFJ2FjX5GxGRiawUNHzs90rKBEUFOcf_z_n/exec";
+/* ════════════════════════════════════════════════
+   CONFIG — رابط السكريبت V9.2 الجديد
+════════════════════════════════════════════════ */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
+const API_TOKEN  = "HUT_CLOUD_2026";
 
-    const content = {
-        ar:{dir:'rtl',greet:'تم الحجز بنجاح!',status:'تم إرسال بياناتك إلى خوادم الحوت...',sub:'سيقوم فريق الدعم الفني بالتواصل معك خلال دقائق.',sync:'تم المزامنة بنجاح ✅',syncing:'جاري الحفظ...',already:'تم الحفظ مسبقاً ✅',back:'العودة للرئيسية',welcome:'عميلنا العزيز'},
-        ku:{dir:'rtl',greet:'سەرکەوتوو بوو!',status:'زانیارییەکانت نێردرا بۆ سێرڤەری حوت...',sub:'تیمی پشتگیری لە ماوەی چەند خولەکێکدا پەیوەندیت پێوە دەکەین.',sync:'زانیارییەکان پارێزراون ✅',syncing:'خەریکی پاراستنە...',already:'پێشتر نێردراوە ✅',back:'گەڕانەوە بۆ سەرەتا',welcome:'کڕیاری بەڕێز'},
-        tr:{dir:'ltr',greet:'Rezervasyon Başarılı!',status:'Verileriniz Al-Hut sunucularına gönderildi...',sub:'Destek ekibimiz birkaç dakika içinde sizinle iletişime geçecektir.',sync:'Kayıt Başarılı ✅',syncing:'Kaydediliyor...',already:'Zaten kaydedildi ✅',back:'Ana Sayfaya Dön',welcome:'Değerli Müşterimiz'},
-        en:{dir:'ltr',greet:'Booking Successful!',status:'Your data has been sent to Al-Hut servers...',sub:'Our support team will contact you within minutes.',sync:'Record Synchronized ✅',syncing:'Saving now...',already:'Already saved ✅',back:'Back to Home',welcome:'Valued Customer'},
-    };
+/* ════════════════════════════════════════════════
+   LOCALIZATION — 4 لغات
+════════════════════════════════════════════════ */
+const i18n = {
+  ar:{
+    dir:"rtl",
+    greet:"تم الحجز بنجاح!",
+    heroSub:"رقم طلبك محفوظ ومرسل للسيرفر",
+    status:"تم إرسال بياناتك إلى خوادم الحوت ✅",
+    statusErr:"تعذّر الاتصال — سيتم الإرسال تلقائياً",
+    sub:"سيتواصل معك فريق الحوت خلال دقائق قليلة لتأكيد التفاصيل.",
+    syncing:"جاري الحفظ في السيرفر...",
+    synced:"تم الحفظ بنجاح ✅",
+    synced_prev:"محفوظ مسبقاً ✅",
+    back:"العودة للرئيسية",
+    share:"مشاركة الطلب",
+    refLabel:"رقم المرجع",
+    s1:"الإدخال",s2:"الإرسال",s3:"الحفظ",s4:"التأكيد",
+    welcome:"عميلنا العزيز",
+    field_car:"السيارة",field_days:"الأيام",field_city:"المدينة",field_total:"المبلغ الكلي",
+    field_hotel:"الفندق",field_date:"التاريخ",field_nights:"الليالي",field_room:"نوع الغرفة",
+    field_course:"الكورس",
+    svc:{personal:"🚗 تأجير سيارة",hotel:"🏨 حجز فندق",wedding:"🎊 تأجير زفاف",training:"🚦 تعليم السياقة"},
+  },
+  ku:{
+    dir:"rtl",
+    greet:"سەرکەوتوو بوو! ✅",
+    heroSub:"ژمارەی داواکارییەکەت پارێزراوە",
+    status:"زانیارییەکانت بۆ سێرڤەری حوت نێردراون ✅",
+    statusErr:"پەیوەندی تووندابوو — بەخۆیەوە دەنێردرێت",
+    sub:"تیمی حوت لە ماوەی چەند خولەکێکدا پەیوەندیت پێوە دەکەین.",
+    syncing:"خەریکی پاراستنە لە سێرڤەردا...",
+    synced:"سەرکەوتووانە پارێزرا ✅",
+    synced_prev:"پێشتر پارێزراوە ✅",
+    back:"گەڕانەوە بۆ سەرەتا",
+    share:"هاوبەشکردنی داواکاری",
+    refLabel:"REFERENCE NUMBER",
+    s1:"داخلکردن",s2:"ناردن",s3:"پارێزتن",s4:"پشتڕاستکردن",
+    welcome:"کڕیاری بەڕێز",
+    field_car:"ئۆتومبێل",field_days:"ڕۆژ",field_city:"شار",field_total:"کۆی گشتی",
+    field_hotel:"هوتێل",field_date:"بەروار",field_nights:"شەو",field_room:"جۆری ژووری",
+    field_course:"کۆرس",
+    svc:{personal:"🚗 کرێی ئۆتومبێل",hotel:"🏨 بووکردنی هوتێل",wedding:"🎊 زەواجی",training:"🚦 فێربوونی شووفێری"},
+  },
+  tr:{
+    dir:"ltr",
+    greet:"Rezervasyon Başarılı! ✅",
+    heroSub:"Başvuru numaranız kaydedildi",
+    status:"Verileriniz Al-Hut sunucularına iletildi ✅",
+    statusErr:"Bağlantı hatası — otomatik yeniden deneniyor",
+    sub:"Al-Hut ekibimiz birkaç dakika içinde iletişime geçecektir.",
+    syncing:"Sunucuya kaydediliyor...",
+    synced:"Başarıyla kaydedildi ✅",
+    synced_prev:"Zaten kaydedildi ✅",
+    back:"Ana Sayfaya Dön",
+    share:"Başvuruyu Paylaş",
+    refLabel:"REFERENCE NUMBER",
+    s1:"Giriş",s2:"Gönderim",s3:"Kayıt",s4:"Onay",
+    welcome:"Değerli Müşterimiz",
+    field_car:"Araç",field_days:"Gün",field_city:"Şehir",field_total:"Toplam",
+    field_hotel:"Otel",field_date:"Tarih",field_nights:"Gece",field_room:"Oda Tipi",
+    field_course:"Kurs",
+    svc:{personal:"🚗 Araç Kiralama",hotel:"🏨 Otel Rezervasyonu",wedding:"🎊 Düğün",training:"🚦 Ehliyet Eğitimi"},
+  },
+  en:{
+    dir:"ltr",
+    greet:"Booking Successful! ✅",
+    heroSub:"Your reference number is saved & sent",
+    status:"Your data has been sent to Al-Hut servers ✅",
+    statusErr:"Connection failed — will retry automatically",
+    sub:"Our Al-Hut team will contact you within a few minutes.",
+    syncing:"Saving to server...",
+    synced:"Successfully saved ✅",
+    synced_prev:"Already saved ✅",
+    back:"Back to Home",
+    share:"Share Booking",
+    refLabel:"REFERENCE NUMBER",
+    s1:"Entry",s2:"Submit",s3:"Save",s4:"Confirm",
+    welcome:"Valued Customer",
+    field_car:"Vehicle",field_days:"Days",field_city:"City",field_total:"Total",
+    field_hotel:"Hotel",field_date:"Date",field_nights:"Nights",field_room:"Room Type",
+    field_course:"Course",
+    svc:{personal:"🚗 Car Rental",hotel:"🏨 Hotel Booking",wedding:"🎊 Wedding",training:"🚦 Driving School"},
+  }
+};
 
-    window.onload = async () => {
-        const l = content[lang] || content.ar;
-        document.getElementById('htmlTag').dir = l.dir;
-        document.getElementById('greetText').innerText = l.greet;
-        document.getElementById('statusMsg').innerText = l.status;
-        document.getElementById('subMsg').innerText = l.sub;
-        document.getElementById('backBtn').innerText = l.back;
-        document.getElementById('syncTxt').innerText = l.syncing;
-        document.getElementById('userNameTxt').innerText = u.get('name') || l.welcome;
+/* ════════════════════════════════════════════════
+   SERVICE THEME COLORS
+   (hero gradient per service type)
+════════════════════════════════════════════════ */
+const svcTheme = {
+  personal: { g:"linear-gradient(135deg,#2563eb,#1d4ed8)", icon:"🚗", color:"#2563eb" },
+  hotel:    { g:"linear-gradient(135deg,#7c3aed,#6d28d9)", icon:"🏨", color:"#7c3aed" },
+  wedding:  { g:"linear-gradient(135deg,#db2777,#be185d)", icon:"💍", color:"#db2777" },
+  training: { g:"linear-gradient(135deg,#d97706,#b45309)", icon:"🚦", color:"#d97706" },
+};
 
-        const finalOrderID = u.get('order_id') || 'HUT-' + Math.random().toString(36).substr(2,6).toUpperCase();
-        document.getElementById('orderIdTxt').innerText = '#' + finalOrderID;
+/* ════════════════════════════════════════════════
+   MAIN
+════════════════════════════════════════════════ */
+const P = new URLSearchParams(location.search);
 
-        // Confetti
-        confetti({ particleCount:160, spread:80, origin:{y:0.6}, colors:['#FF385C','#FFD700','#222222'] });
-        setTimeout(() => confetti({ particleCount:60, spread:120, origin:{y:0.4}, colors:['#FF385C','#fff'] }), 600);
+// Detect language & service type
+const lang    = P.get("lang") || "ar";
+const t       = i18n[lang] || i18n.ar;
+const svcRaw  = P.get("service") || P.get("type") || "";
+const type    = svcRaw === "فندق" || svcRaw === "hotel" ? "hotel"
+              : svcRaw === "زفاف" || svcRaw === "wedding" ? "wedding"
+              : svcRaw === "تدريب قيادة" || svcRaw === "training" ? "training"
+              : "personal";
+const theme   = svcTheme[type];
 
-        if(sessionStorage.getItem('sent_'+finalOrderID)) {
-            document.getElementById('syncTxt').innerText = l.already;
-            document.getElementById('syncIcon').style.animation = 'none';
-            document.getElementById('syncIcon').className = 'fas fa-check-double';
-            document.getElementById('syncIcon').style.color = '#16a34a';
-            return;
-        }
+// DOM shortcuts
+const $ = id => document.getElementById(id);
 
-        const payload = {
-            order_id: finalOrderID,
-            name: u.get('name'),
-            phone: u.get('phone'),
-            province: u.get('province'),
-            car: u.get('car'),
-            days: u.get('days') || '1',
-            total_price: u.get('total_price'),
-            service: serviceType,
-            date: new Date().toLocaleString('en-GB')
-        };
+/* ────── Apply language ────── */
+function applyLang() {
+  const root = $("htmlRoot");
+  root.lang = lang;
+  root.dir  = t.dir;
+  $("heroTitle").textContent = t.greet;
+  $("heroSub").textContent   = t.heroSub;
+  $("statusText").textContent= t.status;
+  $("subMsg").textContent    = t.sub;
+  $("syncTxt").textContent   = t.syncing;
+  $("backBtn").textContent   = t.back;
+  $("refLabel").textContent  = t.refLabel;
+  $("s1l").textContent = t.s1;
+  $("s2l").textContent = t.s2;
+  $("s3l").textContent = t.s3;
+  $("s4l").textContent = t.s4;
+  const svcLabel = t.svc?.[type] || "🐋 الحوت";
+  $("svcBadge").textContent = svcLabel;
+  $("custName").textContent = P.get("name") || t.welcome;
+}
 
-        try {
-            await fetch(scriptURL, { method:'POST', mode:'no-cors', body:JSON.stringify(payload) });
-            sessionStorage.setItem('sent_'+finalOrderID, 'true');
-            setTimeout(() => {
-                document.getElementById('syncTxt').innerText = l.sync;
-                document.getElementById('syncIcon').style.animation = 'none';
-                document.getElementById('syncIcon').className = 'fas fa-check-double';
-                document.getElementById('syncIcon').style.color = '#16a34a';
-            }, 1500);
-        } catch(err) {
-            document.getElementById('syncTxt').innerText = '✅ ' + (lang==='ar'?'تم الحفظ':'Saved');
-        }
-    };
+/* ────── Apply service theme ────── */
+function applyTheme() {
+  $("cardHero").style.background = theme.g;
+  $("sIcon").textContent         = theme.icon;
+  // Tint the customer name
+  $("custName").style.color      = theme.color;
+}
+
+/* ────── Build detail grid ────── */
+function buildDetails() {
+  const grid = $("detailGrid");
+  const items = [];
+
+  if(type === "hotel") {
+    const hotelName = P.get("hotel_name") || P.get("car") || "";
+    const roomType  = P.get("room_type") || "";
+    const nights    = P.get("nights") || P.get("days") || "";
+    const date      = P.get("date") || "";
+    const city      = P.get("province") || P.get("city") || "";
+    const total     = P.get("total_price") || "";
+    if(hotelName) items.push([t.field_hotel, hotelName]);
+    if(roomType)  items.push([t.field_room, roomType]);
+    if(nights)    items.push([t.field_nights, nights]);
+    if(date)      items.push([t.field_date, date]);
+    if(city)      items.push([t.field_city, city]);
+    if(total)     items.push([t.field_total, fmt(total)+" د.ع", true]);
+  } else if(type === "training") {
+    const course = P.get("addon_display") || P.get("course") || P.get("car") || "";
+    const city   = P.get("province") || "";
+    const date   = P.get("date") || "";
+    const total  = P.get("total_price") || "";
+    if(course) items.push([t.field_course, course]);
+    if(city)   items.push([t.field_city, city]);
+    if(date)   items.push([t.field_date, date]);
+    if(total)  items.push([t.field_total, fmt(total)+" د.ع", true]);
+  } else {
+    const car   = P.get("car") || "";
+    const days  = P.get("days") || "";
+    const city  = P.get("province") || P.get("city") || "";
+    const date  = P.get("date") || "";
+    const addon = P.get("addon_display") || "";
+    const total = P.get("total_price") || "";
+    if(car)   items.push([t.field_car, car]);
+    if(days)  items.push([t.field_days, days + (days ? (lang==="ar"?" يوم":lang==="ku"?" ڕۆژ":lang==="tr"?" Gün":" Day") : "")]);
+    if(city)  items.push([t.field_city, city]);
+    if(date)  items.push([t.field_date, date]);
+    if(addon) items.push(["✨", addon]);
+    if(total) items.push([t.field_total, fmt(total)+" د.ع", true]);
+  }
+
+  if(!items.length) { grid.style.display = "none"; return; }
+
+  grid.innerHTML = items.map(([lbl, val, isPrice]) => `
+    <div class="det">
+      <div class="det-lbl">${lbl}</div>
+      <div class="det-val${isPrice?" price":""}">${val}</div>
+    </div>`).join("");
+}
+
+function fmt(n) {
+  const num = Number(String(n||"").replace(/[^\d.]/g,""));
+  return isNaN(num) ? n : Math.round(num).toLocaleString("ar-EG");
+}
+
+/* ────── Confetti ────── */
+function fireConfetti() {
+  // Burst 1
+  confetti({
+    particleCount: 120,
+    spread: 80,
+    origin: { y: 0.55 },
+    colors: ["#2563eb","#059669","#d97706","#db2777","#ffffff"],
+  });
+  // Burst 2 (delayed)
+  setTimeout(() => confetti({
+    particleCount: 60,
+    spread: 120,
+    origin: { y: 0.4 },
+    colors: ["#ffffff","#2563eb","#fbbf24"],
+    scalar: 0.9,
+  }), 550);
+  // Burst 3 (sides)
+  setTimeout(() => {
+    confetti({ particleCount: 40, angle: 60, spread: 55, origin: { x: 0, y: 0.6 }, colors: ["#2563eb","#fff"] });
+    confetti({ particleCount: 40, angle: 120, spread: 55, origin: { x: 1, y: 0.6 }, colors: ["#059669","#fff"] });
+  }, 900);
+}
+
+/* ────── Sync state UI helpers ────── */
+function setSyncState(state) {
+  // state: "pending" | "success" | "error"
+  const row = $("syncRow");
+  const txt = $("syncTxt");
+  row.className = "sync-row " + state;
+  if(state === "pending") {
+    txt.textContent = t.syncing;
+  } else if(state === "success") {
+    txt.textContent = t.synced;
+    // Advance steps: mark step 3 done, step 4 active
+    $("s3").className = "step done";
+    $("s3").querySelector(".step-num").textContent = "✓";
+    $("s4").className = "step active";
+  } else if(state === "error") {
+    txt.textContent = t.statusErr;
+    $("retryRow").classList.add("show");
+  }
+}
+
+/* ════════════════════════════════════════════════
+   SUBMIT TO SCRIPT V9.2
+   Uses POST with action: NEW_CAR_ORDER / NEW_HOTEL_BOOKING / NEW_DRIVE_STUDENT
+════════════════════════════════════════════════ */
+let finalOrderID = "";
+let submitPayload = {};
+
+function buildPayload() {
+  // Use the passed order_id or generate a new one
+  finalOrderID = P.get("order_id") || `HUT-${new Date().toISOString().slice(0,10).replace(/-/g,"")}-${Math.floor(1000+Math.random()*9000)}`;
+
+  // Choose action based on service type
+  let action;
+  if(type === "hotel")    action = "NEW_HOTEL_BOOKING";
+  else if(type === "training") action = "NEW_DRIVE_STUDENT";
+  else                    action = "NEW_CAR_ORDER";
+
+  // Common fields
+  const base = {
+    action,
+    token:       API_TOKEN,
+    order_id:    finalOrderID,
+    name:        P.get("name")         || "",
+    phone:       P.get("phone")        || "",
+    province:    P.get("province")     || P.get("city") || "",
+    date:        P.get("date")         || new Date().toLocaleDateString("en-GB"),
+    total_price: P.get("total_price")  || P.get("total") || "0",
+    service:     svcRaw,
+    lang,
+  };
+
+  if(type === "hotel") {
+    Object.assign(base, {
+      hotel_name: P.get("hotel_name") || P.get("car") || "",
+      hotel_id:   P.get("hotel_id")   || "",
+      room_type:  P.get("room_type")  || "",
+      nights:     P.get("nights")     || P.get("days") || "1",
+      guests:     P.get("guests")     || "1",
+      national_id:P.get("national_id")|| "",
+      special_req:P.get("special_req")|| "",
+      city:       P.get("province")   || "",
+    });
+  } else if(type === "training") {
+    Object.assign(base, {
+      course:       P.get("addon_display") || P.get("course") || "",
+      city:         P.get("province") || "",
+      school_id:    P.get("school_id") || "",
+      addon_display:P.get("addon_display") || "",
+    });
+  } else {
+    Object.assign(base, {
+      car:          P.get("car")           || "",
+      days:         P.get("days")          || "1",
+      addon_display:P.get("addon_display") || "",
+      location_link:P.get("location_link") || "",
+      national_id:  P.get("national_id")   || "",
+    });
+  }
+
+  return base;
+}
+
+async function submitToServer(payload) {
+  // POST to GAS with JSON body
+  const res = await fetch(SCRIPT_URL, {
+    method:  "POST",
+    mode:    "no-cors",   // GAS doesn't return CORS headers
+    headers: { "Content-Type": "application/json" },
+    body:    JSON.stringify(payload),
+  });
+  // no-cors → opaque response, treat as success if no exception thrown
+  return true;
+}
+
+async function retrySubmit() {
+  $("retryRow").classList.remove("show");
+  setSyncState("pending");
+  await doSubmit();
+}
+window.retrySubmit = retrySubmit;
+
+async function doSubmit() {
+  // Check sessionStorage dedup
+  const dedupKey = "hut_sent_" + finalOrderID;
+  if(sessionStorage.getItem(dedupKey)) {
+    setSyncState("success");
+    $("syncTxt").textContent = t.synced_prev;
+    return;
+  }
+
+  setSyncState("pending");
+
+  try {
+    await submitToServer(submitPayload);
+    sessionStorage.setItem(dedupKey, "1");
+    setSyncState("success");
+  } catch(err) {
+    console.warn("Submit error:", err);
+    setSyncState("error");
+    // Queue for retry when back online
+    window.addEventListener("online", () => {
+      if(!sessionStorage.getItem(dedupKey)) doSubmit();
+    }, { once: true });
+  }
+}
+
+/* ════════════════════════════════════════════════
+   SHARE API
+════════════════════════════════════════════════ */
+function buildShareBtn() {
+  if(!navigator.share) return;
+  const shareBtn = document.createElement("button");
+  shareBtn.className = "btn-secondary";
+  shareBtn.textContent = "📤 " + t.share;
+  shareBtn.onclick = () => {
+    navigator.share({
+      title: `الحوت | ${t.greet}`,
+      text: `${t.greet}\n#${finalOrderID}`,
+      url: location.href,
+    }).catch(()=>{});
+  };
+  $("actionsArea").appendChild(shareBtn);
+}
+
+/* ════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════ */
+window.onload = () => {
+  applyLang();
+  applyTheme();
+
+  // Build and show order ID
+  submitPayload = buildPayload();
+  $("orderIdEl").textContent = "#" + finalOrderID;
+
+  // Build detail grid
+  buildDetails();
+
+  // Confetti 🎉
+  fireConfetti();
+
+  // Submit to server
+  doSubmit();
+
+  // Share button
+  buildShareBtn();
+};
 </script>
 </body>
 </html>

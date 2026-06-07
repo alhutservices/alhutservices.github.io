@@ -1,184 +1,892 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlTag">
+<html lang="ar" dir="rtl" id="htmlRoot">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أسطول الحوت | اختر سيارتك</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --primary:#FF385C; --primary-dark:#E31C5F; --dark:#222222; --mid:#717171; --light:#DDDDDD; --bg:#F7F7F7; --shadow:0 6px 20px rgba(0,0,0,0.12); --radius:16px; }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--dark); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>أسطول الحوت | اختر سيارتك</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 
-        .navbar { background:white; border-bottom:1px solid var(--light); padding:0 24px; height:72px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 1px 12px rgba(0,0,0,0.06); }
-        .logo { font-size:1.3rem; font-weight:900; color:var(--primary); text-decoration:none; display:flex; align-items:center; gap:8px; }
-        .back-btn { display:flex; align-items:center; gap:8px; color:var(--dark); text-decoration:none; font-weight:700; font-size:0.9rem; padding:10px 18px; border-radius:12px; border:1.5px solid var(--light); transition:0.2s; }
-        .back-btn:hover { border-color:var(--dark); }
+<style>
+/* ═══════════════════════════════════════════════════════
+   DESIGN SYSTEM — Silicon Valley Light
+   Matches partners_v3.html + success.html
+═══════════════════════════════════════════════════════ */
+:root{
+  --page:   #f5f7fa;
+  --surf:   #ffffff;
+  --surf1:  #f8fafb;
+  --surf2:  #eef2f7;
 
-        .service-banner { padding:32px 24px; text-align:center; border-bottom:1px solid var(--light); background:white; }
-        .service-banner h1 { font-size:1.8rem; font-weight:900; margin-bottom:6px; }
-        .service-banner p { color:var(--mid); }
-        .service-pills { display:flex; gap:10px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
-        .s-pill { background:var(--bg); padding:6px 14px; border-radius:20px; font-size:0.8rem; font-weight:700; color:var(--mid); }
+  --blue:   #2563eb;
+  --blue-d: #1d4ed8;
+  --blue-l: #eff6ff;
+  --blue-m: rgba(37,99,235,.12);
+  --blue-g: linear-gradient(135deg,#2563eb,#1d4ed8);
 
-        .filters-bar { background:white; border-bottom:1px solid var(--light); padding:14px 24px; display:flex; gap:10px; overflow-x:auto; }
-        .filter-chip { padding:9px 18px; border-radius:24px; border:1.5px solid var(--light); background:white; font-weight:700; font-size:0.83rem; cursor:pointer; white-space:nowrap; transition:0.2s; }
-        .filter-chip:hover { border-color:var(--dark); }
-        .filter-chip.active { background:var(--dark); color:white; border-color:var(--dark); }
+  --green:  #059669;
+  --green-l:#ecfdf5;
+  --green-m:rgba(5,150,105,.1);
 
-        .main { max-width:1200px; margin:0 auto; padding:32px 24px; }
-        .results-info { font-size:0.9rem; color:var(--mid); margin-bottom:24px; font-weight:600; }
-        .results-info strong { color:var(--dark); }
+  --amber:  #d97706;
+  --amber-l:#fffbeb;
 
-        .fleet-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(290px, 1fr)); gap:24px; }
+  --red:    #dc2626;
+  --red-l:  #fef2f2;
 
-        .car-card { background:white; border-radius:var(--radius); overflow:hidden; border:1px solid var(--light); transition:0.25s; cursor:pointer; }
-        .car-card:hover { box-shadow:var(--shadow); transform:translateY(-4px); }
-        .car-img { width:100%; height:180px; object-fit:cover; background:linear-gradient(135deg,#f8f8f8,#ebebeb); display:flex; align-items:center; justify-content:center; font-size:5rem; position:relative; overflow:hidden; }
-        .car-img img { width:100%; height:100%; object-fit:cover; position:absolute; inset:0; }
-        .car-badge { position:absolute; top:12px; right:12px; background:var(--primary); color:white; font-size:0.7rem; font-weight:800; padding:4px 10px; border-radius:8px; }
-        .car-body { padding:16px; }
-        .car-type { font-size:0.75rem; font-weight:800; color:var(--mid); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
-        .car-name { font-size:1.1rem; font-weight:900; margin-bottom:10px; }
-        .car-specs { display:flex; gap:12px; margin-bottom:14px; }
-        .spec { display:flex; align-items:center; gap:5px; font-size:0.8rem; color:var(--mid); font-weight:600; }
-        .car-footer { display:flex; align-items:center; justify-content:space-between; padding-top:12px; border-top:1px solid var(--bg); }
-        .car-price { font-size:1rem; font-weight:900; }
-        .car-price small { font-size:0.75rem; font-weight:500; color:var(--mid); }
-        .select-btn { background:var(--primary); color:white; border:none; padding:10px 20px; border-radius:12px; font-weight:800; font-size:0.85rem; cursor:pointer; transition:0.2s; }
-        .select-btn:hover { background:var(--primary-dark); }
+  --tx0: #0f172a;
+  --tx1: #1e293b;
+  --tx2: #475569;
+  --tx3: #94a3b8;
+  --tx4: #cbd5e1;
 
-        .cat-labels { ar:{economy:'اقتصادية',family:'عائلية',luxury:'VIP فاخرة'}; }
-        @media(max-width:640px){ .fleet-grid{grid-template-columns:1fr;} }
-    </style>
+  --bdr:  rgba(15,23,42,.08);
+  --bdr2: rgba(15,23,42,.04);
+
+  --sh-xs: 0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);
+  --sh-sm: 0 4px 6px rgba(15,23,42,.05),0 2px 4px rgba(15,23,42,.04);
+  --sh-md: 0 10px 30px rgba(15,23,42,.08),0 4px 10px rgba(15,23,42,.04);
+  --sh-lg: 0 20px 50px rgba(15,23,42,.10),0 8px 20px rgba(15,23,42,.06);
+  --sh-blue:0 8px 24px rgba(37,99,235,.22);
+
+  --nav-h: 68px;
+  --r3:10px;--r4:14px;--r5:18px;--r6:22px;--r7:28px;
+}
+
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--page);font-family:'Cairo',sans-serif;color:var(--tx0);min-height:100vh;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:99px;}
+img{display:block;}
+button{font-family:'Cairo',sans-serif;}
+
+/* ════════════════════════════════════
+   NAVBAR
+════════════════════════════════════ */
+.nav{
+  height:var(--nav-h);background:var(--surf);
+  border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;
+  position:sticky;top:0;z-index:200;
+  box-shadow:var(--sh-sm);
+}
+.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
+.nav-logo-ic{width:36px;height:36px;border-radius:11px;background:var(--blue-g);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--sh-blue);}
+.nav-logo-txt{font-size:1.1rem;font-weight:900;color:var(--tx0);}
+.nav-back{
+  display:flex;align-items:center;gap:7px;
+  color:var(--tx1);text-decoration:none;
+  font-size:.84rem;font-weight:800;
+  padding:9px 16px;border-radius:var(--r4);
+  border:1.5px solid var(--bdr);background:var(--surf);
+  transition:.18s;
+}
+.nav-back:hover{border-color:var(--blue);color:var(--blue);}
+.nav-back:active{transform:scale(.96);}
+
+/* ════════════════════════════════════
+   PAGE HERO
+════════════════════════════════════ */
+.hero{
+  background:var(--blue-g);
+  padding:32px 28px 72px;
+  position:relative;overflow:hidden;
+}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 80% 110%,rgba(255,255,255,.07),transparent);}
+.hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:44px;background:var(--page);border-radius:40px 40px 0 0;}
+.hero-inner{position:relative;z-index:1;max-width:760px;}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);
+  border-radius:99px;padding:5px 14px;
+  font-size:.72rem;font-weight:800;color:rgba(255,255,255,.9);
+  margin-bottom:14px;
+}
+.hero-tag-dot{width:6px;height:6px;border-radius:50%;background:#34d399;animation:dotBlink 1.8s infinite;}
+@keyframes dotBlink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero-title{font-size:1.75rem;font-weight:900;color:#fff;margin-bottom:8px;letter-spacing:-.02em;}
+.hero-sub{font-size:.84rem;font-weight:600;color:rgba(255,255,255,.7);}
+.hero-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.h-pill{
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);
+  border-radius:99px;padding:5px 13px;
+  font-size:.73rem;font-weight:700;color:rgba(255,255,255,.88);
+}
+
+/* ════════════════════════════════════
+   FILTER BAR
+════════════════════════════════════ */
+.filters{
+  background:var(--surf);
+  border-bottom:1px solid var(--bdr);
+  padding:14px 20px;
+  display:flex;gap:8px;overflow-x:auto;
+  position:sticky;top:var(--nav-h);z-index:100;
+  box-shadow:var(--sh-xs);
+  scrollbar-width:none;
+  margin-top:-28px;  /* pull up into the hero overlap */
+  position:relative;z-index:99;
+}
+.filters::-webkit-scrollbar{display:none;}
+.fc{
+  flex-shrink:0;
+  padding:8px 16px;border-radius:99px;
+  border:1.5px solid var(--bdr);background:var(--surf);
+  font-size:.77rem;font-weight:800;color:var(--tx2);
+  cursor:pointer;transition:.15s;white-space:nowrap;
+  display:flex;align-items:center;gap:6px;
+}
+.fc:hover{border-color:var(--blue);color:var(--blue);}
+.fc.on{background:var(--blue-g);color:#fff;border-color:transparent;box-shadow:var(--sh-blue);}
+.fc .fn{
+  font-size:.65rem;font-weight:900;
+  padding:2px 6px;border-radius:99px;
+  background:rgba(255,255,255,.2);
+}
+.fc:not(.on) .fn{background:var(--blue-m);color:var(--blue);}
+.filter-sep{width:1px;background:var(--bdr);margin:2px 4px;flex-shrink:0;}
+
+/* ════════════════════════════════════
+   MAIN CONTENT
+════════════════════════════════════ */
+.main{max-width:1240px;margin:0 auto;padding:28px 20px 60px;}
+
+/* ── Results bar ── */
+.results-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;flex-wrap:wrap;gap:10px;
+}
+.results-count{font-size:.85rem;font-weight:700;color:var(--tx2);}
+.results-count strong{color:var(--tx0);font-weight:900;}
+
+/* City search */
+.city-search{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surf);border:1.5px solid var(--bdr);
+  border-radius:var(--r4);padding:0 14px;
+  box-shadow:var(--sh-xs);height:38px;
+  transition:.18s;
+}
+.city-search:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-m);}
+.city-search-ic{color:var(--tx3);font-size:.9rem;flex-shrink:0;}
+.city-search input{
+  border:none;outline:none;background:transparent;
+  font-family:'Cairo',sans-serif;font-size:.82rem;font-weight:700;
+  color:var(--tx0);width:140px;
+}
+.city-search input::placeholder{color:var(--tx4);}
+
+/* ── Grid ── */
+.fleet-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+}
+@media(max-width:600px){.fleet-grid{grid-template-columns:1fr;gap:14px;}}
+@media(min-width:1100px){.fleet-grid{grid-template-columns:repeat(4,1fr);}}
+
+/* ════════════════════════════════════
+   CAR CARD
+════════════════════════════════════ */
+.car-card{
+  background:var(--surf);border-radius:var(--r6);
+  border:1px solid var(--bdr);
+  overflow:hidden;cursor:pointer;
+  transition:.22s;box-shadow:var(--sh-xs);
+  display:flex;flex-direction:column;
+}
+.car-card:hover{transform:translateY(-4px);box-shadow:var(--sh-lg);border-color:rgba(37,99,235,.15);}
+.car-card:active{transform:scale(.98);}
+
+/* ── Image ── */
+.car-img-wrap{
+  position:relative;height:178px;overflow:hidden;
+  background:var(--surf1);
+  flex-shrink:0;
+}
+.car-img-wrap img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .4s ease;
+}
+.car-card:hover .car-img-wrap img{transform:scale(1.04);}
+.car-img-fallback{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:8px;
+  background:linear-gradient(135deg,var(--surf1),var(--surf2));
+}
+.car-img-fallback .fi-icon{font-size:3rem;opacity:.4;}
+.car-img-fallback .fi-name{font-size:.72rem;font-weight:700;color:var(--tx3);}
+
+/* Cat badge */
+.cat-badge{
+  position:absolute;top:10px;right:10px;
+  font-size:.67rem;font-weight:900;
+  padding:4px 10px;border-radius:99px;
+  backdrop-filter:blur(8px);
+  border:1px solid;
+}
+.badge-economy { background:rgba(5,150,105,.12);color:#065f46;border-color:rgba(5,150,105,.2); }
+.badge-family  { background:rgba(37,99,235,.12);color:#1d4ed8;border-color:rgba(37,99,235,.2); }
+.badge-luxury  { background:rgba(124,58,237,.12);color:#6d28d9;border-color:rgba(124,58,237,.2); }
+.badge-wedding { background:rgba(219,39,119,.12);color:#9d174d;border-color:rgba(219,39,119,.2); }
+
+/* Popular badge */
+.pop-badge{
+  position:absolute;top:10px;left:10px;
+  background:var(--amber);color:#fff;
+  font-size:.62rem;font-weight:900;
+  padding:3px 8px;border-radius:99px;
+}
+
+/* Office badge */
+.office-badge{
+  position:absolute;bottom:10px;left:10px;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.5);
+  font-size:.63rem;font-weight:800;color:var(--tx2);
+  padding:3px 9px;border-radius:99px;
+  max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* ── Card body ── */
+.car-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;}
+.car-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.car-name{font-size:.98rem;font-weight:900;color:var(--tx0);line-height:1.3;flex:1;}
+.car-orders{
+  font-size:.63rem;font-weight:800;color:var(--tx3);
+  background:var(--surf2);border-radius:99px;padding:2px 7px;
+  flex-shrink:0;margin-top:2px;margin-right:6px;
+  display:flex;align-items:center;gap:3px;
+}
+
+/* Specs row */
+.car-specs{
+  display:flex;gap:10px;flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.car-spec{
+  display:flex;align-items:center;gap:4px;
+  font-size:.73rem;font-weight:700;color:var(--tx2);
+  background:var(--surf1);border-radius:99px;
+  padding:3px 9px;
+}
+.car-spec-ic{font-size:.8rem;}
+
+/* Color dot */
+.color-dot{
+  display:inline-block;width:10px;height:10px;border-radius:50%;
+  border:1.5px solid rgba(0,0,0,.1);margin-left:4px;
+  vertical-align:middle;
+}
+
+/* Footer */
+.car-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:11px;border-top:1px solid var(--bdr2);margin-top:auto;
+}
+.car-price-val{font-size:1.05rem;font-weight:900;color:var(--tx0);}
+.car-price-sub{font-size:.7rem;font-weight:600;color:var(--tx3);}
+.btn-select{
+  background:var(--blue-g);color:#fff;
+  border:none;border-radius:var(--r4);
+  padding:9px 18px;
+  font-size:.78rem;font-weight:900;
+  cursor:pointer;transition:.18s;
+  font-family:'Cairo',sans-serif;
+  box-shadow:0 4px 12px rgba(37,99,235,.25);
+}
+.btn-select:hover{box-shadow:var(--sh-blue);}
+.btn-select:active{transform:scale(.93);}
+
+/* ════════════════════════════════════
+   SKELETON LOADING
+════════════════════════════════════ */
+.skeleton{
+  background:var(--surf);border-radius:var(--r6);
+  border:1px solid var(--bdr);overflow:hidden;
+  box-shadow:var(--sh-xs);
+}
+.sk-img{height:178px;background:linear-gradient(90deg,var(--surf2) 25%,var(--surf1) 50%,var(--surf2) 75%);background-size:200% 100%;animation:shimmer 1.6s infinite;}
+.sk-body{padding:14px 16px;}
+.sk-line{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--surf2) 25%,var(--surf1) 50%,var(--surf2) 75%);background-size:200% 100%;animation:shimmer 1.6s infinite;margin-bottom:10px;}
+.sk-line.w80{width:80%;}
+.sk-line.w60{width:60%;}
+.sk-line.w40{width:40%;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ════════════════════════════════════
+   EMPTY / ERROR STATES
+════════════════════════════════════ */
+.empty-state{
+  grid-column:1/-1;text-align:center;
+  padding:60px 20px;
+  background:var(--surf);border-radius:var(--r6);
+  border:1px dashed var(--bdr);
+}
+.empty-icon{font-size:2.8rem;margin-bottom:14px;opacity:.5;}
+.empty-title{font-size:1rem;font-weight:900;color:var(--tx1);margin-bottom:6px;}
+.empty-sub{font-size:.82rem;font-weight:600;color:var(--tx3);line-height:1.7;}
+.btn-retry-main{
+  margin-top:16px;padding:10px 24px;border-radius:var(--r5);
+  background:var(--blue-g);color:#fff;border:none;
+  font-size:.82rem;font-weight:900;cursor:pointer;
+  box-shadow:var(--sh-blue);transition:.18s;
+  font-family:'Cairo',sans-serif;
+}
+
+/* ════════════════════════════════════
+   API STATUS BANNER
+════════════════════════════════════ */
+.api-banner{
+  display:none;align-items:center;gap:10px;
+  padding:10px 16px;border-radius:var(--r4);
+  font-size:.78rem;font-weight:700;
+  margin-bottom:16px;
+  border:1px solid;
+}
+.api-banner.loading{background:var(--blue-l);border-color:rgba(37,99,235,.2);color:var(--blue);display:flex;}
+.api-banner.fallback{background:var(--amber-l);border-color:rgba(217,119,6,.2);color:var(--amber);display:flex;}
+.api-banner.ok{display:none;}
+.api-spin{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
 </head>
 <body>
-<nav class="navbar">
-    <a href="index.html" class="logo"><span>🐋</span> <span id="logoTxt">الحوت</span></a>
-    <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> <span id="backTxt">رجوع</span></a>
+
+<!-- ════════════════════════════════════
+     NAVBAR
+════════════════════════════════════ -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-ic">🐋</div>
+    <span class="nav-logo-txt" id="logoTxt">الحوت</span>
+  </a>
+  <a href="index.html" class="nav-back" id="backBtn">← رجوع</a>
 </nav>
 
-<div class="service-banner">
-    <h1 id="pageTitle">أسطول الحوت</h1>
-    <p id="serviceLabel"></p>
-    <div class="service-pills" id="summaryPills"></div>
+<!-- ════════════════════════════════════
+     HERO
+════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag"><div class="hero-tag-dot"></div><span id="heroTag">أسطول مُحدَّث لحظياً</span></div>
+    <div class="hero-title" id="heroTitle">اختر سيارتك</div>
+    <div class="hero-sub"   id="heroSub">أسطول حقيقي من شركاء الحوت المعتمدين</div>
+    <div class="hero-pills" id="heroPills"></div>
+  </div>
 </div>
 
-<div class="filters-bar" id="filtersBar"></div>
+<!-- ════════════════════════════════════
+     FILTERS
+════════════════════════════════════ -->
+<div class="filters" id="filtersBar">
+  <!-- built by JS -->
+</div>
 
+<!-- ════════════════════════════════════
+     MAIN
+════════════════════════════════════ -->
 <div class="main">
-    <div class="results-info" id="resultsInfo"></div>
-    <div class="fleet-grid" id="fleetGrid"></div>
-</div>
+
+  <!-- API status -->
+  <div class="api-banner loading" id="apiBanner">
+    <div class="api-spin"></div>
+    <span id="apiBannerTxt">جاري جلب الأسطول من السيرفر...</span>
+  </div>
+
+  <!-- Results bar -->
+  <div class="results-bar">
+    <div class="results-count" id="resultsCount">جاري التحميل...</div>
+    <div class="city-search">
+      <span class="city-search-ic">📍</span>
+      <input type="text" id="cityInput" placeholder="المدينة..." oninput="onCityChange(this.value)">
+    </div>
+  </div>
+
+  <!-- Fleet grid -->
+  <div class="fleet-grid" id="fleetGrid">
+    <!-- skeletons -->
+    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w80"></div><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div>
+    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w80"></div><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div>
+    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w80"></div><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div>
+    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w80"></div><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div>
+  </div>
+
+</div><!-- /main -->
 
 <script>
-    const p = new URLSearchParams(window.location.search);
-    const type = p.get('type') || 'personal';
-    const lang = p.get('lang') || 'ar';
-    const city = p.get('city') || 'كركوك';
-    const days = p.get('days') || '1';
-    const date = p.get('date') || '';
+/* ════════════════════════════════════════════════════════
+   CONFIG — V9.2
+════════════════════════════════════════════════════════ */
+const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
+const API_TOKEN = "HUT_CLOUD_2026";
 
-    const fleet = [
-        { name:{ar:'تويوتا كورولا 2025',ku:'تۆیۆتا کۆرۆلا',tr:'Toyota Corolla 2025',en:'Toyota Corolla 2025'}, engine:'hybrid', cat:'economy', price:45000, img:'Cars/corolla.jpg', seats:5, trans:{ar:'هايبرد',en:'Hybrid',tr:'Hibrit',ku:'هایبرید'} },
-        { name:{ar:'تويوتا كامري',ku:'تۆیۆتا کامری',tr:'Toyota Camry',en:'Toyota Camry'}, engine:'hybrid', cat:'economy', price:55000, img:'Cars/camry.jpg', seats:5, trans:{ar:'هايبرد',en:'Hybrid',tr:'Hibrit',ku:'هایبرید'} },
-        { name:{ar:'هيونداي توسان',ku:'هیۆندای تۆسۆن',tr:'Hyundai Tucson',en:'Hyundai Tucson'}, engine:'auto', cat:'family', price:60000, img:'Cars/tucson.jpg', seats:5, trans:{ar:'أوتوماتيك',en:'Automatic',tr:'Otomatik',ku:'ئۆتۆماتیک'} },
-        { name:{ar:'كيا سورينتو',ku:'کیا سۆرێنتۆ',tr:'Kia Sorento',en:'Kia Sorento'}, engine:'auto', cat:'family', price:70000, img:'Cars/sorento.jpg', seats:7, trans:{ar:'أوتوماتيك',en:'Automatic',tr:'Otomatik',ku:'ئۆتۆماتیک'} },
-        { name:{ar:'مرسيدس S-Class',ku:'مێرسیدس S',tr:'Mercedes S-Class',en:'Mercedes S-Class'}, engine:'auto', cat:'luxury', price:150000, img:'Cars/mercedes.jpg', seats:5, trans:{ar:'أوتوماتيك',en:'Automatic',tr:'Otomatik',ku:'ئۆتۆماتیک'} },
-        { name:{ar:'دودج جارجر SRT',ku:'دۆج جارجەر',tr:'Dodge Charger SRT',en:'Dodge Charger SRT'}, engine:'auto', cat:'luxury', price:85000, img:'Cars/charger.jpg', seats:5, trans:{ar:'أوتوماتيك',en:'Automatic',tr:'Otomatik',ku:'ئۆتۆماتیک'} },
-    ];
+/* ════════════════════════════════════════════════════════
+   LOCALIZATION
+════════════════════════════════════════════════════════ */
+const i18n = {
+  ar:{
+    dir:"rtl",
+    logo:"الحوت", back:"← رجوع",
+    heroTitle:"اختر سيارتك",
+    heroSub:"أسطول حقيقي من شركاء الحوت المعتمدين",
+    heroTag:"أسطول مُحدَّث لحظياً",
+    loading:"جاري جلب الأسطول من السيرفر...",
+    fallback:"تعذّر الاتصال — يتم عرض بيانات احتياطية",
+    cats:["الكل","اقتصادية","عائلية","فاخرة VIP","زفاف"],
+    catKeys:["all","economy","family","luxury","wedding"],
+    catBadge:{economy:"اقتصادية",family:"عائلية",luxury:"VIP فاخرة",wedding:"زفاف 💍"},
+    available:"سيارة متاحة",
+    perDay:"/ يوم",
+    cur:"د.ع",
+    select:"احجز الآن",
+    popular:"الأكثر طلباً",
+    trips:"رحلة",
+    cityPH:"المدينة...",
+    emptyTitle:"لا توجد سيارات متاحة",
+    emptySub:"جرّب تغيير الفلتر أو المدينة",
+    retryBtn:"إعادة المحاولة",
+    orders:"رحلة",
+    colorLabel:"اللون:",
+    officeLabel:"المكتب:",
+  },
+  ku:{
+    dir:"rtl",
+    logo:"الحوت", back:"← گەڕانەوە",
+    heroTitle:"ئۆتۆمبێلەکەت هەڵبژێرە",
+    heroSub:"ئۆتۆمبێلی ڕاستەقینە لە هاوبەشانی ئەلحووت",
+    heroTag:"فلۆتی نوێکراوەوە",
+    loading:"خەریکی وەرگرتنی فلۆتە...",
+    fallback:"پەیوەندی تووندابوو — داتای ئەمەرجەنسی",
+    cats:["هەموو","ئابووری","خێزانی","VIP","زەواجی"],
+    catKeys:["all","economy","family","luxury","wedding"],
+    catBadge:{economy:"ئابووری",family:"خێزانی",luxury:"VIP",wedding:"زەواجی 💍"},
+    available:"ئۆتۆمبێل",
+    perDay:"/ ڕۆژ",
+    cur:"د.ع",
+    select:"ببووکرێ",
+    popular:"زیاتر داواکراو",
+    trips:"گەشت",
+    cityPH:"شار...",
+    emptyTitle:"هیچ ئۆتۆمبێلێک نییە",
+    emptySub:"فلتەر یان شار بگۆڕە",
+    retryBtn:"دووبارە هەوڵ بدەرەوە",
+    orders:"گەشت",
+    colorLabel:"ڕەنگ:",
+    officeLabel:"ئۆفیس:",
+  },
+  tr:{
+    dir:"ltr",
+    logo:"AL-HUT", back:"← Geri",
+    heroTitle:"Araçınızı Seçin",
+    heroSub:"Al-Hut onaylı ortaklardan gerçek araçlar",
+    heroTag:"Anlık güncellenen filo",
+    loading:"Araçlar yükleniyor...",
+    fallback:"Bağlantı hatası — yedek veriler gösteriliyor",
+    cats:["Tümü","Ekonomik","Aile","VIP Lüks","Düğün"],
+    catKeys:["all","economy","family","luxury","wedding"],
+    catBadge:{economy:"Ekonomik",family:"Aile",luxury:"VIP Lüks",wedding:"Düğün 💍"},
+    available:"araç mevcut",
+    perDay:"/ gün",
+    cur:"IQD",
+    select:"Seç",
+    popular:"En Popüler",
+    trips:"yolculuk",
+    cityPH:"Şehir...",
+    emptyTitle:"Araç bulunamadı",
+    emptySub:"Filtre veya şehri değiştirin",
+    retryBtn:"Tekrar Dene",
+    orders:"yolculuk",
+    colorLabel:"Renk:",
+    officeLabel:"Ofis:",
+  },
+  en:{
+    dir:"ltr",
+    logo:"AL-HUT", back:"← Back",
+    heroTitle:"Choose Your Vehicle",
+    heroSub:"Real cars from certified Al-Hut partners",
+    heroTag:"Live-updated fleet",
+    loading:"Loading fleet from server...",
+    fallback:"Connection failed — showing fallback data",
+    cats:["All","Economy","Family","VIP Luxury","Wedding"],
+    catKeys:["all","economy","family","luxury","wedding"],
+    catBadge:{economy:"Economy",family:"Family",luxury:"VIP Luxury",wedding:"Wedding 💍"},
+    available:"car(s) available",
+    perDay:"/ day",
+    cur:"IQD",
+    select:"Book Now",
+    popular:"Most Popular",
+    trips:"trip",
+    cityPH:"City...",
+    emptyTitle:"No cars available",
+    emptySub:"Try changing the filter or city",
+    retryBtn:"Retry",
+    orders:"trip",
+    colorLabel:"Color:",
+    officeLabel:"Office:",
+  }
+};
 
-    const ui = {
-        ar:{ dir:'rtl', logo:'الحوت', back:'رجوع', cats:['الكل','اقتصادية','عائلية/SUV','VIP فاخرة'], catKeys:['all','economy','family','luxury'], eng:['الكل','هايبرد','أوتوماتيك'], engKeys:['all','hybrid','auto'], curr:'د.ع', perDay:'/ يوم', select:'اختر السيارة', res:' سيارة متاحة', svc:{personal:'🚗 تأجير السيارات',wedding:'💍 سيارات الأعراس'} },
-        ku:{ dir:'rtl', logo:'ئەلحووت', back:'گەڕانەوە', cats:['هەموو','ئابووری','خێزانی','VIP'], catKeys:['all','economy','family','luxury'], eng:['هەموو','هایبرید','ئۆتۆماتیک'], engKeys:['all','hybrid','auto'], curr:'د.ع', perDay:'/ ڕۆژ', select:'هەڵبژاردن', res:' ئۆتۆمبێل', svc:{personal:'🚗 بەکرێگرتن',wedding:'💍 زەماوەند'} },
-        tr:{ dir:'ltr', logo:'AL-HUT', back:'Geri', cats:['Tümü','Ekonomik','Aile/SUV','VIP Lüks'], catKeys:['all','economy','family','luxury'], eng:['Tümü','Hibrit','Otomatik'], engKeys:['all','hybrid','auto'], curr:'IQD', perDay:'/ gün', select:'Seç', res:' araç mevcut', svc:{personal:'🚗 Araç Kiralama',wedding:'💍 Düğün Araçları'} },
-        en:{ dir:'ltr', logo:'AL-HUT', back:'Back', cats:['All','Economy','Family/SUV','VIP Luxury'], catKeys:['all','economy','family','luxury'], eng:['All','Hybrid','Automatic'], engKeys:['all','hybrid','auto'], curr:'IQD', perDay:'/ day', select:'Select', res:' cars available', svc:{personal:'🚗 Car Rental',wedding:'💍 Wedding Cars'} },
-    };
+/* ════════════════════════════════════════════════════════
+   FALLBACK DATA
+   (يُستخدم إذا فشل الـ API — نفس بنية السيرفر تماماً)
+════════════════════════════════════════════════════════ */
+const FALLBACK_CARS = [
+  {id:"C001",name:"تويوتا كورولا 2025",cat:"economy",price:45000,color:"أبيض",plate:"كركوك 12345",status:"available",orders:12,office_id:"OFF-0001",photo_url:""},
+  {id:"C002",name:"مرسيدس S-Class",     cat:"luxury", price:150000,color:"أسود",plate:"بغداد 99999",status:"available",orders:5, office_id:"OFF-0002",photo_url:""},
+  {id:"C003",name:"هيونداي توسان",       cat:"family", price:60000, color:"رمادي",plate:"أربيل 11111",status:"available",orders:8, office_id:"OFF-0003",photo_url:""},
+  {id:"C004",name:"تويوتا كامري 2024",   cat:"economy",price:55000,color:"فضي", plate:"كركوك 54321",status:"available",orders:18,office_id:"OFF-0001",photo_url:""},
+  {id:"C005",name:"كيا سورينتو",         cat:"family", price:70000,color:"أزرق",plate:"بغداد 77777",status:"available",orders:3, office_id:"OFF-0004",photo_url:""},
+  {id:"C006",name:"دودج جارجر SRT",      cat:"luxury", price:95000,color:"أحمر",plate:"أربيل 22222",status:"available",orders:7, office_id:"OFF-0005",photo_url:""},
+];
 
-    let activeCat = 'all', activeEng = 'all';
+/* ════════════════════════════════════════════════════════
+   COLOR MAP — converts Arabic/text color to CSS
+════════════════════════════════════════════════════════ */
+const COLOR_MAP = {
+  "أبيض":"#f8fafc","white":"#f8fafc","beyaz":"#f8fafc",
+  "أسود":"#0f172a","black":"#0f172a","siyah":"#0f172a",
+  "رمادي":"#94a3b8","gray":"#94a3b8","gri":"#94a3b8",
+  "أحمر":"#ef4444","red":"#ef4444","kırmızı":"#ef4444",
+  "أزرق":"#2563eb","blue":"#2563eb","mavi":"#2563eb",
+  "فضي":"#cbd5e1","silver":"#cbd5e1","gümüş":"#cbd5e1",
+  "ذهبي":"#d97706","gold":"#d97706","altın":"#d97706",
+  "بني":"#92400e","brown":"#92400e","kahverengi":"#92400e",
+  "بيج":"#d4b896","beige":"#d4b896","bej":"#d4b896",
+  "أخضر":"#059669","green":"#059669","yeşil":"#059669",
+  "برتقالي":"#ea580c","orange":"#ea580c","turuncu":"#ea580c",
+  "بنفسجي":"#7c3aed","purple":"#7c3aed","mor":"#7c3aed",
+};
 
-    function init() {
-        const l = ui[lang] || ui.ar;
-        document.getElementById('htmlTag').dir = l.dir;
-        document.getElementById('logoTxt').innerText = l.logo;
-        document.getElementById('backTxt').innerText = l.back;
-        document.getElementById('pageTitle').innerText = (lang==='ar'||lang==='ku') ? 'أسطول الحوت' : 'Al-Hut Fleet';
-        document.getElementById('serviceLabel').innerText = (l.svc[type] || l.svc.personal);
+function getColorCSS(colorStr) {
+  if(!colorStr) return "#94a3b8";
+  const key = String(colorStr).toLowerCase().trim();
+  for(const [k,v] of Object.entries(COLOR_MAP)) {
+    if(key.includes(k.toLowerCase())) return v;
+  }
+  return "#94a3b8";
+}
 
-        // Summary pills
-        document.getElementById('summaryPills').innerHTML = [
-            `<span class="s-pill">📍 ${city}</span>`,
-            date ? `<span class="s-pill">📅 ${date}</span>` : '',
-            `<span class="s-pill">🌙 ${days} ${lang==='ar'?'يوم':'day'}</span>`,
-        ].join('');
+/* ════════════════════════════════════════════════════════
+   CAT BADGE STYLES
+════════════════════════════════════════════════════════ */
+const CAT_BADGE_CLASS = {
+  economy:"badge-economy",
+  family:"badge-family",
+  luxury:"badge-luxury",
+  wedding:"badge-wedding",
+};
 
-        // Filters
-        const fb = document.getElementById('filtersBar');
-        fb.innerHTML = l.catKeys.map((k,i) => `<div class="filter-chip ${k==='all'?'active':''}" onclick="filterCat('${k}')" id="chip-${k}">${l.cats[i]}</div>`).join('')
-            + '&nbsp;&nbsp;'
-            + l.engKeys.map((k,i) => `<div class="filter-chip" onclick="filterEng('${k}')" id="eng-${k}" style="${k==='all'?'background:var(--bg);':''}">${l.eng[i]}</div>`).join('');
+/* ════════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════════ */
+const P = new URLSearchParams(location.search);
+const lang    = P.get("lang")  || "ar";
+const type    = P.get("type")  || "personal";
+const days    = P.get("days")  || "1";
+const date    = P.get("date")  || "";
+const t       = i18n[lang] || i18n.ar;
 
-        renderFleet();
+let allCars   = [];       // raw API response
+let filtered  = [];       // after filter
+let activeCat = "all";    // current category filter
+let cityQuery = P.get("city") || P.get("province") || "كركوك";
+
+/* ════════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════════ */
+function init() {
+  applyLang();
+  buildFilters();
+  fetchFleet();
+}
+
+function applyLang() {
+  const root = document.getElementById("htmlRoot");
+  root.lang = lang; root.dir = t.dir;
+  document.getElementById("logoTxt").textContent  = t.logo;
+  document.getElementById("backBtn").textContent  = t.back;
+  document.getElementById("heroTitle").textContent = t.heroTitle;
+  document.getElementById("heroSub").textContent   = t.heroSub;
+  document.getElementById("heroTag").textContent   = t.heroTag;
+  document.getElementById("cityInput").placeholder = t.cityPH;
+  document.getElementById("cityInput").value       = cityQuery;
+  document.getElementById("apiBannerTxt").textContent = t.loading;
+
+  // Hero pills
+  const pills = [];
+  if(cityQuery) pills.push(`<div class="h-pill">📍 ${cityQuery}</div>`);
+  if(date)      pills.push(`<div class="h-pill">📅 ${date}</div>`);
+  if(days)      pills.push(`<div class="h-pill">🌙 ${days} ${lang==="ar"?"يوم":lang==="ku"?"ڕۆژ":lang==="tr"?"Gün":"Day"}</div>`);
+  document.getElementById("heroPills").innerHTML = pills.join("");
+
+  // Page title
+  const svcMap = {personal:t.heroTitle,wedding:(lang==="ar"?"سيارات الأعراس":lang==="ku"?"ئۆتۆمبێلی زەواجی":"Wedding Cars")};
+  document.getElementById("heroTitle").textContent = svcMap[type] || t.heroTitle;
+}
+
+function buildFilters() {
+  const bar = document.getElementById("filtersBar");
+  const chips = t.catKeys.map((k,i) => {
+    const cnt = k==="all" ? `<span class="fn" id="fn-${k}">0</span>` : `<span class="fn" id="fn-${k}">0</span>`;
+    return `<button class="fc ${k==="all"?"on":""}" id="fc-${k}" onclick="setFilter('${k}')">${t.cats[i]} ${cnt}</button>`;
+  });
+  bar.innerHTML = chips.join("");
+}
+
+/* ════════════════════════════════════════════════════════
+   FETCH FROM API — ?action=getAvailableCars
+   Returns: [{id, name, cat, price, color, plate, status, orders, office_id, photo_url}]
+════════════════════════════════════════════════════════ */
+async function fetchFleet() {
+  setBanner("loading");
+
+  // Build API URL — city filter if provided
+  const category = type === "wedding" ? "wedding" : "";
+  let url = `${API_URL}?action=getAvailableCars&token=${API_TOKEN}&_t=${Date.now()}`;
+  if(cityQuery) url += `&city=${encodeURIComponent(cityQuery)}`;
+  if(category)  url += `&category=${encodeURIComponent(category)}`;
+
+  try {
+    const controller = new AbortController();
+    const timeout    = setTimeout(() => controller.abort(), 12000); // 12s timeout
+
+    const res  = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeout);
+
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    // Handle both array response and wrapped response
+    const cars = Array.isArray(data) ? data : (data.cars || data.fleet || []);
+
+    if(cars.length === 0 && cityQuery) {
+      // Try without city filter (show all available)
+      const res2  = await fetch(`${API_URL}?action=getAvailableCars&token=${API_TOKEN}&_t=${Date.now()}`);
+      const data2 = await res2.json();
+      allCars = Array.isArray(data2) ? data2 : (data2.cars || data2.fleet || FALLBACK_CARS);
+    } else {
+      allCars = cars.length > 0 ? cars : FALLBACK_CARS;
     }
 
-    function filterCat(c) {
-        activeCat = c;
-        document.querySelectorAll('[id^="chip-"]').forEach(e=>e.classList.remove('active'));
-        document.getElementById('chip-'+c).classList.add('active');
-        renderFleet();
-    }
-    function filterEng(e) {
-        activeEng = e;
-        document.querySelectorAll('[id^="eng-"]').forEach(el=>el.classList.remove('active'));
-        document.getElementById('eng-'+e).classList.add('active');
-        renderFleet();
-    }
+    setBanner("ok");
 
-    function renderFleet() {
-        const l = ui[lang] || ui.ar;
-        const filtered = fleet.filter(c => (activeCat==='all'||c.cat===activeCat) && (activeEng==='all'||c.engine===activeEng));
-        document.getElementById('resultsInfo').innerHTML = `<strong>${filtered.length}</strong>${l.res}`;
+  } catch(err) {
+    console.warn("Fleet API error:", err);
+    allCars = FALLBACK_CARS;
+    setBanner("fallback");
+  }
 
-        const grid = document.getElementById('fleetGrid');
-        if (filtered.length === 0) {
-            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--mid);font-weight:700;">لا توجد سيارات بهذه المواصفات 🐋</div>`;
-            return;
-        }
-        const catBadge = {economy:{ar:'اقتصادية',en:'Economy',tr:'Ekonomik',ku:'ئابووری'}, family:{ar:'عائلية',en:'Family',tr:'Aile',ku:'خێزانی'}, luxury:{ar:'VIP فاخرة',en:'VIP Luxury',tr:'VIP Lüks',ku:'VIP'}};
-        grid.innerHTML = filtered.map(car => {
-            const name = car.name[lang] || car.name.ar;
-            const trans = car.trans[lang] || car.trans.ar;
-            const badge = catBadge[car.cat][lang] || catBadge[car.cat].ar;
-            const seoAlt = `تأجير ${name} في ${city} - منصة الحوت`;
-            return `
-            <div class="car-card" onclick="selectCar('${encodeURIComponent(name)}',${car.price})">
-                <div class="car-img">
-                    <img src="${car.img}" alt="${seoAlt}" onerror="this.style.display='none'">
-                    🚗
-                    <div class="car-badge">${badge}</div>
-                </div>
-                <div class="car-body">
-                    <div class="car-type">${trans}</div>
-                    <div class="car-name">${name}</div>
-                    <div class="car-specs">
-                        <div class="spec"><i class="fas fa-users"></i> ${car.seats}</div>
-                        <div class="spec"><i class="fas fa-cog"></i> ${trans}</div>
-                    </div>
-                    <div class="car-footer">
-                        <div class="car-price">${car.price.toLocaleString()} <small>${l.curr}</small> <small>${l.perDay}</small></div>
-                        <button class="select-btn">${l.select}</button>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
+  updateFilterCounts();
+  renderFleet();
+}
+
+function setBanner(state) {
+  const banner = document.getElementById("apiBanner");
+  const txt    = document.getElementById("apiBannerTxt");
+  banner.className = "api-banner " + state;
+  if(state === "loading")  txt.textContent = t.loading;
+  if(state === "fallback") txt.textContent = t.fallback;
+}
+
+/* ════════════════════════════════════════════════════════
+   FILTER LOGIC
+════════════════════════════════════════════════════════ */
+function updateFilterCounts() {
+  // Count per category
+  const counts = {};
+  allCars.forEach(c => {
+    counts["all"] = (counts["all"]||0) + 1;
+    const cat = (c.cat||"economy").toLowerCase();
+    counts[cat] = (counts[cat]||0) + 1;
+  });
+  t.catKeys.forEach(k => {
+    const el = document.getElementById("fn-"+k);
+    if(el) el.textContent = counts[k] || 0;
+  });
+}
+
+function setFilter(cat) {
+  activeCat = cat;
+  document.querySelectorAll(".fc").forEach(b => b.classList.remove("on"));
+  document.getElementById("fc-"+cat)?.classList.add("on");
+  renderFleet();
+}
+window.setFilter = setFilter;
+
+function onCityChange(val) {
+  cityQuery = val.trim();
+  // Debounce
+  clearTimeout(window._cityTimer);
+  window._cityTimer = setTimeout(() => {
+    fetchFleet();
+    // Update hero pill
+    const pill = document.querySelector(".h-pill");
+    if(pill && cityQuery) pill.textContent = "📍 " + cityQuery;
+  }, 600);
+}
+window.onCityChange = onCityChange;
+
+/* ════════════════════════════════════════════════════════
+   RENDER
+════════════════════════════════════════════════════════ */
+function renderFleet() {
+  const grid = document.getElementById("fleetGrid");
+
+  // Apply filters
+  filtered = allCars.filter(c => {
+    if(c.status && c.status !== "available") return false;
+    if(activeCat !== "all") {
+      const carCat = (c.cat||"economy").toLowerCase();
+      if(carCat !== activeCat) return false;
     }
-
-    function selectCar(name, price) {
-        window.location.href = `addons.html?type=${type}&lang=${lang}&city=${encodeURIComponent(city)}&days=${days}&date=${date}&car=${name}&basePrice=${price}`;
+    if(type === "wedding") {
+      const carCat = (c.cat||"").toLowerCase();
+      return carCat === "wedding" || carCat === "luxury";
     }
+    return true;
+  });
 
-    window.onload = init;
+  // Sort: most popular first
+  filtered.sort((a,b) => (Number(b.orders)||0) - (Number(a.orders)||0));
+
+  // Update count
+  document.getElementById("resultsCount").innerHTML =
+    `<strong>${filtered.length}</strong> ${t.available}`;
+
+  if(filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🐋</div>
+        <div class="empty-title">${t.emptyTitle}</div>
+        <div class="empty-sub">${t.emptySub}</div>
+        <button class="btn-retry-main" onclick="fetchFleet()">${t.retryBtn}</button>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map((car, idx) => buildCard(car, idx)).join("");
+}
+
+/* ════════════════════════════════════════════════════════
+   BUILD CARD HTML
+════════════════════════════════════════════════════════ */
+function buildCard(car, idx) {
+  const name      = String(car.name||"سيارة").substring(0,40);
+  const price     = Math.round(Number(car.price)||0);
+  const cat       = (car.cat||"economy").toLowerCase();
+  const color     = car.color || "";
+  const plate     = car.plate || "";
+  const orders    = Number(car.orders)||0;
+  const photoUrl  = car.photo_url || "";
+  const officeId  = car.office_id || "";
+  const isPopular = idx === 0 && orders > 0;
+
+  const badgeClass = CAT_BADGE_CLASS[cat] || "badge-economy";
+  const catLabel   = t.catBadge?.[cat] || cat;
+  const colorCSS   = getColorCSS(color);
+
+  // Image section
+  const imgHtml = photoUrl
+    ? `<img src="${escHtml(photoUrl)}" alt="${escHtml(name)}" loading="lazy" onerror="this.parentNode.innerHTML=fallbackImgHtml('${escHtml(name)}','${escHtml(cat)}')">`
+    : fallbackImgHtml(name, cat);
+
+  const officeHtml = officeId
+    ? `<div class="office-badge">🏢 ${escHtml(officeId)}</div>`
+    : "";
+
+  const ordersHtml = orders > 0
+    ? `<div class="car-orders">🔥 ${orders} ${t.orders}</div>`
+    : "";
+
+  const colorHtml = color
+    ? `<div class="car-spec"><span class="car-spec-ic">🎨</span><span>${color}</span><span class="color-dot" style="background:${colorCSS}"></span></div>`
+    : "";
+
+  const plateHtml = plate
+    ? `<div class="car-spec"><span class="car-spec-ic">🪪</span><span style="font-family:'IBM Plex Mono',monospace;font-size:.7rem">${escHtml(plate)}</span></div>`
+    : "";
+
+  return `
+  <div class="car-card" onclick="selectCar(${JSON.stringify(car)})">
+    <div class="car-img-wrap">
+      ${imgHtml}
+      <div class="cat-badge ${badgeClass}">${catLabel}</div>
+      ${isPopular ? `<div class="pop-badge">⭐ ${t.popular}</div>` : ""}
+      ${officeHtml}
+    </div>
+    <div class="car-body">
+      <div class="car-top">
+        <div class="car-name">${escHtml(name)}</div>
+        ${ordersHtml}
+      </div>
+      <div class="car-specs">
+        ${colorHtml}
+        ${plateHtml}
+      </div>
+      <div class="car-footer">
+        <div>
+          <div class="car-price-val">${price.toLocaleString("ar-EG")}</div>
+          <div class="car-price-sub">${t.cur} ${t.perDay}</div>
+        </div>
+        <button class="btn-select" onclick="event.stopPropagation();selectCar(${JSON.stringify(car)})">${t.select}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ════════════════════════════════════════════════════════
+   FALLBACK IMAGE HTML (no photo_url)
+════════════════════════════════════════════════════════ */
+function fallbackImgHtml(name, cat) {
+  const catIcons = { economy:"🚗", family:"🚙", luxury:"🏎️", wedding:"💍" };
+  const icon = catIcons[cat] || "🚗";
+  const shortName = String(name).split(" ").slice(0,2).join(" ");
+  return `<div class="car-img-fallback"><div class="fi-icon">${icon}</div><div class="fi-name">${escHtml(shortName)}</div></div>`;
+}
+window.fallbackImgHtml = fallbackImgHtml;
+
+/* ════════════════════════════════════════════════════════
+   SELECT CAR → Navigate to addons.html
+   Passes: type, lang, city, days, date, car (name), basePrice, car_id, office_id
+════════════════════════════════════════════════════════ */
+function selectCar(car) {
+  const name  = encodeURIComponent(car.name || "");
+  const price = car.price || 0;
+  const id    = encodeURIComponent(car.id   || "");
+  const offId = encodeURIComponent(car.office_id || "");
+  const city  = encodeURIComponent(cityQuery || P.get("city") || "");
+
+  const dest = `addons.html`
+    + `?type=${encodeURIComponent(type)}`
+    + `&lang=${encodeURIComponent(lang)}`
+    + `&city=${city}`
+    + `&days=${encodeURIComponent(days)}`
+    + `&date=${encodeURIComponent(date)}`
+    + `&car=${name}`
+    + `&basePrice=${price}`
+    + `&car_id=${id}`
+    + `&office_id=${offId}`;
+
+  window.location.href = dest;
+}
+
+/* ════════════════════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════════════════════ */
+function escHtml(s) {
+  return String(s||"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+/* ════════════════════════════════════════════════════════
+   BOOT
+════════════════════════════════════════════════════════ */
+window.onload = init;
 </script>
 </body>
 </html>

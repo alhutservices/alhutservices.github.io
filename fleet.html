@@ -2,361 +2,238 @@
 <html lang="ar" dir="rtl" id="htmlRoot">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#FF385C">
+<meta name="description" content="أسطول سيارات الحوت - اختر سيارتك المفضلة">
 <title>أسطول الحوت | اختر سيارتك</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 
 <style>
-/* ═══════════════════════════════════════════════════════
-   DESIGN SYSTEM — Silicon Valley Light
-   Matches partners_v3.html + success.html
-═══════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — Al-Hut Fleet · Airbnb-Inspired Clean Light
+════════════════════════════════════════════════════════════════ */
 :root{
-  --page:   #f5f7fa;
-  --surf:   #ffffff;
-  --surf1:  #f8fafb;
-  --surf2:  #eef2f7;
-
-  --blue:   #2563eb;
-  --blue-d: #1d4ed8;
-  --blue-l: #eff6ff;
-  --blue-m: rgba(37,99,235,.12);
-  --blue-g: linear-gradient(135deg,#2563eb,#1d4ed8);
-
-  --green:  #059669;
-  --green-l:#ecfdf5;
-  --green-m:rgba(5,150,105,.1);
-
-  --amber:  #d97706;
-  --amber-l:#fffbeb;
-
-  --red:    #dc2626;
-  --red-l:  #fef2f2;
-
-  --tx0: #0f172a;
-  --tx1: #1e293b;
-  --tx2: #475569;
-  --tx3: #94a3b8;
-  --tx4: #cbd5e1;
-
-  --bdr:  rgba(15,23,42,.08);
-  --bdr2: rgba(15,23,42,.04);
-
-  --sh-xs: 0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);
-  --sh-sm: 0 4px 6px rgba(15,23,42,.05),0 2px 4px rgba(15,23,42,.04);
-  --sh-md: 0 10px 30px rgba(15,23,42,.08),0 4px 10px rgba(15,23,42,.04);
-  --sh-lg: 0 20px 50px rgba(15,23,42,.10),0 8px 20px rgba(15,23,42,.06);
-  --sh-blue:0 8px 24px rgba(37,99,235,.22);
-
-  --nav-h: 68px;
-  --r3:10px;--r4:14px;--r5:18px;--r6:22px;--r7:28px;
+  --bg:      #F7F7F7;
+  --white:   #FFFFFF;
+  --border:  #EBEBEB;
+  --border-d:#DDDDDD;
+  --light:   #EEEEEE;
+  
+  --red:     #FF385C;
+  --red-d:   #E31C5F;
+  --red-l:   #FFF0F2;
+  --red-m:   rgba(255,56,92,.12);
+  --red-g:   linear-gradient(135deg,#FF385C,#E31C5F);
+  
+  --green:   #00A699;
+  --amber:   #FC642D;
+  --blue:    #0066CC;
+  
+  --tx0:     #222222;
+  --tx1:     #484848;
+  --tx2:     #717171;
+  --tx3:     #AAAAAA;
+  
+  --sh-card: 0 6px 16px rgba(0,0,0,.08);
+  --sh-hover:0 12px 28px rgba(0,0,0,.12);
+  --sh-nav:  0 1px 0 rgba(0,0,0,.06);
+  --sh-btn:  0 4px 14px rgba(255,56,92,.3);
+  
+  --r3:12px; --r4:16px; --r5:20px;
+  --nav-h:72px;
 }
 
 *,::before,::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{background:var(--page);font-family:'Cairo',sans-serif;color:var(--tx0);min-height:100vh;-webkit-font-smoothing:antialiased;}
-::-webkit-scrollbar{width:5px;}
-::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:99px;}
-img{display:block;}
-button{font-family:'Cairo',sans-serif;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{
+  min-height:100vh;background:var(--bg);
+  font-family:'Cairo',sans-serif;color:var(--tx0);
+  overflow-x:hidden;-webkit-tap-highlight-color:transparent;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block;}
+button,input{font-family:'Cairo',sans-serif;outline:none;}
+.dn{display:none!important;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-thumb{background:var(--border-d);border-radius:99px;}
 
-/* ════════════════════════════════════
-   NAVBAR
-════════════════════════════════════ */
+/* ════ NAVBAR ════ */
 .nav{
-  height:var(--nav-h);background:var(--surf);
-  border-bottom:1px solid var(--bdr);
+  height:var(--nav-h);background:rgba(255,255,255,.95);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;
-  position:sticky;top:0;z-index:200;
+  padding:0 24px;position:sticky;top:0;z-index:900;
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-ic{
+  width:38px;height:38px;border-radius:11px;background:var(--red-g);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;box-shadow:var(--sh-btn);
+}
+.nav-logo-txt{font-size:1.15rem;font-weight:900;color:var(--tx0);letter-spacing:-.5px;}
+.nav-back{
+  font-size:.85rem;font-weight:800;color:var(--tx1);
+  text-decoration:none;padding:8px 16px;border-radius:99px;
+  border:1px solid var(--border-d);background:var(--white);
+  transition:.2s;display:flex;align-items:center;gap:6px;
+}
+.nav-back:hover{border-color:var(--tx0);background:var(--bg);}
+.nav-back:active{transform:scale(.95);}
+
+/* ════ PAGE HERO ════ */
+.hero{
+  background:var(--red-g);
+  padding:40px 24px 60px;
+  text-align:center;position:relative;
+}
+.hero::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;
+  height:30px;background:var(--bg);border-radius:30px 30px 0 0;
+}
+.hero-inner{position:relative;z-index:1;}
+.hero-title{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:900;color:#fff;margin-bottom:8px;letter-spacing:-.02em;}
+.hero-sub{font-size:.9rem;font-weight:600;color:rgba(255,255,255,.8);margin-bottom:20px;}
+.hero-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.h-pill{
+  background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);
+  backdrop-filter:blur(5px);border-radius:99px;padding:6px 14px;
+  font-size:.75rem;font-weight:800;color:#fff;
+}
+
+/* ════ FILTER BAR ════ */
+.filters-wrap{
+  background:var(--white);border-bottom:1px solid var(--border);
+  position:sticky;top:var(--nav-h);z-index:800;
   box-shadow:var(--sh-sm);
 }
-.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
-.nav-logo-ic{width:36px;height:36px;border-radius:11px;background:var(--blue-g);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--sh-blue);}
-.nav-logo-txt{font-size:1.1rem;font-weight:900;color:var(--tx0);}
-.nav-back{
-  display:flex;align-items:center;gap:7px;
-  color:var(--tx1);text-decoration:none;
-  font-size:.84rem;font-weight:800;
-  padding:9px 16px;border-radius:var(--r4);
-  border:1.5px solid var(--bdr);background:var(--surf);
-  transition:.18s;
-}
-.nav-back:hover{border-color:var(--blue);color:var(--blue);}
-.nav-back:active{transform:scale(.96);}
-
-/* ════════════════════════════════════
-   PAGE HERO
-════════════════════════════════════ */
-.hero{
-  background:var(--blue-g);
-  padding:32px 28px 72px;
-  position:relative;overflow:hidden;
-}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 80% 110%,rgba(255,255,255,.07),transparent);}
-.hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:44px;background:var(--page);border-radius:40px 40px 0 0;}
-.hero-inner{position:relative;z-index:1;max-width:760px;}
-.hero-tag{
-  display:inline-flex;align-items:center;gap:6px;
-  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);
-  border-radius:99px;padding:5px 14px;
-  font-size:.72rem;font-weight:800;color:rgba(255,255,255,.9);
-  margin-bottom:14px;
-}
-.hero-tag-dot{width:6px;height:6px;border-radius:50%;background:#34d399;animation:dotBlink 1.8s infinite;}
-@keyframes dotBlink{0%,100%{opacity:1}50%{opacity:.2}}
-.hero-title{font-size:1.75rem;font-weight:900;color:#fff;margin-bottom:8px;letter-spacing:-.02em;}
-.hero-sub{font-size:.84rem;font-weight:600;color:rgba(255,255,255,.7);}
-.hero-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
-.h-pill{
-  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);
-  border-radius:99px;padding:5px 13px;
-  font-size:.73rem;font-weight:700;color:rgba(255,255,255,.88);
-}
-
-/* ════════════════════════════════════
-   FILTER BAR
-════════════════════════════════════ */
 .filters{
-  background:var(--surf);
-  border-bottom:1px solid var(--bdr);
-  padding:14px 20px;
-  display:flex;gap:8px;overflow-x:auto;
-  position:sticky;top:var(--nav-h);z-index:100;
-  box-shadow:var(--sh-xs);
-  scrollbar-width:none;
-  margin-top:-28px;  /* pull up into the hero overlap */
-  position:relative;z-index:99;
+  display:flex;gap:12px;padding:12px 24px;
+  overflow-x:auto;scrollbar-width:none;
 }
 .filters::-webkit-scrollbar{display:none;}
 .fc{
-  flex-shrink:0;
-  padding:8px 16px;border-radius:99px;
-  border:1.5px solid var(--bdr);background:var(--surf);
-  font-size:.77rem;font-weight:800;color:var(--tx2);
-  cursor:pointer;transition:.15s;white-space:nowrap;
-  display:flex;align-items:center;gap:6px;
+  flex-shrink:0;padding:8px 18px;border-radius:99px;
+  background:var(--bg);border:1.5px solid transparent;
+  font-size:.8rem;font-weight:800;color:var(--tx1);
+  cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px;
 }
-.fc:hover{border-color:var(--blue);color:var(--blue);}
-.fc.on{background:var(--blue-g);color:#fff;border-color:transparent;box-shadow:var(--sh-blue);}
+.fc:hover{background:var(--light);}
+.fc.on{background:var(--white);border-color:var(--tx0);color:var(--tx0);box-shadow:var(--sh-sm);}
 .fc .fn{
-  font-size:.65rem;font-weight:900;
-  padding:2px 6px;border-radius:99px;
-  background:rgba(255,255,255,.2);
+  font-size:.65rem;font-weight:900;padding:2px 8px;
+  border-radius:99px;background:var(--border-d);color:var(--tx1);
 }
-.fc:not(.on) .fn{background:var(--blue-m);color:var(--blue);}
-.filter-sep{width:1px;background:var(--bdr);margin:2px 4px;flex-shrink:0;}
+.fc.on .fn{background:var(--tx0);color:var(--white);}
 
-/* ════════════════════════════════════
-   MAIN CONTENT
-════════════════════════════════════ */
-.main{max-width:1240px;margin:0 auto;padding:28px 20px 60px;}
-
-/* ── Results bar ── */
+/* ════ MAIN & SEARCH ════ */
+.main{max-width:1200px;margin:0 auto;padding:24px 24px 60px;}
 .results-bar{
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:20px;flex-wrap:wrap;gap:10px;
+  margin-bottom:24px;flex-wrap:wrap;gap:12px;
 }
-.results-count{font-size:.85rem;font-weight:700;color:var(--tx2);}
-.results-count strong{color:var(--tx0);font-weight:900;}
-
-/* City search */
+.results-count{font-size:.9rem;font-weight:800;color:var(--tx0);}
 .city-search{
   display:flex;align-items:center;gap:8px;
-  background:var(--surf);border:1.5px solid var(--bdr);
-  border-radius:var(--r4);padding:0 14px;
-  box-shadow:var(--sh-xs);height:38px;
-  transition:.18s;
+  background:var(--white);border:1px solid var(--border-d);
+  border-radius:99px;padding:8px 16px;
+  transition:.2s;box-shadow:var(--sh-sm);
 }
-.city-search:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-m);}
-.city-search-ic{color:var(--tx3);font-size:.9rem;flex-shrink:0;}
+.city-search:focus-within{border-color:var(--tx0);box-shadow:0 0 0 1px var(--tx0);}
+.city-search-ic{color:var(--tx2);font-size:.9rem;}
 .city-search input{
-  border:none;outline:none;background:transparent;
-  font-family:'Cairo',sans-serif;font-size:.82rem;font-weight:700;
-  color:var(--tx0);width:140px;
+  border:none;background:transparent;width:150px;
+  font-size:.85rem;font-weight:700;color:var(--tx0);
 }
-.city-search input::placeholder{color:var(--tx4);}
+.city-search input::placeholder{color:var(--tx3);}
 
-/* ── Grid ── */
+/* ════ GRID & CARDS ════ */
 .fleet-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-  gap:20px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;
 }
-@media(max-width:600px){.fleet-grid{grid-template-columns:1fr;gap:14px;}}
-@media(min-width:1100px){.fleet-grid{grid-template-columns:repeat(4,1fr);}}
-
-/* ════════════════════════════════════
-   CAR CARD
-════════════════════════════════════ */
 .car-card{
-  background:var(--surf);border-radius:var(--r6);
-  border:1px solid var(--bdr);
-  overflow:hidden;cursor:pointer;
-  transition:.22s;box-shadow:var(--sh-xs);
-  display:flex;flex-direction:column;
+  background:var(--white);border:1px solid transparent;
+  border-radius:var(--r4);overflow:hidden;cursor:pointer;
+  transition:.3s;display:flex;flex-direction:column;
 }
-.car-card:hover{transform:translateY(-4px);box-shadow:var(--sh-lg);border-color:rgba(37,99,235,.15);}
+.car-card:hover{box-shadow:var(--sh-hover);border-color:var(--border);}
 .car-card:active{transform:scale(.98);}
 
-/* ── Image ── */
 .car-img-wrap{
-  position:relative;height:178px;overflow:hidden;
-  background:var(--surf1);
-  flex-shrink:0;
+  width:100%;height:200px;position:relative;background:var(--bg);
+  border-radius:var(--r4);overflow:hidden;
 }
-.car-img-wrap img{
-  width:100%;height:100%;object-fit:cover;
-  transition:transform .4s ease;
-}
-.car-card:hover .car-img-wrap img{transform:scale(1.04);}
+.car-img-wrap img{width:100%;height:100%;object-fit:cover;transition:.4s ease;}
+.car-card:hover .car-img-wrap img{transform:scale(1.05);}
 .car-img-fallback{
-  width:100%;height:100%;
-  display:flex;align-items:center;justify-content:center;
-  flex-direction:column;gap:8px;
-  background:linear-gradient(135deg,var(--surf1),var(--surf2));
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;font-size:3rem;color:var(--border-d);
 }
-.car-img-fallback .fi-icon{font-size:3rem;opacity:.4;}
-.car-img-fallback .fi-name{font-size:.72rem;font-weight:700;color:var(--tx3);}
 
-/* Cat badge */
 .cat-badge{
-  position:absolute;top:10px;right:10px;
-  font-size:.67rem;font-weight:900;
+  position:absolute;top:12px;left:12px;
+  background:rgba(255,255,255,.9);backdrop-filter:blur(4px);
   padding:4px 10px;border-radius:99px;
-  backdrop-filter:blur(8px);
-  border:1px solid;
+  font-size:.65rem;font-weight:900;color:var(--tx0);
+  box-shadow:var(--sh-sm);
 }
-.badge-economy { background:rgba(5,150,105,.12);color:#065f46;border-color:rgba(5,150,105,.2); }
-.badge-family  { background:rgba(37,99,235,.12);color:#1d4ed8;border-color:rgba(37,99,235,.2); }
-.badge-luxury  { background:rgba(124,58,237,.12);color:#6d28d9;border-color:rgba(124,58,237,.2); }
-.badge-wedding { background:rgba(219,39,119,.12);color:#9d174d;border-color:rgba(219,39,119,.2); }
-
-/* Popular badge */
-.pop-badge{
-  position:absolute;top:10px;left:10px;
-  background:var(--amber);color:#fff;
-  font-size:.62rem;font-weight:900;
-  padding:3px 8px;border-radius:99px;
-}
-
-/* Office badge */
 .office-badge{
-  position:absolute;bottom:10px;left:10px;
-  background:rgba(255,255,255,.88);backdrop-filter:blur(6px);
-  border:1px solid rgba(255,255,255,.5);
-  font-size:.63rem;font-weight:800;color:var(--tx2);
-  padding:3px 9px;border-radius:99px;
-  max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  position:absolute;bottom:12px;right:12px;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+  padding:4px 10px;border-radius:99px;
+  font-size:.65rem;font-weight:800;color:var(--white);
 }
 
-/* ── Card body ── */
-.car-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;}
-.car-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
-.car-name{font-size:.98rem;font-weight:900;color:var(--tx0);line-height:1.3;flex:1;}
-.car-orders{
-  font-size:.63rem;font-weight:800;color:var(--tx3);
-  background:var(--surf2);border-radius:99px;padding:2px 7px;
-  flex-shrink:0;margin-top:2px;margin-right:6px;
-  display:flex;align-items:center;gap:3px;
-}
+.car-body{padding:16px 4px 8px;flex:1;display:flex;flex-direction:column;}
+.car-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.car-name{font-size:1.05rem;font-weight:900;color:var(--tx0);line-height:1.3;margin-bottom:4px;}
+.car-rating{font-size:.75rem;font-weight:800;color:var(--tx0);display:flex;align-items:center;gap:4px;}
 
-/* Specs row */
 .car-specs{
-  display:flex;gap:10px;flex-wrap:wrap;
-  margin-bottom:12px;
+  font-size:.75rem;font-weight:600;color:var(--tx2);
+  display:flex;align-items:center;gap:6px;margin-bottom:12px;
 }
-.car-spec{
-  display:flex;align-items:center;gap:4px;
-  font-size:.73rem;font-weight:700;color:var(--tx2);
-  background:var(--surf1);border-radius:99px;
-  padding:3px 9px;
-}
-.car-spec-ic{font-size:.8rem;}
-
-/* Color dot */
 .color-dot{
   display:inline-block;width:10px;height:10px;border-radius:50%;
-  border:1.5px solid rgba(0,0,0,.1);margin-left:4px;
-  vertical-align:middle;
+  border:1px solid var(--border-d);margin-right:2px;vertical-align:middle;
 }
 
-/* Footer */
 .car-footer{
   display:flex;align-items:center;justify-content:space-between;
-  padding-top:11px;border-top:1px solid var(--bdr2);margin-top:auto;
+  margin-top:auto;padding-top:8px;
 }
-.car-price-val{font-size:1.05rem;font-weight:900;color:var(--tx0);}
-.car-price-sub{font-size:.7rem;font-weight:600;color:var(--tx3);}
+.car-price-val{font-size:1.15rem;font-weight:900;color:var(--tx0);}
+.car-price-sub{font-size:.75rem;font-weight:600;color:var(--tx2);}
 .btn-select{
-  background:var(--blue-g);color:#fff;
-  border:none;border-radius:var(--r4);
-  padding:9px 18px;
-  font-size:.78rem;font-weight:900;
-  cursor:pointer;transition:.18s;
-  font-family:'Cairo',sans-serif;
-  box-shadow:0 4px 12px rgba(37,99,235,.25);
+  background:var(--red-g);color:var(--white);border:none;
+  border-radius:var(--r3);padding:10px 20px;font-size:.85rem;font-weight:900;
+  cursor:pointer;transition:.2s;box-shadow:var(--sh-btn);
 }
-.btn-select:hover{box-shadow:var(--sh-blue);}
-.btn-select:active{transform:scale(.93);}
+.btn-select:hover{opacity:.9;}
+.btn-select:active{transform:scale(.95);}
 
-/* ════════════════════════════════════
-   SKELETON LOADING
-════════════════════════════════════ */
-.skeleton{
-  background:var(--surf);border-radius:var(--r6);
-  border:1px solid var(--bdr);overflow:hidden;
-  box-shadow:var(--sh-xs);
-}
-.sk-img{height:178px;background:linear-gradient(90deg,var(--surf2) 25%,var(--surf1) 50%,var(--surf2) 75%);background-size:200% 100%;animation:shimmer 1.6s infinite;}
-.sk-body{padding:14px 16px;}
-.sk-line{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--surf2) 25%,var(--surf1) 50%,var(--surf2) 75%);background-size:200% 100%;animation:shimmer 1.6s infinite;margin-bottom:10px;}
-.sk-line.w80{width:80%;}
-.sk-line.w60{width:60%;}
-.sk-line.w40{width:40%;}
+/* ════ SKELETON ════ */
+.skeleton{border-radius:var(--r4);overflow:hidden;}
+.sk-img{height:200px;border-radius:var(--r4);background:linear-gradient(90deg,var(--bg) 25%,var(--light) 50%,var(--bg) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
+.sk-body{padding:16px 4px;}
+.sk-line{height:14px;border-radius:99px;background:linear-gradient(90deg,var(--bg) 25%,var(--light) 50%,var(--bg) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;margin-bottom:10px;}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-/* ════════════════════════════════════
-   EMPTY / ERROR STATES
-════════════════════════════════════ */
-.empty-state{
-  grid-column:1/-1;text-align:center;
-  padding:60px 20px;
-  background:var(--surf);border-radius:var(--r6);
-  border:1px dashed var(--bdr);
-}
-.empty-icon{font-size:2.8rem;margin-bottom:14px;opacity:.5;}
-.empty-title{font-size:1rem;font-weight:900;color:var(--tx1);margin-bottom:6px;}
-.empty-sub{font-size:.82rem;font-weight:600;color:var(--tx3);line-height:1.7;}
-.btn-retry-main{
-  margin-top:16px;padding:10px 24px;border-radius:var(--r5);
-  background:var(--blue-g);color:#fff;border:none;
-  font-size:.82rem;font-weight:900;cursor:pointer;
-  box-shadow:var(--sh-blue);transition:.18s;
-  font-family:'Cairo',sans-serif;
-}
-
-/* ════════════════════════════════════
-   API STATUS BANNER
-════════════════════════════════════ */
+/* ════ API BANNER ════ */
 .api-banner{
-  display:none;align-items:center;gap:10px;
-  padding:10px 16px;border-radius:var(--r4);
-  font-size:.78rem;font-weight:700;
-  margin-bottom:16px;
-  border:1px solid;
+  display:none;align-items:center;justify-content:center;gap:10px;
+  padding:12px 16px;border-radius:var(--r3);font-size:.8rem;font-weight:800;
+  margin-bottom:20px;text-align:center;
 }
-.api-banner.loading{background:var(--blue-l);border-color:rgba(37,99,235,.2);color:var(--blue);display:flex;}
-.api-banner.fallback{background:var(--amber-l);border-color:rgba(217,119,6,.2);color:var(--amber);display:flex;}
-.api-banner.ok{display:none;}
-.api-spin{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+.api-banner.loading{background:var(--bg);color:var(--tx1);display:flex;}
+.api-banner.fallback{background:var(--red-l);color:var(--red);display:flex;}
+.api-spin{width:16px;height:16px;border:2.5px solid var(--tx3);border-top-color:var(--tx0);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════
-     NAVBAR
-════════════════════════════════════ -->
+<!-- NAVBAR -->
 <nav class="nav">
   <a href="index.html" class="nav-logo">
     <div class="nav-logo-ic">🐋</div>
@@ -365,34 +242,26 @@ button{font-family:'Cairo',sans-serif;}
   <a href="index.html" class="nav-back" id="backBtn">← رجوع</a>
 </nav>
 
-<!-- ════════════════════════════════════
-     HERO
-════════════════════════════════════ -->
+<!-- HERO -->
 <div class="hero">
   <div class="hero-inner">
-    <div class="hero-tag"><div class="hero-tag-dot"></div><span id="heroTag">أسطول مُحدَّث لحظياً</span></div>
     <div class="hero-title" id="heroTitle">اختر سيارتك</div>
-    <div class="hero-sub"   id="heroSub">أسطول حقيقي من شركاء الحوت المعتمدين</div>
+    <div class="hero-sub" id="heroSub">أسطول متكامل وجاهز للانطلاق من مكاتبنا المعتمدة</div>
     <div class="hero-pills" id="heroPills"></div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════
-     FILTERS
-════════════════════════════════════ -->
-<div class="filters" id="filtersBar">
-  <!-- built by JS -->
+<!-- FILTERS BAR -->
+<div class="filters-wrap">
+  <div class="filters" id="filtersBar"></div>
 </div>
 
-<!-- ════════════════════════════════════
-     MAIN
-════════════════════════════════════ -->
+<!-- MAIN -->
 <div class="main">
-
   <!-- API status -->
   <div class="api-banner loading" id="apiBanner">
     <div class="api-spin"></div>
-    <span id="apiBannerTxt">جاري جلب الأسطول من السيرفر...</span>
+    <span id="apiBannerTxt">جاري جلب الأسطول لحظياً من السيرفر...</span>
   </div>
 
   <!-- Results bar -->
@@ -406,487 +275,234 @@ button{font-family:'Cairo',sans-serif;}
 
   <!-- Fleet grid -->
   <div class="fleet-grid" id="fleetGrid">
-    <!-- skeletons -->
-    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w80"></div><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div>
-    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w80"></div><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div>
-    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w80"></div><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div>
-    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w80"></div><div class="sk-line w60"></div><div class="sk-line w40"></div></div></div>
+    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line" style="width:80%"></div><div class="sk-line" style="width:50%"></div></div></div>
+    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line" style="width:80%"></div><div class="sk-line" style="width:50%"></div></div></div>
+    <div class="skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line" style="width:80%"></div><div class="sk-line" style="width:50%"></div></div></div>
   </div>
-
-</div><!-- /main -->
+</div>
 
 <script>
 /* ════════════════════════════════════════════════════════
-   CONFIG — V9.2
+   CONFIG & FALLBACK DATA
 ════════════════════════════════════════════════════════ */
 const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
 const API_TOKEN = "HUT_CLOUD_2026";
 
-/* ════════════════════════════════════════════════════════
-   LOCALIZATION
-════════════════════════════════════════════════════════ */
-const i18n = {
-  ar:{
-    dir:"rtl",
-    logo:"الحوت", back:"← رجوع",
-    heroTitle:"اختر سيارتك",
-    heroSub:"أسطول حقيقي من شركاء الحوت المعتمدين",
-    heroTag:"أسطول مُحدَّث لحظياً",
-    loading:"جاري جلب الأسطول من السيرفر...",
-    fallback:"تعذّر الاتصال — يتم عرض بيانات احتياطية",
-    cats:["الكل","اقتصادية","عائلية","فاخرة VIP","زفاف"],
-    catKeys:["all","economy","family","luxury","wedding"],
-    catBadge:{economy:"اقتصادية",family:"عائلية",luxury:"VIP فاخرة",wedding:"زفاف 💍"},
-    available:"سيارة متاحة",
-    perDay:"/ يوم",
-    cur:"د.ع",
-    select:"احجز الآن",
-    popular:"الأكثر طلباً",
-    trips:"رحلة",
-    cityPH:"المدينة...",
-    emptyTitle:"لا توجد سيارات متاحة",
-    emptySub:"جرّب تغيير الفلتر أو المدينة",
-    retryBtn:"إعادة المحاولة",
-    orders:"رحلة",
-    colorLabel:"اللون:",
-    officeLabel:"المكتب:",
-  },
-  ku:{
-    dir:"rtl",
-    logo:"الحوت", back:"← گەڕانەوە",
-    heroTitle:"ئۆتۆمبێلەکەت هەڵبژێرە",
-    heroSub:"ئۆتۆمبێلی ڕاستەقینە لە هاوبەشانی ئەلحووت",
-    heroTag:"فلۆتی نوێکراوەوە",
-    loading:"خەریکی وەرگرتنی فلۆتە...",
-    fallback:"پەیوەندی تووندابوو — داتای ئەمەرجەنسی",
-    cats:["هەموو","ئابووری","خێزانی","VIP","زەواجی"],
-    catKeys:["all","economy","family","luxury","wedding"],
-    catBadge:{economy:"ئابووری",family:"خێزانی",luxury:"VIP",wedding:"زەواجی 💍"},
-    available:"ئۆتۆمبێل",
-    perDay:"/ ڕۆژ",
-    cur:"د.ع",
-    select:"ببووکرێ",
-    popular:"زیاتر داواکراو",
-    trips:"گەشت",
-    cityPH:"شار...",
-    emptyTitle:"هیچ ئۆتۆمبێلێک نییە",
-    emptySub:"فلتەر یان شار بگۆڕە",
-    retryBtn:"دووبارە هەوڵ بدەرەوە",
-    orders:"گەشت",
-    colorLabel:"ڕەنگ:",
-    officeLabel:"ئۆفیس:",
-  },
-  tr:{
-    dir:"ltr",
-    logo:"AL-HUT", back:"← Geri",
-    heroTitle:"Araçınızı Seçin",
-    heroSub:"Al-Hut onaylı ortaklardan gerçek araçlar",
-    heroTag:"Anlık güncellenen filo",
-    loading:"Araçlar yükleniyor...",
-    fallback:"Bağlantı hatası — yedek veriler gösteriliyor",
-    cats:["Tümü","Ekonomik","Aile","VIP Lüks","Düğün"],
-    catKeys:["all","economy","family","luxury","wedding"],
-    catBadge:{economy:"Ekonomik",family:"Aile",luxury:"VIP Lüks",wedding:"Düğün 💍"},
-    available:"araç mevcut",
-    perDay:"/ gün",
-    cur:"IQD",
-    select:"Seç",
-    popular:"En Popüler",
-    trips:"yolculuk",
-    cityPH:"Şehir...",
-    emptyTitle:"Araç bulunamadı",
-    emptySub:"Filtre veya şehri değiştirin",
-    retryBtn:"Tekrar Dene",
-    orders:"yolculuk",
-    colorLabel:"Renk:",
-    officeLabel:"Ofis:",
-  },
-  en:{
-    dir:"ltr",
-    logo:"AL-HUT", back:"← Back",
-    heroTitle:"Choose Your Vehicle",
-    heroSub:"Real cars from certified Al-Hut partners",
-    heroTag:"Live-updated fleet",
-    loading:"Loading fleet from server...",
-    fallback:"Connection failed — showing fallback data",
-    cats:["All","Economy","Family","VIP Luxury","Wedding"],
-    catKeys:["all","economy","family","luxury","wedding"],
-    catBadge:{economy:"Economy",family:"Family",luxury:"VIP Luxury",wedding:"Wedding 💍"},
-    available:"car(s) available",
-    perDay:"/ day",
-    cur:"IQD",
-    select:"Book Now",
-    popular:"Most Popular",
-    trips:"trip",
-    cityPH:"City...",
-    emptyTitle:"No cars available",
-    emptySub:"Try changing the filter or city",
-    retryBtn:"Retry",
-    orders:"trip",
-    colorLabel:"Color:",
-    officeLabel:"Office:",
-  }
-};
-
-/* ════════════════════════════════════════════════════════
-   FALLBACK DATA
-   (يُستخدم إذا فشل الـ API — نفس بنية السيرفر تماماً)
-════════════════════════════════════════════════════════ */
 const FALLBACK_CARS = [
-  {id:"C001",name:"تويوتا كورولا 2025",cat:"economy",price:45000,color:"أبيض",plate:"كركوك 12345",status:"available",orders:12,office_id:"OFF-0001",photo_url:""},
-  {id:"C002",name:"مرسيدس S-Class",     cat:"luxury", price:150000,color:"أسود",plate:"بغداد 99999",status:"available",orders:5, office_id:"OFF-0002",photo_url:""},
-  {id:"C003",name:"هيونداي توسان",       cat:"family", price:60000, color:"رمادي",plate:"أربيل 11111",status:"available",orders:8, office_id:"OFF-0003",photo_url:""},
-  {id:"C004",name:"تويوتا كامري 2024",   cat:"economy",price:55000,color:"فضي", plate:"كركوك 54321",status:"available",orders:18,office_id:"OFF-0001",photo_url:""},
-  {id:"C005",name:"كيا سورينتو",         cat:"family", price:70000,color:"أزرق",plate:"بغداد 77777",status:"available",orders:3, office_id:"OFF-0004",photo_url:""},
-  {id:"C006",name:"دودج جارجر SRT",      cat:"luxury", price:95000,color:"أحمر",plate:"أربيل 22222",status:"available",orders:7, office_id:"OFF-0005",photo_url:""},
+  {id:"C001",name:"تويوتا كورولا 2025",cat:"economy",price:45000,color:"أبيض",plate:"كركوك",orders:12,office_id:"مكتب النورس"},
+  {id:"C002",name:"مرسيدس S-Class",cat:"luxury",price:150000,color:"أسود",plate:"بغداد",orders:5,office_id:"VIP كلاس"},
+  {id:"C003",name:"هيونداي توسان",cat:"family",price:60000,color:"رمادي",plate:"أربيل",orders:8,office_id:"السيف للسيارات"}
 ];
 
-/* ════════════════════════════════════════════════════════
-   COLOR MAP — converts Arabic/text color to CSS
-════════════════════════════════════════════════════════ */
-const COLOR_MAP = {
-  "أبيض":"#f8fafc","white":"#f8fafc","beyaz":"#f8fafc",
-  "أسود":"#0f172a","black":"#0f172a","siyah":"#0f172a",
-  "رمادي":"#94a3b8","gray":"#94a3b8","gri":"#94a3b8",
-  "أحمر":"#ef4444","red":"#ef4444","kırmızı":"#ef4444",
-  "أزرق":"#2563eb","blue":"#2563eb","mavi":"#2563eb",
-  "فضي":"#cbd5e1","silver":"#cbd5e1","gümüş":"#cbd5e1",
-  "ذهبي":"#d97706","gold":"#d97706","altın":"#d97706",
-  "بني":"#92400e","brown":"#92400e","kahverengi":"#92400e",
-  "بيج":"#d4b896","beige":"#d4b896","bej":"#d4b896",
-  "أخضر":"#059669","green":"#059669","yeşil":"#059669",
-  "برتقالي":"#ea580c","orange":"#ea580c","turuncu":"#ea580c",
-  "بنفسجي":"#7c3aed","purple":"#7c3aed","mor":"#7c3aed",
-};
-
-function getColorCSS(colorStr) {
-  if(!colorStr) return "#94a3b8";
-  const key = String(colorStr).toLowerCase().trim();
-  for(const [k,v] of Object.entries(COLOR_MAP)) {
-    if(key.includes(k.toLowerCase())) return v;
+const i18n = {
+  ar:{
+    dir:"rtl", logo:"الحوت", back:"← العودة للرئيسية",
+    heroTitle:"اختر سيارتك", heroSub:"أسطول متكامل وجاهز للانطلاق",
+    cats:["الكل","اقتصادية","عائلية","فاخرة VIP","زفاف"],
+    catKeys:["all","economy","family","luxury","wedding"],
+    catBadge:{economy:"اقتصادية",family:"عائلية",luxury:"VIP فاخرة",wedding:"للزفاف"},
+    available:"سيارة متاحة", perDay:"/ يوم", cur:"د.ع", select:"حجز", cityPH:"ابحث بالمدينة..."
   }
-  return "#94a3b8";
-}
-
-/* ════════════════════════════════════════════════════════
-   CAT BADGE STYLES
-════════════════════════════════════════════════════════ */
-const CAT_BADGE_CLASS = {
-  economy:"badge-economy",
-  family:"badge-family",
-  luxury:"badge-luxury",
-  wedding:"badge-wedding",
 };
 
 /* ════════════════════════════════════════════════════════
-   STATE
+   STATE & PARAMS
 ════════════════════════════════════════════════════════ */
 const P = new URLSearchParams(location.search);
-const lang    = P.get("lang")  || "ar";
-const type    = P.get("type")  || "personal";
-const days    = P.get("days")  || "1";
-const date    = P.get("date")  || "";
-const t       = i18n[lang] || i18n.ar;
+const lang = P.get("lang") || "ar";
+const type = P.get("type") || "personal";
+const days = P.get("days") || "1";
+const date = P.get("date") || "";
+let cityQuery = P.get("city") || P.get("province") || "";
 
-let allCars   = [];       // raw API response
-let filtered  = [];       // after filter
-let activeCat = "all";    // current category filter
-let cityQuery = P.get("city") || P.get("province") || "كركوك";
+const t = i18n[lang] || i18n.ar;
+let allCars = [];
+let filtered = [];
+let activeCat = "all";
 
 /* ════════════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════════════ */
-function init() {
+window.onload = () => {
   applyLang();
   buildFilters();
   fetchFleet();
-}
+};
 
 function applyLang() {
-  const root = document.getElementById("htmlRoot");
-  root.lang = lang; root.dir = t.dir;
-  document.getElementById("logoTxt").textContent  = t.logo;
-  document.getElementById("backBtn").textContent  = t.back;
-  document.getElementById("heroTitle").textContent = t.heroTitle;
-  document.getElementById("heroSub").textContent   = t.heroSub;
-  document.getElementById("heroTag").textContent   = t.heroTag;
-  document.getElementById("cityInput").placeholder = t.cityPH;
-  document.getElementById("cityInput").value       = cityQuery;
-  document.getElementById("apiBannerTxt").textContent = t.loading;
-
-  // Hero pills
-  const pills = [];
-  if(cityQuery) pills.push(`<div class="h-pill">📍 ${cityQuery}</div>`);
-  if(date)      pills.push(`<div class="h-pill">📅 ${date}</div>`);
-  if(days)      pills.push(`<div class="h-pill">🌙 ${days} ${lang==="ar"?"يوم":lang==="ku"?"ڕۆژ":lang==="tr"?"Gün":"Day"}</div>`);
-  document.getElementById("heroPills").innerHTML = pills.join("");
-
-  // Page title
-  const svcMap = {personal:t.heroTitle,wedding:(lang==="ar"?"سيارات الأعراس":lang==="ku"?"ئۆتۆمبێلی زەواجی":"Wedding Cars")};
+  document.getElementById("htmlRoot").dir = t.dir;
+  document.getElementById("logoTxt").textContent = t.logo;
+  document.getElementById("backBtn").textContent = t.back;
+  
+  const svcMap = {personal:t.heroTitle, wedding:"سيارات الأعراس والمناسبات"};
   document.getElementById("heroTitle").textContent = svcMap[type] || t.heroTitle;
+  document.getElementById("cityInput").placeholder = t.cityPH;
+  if(cityQuery) document.getElementById("cityInput").value = cityQuery;
+
+  const pills = [];
+  if(cityQuery) pills.push(`<div class="h-pill">📍 ${escHtml(cityQuery)}</div>`);
+  if(date)      pills.push(`<div class="h-pill">📅 ${escHtml(date)}</div>`);
+  if(days)      pills.push(`<div class="h-pill">🌙 ${escHtml(days)} يوم</div>`);
+  document.getElementById("heroPills").innerHTML = pills.join("");
 }
 
 function buildFilters() {
   const bar = document.getElementById("filtersBar");
-  const chips = t.catKeys.map((k,i) => {
-    const cnt = k==="all" ? `<span class="fn" id="fn-${k}">0</span>` : `<span class="fn" id="fn-${k}">0</span>`;
-    return `<button class="fc ${k==="all"?"on":""}" id="fc-${k}" onclick="setFilter('${k}')">${t.cats[i]} ${cnt}</button>`;
-  });
-  bar.innerHTML = chips.join("");
+  bar.innerHTML = t.catKeys.map((k,i) => `
+    <button class="fc ${k==="all"?"on":""}" id="fc-${k}" onclick="setFilter('${k}')">
+      ${t.cats[i]} <span class="fn" id="fn-${k}">0</span>
+    </button>
+  `).join("");
 }
 
 /* ════════════════════════════════════════════════════════
-   FETCH FROM API — ?action=getAvailableCars
-   Returns: [{id, name, cat, price, color, plate, status, orders, office_id, photo_url}]
+   FETCH FLEET
 ════════════════════════════════════════════════════════ */
 async function fetchFleet() {
-  setBanner("loading");
+  const banner = document.getElementById("apiBanner");
+  banner.className = "api-banner loading";
+  document.getElementById("apiBannerTxt").textContent = "جاري الاتصال بقاعدة البيانات...";
 
-  // Build API URL — city filter if provided
-  const category = type === "wedding" ? "wedding" : "";
   let url = `${API_URL}?action=getAvailableCars&token=${API_TOKEN}&_t=${Date.now()}`;
-  if(cityQuery) url += `&city=${encodeURIComponent(cityQuery)}`;
-  if(category)  url += `&category=${encodeURIComponent(category)}`;
-
+  
   try {
     const controller = new AbortController();
-    const timeout    = setTimeout(() => controller.abort(), 12000); // 12s timeout
-
-    const res  = await fetch(url, { signal: controller.signal });
+    const timeout = setTimeout(()=>controller.abort(), 10000);
+    const res = await fetch(url, { signal: controller.signal });
     clearTimeout(timeout);
-
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    
+    if(!res.ok) throw new Error("HTTP Error");
     const data = await res.json();
-
-    // Handle both array response and wrapped response
-    const cars = Array.isArray(data) ? data : (data.cars || data.fleet || []);
-
-    if(cars.length === 0 && cityQuery) {
-      // Try without city filter (show all available)
-      const res2  = await fetch(`${API_URL}?action=getAvailableCars&token=${API_TOKEN}&_t=${Date.now()}`);
-      const data2 = await res2.json();
-      allCars = Array.isArray(data2) ? data2 : (data2.cars || data2.fleet || FALLBACK_CARS);
-    } else {
-      allCars = cars.length > 0 ? cars : FALLBACK_CARS;
-    }
-
-    setBanner("ok");
-
+    
+    let cars = Array.isArray(data) ? data : (data.cars || []);
+    if(cars.length === 0) cars = FALLBACK_CARS;
+    
+    allCars = cars;
+    banner.style.display = "none";
   } catch(err) {
-    console.warn("Fleet API error:", err);
     allCars = FALLBACK_CARS;
-    setBanner("fallback");
+    banner.className = "api-banner fallback";
+    document.getElementById("apiBannerTxt").textContent = "تعذر الاتصال بالسيرفر. يتم عرض البيانات المؤقتة.";
   }
 
   updateFilterCounts();
   renderFleet();
 }
 
-function setBanner(state) {
-  const banner = document.getElementById("apiBanner");
-  const txt    = document.getElementById("apiBannerTxt");
-  banner.className = "api-banner " + state;
-  if(state === "loading")  txt.textContent = t.loading;
-  if(state === "fallback") txt.textContent = t.fallback;
-}
-
 /* ════════════════════════════════════════════════════════
-   FILTER LOGIC
+   FILTER & RENDER
 ════════════════════════════════════════════════════════ */
 function updateFilterCounts() {
-  // Count per category
-  const counts = {};
+  const counts = { all: 0 };
   allCars.forEach(c => {
-    counts["all"] = (counts["all"]||0) + 1;
-    const cat = (c.cat||"economy").toLowerCase();
-    counts[cat] = (counts[cat]||0) + 1;
+    if(c.status && c.status !== "available") return;
+    if(cityQuery && c.city && !c.city.includes(cityQuery)) return;
+    
+    counts["all"]++;
+    const cat = (c.cat || "economy").toLowerCase();
+    counts[cat] = (counts[cat] || 0) + 1;
   });
+  
   t.catKeys.forEach(k => {
     const el = document.getElementById("fn-"+k);
     if(el) el.textContent = counts[k] || 0;
   });
 }
 
-function setFilter(cat) {
+window.setFilter = (cat) => {
   activeCat = cat;
   document.querySelectorAll(".fc").forEach(b => b.classList.remove("on"));
   document.getElementById("fc-"+cat)?.classList.add("on");
   renderFleet();
-}
-window.setFilter = setFilter;
+};
 
-function onCityChange(val) {
+window.onCityChange = (val) => {
   cityQuery = val.trim();
-  // Debounce
   clearTimeout(window._cityTimer);
-  window._cityTimer = setTimeout(() => {
-    fetchFleet();
-    // Update hero pill
-    const pill = document.querySelector(".h-pill");
-    if(pill && cityQuery) pill.textContent = "📍 " + cityQuery;
-  }, 600);
-}
-window.onCityChange = onCityChange;
+  window._cityTimer = setTimeout(() => { updateFilterCounts(); renderFleet(); }, 400);
+};
 
-/* ════════════════════════════════════════════════════════
-   RENDER
-════════════════════════════════════════════════════════ */
 function renderFleet() {
   const grid = document.getElementById("fleetGrid");
-
-  // Apply filters
+  
   filtered = allCars.filter(c => {
     if(c.status && c.status !== "available") return false;
-    if(activeCat !== "all") {
-      const carCat = (c.cat||"economy").toLowerCase();
-      if(carCat !== activeCat) return false;
-    }
-    if(type === "wedding") {
-      const carCat = (c.cat||"").toLowerCase();
-      return carCat === "wedding" || carCat === "luxury";
-    }
+    if(cityQuery && c.city && !c.city.includes(cityQuery)) return false;
+    if(activeCat !== "all" && (c.cat||"economy").toLowerCase() !== activeCat) return false;
+    if(type === "wedding" && !["wedding","luxury"].includes((c.cat||"").toLowerCase())) return false;
     return true;
   });
 
-  // Sort: most popular first
   filtered.sort((a,b) => (Number(b.orders)||0) - (Number(a.orders)||0));
-
-  // Update count
-  document.getElementById("resultsCount").innerHTML =
-    `<strong>${filtered.length}</strong> ${t.available}`;
+  
+  document.getElementById("resultsCount").innerHTML = `<strong>${filtered.length}</strong> ${t.available}`;
 
   if(filtered.length === 0) {
-    grid.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">🐋</div>
-        <div class="empty-title">${t.emptyTitle}</div>
-        <div class="empty-sub">${t.emptySub}</div>
-        <button class="btn-retry-main" onclick="fetchFleet()">${t.retryBtn}</button>
-      </div>`;
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;background:var(--white);border:1px dashed var(--border-d);border-radius:var(--r5);"><div style="font-size:3rem;margin-bottom:10px;opacity:.5">🚗</div><h3 style="font-weight:900;color:var(--tx1);">لا توجد سيارات متاحة</h3><p style="color:var(--tx2);font-size:.85rem;">حاول تعديل خيارات البحث أو المدينة</p></div>`;
     return;
   }
 
-  grid.innerHTML = filtered.map((car, idx) => buildCard(car, idx)).join("");
+  grid.innerHTML = filtered.map(c => buildCard(c)).join("");
 }
 
-/* ════════════════════════════════════════════════════════
-   BUILD CARD HTML
-════════════════════════════════════════════════════════ */
-function buildCard(car, idx) {
-  const name      = String(car.name||"سيارة").substring(0,40);
-  const price     = Math.round(Number(car.price)||0);
-  const cat       = (car.cat||"economy").toLowerCase();
-  const color     = car.color || "";
-  const plate     = car.plate || "";
-  const orders    = Number(car.orders)||0;
-  const photoUrl  = car.photo_url || "";
-  const officeId  = car.office_id || "";
-  const isPopular = idx === 0 && orders > 0;
-
-  const badgeClass = CAT_BADGE_CLASS[cat] || "badge-economy";
-  const catLabel   = t.catBadge?.[cat] || cat;
-  const colorCSS   = getColorCSS(color);
-
-  // Image section
-  const imgHtml = photoUrl
-    ? `<img src="${escHtml(photoUrl)}" alt="${escHtml(name)}" loading="lazy" onerror="this.parentNode.innerHTML=fallbackImgHtml('${escHtml(name)}','${escHtml(cat)}')">`
-    : fallbackImgHtml(name, cat);
-
-  const officeHtml = officeId
-    ? `<div class="office-badge">🏢 ${escHtml(officeId)}</div>`
-    : "";
-
-  const ordersHtml = orders > 0
-    ? `<div class="car-orders">🔥 ${orders} ${t.orders}</div>`
-    : "";
-
-  const colorHtml = color
-    ? `<div class="car-spec"><span class="car-spec-ic">🎨</span><span>${color}</span><span class="color-dot" style="background:${colorCSS}"></span></div>`
-    : "";
-
-  const plateHtml = plate
-    ? `<div class="car-spec"><span class="car-spec-ic">🪪</span><span style="font-family:'IBM Plex Mono',monospace;font-size:.7rem">${escHtml(plate)}</span></div>`
-    : "";
-
+function buildCard(car) {
+  const name  = car.name || "سيارة غير مسماة";
+  const price = Number(car.price)||0;
+  const cat   = (car.cat||"economy").toLowerCase();
+  const color = car.color || "";
+  const plate = car.plate || "";
+  const offId = car.office_id || "";
+  
+  const imgHtml = car.photo_url 
+    ? `<img src="${escHtml(car.photo_url)}" loading="lazy">` 
+    : `<div class="car-img-fallback">🚗</div>`;
+    
   return `
-  <div class="car-card" onclick="selectCar(${JSON.stringify(car)})">
+  <div class="car-card" onclick='selectCar(${JSON.stringify(car).replace(/'/g, "&#39;")})'>
     <div class="car-img-wrap">
       ${imgHtml}
-      <div class="cat-badge ${badgeClass}">${catLabel}</div>
-      ${isPopular ? `<div class="pop-badge">⭐ ${t.popular}</div>` : ""}
-      ${officeHtml}
+      <div class="cat-badge">${t.catBadge[cat]||cat}</div>
+      ${offId ? `<div class="office-badge">🏢 ${escHtml(offId)}</div>` : ''}
     </div>
     <div class="car-body">
       <div class="car-top">
         <div class="car-name">${escHtml(name)}</div>
-        ${ordersHtml}
+        <div class="car-rating">★ 5.0</div>
       </div>
       <div class="car-specs">
-        ${colorHtml}
-        ${plateHtml}
+        ${color ? `<span>🎨 ${escHtml(color)}</span>` : ''}
+        ${plate ? `<span>📍 ${escHtml(plate)}</span>` : ''}
       </div>
       <div class="car-footer">
         <div>
-          <div class="car-price-val">${price.toLocaleString("ar-EG")}</div>
-          <div class="car-price-sub">${t.cur} ${t.perDay}</div>
+          <span class="car-price-val">${price.toLocaleString("ar-EG")}</span>
+          <span class="car-price-sub">${t.cur} ${t.perDay}</span>
         </div>
-        <button class="btn-select" onclick="event.stopPropagation();selectCar(${JSON.stringify(car)})">${t.select}</button>
+        <button class="btn-select">${t.select}</button>
       </div>
     </div>
   </div>`;
 }
 
 /* ════════════════════════════════════════════════════════
-   FALLBACK IMAGE HTML (no photo_url)
+   SELECT CAR & REDIRECT
 ════════════════════════════════════════════════════════ */
-function fallbackImgHtml(name, cat) {
-  const catIcons = { economy:"🚗", family:"🚙", luxury:"🏎️", wedding:"💍" };
-  const icon = catIcons[cat] || "🚗";
-  const shortName = String(name).split(" ").slice(0,2).join(" ");
-  return `<div class="car-img-fallback"><div class="fi-icon">${icon}</div><div class="fi-name">${escHtml(shortName)}</div></div>`;
-}
-window.fallbackImgHtml = fallbackImgHtml;
-
-/* ════════════════════════════════════════════════════════
-   SELECT CAR → Navigate to addons.html
-   Passes: type, lang, city, days, date, car (name), basePrice, car_id, office_id
-════════════════════════════════════════════════════════ */
-function selectCar(car) {
-  const name  = encodeURIComponent(car.name || "");
-  const price = car.price || 0;
-  const id    = encodeURIComponent(car.id   || "");
-  const offId = encodeURIComponent(car.office_id || "");
-  const city  = encodeURIComponent(cityQuery || P.get("city") || "");
-
+window.selectCar = (car) => {
   const dest = `addons.html`
     + `?type=${encodeURIComponent(type)}`
     + `&lang=${encodeURIComponent(lang)}`
-    + `&city=${city}`
+    + `&city=${encodeURIComponent(cityQuery || car.city || "")}`
     + `&days=${encodeURIComponent(days)}`
     + `&date=${encodeURIComponent(date)}`
-    + `&car=${name}`
-    + `&basePrice=${price}`
-    + `&car_id=${id}`
-    + `&office_id=${offId}`;
+    + `&car=${encodeURIComponent(car.name)}`
+    + `&basePrice=${car.price||0}`
+    + `&car_id=${encodeURIComponent(car.id||"")}`
+    + `&office_id=${encodeURIComponent(car.office_id||"")}`;
 
   window.location.href = dest;
-}
+};
 
-/* ════════════════════════════════════════════════════════
-   HELPERS
-════════════════════════════════════════════════════════ */
-function escHtml(s) {
-  return String(s||"")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;");
-}
-
-/* ════════════════════════════════════════════════════════
-   BOOT
-════════════════════════════════════════════════════════ */
-window.onload = init;
+function escHtml(s) { return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 </script>
 </body>
 </html>

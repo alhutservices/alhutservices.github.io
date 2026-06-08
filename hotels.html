@@ -1,289 +1,1890 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlTag">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فنادق الحوت | أفضل فنادق العراق</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #FF385C;
-            --primary-dark: #E31C5F;
-            --dark: #222222;
-            --mid: #717171;
-            --light: #DDDDDD;
-            --bg: #F7F7F7;
-            --white: #FFFFFF;
-            --shadow: 0 6px 20px rgba(0,0,0,0.12);
-            --radius: 16px;
-        }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Tajawal',sans-serif; background:var(--bg); color:var(--dark); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover">
+<meta name="theme-color" content="#FF385C">
+<meta name="description" content="اكتشف أفضل الفنادق في العراق عبر منصة الحوت">
+<title>فنادق الحوت | ابحث واحجز</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-        .navbar {
-            background:white;
-            border-bottom:1px solid var(--light);
-            padding:0 24px;
-            height:72px;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            position:sticky; top:0; z-index:100;
-            box-shadow: 0 1px 12px rgba(0,0,0,0.06);
-        }
-        .logo { font-size:1.3rem; font-weight:900; color:var(--primary); text-decoration:none; display:flex; align-items:center; gap:8px; }
-        .back-btn {
-            display:flex; align-items:center; gap:8px;
-            color:var(--dark); text-decoration:none;
-            font-weight:700; font-size:0.9rem;
-            padding:10px 18px; border-radius:12px;
-            border:1.5px solid var(--light);
-            transition:0.2s;
-        }
-        .back-btn:hover { border-color:var(--dark); }
+<style>
+/* ════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — Al-Hut Hotels · Airbnb-Inspired Clean Light
+   #FF385C Primary · #F7F7F7 BG · #00A699 Success
+════════════════════════════════════════════════════════════════ */
+:root{
+  --bg:      #F7F7F7;
+  --white:   #FFFFFF;
+  --border:  #DDDDDD;
+  --light:   #EEEEEE;
+  --red:     #FF385C;
+  --red-d:   #E31C5F;
+  --red-l:   #FFF0F2;
+  --red-m:   rgba(255,56,92,.12);
+  --red-g:   linear-gradient(135deg,#FF385C,#E31C5F);
+  --green:   #00A699;
+  --green-l: #E6F7F6;
+  --green-m: rgba(0,166,153,.12);
+  --amber:   #FC642D;
+  --amber-l: #FFF3EE;
+  --blue:    #0066CC;
+  --blue-l:  #EEF5FF;
+  --gold:    #F5A623;
+  --gold-l:  #FFF8EC;
+  --tx0:     #222222;
+  --tx1:     #484848;
+  --tx2:     #717171;
+  --tx3:     #AAAAAA;
+  --tx4:     #CCCCCC;
+  --sh-xs:   0 1px 2px rgba(0,0,0,.06);
+  --sh-sm:   0 2px 8px rgba(0,0,0,.07);
+  --sh-card: 0 1px 2px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.06);
+  --sh-lg:   0 8px 32px rgba(0,0,0,.12);
+  --sh-modal:0 16px 48px rgba(0,0,0,.18),0 4px 12px rgba(0,0,0,.1);
+  --sh-btn:  0 4px 14px rgba(255,56,92,.35);
+  --r2:8px;--r3:12px;--r4:16px;--r5:20px;--r6:24px;--r8:32px;
+  --nav-h:68px;
+  --header-h:72px;
+}
 
-        .page-hero {
-            background:linear-gradient(135deg, #fff5f7 0%, #ffffff 100%);
-            padding:40px 24px;
-            text-align:center;
-            border-bottom:1px solid var(--light);
-        }
-        .page-hero h1 { font-size:2rem; font-weight:900; margin-bottom:8px; }
-        .page-hero p { color:var(--mid); font-size:1rem; }
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{
+  min-height:100vh;background:var(--bg);
+  font-family:'Cairo',sans-serif;color:var(--tx0);
+  overflow-x:hidden;-webkit-tap-highlight-color:transparent;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+.dn{display:none!important;}
+button,input,select,textarea{font-family:'Cairo',sans-serif;color:inherit;}
 
-        .filters-bar {
-            background:white;
-            border-bottom:1px solid var(--light);
-            padding:16px 24px;
-            display:flex;
-            gap:12px;
-            overflow-x:auto;
-            -webkit-overflow-scrolling:touch;
-        }
-        .filter-pill {
-            padding:10px 20px;
-            border-radius:24px;
-            border:1.5px solid var(--light);
-            background:white;
-            font-weight:700;
-            font-size:0.85rem;
-            cursor:pointer;
-            white-space:nowrap;
-            transition:0.2s;
-            display:flex; align-items:center; gap:6px;
-        }
-        .filter-pill:hover { border-color:var(--dark); }
-        .filter-pill.active {
-            background:var(--dark);
-            color:white;
-            border-color:var(--dark);
-        }
+/* ════ TOASTS ════ */
+#toasts{
+  position:fixed;top:max(16px,env(safe-area-inset-top));
+  left:50%;transform:translateX(-50%);
+  z-index:99999;display:flex;flex-direction:column;gap:8px;
+  width:min(96%,380px);pointer-events:none;
+}
+.ti{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r4);padding:12px 16px;box-shadow:var(--sh-modal);
+  display:flex;align-items:center;gap:9px;font-size:.83rem;font-weight:700;
+  animation:tIn .35s cubic-bezier(.34,1.56,.64,1);pointer-events:auto;
+}
+.ti-ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.ts .ti-ic{background:var(--green-l);color:var(--green);}
+.te .ti-ic{background:var(--red-l);color:var(--red);}
+.ti-msg{flex:1;color:var(--tx1);}
+@keyframes tIn{from{opacity:0;transform:translateY(-10px) scale(.95)}to{opacity:1;transform:none}}
 
-        .main-content {
-            max-width:1200px;
-            margin:0 auto;
-            padding:32px 24px;
-        }
+/* ════ LOADING ════ */
+#splash{
+  position:fixed;inset:0;z-index:80000;
+  background:var(--white);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;
+}
+.sp-logo{
+  width:80px;height:80px;border-radius:24px;background:var(--red-g);
+  display:flex;align-items:center;justify-content:center;font-size:38px;
+  box-shadow:var(--sh-btn);animation:spP 1.4s ease-in-out infinite;
+}
+@keyframes spP{0%,100%{transform:scale(1);box-shadow:var(--sh-btn)}50%{transform:scale(1.06);box-shadow:0 8px 28px rgba(255,56,92,.45)}}
+.sp-bar{width:140px;height:3px;background:var(--border);border-radius:99px;overflow:hidden;}
+.sp-fill{height:100%;background:var(--red-g);border-radius:99px;animation:spF 1.4s ease-in-out infinite;}
+@keyframes spF{0%{width:0%;margin-left:0}50%{width:55%;margin-left:20%}100%{width:0%;margin-left:100%}}
+.sp-txt{font-size:.78rem;font-weight:700;color:var(--tx2);}
 
-        .results-info {
-            font-size:0.9rem;
-            color:var(--mid);
-            margin-bottom:24px;
-            font-weight:600;
-        }
-        .results-info strong { color:var(--dark); }
+/* ════ STICKY HEADER ════ */
+.site-header{
+  position:sticky;top:0;z-index:900;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid var(--border);
+  height:var(--header-h);
+  display:flex;align-items:center;padding:0 max(20px,env(safe-area-inset-left));
+  gap:14px;
+}
+.header-logo{
+  display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;
+}
+.header-logo-ic{
+  width:38px;height:38px;border-radius:11px;background:var(--red-g);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  box-shadow:var(--sh-btn);flex-shrink:0;
+}
+.header-logo-nm{font-size:.9rem;font-weight:900;color:var(--tx0);}
+.header-logo-sub{font-size:.6rem;font-weight:700;color:var(--tx2);}
 
-        .hotels-grid {
-            display:grid;
-            grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
-            gap:28px;
-        }
+/* search bar in header */
+.header-search{
+  flex:1;max-width:520px;
+  background:var(--bg);border:1.5px solid var(--border);border-radius:99px;
+  display:flex;align-items:center;gap:8px;padding:0 14px;
+  transition:.2s;cursor:text;
+  height:42px;
+}
+.header-search:focus-within{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);background:var(--white);}
+.header-search-ic{color:var(--tx3);font-size:15px;flex-shrink:0;}
+.header-search input{
+  flex:1;border:none;background:transparent;font-family:'Cairo',sans-serif;
+  font-size:.84rem;font-weight:700;color:var(--tx0);outline:none;
+}
+.header-search input::placeholder{color:var(--tx3);font-weight:500;}
+.header-filter-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:0 14px;height:38px;border-radius:99px;
+  border:1.5px solid var(--border);background:var(--white);
+  font-size:.78rem;font-weight:800;color:var(--tx1);cursor:pointer;
+  transition:.18s;white-space:nowrap;flex-shrink:0;
+}
+.header-filter-btn:hover{border-color:var(--red);color:var(--red);}
+.header-filter-btn .filt-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--red);
+  display:none;
+}
+.header-filter-btn.active .filt-dot{display:block;}
+.header-filter-btn.active{border-color:var(--red);color:var(--red);background:var(--red-l);}
 
-        .hotel-card {
-            background:white;
-            border-radius:var(--radius);
-            overflow:hidden;
-            transition:0.25s;
-            border:1px solid var(--light);
-            cursor:pointer;
-            text-decoration:none;
-            color:var(--dark);
-            display:block;
-        }
-        .hotel-card:hover {
-            box-shadow:var(--shadow);
-            transform:translateY(-4px);
-        }
-        .hotel-img {
-            width:100%;
-            height:200px;
-            object-fit:cover;
-            background:linear-gradient(135deg, #f0f0f0, #e0e0e0);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:4rem;
-        }
-        .hotel-body { padding:16px; }
-        .hotel-rating {
-            display:flex; align-items:center; gap:4px;
-            font-size:0.82rem; font-weight:700; margin-bottom:6px;
-            color:var(--dark);
-        }
-        .hotel-rating i { color:#FF385C; }
-        .hotel-name { font-size:1rem; font-weight:800; margin-bottom:4px; }
-        .hotel-location { font-size:0.85rem; color:var(--mid); margin-bottom:12px; display:flex; align-items:center; gap:4px; }
-        .hotel-features {
-            display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;
-        }
-        .feature-tag {
-            background:var(--bg);
-            padding:4px 10px;
-            border-radius:8px;
-            font-size:0.75rem;
-            font-weight:700;
-            color:var(--mid);
-        }
-        .hotel-footer {
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            padding-top:12px;
-            border-top:1px solid var(--bg);
-        }
-        .hotel-price { font-size:1rem; font-weight:900; }
-        .hotel-price span { font-size:0.8rem; font-weight:500; color:var(--mid); }
-        .book-btn {
-            background:var(--primary);
-            color:white;
-            border:none;
-            padding:10px 20px;
-            border-radius:12px;
-            font-weight:800;
-            font-size:0.85rem;
-            cursor:pointer;
-            transition:0.2s;
-        }
-        .book-btn:hover { background:var(--primary-dark); }
+/* ════ HERO SECTION ════ */
+.hero{
+  background:var(--red-g);
+  padding:48px 20px 80px;
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='18'/%3E%3C/g%3E%3C/svg%3E");
+}
+.hero::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;
+  height:48px;background:var(--bg);border-radius:40px 40px 0 0;
+}
+.hero-inner{position:relative;z-index:1;}
+.hero-title{
+  font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;color:#fff;
+  letter-spacing:-.03em;margin-bottom:8px;line-height:1.2;
+}
+.hero-sub{font-size:clamp(.8rem,2vw,.95rem);font-weight:600;color:rgba(255,255,255,.75);margin-bottom:28px;}
 
-        @media(max-width:640px) {
-            .hotels-grid { grid-template-columns:1fr; }
-        }
-    </style>
+/* hero search pill */
+.hero-search-wrap{
+  max-width:560px;margin:0 auto;
+  background:var(--white);border-radius:var(--r6);
+  box-shadow:var(--sh-lg);overflow:hidden;
+}
+.hero-search-row{display:flex;gap:0;}
+.hero-search-field{
+  flex:1;display:flex;align-items:center;gap:9px;
+  padding:14px 18px;border-left:1px solid var(--border);cursor:text;
+}
+.hero-search-field:last-of-type{border-left:none;}
+.hsf-ic{font-size:16px;flex-shrink:0;color:var(--tx2);}
+.hsf-lbl{font-size:.62rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:2px;}
+.hsf-val{font-size:.84rem;font-weight:700;color:var(--tx0);}
+.hsf-val input{
+  border:none;background:transparent;font-family:'Cairo',sans-serif;
+  font-size:.84rem;font-weight:700;color:var(--tx0);outline:none;width:100%;
+}
+.hsf-val input::placeholder{color:var(--tx3);font-weight:500;}
+.hero-search-btn{
+  background:var(--red-g);color:#fff;border:none;
+  padding:14px 22px;font-size:.88rem;font-weight:900;cursor:pointer;
+  display:flex;align-items:center;gap:7px;font-family:'Cairo',sans-serif;
+  transition:.18s;flex-shrink:0;
+}
+.hero-search-btn:hover{opacity:.92;}
+.hero-search-btn:active{transform:scale(.97);}
+
+/* hero quick-filter pills */
+.hero-filters{
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:18px;
+}
+.hf-pill{
+  padding:6px 14px;border-radius:99px;
+  background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);
+  color:rgba(255,255,255,.9);font-size:.74rem;font-weight:800;
+  cursor:pointer;transition:.18s;backdrop-filter:blur(4px);
+  display:flex;align-items:center;gap:5px;
+}
+.hf-pill:hover{background:rgba(255,255,255,.3);}
+.hf-pill.on{background:#fff;color:var(--red);border-color:#fff;}
+
+/* ════ CITY STRIP ════ */
+.city-strip{padding:20px 0 4px;overflow-x:auto;scrollbar-width:none;}
+.city-strip::-webkit-scrollbar{display:none;}
+.city-inner{
+  display:flex;gap:10px;padding:0 20px;
+  width:max-content;
+}
+.city-chip{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:12px 16px;border-radius:var(--r4);background:var(--white);
+  border:2px solid var(--border);cursor:pointer;transition:.18s;
+  min-width:72px;
+}
+.city-chip:active{transform:scale(.95);}
+.city-chip.on{border-color:var(--red);background:var(--red-l);}
+.city-ic{font-size:1.5rem;}
+.city-nm{font-size:.7rem;font-weight:800;color:var(--tx1);}
+.city-ct{font-size:.6rem;font-weight:600;color:var(--tx2);}
+.city-chip.on .city-nm{color:var(--red);}
+
+/* ════ SECTION HEADERS ════ */
+.sec-h{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 20px 12px;
+}
+.sec-h-left{display:flex;flex-direction:column;}
+.sec-h-title{font-size:1.05rem;font-weight:900;color:var(--tx0);letter-spacing:-.01em;}
+.sec-h-sub{font-size:.72rem;font-weight:600;color:var(--tx2);margin-top:2px;}
+.sec-h-link{
+  font-size:.76rem;font-weight:800;color:var(--red);
+  background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:4px;white-space:nowrap;
+}
+
+/* ════ STARS ════ */
+.stars{display:flex;gap:2px;align-items:center;}
+.star{color:var(--gold);font-size:.75rem;}
+.star.empty{color:var(--border);}
+.stars-count{font-size:.7rem;font-weight:700;color:var(--tx2);margin-right:3px;}
+
+/* ════ HORIZONTAL SCROLL HOTEL CARDS ════ */
+.hscroll{overflow-x:auto;scrollbar-width:none;padding:0 20px 16px;}
+.hscroll::-webkit-scrollbar{display:none;}
+.hscroll-inner{display:flex;gap:14px;width:max-content;}
+
+/* ────── FEATURED CARD (large) ────── */
+.hotel-feat-card{
+  width:290px;border-radius:var(--r5);overflow:hidden;
+  background:var(--white);box-shadow:var(--sh-card);
+  transition:.22s;cursor:pointer;flex-shrink:0;
+  border:1px solid var(--border);
+}
+.hotel-feat-card:hover{box-shadow:var(--sh-lg);transform:translateY(-3px);}
+.hfc-img{
+  width:100%;height:190px;overflow:hidden;position:relative;
+}
+.hfc-img img{width:100%;height:100%;object-fit:cover;transition:.3s;}
+.hotel-feat-card:hover .hfc-img img{transform:scale(1.04);}
+.hfc-badge{
+  position:absolute;top:10px;right:10px;
+  background:rgba(255,255,255,.94);backdrop-filter:blur(8px);
+  padding:4px 10px;border-radius:99px;
+  font-size:.65rem;font-weight:900;color:var(--tx0);
+  display:flex;align-items:center;gap:4px;
+}
+.hfc-fav{
+  position:absolute;top:10px;left:10px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(6px);
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:15px;transition:.18s;
+}
+.hfc-fav:hover{background:var(--red-l);}
+.hfc-fav.loved{color:var(--red);}
+.hfc-body{padding:13px;}
+.hfc-city{font-size:.65rem;font-weight:800;color:var(--tx2);margin-bottom:3px;display:flex;align-items:center;gap:4px;}
+.hfc-name{font-size:.94rem;font-weight:900;color:var(--tx0);margin-bottom:4px;line-height:1.3;}
+.hfc-stars{margin-bottom:7px;}
+.hfc-feat{
+  display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px;
+}
+.hfc-feat-tag{
+  font-size:.62rem;font-weight:800;
+  background:var(--green-l);color:var(--green);
+  padding:2px 8px;border-radius:99px;
+}
+.hfc-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:9px;border-top:1px solid var(--border);
+}
+.hfc-price{font-size:.82rem;font-weight:900;color:var(--tx0);}
+.hfc-price span{font-size:1.05rem;color:var(--red);}
+.hfc-price-unit{font-size:.62rem;font-weight:600;color:var(--tx2);}
+.hfc-avail{
+  font-size:.64rem;font-weight:800;color:var(--green);
+  background:var(--green-l);padding:3px 9px;border-radius:99px;
+  display:flex;align-items:center;gap:4px;
+}
+
+/* ────── GRID HOTEL CARD (main list) ────── */
+.hotels-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:18px;
+  padding:4px 20px 24px;
+}
+.hotel-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r5);overflow:hidden;
+  box-shadow:var(--sh-card);transition:.22s;cursor:pointer;
+  display:flex;flex-direction:column;
+}
+.hotel-card:hover{box-shadow:var(--sh-lg);transform:translateY(-3px);}
+.hc-img{width:100%;height:200px;position:relative;overflow:hidden;flex-shrink:0;}
+.hc-img img{width:100%;height:100%;object-fit:cover;transition:.3s;}
+.hotel-card:hover .hc-img img{transform:scale(1.04);}
+.hc-img-placeholder{
+  width:100%;height:100%;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  font-size:3rem;color:var(--tx4);
+}
+/* top badges on card */
+.hc-badges{position:absolute;top:10px;right:10px;display:flex;gap:5px;flex-direction:column;}
+.hc-badge{
+  padding:4px 10px;border-radius:99px;font-size:.63rem;font-weight:900;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(8px);color:var(--tx0);
+}
+.hc-badge.new{background:var(--red);color:#fff;}
+.hc-badge.offer{background:var(--amber);color:#fff;}
+.hc-fav{
+  position:absolute;top:10px;left:10px;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(6px);
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:16px;transition:.18s;
+}
+.hc-fav:hover{transform:scale(1.1);}
+.hc-fav.loved{color:var(--red);}
+/* rooms count tag */
+.hc-rooms-tag{
+  position:absolute;bottom:10px;right:10px;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(6px);
+  color:#fff;font-size:.63rem;font-weight:800;
+  padding:3px 9px;border-radius:99px;
+}
+
+.hc-body{padding:14px;flex:1;display:flex;flex-direction:column;}
+.hc-city{font-size:.65rem;font-weight:800;color:var(--tx2);display:flex;align-items:center;gap:4px;margin-bottom:4px;}
+.hc-name{font-size:.98rem;font-weight:900;color:var(--tx0);margin-bottom:5px;line-height:1.3;}
+.hc-stars{margin-bottom:6px;}
+/* features row */
+.hc-feats{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+.hc-feat{
+  font-size:.63rem;font-weight:800;
+  background:var(--bg);border:1px solid var(--border);
+  padding:3px 9px;border-radius:99px;color:var(--tx1);
+  display:flex;align-items:center;gap:3px;
+}
+/* rooms preview strip */
+.hc-rooms{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;scrollbar-width:none;}
+.hc-rooms::-webkit-scrollbar{display:none;}
+.hc-room-pill{
+  flex-shrink:0;background:var(--green-l);border:1px solid rgba(0,166,153,.15);
+  border-radius:var(--r2);padding:5px 10px;text-align:center;min-width:80px;
+}
+.hcp-type{font-size:.6rem;font-weight:900;color:var(--green);text-transform:uppercase;letter-spacing:1px;}
+.hcp-price{font-size:.82rem;font-weight:900;color:var(--tx0);margin-top:1px;}
+.hcp-unit{font-size:.57rem;font-weight:600;color:var(--tx2);}
+
+.hc-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:10px;border-top:1px solid var(--border);margin-top:auto;
+}
+.hc-price-from{font-size:.7rem;font-weight:600;color:var(--tx2);}
+.hc-price-val{font-size:1.05rem;font-weight:900;color:var(--red);}
+.hc-price-unit{font-size:.63rem;font-weight:600;color:var(--tx2);}
+.hc-cta{
+  padding:9px 16px;background:var(--red-g);color:#fff;border:none;
+  border-radius:var(--r3);font-size:.76rem;font-weight:900;cursor:pointer;
+  box-shadow:var(--sh-btn);transition:.18s;font-family:'Cairo',sans-serif;
+}
+.hc-cta:hover{opacity:.9;}
+.hc-cta:active{transform:scale(.95);}
+
+/* ════ EMPTY / LOADING STATES ════ */
+.hotels-empty{
+  grid-column:1/-1;background:var(--white);border:1.5px dashed var(--border);
+  border-radius:var(--r5);padding:52px 24px;text-align:center;
+}
+.he-ic{font-size:2.4rem;margin-bottom:12px;opacity:.4;}
+.he-title{font-size:.95rem;font-weight:800;color:var(--tx1);margin-bottom:5px;}
+.he-sub{font-size:.76rem;font-weight:600;color:var(--tx2);}
+.hotels-loading{grid-column:1/-1;}
+.hotel-skeleton{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r5);overflow:hidden;
+}
+.sk-img{height:200px;animation:shimmer 1.5s infinite;}
+.sk-body{padding:14px;}
+.sk-line{
+  height:13px;border-radius:6px;margin-bottom:9px;
+  animation:shimmer 1.5s infinite;
+}
+.sk-line.w100{width:100%;}
+.sk-line.w70{width:70%;}
+.sk-line.w50{width:50%;}
+@keyframes shimmer{
+  0%{background:linear-gradient(90deg,var(--bg) 0%,var(--light) 50%,var(--bg) 100%);background-size:200% 100%;background-position:200% 0}
+  100%{background:linear-gradient(90deg,var(--bg) 0%,var(--light) 50%,var(--bg) 100%);background-size:200% 100%;background-position:-200% 0}
+}
+
+/* ════ RESULTS BAR ════ */
+.results-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 20px 4px;flex-wrap:wrap;gap:8px;
+}
+.results-count{font-size:.8rem;font-weight:700;color:var(--tx1);}
+.results-count strong{color:var(--tx0);font-weight:900;}
+.sort-sel{
+  background:var(--white);border:1.5px solid var(--border);border-radius:var(--r2);
+  padding:6px 11px;font-size:.76rem;font-weight:700;color:var(--tx1);outline:none;cursor:pointer;
+}
+
+/* ════ FILTER DRAWER ════ */
+#filterDrawer{
+  position:fixed;inset:0;z-index:50000;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.fd-overlay{
+  position:absolute;inset:0;background:rgba(34,34,34,.38);
+  backdrop-filter:blur(4px);
+}
+.fd-sheet{
+  position:relative;z-index:1;
+  background:var(--white);width:100%;max-width:580px;
+  border-radius:var(--r6) var(--r6) 0 0;
+  max-height:88vh;overflow-y:auto;
+  box-shadow:var(--sh-modal);
+  animation:fdUp .32s cubic-bezier(.34,1.15,.64,1);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+@keyframes fdUp{from{transform:translateY(100%)}to{transform:none}}
+.fd-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:12px auto 0;}
+.fd-head{
+  padding:14px 20px 12px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--white);z-index:1;
+}
+.fd-title{font-size:.95rem;font-weight:900;color:var(--tx0);}
+.fd-reset{background:none;border:none;font-size:.78rem;font-weight:800;color:var(--red);cursor:pointer;}
+.fd-body{padding:16px 20px;}
+.fd-sec{margin-bottom:20px;}
+.fd-sec-t{font-size:.78rem;font-weight:900;color:var(--tx0);margin-bottom:11px;}
+/* city filter grid */
+.fd-city-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+.fd-city{
+  background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);
+  padding:9px 6px;text-align:center;cursor:pointer;transition:.16s;
+}
+.fd-city.on{border-color:var(--red);background:var(--red-l);}
+.fd-city-nm{font-size:.72rem;font-weight:800;color:var(--tx1);}
+.fd-city.on .fd-city-nm{color:var(--red);}
+/* stars filter */
+.fd-stars-row{display:flex;gap:7px;flex-wrap:wrap;}
+.fd-star-opt{
+  padding:6px 14px;border-radius:99px;border:1.5px solid var(--border);
+  background:var(--white);font-size:.74rem;font-weight:800;color:var(--tx2);
+  cursor:pointer;transition:.16s;display:flex;align-items:center;gap:4px;
+}
+.fd-star-opt.on{border-color:var(--gold);background:var(--gold-l);color:var(--tx0);}
+/* price range */
+.fd-price-range{display:flex;gap:10px;}
+.fd-price-field{flex:1;}
+.fd-price-lbl{font-size:.64rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;display:block;}
+.fd-price-in{
+  width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);
+  padding:9px 12px;font-size:.84rem;font-weight:700;color:var(--tx0);outline:none;transition:.2s;
+}
+.fd-price-in:focus{border-color:var(--red);}
+/* amenities checkboxes */
+.fd-amen-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;}
+.fd-amen{
+  display:flex;align-items:center;gap:8px;padding:9px 11px;
+  background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);cursor:pointer;transition:.16s;
+}
+.fd-amen.on{border-color:var(--green);background:var(--green-l);}
+.fd-amen-ic{font-size:15px;flex-shrink:0;}
+.fd-amen-nm{font-size:.74rem;font-weight:800;color:var(--tx1);}
+.fd-amen.on .fd-amen-nm{color:var(--green);}
+/* apply button */
+.fd-apply{
+  width:100%;padding:14px;background:var(--red-g);color:#fff;border:none;
+  border-radius:var(--r4);font-size:.9rem;font-weight:900;cursor:pointer;
+  box-shadow:var(--sh-btn);margin-top:8px;font-family:'Cairo',sans-serif;
+  transition:.18s;
+}
+.fd-apply:active{transform:scale(.97);}
+
+/* ════ HOTEL DETAIL MODAL ════ */
+#hotelModal{
+  position:fixed;inset:0;z-index:60000;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.hm-overlay{
+  position:absolute;inset:0;background:rgba(34,34,34,.4);
+  backdrop-filter:blur(6px);
+}
+.hm-sheet{
+  position:relative;z-index:1;
+  background:var(--white);width:100%;max-width:680px;
+  border-radius:var(--r6) var(--r6) 0 0;
+  max-height:96vh;overflow-y:auto;
+  box-shadow:var(--sh-modal);
+  animation:fdUp .32s cubic-bezier(.34,1.15,.64,1);
+  padding-bottom:max(20px,env(safe-area-inset-bottom));
+}
+/* sticky close bar */
+.hm-close-bar{
+  position:sticky;top:0;z-index:2;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px 10px;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.hm-close-lbl{font-size:.88rem;font-weight:900;color:var(--tx0);}
+.hm-close-btn{
+  width:32px;height:32px;border-radius:50%;background:var(--bg);
+  border:1px solid var(--border);cursor:pointer;display:flex;
+  align-items:center;justify-content:center;font-size:16px;color:var(--tx1);
+  transition:.18s;
+}
+.hm-close-btn:hover{background:var(--red-l);color:var(--red);}
+
+/* photo gallery */
+.hm-gallery{position:relative;height:280px;overflow:hidden;background:var(--bg);}
+.hm-gallery img{width:100%;height:100%;object-fit:cover;}
+.hm-gallery-nav{
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  display:flex;gap:5px;
+}
+.hm-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(255,255,255,.55);cursor:pointer;transition:.18s;
+}
+.hm-dot.on{background:#fff;width:20px;border-radius:4px;}
+.hm-gallery-count{
+  position:absolute;bottom:12px;right:12px;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  color:#fff;font-size:.65rem;font-weight:800;
+  padding:3px 9px;border-radius:99px;
+}
+.hm-prev-btn,.hm-next-btn{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.4);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  transition:.18s;z-index:1;
+}
+.hm-prev-btn{right:10px;}
+.hm-next-btn{left:10px;}
+.hm-prev-btn:hover,.hm-next-btn:hover{background:#fff;box-shadow:var(--sh-sm);}
+
+/* hotel main info */
+.hm-info{padding:18px 18px 0;}
+.hm-city{font-size:.68rem;font-weight:800;color:var(--tx2);display:flex;align-items:center;gap:4px;margin-bottom:5px;}
+.hm-name{font-size:1.25rem;font-weight:900;color:var(--tx0);letter-spacing:-.02em;margin-bottom:6px;}
+.hm-stars-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.hm-rating-pill{
+  background:var(--gold);color:#fff;
+  font-size:.72rem;font-weight:900;
+  padding:3px 9px;border-radius:var(--r2);
+}
+.hm-review-cnt{font-size:.72rem;font-weight:700;color:var(--tx2);}
+
+/* features pills */
+.hm-feats{display:flex;gap:6px;flex-wrap:wrap;padding:12px 18px;border-bottom:1px solid var(--border);}
+.hm-feat{
+  display:flex;align-items:center;gap:5px;
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:99px;padding:5px 11px;
+  font-size:.7rem;font-weight:800;color:var(--tx1);
+}
+
+/* map section */
+.hm-map-sec{padding:14px 18px;}
+.hm-sec-title{font-size:.84rem;font-weight:900;color:var(--tx0);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.hm-map{height:170px;border-radius:var(--r3);overflow:hidden;border:1px solid var(--border);}
+
+/* ════ ROOMS SECTION — The Star of the Show ════ */
+.hm-rooms-sec{padding:0 18px 14px;}
+.rooms-list{display:flex;flex-direction:column;gap:12px;}
+
+/* ROOM CARD */
+.room-card{
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:var(--r4);overflow:hidden;transition:.2s;
+}
+.room-card:hover{border-color:rgba(0,166,153,.3);box-shadow:0 2px 12px rgba(0,166,153,.1);}
+
+.rc-head{
+  display:flex;gap:0;
+}
+/* room photo: small thumbnail on left */
+.rc-thumb{
+  width:110px;height:100px;flex-shrink:0;
+  position:relative;overflow:hidden;background:var(--white);
+}
+.rc-thumb img{width:100%;height:100%;object-fit:cover;transition:.3s;}
+.room-card:hover .rc-thumb img{transform:scale(1.05);}
+.rc-thumb-placeholder{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-size:2rem;color:var(--tx4);background:var(--white);
+}
+/* room info panel */
+.rc-info{flex:1;padding:11px 13px;display:flex;flex-direction:column;justify-content:space-between;min-width:0;}
+.rc-name{font-size:.86rem;font-weight:900;color:var(--tx0);margin-bottom:4px;line-height:1.3;}
+.rc-meta{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;}
+.rc-tag{
+  font-size:.62rem;font-weight:800;
+  padding:2px 8px;border-radius:99px;
+}
+.rc-tag.type{background:var(--blue-l);color:var(--blue);}
+.rc-tag.bed{background:var(--gold-l);color:var(--amber);}
+.rc-tag.avail{background:var(--green-l);color:var(--green);}
+.rc-tag.taken{background:var(--red-l);color:var(--red);}
+.rc-desc{font-size:.7rem;font-weight:600;color:var(--tx2);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+/* price + book row */
+.rc-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 13px;border-top:1px solid var(--border);background:var(--white);
+}
+.rc-price-wrap{display:flex;align-items:baseline;gap:3px;}
+.rc-price{font-size:1.05rem;font-weight:900;color:var(--tx0);}
+.rc-price-unit{font-size:.63rem;font-weight:600;color:var(--tx2);}
+.rc-book-btn{
+  padding:8px 18px;background:var(--red-g);color:#fff;border:none;
+  border-radius:var(--r3);font-size:.78rem;font-weight:900;cursor:pointer;
+  box-shadow:var(--sh-btn);transition:.18s;font-family:'Cairo',sans-serif;
+}
+.rc-book-btn:hover{opacity:.9;}
+.rc-book-btn:active{transform:scale(.95);}
+.rc-book-btn:disabled{background:var(--border);color:var(--tx3);cursor:not-allowed;box-shadow:none;}
+
+/* Room full-screen preview */
+.rc-expand-btn{
+  position:absolute;bottom:6px;left:6px;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(4px);
+  color:#fff;border:none;border-radius:var(--r2);
+  padding:3px 8px;font-size:.6rem;font-weight:800;cursor:pointer;
+}
+
+/* ════ BOOKING FORM SHEET ════ */
+#bookingModal{
+  position:fixed;inset:0;z-index:70000;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.bm-overlay{
+  position:absolute;inset:0;background:rgba(34,34,34,.4);backdrop-filter:blur(5px);
+}
+.bm-sheet{
+  position:relative;z-index:1;
+  background:var(--white);width:100%;max-width:560px;
+  border-radius:var(--r6) var(--r6) 0 0;
+  max-height:92vh;overflow-y:auto;
+  box-shadow:var(--sh-modal);
+  animation:fdUp .3s cubic-bezier(.34,1.15,.64,1);
+  padding-bottom:max(20px,env(safe-area-inset-bottom));
+}
+.bm-hd{
+  padding:12px 18px 10px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--white);z-index:1;
+}
+.bm-title{font-size:.92rem;font-weight:900;color:var(--tx0);}
+.bm-close{background:none;border:none;font-size:20px;color:var(--tx3);cursor:pointer;}
+.bm-body{padding:16px 18px;}
+/* selected room summary */
+.bm-room-sum{
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);
+  padding:12px 14px;display:flex;gap:12px;align-items:center;margin-bottom:16px;
+}
+.bm-room-img{
+  width:60px;height:52px;border-radius:var(--r2);overflow:hidden;flex-shrink:0;
+  background:var(--border);
+}
+.bm-room-img img{width:100%;height:100%;object-fit:cover;}
+.bm-room-name{font-size:.84rem;font-weight:900;color:var(--tx0);}
+.bm-room-price{font-size:.82rem;font-weight:900;color:var(--red);margin-top:2px;}
+.bm-room-hotel{font-size:.68rem;font-weight:700;color:var(--tx2);margin-top:2px;}
+/* form fields */
+.bm-fld{margin-bottom:13px;}
+.bm-lbl{font-size:.64rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1.1px;margin-bottom:6px;display:block;}
+.bm-in{
+  width:100%;background:var(--bg);border:1.5px solid var(--border);
+  border-radius:var(--r3);padding:12px 14px;font-size:.88rem;font-weight:700;
+  color:var(--tx0);outline:none;transition:.2s;-webkit-appearance:none;
+}
+.bm-in:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);}
+.bm-in::placeholder{color:var(--tx4);font-weight:500;}
+.bm-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+/* nights stepper */
+.bm-nights-row{display:flex;align-items:center;gap:12px;}
+.bm-nights-val{
+  flex:1;background:var(--bg);border:1.5px solid var(--border);
+  border-radius:var(--r3);padding:11px 14px;text-align:center;
+  font-size:.9rem;font-weight:900;color:var(--tx0);
+}
+.bm-step{
+  width:40px;height:40px;border-radius:var(--r2);border:1.5px solid var(--border);
+  background:var(--white);font-size:1.2rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:.16s;flex-shrink:0;
+}
+.bm-step:hover{border-color:var(--red);color:var(--red);}
+/* total summary */
+.bm-total-box{
+  background:var(--green-l);border:1px solid rgba(0,166,153,.2);
+  border-radius:var(--r3);padding:13px 15px;margin-bottom:14px;
+}
+.bm-total-row{display:flex;justify-content:space-between;align-items:center;}
+.bm-total-lbl{font-size:.78rem;font-weight:700;color:var(--tx1);}
+.bm-total-val{font-size:.84rem;font-weight:900;color:var(--tx0);}
+.bm-total-row.grand .bm-total-val{font-size:1.1rem;color:var(--green);}
+.bm-total-sep{height:1px;background:rgba(0,166,153,.15);margin:8px 0;}
+/* submit */
+.bm-submit{
+  width:100%;padding:15px;background:var(--red-g);color:#fff;border:none;
+  border-radius:var(--r4);font-size:.92rem;font-weight:900;cursor:pointer;
+  box-shadow:var(--sh-btn);font-family:'Cairo',sans-serif;transition:.18s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.bm-submit:active{transform:scale(.97);}
+.bm-err{color:var(--red);font-size:.76rem;font-weight:700;text-align:center;min-height:20px;margin-top:6px;}
+
+/* ════ BOOKING SUCCESS CARD ════ */
+.bm-success{text-align:center;padding:32px 20px;}
+.bm-success-ic{
+  width:80px;height:80px;border-radius:50%;background:var(--green-l);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:36px;margin-bottom:16px;
+  animation:successPop .5s cubic-bezier(.34,1.7,.64,1);
+}
+@keyframes successPop{from{transform:scale(0)}to{transform:scale(1)}}
+.bm-success-title{font-size:1.15rem;font-weight:900;color:var(--tx0);margin-bottom:6px;}
+.bm-success-sub{font-size:.8rem;font-weight:600;color:var(--tx2);line-height:1.7;margin-bottom:20px;}
+.bm-success-ref{
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);
+  padding:12px 16px;margin-bottom:18px;
+}
+.bm-success-ref-l{font-size:.65rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;}
+.bm-success-ref-v{font-size:.9rem;font-weight:900;color:var(--green);font-family:'IBM Plex Mono',monospace;margin-top:3px;}
+
+/* ════ STICKY BOOKING BAR ════ */
+.sticky-book-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:9500;
+  background:rgba(255,255,255,.94);backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  padding:12px 20px max(16px,env(safe-area-inset-bottom));
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 -4px 20px rgba(0,0,0,.08);
+  transform:translateY(100%);transition:.3s cubic-bezier(.34,1.2,.64,1);
+}
+.sticky-book-bar.show{transform:translateY(0);}
+.sbb-price{flex:1;}
+.sbb-from{font-size:.65rem;font-weight:700;color:var(--tx2);}
+.sbb-val{font-size:1.1rem;font-weight:900;color:var(--tx0);}
+.sbb-unit{font-size:.65rem;font-weight:600;color:var(--tx2);}
+.sbb-btn{
+  padding:13px 28px;background:var(--red-g);color:#fff;border:none;
+  border-radius:var(--r4);font-size:.88rem;font-weight:900;cursor:pointer;
+  box-shadow:var(--sh-btn);font-family:'Cairo',sans-serif;white-space:nowrap;
+}
+.sbb-btn:active{transform:scale(.97);}
+
+/* ════ FOOTER ════ */
+.site-footer{
+  background:var(--white);border-top:1px solid var(--border);
+  padding:28px 20px max(24px,env(safe-area-inset-bottom));
+  text-align:center;
+}
+.footer-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;}
+.footer-logo-ic{width:32px;height:32px;border-radius:9px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.footer-logo-nm{font-size:.88rem;font-weight:900;color:var(--tx0);}
+.footer-sub{font-size:.73rem;font-weight:600;color:var(--tx2);line-height:1.6;}
+.footer-copy{font-size:.65rem;font-weight:600;color:var(--tx3);margin-top:12px;}
+
+/* ════ RESPONSIVE ════ */
+@media(min-width:768px){
+  .hotels-grid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr));}
+  .hm-sheet{max-height:90vh;}
+  .fd-city-grid{grid-template-columns:repeat(5,1fr);}
+  .bm-sheet{margin:auto;border-radius:var(--r6);}
+  #bookingModal{align-items:center;}
+  #hotelModal{align-items:center;}
+  .hm-gallery{height:340px;}
+  .rc-thumb{width:130px;height:110px;}
+}
+@media(min-width:1024px){
+  .hotels-grid{grid-template-columns:repeat(3,1fr);}
+  .hero{padding:60px 20px 100px;}
+  .hero-search-wrap{max-width:660px;}
+}
+</style>
 </head>
-<body>
+<body> <div id="toasts"></div>
 
-<nav class="navbar">
-    <a href="index.html" class="logo"><span>🐋</span> <span id="logoText">الحوت</span></a>
-    <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> <span id="backText">رجوع</span></a>
-</nav>
-
-<div class="page-hero">
-    <h1 id="pageTitle">🏨 فنادق الحوت</h1>
-    <p id="pageSubTitle">أفضل الفنادق في جميع محافظات العراق</p>
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sp-logo">🐋</div>
+  <div class="sp-bar"><div class="sp-fill"></div></div>
+  <div class="sp-txt">جاري تحميل الفنادق...</div>
 </div>
 
-<div class="filters-bar" id="filtersBar"></div>
+<!-- SITE HEADER -->
+<header class="site-header">
+  <a class="header-logo" href="#">
+    <div class="header-logo-ic">🐋</div>
+    <div>
+      <div class="header-logo-nm">الحوت</div>
+      <div class="header-logo-sub">منصة الإقامة والسياحة</div>
+    </div>
+  </a>
+  <div class="header-search" onclick="document.getElementById('hs-input').focus()">
+    <span class="header-search-ic">🔍</span>
+    <input type="text" id="hs-input" placeholder="ابحث عن فندق أو مدينة..." oninput="onSearchInput()">
+  </div>
+  <button class="header-filter-btn" id="filterToggle" onclick="openFilter()">
+    <span>⚙️ فلترة</span>
+    <span class="filt-dot"></span>
+  </button>
+</header>
 
-<div class="main-content">
-    <div class="results-info" id="resultsInfo"></div>
-    <div class="hotels-grid" id="hotelsGrid"></div>
-</div>
-
-<script>
-    const p = new URLSearchParams(window.location.search);
-    const lang = p.get('lang') || 'ar';
-    const city = p.get('city') || 'بغداد';
-    const date = p.get('date') || '';
-    const days = p.get('days') || '1';
-
-    const hotelData = [
-        { id:'h1', name:{ar:'فندق بابل الكبير',ku:'هۆتێلی بابل',tr:'Babil Büyük Oteli',en:'Babylon Grand Hotel'}, stars:5, cat:'luxury', price:150000, city:'بغداد', features:{ar:['واي فاي','مسبح','مطعم','باركينج'],en:['WiFi','Pool','Restaurant','Parking'],tr:['WiFi','Havuz','Restoran','Otopark'],ku:['ئینتەرنێت','مەلەوانگە','چێشتخانە','پارکینگ']}, icon:'🏰' },
-        { id:'h2', name:{ar:'فندق أربيل الدولي',ku:'هۆتێلی هەولێری نێودەوڵەتی',tr:'Erbil Uluslararası Oteli',en:'Erbil International Hotel'}, stars:5, cat:'luxury', price:180000, city:'أربيل', features:{ar:['واي فاي','صالة رياضية','سبا','مطعم'],en:['WiFi','Gym','Spa','Restaurant'],tr:['WiFi','Spor Salonu','Spa','Restoran'],ku:['ئینتەرنێت','جیمناستیک','سپا','چێشتخانە']}, icon:'🏔️' },
-        { id:'h3', name:{ar:'فندق كركوك بلازا',ku:'هۆتێلی کەرکوک پلازا',tr:'Kerkük Plaza Oteli',en:'Kirkuk Plaza Hotel'}, stars:4, cat:'premium', price:90000, city:'كركوك', features:{ar:['واي فاي','مطعم','باركينج'],en:['WiFi','Restaurant','Parking'],tr:['WiFi','Restoran','Otopark'],ku:['ئینتەرنێت','چێشتخانە','پارکینگ']}, icon:'💎' },
-        { id:'h4', name:{ar:'نزل السليمانية السياحي',ku:'هۆتێلی سلێمانی تووریستی',tr:'Süleymaniye Turizm Oteli',en:'Sulaymaniyah Tourist Hotel'}, stars:3, cat:'economy', price:55000, city:'السليمانية', features:{ar:['واي فاي','إفطار'],en:['WiFi','Breakfast'],tr:['WiFi','Kahvaltı'],ku:['ئینتەرنێت','ناشتا']}, icon:'🌲' },
-        { id:'h5', name:{ar:'فندق شط العرب - البصرة',ku:'هۆتێلی شەتتولعەرەب',tr:'Şattülarap Oteli - Basra',en:'Shatt Al-Arab Hotel - Basra'}, stars:4, cat:'premium', price:95000, city:'البصرة', features:{ar:['واي فاي','إطلالة نهرية','مطعم'],en:['WiFi','River View','Restaurant'],tr:['WiFi','Nehir Manzarası','Restoran'],ku:['ئینتەرنێت','دیمەنی ڕووبار','چێشتخانە']}, icon:'⚓' },
-        { id:'h6', name:{ar:'فندق الموصل الكلاسيك',ku:'هۆتێلی مووسڵ کلاسیک',tr:'Musul Klasik Oteli',en:'Mosul Classic Hotel'}, stars:3, cat:'economy', price:50000, city:'الموصل', features:{ar:['واي فاي','إفطار','باركينج'],en:['WiFi','Breakfast','Parking'],tr:['WiFi','Kahvaltı','Otopark'],ku:['ئینتەرنێت','ناشتا','پارکینگ']}, icon:'🏹' },
-        { id:'h7', name:{ar:'فندق الأنبار الصحراوي',ku:'هۆتێلی ئەنبار',tr:'Anbar Çöl Oteli',en:'Anbar Desert Hotel'}, stars:3, cat:'economy', price:45000, city:'الأنبار', features:{ar:['واي فاي','إفطار'],en:['WiFi','Breakfast'],tr:['WiFi','Kahvaltı'],ku:['ئینتەرنێت','ناشتا']}, icon:'🌴' },
-        { id:'h8', name:{ar:'منتجع ديالى الخضراء',ku:'ڕیزۆرتی دیالە',tr:'Diyala Yeşil Tatil Köyü',en:'Diyala Green Resort'}, stars:4, cat:'premium', price:85000, city:'ديالى', features:{ar:['واي فاي','حديقة','مسبح'],en:['WiFi','Garden','Pool'],tr:['WiFi','Bahçe','Havuz'],ku:['ئینتەرنێت','باخچە','مەلەوانگە']}, icon:'🍊' },
-    ];
-
-    const ui = {
-        ar:{ dir:'rtl', logo:'الحوت', back:'رجوع', title:'🏨 فنادق الحوت', sub:'أفضل الفنادق في جميع محافظات العراق', filters:['الكل','اقتصادي','مميز','فاخر'], cats:['all','economy','premium','luxury'], catLabels:{all:'الكل',economy:'اقتصادي',premium:'مميز',luxury:'فاخر'}, perNight:'/ الليلة', curr:'د.ع', book:'احجز الآن', results:' فندق متاح في ', stars:'نجوم', filt:'تصفية حسب الفئة' },
-        ku:{ dir:'rtl', logo:'ئەلحووت', back:'گەڕانەوە', title:'🏨 هۆتێلەکان', sub:'باشترین هۆتێلەکان لە عێراق', filters:['هەموو','ئابووری','تایبەت','ناوازە'], cats:['all','economy','premium','luxury'], catLabels:{all:'هەموو',economy:'ئابووری',premium:'تایبەت',luxury:'ناوازە'}, perNight:'/ شەو', curr:'د.ع', book:'کرێ بکە', results:' هۆتێل هەیە لە ', stars:'ئەستێرە', filt:'پاڵاوتن' },
-        tr:{ dir:'ltr', logo:'AL-HUT', back:'Geri', title:'🏨 Al-Hut Otelleri', sub:'Irak\'ın tüm illerinde en iyi oteller', filters:['Tümü','Ekonomik','Premium','Lüks'], cats:['all','economy','premium','luxury'], catLabels:{all:'Tümü',economy:'Ekonomik',premium:'Premium',luxury:'Lüks'}, perNight:'/ gece', curr:'IQD', book:'Rezervasyon', results:' otel mevcut — ', stars:'yıldız', filt:'Filtrele' },
-        en:{ dir:'ltr', logo:'AL-HUT', back:'Back', title:'🏨 Al-Hut Hotels', sub:'Best hotels across all Iraqi provinces', filters:['All','Economy','Premium','Luxury'], cats:['all','economy','premium','luxury'], catLabels:{all:'All',economy:'Economy',premium:'Premium',luxury:'Luxury'}, perNight:'/ night', curr:'IQD', book:'Book Now', results:' hotels in ', stars:'stars', filt:'Filter by category' },
-    };
-
-    let activeCat = 'all';
-
-    function init() {
-        const l = ui[lang] || ui.ar;
-        document.getElementById('htmlTag').dir = l.dir;
-        document.getElementById('logoText').innerText = l.logo;
-        document.getElementById('backText').innerText = l.back;
-        document.getElementById('pageTitle').innerText = l.title;
-        document.getElementById('pageSubTitle').innerText = l.sub;
-
-        // Filters
-        const fb = document.getElementById('filtersBar');
-        fb.innerHTML = l.cats.map((cat, i) => `
-            <div class="filter-pill ${cat==='all'?'active':''}" onclick="filterHotels('${cat}')" id="filter-${cat}">
-                ${l.filters[i]}
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-title">اكتشف أجمل الفنادق في العراق</div>
+    <div class="hero-sub">غرف فاخرة، أسعار مناسبة، حجز فوري</div>
+    <!-- Hero search -->
+    <div class="hero-search-wrap">
+      <div class="hero-search-row">
+        <div class="hero-search-field">
+          <span class="hsf-ic">📍</span>
+          <div style="flex:1;min-width:0">
+            <span class="hsf-lbl">الوجهة</span>
+            <div class="hsf-val">
+              <input type="text" id="hero-city" placeholder="أي مدينة؟" oninput="onSearchInput()">
             </div>
-        `).join('');
+          </div>
+        </div>
+        <div class="hero-search-field" style="border-left:none">
+          <span class="hsf-ic">📅</span>
+          <div style="flex:1;min-width:0">
+            <span class="hsf-lbl">تاريخ الوصول</span>
+            <div class="hsf-val">
+              <input type="date" id="hero-checkin" style="font-size:.82rem">
+            </div>
+          </div>
+        </div>
+        <button class="hero-search-btn" onclick="applySearch()">
+          🔍 <span>ابحث</span>
+        </button>
+      </div>
+    </div>
+    <!-- Quick filter pills -->
+    <div class="hero-filters">
+      <div class="hf-pill on" data-stars="0" onclick="quickFilter(this,'stars',0)">🏨 الكل</div>
+      <div class="hf-pill" data-stars="5"  onclick="quickFilter(this,'stars',5)">⭐⭐⭐⭐⭐ 5 نجوم</div>
+      <div class="hf-pill" data-stars="4"  onclick="quickFilter(this,'stars',4)">⭐⭐⭐⭐ 4 نجوم</div>
+      <div class="hf-pill" data-stars="3"  onclick="quickFilter(this,'stars',3)">⭐⭐⭐ 3 نجوم</div>
+    </div>
+  </div>
+</section>
 
-        renderHotels();
+<!-- CITY STRIP -->
+<div class="city-strip">
+  <div class="city-inner" id="cityStrip">
+    <!-- rendered by JS -->
+  </div>
+</div>
+
+<!-- FEATURED (horizontal scroll) -->
+<div id="featured-sec">
+  <div class="sec-h">
+    <div class="sec-h-left">
+      <div class="sec-h-title">⭐ المميزة</div>
+      <div class="sec-h-sub">أعلى الفنادق تقييماً</div>
+    </div>
+    <button class="sec-h-link" onclick="scrollToMain()">عرض الكل ←</button>
+  </div>
+  <div class="hscroll">
+    <div class="hscroll-inner" id="featuredList">
+      <!-- skeleton -->
+      <div class="hotel-feat-card" style="background:var(--white)">
+        <div class="hfc-img" style="height:190px;animation:shimmer 1.5s infinite;"></div>
+        <div style="padding:13px"><div class="sk-line w100"></div><div class="sk-line w70"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ALL HOTELS -->
+<div id="main-hotels">
+  <div class="sec-h">
+    <div class="sec-h-left">
+      <div class="sec-h-title" id="main-title">🏨 جميع الفنادق</div>
+      <div class="sec-h-sub" id="main-sub">اكتشف خياراتك</div>
+    </div>
+  </div>
+  <!-- Results bar -->
+  <div class="results-bar">
+    <div class="results-count" id="results-count"></div>
+    <select class="sort-sel" id="sortSel" onchange="renderHotelsGrid()">
+      <option value="default">ترتيب: افتراضي</option>
+      <option value="price_asc">السعر: الأقل أولاً</option>
+      <option value="price_desc">السعر: الأعلى أولاً</option>
+      <option value="stars">التقييم: الأعلى</option>
+    </select>
+  </div>
+  <div class="hotels-grid" id="hotelsGrid">
+    <!-- skeletons -->
+    <div class="hotel-skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w100"></div><div class="sk-line w70"></div><div class="sk-line w50"></div></div></div>
+    <div class="hotel-skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w100"></div><div class="sk-line w70"></div><div class="sk-line w50"></div></div></div>
+    <div class="hotel-skeleton"><div class="sk-img"></div><div class="sk-body"><div class="sk-line w100"></div><div class="sk-line w70"></div><div class="sk-line w50"></div></div></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-logo">
+    <div class="footer-logo-ic">🐋</div>
+    <div class="footer-logo-nm">منصة الحوت</div>
+  </div>
+  <div class="footer-sub">منصة الإقامة والسياحة في العراق · حجز فوري آمن</div>
+  <div class="footer-copy">© 2026 منصة الحوت — جميع الحقوق محفوظة</div>
+</footer>
+
+<!-- ════ FILTER DRAWER ════ -->
+<div id="filterDrawer" class="dn" onclick="e=>e.target===this&&closeFilter()">
+  <div class="fd-overlay" onclick="closeFilter()"></div>
+  <div class="fd-sheet">
+    <div class="fd-handle"></div>
+    <div class="fd-head">
+      <div class="fd-title">⚙️ فلترة النتائج</div>
+      <button class="fd-reset" onclick="resetFilters()">إعادة تعيين</button>
+    </div>
+    <div class="fd-body">
+      <!-- City -->
+      <div class="fd-sec">
+        <div class="fd-sec-t">📍 المدينة</div>
+        <div class="fd-city-grid" id="fdCityGrid">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+      <!-- Stars -->
+      <div class="fd-sec">
+        <div class="fd-sec-t">⭐ التصنيف</div>
+        <div class="fd-stars-row" id="fdStarsRow">
+          <div class="fd-star-opt" data-s="5" onclick="toggleStarFilter(5,this)">⭐⭐⭐⭐⭐</div>
+          <div class="fd-star-opt" data-s="4" onclick="toggleStarFilter(4,this)">⭐⭐⭐⭐</div>
+          <div class="fd-star-opt" data-s="3" onclick="toggleStarFilter(3,this)">⭐⭐⭐</div>
+          <div class="fd-star-opt" data-s="2" onclick="toggleStarFilter(2,this)">⭐⭐</div>
+        </div>
+      </div>
+      <!-- Price -->
+      <div class="fd-sec">
+        <div class="fd-sec-t">💰 نطاق السعر (د.ع / ليلة)</div>
+        <div class="fd-price-range">
+          <div class="fd-price-field">
+            <label class="fd-price-lbl">الحد الأدنى</label>
+            <input type="number" id="fd-min" class="fd-price-in" placeholder="0" oninput="markFilterActive()">
+          </div>
+          <div class="fd-price-field">
+            <label class="fd-price-lbl">الحد الأقصى</label>
+            <input type="number" id="fd-max" class="fd-price-in" placeholder="بلا حد" oninput="markFilterActive()">
+          </div>
+        </div>
+      </div>
+      <!-- Amenities -->
+      <div class="fd-sec">
+        <div class="fd-sec-t">🛎️ المرافق</div>
+        <div class="fd-amen-grid" id="fdAmenGrid">
+          <div class="fd-amen" data-a="wifi"    onclick="toggleAmen(this)"><span class="fd-amen-ic">📶</span><span class="fd-amen-nm">واي فاي</span></div>
+          <div class="fd-amen" data-a="parking" onclick="toggleAmen(this)"><span class="fd-amen-ic">🅿️</span><span class="fd-amen-nm">مواقف</span></div>
+          <div class="fd-amen" data-a="pool"    onclick="toggleAmen(this)"><span class="fd-amen-ic">🏊</span><span class="fd-amen-nm">مسبح</span></div>
+          <div class="fd-amen" data-a="gym"     onclick="toggleAmen(this)"><span class="fd-amen-ic">💪</span><span class="fd-amen-nm">صالة رياضية</span></div>
+          <div class="fd-amen" data-a="restaurant" onclick="toggleAmen(this)"><span class="fd-amen-ic">🍽️</span><span class="fd-amen-nm">مطعم</span></div>
+          <div class="fd-amen" data-a="spa"     onclick="toggleAmen(this)"><span class="fd-amen-ic">💆</span><span class="fd-amen-nm">سبا</span></div>
+        </div>
+      </div>
+      <button class="fd-apply" onclick="applyFilter()">عرض النتائج ←</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ HOTEL DETAIL MODAL ════ -->
+<div id="hotelModal" class="dn" onclick="e=>{if(e.target===this||e.target.classList.contains('hm-overlay'))closeHotelModal();}">
+  <div class="hm-overlay" onclick="closeHotelModal()"></div>
+  <div class="hm-sheet" id="hm-sheet">
+    <!-- dynamic content -->
+  </div>
+</div>
+
+<!-- ════ BOOKING MODAL ════ -->
+<div id="bookingModal" class="dn" onclick="e=>{if(e.target===this||e.target.classList.contains('bm-overlay'))closeBooking();}">
+  <div class="bm-overlay" onclick="closeBooking()"></div>
+  <div class="bm-sheet">
+    <div class="bm-hd">
+      <div class="bm-title" id="bm-title">حجز الغرفة</div>
+      <button class="bm-close" onclick="closeBooking()">✕</button>
+    </div>
+    <div class="bm-body" id="bm-body">
+      <!-- dynamic content -->
+    </div>
+  </div>
+</div> <script>
+/* ════════════════════════════════════════════════════════════════
+   CONSTANTS & FIREBASE
+════════════════════════════════════════════════════════════════ */
+const API   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
+const TOKEN = "HUT_CLOUD_2026";
+const FB_DB = "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app";
+
+let db;
+try {
+  firebase.initializeApp({
+    apiKey:"AIzaSyAo1rmqUzieYZU3RIwXOAN87GkpNrp-_Hc",
+    authDomain:"alhut-for-rent.firebaseapp.com",
+    databaseURL: FB_DB,
+    projectId:"alhut-for-rent",
+    storageBucket:"alhut-for-rent.firebasestorage.app",
+    messagingSenderId:"941542380637",
+    appId:"1:941542380637:web:9623fa6e627817ffeba9b4"
+  });
+  db = firebase.database();
+} catch(e) { console.warn("Firebase:", e); }
+
+/* ════ STATE ════ */
+let allHotels    = [];   // raw from API
+let allRooms     = {};   // { hotel_id: [room,...] } — from partners ADD_HOTEL_ROOM
+let filteredHotels=[];
+let favorites    = new Set(JSON.parse(localStorage.getItem("hut_favs")||"[]"));
+let mapInstance  = null;
+let detailMap    = null;
+
+// Filter state
+const filters = {
+  city: "",
+  stars: 0,       // 0 = all
+  minPrice: 0,
+  maxPrice: 0,
+  amenities: new Set()
+};
+
+/* ════ CITIES ════ */
+const CITIES = [
+  {nm:"الكل",   ic:"🇮🇶", key:""},
+  {nm:"بغداد",  ic:"🏛️", key:"بغداد"},
+  {nm:"أربيل",  ic:"🏔️", key:"أربيل"},
+  {nm:"كركوك",  ic:"⛽", key:"كركوك"},
+  {nm:"النجف",  ic:"🕌", key:"النجف"},
+  {nm:"كربلاء", ic:"🕌", key:"كربلاء"},
+  {nm:"الموصل", ic:"🌉", key:"الموصل"},
+  {nm:"البصرة", ic:"⚓", key:"البصرة"},
+  {nm:"السليمانية",ic:"🌿",key:"السليمانية"},
+];
+
+/* ════ UTILS ════ */
+const $ = id => document.getElementById(id);
+const fmt = n  => Math.round(Number(n)||0).toLocaleString("ar-EG");
+function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+function toast(msg, type="s"){
+  const el=document.createElement("div");
+  el.className=`ti t${type}`;
+  el.innerHTML=`<div class="ti-ic">${type==="s"?"✅":"❌"}</div><div class="ti-msg">${msg}</div>`;
+  $("toasts").appendChild(el);
+  setTimeout(()=>{el.style.opacity="0";el.style.transition=".3s";setTimeout(()=>el.remove(),300);},3500);
+}
+
+function starsHTML(n, show=true){
+  if(!show||!n) return "";
+  const full = Math.floor(Number(n)||0);
+  const max = 5;
+  let html = `<div class="stars">`;
+  for(let i=1;i<=max;i++) html+=`<span class="star${i<=full?"":" empty"}">★</span>`;
+  html += `</div>`;
+  return html;
+}
+
+function getMinPrice(hotel){
+  const rooms = allRooms[String(hotel.id)] || [];
+  if(rooms.length){
+    const prices = rooms.filter(r=>r.status!=="inactive"&&r.price>0).map(r=>Number(r.price)||0);
+    if(prices.length) return Math.min(...prices);
+  }
+  // fallback to hotel prices
+  const ps=[hotel.price_single,hotel.price_double,hotel.price_suite].filter(p=>Number(p)>0);
+  return ps.length ? Math.min(...ps.map(Number)) : 0;
+}
+
+function featureList(hotel){
+  const raw = hotel.features||hotel.amenities||"";
+  if(!raw) return [];
+  return String(raw).split(/[,،;]/g).map(s=>s.trim()).filter(Boolean);
+}
+
+function amenityIcon(feat){
+  const f = feat.toLowerCase();
+  if(f.includes("واي") || f.includes("wifi") || f.includes("انترنت")) return "📶";
+  if(f.includes("مواقف") || f.includes("parking"))                    return "🅿️";
+  if(f.includes("مسبح") || f.includes("pool"))                        return "🏊";
+  if(f.includes("مطعم") || f.includes("restaurant"))                  return "🍽️";
+  if(f.includes("سبا") || f.includes("spa"))                          return "💆";
+  if(f.includes("صالة") || f.includes("gym"))                         return "💪";
+  if(f.includes("مكيف") || f.includes("ac"))                          return "❄️";
+  if(f.includes("مصعد") || f.includes("lift"))                        return "🛗";
+  if(f.includes("خدمة") || f.includes("service"))                     return "🛎️";
+  if(f.includes("غداء") || f.includes("افطار") || f.includes("فطور")) return "🍳";
+  return "✓";
+}
+
+function roomTypeLabel(type){
+  return {
+    single:"مفردة 🛏", double:"مزدوجة 🛏🛏", suite:"جناح 👑",
+    single_room:"مفردة 🛏", double_room:"مزدوجة 🛏🛏",
+    family:"عائلية 👨‍👩‍👧"
+  }[String(type).toLowerCase()] || String(type||"غرفة");
+}
+
+function bedLabel(type){
+  return {
+    single:"سرير مفرد",double:"سرير مزدوج كبير",twin:"سريرين توأم",king:"سرير كينج"
+  }[type] || type||"";
+}
+
+function saveFavs(){
+  localStorage.setItem("hut_favs", JSON.stringify([...favorites]));
+}
+
+/* ════════════════════════════════════════════════════════════════
+   INIT & DATA LOAD
+════════════════════════════════════════════════════════════════ */
+window.addEventListener("DOMContentLoaded", async ()=>{
+  // Set default checkin = tomorrow
+  const tom = new Date(); tom.setDate(tom.getDate()+1);
+  const dateStr = tom.toISOString().split("T")[0];
+  const ci = $("hero-checkin"); if(ci) ci.value = dateStr;
+
+  buildCityStrip();
+  buildFilterCities();
+  await loadHotels();
+  $("splash")?.classList.add("dn");
+});
+
+async function loadHotels(){
+  try{
+    const res = await fetch(`${API}?action=getAdminFullData&token=${TOKEN}&_t=${Date.now()}`);
+    const data = await res.json();
+    if(!data.success) throw new Error("API error");
+
+    allHotels = (data.hotels||[]).filter(h=>h.status==="active");
+
+    // Load rooms from Firebase (partner-added rooms via ADD_HOTEL_ROOM)
+    if(db){
+      const snap = await db.ref("hotel_rooms").once("value");
+      const raw  = snap.val()||{};
+      // Normalize: keyed by hotel_id
+      Object.values(raw).forEach(room=>{
+        const hid = String(room.hotel_id||"");
+        if(!hid) return;
+        if(!allRooms[hid]) allRooms[hid]=[];
+        allRooms[hid].push(room);
+      });
     }
 
-    function filterHotels(cat) {
-        activeCat = cat;
-        document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-        document.getElementById('filter-'+cat).classList.add('active');
-        renderHotels();
-    }
+    // Sort by stars desc then name
+    allHotels.sort((a,b)=>((b.stars||0)-(a.stars||0))||a.name.localeCompare(b.name,"ar"));
+    filteredHotels = [...allHotels];
 
-    function renderHotels() {
-        const l = ui[lang] || ui.ar;
-        let filtered = hotelData.filter(h => (activeCat === 'all' || h.cat === activeCat));
-        
-        document.getElementById('resultsInfo').innerHTML = `<strong>${filtered.length}</strong>${l.results}<strong>${city}</strong>`;
+    renderFeatured();
+    renderHotelsGrid();
+    updateResultsCount();
 
-        const grid = document.getElementById('hotelsGrid');
-        if (filtered.length === 0) {
-            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--mid);font-weight:700;">لا توجد فنادق بهذه الفئة 🐋</div>`;
-            return;
+  } catch(e){
+    console.error("loadHotels:", e);
+    $("hotelsGrid").innerHTML=`
+      <div class="hotels-empty">
+        <div class="he-ic">⚠️</div>
+        <div class="he-title">فشل تحميل الفنادق</div>
+        <div class="he-sub">تحقق من اتصالك بالإنترنت</div>
+      </div>`;
+    $("splash")?.classList.add("dn");
+  }
+}
+
+/* ════ CITY STRIP ════ */
+function buildCityStrip(){
+  $("cityStrip").innerHTML = CITIES.map(c=>`
+    <div class="city-chip${c.key===filters.city?" on":""}" onclick="filterCity('${esc(c.key)}',this)">
+      <div class="city-ic">${c.ic}</div>
+      <div class="city-nm">${c.nm}</div>
+    </div>`).join("");
+}
+
+function filterCity(key, el){
+  filters.city = key;
+  document.querySelectorAll(".city-chip").forEach(c=>c.classList.remove("on"));
+  el.classList.add("on");
+  applyAllFilters();
+}
+window.filterCity = filterCity;
+
+/* ════ FILTER CITIES IN DRAWER ════ */
+function buildFilterCities(){
+  const grid = $("fdCityGrid");
+  grid.innerHTML = CITIES.map(c=>`
+    <div class="fd-city${c.key===filters.city?" on":""}" data-c="${esc(c.key)}" onclick="toggleFdCity('${esc(c.key)}',this)">
+      <div class="fd-city-nm">${c.ic} ${c.nm}</div>
+    </div>`).join("");
+}
+
+function toggleFdCity(key, el){
+  document.querySelectorAll(".fd-city").forEach(c=>c.classList.remove("on"));
+  el.classList.add("on");
+  filters.city = key;
+}
+window.toggleFdCity = toggleFdCity;
+
+/* ════ RENDER FEATURED ════ */
+function renderFeatured(){
+  const top = [...allHotels].filter(h=>Number(h.stars||0)>=4).slice(0,8);
+  if(!top.length){ $("featured-sec").style.display="none"; return; }
+
+  $("featuredList").innerHTML = top.map(h=>{
+    const price = getMinPrice(h);
+    const feats = featureList(h).slice(0,3);
+    const rooms = allRooms[String(h.id)]||[];
+    const isFav = favorites.has(String(h.id));
+    return `
+    <div class="hotel-feat-card" onclick="openHotelDetail('${esc(h.id)}')">
+      <div class="hfc-img">
+        ${h.photo_url
+          ? `<img src="${esc(h.photo_url)}" alt="${esc(h.name)}" loading="lazy">`
+          : `<div style="width:100%;height:190px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:2.6rem;color:var(--tx4)">🏨</div>`}
+        <div class="hfc-badge">${starsHTML(h.stars)} ${h.stars||"—"} نجوم</div>
+        <button class="hfc-fav${isFav?" loved":""}" onclick="event.stopPropagation();toggleFav('${esc(h.id)}',this)">
+          ${isFav?"❤️":"🤍"}
+        </button>
+      </div>
+      <div class="hfc-body">
+        <div class="hfc-city">📍 ${esc(h.city||"—")}</div>
+        <div class="hfc-name">${esc(h.name)}</div>
+        <div class="hfc-stars">${starsHTML(h.stars)}</div>
+        ${feats.length?`<div class="hfc-feat">${feats.map(f=>`<span class="hfc-feat-tag">${amenityIcon(f)} ${esc(f)}</span>`).join("")}</div>`:""}
+        <div class="hfc-foot">
+          <div>
+            <div class="hfc-price">من <span>${fmt(price)}</span></div>
+            <div class="hfc-price-unit">د.ع / ليلة</div>
+          </div>
+          <div class="hfc-avail">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:spP 2s infinite;flex-shrink:0"></div>
+            ${rooms.filter(r=>r.status!=="inactive").length||""}  متاح
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* ════ RENDER HOTELS GRID ════ */
+function renderHotelsGrid(){
+  const grid = $("hotelsGrid");
+  const sortMode = $("sortSel")?.value||"default";
+
+  let list = [...filteredHotels];
+
+  // Sort
+  if(sortMode==="price_asc")   list.sort((a,b)=>getMinPrice(a)-getMinPrice(b));
+  else if(sortMode==="price_desc") list.sort((a,b)=>getMinPrice(b)-getMinPrice(a));
+  else if(sortMode==="stars")  list.sort((a,b)=>(b.stars||0)-(a.stars||0));
+
+  if(!list.length){
+    grid.innerHTML=`
+      <div class="hotels-empty">
+        <div class="he-ic">🏨</div>
+        <div class="he-title">لا توجد فنادق تطابق بحثك</div>
+        <div class="he-sub">جرّب تعديل الفلاتر أو البحث في مدينة أخرى</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(h=>{
+    const price  = getMinPrice(h);
+    const feats  = featureList(h).slice(0,4);
+    const rooms  = (allRooms[String(h.id)]||[]).filter(r=>r.status!=="inactive");
+    const isFav  = favorites.has(String(h.id));
+    const isNew  = Date.now() - new Date(h.created_at||0) < 30*24*3600*1000;
+    // Min-price rooms preview (max 3 types)
+    const uniqueRooms = [];
+    const seen = new Set();
+    rooms.forEach(r=>{ const k=r.room_type||r.type; if(!seen.has(k)&&uniqueRooms.length<3){ seen.add(k); uniqueRooms.push(r); } });
+
+    return `
+    <div class="hotel-card" onclick="openHotelDetail('${esc(h.id)}')">
+      <div class="hc-img">
+        ${h.photo_url
+          ? `<img src="${esc(h.photo_url)}" alt="${esc(h.name)}" loading="lazy">`
+          : `<div class="hc-img-placeholder">🏨</div>`}
+        <div class="hc-badges">
+          ${isNew?`<div class="hc-badge new">✨ جديد</div>`:""}
+          ${Number(h.stars||0)>=5?`<div class="hc-badge">⭐ ممتاز</div>`:""}
+        </div>
+        <button class="hc-fav${isFav?" loved":""}"
+          onclick="event.stopPropagation();toggleFav('${esc(h.id)}',this)">
+          ${isFav?"❤️":"🤍"}
+        </button>
+        ${rooms.length?`<div class="hc-rooms-tag">🛏 ${rooms.length} غرفة متاحة</div>`:""}
+      </div>
+      <div class="hc-body">
+        <div class="hc-city">📍 ${esc(h.city||"—")}</div>
+        <div class="hc-name">${esc(h.name)}</div>
+        <div class="hc-stars">${starsHTML(h.stars)}</div>
+        ${feats.length?`<div class="hc-feats">${feats.map(f=>`<div class="hc-feat">${amenityIcon(f)} ${esc(f)}</div>`).join("")}</div>`:""}
+        ${uniqueRooms.length?`
+        <div class="hc-rooms">
+          ${uniqueRooms.map(r=>`
+          <div class="hc-room-pill">
+            <div class="hcp-type">${roomTypeLabel(r.room_type||r.type)}</div>
+            <div class="hcp-price">${fmt(r.price)}</div>
+            <div class="hcp-unit">د.ع/ليلة</div>
+          </div>`).join("")}
+        </div>`:
+        (price>0?`<div class="hc-rooms">
+          <div class="hc-room-pill"><div class="hcp-type">أدنى سعر</div><div class="hcp-price">${fmt(price)}</div><div class="hcp-unit">د.ع/ليلة</div></div>
+        </div>`:"")
         }
+        <div class="hc-foot">
+          <div>
+            <div class="hc-price-from">يبدأ من</div>
+            <div><span class="hc-price-val">${fmt(price)||"—"}</span> <span class="hc-price-unit">د.ع / ليلة</span></div>
+          </div>
+          <button class="hc-cta" onclick="event.stopPropagation();openHotelDetail('${esc(h.id)}')">عرض الغرف</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
 
-        grid.innerHTML = filtered.map(h => {
-            const name = h.name[lang] || h.name.ar;
-            const feats = h.features[lang] || h.features.ar;
-            const stars = '⭐'.repeat(h.stars);
-            return `
-            <div class="hotel-card" onclick="selectHotel('${h.id}','${name}',${h.price})">
-                <div class="hotel-img">${h.icon}</div>
-                <div class="hotel-body">
-                    <div class="hotel-rating"><i class="fas fa-star"></i> ${h.stars} ${l.stars} · ${stars}</div>
-                    <div class="hotel-name">${name}</div>
-                    <div class="hotel-location"><i class="fas fa-map-marker-alt" style="color:var(--primary)"></i> ${h.city}</div>
-                    <div class="hotel-features">${feats.map(f=>`<span class="feature-tag">${f}</span>`).join('')}</div>
-                    <div class="hotel-footer">
-                        <div class="hotel-price">${h.price.toLocaleString()} <small>${l.curr}</small> <span>${l.perNight}</span></div>
-                        <button class="book-btn">${l.book}</button>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
+/* ════ FAVORITES ════ */
+function toggleFav(id, btn){
+  if(favorites.has(id)){ favorites.delete(id); btn.classList.remove("loved"); btn.textContent="🤍"; }
+  else{ favorites.add(id); btn.classList.add("loved"); btn.textContent="❤️"; toast("أُضيف إلى المفضلة ❤️"); }
+  saveFavs();
+}
+window.toggleFav = toggleFav;
+
+/* ════ SEARCH ════ */
+function onSearchInput(){
+  applyAllFilters();
+}
+function applySearch(){
+  applyAllFilters();
+  scrollToMain();
+}
+window.applySearch = applySearch;
+window.onSearchInput = onSearchInput;
+window.scrollToMain = ()=>$("main-hotels")?.scrollIntoView({behavior:"smooth"});
+
+/* ════ QUICK FILTER ════ */
+window.quickFilter = function(el, type, val){
+  document.querySelectorAll(".hf-pill").forEach(p=>p.classList.remove("on"));
+  el.classList.add("on");
+  if(type==="stars") filters.stars = Number(val);
+  applyAllFilters();
+};
+
+/* ════ APPLY ALL FILTERS ════ */
+function applyAllFilters(){
+  const q = (($("hs-input")?.value||"") + " " + ($("hero-city")?.value||"")).toLowerCase().trim();
+
+  filteredHotels = allHotels.filter(h=>{
+    // text search
+    if(q && !h.name.toLowerCase().includes(q) && !(h.city||"").toLowerCase().includes(q)) return false;
+    // city
+    if(filters.city && h.city!==filters.city) return false;
+    // stars
+    if(filters.stars>0 && Number(h.stars||0)<filters.stars) return false;
+    // price
+    const mp = getMinPrice(h);
+    if(filters.minPrice>0 && mp<filters.minPrice) return false;
+    if(filters.maxPrice>0 && mp>filters.maxPrice) return false;
+    // amenities
+    if(filters.amenities.size>0){
+      const feats = featureList(h).join(" ").toLowerCase();
+      for(const a of filters.amenities){
+        const map={wifi:"واي",parking:"مواقف",pool:"مسبح",gym:"صالة",restaurant:"مطعم",spa:"سبا"};
+        if(!feats.includes(map[a]||a)) return false;
+      }
     }
+    return true;
+  });
 
-    function selectHotel(id, name, price) {
-        const total = parseInt(price) * parseInt(days);
-        window.location.href = `booking_hotel.html?hotel_id=${id}&hotel_name=${encodeURIComponent(name)}&hotel_price=${price}&city=${encodeURIComponent(city)}&date=${date}&days=${days}&lang=${lang}&total_price=${total}&type=hotel`;
+  renderHotelsGrid();
+  updateResultsCount();
+}
+
+function updateResultsCount(){
+  const el = $("results-count");
+  if(el) el.innerHTML = `تم العثور على <strong>${filteredHotels.length}</strong> فندق`;
+}
+
+/* ════ FILTER DRAWER ════ */
+window.openFilter = ()=>{ $("filterDrawer").classList.remove("dn"); };
+window.closeFilter= ()=>{ $("filterDrawer").classList.add("dn"); };
+
+window.toggleStarFilter = function(s, el){
+  el.classList.toggle("on");
+  // allow multiple star selections → filter to highest
+  const sel = [...document.querySelectorAll(".fd-star-opt.on")].map(e=>Number(e.dataset.s));
+  filters.stars = sel.length ? Math.min(...sel) : 0;
+  markFilterActive();
+};
+window.toggleAmen = function(el){
+  el.classList.toggle("on");
+  const a = el.dataset.a;
+  if(el.classList.contains("on")) filters.amenities.add(a);
+  else filters.amenities.delete(a);
+  markFilterActive();
+};
+function markFilterActive(){
+  const hasFilter = filters.city||filters.stars>0||filters.minPrice>0||
+                    filters.maxPrice>0||filters.amenities.size>0;
+  $("filterToggle").classList.toggle("active", hasFilter);
+}
+window.resetFilters = function(){
+  filters.city=""; filters.stars=0; filters.minPrice=0; filters.maxPrice=0; filters.amenities.clear();
+  document.querySelectorAll(".fd-city,.fd-star-opt,.fd-amen").forEach(el=>el.classList.remove("on"));
+  if($("fd-min")) $("fd-min").value="";
+  if($("fd-max")) $("fd-max").value="";
+  $("filterToggle").classList.remove("active");
+  buildCityStrip();
+};
+window.applyFilter = function(){
+  const min = Number($("fd-min")?.value)||0;
+  const max = Number($("fd-max")?.value)||0;
+  filters.minPrice = min; filters.maxPrice = max;
+  // Sync city strip
+  buildCityStrip();
+  closeFilter();
+  applyAllFilters();
+};
+
+/* ════════════════════════════════════════════════════════════════
+   HOTEL DETAIL MODAL — Full Sheet with Rooms
+════════════════════════════════════════════════════════════════ */
+let currentHotel = null;
+let galleryIdx   = 0;
+let galleryImgs  = [];
+
+function openHotelDetail(id){
+  currentHotel = allHotels.find(h=>String(h.id)===String(id));
+  if(!currentHotel) return;
+
+  const h = currentHotel;
+  const rooms = allRooms[String(h.id)]||[];
+  const feats = featureList(h);
+  const isFav = favorites.has(String(h.id));
+
+  // Build gallery images
+  galleryImgs = [];
+  if(h.photo_url) galleryImgs.push(h.photo_url);
+  // Add room photos
+  rooms.forEach(r=>{ if(r.photo_url && !galleryImgs.includes(r.photo_url)) galleryImgs.push(r.photo_url); });
+  galleryIdx = 0;
+
+  const sheet = $("hm-sheet");
+  sheet.innerHTML = `
+    <!-- Close bar -->
+    <div class="hm-close-bar">
+      <div class="hm-close-lbl">${esc(h.name)}</div>
+      <button class="hm-close-btn" onclick="closeHotelModal()">✕</button>
+    </div>
+
+    <!-- Gallery -->
+    <div class="hm-gallery" id="hm-gallery">
+      ${galleryImgs.length
+        ? `<img id="hm-gal-img" src="${esc(galleryImgs[0])}" alt="${esc(h.name)}" onclick="nextGallery(1)">`
+        : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;color:var(--tx4);background:var(--bg)">🏨</div>`}
+      ${galleryImgs.length>1?`
+      <button class="hm-prev-btn" onclick="nextGallery(1)">&#8250;</button>
+      <button class="hm-next-btn" onclick="nextGallery(-1)">&#8249;</button>
+      <div class="hm-gallery-nav" id="hm-gal-nav">
+        ${galleryImgs.map((_,i)=>`<div class="hm-dot${i===0?" on":""}" onclick="goGallery(${i})"></div>`).join("")}
+      </div>
+      <div class="hm-gallery-count" id="hm-gal-cnt">1 / ${galleryImgs.length}</div>`:""}
+    </div>
+
+    <!-- Info -->
+    <div class="hm-info">
+      <div class="hm-city">📍 ${esc(h.city||"—")}</div>
+      <div class="hm-name">${esc(h.name)}</div>
+      <div class="hm-stars-row">
+        ${starsHTML(h.stars)}
+        ${Number(h.stars||0)>0?`<div class="hm-rating-pill">★ ${h.stars}.0</div>`:""}
+        <div class="hm-review-cnt">${rooms.length} غرفة متاحة</div>
+      </div>
+    </div>
+
+    <!-- Features / Amenities -->
+    ${feats.length?`
+    <div class="hm-feats">
+      ${feats.map(f=>`<div class="hm-feat">${amenityIcon(f)} ${esc(f)}</div>`).join("")}
+    </div>`:"<div style='height:1px;background:var(--border);margin:0 18px'></div>"}
+
+    <!-- ════ ROOMS SECTION ════ -->
+    <div class="hm-rooms-sec">
+      <div class="hm-sec-title">🛏 الغرف والأجنحة المتاحة</div>
+      ${buildRoomsList(h, rooms)}
+    </div>
+
+    <!-- Map -->
+    <div class="hm-map-sec">
+      <div class="hm-sec-title">📍 الموقع</div>
+      <div class="hm-map" id="detail-map"></div>
+      ${h.lat&&h.lng?`<p style="font-size:.7rem;font-weight:700;color:var(--tx2);margin-top:7px;text-align:center">
+        <a href="https://maps.google.com/?q=${h.lat},${h.lng}" target="_blank"
+          style="color:var(--blue);font-weight:800">فتح في خرائط جوجل ↗</a>
+      </p>`:""}
+    </div>`;
+
+  $("hotelModal").classList.remove("dn");
+
+  // Init detail map
+  setTimeout(()=>{
+    const mapEl=$("detail-map");
+    if(!mapEl) return;
+    if(detailMap){ detailMap.remove(); detailMap=null; }
+    detailMap = L.map("detail-map",{zoomControl:false,attributionControl:false,dragging:true});
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",{maxZoom:19}).addTo(detailMap);
+    const lat=parseFloat(h.lat), lng=parseFloat(h.lng);
+    if(lat&&Math.abs(lat)>0.1){
+      detailMap.setView([lat,lng],15);
+      const ico=L.divIcon({className:"",html:`<div style="background:#fff;border:2.5px solid var(--red);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 12px rgba(0,0,0,.2)">🏨</div>`,iconSize:[36,36],iconAnchor:[18,18]});
+      L.marker([lat,lng],{icon:ico}).addTo(detailMap)
+        .bindPopup(`<b>${esc(h.name)}</b><br>📍 ${esc(h.city)}`).openPopup();
+    } else {
+      detailMap.setView([33.3,44.3],11);
     }
+    L.control.zoom({position:"bottomright"}).addTo(detailMap);
+    setTimeout(()=>detailMap.invalidateSize(),250);
+  },300);
+}
+window.openHotelDetail = openHotelDetail;
 
-    window.onload = init;
+/* ── Build rooms list HTML ── */
+function buildRoomsList(hotel, rooms){
+  // Merge partner-added rooms WITH base hotel room types
+  let roomsToShow = [];
+
+  // 1) Partner-added rooms (highest priority — real data with photos/desc)
+  if(rooms.length){
+    roomsToShow = rooms.filter(r=>r.status!=="inactive"&&Number(r.price||0)>0);
+  }
+
+  // 2) Fallback: build from hotel price fields if no partner rooms
+  if(!roomsToShow.length){
+    const fallback=[
+      {id:"s",room_type:"single",room_name:"غرفة مفردة",price:hotel.price_single,photo_url:hotel.photo_url},
+      {id:"d",room_type:"double",room_name:"غرفة مزدوجة",price:hotel.price_double,photo_url:hotel.photo_url},
+      {id:"u",room_type:"suite", room_name:"جناح VIP",   price:hotel.price_suite, photo_url:hotel.photo_url},
+    ].filter(r=>Number(r.price||0)>0);
+    if(fallback.length) roomsToShow=fallback;
+  }
+
+  if(!roomsToShow.length){
+    return `<div class="hotels-empty" style="border:none;padding:30px 0">
+      <div class="he-ic">🛏</div>
+      <div class="he-title">لا توجد غرف مسجلة حالياً</div>
+      <div class="he-sub">تواصل مع الفندق مباشرة</div>
+    </div>`;
+  }
+
+  return `<div class="rooms-list">
+    ${roomsToShow.map(r=>buildRoomCard(hotel, r)).join("")}
+  </div>`;
+}
+
+function buildRoomCard(hotel, room){
+  const rtype  = room.room_type||room.type||"single";
+  const rname  = room.room_name||room.name||roomTypeLabel(rtype);
+  const price  = Number(room.price||0);
+  const desc   = room.description||room.desc||"";
+  const bed    = room.bed_type||"";
+  const isAvail= room.status!=="inactive";
+  const rid    = String(room.id||room.room_name||rtype);
+
+  return `
+  <div class="room-card">
+    <div class="rc-head">
+      <div class="rc-thumb" style="position:relative">
+        ${room.photo_url
+          ? `<img src="${esc(room.photo_url)}" alt="${esc(rname)}" loading="lazy">`
+          : `<div class="rc-thumb-placeholder">${rtype==="suite"?"👑":rtype==="double"?"🛏🛏":"🛏"}</div>`}
+      </div>
+      <div class="rc-info">
+        <div class="rc-name">${esc(rname)}</div>
+        <div class="rc-meta">
+          <span class="rc-tag type">${roomTypeLabel(rtype)}</span>
+          ${bed?`<span class="rc-tag bed">🛌 ${bedLabel(bed)}</span>`:""}
+          <span class="rc-tag ${isAvail?"avail":"taken"}">${isAvail?"✓ متاح":"غير متاح"}</span>
+        </div>
+        ${desc?`<div class="rc-desc">${esc(desc)}</div>`:""}
+      </div>
+    </div>
+    <div class="rc-foot">
+      <div class="rc-price-wrap">
+        <div class="rc-price">${fmt(price)}</div>
+        <div class="rc-price-unit">د.ع / ليلة</div>
+      </div>
+      <button class="rc-book-btn" ${isAvail?"":"disabled"}
+        onclick="${isAvail?`openBooking('${esc(hotel.id)}','${esc(rid)}')`:""}"
+      >${isAvail?"احجز الآن":"غير متاح"}</button>
+    </div>
+  </div>`;
+}
+
+/* ── Gallery navigation ── */
+window.nextGallery = function(dir){
+  galleryIdx = (galleryIdx + dir + galleryImgs.length) % galleryImgs.length;
+  goGallery(galleryIdx);
+};
+window.goGallery = function(idx){
+  galleryIdx = idx;
+  const img = $("hm-gal-img"); if(img) img.src = galleryImgs[idx];
+  const dots = document.querySelectorAll(".hm-dot"); dots.forEach((d,i)=>d.classList.toggle("on",i===idx));
+  const cnt = $("hm-gal-cnt"); if(cnt) cnt.textContent=`${idx+1} / ${galleryImgs.length}`;
+};
+
+function closeHotelModal(){
+  $("hotelModal").classList.add("dn");
+  if(detailMap){ detailMap.remove(); detailMap=null; }
+  currentHotel=null;
+}
+window.closeHotelModal=closeHotelModal;
+
+/* ════════════════════════════════════════════════════════════════
+   BOOKING FORM
+════════════════════════════════════════════════════════════════ */
+let bookingCtx = null; // { hotel, room, nights }
+
+window.openBooking = function(hotelId, roomId){
+  const hotel = allHotels.find(h=>String(h.id)===String(hotelId));
+  if(!hotel) return;
+
+  const rooms = allRooms[String(hotelId)]||[];
+  let room = rooms.find(r=>String(r.id||r.room_name||r.room_type)===String(roomId));
+  // fallback to base types
+  if(!room){
+    const base={
+      single:{id:"s",room_type:"single",room_name:"غرفة مفردة",price:hotel.price_single,photo_url:hotel.photo_url},
+      double:{id:"d",room_type:"double",room_name:"غرفة مزدوجة",price:hotel.price_double,photo_url:hotel.photo_url},
+      suite :{id:"u",room_type:"suite",room_name:"جناح VIP",price:hotel.price_suite,photo_url:hotel.photo_url},
+    };
+    room = base[roomId]||base.single;
+  }
+
+  bookingCtx = { hotel, room, nights:1 };
+  renderBookingForm();
+  $("bookingModal").classList.remove("dn");
+};
+
+function renderBookingForm(){
+  const{hotel,room,nights}=bookingCtx;
+  const price = Number(room.price||0);
+  const total = price * nights;
+
+  // tomorrow
+  const tom=new Date(); tom.setDate(tom.getDate()+1);
+  const defDate=tom.toISOString().split("T")[0];
+
+  $("bm-title").textContent=`حجز — ${room.room_name||room.room_type}`;
+  $("bm-body").innerHTML=`
+    <!-- Room summary -->
+    <div class="bm-room-sum">
+      <div class="bm-room-img">
+        ${room.photo_url
+          ?`<img src="${esc(room.photo_url)}" alt="${esc(room.room_name||"")}">`
+          :`<div style="width:100%;height:100%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.6rem">🛏</div>`}
+      </div>
+      <div>
+        <div class="bm-room-name">${esc(room.room_name||roomTypeLabel(room.room_type))}</div>
+        <div class="bm-room-price">${fmt(price)} د.ع / ليلة</div>
+        <div class="bm-room-hotel">🏨 ${esc(hotel.name)} · 📍 ${esc(hotel.city)}</div>
+      </div>
+    </div>
+
+    <!-- Guest info -->
+    <div class="bm-fld"><label class="bm-lbl">اسم النزيل الكامل</label>
+      <input type="text" id="bm-name" class="bm-in" placeholder="الاسم الثلاثي"></div>
+    <div class="bm-fld"><label class="bm-lbl">رقم الهاتف</label>
+      <input type="tel" id="bm-phone" class="bm-in" placeholder="07XXXXXXXX" dir="ltr" style="text-align:right"></div>
+    <div class="bm-grid2">
+      <div class="bm-fld"><label class="bm-lbl">رقم الهوية</label>
+        <input type="text" id="bm-id" class="bm-in" placeholder="اختياري" dir="ltr" style="text-align:right"></div>
+      <div class="bm-fld"><label class="bm-lbl">عدد النزلاء</label>
+        <input type="number" id="bm-guests" class="bm-in" placeholder="1" min="1" max="10" value="1"></div>
+    </div>
+    <div class="bm-fld"><label class="bm-lbl">تاريخ الوصول</label>
+      <input type="date" id="bm-checkin" class="bm-in" value="${defDate}" onchange="updateBookingCalc()"></div>
+
+    <!-- Nights stepper -->
+    <div class="bm-fld">
+      <label class="bm-lbl">عدد الليالي</label>
+      <div class="bm-nights-row">
+        <button class="bm-step" onclick="changeNights(-1)">−</button>
+        <div class="bm-nights-val" id="bm-nights-val">${nights} ليلة</div>
+        <button class="bm-step" onclick="changeNights(1)">+</button>
+      </div>
+    </div>
+
+    <!-- طلب خاص -->
+    <div class="bm-fld"><label class="bm-lbl">ملاحظات خاصة (اختياري)</label>
+      <input type="text" id="bm-note" class="bm-in" placeholder="مثال: طابق عالٍ، وجبة إفطار..."></div>
+
+    <!-- Total summary -->
+    <div class="bm-total-box" id="bm-total-box">
+      <div class="bm-total-row">
+        <div class="bm-total-lbl">${fmt(price)} × ${nights} ليلة</div>
+        <div class="bm-total-val">${fmt(total)} د.ع</div>
+      </div>
+      <div class="bm-total-sep"></div>
+      <div class="bm-total-row grand">
+        <div class="bm-total-lbl" style="font-weight:900">الإجمالي</div>
+        <div class="bm-total-val" id="bm-total-val">${fmt(total)} د.ع</div>
+      </div>
+    </div>
+
+    <button class="bm-submit" id="bm-submit-btn" onclick="submitBooking()">
+      🛏 تأكيد الحجز الآن
+    </button>
+    <div class="bm-err" id="bm-err"></div>`;
+}
+
+window.changeNights = function(delta){
+  if(!bookingCtx) return;
+  bookingCtx.nights = Math.max(1, Math.min(30, bookingCtx.nights+delta));
+  updateBookingCalc();
+};
+function updateBookingCalc(){
+  if(!bookingCtx) return;
+  const price = Number(bookingCtx.room.price||0);
+  const n = bookingCtx.nights;
+  const total = price*n;
+  const nv = $("bm-nights-val"); if(nv) nv.textContent=n+" ليلة";
+  const tv = $("bm-total-val");  if(tv) tv.textContent=fmt(total)+" د.ع";
+  const tb = $("bm-total-box");
+  if(tb) tb.querySelector(".bm-total-row .bm-total-lbl").textContent=`${fmt(price)} × ${n} ليلة`;
+  if(tb) tb.querySelector(".bm-total-row .bm-total-val").textContent=`${fmt(total)} د.ع`;
+}
+window.updateBookingCalc = updateBookingCalc;
+
+async function submitBooking(){
+  const name   = $("bm-name")?.value.trim();
+  const phone  = $("bm-phone")?.value.trim();
+  const natId  = $("bm-id")?.value.trim()||"";
+  const guests = $("bm-guests")?.value||"1";
+  const checkin= $("bm-checkin")?.value||"";
+  const note   = $("bm-note")?.value.trim()||"";
+  const errEl  = $("bm-err");
+
+  if(!name)   { if(errEl) errEl.textContent="أدخل اسم النزيل"; return; }
+  if(!phone||phone.length<10){ if(errEl) errEl.textContent="أدخل رقم هاتف صحيح"; return; }
+  if(!checkin){ if(errEl) errEl.textContent="اختر تاريخ الوصول"; return; }
+  if(errEl) errEl.textContent="";
+
+  const{hotel,room,nights}=bookingCtx;
+  const price = Number(room.price||0);
+  const total = price * nights;
+
+  const submitBtn = $("bm-submit-btn");
+  if(submitBtn){ submitBtn.classList.add("btn-ld"); submitBtn.disabled=true; }
+
+  const body={
+    action:     "BOOK_HOTEL_ROOM",
+    token:      TOKEN,
+    hotel_id:   hotel.id,
+    hotel_name: hotel.name,
+    room_id:    room.id||room.room_type||"",
+    room_type:  room.room_type||"single",
+    room_name:  room.room_name||"غرفة",
+    guest_name: name,
+    guest_phone:phone,
+    guest_national_id:natId,
+    guests:     guests,
+    date_arrive:checkin,
+    nights:     nights,
+    total:      total,
+    city:       hotel.city||"",
+    special_req:note,
+  };
+
+  try{
+    const res = await fetch(API,{method:"POST",body:JSON.stringify(body)});
+    const d   = await res.json();
+    if(d.success||d.id||d.booking_id){
+      const refId = d.id||d.booking_id||("HT"+Date.now());
+      renderBookingSuccess(name, refId, hotel, room, checkin, nights, total);
+    }else{
+      if(errEl) errEl.textContent = d.msg||"فشل الحجز، حاول مجدداً";
+    }
+  }catch(e){
+    if(errEl) errEl.textContent="فشل الاتصال بالخادم";
+  }finally{
+    if(submitBtn){ submitBtn.classList.remove("btn-ld"); submitBtn.disabled=false; }
+  }
+}
+
+function renderBookingSuccess(name, refId, hotel, room, checkin, nights, total){
+  $("bm-body").innerHTML=`
+    <div class="bm-success">
+      <div class="bm-success-ic">✅</div>
+      <div class="bm-success-title">تم تأكيد حجزك!</div>
+      <div class="bm-success-sub">
+        مرحباً ${esc(name)} 🎉<br>
+        تم استلام طلب حجزك بنجاح وسيتواصل معك الفندق قريباً.
+      </div>
+      <div class="bm-success-ref">
+        <div class="bm-success-ref-l">رقم الحجز</div>
+        <div class="bm-success-ref-v">#${esc(String(refId))}</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:13px 15px;text-align:right;margin-bottom:18px">
+        <div style="font-size:.72rem;font-weight:700;color:var(--tx2);margin-bottom:8px">ملخص الحجز</div>
+        <div style="display:flex;justify-content:space-between;font-size:.8rem;font-weight:700;margin-bottom:5px">
+          <span style="color:var(--tx2)">الفندق</span><span style="font-weight:900">${esc(hotel.name)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.8rem;font-weight:700;margin-bottom:5px">
+          <span style="color:var(--tx2)">الغرفة</span><span style="font-weight:900">${esc(room.room_name||"")}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.8rem;font-weight:700;margin-bottom:5px">
+          <span style="color:var(--tx2)">الوصول</span><span style="font-weight:900">${esc(checkin)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.8rem;font-weight:700">
+          <span style="color:var(--tx2)">الإجمالي</span>
+          <span style="font-weight:900;color:var(--green);font-size:.9rem">${fmt(total)} د.ع</span>
+        </div>
+      </div>
+      <button class="bm-submit" onclick="closeBooking()">رائع، شكراً! 🐋</button>
+    </div>`;
+}
+
+function closeBooking(){
+  $("bookingModal").classList.add("dn");
+  bookingCtx=null;
+}
+window.closeBooking=closeBooking;
+window.openBooking=openBooking;
+
+/* ════ BUTTON LOADING CLASS ════ */
+Element.prototype.addClass=Element.prototype.classList?.add;
+const _setBtn = (el,loading)=>{ if(!el)return; el.classList.toggle("btn-ld",loading); el.disabled=loading; };
 </script>
+
+<!-- btn-ld CSS patch (works without vendor prefix issue) -->
+<style>
+.btn-ld{color:transparent!important;pointer-events:none;position:relative;}
+.btn-ld::after{content:'';position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
 </body>
 </html>
-

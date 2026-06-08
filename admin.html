@@ -2,97 +2,67 @@
 <html lang="ar" dir="rtl">
 <head>
 <script>
-const V="2.0",VK="alhut_admin_v2";
+const V="3.0",VK="alhut_admin_v3";
 try{if(localStorage.getItem(VK)!==V){localStorage.setItem(VK,V);if("caches"in window)caches.keys().then(n=>n.forEach(k=>caches.delete(k)));}}catch(e){}
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-<title>الحوت — لوحة القيادة V2</title>
+<title>الحوت — لوحة القيادة V3</title>
 <meta name="theme-color" content="#F7F7F7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<!-- Leaflet + MarkerCluster -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-<!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
-/* ═══════════════════════════════════════════════════════════
-   DESIGN SYSTEM — Airbnb Clean Light
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — Al-Hut Admin V3 · Airbnb Clean Light
    Primary: #FF385C  BG: #F7F7F7  Success: #00A699
-═══════════════════════════════════════════════════════════ */
+   *** Enterprise Order Cards + Full Listing Management ***
+═══════════════════════════════════════════════════════════════ */
 :root{
-  --bg:      #F7F7F7;
-  --white:   #FFFFFF;
-  --border:  #DDDDDD;
-  --light:   #EEEEEE;
-  --red:     #FF385C;
-  --red-d:   #E31C5F;
-  --red-l:   #FFF0F2;
-  --red-m:   rgba(255,56,92,.12);
-  --red-g:   linear-gradient(135deg,#FF385C,#E31C5F);
-  --green:   #00A699;
-  --green-l: #E6F7F6;
-  --green-m: rgba(0,166,153,.12);
-  --amber:   #FC642D;
-  --amber-l: #FFF3EE;
-  --amber-m: rgba(252,100,45,.12);
-  --blue:    #0066CC;
-  --blue-l:  #EEF5FF;
-  --blue-m:  rgba(0,102,204,.1);
-  --violet:  #6B46C1;
-  --violet-l:#F3F0FF;
-  --violet-m:rgba(107,70,193,.1);
-  --tx0:     #222222;
-  --tx1:     #484848;
-  --tx2:     #717171;
-  --tx3:     #AAAAAA;
-  --tx4:     #CCCCCC;
-  --sh-card: 0 1px 2px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.05);
-  --sh-nav:  0 -1px 0 rgba(0,0,0,.06);
+  --bg:#F7F7F7;--white:#FFFFFF;--border:#DDDDDD;--light:#EEEEEE;
+  --red:#FF385C;--red-d:#E31C5F;--red-l:#FFF0F2;--red-m:rgba(255,56,92,.12);
+  --red-g:linear-gradient(135deg,#FF385C,#E31C5F);
+  --green:#00A699;--green-l:#E6F7F6;--green-m:rgba(0,166,153,.12);
+  --amber:#FC642D;--amber-l:#FFF3EE;--amber-m:rgba(252,100,45,.12);
+  --blue:#0066CC;--blue-l:#EEF5FF;--blue-m:rgba(0,102,204,.1);
+  --violet:#6B46C1;--violet-l:#F3F0FF;--violet-m:rgba(107,70,193,.1);
+  --indigo:#4338CA;--indigo-l:#EEF2FF;
+  --tx0:#222222;--tx1:#484848;--tx2:#717171;--tx3:#AAAAAA;--tx4:#CCCCCC;
+  --sh-card:0 1px 2px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.04);
+  --sh-md:0 6px 20px rgba(0,0,0,.09);
   --sh-modal:0 8px 28px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.08);
-  --sh-btn:  0 4px 12px rgba(255,56,92,.3);
-  --r2:8px;--r3:12px;--r4:16px;--r5:20px;--r6:24px;
-  --sidebar:252px;
+  --sh-btn:0 4px 12px rgba(255,56,92,.3);
+  --r2:8px;--r3:12px;--r4:16px;--r5:20px;--r6:24px;--r8:32px;
+  --sb:256px;
 }
-
 *,::before,::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;background:var(--bg);font-family:'Cairo',sans-serif;color:var(--tx0);overflow:hidden;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;}
 button,input,select,textarea{font-family:'Cairo',sans-serif;}
 .dn{display:none!important;}
 ::-webkit-scrollbar{width:5px;height:5px;}
-::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
 
-/* ══ TOASTS ══ */
-#toasts{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:8px;width:min(94%,380px);pointer-events:none;}
+/* ── TOASTS ── */
+#toasts{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:8px;width:min(94%,400px);pointer-events:none;}
 .ti{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:12px 16px;box-shadow:var(--sh-modal);display:flex;align-items:center;gap:10px;font-size:.82rem;font-weight:700;animation:tiIn .3s cubic-bezier(.34,1.56,.64,1);pointer-events:auto;}
 .ti-ic{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
 .ts .ti-ic{background:var(--green-l);color:var(--green);}
 .te .ti-ic{background:var(--red-l);color:var(--red);}
+.tw .ti-ic{background:var(--amber-l);color:var(--amber);}
 .ti-msg{flex:1;color:var(--tx1);}
 @keyframes tiIn{from{opacity:0;transform:translateY(-10px) scale(.95)}to{opacity:1;transform:none}}
 
-/* ══ NEW ORDER SIDE TOAST ══ */
-#newOrderToast{
-  position:fixed;right:20px;top:80px;z-index:88000;
-  width:300px;background:var(--white);
-  border:1.5px solid var(--border);border-right:4px solid var(--red);
-  border-radius:var(--r4);box-shadow:var(--sh-modal);
-  padding:16px;
-  transform:translateX(340px);
-  transition:transform .4s cubic-bezier(.34,1.2,.64,1);
-  display:flex;gap:10px;
-}
+/* ── SIDE TOAST (new order) ── */
+#newOrderToast{position:fixed;right:20px;top:80px;z-index:88000;width:300px;background:var(--white);border:1.5px solid var(--border);border-right:4px solid var(--red);border-radius:var(--r4);box-shadow:var(--sh-modal);padding:14px;transform:translateX(340px);transition:transform .4s cubic-bezier(.34,1.2,.64,1);display:flex;gap:10px;}
 #newOrderToast.show{transform:translateX(0);}
 .not-ic{width:40px;height:40px;border-radius:12px;background:var(--red-l);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 .not-body{flex:1;min-width:0;}
@@ -101,7 +71,7 @@ button,input,select,textarea{font-family:'Cairo',sans-serif;}
 .not-go{width:100%;margin-top:9px;padding:6px;background:var(--red-g);color:#fff;border:none;border-radius:8px;font-size:.72rem;font-weight:900;cursor:pointer;font-family:'Cairo',sans-serif;}
 .not-close{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--tx3);font-size:16px;cursor:pointer;line-height:1;}
 
-/* ══ LOADING ══ */
+/* ── LOADING ── */
 #loadScr{position:fixed;inset:0;z-index:60000;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
 .ld-whale{font-size:2.8rem;animation:ldW 1.6s ease-in-out infinite;}
 @keyframes ldW{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
@@ -110,7 +80,7 @@ button,input,select,textarea{font-family:'Cairo',sans-serif;}
 @keyframes ldP{0%{width:0%;margin-left:0%}50%{width:60%;margin-left:20%}100%{width:0%;margin-left:100%}}
 .ld-txt{font-size:.76rem;font-weight:800;color:var(--tx2);}
 
-/* ══ AUTH ══ */
+/* ── AUTH ── */
 #auth{position:fixed;inset:0;z-index:70000;background:var(--white);display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden;}
 #auth::before{content:'';position:absolute;top:0;left:0;right:0;height:50vh;background:var(--red-g);clip-path:ellipse(70% 55% at 50% 0);}
 .auth-card{width:100%;max-width:400px;background:var(--white);border-radius:var(--r6);box-shadow:var(--sh-modal);padding:40px 32px;text-align:center;position:relative;z-index:1;}
@@ -120,174 +90,210 @@ button,input,select,textarea{font-family:'Cairo',sans-serif;}
 .auth-in{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:14px 18px;font-size:1.3rem;font-weight:900;color:var(--tx0);text-align:center;letter-spacing:8px;outline:none;transition:.2s;margin-bottom:14px;caret-color:var(--red);}
 .auth-in:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);background:var(--red-l);}
 .auth-btn{width:100%;padding:14px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r4);font-size:.92rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);transition:.2s;}
-.auth-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,56,92,.4);}
-.auth-btn:active{transform:scale(.97);}
+.auth-btn:hover{transform:translateY(-2px);}
 .auth-err{color:var(--red);font-size:.76rem;font-weight:700;min-height:22px;margin-top:10px;}
+
+/* ── BTN-LD spinner ── */
 .btn-ld{color:transparent!important;pointer-events:none;position:relative;}
 .btn-ld::after{content:'';position:absolute;left:50%;top:50%;width:17px;height:17px;margin:-8.5px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ══ APP LAYOUT ══ */
+/* ── LAYOUT ── */
 #app{display:flex;height:100vh;overflow:hidden;}
-
-/* ══ SIDEBAR ══ */
-.sidebar{
-  width:var(--sidebar);height:100vh;
-  background:var(--white);border-left:1px solid var(--border);
-  position:fixed;right:0;top:0;z-index:900;
-  display:flex;flex-direction:column;overflow:hidden;
-  box-shadow:2px 0 12px rgba(0,0,0,.05);
-}
-.sb-head{padding:24px 18px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;}
-.sb-logo{width:42px;height:42px;border-radius:14px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:var(--sh-btn);}
-.sb-title{font-size:.92rem;font-weight:900;color:var(--tx0);}
+.sidebar{width:var(--sb);height:100vh;background:var(--white);border-left:1px solid var(--border);position:fixed;right:0;top:0;z-index:900;display:flex;flex-direction:column;overflow:hidden;box-shadow:2px 0 10px rgba(0,0,0,.04);}
+.sb-head{padding:20px 16px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px;flex-shrink:0;}
+.sb-logo{width:40px;height:40px;border-radius:13px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:var(--sh-btn);}
+.sb-title{font-size:.9rem;font-weight:900;color:var(--tx0);}
 .sb-ver{font-size:.58rem;font-weight:800;color:var(--red);background:var(--red-l);border:1px solid rgba(255,56,92,.15);padding:2px 7px;border-radius:6px;display:inline-block;margin-top:3px;}
-.sb-sec{font-size:.58rem;font-weight:900;color:var(--tx3);text-transform:uppercase;letter-spacing:2px;padding:14px 18px 5px;flex-shrink:0;}
-.sb-nav{flex:1;overflow-y:auto;padding:6px 10px;}
-.sbn{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:var(--r3);color:var(--tx2);font-size:.8rem;font-weight:700;cursor:pointer;margin-bottom:2px;transition:.15s;border:none;background:transparent;width:100%;text-align:right;position:relative;}
+.sb-sec{font-size:.58rem;font-weight:900;color:var(--tx3);text-transform:uppercase;letter-spacing:2px;padding:13px 16px 5px;flex-shrink:0;}
+.sb-nav{flex:1;overflow-y:auto;padding:5px 9px;}
+.sbn{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:var(--r3);color:var(--tx2);font-size:.79rem;font-weight:700;cursor:pointer;margin-bottom:2px;transition:.15s;border:none;background:transparent;width:100%;text-align:right;position:relative;}
 .sbn:hover{background:var(--bg);color:var(--tx1);}
-.sbn.on{background:var(--red-l);color:var(--red);font-weight:900;border:1px solid rgba(255,56,92,.15);}
-.sbn-ic{width:28px;height:28px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.sbn.on{background:var(--red-l);color:var(--red);font-weight:900;border:1px solid rgba(255,56,92,.12);}
+.sbn-ic{width:27px;height:27px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
 .sbn.on .sbn-ic{background:var(--red-m);}
 .sbn-badge{margin-right:auto;background:var(--red);color:#fff;font-size:.58rem;font-weight:900;padding:2px 7px;border-radius:99px;}
 .sbn-badge.amber{background:var(--amber);}
-.sb-foot{padding:12px 10px 16px;border-top:1px solid var(--border);flex-shrink:0;}
-.sb-conn{background:var(--green-l);border:1px solid rgba(0,166,153,.2);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.sb-foot{padding:11px 9px 14px;border-top:1px solid var(--border);flex-shrink:0;}
+.sb-conn{background:var(--green-l);border:1px solid rgba(0,166,153,.2);border-radius:10px;padding:8px 11px;display:flex;align-items:center;gap:8px;margin-bottom:9px;}
 .sb-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:sbP 2s infinite;}
 @keyframes sbP{0%,100%{box-shadow:0 0 0 0 rgba(0,166,153,.4)}50%{box-shadow:0 0 0 5px rgba(0,166,153,0)}}
 .sb-dot.off{background:#ef4444;animation:none;}
 .sb-ct{font-size:.72rem;font-weight:800;color:var(--green);}
 .sb-ct.off{color:#ef4444;}
-.sb-logout{width:100%;padding:10px;border-radius:var(--r3);background:transparent;border:1.5px solid var(--border);color:var(--tx2);font-size:.8rem;font-weight:800;cursor:pointer;transition:.18s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.sb-logout{width:100%;padding:10px;border-radius:var(--r3);background:transparent;border:1.5px solid var(--border);color:var(--tx2);font-size:.79rem;font-weight:800;cursor:pointer;transition:.18s;display:flex;align-items:center;justify-content:center;gap:7px;}
 .sb-logout:hover{background:var(--red-l);border-color:rgba(255,56,92,.2);color:var(--red);}
-
-/* ══ MAIN ══ */
-.main{flex:1;height:100vh;overflow-y:auto;margin-right:var(--sidebar);background:var(--bg);}
-.tab-page{display:none;padding:24px 28px 40px;}
+.main{flex:1;height:100vh;overflow-y:auto;margin-right:var(--sb);background:var(--bg);}
+.tab-page{display:none;padding:22px 26px 40px;}
 .tab-page.on{display:block;}
-.pg-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:10px;}
-.pg-title{font-size:1.4rem;font-weight:900;color:var(--tx0);letter-spacing:-.02em;}
+.pg-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;flex-wrap:wrap;gap:10px;}
+.pg-title{font-size:1.35rem;font-weight:900;color:var(--tx0);letter-spacing:-.02em;}
 .pg-sub{font-size:.74rem;font-weight:600;color:var(--tx2);margin-top:3px;}
-.clk{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);padding:7px 14px;font-size:.88rem;font-weight:900;color:var(--tx0);font-family:'IBM Plex Mono',monospace;box-shadow:var(--sh-card);}
+.clk{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);padding:7px 13px;font-size:.86rem;font-weight:900;color:var(--tx0);font-family:'IBM Plex Mono',monospace;box-shadow:var(--sh-card);}
 
-/* ══ KPI ══ */
-.kpi-g{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+/* ── LIVE MAP PAGE ── */
+#pg-live{padding:0;height:100vh;display:none;flex-direction:column;}
+#pg-live.on{display:flex;}
+.live-hdr{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--white);flex-shrink:0;box-shadow:var(--sh-card);flex-wrap:wrap;gap:9px;}
+.live-kpis{display:flex;gap:8px;}
+.lk{background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:7px 13px;display:flex;align-items:center;gap:8px;}
+.lk-v{font-size:1.1rem;font-weight:900;color:var(--tx0);}
+.lk-l{font-size:.61rem;font-weight:700;color:var(--tx2);margin-top:2px;}
+.live-body{display:flex;flex:1;overflow:hidden;}
+#amap{flex:1;}
+
+/* ── LIVE PANEL ── */
+.live-panel{width:360px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
+.lp-hd{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.lp-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:sbP 1.5s infinite;}
+.lp-title{font-size:.83rem;font-weight:900;color:var(--tx0);}
+.lp-cnt{margin-right:auto;background:var(--red);color:#fff;font-size:.6rem;font-weight:900;padding:2px 7px;border-radius:99px;display:none;}
+.lp-cnt.show{display:block;}
+.fbar{display:flex;gap:5px;padding:9px 13px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;flex-shrink:0;}
+.fbar::-webkit-scrollbar{display:none;}
+.fp{flex-shrink:0;padding:5px 11px;border-radius:99px;font-size:.7rem;font-weight:800;color:var(--tx2);background:var(--bg);border:1px solid var(--border);cursor:pointer;transition:.14s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;}
+.fp.on{background:var(--red-l);color:var(--red);border-color:rgba(255,56,92,.2);font-weight:900;}
+.fp .fc-n{font-size:.62rem;font-weight:900;background:rgba(0,0,0,.07);padding:1px 5px;border-radius:99px;}
+.fp.on .fc-n{background:rgba(255,56,92,.15);color:var(--red);}
+.lp-list{flex:1;overflow-y:auto;padding:9px 12px;}
+.lp-empty{text-align:center;padding:36px 16px;color:var(--tx3);font-size:.82rem;font-weight:700;}
+
+/* ══════════════════════════════════════════════════════════════
+   ENTERPRISE ORDER CARDS — Full Details + All Actions
+══════════════════════════════════════════════════════════════ */
+.oc{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r4);margin-bottom:10px;overflow:hidden;
+  box-shadow:var(--sh-card);transition:.2s;
+}
+.oc:hover{box-shadow:var(--sh-md);border-color:rgba(255,56,92,.12);}
+.oc-stripe{height:3px;}
+.str-p {background:linear-gradient(90deg,var(--amber),#ffb997);}
+.str-a {background:linear-gradient(90deg,var(--blue),#60a5fa);}
+.str-c {background:linear-gradient(90deg,var(--green),#34d399);}
+.str-x {background:var(--border);}
+.str-cp{background:linear-gradient(90deg,var(--red),var(--amber));}
+
+/* Header */
+.oc-hd{padding:9px 12px 0;display:flex;align-items:center;justify-content:space-between;gap:6px;}
+.oc-id{font-family:'IBM Plex Mono',monospace;font-size:.69rem;font-weight:700;color:var(--red);}
+.oc-stb{padding:3px 8px;border-radius:99px;font-size:.6rem;font-weight:900;white-space:nowrap;}
+.stb-p{background:var(--amber-l);color:var(--amber);}
+.stb-a{background:var(--blue-l);color:var(--blue);}
+.stb-g{background:var(--green-l);color:var(--green);}
+.stb-x{background:var(--bg);color:var(--tx2);}
+.stb-cp{background:var(--red-l);color:var(--red);}
+
+/* Info Grid — 2 cols, like Airbnb receipt */
+.oc-info-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:0;
+  margin:8px 12px 0;
+  border:1px solid var(--border);border-radius:var(--r2);
+  overflow:hidden;background:var(--bg);
+}
+.oc-ig{padding:7px 9px;border-left:1px solid var(--border);}
+.oc-ig:nth-child(2n){border-left:none;}
+.oc-ig:nth-child(n+3){border-top:1px solid var(--border);}
+.oc-ig.full{grid-column:1/3;border-left:none;}
+.oc-ig-lbl{font-size:.56rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+.oc-ig-val{font-size:.78rem;font-weight:800;color:var(--tx0);line-height:1.3;}
+.oc-ig-val.mono{font-family:'IBM Plex Mono',monospace;color:var(--green);font-size:.74rem;}
+.oc-ig-val.price{color:var(--green);font-size:.88rem;font-weight:900;}
+.oc-ig-val.id{font-family:'IBM Plex Mono',monospace;color:var(--blue);font-size:.72rem;}
+.oc-ig-val.loc{color:var(--indigo);cursor:pointer;text-decoration:underline;font-size:.74rem;}
+
+/* Cancel reason */
+.oc-cancel-note{margin:6px 12px 0;padding:6px 9px;background:var(--red-l);border:1px solid rgba(255,56,92,.15);border-radius:var(--r2);font-size:.65rem;font-weight:800;color:var(--red);display:flex;align-items:center;gap:5px;}
+/* Addon */
+.oc-addon{margin:5px 12px 0;display:flex;gap:5px;flex-wrap:wrap;}
+.addon-pill{background:var(--blue-l);border:1px solid rgba(0,102,204,.12);border-radius:99px;padding:2px 9px;font-size:.67rem;font-weight:800;color:var(--blue);}
+/* Note */
+.oc-note{margin:5px 12px 0;padding:6px 9px;background:var(--amber-l);border:1px solid rgba(252,100,45,.12);border-radius:var(--r2);font-size:.7rem;font-weight:700;color:var(--amber);line-height:1.5;}
+
+/* Action toolbar */
+.oc-toolbar{
+  padding:8px 12px 10px;
+  border-top:1px solid var(--light);
+  display:flex;gap:5px;flex-wrap:wrap;align-items:center;
+}
+/* Action groups */
+.oc-price-tag{font-size:.88rem;font-weight:900;color:var(--green);white-space:nowrap;margin-left:auto;}
+
+/* Primary action buttons */
+.oa{
+  padding:6px 10px;border-radius:var(--r2);border:none;
+  font-size:.7rem;font-weight:900;cursor:pointer;
+  display:flex;align-items:center;gap:4px;transition:.13s;
+  font-family:'Cairo',sans-serif;white-space:nowrap;
+}
+.oa:active{transform:scale(.9);}
+.oa-assign  {background:var(--indigo);color:#fff;}/* تعيين قسري */
+.oa-complete{background:var(--green);color:#fff;}  /* إتمام */
+.oa-cancel  {background:var(--red-l);color:var(--red);}/* إلغاء */
+.oa-rev     {background:var(--amber-l);color:var(--amber);}/* مراجعة إلغاء */
+
+/* Icon-only buttons */
+.ob{width:27px;height:27px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.14s;font-size:12px;font-weight:900;font-family:'Cairo',sans-serif;flex-shrink:0;}
+.ob:active{transform:scale(.88);}
+.ob-wa    {background:#dcfce7;color:#16a34a;}
+.ob-wa-p  {background:#dbeafe;color:#1d4ed8;}
+.ob-map   {background:var(--indigo-l);color:var(--indigo);}
+.ob-del   {background:var(--red-l);color:var(--red);}
+
+/* ── KPI ── */
+.kpi-g{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:20px;}
 @media(max-width:1200px){.kpi-g{grid-template-columns:repeat(2,1fr);}}
-.kc{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:18px 16px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;box-shadow:var(--sh-card);transition:.18s;}
-.kc:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.kc{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:17px 14px;display:flex;align-items:center;gap:13px;position:relative;overflow:hidden;box-shadow:var(--sh-card);transition:.18s;}
+.kc:hover{box-shadow:var(--sh-md);}
 .kc::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
 .kc.kr::after{background:var(--red);}
 .kc.kg::after{background:var(--green);}
 .kc.ka::after{background:var(--amber);}
 .kc.kb::after{background:var(--blue);}
 .kc.kv::after{background:var(--violet);}
-.kc-ic{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.kc-ic{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
 .kr .kc-ic{background:var(--red-l);}
 .kg .kc-ic{background:var(--green-l);}
 .ka .kc-ic{background:var(--amber-l);}
 .kb .kc-ic{background:var(--blue-l);}
 .kv .kc-ic{background:var(--violet-l);}
-.kc-v{font-size:1.9rem;font-weight:900;line-height:1;color:var(--tx0);}
-.kc-l{font-size:.65rem;font-weight:700;color:var(--tx2);margin-top:4px;}
+.kc-v{font-size:1.8rem;font-weight:900;line-height:1;color:var(--tx0);}
+.kc-l{font-size:.64rem;font-weight:700;color:var(--tx2);margin-top:4px;}
 
-/* ══ SECTIONS ══ */
-.sec-tt{font-size:.7rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+/* ── SECTION TITLE ── */
+.sec-tt{font-size:.69rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
 .sec-tt::after{content:'';flex:1;height:1px;background:var(--border);}
 
-/* ══ LIVE MAP ══ */
-#pg-live{padding:0;height:100vh;display:none;flex-direction:column;}
-#pg-live.on{display:flex;}
-.live-hdr{padding:18px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--white);flex-shrink:0;box-shadow:var(--sh-card);flex-wrap:wrap;gap:10px;}
-.live-kpis{display:flex;gap:10px;}
-.lk{background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:8px 14px;display:flex;align-items:center;gap:9px;}
-.lk-v{font-size:1.15rem;font-weight:900;color:var(--tx0);}
-.lk-l{font-size:.62rem;font-weight:700;color:var(--tx2);margin-top:2px;}
-.live-body{display:flex;flex:1;overflow:hidden;}
-#amap{flex:1;}
-.live-panel{width:340px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
-.lp-hd{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;flex-shrink:0;}
-.lp-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:sbP 1.5s infinite;}
-.lp-title{font-size:.84rem;font-weight:900;color:var(--tx0);}
-.lp-cnt{margin-right:auto;background:var(--red);color:#fff;font-size:.6rem;font-weight:900;padding:2px 7px;border-radius:99px;display:none;}
-.lp-cnt.show{display:block;}
-.fbar{display:flex;gap:5px;padding:10px 14px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;flex-shrink:0;}
-.fbar::-webkit-scrollbar{display:none;}
-.fp{flex-shrink:0;padding:5px 11px;border-radius:99px;font-size:.7rem;font-weight:800;color:var(--tx2);background:var(--bg);border:1px solid var(--border);cursor:pointer;transition:.15s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;}
-.fp.on{background:var(--red-l);color:var(--red);border-color:rgba(255,56,92,.2);font-weight:900;}
-.fp .fc-n{font-size:.62rem;font-weight:900;background:rgba(0,0,0,.07);padding:1px 5px;border-radius:99px;}
-.fp.on .fc-n{background:rgba(255,56,92,.15);color:var(--red);}
-.lp-list{flex:1;overflow-y:auto;padding:10px 14px;}
-.lp-empty{text-align:center;padding:36px 16px;color:var(--tx3);font-size:.82rem;font-weight:700;}
-
-/* ══ ORDER CARDS (Live Panel) ══ */
-.oc{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);margin-bottom:8px;overflow:hidden;box-shadow:var(--sh-card);transition:.18s;}
-.oc:hover{box-shadow:0 3px 12px rgba(0,0,0,.09);}
-.oc-stripe{height:3px;}
-.str-p{background:linear-gradient(90deg,var(--amber),#ffb997);}
-.str-a{background:linear-gradient(90deg,var(--blue),#60a5fa);}
-.str-c{background:linear-gradient(90deg,var(--green),#34d399);}
-.str-x{background:var(--border);}
-/* !! CANCEL PENDING stripe */
-.str-cp{background:linear-gradient(90deg,var(--red),var(--amber));}
-.oc-hd{padding:9px 12px 5px;display:flex;align-items:center;justify-content:space-between;}
-.oc-id{font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:700;color:var(--red);}
-.oc-stb{padding:3px 8px;border-radius:99px;font-size:.6rem;font-weight:900;}
-.stb-p{background:var(--amber-l);color:var(--amber);}
-.stb-a{background:var(--blue-l);color:var(--blue);}
-.stb-g{background:var(--green-l);color:var(--green);}
-.stb-x{background:var(--bg);color:var(--tx2);}
-.stb-cp{background:var(--red-l);color:var(--red);}
-.oc-bd{padding:4px 12px 9px;}
-.oc-ti{font-size:.84rem;font-weight:900;color:var(--tx0);margin-bottom:3px;}
-.oc-det{font-size:.68rem;font-weight:700;color:var(--tx2);line-height:1.6;}
-/* cancel reason pill */
-.oc-cr{font-size:.65rem;font-weight:800;background:var(--red-l);color:var(--red);border:1px solid rgba(255,56,92,.15);border-radius:6px;padding:3px 8px;margin-top:5px;display:inline-flex;align-items:center;gap:4px;}
-.oc-ft{padding:7px 12px 9px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.oc-price{font-size:.88rem;font-weight:900;color:var(--green);}
-.oc-acts{display:flex;gap:5px;}
-.ob{width:27px;height:27px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;font-size:11px;font-weight:900;font-family:'Cairo',sans-serif;}
-.ob:active{transform:scale(.87);}
-.ob-ok{background:var(--green-l);color:var(--green);}
-.ob-del{background:var(--red-l);color:var(--red);}
-.ob-wa{background:#dcfce7;color:#16a34a;}
-/* Cancel review buttons */
-.ob-back{background:var(--blue-l);color:var(--blue);}
-.ob-approve{background:var(--green-l);color:var(--green);}
-.ob-nuke{background:var(--red-l);color:var(--red);}
-
-/* ══ CANCEL TAB ══ */
-.cancel-panel{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:16px;margin-bottom:14px;box-shadow:var(--sh-card);}
-.cancel-badge{display:inline-flex;align-items:center;gap:5px;background:var(--red-l);color:var(--red);border:1px solid rgba(255,56,92,.2);border-radius:99px;font-size:.68rem;font-weight:900;padding:3px 10px;}
-
-/* ══ CHARTS ══ */
-.chart-g{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;}
+/* ── CHARTS ── */
+.chart-g{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:20px;}
 @media(max-width:900px){.chart-g{grid-template-columns:1fr;}}
-.ch-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:18px;box-shadow:var(--sh-card);}
-.ch-tt{font-size:.8rem;font-weight:900;color:var(--tx0);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
-.ch-in{position:relative;height:195px;}
+.ch-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:16px;box-shadow:var(--sh-card);}
+.ch-tt{font-size:.79rem;font-weight:900;color:var(--tx0);margin-bottom:13px;}
+.ch-in{position:relative;height:190px;}
 
-/* ══ TABLE ══ */
+/* ── TABLE ── */
 .tb-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);overflow:hidden;box-shadow:var(--sh-card);}
-.tb-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);gap:10px;flex-wrap:wrap;}
-.tb-tt{font-size:.85rem;font-weight:900;color:var(--tx0);}
-.tb-cnt{background:var(--red-l);color:var(--red);font-size:.62rem;font-weight:900;padding:2px 8px;border-radius:99px;margin-right:6px;}
-.si{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:7px 12px;font-size:.78rem;font-weight:700;color:var(--tx0);outline:none;width:190px;transition:.2s;}
+.tb-hdr{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);gap:9px;flex-wrap:wrap;}
+.tb-tt{font-size:.84rem;font-weight:900;color:var(--tx0);}
+.tb-cnt{background:var(--red-l);color:var(--red);font-size:.61rem;font-weight:900;padding:2px 8px;border-radius:99px;margin-right:6px;}
+.si{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:7px 11px;font-size:.77rem;font-weight:700;color:var(--tx0);outline:none;width:185px;transition:.18s;}
 .si:focus{border-color:var(--red);background:var(--red-l);}
 .si::placeholder{color:var(--tx3);}
-.sel{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:7px 12px;font-size:.78rem;font-weight:700;color:var(--tx1);outline:none;}
+.sel{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:7px 11px;font-size:.77rem;font-weight:700;color:var(--tx1);outline:none;}
 .sel option{background:var(--white);}
-.btn-exp{padding:7px 16px;border-radius:var(--r2);border:none;background:var(--red-g);color:#fff;font-size:.76rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);transition:.18s;white-space:nowrap;font-family:'Cairo',sans-serif;}
+.btn-exp{padding:7px 15px;border-radius:var(--r2);border:none;background:var(--red-g);color:#fff;font-size:.75rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);transition:.17s;white-space:nowrap;font-family:'Cairo',sans-serif;}
 .btn-exp:hover{transform:translateY(-1px);}
-.dr-wrap{display:flex;gap:7px;align-items:center;}
+.dr-wrap{display:flex;gap:6px;align-items:center;}
 .dr-sep{font-size:.7rem;font-weight:700;color:var(--tx2);}
 input[type="date"].si{width:140px;}
 .tb-sc{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;min-width:700px;}
-th{padding:11px 13px;font-size:.67rem;font-weight:900;color:var(--tx2);background:var(--bg);border-bottom:1px solid var(--border);text-align:right;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;}
-td{padding:11px 13px;font-size:.78rem;font-weight:700;border-bottom:1px solid var(--border);color:var(--tx1);white-space:nowrap;}
+table{width:100%;border-collapse:collapse;min-width:720px;}
+th{padding:10px 12px;font-size:.66rem;font-weight:900;color:var(--tx2);background:var(--bg);border-bottom:1px solid var(--border);text-align:right;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;}
+td{padding:10px 12px;font-size:.77rem;font-weight:700;border-bottom:1px solid var(--border);color:var(--tx1);white-space:nowrap;}
 tr:hover td{background:var(--bg);}
 tr:last-child td{border-bottom:none;}
-td.mono{font-family:'IBM Plex Mono',monospace;color:var(--red);font-size:.72rem;}
+td.mono{font-family:'IBM Plex Mono',monospace;color:var(--red);font-size:.71rem;}
 td.hi{color:var(--green);font-weight:900;}
 .stb{padding:3px 8px;border-radius:99px;font-size:.62rem;font-weight:900;}
 .stb-comp{background:var(--green-l);color:var(--green);}
@@ -296,158 +302,259 @@ td.hi{color:var(--green);font-weight:900;}
 .stb-canc{background:var(--bg);color:var(--tx2);}
 .stb-cpnd{background:var(--red-l);color:var(--red);}
 
-/* ══ ENTITY CARDS ══ */
-.efil{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
-.ef{padding:6px 14px;border-radius:99px;border:1.5px solid var(--border);background:var(--white);color:var(--tx2);font-size:.72rem;font-weight:800;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:5px;}
+/* ── ENTITY CARDS ── */
+.efil{display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap;}
+.ef{padding:6px 13px;border-radius:99px;border:1.5px solid var(--border);background:var(--white);color:var(--tx2);font-size:.71rem;font-weight:800;cursor:pointer;transition:.13s;display:flex;align-items:center;gap:5px;}
 .ef:hover{color:var(--tx1);}
-.ef.on{background:var(--red-l);color:var(--red);border-color:rgba(255,56,92,.2);}
-.ef.jade.on{background:var(--green-l);color:var(--green);border-color:rgba(0,166,153,.2);}
-.ef.amber.on{background:var(--amber-l);color:var(--amber);border-color:rgba(252,100,45,.2);}
-.ef.rose.on{background:var(--red-l);color:var(--red);border-color:rgba(255,56,92,.2);}
+.ef.on{background:var(--red-l);color:var(--red);border-color:rgba(255,56,92,.18);}
+.ef.jade.on{background:var(--green-l);color:var(--green);border-color:rgba(0,166,153,.18);}
+.ef.amber.on{background:var(--amber-l);color:var(--amber);border-color:rgba(252,100,45,.18);}
+.ef.rose.on{background:var(--red-l);color:var(--red);border-color:rgba(255,56,92,.18);}
 .ef-n{font-size:.6rem;font-weight:900;background:rgba(0,0,0,.07);padding:1px 5px;border-radius:99px;}
-.entity-g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.entity-g{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
 @media(max-width:1100px){.entity-g{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:700px){.entity-g{grid-template-columns:1fr;}}
 .ec{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);overflow:hidden;box-shadow:var(--sh-card);transition:.2s;display:flex;flex-direction:column;}
-.ec:hover{box-shadow:0 4px 18px rgba(0,0,0,.1);transform:translateY(-2px);}
+.ec:hover{box-shadow:var(--sh-md);transform:translateY(-2px);}
 .ec-bar{height:3px;}
 .ec.s-active .ec-bar{background:var(--green);}
 .ec.s-pending .ec-bar{background:var(--amber);}
 .ec.s-blocked .ec-bar{background:var(--red);}
 .ec-img{width:100%;height:110px;object-fit:cover;}
 .ec-noimg{width:100%;height:110px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:2.2rem;color:var(--tx4);border-bottom:1px solid var(--border);}
-.ec-body{padding:14px;flex:1;}
-.ec-name{font-size:.9rem;font-weight:900;color:var(--tx0);margin-bottom:6px;}
-.ec-meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
-.ec-city{font-size:.65rem;font-weight:800;color:var(--red);background:var(--red-l);padding:2px 8px;border-radius:6px;}
+.ec-body{padding:13px;flex:1;}
+.ec-name{font-size:.9rem;font-weight:900;color:var(--tx0);margin-bottom:5px;}
+.ec-meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:9px;}
+.ec-city{font-size:.64rem;font-weight:800;color:var(--red);background:var(--red-l);padding:2px 8px;border-radius:6px;}
 .ec-ph{font-size:.7rem;font-weight:700;color:var(--tx2);direction:ltr;}
-.ec-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;}
+.ec-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:9px;}
 .est{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:7px 5px;text-align:center;}
-.est-v{font-size:.92rem;font-weight:900;color:var(--tx0);line-height:1;}
-.est-v.g{color:var(--green);}.est-v.r{color:var(--red);}.est-v.y{color:var(--amber);}
-.est-l{font-size:.56rem;font-weight:700;color:var(--tx3);margin-top:3px;}
-.ec-comm{font-size:.68rem;font-weight:700;color:var(--tx2);background:var(--bg);border-radius:7px;padding:5px 9px;margin-bottom:9px;border:1px solid var(--border);}
-.ec-acts{padding:11px 14px;border-top:1px solid var(--border);display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;}
-.ea{padding:6px 11px;border-radius:var(--r2);border:none;font-size:.7rem;font-weight:800;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:4px;font-family:'Cairo',sans-serif;}
-.ea:active{transform:scale(.93);}
+.est-v{font-size:.9rem;font-weight:900;color:var(--tx0);line-height:1;}
+.est-v.g{color:var(--green);}
+.est-v.r{color:var(--red);}
+.est-v.y{color:var(--amber);}
+.est-l{font-size:.55rem;font-weight:700;color:var(--tx3);margin-top:3px;}
+.ec-comm{font-size:.68rem;font-weight:700;color:var(--tx2);background:var(--bg);border-radius:7px;padding:5px 8px;margin-bottom:8px;border:1px solid var(--border);}
+.ec-acts{padding:10px 13px;border-top:1px solid var(--border);display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;}
+.ea{padding:5px 10px;border-radius:var(--r2);border:none;font-size:.69rem;font-weight:800;cursor:pointer;transition:.13s;display:flex;align-items:center;gap:4px;font-family:'Cairo',sans-serif;}
+.ea:active{transform:scale(.92);}
 .ea-ok{background:var(--green-l);color:var(--green);}
 .ea-blk{background:var(--red-l);color:var(--red);}
 .ea-rst{background:var(--amber-l);color:var(--amber);}
 .ea-edit{background:var(--blue-l);color:var(--blue);}
 .ea-wa{background:#dcfce7;color:#16a34a;}
 
-/* ══ SHARED FLEET ADD FORM ══ */
-.add-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:20px;margin-bottom:16px;box-shadow:var(--sh-card);}
-.add-tt{font-size:.9rem;font-weight:900;color:var(--tx0);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:12px;}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:12px;}
-.fld-lbl{font-size:.63rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:5px;display:block;}
-.fc{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);padding:10px 12px;font-size:.84rem;font-weight:700;color:var(--tx0);outline:none;transition:.2s;}
+/* ══════════════════════════════════════════════════════════════
+   LISTINGS PAGE (Cars + Rooms) — Full Management
+══════════════════════════════════════════════════════════════ */
+.lst-tabs{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:var(--r4);padding:4px;margin-bottom:18px;gap:4px;}
+.lst-tab{flex:1;padding:9px 12px;border-radius:var(--r3);font-size:.8rem;font-weight:800;color:var(--tx2);text-align:center;cursor:pointer;transition:.18s;border:none;background:transparent;display:flex;align-items:center;justify-content:center;gap:6px;}
+.lst-tab.on{background:var(--white);color:var(--red);box-shadow:var(--sh-card);}
+.lst-cnt{font-size:.62rem;font-weight:900;background:var(--red-l);color:var(--red);padding:2px 7px;border-radius:99px;}
+.lst-tab.on .lst-cnt{background:var(--red);color:#fff;}
+
+/* listing grid */
+.listing-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.li{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);overflow:hidden;box-shadow:var(--sh-card);transition:.2s;display:flex;flex-direction:column;}
+.li:hover{box-shadow:var(--sh-md);transform:translateY(-2px);}
+.li-img{width:100%;height:140px;object-fit:cover;display:block;}
+.li-noimg{width:100%;height:140px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:var(--tx4);border-bottom:1px solid var(--border);}
+.li-body{padding:12px;flex:1;}
+.li-name{font-size:.9rem;font-weight:900;color:var(--tx0);margin-bottom:5px;}
+.li-meta{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;align-items:center;}
+.li-tag{font-size:.63rem;font-weight:800;padding:2px 8px;border-radius:6px;}
+.li-tag.type{background:var(--blue-l);color:var(--blue);}
+.li-tag.owner{background:var(--green-l);color:var(--green);}
+.li-tag.shared{background:var(--violet-l);color:var(--violet);}
+.li-tag.status-active{background:var(--green-l);color:var(--green);}
+.li-tag.status-inactive{background:var(--red-l);color:var(--red);}
+.li-tag.status-rented{background:var(--amber-l);color:var(--amber);}
+.li-info{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;}
+.li-row{background:var(--bg);border-radius:6px;padding:5px 7px;}
+.li-row-l{font-size:.56rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;}
+.li-row-v{font-size:.76rem;font-weight:900;color:var(--tx0);margin-top:1px;}
+.li-row-v.price{color:var(--green);}
+.li-plate{font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:700;color:var(--tx1);}
+.li-acts{padding:10px 12px;border-top:1px solid var(--border);display:flex;gap:5px;justify-content:flex-end;}
+.la{padding:6px 11px;border-radius:var(--r2);border:none;font-size:.69rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:4px;transition:.13s;font-family:'Cairo',sans-serif;}
+.la:active{transform:scale(.92);}
+.la-edit{background:var(--blue-l);color:var(--blue);}
+.la-del{background:var(--red-l);color:var(--red);}
+.la-toggle{background:var(--amber-l);color:var(--amber);}
+
+/* ── ADD FORM (shared fleet + inline) ── */
+.add-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:18px;margin-bottom:16px;box-shadow:var(--sh-card);}
+.add-tt{font-size:.88rem;font-weight:900;color:var(--tx0);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:11px;}
+.fld-lbl{font-size:.62rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1.1px;margin-bottom:5px;display:block;}
+.fc{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);padding:10px 11px;font-size:.83rem;font-weight:700;color:var(--tx0);outline:none;transition:.2s;}
 .fc:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);}
 .fc::placeholder{color:var(--tx4);font-weight:500;}
 select.fc{cursor:pointer;}
 select.fc option{background:var(--white);}
-.uz{border:2px dashed var(--border);border-radius:var(--r3);background:var(--bg);height:130px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;cursor:pointer;transition:.2s;margin-bottom:12px;position:relative;overflow:hidden;}
+.uz{border:2px dashed var(--border);border-radius:var(--r3);background:var(--bg);height:120px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;cursor:pointer;transition:.2s;margin-bottom:11px;position:relative;overflow:hidden;}
 .uz:hover{border-color:var(--red);background:var(--red-l);}
 .uz.filled{border-style:solid;border-color:var(--border);}
 .uz-prev{position:absolute;inset:0;object-fit:cover;width:100%;height:100%;}
-.uz-ov{position:absolute;inset:0;background:rgba(255,255,255,.85);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;}
+.uz-ov{position:absolute;inset:0;background:rgba(255,255,255,.84);display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;}
 .uz:hover .uz-ov{opacity:1;}
-.uz-ov-t{font-size:.76rem;font-weight:900;color:var(--red);}
-.uz-ico{font-size:1.9rem;color:var(--tx4);}
-.uz-lbl{font-size:.74rem;font-weight:700;color:var(--tx2);}
-.uz-sub{font-size:.6rem;font-weight:600;color:var(--tx3);}
+.uz-ov-t{font-size:.75rem;font-weight:900;color:var(--red);}
+.uz-ico{font-size:1.8rem;color:var(--tx4);}
+.uz-lbl{font-size:.73rem;font-weight:700;color:var(--tx2);}
 .comp-badge{position:absolute;top:7px;right:7px;background:var(--green);color:#fff;font-size:.6rem;font-weight:900;padding:2px 7px;border-radius:99px;opacity:0;transition:.3s;}
 .uz.filled .comp-badge{opacity:1;}
-.btn-pri{width:100%;padding:13px;border:none;border-radius:var(--r4);background:var(--red-g);color:#fff;font-size:.88rem;font-weight:900;cursor:pointer;transition:.2s;box-shadow:var(--sh-btn);display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Cairo',sans-serif;}
+.btn-pri{width:100%;padding:12px;border:none;border-radius:var(--r4);background:var(--red-g);color:#fff;font-size:.88rem;font-weight:900;cursor:pointer;transition:.2s;box-shadow:var(--sh-btn);display:flex;align-items:center;justify-content:center;gap:7px;font-family:'Cairo',sans-serif;}
 .btn-pri:active{transform:scale(.97);box-shadow:none;}
 
-/* ══ BROADCAST ══ */
-.bc-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:16px;margin-bottom:16px;box-shadow:var(--sh-card);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-.bc-input{flex:1;min-width:200px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:10px 14px;font-size:.84rem;font-weight:700;color:var(--tx0);outline:none;transition:.2s;}
+/* ── BROADCAST / CANCEL PANELS ── */
+.bc-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:14px;margin-bottom:14px;box-shadow:var(--sh-card);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.bc-input{flex:1;min-width:180px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:9px 13px;font-size:.83rem;font-weight:700;color:var(--tx0);outline:none;transition:.2s;}
 .bc-input:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);}
-.btn-bc{padding:10px 18px;border-radius:var(--r3);border:none;background:var(--red-g);color:#fff;font-size:.8rem;font-weight:900;cursor:pointer;white-space:nowrap;box-shadow:var(--sh-btn);font-family:'Cairo',sans-serif;transition:.18s;}
+.btn-bc{padding:9px 16px;border-radius:var(--r3);border:none;background:var(--red-g);color:#fff;font-size:.79rem;font-weight:900;cursor:pointer;white-space:nowrap;box-shadow:var(--sh-btn);font-family:'Cairo',sans-serif;transition:.17s;}
 .btn-bc:active{transform:scale(.96);}
 
-/* ══ WHATSAPP MODAL ══ */
-#waModal{position:fixed;inset:0;z-index:45000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;padding:16px;}
-.wa-sheet{background:var(--white);border-radius:var(--r5) var(--r5) var(--r4) var(--r4);width:100%;max-width:480px;box-shadow:var(--sh-modal);animation:shUp .3s cubic-bezier(.34,1.2,.64,1);max-height:80vh;overflow-y:auto;}
-@keyframes shUp{from{transform:translateY(100%)}to{transform:none}}
-.wa-hd{padding:14px 18px 11px;border-bottom:1px solid var(--border);}
-.wa-hd-h{font-size:.9rem;font-weight:900;color:var(--tx0);margin-bottom:2px;}
-.wa-hd-s{font-size:.7rem;font-weight:600;color:var(--tx2);}
-.wa-chip{display:inline-flex;align-items:center;gap:4px;background:var(--green-l);border:1px solid rgba(0,166,153,.2);border-radius:99px;padding:3px 9px;font-size:.68rem;font-weight:800;color:var(--green);margin-top:5px;}
-.wa-tmps{padding:10px 16px;}
-.wa-tmp{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:12px 13px;margin-bottom:8px;cursor:pointer;transition:.18s;}
-.wa-tmp:hover{border-color:rgba(22,163,74,.3);background:#f0fdf4;}
-.wa-tmp:active{transform:scale(.97);}
-.wa-tmp-txt{font-size:.8rem;font-weight:700;color:var(--tx1);line-height:1.6;}
-.wa-tmp-row{display:flex;align-items:center;justify-content:space-between;margin-top:7px;}
-.wa-tmp-lbl{font-size:.63rem;font-weight:800;color:var(--tx2);}
-.wa-snd{background:#dcfce7;color:#16a34a;border:1px solid #bbf7d0;border-radius:7px;padding:4px 9px;font-size:.68rem;font-weight:900;cursor:pointer;font-family:'Cairo',sans-serif;}
-.wa-close{width:calc(100% - 32px);margin:4px 16px calc(16px + env(safe-area-inset-bottom));padding:11px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);color:var(--tx2);font-size:.8rem;font-weight:800;cursor:pointer;font-family:'Cairo',sans-serif;}
+.cancel-panel{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:14px;margin-bottom:12px;box-shadow:var(--sh-card);}
+.cancel-badge{display:inline-flex;align-items:center;gap:5px;background:var(--red-l);color:var(--red);border:1px solid rgba(255,56,92,.2);border-radius:99px;font-size:.67rem;font-weight:900;padding:3px 10px;}
 
-/* ══ CANCEL REVIEW MODAL ══ */
+/* ══════════════════════════════════════════════════════════════
+   MODALS
+══════════════════════════════════════════════════════════════ */
+/* WA Sheet */
+#waModal{position:fixed;inset:0;z-index:45000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;padding:16px;}
+.wa-sheet{background:var(--white);border-radius:var(--r5) var(--r5) var(--r4) var(--r4);width:100%;max-width:520px;box-shadow:var(--sh-modal);animation:shUp .3s cubic-bezier(.34,1.2,.64,1);max-height:82vh;overflow-y:auto;}
+@keyframes shUp{from{transform:translateY(100%)}to{transform:none}}
+.wa-hd{padding:13px 17px 10px;border-bottom:1px solid var(--border);}
+.wa-hd-h{font-size:.9rem;font-weight:900;color:var(--tx0);margin-bottom:2px;}
+.wa-hd-s{font-size:.69rem;font-weight:600;color:var(--tx2);}
+.wa-chip{display:inline-flex;align-items:center;gap:4px;background:var(--green-l);border:1px solid rgba(0,166,153,.2);border-radius:99px;padding:3px 9px;font-size:.67rem;font-weight:800;color:var(--green);margin-top:5px;}
+.wa-tmps{padding:10px 15px;}
+.wa-tmp{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:11px 12px;margin-bottom:8px;cursor:pointer;transition:.17s;}
+.wa-tmp:hover{border-color:rgba(22,163,74,.28);background:#f0fdf4;}
+.wa-tmp:active{transform:scale(.97);}
+.wa-tmp-txt{font-size:.79rem;font-weight:700;color:var(--tx1);line-height:1.6;}
+.wa-tmp-row{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
+.wa-tmp-lbl{font-size:.62rem;font-weight:800;color:var(--tx2);}
+.wa-snd{background:#dcfce7;color:#16a34a;border:1px solid #bbf7d0;border-radius:7px;padding:4px 9px;font-size:.67rem;font-weight:900;cursor:pointer;font-family:'Cairo',sans-serif;}
+.wa-close{width:calc(100% - 30px);margin:4px 15px 14px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);color:var(--tx2);font-size:.79rem;font-weight:800;cursor:pointer;font-family:'Cairo',sans-serif;}
+
+/* Cancel Review */
 #cancelReviewModal{position:fixed;inset:0;z-index:45000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;}
-.cr-card{background:var(--white);border-radius:var(--r5);width:100%;max-width:420px;padding:28px 24px;box-shadow:var(--sh-modal);animation:crIn .3s cubic-bezier(.34,1.3,.64,1);}
+.cr-card{background:var(--white);border-radius:var(--r5);width:100%;max-width:440px;padding:26px 22px;box-shadow:var(--sh-modal);animation:crIn .3s cubic-bezier(.34,1.3,.64,1);}
 @keyframes crIn{from{opacity:0;transform:scale(.88) translateY(10px)}to{opacity:1;transform:none}}
-.cr-icon{font-size:2.6rem;text-align:center;margin-bottom:12px;}
-.cr-title{font-size:1rem;font-weight:900;color:var(--tx0);text-align:center;margin-bottom:5px;}
-.cr-sub{font-size:.78rem;font-weight:600;color:var(--tx2);text-align:center;line-height:1.7;margin-bottom:16px;}
-.cr-info{background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:12px 14px;margin-bottom:16px;}
+.cr-icon{font-size:2.4rem;text-align:center;margin-bottom:11px;}
+.cr-title{font-size:.98rem;font-weight:900;color:var(--tx0);text-align:center;margin-bottom:4px;}
+.cr-sub{font-size:.77rem;font-weight:600;color:var(--tx2);text-align:center;line-height:1.7;margin-bottom:14px;}
+.cr-info{background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:11px 13px;margin-bottom:14px;}
 .cr-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);}
 .cr-row:last-child{border-bottom:none;}
 .cr-lbl{font-size:.7rem;font-weight:700;color:var(--tx2);}
-.cr-val{font-size:.78rem;font-weight:900;color:var(--tx0);text-align:left;}
-.cr-reason-box{background:var(--red-l);border:1px solid rgba(255,56,92,.2);border-radius:var(--r2);padding:9px 12px;margin-bottom:16px;font-size:.76rem;font-weight:700;color:var(--red);line-height:1.6;}
-.cr-btns{display:flex;gap:8px;}
-.crb{flex:1;padding:11px 8px;border-radius:var(--r3);border:none;font-size:.76rem;font-weight:900;cursor:pointer;font-family:'Cairo',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;transition:.18s;}
+.cr-val{font-size:.77rem;font-weight:900;color:var(--tx0);text-align:left;}
+.cr-reason-box{background:var(--red-l);border:1px solid rgba(255,56,92,.18);border-radius:var(--r2);padding:8px 11px;margin-bottom:14px;font-size:.75rem;font-weight:700;color:var(--red);line-height:1.55;}
+.cr-btns{display:flex;gap:7px;}
+.crb{flex:1;padding:10px 7px;border-radius:var(--r3);border:none;font-size:.74rem;font-weight:900;cursor:pointer;font-family:'Cairo',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;transition:.17s;}
 .crb:active{transform:scale(.95);}
 .crb-back{background:var(--blue-l);color:var(--blue);}
-.crb-ok{background:var(--green-l);color:var(--green);}
-.crb-del{background:var(--red-g);color:#fff;box-shadow:var(--sh-btn);}
+.crb-ok  {background:var(--green-l);color:var(--green);}
+.crb-del {background:var(--red-g);color:#fff;box-shadow:var(--sh-btn);}
 
-/* ══ EDIT MODAL ══ */
-#editModal,#sharedAddModal{position:fixed;inset:0;z-index:45000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;}
-#editModal.open,#sharedAddModal.open{display:flex;}
-.mod-card{background:var(--white);border-radius:var(--r5);width:100%;max-width:480px;padding:26px 22px;box-shadow:var(--sh-modal);animation:crIn .3s cubic-bezier(.34,1.3,.64,1);max-height:92vh;overflow-y:auto;}
-.mod-title{font-size:1rem;font-weight:900;color:var(--tx0);text-align:center;margin-bottom:4px;}
-.mod-sub{font-size:.74rem;font-weight:700;color:var(--tx2);text-align:center;margin-bottom:20px;}
+/* Assign Modal */
+#assignModal{position:fixed;inset:0;z-index:45000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;}
+.assign-card{background:var(--white);border-radius:var(--r5);width:100%;max-width:460px;padding:26px 22px;box-shadow:var(--sh-modal);animation:crIn .3s cubic-bezier(.34,1.3,.64,1);}
+.assign-title{font-size:.96rem;font-weight:900;color:var(--tx0);margin-bottom:5px;}
+.assign-sub{font-size:.77rem;font-weight:600;color:var(--tx2);margin-bottom:16px;line-height:1.6;}
+.assign-search{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:10px 13px;font-size:.84rem;font-weight:700;color:var(--tx0);outline:none;margin-bottom:12px;transition:.2s;}
+.assign-search:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);}
+.assign-list{max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--r3);margin-bottom:14px;}
+.assign-opt{padding:10px 13px;cursor:pointer;transition:.14s;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border);}
+.assign-opt:last-child{border-bottom:none;}
+.assign-opt:hover{background:var(--red-l);}
+.assign-opt.selected{background:var(--green-l);}
+.assign-ic{width:32px;height:32px;border-radius:9px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.assign-nm{font-size:.82rem;font-weight:900;color:var(--tx0);}
+.assign-city{font-size:.66rem;font-weight:700;color:var(--tx2);}
+.assign-btn-row{display:flex;gap:9px;}
+.assign-cancel{flex:1;padding:11px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);color:var(--tx1);font-size:.82rem;font-weight:800;cursor:pointer;font-family:'Cairo',sans-serif;}
+.assign-confirm{flex:1;padding:11px;background:var(--red-g);border:none;border-radius:var(--r3);color:#fff;font-size:.82rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);font-family:'Cairo',sans-serif;}
+.assign-confirm:active{transform:scale(.97);}
+
+/* Edit Modal */
+#editModal,#listingEditModal{position:fixed;inset:0;z-index:45000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;}
+#editModal.open,#listingEditModal.open{display:flex;}
+.mod-card{background:var(--white);border-radius:var(--r5);width:100%;max-width:490px;padding:24px 20px;box-shadow:var(--sh-modal);animation:crIn .3s cubic-bezier(.34,1.3,.64,1);max-height:92vh;overflow-y:auto;}
+.mod-title{font-size:.96rem;font-weight:900;color:var(--tx0);text-align:center;margin-bottom:4px;}
+.mod-sub{font-size:.73rem;font-weight:700;color:var(--tx2);text-align:center;margin-bottom:18px;}
 .mod-acts{display:flex;gap:9px;margin-top:10px;}
-.m-cancel{flex:1;padding:11px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);color:var(--tx1);font-size:.82rem;font-weight:800;cursor:pointer;font-family:'Cairo',sans-serif;}
-.m-save{flex:1;padding:11px;background:var(--red-g);border:none;border-radius:var(--r3);color:#fff;font-size:.82rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);font-family:'Cairo',sans-serif;}
+.m-cancel{flex:1;padding:11px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);color:var(--tx1);font-size:.81rem;font-weight:800;cursor:pointer;font-family:'Cairo',sans-serif;}
+.m-save{flex:1;padding:11px;background:var(--red-g);border:none;border-radius:var(--r3);color:#fff;font-size:.81rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);font-family:'Cairo',sans-serif;}
 .m-save:active{transform:scale(.97);}
-.el{font-size:.64rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:5px;display:block;margin-top:11px;}
+.el{font-size:.63rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:5px;display:block;margin-top:11px;}
 .el:first-of-type{margin-top:0;}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
 
-/* ══ MOBILE ══ */
+/* Order Detail Sheet */
+#orderDetailModal{position:fixed;inset:0;z-index:45000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;}
+.od-sheet{background:var(--white);border-radius:var(--r5) var(--r5) 0 0;width:100%;max-width:640px;box-shadow:var(--sh-modal);animation:shUp .3s cubic-bezier(.34,1.2,.64,1);max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;}
+.od-hd{padding:0 20px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;}
+.od-hdl{font-size:.9rem;font-weight:900;color:var(--tx0);padding:14px 0;}
+.od-close{background:none;border:none;color:var(--tx3);font-size:20px;cursor:pointer;padding:8px;}
+.od-map{width:100%;height:220px;flex-shrink:0;}
+.od-body{padding:16px 20px;flex:1;}
+.od-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.od-cell{background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:9px 11px;}
+.od-cell.full{grid-column:1/3;}
+.od-cell-l{font-size:.57rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+.od-cell-v{font-size:.82rem;font-weight:800;color:var(--tx0);}
+.od-cell-v.green{color:var(--green);}
+.od-cell-v.mono{font-family:'IBM Plex Mono',monospace;color:var(--blue);font-size:.78rem;}
+.od-cell-v.red{color:var(--red);}
+.od-wa-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.od-wa-btn{flex:1;min-width:140px;padding:10px;border-radius:var(--r3);border:none;font-size:.78rem;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Cairo',sans-serif;transition:.15s;}
+.od-wa-btn:active{transform:scale(.97);}
+.od-wa-cust{background:#dcfce7;color:#16a34a;}
+.od-wa-part{background:#dbeafe;color:#1d4ed8;}
+.od-actions{padding:12px 20px 16px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+.od-act{flex:1;min-width:120px;padding:11px;border-radius:var(--r3);border:none;font-size:.79rem;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;font-family:'Cairo',sans-serif;transition:.15s;}
+.od-act:active{transform:scale(.97);}
+.od-act.assign{background:var(--indigo);color:#fff;}
+.od-act.complete{background:var(--green);color:#fff;}
+.od-act.cancel{background:var(--red-l);color:var(--red);}
+.od-act.detail{background:var(--bg);color:var(--tx1);border:1.5px solid var(--border);}
+
+/* ── MOBILE ── */
 @media(max-width:768px){
   .sidebar{display:none!important;}
   .main{margin-right:0;padding-bottom:70px;}
-  .tab-page{padding:14px;padding-bottom:80px;}
+  .tab-page{padding:13px;padding-bottom:80px;}
   .kpi-g{grid-template-columns:1fr 1fr;gap:9px;}
   .chart-g{grid-template-columns:1fr;}
   .entity-g{grid-template-columns:1fr;}
-  .live-panel{display:none;}
+  .live-panel{width:100%;}
   #pg-live{padding-bottom:70px;}
-  .live-hdr{padding:10px 14px;flex-wrap:wrap;gap:7px;}
   .bnav{display:flex;}
   #newOrderToast{right:10px;top:60px;width:calc(100% - 20px);}
+  .listing-g{grid-template-columns:1fr 1fr;}
+  .od-sheet{max-height:95vh;}
+  .od-map{height:170px;}
 }
-.bnav{display:none;position:fixed;bottom:0;left:0;right:0;height:64px;background:rgba(255,255,255,.92);backdrop-filter:blur(20px);border-top:1px solid var(--border);justify-content:space-around;align-items:center;z-index:9000;padding-bottom:env(safe-area-inset-bottom);}
-.bni{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:7px 12px;}
-.bni-ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--tx3);font-size:15px;transition:.18s;}
-.bni-lb{font-size:.56rem;font-weight:700;color:var(--tx3);}
+.bnav{display:none;position:fixed;bottom:0;left:0;right:0;height:64px;background:rgba(255,255,255,.92);backdrop-filter:blur(18px);border-top:1px solid var(--border);justify-content:space-around;align-items:center;z-index:9000;padding-bottom:env(safe-area-inset-bottom);}
+.bni{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:7px 11px;}
+.bni-ic{width:33px;height:33px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--tx3);font-size:15px;transition:.17s;}
+.bni-lb{font-size:.55rem;font-weight:700;color:var(--tx3);}
 .bni.on .bni-ic{background:var(--red-l);color:var(--red);}
 .bni.on .bni-lb{color:var(--red);font-weight:900;}
+/* leaflet */
+.leaflet-popup-content-wrapper{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);box-shadow:var(--sh-modal);color:var(--tx0);}
+.leaflet-popup-tip{background:var(--white);}
+.popup-title{font-weight:900;font-size:.83rem;margin-bottom:3px;}
+.popup-sub{font-size:.69rem;font-weight:700;color:var(--tx2);}
 </style>
 </head>
 <body>
 <audio id="sndNew" src="https://actions.google.com/sounds/v1/alarms/submarine_dive_horn.ogg" preload="auto"></audio>
 <div id="toasts"></div>
 
-<!-- ══ SIDE TOAST ══ -->
+<!-- ═══════════════ SIDE TOAST ═══════════════ -->
 <div id="newOrderToast" role="alert">
   <div class="not-ic">🔔</div>
   <div class="not-body">
@@ -458,299 +565,32 @@ select.fc option{background:var(--white);}
   <button class="not-close" onclick="hideNewOrderToast()">✕</button>
 </div>
 
-<!-- ══ LOADING ══ -->
+<!-- LOADING -->
 <div id="loadScr" class="dn">
   <div class="ld-whale">🐋</div>
   <div class="ld-bar"><div class="ld-prog"></div></div>
   <div class="ld-txt" id="ldTxt">جاري المعالجة...</div>
 </div>
 
-<!-- ══ AUTH ══ -->
+<!-- ═══════════════ AUTH ═══════════════ -->
 <div id="auth">
   <div class="auth-card">
     <div class="auth-logo">🐋</div>
     <div class="auth-h">منصة الحوت</div>
-    <div class="auth-s">لوحة القيادة العليا · V2.0 Enterprise</div>
-    <input type="password" id="mPW" class="auth-in" placeholder="••••" autocomplete="off"
-      onkeypress="if(event.key==='Enter')doAuth()">
+    <div class="auth-s">لوحة القيادة العليا · V3.0 Enterprise</div>
+    <input type="password" id="mPW" class="auth-in" placeholder="••••" autocomplete="off" onkeypress="if(event.key==='Enter')doAuth()">
     <button class="auth-btn" id="authB" onclick="doAuth()">دخول النظام الآمن</button>
     <div class="auth-err" id="authErr"></div>
   </div>
 </div>
 
-<!-- ══ APP ══ -->
+<!-- ═══════════════ APP ═══════════════ -->
 <div id="app" class="dn">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sb-head">
-      <div class="sb-logo">🐋</div>
-      <div>
-        <div class="sb-title">منصة الحوت</div>
-        <div class="sb-ver">V2.0 · الإدارة العليا</div>
-      </div>
-    </div>
-    <nav class="sb-nav">
-      <div class="sb-sec">المراقبة الحية</div>
-      <button class="sbn on" id="sbn-live" onclick="goTab('live',this)">
-        <div class="sbn-ic">🗺️</div>الرادار الميداني
-      </button>
-      <!-- Cancel requests badge -->
-      <button class="sbn" id="sbn-cancels" onclick="goTab('cancels',this)">
-        <div class="sbn-ic">🗑️</div>طلبات الإلغاء
-        <span class="sbn-badge amber dn" id="badge-cancels">0</span>
-      </button>
-      <div class="sb-sec">التقارير والحسابات</div>
-      <button class="sbn" id="sbn-reports" onclick="goTab('reports',this)">
-        <div class="sbn-ic">📊</div>السجلات المالية
-      </button>
-      <div class="sb-sec">إدارة الشركاء</div>
-      <button class="sbn" id="sbn-offices" onclick="goTab('offices',this)">
-        <div class="sbn-ic">🚗</div>مكاتب السيارات
-        <span class="sbn-badge dn" id="badge-offices">0</span>
-      </button>
-      <button class="sbn" id="sbn-hotels" onclick="goTab('hotels',this)">
-        <div class="sbn-ic">🏨</div>قطاع الفنادق
-        <span class="sbn-badge dn" id="badge-hotels">0</span>
-      </button>
-      <div class="sb-sec">أسطول المنصة</div>
-      <button class="sbn" id="sbn-shared" onclick="goTab('shared',this)">
-        <div class="sbn-ic">🚙</div>سيارات المنصة
-      </button>
-    </nav>
-    <div class="sb-foot">
-      <div class="sb-conn">
-        <div class="sb-dot" id="fbDot"></div>
-        <div class="sb-ct" id="fbTxt">جاري الاتصال...</div>
-      </div>
-      <button class="sb-logout" onclick="doLogout()">🚪 مغادرة النظام</button>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main" id="mainArea">
-
-    <!-- ══ PAGE: LIVE MAP ══ -->
-    <div id="pg-live" class="tab-page" style="padding:0;height:100vh;display:none;flex-direction:column;">
-      <div class="live-hdr">
-        <div style="display:flex;align-items:center;gap:10px">
-          <span style="font-size:.92rem;font-weight:900;color:var(--tx0)">الرادار الميداني</span>
-          <div style="display:flex;align-items:center;gap:4px;font-size:.68rem;font-weight:800;color:var(--green)">
-            <div style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:sbP 1.5s infinite;"></div>مباشر
-          </div>
-        </div>
-        <div class="live-kpis">
-          <div class="lk"><div><div class="lk-v" id="lk-active">0</div><div class="lk-l">نشط</div></div></div>
-          <div class="lk"><div><div class="lk-v" id="lk-offices">0</div><div class="lk-l">مكتب</div></div></div>
-          <div class="lk"><div><div class="lk-v" id="lk-hotels">0</div><div class="lk-l">فندق</div></div></div>
-          <div class="lk"><div><div class="lk-v" id="lk-done">0</div><div class="lk-l">منجزة</div></div></div>
-        </div>
-        <!-- Broadcast -->
-        <div class="bc-box" style="margin:0;padding:0;background:transparent;border:none;box-shadow:none;gap:7px;">
-          <input type="text" class="bc-input" id="bcMsg" placeholder="📢 بث رسالة لكل الشركاء..." style="min-width:180px;">
-          <button class="btn-bc" onclick="sendBroadcast()">📡 بث</button>
-        </div>
-        <div class="clk" id="clk">--:--</div>
-      </div>
-      <div class="live-body">
-        <div class="live-panel">
-          <div class="lp-hd">
-            <div class="lp-dot"></div>
-            <div class="lp-title">الطلبات الواردة</div>
-            <div class="lp-cnt" id="lp-cnt">0</div>
-          </div>
-          <div class="fbar">
-            <button class="fp on" onclick="setLiveFilt('all',this)">الكل <span class="fc-n" id="fn-all">0</span></button>
-            <button class="fp" onclick="setLiveFilt('pending',this)">معلق <span class="fc-n" id="fn-p">0</span></button>
-            <button class="fp" onclick="setLiveFilt('active',this)">جاري <span class="fc-n" id="fn-a">0</span></button>
-            <button class="fp" onclick="setLiveFilt('cancel_pending',this)">إلغاء⏳ <span class="fc-n" id="fn-cp">0</span></button>
-          </div>
-          <div class="lp-list" id="lp-list">
-            <div class="lp-empty">⏳ في انتظار Firebase...</div>
-          </div>
-        </div>
-        <div id="amap" style="flex:1;"></div>
-      </div>
-    </div>
-
-    <!-- ══ PAGE: CANCEL REQUESTS ══ -->
-    <div id="pg-cancels" class="tab-page">
-      <div class="pg-hdr">
-        <div>
-          <div class="pg-title">طلبات الإلغاء المعلقة ⏳</div>
-          <div class="pg-sub">مراجعة طلبات الإلغاء من الشركاء والعملاء</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="cancel-badge" id="cancels-count">0 طلب</div>
-          <div class="clk" id="clk2">--:--</div>
-        </div>
-      </div>
-      <!-- Cancel cards rendered here -->
-      <div id="cancels-list">
-        <div class="lp-empty" style="background:var(--white);border-radius:var(--r4);padding:48px;text-align:center;color:var(--tx3);">
-          <div style="font-size:2rem;margin-bottom:10px">✅</div>لا توجد طلبات إلغاء معلقة
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ PAGE: REPORTS ══ -->
-    <div id="pg-reports" class="tab-page">
-      <div class="pg-hdr">
-        <div><div class="pg-title">السجلات المالية</div><div class="pg-sub">تقارير الطلبات والعمولات</div></div>
-        <div class="clk" id="clk3">--:--</div>
-      </div>
-      <div class="kpi-g" style="grid-template-columns:repeat(3,1fr);">
-        <div class="kc kg"><div class="kc-ic">✅</div><div><div class="kc-v" id="rp-comp">0</div><div class="kc-l">طلبات مكتملة</div></div></div>
-        <div class="kc kr"><div class="kc-ic">💸</div><div><div class="kc-v" id="rp-debt">0</div><div class="kc-l">عمولات مستحقة (د.ع)</div></div></div>
-        <div class="kc ka"><div class="kc-ic">📈</div><div><div class="kc-v" id="rp-rev">0</div><div class="kc-l">إجمالي الإيرادات (د.ع)</div></div></div>
-      </div>
-      <div class="chart-g">
-        <div class="ch-box">
-          <div class="ch-tt">📊 أداء الطلبات حسب النوع</div>
-          <div class="ch-in"><canvas id="chart-orders"></canvas></div>
-        </div>
-        <div class="ch-box">
-          <div class="ch-tt">💰 توزيع الإيرادات</div>
-          <div class="ch-in"><canvas id="chart-revenue"></canvas></div>
-        </div>
-      </div>
-      <div class="tb-wrap">
-        <div class="tb-hdr">
-          <div>
-            <span class="tb-tt">سجل الحجوزات</span>
-            <span class="tb-cnt" id="tb-cnt">0 سجل</span>
-          </div>
-          <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
-            <!-- Date range filter -->
-            <div class="dr-wrap">
-              <input type="date" id="dr-from" class="si" style="width:140px" onchange="renderArchTable()">
-              <span class="dr-sep">←</span>
-              <input type="date" id="dr-to"   class="si" style="width:140px" onchange="renderArchTable()">
-            </div>
-            <input type="text" class="si" id="arcSch" placeholder="🔍 بحث..." oninput="renderArchTable()">
-            <select class="sel" id="arcType" onchange="renderArchTable()">
-              <option value="all">كل الطلبات</option>
-              <option value="car">🚗 السيارات</option>
-              <option value="hotel">🏨 الفنادق</option>
-            </select>
-            <!-- Per-partner export -->
-            <select class="sel" id="expPartnerSel">
-              <option value="all">تصدير: الكل</option>
-            </select>
-            <button class="btn-exp" onclick="expCSV()">⬇ تصدير CSV</button>
-          </div>
-        </div>
-        <div class="tb-sc">
-          <table>
-            <thead><tr>
-              <th>المعرف</th><th>التاريخ</th><th>العميل</th>
-              <th>النوع</th><th>الجهة</th><th>المبلغ</th>
-              <th>الحالة</th><th>إجراء</th>
-            </tr></thead>
-            <tbody id="arcTbody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ PAGE: OFFICES ══ -->
-    <div id="pg-offices" class="tab-page">
-      <div class="pg-hdr">
-        <div><div class="pg-title">مكاتب السيارات</div><div class="pg-sub">إدارة الشركاء وضبط الصلاحيات</div></div>
-        <input type="text" class="si" id="sOff" placeholder="🔍 بحث عن مكتب..." oninput="renderOffices()">
-      </div>
-      <div class="efil" id="offFilt">
-        <button class="ef on" onclick="setEntFilt('office','all',this)">الكل <span class="ef-n" id="eof-all">0</span></button>
-        <button class="ef jade" onclick="setEntFilt('office','active',this)">✅ نشط <span class="ef-n" id="eof-act">0</span></button>
-        <button class="ef amber" onclick="setEntFilt('office','pending',this)">⏳ معلق <span class="ef-n" id="eof-pend">0</span></button>
-        <button class="ef rose" onclick="setEntFilt('office','blocked',this)">🚫 موقوف <span class="ef-n" id="eof-blk">0</span></button>
-      </div>
-      <div class="entity-g" id="officesList"></div>
-    </div>
-
-    <!-- ══ PAGE: HOTELS ══ -->
-    <div id="pg-hotels" class="tab-page">
-      <div class="pg-hdr">
-        <div><div class="pg-title">قطاع الفنادق</div><div class="pg-sub">إدارة الفنادق الشريكة</div></div>
-        <input type="text" class="si" id="sHot" placeholder="🔍 بحث عن فندق..." oninput="renderHotels()">
-      </div>
-      <div class="efil" id="hotFilt">
-        <button class="ef on" onclick="setEntFilt('hotel','all',this)">الكل <span class="ef-n" id="ehot-all">0</span></button>
-        <button class="ef jade" onclick="setEntFilt('hotel','active',this)">✅ نشط <span class="ef-n" id="ehot-act">0</span></button>
-        <button class="ef amber" onclick="setEntFilt('hotel','pending',this)">⏳ معلق <span class="ef-n" id="ehot-pend">0</span></button>
-        <button class="ef rose" onclick="setEntFilt('hotel','blocked',this)">🚫 موقوف <span class="ef-n" id="ehot-blk">0</span></button>
-      </div>
-      <div class="entity-g" id="hotelsList"></div>
-    </div>
-
-    <!-- ══ PAGE: SHARED FLEET ══ -->
-    <div id="pg-shared" class="tab-page">
-      <div class="pg-hdr">
-        <div><div class="pg-title">سيارات المنصة 🚙</div><div class="pg-sub">الأسطول المشترك — متاح لجميع المكاتب والعملاء</div></div>
-      </div>
-
-      <!-- Broadcast bar on this page too -->
-      <div class="bc-box" style="margin-bottom:18px">
-        <span style="font-size:.8rem;font-weight:900;color:var(--tx0);white-space:nowrap">📢 بث رسالة</span>
-        <input type="text" class="bc-input" id="bcMsg2" placeholder="تنبيه يصل لكل الشركاء فوراً...">
-        <button class="btn-bc" onclick="sendBroadcast2()">📡 بث</button>
-      </div>
-
-      <div class="add-card">
-        <div class="add-tt">🚙 إضافة سيارة جديدة للمنصة</div>
-        <label class="uz" id="uz-sh" for="img-sh">
-          <input type="file" id="img-sh" accept="image/*" class="dn" onchange="handleSharedImg(this)">
-          <img class="uz-prev" id="uz-sh-p" style="display:none">
-          <div class="comp-badge" id="uz-sh-badge">✓ مضغوطة</div>
-          <div class="uz-ov"><div class="uz-ov-t">تغيير الصورة ✏️</div></div>
-          <div class="uz-ico" id="uz-sh-i">📷</div>
-          <div class="uz-lbl" id="uz-sh-l">ارفع صورة السيارة</div>
-          <div class="uz-sub">يُضغط ويُرفع إلى ImgBB تلقائياً</div>
-        </label>
-        <div class="grid-2">
-          <div><label class="fld-lbl">اسم السيارة والموديل</label><input type="text" id="sh-nm" class="fc" placeholder="تويوتا كورولا 2024"></div>
-          <div><label class="fld-lbl">السعر اليومي (د.ع)</label><input type="number" id="sh-pr" class="fc" placeholder="60000"></div>
-          <div><label class="fld-lbl">رقم اللوحة</label><input type="text" id="sh-pl" class="fc" placeholder="بغداد 12345"></div>
-          <div>
-            <label class="fld-lbl">الفئة</label>
-            <select id="sh-ct" class="fc">
-              <option value="economy">اقتصادية</option>
-              <option value="family">عائلية</option>
-              <option value="luxury">فخمة VIP</option>
-              <option value="wedding">زفاف</option>
-            </select>
-          </div>
-          <div><label class="fld-lbl">اللون</label><input type="text" id="sh-cl" class="fc" placeholder="أبيض فضي"></div>
-          <div style="display:flex;align-items:flex-end">
-            <button class="btn-pri" id="sh-sv" onclick="saveSharedCar()">🚙 نشر في المنصة</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="sec-tt" style="margin-top:6px">سيارات المنصة المسجلة</div>
-      <div id="shared-fleet-list">
-        <div class="lp-empty" style="background:var(--white);border-radius:var(--r4);padding:36px;text-align:center;">
-          <div style="font-size:1.8rem;margin-bottom:8px">🚙</div>لا توجد سيارات مضافة بعد
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- BOTTOM NAV -->
-  <nav class="bnav">
-    <div class="bni on" onclick="goTab('live',this)"><div class="bni-ic">🗺️</div><span class="bni-lb">الرادار</span></div>
-    <div class="bni" onclick="goTab('cancels',this)"><div class="bni-ic">🗑️</div><span class="bni-lb">إلغاءات</span></div>
-    <div class="bni" onclick="goTab('reports',this)"><div class="bni-ic">📊</div><span class="bni-lb">التقارير</span></div>
-    <div class="bni" onclick="goTab('offices',this)"><div class="bni-ic">🚗</div><span class="bni-lb">المكاتب</span></div>
-    <div class="bni" onclick="goTab('shared',this)"><div class="bni-ic">🚙</div><span class="bni-lb">أسطول</span></div>
-  </nav>
-</div>
-
-<!-- ══ WHATSAPP MODAL ══ -->
+<!-- ══ WHATSAPP SHEET ══ -->
 <div id="waModal" class="dn" onclick="closeWaModal()">
   <div class="wa-sheet" onclick="event.stopPropagation()">
-    <div style="width:36px;height:4px;background:var(--border);border-radius:99px;margin:12px auto 0;"></div>
+    <div style="width:34px;height:4px;background:var(--border);border-radius:99px;margin:11px auto 0;"></div>
     <div class="wa-hd">
       <div class="wa-hd-h">مراسلة سريعة عبر واتساب</div>
       <div class="wa-hd-s" id="wa-ctx-label">اختر قالباً</div>
@@ -761,12 +601,32 @@ select.fc option{background:var(--white);}
   </div>
 </div>
 
-<!-- ══ CANCEL REVIEW MODAL ══ -->
+<!-- ══ ORDER DETAIL SHEET ══ -->
+<div id="orderDetailModal" class="dn" onclick="closeOrderDetail()">
+  <div class="od-sheet" onclick="event.stopPropagation()">
+    <div class="od-hd">
+      <div class="od-hdl" id="od-hdl-title">تفاصيل الطلب</div>
+      <button class="od-close" onclick="closeOrderDetail()">✕</button>
+    </div>
+    <!-- Map: customer + partner markers + polyline -->
+    <div id="od-map" class="od-map"></div>
+    <div class="od-body">
+      <div class="od-grid" id="od-info-grid"></div>
+      <div class="od-wa-row">
+        <button class="od-wa-btn od-wa-cust" id="od-wa-cust-btn" onclick="odWa('customer')">💬 واتساب الزبون</button>
+        <button class="od-wa-btn od-wa-part" id="od-wa-part-btn" onclick="odWa('partner')">🏢 واتساب الشريك</button>
+      </div>
+    </div>
+    <div class="od-actions" id="od-actions"></div>
+  </div>
+</div>
+
+<!-- ══ CANCEL REVIEW ══ -->
 <div id="cancelReviewModal" class="dn" onclick="closeCancelReview()">
   <div class="cr-card" onclick="event.stopPropagation()">
     <div class="cr-icon">🗂️</div>
     <div class="cr-title">مراجعة طلب الإلغاء</div>
-    <div class="cr-sub">اختر قراراً — القبول يلغي الطلب نهائياً<br>الرفض يُعيد الطلب للرادار بحالته السابقة</div>
+    <div class="cr-sub">القبول يلغي الطلب · الرفض يُعيده للرادار</div>
     <div class="cr-info" id="cr-info"></div>
     <div class="cr-reason-box" id="cr-reason-box"></div>
     <div class="cr-btns">
@@ -777,15 +637,29 @@ select.fc option{background:var(--white);}
   </div>
 </div>
 
-<!-- ══ EDIT MODAL ══ -->
+<!-- ══ ASSIGN MODAL ══ -->
+<div id="assignModal" class="dn" onclick="closeAssign()">
+  <div class="assign-card" onclick="event.stopPropagation()">
+    <div class="assign-title">🎯 تعيين قسري للشريك</div>
+    <div class="assign-sub" id="assign-sub">اختر المكتب أو الفندق المراد تعيين الطلب إليه</div>
+    <input type="text" class="assign-search" id="assign-search" placeholder="🔍 ابحث عن شريك..." oninput="filterAssignList()">
+    <div class="assign-list" id="assign-list"></div>
+    <div class="assign-btn-row">
+      <button class="assign-cancel" onclick="closeAssign()">إلغاء</button>
+      <button class="assign-confirm" id="assign-confirm-btn" onclick="confirmAssign()">🎯 تعيين الطلب</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EDIT PARTNER MODAL ══ -->
 <div id="editModal" onclick="closeMod('editModal')">
   <div class="mod-card" onclick="event.stopPropagation()">
     <div class="mod-title" id="mod-title">تعديل بيانات الشريك</div>
     <div class="mod-sub"   id="mod-sub">—</div>
     <label class="el">الاسم التجاري</label>
     <input type="text" class="fc" id="mod-name">
-    <label class="el">كلمة المرور الجديدة</label>
-    <input type="text" class="fc" id="mod-pass" placeholder="اتركها فارغة للإبقاء">
+    <label class="el">كلمة مرور جديدة (فارغة = بدون تغيير)</label>
+    <input type="text" class="fc" id="mod-pass" placeholder="كلمة مرور قوية...">
     <div id="mod-hotel-x" class="dn">
       <div class="g2" style="gap:9px">
         <div><label class="el">سعر مفردة</label><input type="number" class="fc" id="mod-ps"></div>
@@ -797,9 +671,12 @@ select.fc option{background:var(--white);}
     </div>
     <div id="mod-office-x" class="dn">
       <div class="g2" style="gap:9px">
-        <div>
-          <label class="el">نوع العمولة</label>
-          <select class="fc" id="mod-ct"><option value="fixed">ثابت</option><option value="split">مناصفة</option><option value="monthly">شهري</option></select>
+        <div><label class="el">نوع العمولة</label>
+          <select class="fc" id="mod-ct">
+            <option value="fixed">ثابت</option>
+            <option value="split">مناصفة</option>
+            <option value="monthly">شهري</option>
+          </select>
         </div>
         <div><label class="el">قيمة العمولة</label><input type="text" class="fc" id="mod-cv"></div>
       </div>
@@ -811,32 +688,311 @@ select.fc option{background:var(--white);}
   </div>
 </div>
 
+<!-- ══ LISTING EDIT MODAL ══ -->
+<div id="listingEditModal" onclick="closeMod('listingEditModal')">
+  <div class="mod-card" onclick="event.stopPropagation()">
+    <div class="mod-title" id="le-title">تعديل العنصر</div>
+    <div class="mod-sub"   id="le-sub">—</div>
+    <div class="g2" style="gap:9px">
+      <div><label class="el">الاسم</label><input type="text" class="fc" id="le-name"></div>
+      <div><label class="el">السعر (د.ع)</label><input type="number" class="fc" id="le-price"></div>
+    </div>
+    <div id="le-car-x">
+      <div class="g2" style="gap:9px">
+        <div><label class="el">الفئة</label>
+          <select class="fc" id="le-cat">
+            <option value="economy">اقتصادية</option>
+            <option value="family">عائلية</option>
+            <option value="luxury">فخمة VIP</option>
+            <option value="wedding">زفاف</option>
+          </select>
+        </div>
+        <div><label class="el">اللون</label><input type="text" class="fc" id="le-color"></div>
+      </div>
+      <label class="el">رقم اللوحة</label>
+      <input type="text" class="fc" id="le-plate">
+    </div>
+    <div id="le-room-x" class="dn">
+      <label class="el">نوع الغرفة</label>
+      <select class="fc" id="le-room-type">
+        <option value="single">مفردة</option>
+        <option value="double">مزدوجة</option>
+        <option value="suite">جناح</option>
+      </select>
+    </div>
+    <label class="el">رابط الصورة</label>
+    <input type="text" class="fc" id="le-photo" placeholder="https://...">
+    <div class="mod-acts">
+      <button class="m-cancel" onclick="closeMod('listingEditModal')">إلغاء</button>
+      <button class="m-save" id="le-save-btn" onclick="saveListing()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sb-head">
+    <div class="sb-logo">🐋</div>
+    <div>
+      <div class="sb-title">منصة الحوت</div>
+      <div class="sb-ver">V3.0 · Enterprise</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">المراقبة الحية</div>
+    <button class="sbn on" id="sbn-live" onclick="goTab('live',this)"><div class="sbn-ic">🗺️</div>الرادار الميداني</button>
+    <button class="sbn" id="sbn-cancels" onclick="goTab('cancels',this)">
+      <div class="sbn-ic">🗑️</div>طلبات الإلغاء
+      <span class="sbn-badge amber dn" id="badge-cancels">0</span>
+    </button>
+    <div class="sb-sec">التقارير</div>
+    <button class="sbn" id="sbn-reports" onclick="goTab('reports',this)"><div class="sbn-ic">📊</div>السجلات المالية</button>
+    <div class="sb-sec">إدارة الشركاء</div>
+    <button class="sbn" id="sbn-offices" onclick="goTab('offices',this)">
+      <div class="sbn-ic">🚗</div>مكاتب السيارات
+      <span class="sbn-badge dn" id="badge-offices">0</span>
+    </button>
+    <button class="sbn" id="sbn-hotels" onclick="goTab('hotels',this)">
+      <div class="sbn-ic">🏨</div>قطاع الفنادق
+      <span class="sbn-badge dn" id="badge-hotels">0</span>
+    </button>
+    <div class="sb-sec">الأصول والعروض</div>
+    <button class="sbn" id="sbn-listings" onclick="goTab('listings',this)"><div class="sbn-ic">📦</div>عناصر الإيجار</button>
+    <button class="sbn" id="sbn-shared" onclick="goTab('shared',this)"><div class="sbn-ic">🚙</div>سيارات المنصة</button>
+    <div class="sb-sec">البث</div>
+    <button class="sbn" onclick="openMod('bcModal')"><div class="sbn-ic">📢</div>بث رسالة للشركاء</button>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-conn"><div class="sb-dot" id="fbDot"></div><div class="sb-ct" id="fbTxt">جاري الاتصال...</div></div>
+    <button class="sb-logout" onclick="doLogout()">🚪 مغادرة النظام</button>
+  </div>
+</aside>
+
+<!-- BROADCAST MODAL (hidden by default) -->
+<div id="bcModal" class="dn" style="position:fixed;inset:0;z-index:45000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;" onclick="closeMod('bcModal')">
+  <div class="mod-card" onclick="event.stopPropagation()" style="max-width:440px">
+    <div class="mod-title">📢 بث رسالة لجميع الشركاء</div>
+    <div class="mod-sub">ستظهر الرسالة فوراً على تطبيق كل الشركاء</div>
+    <label class="el">نص الرسالة</label>
+    <textarea class="fc" id="bc-text" rows="3" placeholder="اكتب رسالتك هنا..." style="resize:none;height:80px;margin-bottom:4px;"></textarea>
+    <div class="mod-acts">
+      <button class="m-cancel" onclick="closeMod('bcModal')">إلغاء</button>
+      <button class="m-save" id="bc-send-btn" onclick="sendBroadcast()">📡 إرسال البث</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<main class="main" id="mainArea">
+
+  <!-- PAGE: LIVE MAP -->
+  <div id="pg-live" class="tab-page" style="padding:0;height:100vh;display:none;flex-direction:column;">
+    <div class="live-hdr">
+      <div style="display:flex;align-items:center;gap:9px">
+        <span style="font-size:.9rem;font-weight:900;color:var(--tx0)">الرادار الميداني</span>
+        <div style="display:flex;align-items:center;gap:4px;font-size:.67rem;font-weight:800;color:var(--green)">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:sbP 1.5s infinite;"></div>مباشر
+        </div>
+      </div>
+      <div class="live-kpis">
+        <div class="lk"><div><div class="lk-v" id="lk-active">0</div><div class="lk-l">نشط</div></div></div>
+        <div class="lk"><div><div class="lk-v" id="lk-offices">0</div><div class="lk-l">مكتب</div></div></div>
+        <div class="lk"><div><div class="lk-v" id="lk-hotels">0</div><div class="lk-l">فندق</div></div></div>
+        <div class="lk"><div><div class="lk-v" id="lk-done">0</div><div class="lk-l">منجزة</div></div></div>
+      </div>
+      <div class="clk" id="clk">--:--</div>
+    </div>
+    <div class="live-body">
+      <div class="live-panel">
+        <div class="lp-hd">
+          <div class="lp-dot"></div>
+          <div class="lp-title">الطلبات الواردة</div>
+          <div class="lp-cnt" id="lp-cnt">0</div>
+        </div>
+        <div class="fbar">
+          <button class="fp on" onclick="setLiveFilt('all',this)">الكل <span class="fc-n" id="fn-all">0</span></button>
+          <button class="fp" onclick="setLiveFilt('pending',this)">معلق <span class="fc-n" id="fn-p">0</span></button>
+          <button class="fp" onclick="setLiveFilt('active',this)">جاري <span class="fc-n" id="fn-a">0</span></button>
+          <button class="fp" onclick="setLiveFilt('cancel_pending',this)">إلغاء⏳ <span class="fc-n" id="fn-cp">0</span></button>
+        </div>
+        <div class="lp-list" id="lp-list"><div class="lp-empty">⏳ جاري تحميل الرادار...</div></div>
+      </div>
+      <div id="amap" style="flex:1;"></div>
+    </div>
+  </div>
+
+  <!-- PAGE: CANCEL REQUESTS -->
+  <div id="pg-cancels" class="tab-page">
+    <div class="pg-hdr">
+      <div><div class="pg-title">طلبات الإلغاء المعلقة ⏳</div><div class="pg-sub">مراجعة وقرار لكل طلب</div></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="cancel-badge" id="cancels-count">0 طلب</div>
+        <div class="clk" id="clk2">--:--</div>
+      </div>
+    </div>
+    <div id="cancels-list">
+      <div class="lp-empty" style="background:var(--white);border-radius:var(--r4);padding:48px;text-align:center;color:var(--tx3);"><div style="font-size:2rem;margin-bottom:10px">✅</div>لا توجد طلبات إلغاء معلقة</div>
+    </div>
+  </div>
+
+  <!-- PAGE: REPORTS -->
+  <div id="pg-reports" class="tab-page">
+    <div class="pg-hdr">
+      <div><div class="pg-title">السجلات المالية</div><div class="pg-sub">تقارير الطلبات والعمولات والإيرادات</div></div>
+      <div class="clk" id="clk3">--:--</div>
+    </div>
+    <div class="kpi-g" style="grid-template-columns:repeat(3,1fr)">
+      <div class="kc kg"><div class="kc-ic">✅</div><div><div class="kc-v" id="rp-comp">0</div><div class="kc-l">طلبات مكتملة</div></div></div>
+      <div class="kc kr"><div class="kc-ic">💸</div><div><div class="kc-v" id="rp-debt">0</div><div class="kc-l">عمولات مستحقة (د.ع)</div></div></div>
+      <div class="kc ka"><div class="kc-ic">📈</div><div><div class="kc-v" id="rp-rev">0</div><div class="kc-l">إجمالي الإيرادات (د.ع)</div></div></div>
+    </div>
+    <div class="chart-g">
+      <div class="ch-box"><div class="ch-tt">📊 أداء الطلبات</div><div class="ch-in"><canvas id="chart-orders"></canvas></div></div>
+      <div class="ch-box"><div class="ch-tt">💰 توزيع الإيرادات</div><div class="ch-in"><canvas id="chart-revenue"></canvas></div></div>
+    </div>
+    <div class="tb-wrap">
+      <div class="tb-hdr">
+        <div><span class="tb-tt">سجل الحجوزات</span><span class="tb-cnt" id="tb-cnt">0 سجل</span></div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
+          <div class="dr-wrap">
+            <input type="date" id="dr-from" class="si" style="width:140px" onchange="renderArchTable()">
+            <span class="dr-sep">←</span>
+            <input type="date" id="dr-to"   class="si" style="width:140px" onchange="renderArchTable()">
+          </div>
+          <input type="text" class="si" id="arcSch" placeholder="🔍 بحث..." oninput="renderArchTable()">
+          <select class="sel" id="arcType" onchange="renderArchTable()"><option value="all">كل الطلبات</option><option value="car">🚗 السيارات</option><option value="hotel">🏨 الفنادق</option></select>
+          <select class="sel" id="expPartnerSel"><option value="all">تصدير: الكل</option></select>
+          <button class="btn-exp" onclick="expCSV()">⬇ تصدير CSV</button>
+        </div>
+      </div>
+      <div class="tb-sc">
+        <table>
+          <thead><tr><th>المعرف</th><th>التاريخ</th><th>العميل</th><th>النوع</th><th>الجهة</th><th>المبلغ</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+          <tbody id="arcTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: OFFICES -->
+  <div id="pg-offices" class="tab-page">
+    <div class="pg-hdr">
+      <div><div class="pg-title">مكاتب السيارات</div><div class="pg-sub">إدارة الشركاء وضبط الصلاحيات</div></div>
+      <input type="text" class="si" id="sOff" placeholder="🔍 بحث عن مكتب..." oninput="renderOffices()">
+    </div>
+    <div class="efil">
+      <button class="ef on"    onclick="setEntFilt('office','all',this)">الكل <span class="ef-n" id="eof-all">0</span></button>
+      <button class="ef jade"  onclick="setEntFilt('office','active',this)">✅ نشط <span class="ef-n" id="eof-act">0</span></button>
+      <button class="ef amber" onclick="setEntFilt('office','pending',this)">⏳ معلق <span class="ef-n" id="eof-pend">0</span></button>
+      <button class="ef rose"  onclick="setEntFilt('office','blocked',this)">🚫 موقوف <span class="ef-n" id="eof-blk">0</span></button>
+    </div>
+    <div class="entity-g" id="officesList"></div>
+  </div>
+
+  <!-- PAGE: HOTELS -->
+  <div id="pg-hotels" class="tab-page">
+    <div class="pg-hdr">
+      <div><div class="pg-title">قطاع الفنادق</div><div class="pg-sub">إدارة الفنادق الشريكة</div></div>
+      <input type="text" class="si" id="sHot" placeholder="🔍 بحث عن فندق..." oninput="renderHotels()">
+    </div>
+    <div class="efil">
+      <button class="ef on"    onclick="setEntFilt('hotel','all',this)">الكل <span class="ef-n" id="ehot-all">0</span></button>
+      <button class="ef jade"  onclick="setEntFilt('hotel','active',this)">✅ نشط <span class="ef-n" id="ehot-act">0</span></button>
+      <button class="ef amber" onclick="setEntFilt('hotel','pending',this)">⏳ معلق <span class="ef-n" id="ehot-pend">0</span></button>
+      <button class="ef rose"  onclick="setEntFilt('hotel','blocked',this)">🚫 موقوف <span class="ef-n" id="ehot-blk">0</span></button>
+    </div>
+    <div class="entity-g" id="hotelsList"></div>
+  </div>
+
+  <!-- PAGE: LISTINGS (Cars + Rooms) -->
+  <div id="pg-listings" class="tab-page">
+    <div class="pg-hdr">
+      <div><div class="pg-title">عناصر الإيجار 📦</div><div class="pg-sub">جميع السيارات والغرف المعروضة مع التحكم الكامل</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input type="text" class="si" id="lstSearch" placeholder="🔍 بحث في العناصر..." oninput="renderListings()">
+        <select class="sel" id="lstStatusF" onchange="renderListings()">
+          <option value="all">كل الحالات</option>
+          <option value="available">متاح</option>
+          <option value="rented">مؤجر</option>
+          <option value="inactive">معطل</option>
+        </select>
+      </div>
+    </div>
+    <!-- Tabs: Cars / Rooms -->
+    <div class="lst-tabs">
+      <button class="lst-tab on" id="lst-tab-cars"  onclick="switchListTab('cars',this)">🚗 السيارات <span class="lst-cnt" id="lst-cnt-cars">0</span></button>
+      <button class="lst-tab"    id="lst-tab-rooms" onclick="switchListTab('rooms',this)">🛏 الغرف <span class="lst-cnt" id="lst-cnt-rooms">0</span></button>
+    </div>
+    <div id="listings-grid" class="listing-g"></div>
+  </div>
+
+  <!-- PAGE: SHARED FLEET -->
+  <div id="pg-shared" class="tab-page">
+    <div class="pg-hdr">
+      <div><div class="pg-title">سيارات المنصة 🚙</div><div class="pg-sub">الأسطول المشترك — متاح لجميع المكاتب والعملاء</div></div>
+    </div>
+    <div class="add-card">
+      <div class="add-tt">🚙 إضافة سيارة جديدة للمنصة</div>
+      <label class="uz" id="uz-sh" for="img-sh">
+        <input type="file" id="img-sh" accept="image/*" class="dn" onchange="handleSharedImg(this)">
+        <img class="uz-prev" id="uz-sh-p" style="display:none">
+        <div class="comp-badge" id="uz-sh-badge">✓ مضغوطة</div>
+        <div class="uz-ov"><div class="uz-ov-t">تغيير الصورة ✏️</div></div>
+        <div class="uz-ico" id="uz-sh-i">📷</div>
+        <div class="uz-lbl" id="uz-sh-l">ارفع صورة السيارة</div>
+      </label>
+      <div class="grid-2">
+        <div><label class="fld-lbl">الاسم والموديل</label><input type="text" id="sh-nm" class="fc" placeholder="تويوتا كورولا 2024"></div>
+        <div><label class="fld-lbl">السعر اليومي (د.ع)</label><input type="number" id="sh-pr" class="fc" placeholder="60000"></div>
+        <div><label class="fld-lbl">رقم اللوحة</label><input type="text" id="sh-pl" class="fc" placeholder="بغداد 12345"></div>
+        <div><label class="fld-lbl">الفئة</label>
+          <select id="sh-ct" class="fc"><option value="economy">اقتصادية</option><option value="family">عائلية</option><option value="luxury">فخمة VIP</option><option value="wedding">زفاف</option></select>
+        </div>
+        <div><label class="fld-lbl">اللون</label><input type="text" id="sh-cl" class="fc" placeholder="أبيض فضي"></div>
+      </div>
+      <button class="btn-pri" id="sh-sv" onclick="saveSharedCar()" style="margin-top:4px">🚙 نشر في المنصة</button>
+    </div>
+    <div class="sec-tt" style="margin-top:6px">الأسطول المشترك الحالي</div>
+    <div id="shared-fleet-list" class="listing-g">
+      <div class="lp-empty" style="grid-column:1/-1;background:var(--white);border-radius:var(--r4);padding:36px;">لا توجد سيارات بعد</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <div class="bni on" onclick="goTab('live',this)"><div class="bni-ic">🗺️</div><span class="bni-lb">الرادار</span></div>
+  <div class="bni" onclick="goTab('cancels',this)"><div class="bni-ic">🗑️</div><span class="bni-lb">إلغاءات</span></div>
+  <div class="bni" onclick="goTab('reports',this)"><div class="bni-ic">📊</div><span class="bni-lb">التقارير</span></div>
+  <div class="bni" onclick="goTab('offices',this)"><div class="bni-ic">🚗</div><span class="bni-lb">المكاتب</span></div>
+  <div class="bni" onclick="goTab('listings',this)"><div class="bni-ic">📦</div><span class="bni-lb">العروض</span></div>
+</nav>
+
+</div><!-- /app -->
 <script>
-/* ══════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════
    CONSTANTS
-══════════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════════════ */
 const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
 const API_TOKEN = "HUT_CLOUD_2026";
 const IMGBB_KEY = "7f67d9adc91e89648de939ed301d20fe";
 
 /* ══ STATE ══ */
-let MP = "", gD = null;
-let carOrdersFB = [], hotelBookingsFB = [];
-let map, clusterLayer;
-let liveFilt = "all";
-let offFiltMode = "all", hotFiltMode = "all";
-let editCtx = {};
-let charts = {};
-let toastTimer = null;
-let waCtx = null;      // { phone, type: "customer"|"partner", order }
-let crCtx = null;      // cancel review context
-let b64Shared = null;
+let MP="", gD=null;
+let carOrdersFB=[], hotelBookingsFB=[];
+let map, clusterLayer, odMap=null;
+let liveFilt="all", offFiltMode="all", hotFiltMode="all";
+let listTab="cars";
+let editCtx={}, listingEditCtx={}, assignCtx=null, crCtx=null;
+let charts={};
+let toastTimer=null, b64Shared=null;
+let waCtx=null, odCtx=null;
+let lastKnownOrderIds=new Set();
 
-/* ══════════════════════════════════════════════════════
-   FIREBASE
-══════════════════════════════════════════════════════ */
+/* ══ FIREBASE ══ */
 let db;
-try {
+try{
   firebase.initializeApp({
     apiKey:"AIzaSyAo1rmqUzieYZU3RIwXOAN87GkpNrp-_Hc",
     authDomain:"alhut-for-rent.firebaseapp.com",
@@ -846,97 +1002,77 @@ try {
     messagingSenderId:"941542380637",
     appId:"1:941542380637:web:9623fa6e627817ffeba9b4"
   });
-  db = firebase.database();
-} catch(e) { console.warn("Firebase:", e); }
+  db=firebase.database();
+}catch(e){console.warn("Firebase:",e);}
 
 if(db){
-  db.ref(".info/connected").on("value", snap => {
-    const on = snap.val();
-    const dot = $("fbDot"), txt = $("fbTxt");
-    if(dot){ dot.className = "sb-dot"+(on?"":" off"); }
-    if(txt){ txt.textContent = on ? "رادار متصل" : "غير متصل"; txt.className = "sb-ct"+(on?"":" off"); }
+  db.ref(".info/connected").on("value",snap=>{
+    const on=snap.val();
+    const dot=$("fbDot"),txt=$("fbTxt");
+    if(dot)dot.className="sb-dot"+(on?"":" off");
+    if(txt){txt.textContent=on?"رادار متصل":"غير متصل";txt.className="sb-ct"+(on?"":" off");}
   });
 }
 
-/* ══════════════════════════════════════════════════════
-   UTILS
-══════════════════════════════════════════════════════ */
-const $ = id => document.getElementById(id);
-const cleanN = v => { const n=Number(String(v||"").replace(/[^\d.-]/g,"")); return isNaN(n)?0:n; };
-const fmt   = n => Math.round(cleanN(n)).toLocaleString("ar-EG");
-function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+/* ══ UTILS ══ */
+const $    = id=>document.getElementById(id);
+const cleanN=v=>{const n=Number(String(v||"").replace(/[^\d.-]/g,""));return isNaN(n)?0:n;};
+const fmt  = n=>Math.round(cleanN(n)).toLocaleString("ar-EG");
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function safeJSON(o){return JSON.stringify(o).replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
 
-function toast(msg, type="s"){
+function toast(msg,type="s"){
   const c=$("toasts");
   const el=document.createElement("div");
   el.className=`ti t${type}`;
-  el.innerHTML=`<div class="ti-ic">${type==="s"?"✅":"❌"}</div><span class="ti-msg">${msg}</span>`;
+  el.innerHTML=`<div class="ti-ic">${type==="s"?"✅":type==="w"?"⚠️":"❌"}</div><span class="ti-msg">${msg}</span>`;
   c.appendChild(el);
-  setTimeout(()=>{el.style.opacity="0";el.style.transition=".3s";setTimeout(()=>el.remove(),300);},3500);
+  setTimeout(()=>{el.style.opacity="0";el.style.transition=".3s";setTimeout(()=>el.remove(),300);},3800);
 }
+function showLoad(on,msg="جاري المعالجة..."){$("ldTxt").textContent=msg;$("loadScr").classList.toggle("dn",!on);}
+function setBtn(id,loading){const el=$(id);if(!el)return;el.classList.toggle("btn-ld",loading);el.disabled=loading;}
 
-function showLoad(on, msg="جاري المعالجة..."){
-  $("ldTxt").textContent = msg;
-  $("loadScr").classList.toggle("dn", !on);
-}
+function openMod(id){const m=$(id);if(m){m.classList.remove("dn");m.style.display="flex";}}
+function closeMod(id){const m=$(id);if(m){m.classList.add("dn");m.style.display="none";}}
 
-function setBtn(id, loading){
-  const el=$(id); if(!el) return;
-  el.classList.toggle("btn-ld", loading);
-  el.disabled = loading;
-}
-
-/* ══ CLOCK ══ */
 function startClock(){
   function tick(){
-    const t = new Date().toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+    const t=new Date().toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
     ["clk","clk2","clk3"].forEach(id=>{const e=$(id);if(e)e.textContent=t;});
   }
-  tick(); setInterval(tick, 1000);
+  tick();setInterval(tick,1000);
 }
 
-/* ══════════════════════════════════════════════════════
-   AUTH
-══════════════════════════════════════════════════════ */
-window.doAuth = async function(){
-  const pass = $("mPW").value.trim();
-  if(!pass){ $("authErr").textContent="أدخل رمز المرور"; return; }
-  MP = pass;
-  setBtn("authB", true);
-  $("authErr").textContent = "";
+/* ══ AUTH ══ */
+window.doAuth=async function(){
+  const pass=$("mPW").value.trim();
+  if(!pass){$("authErr").textContent="أدخل رمز المرور";return;}
+  MP=pass;setBtn("authB",true);$("authErr").textContent="";
   try{
-    const res = await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"VERIFY_MASTER_PASS",pass,token:API_TOKEN})});
-    const d = await res.json();
+    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"VERIFY_MASTER_PASS",pass,token:API_TOKEN})});
+    const d=await res.json();
     if(d.success){
-      $("auth").style.display = "none";
+      $("auth").style.display="none";
       $("app").classList.remove("dn");
-      startClock();
-      initMap();
-      loadSystemData();
-      startFirebaseListeners();
-    } else {
-      MP = "";
-      $("authErr").textContent = "❌ رمز خاطئ أو منتهي الصلاحية";
-    }
-  } catch(e){ MP=""; $("authErr").textContent = "فشل الاتصال"; }
-  finally{ setBtn("authB", false); }
+      startClock();initMap();loadSystemData();startFirebaseListeners();
+    }else{MP="";$("authErr").textContent="❌ رمز خاطئ";}
+  }catch(e){MP="";$("authErr").textContent="فشل الاتصال";}
+  finally{setBtn("authB",false);}
 };
 
-/* ══════════════════════════════════════════════════════
-   DATA LOADING
-══════════════════════════════════════════════════════ */
+/* ══ DATA LOADING ══ */
 async function loadSystemData(){
   try{
-    const res = await fetch(`${API_URL}?action=getAdminFullData&token=${API_TOKEN}&_t=${Date.now()}`);
-    gD = await res.json();
-    if(!gD?.success) return;
+    const res=await fetch(`${API_URL}?action=getAdminFullData&token=${API_TOKEN}&_t=${Date.now()}`);
+    gD=await res.json();
+    if(!gD?.success)return;
 
     // Sidebar badges
-    const offPend = (gD.carOffices||[]).filter(x=>x.status==="pending").length;
-    const hotPend = (gD.hotels||[]).filter(x=>x.status==="pending").length;
-    const badgeOff=$("badge-offices"), badgeHot=$("badge-hotels");
-    if(badgeOff){badgeOff.textContent=offPend;badgeOff.classList.toggle("dn",offPend===0);}
-    if(badgeHot){badgeHot.textContent=hotPend;badgeHot.classList.toggle("dn",hotPend===0);}
+    const offP=(gD.carOffices||[]).filter(x=>x.status==="pending").length;
+    const hotP=(gD.hotels||[]).filter(x=>x.status==="pending").length;
+    const bOff=$("badge-offices"),bHot=$("badge-hotels");
+    if(bOff){bOff.textContent=offP;bOff.classList.toggle("dn",offP===0);}
+    if(bHot){bHot.textContent=hotP;bHot.classList.toggle("dn",hotP===0);}
 
     // Live KPIs
     $("lk-offices").textContent=(gD.carOffices||[]).filter(x=>x.status==="active").length;
@@ -945,7 +1081,7 @@ async function loadSystemData(){
     const doneHot=(gD.hotelBookings||[]).filter(b=>b.status==="completed").length;
     $("lk-done").textContent=doneCar+doneHot;
 
-    // Reports KPIs
+    // Report KPIs
     const tDebt=(gD.carOffices||[]).reduce((s,x)=>s+cleanN(x.debt),0)+(gD.hotels||[]).reduce((s,x)=>s+cleanN(x.debt),0);
     const tRev=(gD.carOrders||[]).filter(o=>o.status==="completed").reduce((s,o)=>s+cleanN(o.total),0)
               +(gD.hotelBookings||[]).filter(b=>b.status==="completed").reduce((s,b)=>s+cleanN(b.total),0);
@@ -953,339 +1089,501 @@ async function loadSystemData(){
     $("rp-debt").textContent=fmt(tDebt)+" د.ع";
     $("rp-rev").textContent=fmt(tRev)+" د.ع";
 
-    renderArchTable(); renderOffices(); renderHotels();
-    placeMarkers(); renderCharts();
+    renderArchTable();renderOffices();renderHotels();
+    placeMarkers();renderCharts();
     buildPartnerSelector();
+    renderListings();
     renderSharedFleet();
-  } catch(e){ toast("خطأ في تحميل البيانات","e"); }
+  }catch(e){toast("خطأ في تحميل البيانات","e");}
 }
 
-/* ══════════════════════════════════════════════════════
-   FIREBASE REALTIME LISTENERS (NO POLLING)
-══════════════════════════════════════════════════════ */
-let lastKnownOrderIds = new Set();
-
+/* ══ FIREBASE LISTENERS ══ */
 function startFirebaseListeners(){
-  if(!db) return;
-
-  // Car orders listener
-  db.ref("hut_car_orders").on("value", snap => {
-    carOrdersFB = snap.val() ? Object.values(snap.val()) : [];
-    refreshLivePanel();
-    checkNewOrders();
+  if(!db)return;
+  db.ref("hut_car_orders").on("value",snap=>{
+    carOrdersFB=snap.val()?Object.values(snap.val()):[];
+    refreshLivePanel();checkNewOrders();
   });
-
-  // Hotel bookings listener
-  db.ref("hut_hotel_bookings").on("value", snap => {
-    hotelBookingsFB = snap.val() ? Object.values(snap.val()) : [];
-    refreshLivePanel();
-    checkNewOrders();
+  db.ref("hut_hotel_bookings").on("value",snap=>{
+    hotelBookingsFB=snap.val()?Object.values(snap.val()):[];
+    refreshLivePanel();checkNewOrders();
   });
-
-  // Partner ledger listener — updates debt/stats in real-time
-  db.ref("ledgers").on("value", snap => {
-    const ledgers = snap.val()||{};
-    if(!gD) return;
-    // Update carOffices debt from Firebase ledger
-    (gD.carOffices||[]).forEach(off => {
-      const key = String(off.id||"").replace(/\D/g,"")||off.name.replace(/\s+/g,"_");
-      const l = ledgers.car_offices?.[key];
-      if(l){ off.debt=l.debt||0; off.total_orders=l.completed_orders||off.total_orders; }
+  db.ref("ledgers").on("value",snap=>{
+    const l=snap.val()||{};if(!gD)return;
+    (gD.carOffices||[]).forEach(off=>{
+      const k=String(off.id||"").replace(/\D/g,"")||off.name.replace(/\s+/g,"_");
+      const ld=l.car_offices?.[k];
+      if(ld){off.debt=ld.debt||0;off.total_orders=ld.completed_orders||off.total_orders;}
     });
-    (gD.hotels||[]).forEach(h => {
-      const key = String(h.id||"").replace(/\D/g,"")||h.name.replace(/\s+/g,"_");
-      const l = ledgers.hotels?.[key];
-      if(l){ h.debt=l.debt||0; h.total_bookings=l.completed_orders||h.total_bookings; }
+    (gD.hotels||[]).forEach(h=>{
+      const k=String(h.id||"").replace(/\D/g,"")||h.name.replace(/\s+/g,"_");
+      const ld=l.hotels?.[k];
+      if(ld){h.debt=ld.debt||0;h.total_bookings=ld.completed_orders||h.total_bookings;}
     });
   });
 }
 
 function checkNewOrders(){
-  const all = getMergedOrders().filter(o=>o.status==="pending");
-  all.forEach(o => {
-    const sid = String(o.id);
+  const pend=getMergedOrders().filter(o=>o.status==="pending");
+  pend.forEach(o=>{
+    const sid=String(o.id);
     if(!lastKnownOrderIds.has(sid)){
       lastKnownOrderIds.add(sid);
       showNewOrderToast(o);
-      const snd=$("sndNew");if(snd){snd.currentTime=0;snd.play().catch(()=>{});}
+      try{const a=$("sndNew");if(a){a.currentTime=0;a.play().catch(()=>{});}}catch(e){}
     }
   });
 }
 
 /* ══ SIDE TOAST ══ */
 function showNewOrderToast(o){
-  $("nt-title").textContent = o.type==="car" ? "🚗 طلب تأجير جديد!" : "🏨 حجز فندقي جديد!";
-  $("nt-sub").textContent = `#${o.id} · ${o.city||"—"} · ${fmt(o.price)} د.ع`;
-  const toast = $("newOrderToast");
-  toast.classList.add("show");
-  if(toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>hideNewOrderToast(), 15000);
+  $("nt-title").textContent=o.type==="car"?"🚗 طلب تأجير جديد!":"🏨 حجز فندقي جديد!";
+  $("nt-sub").textContent=`#${o.id} · ${o.city||"—"} · ${fmt(o.price)} د.ع`;
+  const t=$("newOrderToast");t.classList.add("show");
+  clearTimeout(toastTimer);toastTimer=setTimeout(hideNewOrderToast,15000);
 }
-function hideNewOrderToast(){ $("newOrderToast").classList.remove("show"); }
-function goTabAndShowOrder(){ hideNewOrderToast(); goTab("live"); }
-window.goTabAndShowOrder = goTabAndShowOrder;
-window.hideNewOrderToast = hideNewOrderToast;
+function hideNewOrderToast(){$("newOrderToast").classList.remove("show");}
+function goTabAndShowOrder(){hideNewOrderToast();goTab("live");}
+window.goTabAndShowOrder=goTabAndShowOrder;
+window.hideNewOrderToast=hideNewOrderToast;
 
-/* ══════════════════════════════════════════════════════
-   MERGED ORDERS
-══════════════════════════════════════════════════════ */
+/* ══ MERGED ORDERS ══ */
 function getMergedOrders(){
   const list=[];
   carOrdersFB.forEach(o=>list.push({
-    id:o.id, type:"car",
-    title:(o.car||"سيارة"),
-    name:o.name||"—", phone:o.phone||"",
+    id:o.id,type:"car",title:(o.car||"سيارة"),
+    name:o.name||"—",phone:o.phone||"",
     entity:o.office||"جاري التحديد",
-    city:o.city||"—", price:cleanN(o.total),
-    status:o.status, date:o.date||o.created_at||"",
+    city:o.city||"—",price:cleanN(o.total),
+    status:o.status,date:o.date||o.created_at||"",
     cancel_requested:o.cancel_requested||false,
     cancel_reason:o.cancel_reason||"",
     cancel_by:o.cancel_by||"",
+    lat:o.lat||null,lng:o.lng||null,
+    // all raw fields for detail sheet
+    days:o.days||1,addon:o.addon||"",
+    national_id:o.national_id||"",
+    location_link:o.location_link||"",
+    special_req:o.special_req||"",
     raw:o
   }));
   hotelBookingsFB.forEach(b=>list.push({
-    id:b.id, type:"hotel",
-    title:(b.hotel_name||"فندق"),
-    name:b.guest_name||b.name||"—", phone:b.guest_phone||b.phone||"",
+    id:b.id,type:"hotel",title:(b.hotel_name||"فندق"),
+    name:b.guest_name||b.name||"—",phone:b.guest_phone||b.phone||"",
     entity:b.hotel_name||"—",
-    city:b.city||"—", price:cleanN(b.total),
-    status:b.status, date:b.date_arrive||b.created_at||"",
+    city:b.city||"—",price:cleanN(b.total),
+    status:b.status,date:b.date_arrive||b.created_at||"",
     cancel_requested:b.cancel_requested||false,
     cancel_reason:b.cancel_reason||"",
     cancel_by:b.cancel_by||"",
+    lat:b.lat||null,lng:b.lng||null,
+    nights:b.nights||1,room_type:b.room_type||"غرفة",
+    guests:b.guests||"",
+    national_id:b.guest_national_id||"",
+    location_link:b.location_link||"",
+    special_req:b.special_req||"",
     raw:b
   }));
   return list.sort((a,b)=>new Date(b.date)-new Date(a.date));
 }
 
-/* ══════════════════════════════════════════════════════
-   LIVE PANEL RENDER
-══════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════
+   ENTERPRISE ORDER CARDS RENDER
+══════════════════════════════════════════════════════════════ */
 function refreshLivePanel(){
-  const all = getMergedOrders();
-  const pend = all.filter(x=>x.status==="pending"&&!x.cancel_requested).length;
-  const act  = all.filter(x=>["active","confirmed"].includes(x.status)&&!x.cancel_requested).length;
-  const cp   = all.filter(x=>x.cancel_requested).length;
+  const all=getMergedOrders();
+  const pend=all.filter(x=>x.status==="pending"&&!x.cancel_requested).length;
+  const act =all.filter(x=>["active","confirmed"].includes(x.status)&&!x.cancel_requested).length;
+  const cp  =all.filter(x=>x.cancel_requested).length;
 
-  $("fn-all").textContent = all.length;
-  $("fn-p").textContent   = pend;
-  $("fn-a").textContent   = act;
-  $("fn-cp").textContent  = cp;
-  $("lk-active").textContent = pend+act;
+  $("fn-all").textContent=all.length;
+  $("fn-p").textContent=pend;
+  $("fn-a").textContent=act;
+  $("fn-cp").textContent=cp;
+  $("lk-active").textContent=pend+act;
 
   const cntEl=$("lp-cnt");
   if(cntEl){cntEl.textContent=pend;cntEl.classList.toggle("show",pend>0);}
-
-  // Update cancel badge in sidebar
   const bc=$("badge-cancels");
   if(bc){bc.textContent=cp;bc.classList.toggle("dn",cp===0);}
 
-  let filtered = all;
-  if(liveFilt==="pending") filtered=all.filter(x=>x.status==="pending"&&!x.cancel_requested);
-  if(liveFilt==="active")  filtered=all.filter(x=>["active","confirmed"].includes(x.status)&&!x.cancel_requested);
+  let filtered=all;
+  if(liveFilt==="pending")        filtered=all.filter(x=>x.status==="pending"&&!x.cancel_requested);
+  if(liveFilt==="active")         filtered=all.filter(x=>["active","confirmed"].includes(x.status)&&!x.cancel_requested);
   if(liveFilt==="cancel_pending") filtered=all.filter(x=>x.cancel_requested);
 
-  renderOrderCards(filtered, "lp-list");
+  renderEnterpriseCards(filtered,"lp-list");
   renderCancelTab(all.filter(x=>x.cancel_requested));
 }
 
-/* ══ ORDER CARDS ══ */
-function renderOrderCards(list, containerId){
+/* ── Enterprise Card — Full Detail + All Actions ── */
+function renderEnterpriseCards(list,containerId){
   const container=$(containerId);
   if(!list.length){container.innerHTML=`<div class="lp-empty">🐋 لا طلبات تطابق الفلتر</div>`;return;}
 
-  container.innerHTML = list.map(x=>{
-    const isCP = x.cancel_requested;
-    let sc,sl,strClass;
-    if(isCP){ sc="stb-cp"; sl="⏳ إلغاء معلق"; strClass="str-cp"; }
-    else if(x.status==="pending"){ sc="stb-p"; sl="معلق"; strClass="str-p"; }
-    else if(["active","confirmed"].includes(x.status)){ sc="stb-a"; sl="جاري"; strClass="str-a"; }
-    else if(x.status==="completed"){ sc="stb-g"; sl="مكتمل"; strClass="str-c"; }
-    else { sc="stb-x"; sl="ملغي"; strClass="str-x"; }
+  container.innerHTML=list.map(x=>{
+    const isCP=x.cancel_requested;
+    let sc,sl,strCls;
+    if(isCP){sc="stb-cp";sl="⏳ إلغاء معلق";strCls="str-cp";}
+    else if(x.status==="pending"){sc="stb-p";sl="⏳ معلق";strCls="str-p";}
+    else if(["active","confirmed"].includes(x.status)){sc="stb-a";sl="🔵 جاري";strCls="str-a";}
+    else if(x.status==="completed"){sc="stb-g";sl="✅ مكتمل";strCls="str-c";}
+    else{sc="stb-x";sl="❌ ملغي";strCls="str-x";}
 
-    const phn = normalizePhone(x.phone);
-    const waBtn = phn ? `<button class="ob ob-wa" title="واتساب" onclick="openWaAdmin('customer',${safeJSON(x)})">💬</button>` : "";
-    const waPartnerPhone = getPartnerPhone(x);
-    const waPartnerBtn = waPartnerPhone ? `<button class="ob" style="background:#e0f2fe;color:#0369a1;font-size:11px;width:27px;height:27px;border-radius:8px;border:none;cursor:pointer" title="واتساب الشريك" onclick="openWaAdmin('partner',${safeJSON(x)})">🏢</button>` : "";
+    const phn=normalizePhone(x.phone);
+    const partnerPhone=getPartnerPhone(x);
 
-    let cancelActions="";
+    // ── Full Info Grid ──
+    const isH=x.type==="hotel";
+    const cells=[
+      {l:"👤 العميل",   v:esc(x.name),cls:""},
+      {l:"📱 الهاتف",   v:`<span style="font-family:'IBM Plex Mono',monospace;color:var(--green);font-size:.74rem">${esc(x.phone||"—")}</span>`,raw:true},
+      {l:isH?"🛏 نوع الغرفة":"🚗 السيارة", v:esc(isH?(x.room_type||"غرفة"):x.title)},
+      {l:"📍 المدينة",  v:esc(x.city)},
+      {l:isH?"🌙 الليالي":"⏱️ الأيام", v:esc(isH?((x.nights||1)+" ليلة"):((x.days||1)+" يوم"))},
+      {l:"💵 الإجمالي",v:`<span class="oc-ig-val price">${fmt(x.price)} د.ع</span>`,raw:true},
+    ];
+    if(x.national_id)cells.push({l:"🪪 الهوية",v:`<span class="oc-ig-val id">${esc(x.national_id)}</span>`,raw:true});
+    if(isH&&x.guests)cells.push({l:"👥 النزلاء",v:esc(x.guests)});
+    if(x.location_link)cells.push({l:"📍 موقع الزبون",v:`<span class="oc-ig-val loc" onclick="window.open('${esc(x.location_link)}','_blank')">عرض الموقع ↗</span>`,raw:true,cls:"full"});
+
+    const gridH=cells.map((c,i)=>`
+      <div class="oc-ig${c.cls?" "+c.cls:i===cells.length-1&&cells.length%2!==0?" full":""}">
+        <div class="oc-ig-lbl">${c.l}</div>
+        <div class="oc-ig-val">${c.raw?c.v:c.v}</div>
+      </div>`).join("");
+
+    const addonH=x.addon?`<div class="oc-addon"><span class="addon-pill">✨ ${esc(x.addon)}</span></div>`:"";
+    const noteH=x.special_req?`<div class="oc-note">⚠️ ${esc(x.special_req)}</div>`:"";
+    const cancelH=isCP?`<div class="oc-cancel-note">🗑 طلب إلغاء — ${esc(x.cancel_reason||"لا سبب")} · بواسطة: ${esc(x.cancel_by||"—")}</div>`:"";
+
+    // ── Action Toolbar ──
+    let toolbar="";
+    // Primary: Open full detail sheet
+    toolbar+=`<button class="oa" style="background:var(--blue-l);color:var(--blue);" onclick="openOrderDetail(${safeJSON(x)})">🔍 تفاصيل كاملة</button>`;
+    
     if(isCP){
-      cancelActions=`
-        <button class="ob ob-back"    title="رفض الإلغاء"  onclick="openCancelReview(${safeJSON(x)})">↺</button>
-        <button class="ob ob-approve" title="قبول الإلغاء" onclick="openCancelReview(${safeJSON(x)})">✅</button>
-        <button class="ob ob-nuke"    title="حذف نهائي"    onclick="openCancelReview(${safeJSON(x)})">🗑</button>`;
-    } else {
-      cancelActions=`
-        <button class="ob ob-ok"  title="إكمال" onclick="forceComplete('${esc(x.type)}','${esc(x.id)}',this)">✓</button>
-        <button class="ob ob-del" title="إلغاء" onclick="forceCancel('${esc(x.id)}',this)">✕</button>`;
+      // Cancel pending: review buttons
+      toolbar+=`<button class="oa oa-rev" onclick="openCancelReview(${safeJSON(x)})">🔍 مراجعة الإلغاء</button>`;
+    } else if(x.status==="pending"){
+      // Pending: assign to partner (force) + complete + cancel
+      toolbar+=`<button class="oa oa-assign" onclick="openAssign(${safeJSON(x)})">🎯 تعيين قسري</button>`;
+      toolbar+=`<button class="oa oa-complete" onclick="forceComplete('${esc(x.type)}','${esc(x.id)}',this)">✅ إتمام</button>`;
+      toolbar+=`<button class="oa oa-cancel"  onclick="forceCancel('${esc(x.id)}',this)">✕</button>`;
+    } else if(["active","confirmed"].includes(x.status)){
+      toolbar+=`<button class="oa oa-assign" onclick="openAssign(${safeJSON(x)})">🔄 إعادة تعيين</button>`;
+      toolbar+=`<button class="oa oa-complete" onclick="forceComplete('${esc(x.type)}','${esc(x.id)}',this)">✅ إتمام</button>`;
+      toolbar+=`<button class="oa oa-cancel" onclick="forceCancel('${esc(x.id)}',this)">✕</button>`;
     }
+    // WhatsApp icons
+    if(phn)        toolbar+=`<button class="ob ob-wa"   title="واتساب الزبون"  onclick="openWaAdmin('customer',${safeJSON(x)})">💬</button>`;
+    if(partnerPhone)toolbar+=`<button class="ob ob-wa-p" title="واتساب الشريك" onclick="openWaAdmin('partner',${safeJSON(x)})">🏢</button>`;
+    // Map icon if location
+    if(x.lat||x.location_link)toolbar+=`<button class="ob ob-map" title="الموقع" onclick="focusOrderOnMap(${safeJSON(x)})">🗺</button>`;
+    // Price
+    toolbar+=`<span class="oc-price-tag">${fmt(x.price)} د.ع</span>`;
 
     return `
     <div class="oc">
-      <div class="oc-stripe ${strClass}"></div>
+      <div class="oc-stripe ${strCls}"></div>
       <div class="oc-hd">
         <div class="oc-id">#${esc(x.id)}</div>
         <span class="oc-stb ${sc}">${sl}</span>
       </div>
-      <div class="oc-bd">
-        <div class="oc-ti">${x.type==="car"?"🚗":"🏨"} ${esc(x.title)}</div>
-        <div class="oc-det">👤 ${esc(x.name)} · 📍 ${esc(x.city)} · 🏢 ${esc(x.entity)}</div>
-        ${isCP?`<div class="oc-cr">🗑 ${esc(x.cancel_reason||"لا سبب")} — بواسطة: ${esc(x.cancel_by||"—")}</div>`:""}
-      </div>
-      <div class="oc-ft">
-        <div class="oc-price">${fmt(x.price)} د.ع</div>
-        <div class="oc-acts">${waBtn}${waPartnerBtn}${cancelActions}</div>
-      </div>
+      <div class="oc-info-grid">${gridH}</div>
+      ${addonH}${noteH}${cancelH}
+      <div class="oc-toolbar">${toolbar}</div>
     </div>`;
   }).join("");
 }
 
-function safeJSON(o){return JSON.stringify(o).replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
-
-/* ══ CANCEL TAB ══ */
-function renderCancelTab(cancelList){
-  const cnt=$("cancels-count");
-  if(cnt){cnt.textContent=cancelList.length+" طلب";}
-
-  if(!cancelList.length){
-    $("cancels-list").innerHTML=`<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:48px;text-align:center;color:var(--tx3);"><div style="font-size:2.2rem;margin-bottom:10px">✅</div>لا توجد طلبات إلغاء معلقة</div>`;
-    return;
-  }
-
-  const html = cancelList.map(x=>{
-    const phn = normalizePhone(x.phone);
-    return `
-    <div class="cancel-panel">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:7px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:700;color:var(--red)">#${esc(x.id)}</span>
-          <span class="stb stb-cpnd">⏳ إلغاء معلق</span>
-        </div>
-        <div style="display:flex;gap:6px">
-          <button class="ea ea-edit" style="font-size:.72rem" onclick="openCancelReview(${safeJSON(x)})">🔍 مراجعة وقرار</button>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:7px;background:var(--bg);border-radius:var(--r2);padding:11px;border:1px solid var(--border)">
-        <div><div style="font-size:.58rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">العميل</div><div style="font-size:.82rem;font-weight:900;margin-top:2px">${esc(x.name)}</div></div>
-        <div><div style="font-size:.58rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">الخدمة</div><div style="font-size:.82rem;font-weight:900;margin-top:2px">${x.type==="car"?"🚗":"🏨"} ${esc(x.title)}</div></div>
-        <div><div style="font-size:.58rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">المدينة</div><div style="font-size:.82rem;font-weight:900;margin-top:2px">📍 ${esc(x.city)}</div></div>
-        <div><div style="font-size:.58rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">المبلغ</div><div style="font-size:.82rem;font-weight:900;color:var(--green);margin-top:2px">${fmt(x.price)} د.ع</div></div>
-        <div><div style="font-size:.58rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">طالب الإلغاء</div><div style="font-size:.78rem;font-weight:700;color:var(--amber);margin-top:2px">${esc(x.cancel_by||"—")}</div></div>
-        <div><div style="font-size:.58rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">الهاتف</div><div style="font-size:.78rem;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--blue);margin-top:2px">${esc(phn||"—")}</div></div>
-      </div>
-      ${x.cancel_reason?`<div class="cr-reason-box" style="margin-top:9px;margin-bottom:0">🗑 السبب: ${esc(x.cancel_reason)}</div>`:""}
-    </div>`;
-  }).join("");
-  $("cancels-list").innerHTML = html;
-}
-
-/* ══ CANCEL REVIEW MODAL ══ */
-function openCancelReview(order){
-  crCtx = order;
-  $("cr-info").innerHTML = `
-    <div class="cr-row"><span class="cr-lbl">المعرف</span><span class="cr-val">#${esc(order.id)}</span></div>
-    <div class="cr-row"><span class="cr-lbl">العميل</span><span class="cr-val">${esc(order.name)}</span></div>
-    <div class="cr-row"><span class="cr-lbl">الخدمة</span><span class="cr-val">${order.type==="car"?"🚗":"🏨"} ${esc(order.title)}</span></div>
-    <div class="cr-row"><span class="cr-lbl">المدينة</span><span class="cr-val">📍 ${esc(order.city)}</span></div>
-    <div class="cr-row"><span class="cr-lbl">المبلغ</span><span class="cr-val" style="color:var(--green)">${fmt(order.price)} د.ع</span></div>
-    <div class="cr-row"><span class="cr-lbl">طالب الإلغاء</span><span class="cr-val" style="color:var(--amber)">${esc(order.cancel_by||"—")}</span></div>`;
-  $("cr-reason-box").textContent = "📝 السبب: " + (order.cancel_reason||"لم يُحدَّد");
-  $("cancelReviewModal").classList.remove("dn");
-}
-function closeCancelReview(){ $("cancelReviewModal").classList.add("dn"); crCtx=null; }
-window.closeCancelReview = closeCancelReview;
-window.openCancelReview  = openCancelReview;
-
-/* Three decisions: back=reject(return to radar) / approve=cancel / delete=hard delete */
-window.decideCancel = async function(decision){
-  if(!crCtx) return;
-  const order = crCtx;
-  const sp = order.type==="hotel" ? "hut_hotel_bookings" : "hut_car_orders";
-  const confirmMsg = {
-    back:    "رفض الإلغاء وإعادة الطلب للرادار؟",
-    approve: "قبول الإلغاء وإلغاء الطلب نهائياً؟",
-    delete:  "⚠️ حذف الطلب كلياً من قاعدة البيانات؟ لا يمكن التراجع!"
-  }[decision];
-  if(!confirm(confirmMsg)) return;
-
-  ["crb-back","crb-ok","crb-del"].forEach(id=>setBtn(id,true));
-
-  try{
-    if(decision === "back"){
-      // Remove cancel flags from Firebase — order returns to radar with original status
-      if(db) await db.ref(`${sp}/${order.id}`).update({
-        cancel_requested: false,
-        cancel_reason: null,
-        cancel_by: null,
-        cancel_at: null
-      });
-      toast("↺ تم رفض الإلغاء — الطلب عاد للرادار ✅");
-
-    } else if(decision === "approve"){
-      // Send cancel/reject to API
-      const ac = order.type==="hotel" ? "rejectHotelBooking" : "cancelRequest";
-      await fetch(API_URL,{method:"POST",body:JSON.stringify({action:ac,id:order.id,token:API_TOKEN,pass:MP})});
-      // Update Firebase status
-      if(db) await db.ref(`${sp}/${order.id}`).update({status:"cancelled",cancel_requested:false});
-      toast("✅ تم قبول الإلغاء وإلغاء الطلب");
-
-    } else if(decision === "delete"){
-      // Delete from API
-      const ac = order.type==="hotel" ? "deleteBooking" : "deleteOrder";
-      await fetch(API_URL,{method:"POST",body:JSON.stringify({action:ac,id:order.id,token:API_TOKEN,pass:MP})});
-      // Hard delete from Firebase
-      if(db) await db.ref(`${sp}/${order.id}`).remove();
-      toast("🗑 تم الحذف النهائي للطلب");
-    }
-    closeCancelReview();
-    setTimeout(loadSystemData, 800);
-  } catch(e){ toast("فشل — حاول مجدداً","e"); }
-  finally{["crb-back","crb-ok","crb-del"].forEach(id=>setBtn(id,false));}
-};
-
-window.setLiveFilt = function(f, btn){
+window.setLiveFilt=function(f,btn){
   liveFilt=f;
   document.querySelectorAll(".fbar .fp").forEach(b=>b.classList.remove("on"));
   btn.classList.add("on");
   refreshLivePanel();
 };
 
+/* ══ ORDER DETAIL SHEET ══ */
+let odDetailMap=null, odLine=null;
+
+window.openOrderDetail=function(order){
+  odCtx=order;
+  const isH=order.type==="hotel";
+
+  $("od-hdl-title").textContent=`#${order.id} — ${isH?"حجز فندقي":"تأجير سيارة"}`;
+  $("orderDetailModal").classList.remove("dn");
+
+  // Build info grid
+  const cells=[
+    {l:"👤 العميل",v:esc(order.name)},
+    {l:"📱 هاتف الزبون",v:`<span class="od-cell-v mono">${esc(order.phone||"—")}</span>`,raw:true},
+    {l:isH?"🛏 نوع الغرفة":"🚗 السيارة",v:esc(isH?(order.room_type||"غرفة"):order.title)},
+    {l:"🏢 الشريك",v:esc(order.entity)},
+    {l:"📍 المدينة",v:esc(order.city)},
+    {l:"📅 التاريخ",v:esc(order.date)},
+    {l:isH?"🌙 الليالي":"⏱️ الأيام",v:esc(isH?((order.nights||1)+" ليلة"):((order.days||1)+" يوم"))},
+    {l:"💵 الإجمالي",v:`<span class="od-cell-v green">${fmt(order.price)} د.ع</span>`,raw:true},
+  ];
+  if(order.national_id)cells.push({l:"🪪 رقم الهوية",v:`<span class="od-cell-v mono">${esc(order.national_id)}</span>`,raw:true});
+  if(isH&&order.guests)cells.push({l:"👥 عدد النزلاء",v:esc(order.guests)});
+  if(order.addon)cells.push({l:"✨ الإضافات",v:esc(order.addon),full:true});
+  if(order.special_req)cells.push({l:"⚠️ طلب خاص",v:`<span class="od-cell-v red">${esc(order.special_req)}</span>`,raw:true,full:true});
+  if(order.location_link)cells.push({l:"📍 موقع الزبون",v:`<a href="${esc(order.location_link)}" target="_blank" style="color:var(--indigo);font-weight:800;font-size:.8rem">فتح الموقع ↗</a>`,raw:true,full:true});
+
+  $("od-info-grid").innerHTML=cells.map(c=>`
+    <div class="od-cell${c.full?" full":""}">
+      <div class="od-cell-l">${c.l}</div>
+      <div class="od-cell-v">${c.raw?c.v:c.v}</div>
+    </div>`).join("");
+
+  // WA buttons
+  const custPhn=normalizePhone(order.phone);
+  const partPhn=getPartnerPhone(order);
+  const custBtn=$("od-wa-cust-btn"),partBtn=$("od-wa-part-btn");
+  if(custBtn){custBtn.textContent="💬 واتساب الزبون"+(custPhn?"":" (لا رقم)");custBtn.disabled=!custPhn;}
+  if(partBtn){partBtn.textContent="🏢 واتساب الشريك"+(partPhn?"":" (لا رقم)");partBtn.disabled=!partPhn;}
+
+  // Actions
+  let actions="";
+  if(!order.cancel_requested){
+    if(["pending","active","confirmed"].includes(order.status)){
+      actions+=`<button class="od-act assign" onclick="openAssign(${safeJSON(order)});closeOrderDetail()">🎯 تعيين قسري</button>`;
+      actions+=`<button class="od-act complete" onclick="forceComplete('${esc(order.type)}','${esc(order.id)}',this)">✅ إتمام</button>`;
+      actions+=`<button class="od-act cancel" onclick="forceCancel('${esc(order.id)}',this)">✕ إلغاء</button>`;
+    }
+  }else{
+    actions+=`<button class="od-act" style="background:var(--amber-l);color:var(--amber)" onclick="openCancelReview(${safeJSON(order)});closeOrderDetail()">🔍 مراجعة الإلغاء</button>`;
+  }
+  actions+=`<button class="od-act detail" onclick="closeOrderDetail()">✕ إغلاق</button>`;
+  $("od-actions").innerHTML=actions;
+
+  // Map: init or update
+  setTimeout(()=>{
+    const mapEl=$("od-map");
+    if(!mapEl)return;
+    if(!odDetailMap){
+      odDetailMap=L.map("od-map",{zoomControl:false,attributionControl:false});
+      L.control.zoom({position:"bottomright"}).addTo(odDetailMap);
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",{maxZoom:19}).addTo(odDetailMap);
+    }else{
+      odDetailMap.eachLayer(l=>{if(l instanceof L.Marker||l instanceof L.Polyline)odDetailMap.removeLayer(l);});
+    }
+    const bounds=[];
+    // Customer location
+    const custLat=parseFloat(order.lat),custLng=parseFloat(order.lng);
+    if(custLat&&Math.abs(custLat)>0.1){
+      const icoC=L.divIcon({className:"",html:`<div style="background:var(--red);border:2px solid #fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 3px 10px rgba(0,0,0,.2)">👤</div>`,iconSize:[30,30],iconAnchor:[15,15]});
+      L.marker([custLat,custLng],{icon:icoC}).bindPopup(`<div class="popup-title">موقع الزبون</div><div class="popup-sub">${esc(order.name)}</div>`).addTo(odDetailMap);
+      bounds.push([custLat,custLng]);
+    }
+    // Partner location
+    const partner=order.type==="car"
+      ?(gD?.carOffices||[]).find(o=>o.name===order.entity)
+      :(gD?.hotels||[]).find(h=>h.name===order.entity);
+    if(partner){
+      const pLat=parseFloat(partner.lat),pLng=parseFloat(partner.lng);
+      if(pLat&&Math.abs(pLat)>0.1){
+        const icoP=L.divIcon({className:"",html:`<div style="background:var(--blue);border:2px solid #fff;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 3px 10px rgba(0,0,0,.2)">${order.type==="car"?"🚗":"🏨"}</div>`,iconSize:[30,30],iconAnchor:[15,15]});
+        L.marker([pLat,pLng],{icon:icoP}).bindPopup(`<div class="popup-title">${esc(partner.name)}</div><div class="popup-sub">📍 ${esc(partner.city)}</div>`).addTo(odDetailMap);
+        bounds.push([pLat,pLng]);
+        // Polyline: customer ↔ partner
+        if(custLat&&Math.abs(custLat)>0.1){
+          L.polyline([[custLat,custLng],[pLat,pLng]],{color:"var(--red)",weight:2,dashArray:"5,8"}).addTo(odDetailMap);
+        }
+      }
+    }
+    if(bounds.length)odDetailMap.fitBounds(bounds,{padding:[30,30]});
+    else odDetailMap.setView([35.468,44.392],12);
+    odDetailMap.invalidateSize();
+  },300);
+};
+
+function closeOrderDetail(){$("orderDetailModal").classList.add("dn");}
+window.closeOrderDetail=closeOrderDetail;
+
+function odWa(target){
+  if(!odCtx)return;
+  if(target==="customer"){openWaAdmin("customer",odCtx);}
+  else{
+    const partPhn=getPartnerPhone(odCtx);
+    openWaAdmin("partner",{...odCtx,phone:partPhn});
+  }
+}
+window.odWa=odWa;
+
+window.focusOrderOnMap=function(order){
+  goTab("live");
+  if(order.lat&&Math.abs(order.lat)>0.1&&map){
+    map.setView([order.lat,order.lng],16);
+  }
+};
+
+/* ══ ASSIGN MODAL ══ */
+window.openAssign=function(order){
+  assignCtx=order;
+  const isH=order.type==="hotel";
+  $("assign-sub").textContent=`طلب #${order.id} — ${isH?"حجز فندق: اختر فندقاً":"تأجير سيارة: اختر مكتباً"}`;
+  filterAssignList();
+  $("assignModal").classList.remove("dn");
+};
+window.closeAssign=function(){$("assignModal").classList.add("dn");assignCtx=null;};
+
+window.filterAssignList=function(){
+  if(!assignCtx)return;
+  const q=($("assign-search")?.value||"").toLowerCase().trim();
+  const isH=assignCtx.type==="hotel";
+  const partners=isH?(gD?.hotels||[]):(gD?.carOffices||[]);
+  const filtered=q?partners.filter(p=>p.name.toLowerCase().includes(q)||p.city.toLowerCase().includes(q)):partners;
+  const container=$("assign-list");
+  if(!filtered.length){container.innerHTML=`<div class="lp-empty" style="padding:20px">لا نتائج</div>`;return;}
+  container.innerHTML=filtered.map(p=>`
+    <div class="assign-opt" id="aopt-${esc(p.id)}" onclick="selectAssignPartner('${esc(p.id)}','${esc(p.name)}',this)">
+      <div class="assign-ic">${isH?"🏨":"🚗"}</div>
+      <div>
+        <div class="assign-nm">${esc(p.name)}</div>
+        <div class="assign-city">📍 ${esc(p.city)} · ${p.status==="active"?"✅ نشط":"⚠️ "+p.status}</div>
+      </div>
+    </div>`).join("");
+};
+
+let selectedAssignPartnerId="",selectedAssignPartnerName="";
+window.selectAssignPartner=function(id,name,el){
+  selectedAssignPartnerId=id;selectedAssignPartnerName=name;
+  document.querySelectorAll(".assign-opt").forEach(e=>e.classList.remove("selected"));
+  el.classList.add("selected");
+};
+
+window.confirmAssign=async function(){
+  if(!assignCtx||!selectedAssignPartnerId){toast("اختر شريكاً أولاً","e");return;}
+  setBtn("assign-confirm-btn",true);
+  const isH=assignCtx.type==="hotel";
+  const action=isH?"assignHotelBooking":"assignCarOrder";
+  try{
+    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({
+      action,id:assignCtx.id,
+      [isH?"hotel":"office"]:selectedAssignPartnerName,
+      token:API_TOKEN,pass:MP
+    })});
+    const d=await res.json();
+    if(d.success){
+      toast(`🎯 تم التعيين إلى ${selectedAssignPartnerName} ✅`);
+      closeAssign();
+      setTimeout(loadSystemData,600);
+    }else{
+      // Fallback: update Firebase directly
+      const sp=isH?"hut_hotel_bookings":"hut_car_orders";
+      if(db)await db.ref(`${sp}/${assignCtx.id}`).update({[isH?"hotel_name":"office"]:selectedAssignPartnerName});
+      toast(`🎯 تم التعيين إلى ${selectedAssignPartnerName}`,"w");
+      closeAssign();
+    }
+  }catch(e){toast("فشل الاتصال","e");}
+  finally{setBtn("assign-confirm-btn",false);}
+};
+
 /* ══ FORCE ACTIONS ══ */
-window.forceComplete = async function(type, id, btn){
-  if(!confirm("تأكيد إكمال الطلب يدوياً؟")) return;
+window.forceComplete=async function(type,id,btn){
+  if(!confirm("تأكيد إتمام الطلب يدوياً؟"))return;
   if(btn)btn.classList.add("btn-ld");
-  const action = type==="car" ? "completeOrder" : "confirmBooking";
-  const body = type==="car"
-    ? {action,id,office:"الإدارة العامة",token:API_TOKEN}
-    : {action,id,hotel:"الإدارة العامة",token:API_TOKEN};
+  const action=type==="car"?"completeOrder":"confirmBooking";
+  const body=type==="car"?{action,id,office:"الإدارة العامة",token:API_TOKEN}:{action,id,hotel:"الإدارة العامة",token:API_TOKEN};
   try{
     await fetch(API_URL,{method:"POST",body:JSON.stringify(body)});
-    toast("تم تحديث الطلب ✅");
-    setTimeout(loadSystemData,600);
-  }catch(e){toast("تم الإرسال","s");}
+    toast("✅ تم تحديث حالة الطلب");setTimeout(loadSystemData,600);
+  }catch(e){toast("تم الإرسال","w");}
   finally{if(btn)btn.classList.remove("btn-ld");}
 };
 
-window.forceCancel = async function(id, btn){
-  if(!confirm("تأكيد إلغاء الطلب؟")) return;
+window.forceCancel=async function(id,btn){
+  if(!confirm("تأكيد إلغاء الطلب نهائياً؟"))return;
   if(btn)btn.classList.add("btn-ld");
   try{
     await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"cancelRequest",id,token:API_TOKEN})});
-    toast("تم الإلغاء ✅");
-    setTimeout(loadSystemData,600);
-  }catch(e){toast("تم الإرسال","s");}
+    const sp=carOrdersFB.find(o=>o.id===id)?"hut_car_orders":"hut_hotel_bookings";
+    if(db)await db.ref(`${sp}/${id}`).update({status:"cancelled"});
+    toast("تم الإلغاء ✅");setTimeout(loadSystemData,600);
+  }catch(e){toast("تم الإرسال","w");}
   finally{if(btn)btn.classList.remove("btn-ld");}
 };
 
-/* ══════════════════════════════════════════════════════
-   MAP — MARKERCLUSTER
-══════════════════════════════════════════════════════ */
+/* ══ CANCEL REVIEW ══ */
+window.openCancelReview=function(order){
+  crCtx=order;
+  $("cr-info").innerHTML=`
+    <div class="cr-row"><span class="cr-lbl">المعرف</span><span class="cr-val">#${esc(order.id)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">العميل</span><span class="cr-val">${esc(order.name)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">الخدمة</span><span class="cr-val">${order.type==="car"?"🚗":"🏨"} ${esc(order.title)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">المدينة</span><span class="cr-val">📍 ${esc(order.city)}</span></div>
+    <div class="cr-row"><span class="cr-lbl">المبلغ</span><span class="cr-val" style="color:var(--green)">${fmt(order.price)} د.ع</span></div>
+    <div class="cr-row"><span class="cr-lbl">طالب الإلغاء</span><span class="cr-val" style="color:var(--amber)">${esc(order.cancel_by||"—")}</span></div>`;
+  $("cr-reason-box").textContent="📝 السبب: "+(order.cancel_reason||"لم يُحدَّد");
+  $("cancelReviewModal").classList.remove("dn");
+};
+function closeCancelReview(){$("cancelReviewModal").classList.add("dn");crCtx=null;}
+window.closeCancelReview=closeCancelReview;
+
+window.decideCancel=async function(decision){
+  if(!crCtx)return;
+  const order=crCtx;
+  const sp=order.type==="hotel"?"hut_hotel_bookings":"hut_car_orders";
+  const msgs={back:"رفض الإلغاء وإعادة الطلب للرادار؟",approve:"قبول الإلغاء وإلغاء الطلب نهائياً؟",delete:"⚠️ حذف الطلب كلياً من النظام؟"};
+  if(!confirm(msgs[decision]))return;
+  ["crb-back","crb-ok","crb-del"].forEach(id=>setBtn(id,true));
+  try{
+    if(decision==="back"){
+      if(db)await db.ref(`${sp}/${order.id}`).update({cancel_requested:false,cancel_reason:null,cancel_by:null,cancel_at:null});
+      toast("↺ تم رفض الإلغاء — الطلب عاد للرادار ✅");
+    }else if(decision==="approve"){
+      const ac=order.type==="hotel"?"rejectHotelBooking":"cancelRequest";
+      await fetch(API_URL,{method:"POST",body:JSON.stringify({action:ac,id:order.id,token:API_TOKEN,pass:MP})});
+      if(db)await db.ref(`${sp}/${order.id}`).update({status:"cancelled",cancel_requested:false});
+      toast("✅ تم قبول الإلغاء وإلغاء الطلب");
+    }else if(decision==="delete"){
+      const ac=order.type==="hotel"?"deleteBooking":"deleteOrder";
+      await fetch(API_URL,{method:"POST",body:JSON.stringify({action:ac,id:order.id,token:API_TOKEN,pass:MP})});
+      if(db)await db.ref(`${sp}/${order.id}`).remove();
+      toast("🗑 تم الحذف النهائي للطلب");
+    }
+    closeCancelReview();setTimeout(loadSystemData,800);
+  }catch(e){toast("فشل — حاول مجدداً","e");}
+  finally{["crb-back","crb-ok","crb-del"].forEach(id=>setBtn(id,false));}
+};
+
+/* ══ CANCEL TAB ══ */
+function renderCancelTab(cancelList){
+  const cnt=$("cancels-count");if(cnt)cnt.textContent=cancelList.length+" طلب";
+  if(!cancelList.length){$("cancels-list").innerHTML=`<div class="lp-empty" style="background:var(--white);border-radius:var(--r4);padding:48px;text-align:center;color:var(--tx3);"><div style="font-size:2.2rem;margin-bottom:10px">✅</div>لا توجد طلبات إلغاء معلقة</div>`;return;}
+  $("cancels-list").innerHTML=cancelList.map(x=>`
+  <div class="cancel-panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:7px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:700;color:var(--red)">#${esc(x.id)}</span>
+        <span class="stb stb-cpnd">⏳ إلغاء معلق</span>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="ea ea-edit" onclick="openOrderDetail(${safeJSON(x)})">🔍 تفاصيل</button>
+        <button class="ea ea-ok"   onclick="openCancelReview(${safeJSON(x)})">⚖️ قرار</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:7px;background:var(--bg);border-radius:var(--r2);padding:11px;border:1px solid var(--border)">
+      <div><div style="font-size:.57rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">العميل</div><div style="font-size:.82rem;font-weight:900;margin-top:2px">${esc(x.name)}</div></div>
+      <div><div style="font-size:.57rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">الخدمة</div><div style="font-size:.82rem;font-weight:900;margin-top:2px">${x.type==="car"?"🚗":"🏨"} ${esc(x.title)}</div></div>
+      <div><div style="font-size:.57rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">الشريك</div><div style="font-size:.78rem;font-weight:700;color:var(--amber);margin-top:2px">${esc(x.cancel_by||"—")}</div></div>
+      <div><div style="font-size:.57rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">المبلغ</div><div style="font-size:.82rem;font-weight:900;color:var(--green);margin-top:2px">${fmt(x.price)} د.ع</div></div>
+      <div><div style="font-size:.57rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">الهاتف</div><div style="font-size:.78rem;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--blue);margin-top:2px">${esc(normalizePhone(x.phone)||"—")}</div></div>
+      <div><div style="font-size:.57rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:1px">المدينة</div><div style="font-size:.78rem;font-weight:700;margin-top:2px">📍 ${esc(x.city)}</div></div>
+    </div>
+    ${x.cancel_reason?`<div class="cr-reason-box" style="margin-top:9px;margin-bottom:0">🗑 السبب: ${esc(x.cancel_reason)}</div>`:""}
+  </div>`).join("");
+}
+
+/* ══ MAP ══ */
 function initMap(){
-  map = L.map("amap",{zoomControl:false,attributionControl:false}).setView([35.468,44.392],11);
+  map=L.map("amap",{zoomControl:false,attributionControl:false}).setView([35.468,44.392],11);
   L.control.zoom({position:"bottomright"}).addTo(map);
   L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",{maxZoom:19}).addTo(map);
-  clusterLayer = L.markerClusterGroup({
-    iconCreateFunction: cluster => L.divIcon({
+  clusterLayer=L.markerClusterGroup({
+    iconCreateFunction:cluster=>L.divIcon({
       html:`<div style="background:var(--red);color:#fff;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;font-family:'Cairo',sans-serif;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.2)">${cluster.getChildCount()}</div>`,
       className:"",iconSize:[34,34]
     })
@@ -1295,555 +1593,78 @@ function initMap(){
 }
 
 function placeMarkers(){
-  if(!map||!gD) return;
+  if(!map||!gD)return;
   clusterLayer.clearLayers();
-
   (gD.carOffices||[]).forEach(off=>{
-    const lat=parseFloat(off.lat), lng=parseFloat(off.lng);
-    if(!lat||!lng||Math.abs(lat)<1) return;
-    const ico = L.divIcon({
-      className:"",
-      html:`<div style="background:#fff;border:2px solid var(--red);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 3px 10px rgba(0,0,0,.15)">🚗</div>`,
-      iconSize:[30,30],iconAnchor:[15,15]
-    });
+    const lat=parseFloat(off.lat),lng=parseFloat(off.lng);
+    if(!lat||!lng||Math.abs(lat)<1)return;
+    const ico=L.divIcon({className:"",html:`<div style="background:#fff;border:2px solid var(--red);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 3px 10px rgba(0,0,0,.15)">🚗</div>`,iconSize:[30,30],iconAnchor:[15,15]});
     L.marker([lat,lng],{icon:ico})
-      .bindPopup(`<div class="popup-title">${off.name}</div><div class="popup-sub">📍 ${off.city} · ${off.total_orders||0} طلب · ${off.phone||"—"}</div><br><a href="https://wa.me/${normalizePhone(off.phone)}" target="_blank" style="color:#16a34a;font-weight:800;font-size:.72rem">💬 واتساب</a>`)
+      .bindPopup(`<div class="popup-title">${off.name}</div><div class="popup-sub">📍 ${off.city} · ${off.total_orders||0} طلب</div><br><a href="https://wa.me/${normalizePhone(off.phone)}" target="_blank" style="color:#16a34a;font-weight:800;font-size:.72rem">💬 واتساب</a>`)
       .addTo(clusterLayer);
   });
-
   (gD.hotels||[]).forEach(h=>{
-    const lat=parseFloat(h.lat), lng=parseFloat(h.lng);
-    if(!lat||!lng||Math.abs(lat)<1) return;
-    const ico = L.divIcon({
-      className:"",
-      html:`<div style="background:#fff;border:2px solid var(--green);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 3px 10px rgba(0,0,0,.15)">🏨</div>`,
-      iconSize:[30,30],iconAnchor:[15,15]
-    });
+    const lat=parseFloat(h.lat),lng=parseFloat(h.lng);
+    if(!lat||!lng||Math.abs(lat)<1)return;
+    const ico=L.divIcon({className:"",html:`<div style="background:#fff;border:2px solid var(--green);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 3px 10px rgba(0,0,0,.15)">🏨</div>`,iconSize:[30,30],iconAnchor:[15,15]});
     L.marker([lat,lng],{icon:ico})
-      .bindPopup(`<div class="popup-title">${h.name}</div><div class="popup-sub">⭐${h.stars||"—"} · 📍 ${h.city} · ${h.phone||"—"}</div><br><a href="https://wa.me/${normalizePhone(h.phone)}" target="_blank" style="color:#16a34a;font-weight:800;font-size:.72rem">💬 واتساب</a>`)
+      .bindPopup(`<div class="popup-title">${h.name}</div><div class="popup-sub">⭐${h.stars||"—"} · 📍 ${h.city}</div><br><a href="https://wa.me/${normalizePhone(h.phone)}" target="_blank" style="color:#16a34a;font-weight:800;font-size:.72rem">💬 واتساب</a>`)
       .addTo(clusterLayer);
   });
 }
 
-/* ══════════════════════════════════════════════════════
-   ARCHIVE TABLE
-══════════════════════════════════════════════════════ */
-function renderArchTable(){
-  if(!gD) return;
-  const q    = ($("arcSch")?.value||"").toLowerCase().trim();
-  const tf   = $("arcType")?.value||"all";
-  const from = $("dr-from")?.value;
-  const to   = $("dr-to")?.value;
-
-  let merged=[];
-  (gD.carOrders||[]).forEach(o=>merged.push({id:o.id,type:"car",name:o.name||"—",entity:o.office||"—",price:cleanN(o.total),status:o.status,date:o.date||"",cancel_requested:o.cancel_requested||false}));
-  (gD.hotelBookings||[]).forEach(b=>merged.push({id:b.id,type:"hotel",name:b.guest_name||"—",entity:b.hotel_name||"—",price:cleanN(b.total),status:b.status,date:b.date_arrive||"",cancel_requested:b.cancel_requested||false}));
-
-  if(tf==="car")   merged=merged.filter(x=>x.type==="car");
-  if(tf==="hotel") merged=merged.filter(x=>x.type==="hotel");
-  if(q) merged=merged.filter(x=>x.id.toLowerCase().includes(q)||x.name.toLowerCase().includes(q)||(x.entity||"").toLowerCase().includes(q));
-  if(from) merged=merged.filter(x=>x.date&&x.date>=from);
-  if(to)   merged=merged.filter(x=>x.date&&x.date<=to);
-
-  const cnt=$("tb-cnt"); if(cnt) cnt.textContent=merged.length+" سجل";
-
-  const stMap={
-    completed:["stb-comp","مكتمل"],pending:["stb-pend","معلق"],
-    active:   ["stb-act","جاري"], confirmed:["stb-act","مؤكد"],
-    cancelled:["stb-canc","ملغي"],rejected: ["stb-canc","مرفوض"],
-  };
-
-  $("arcTbody").innerHTML = merged.length===0
-    ? `<tr><td colspan="8" style="padding:30px;text-align:center;color:var(--tx3)">لا بيانات</td></tr>`
-    : merged.map(x=>{
-        const realSt = x.cancel_requested ? "cancel_pending" : x.status;
-        const [sc,sl] = realSt==="cancel_pending" ? ["stb-cpnd","إلغاء⏳"] : (stMap[x.status]||["stb-canc",x.status]);
-        return `<tr>
-          <td class="mono">#${esc(x.id)}</td>
-          <td>${esc(x.date)||"—"}</td>
-          <td style="font-weight:900">${esc(x.name)}</td>
-          <td>${x.type==="car"?"🚗 سيارات":"🏨 فنادق"}</td>
-          <td style="color:var(--red);font-weight:800">${esc(x.entity)}</td>
-          <td class="hi">${fmt(x.price)} د.ع</td>
-          <td><span class="stb ${sc}">${sl}</span></td>
-          <td><button class="ob ob-del" style="width:24px;height:24px;font-size:10px" onclick="forceCancel('${esc(x.id)}',this)" title="إلغاء">✕</button></td>
-        </tr>`;
-      }).join("");
-}
-
-/* ══ PARTNER SELECTOR for CSV ══ */
-function buildPartnerSelector(){
-  const sel = $("expPartnerSel"); if(!sel) return;
-  const partners = new Set(["all"]);
-  (gD?.carOrders||[]).forEach(o=>o.office&&partners.add(o.office));
-  (gD?.hotelBookings||[]).forEach(b=>b.hotel_name&&partners.add(b.hotel_name));
-  sel.innerHTML = `<option value="all">تصدير: الكل</option>`
-    + [...partners].filter(p=>p!=="all").map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join("");
-}
-
-window.expCSV = function(){
-  if(!gD) return;
-  const partnerFilter = $("expPartnerSel")?.value||"all";
-  let csv="\uFEFFرقم الحجز,التاريخ,العميل,النوع,الجهة,المبلغ,الحالة\n";
-  (gD.carOrders||[]).forEach(o=>{
-    if(partnerFilter!=="all"&&o.office!==partnerFilter) return;
-    csv+=`"${o.id}","${o.date}","${o.name}","سيارات","${o.office}","${o.total}","${o.status}"\n`;
-  });
-  (gD.hotelBookings||[]).forEach(b=>{
-    if(partnerFilter!=="all"&&b.hotel_name!==partnerFilter) return;
-    csv+=`"${b.id}","${b.date_arrive}","${b.guest_name}","فنادق","${b.hotel_name}","${b.total}","${b.status}"\n`;
-  });
-  const partnerName = partnerFilter==="all" ? "الكل" : partnerFilter;
-  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
-  a.download=`تقرير_${partnerName}_${new Date().toISOString().split("T")[0]}.csv`;
-  document.body.appendChild(a); a.click(); a.remove();
-  toast("تم تصدير التقرير ✅");
-};
-
-/* ══════════════════════════════════════════════════════
-   CHARTS
-══════════════════════════════════════════════════════ */
-function renderCharts(){
-  if(!gD||typeof Chart==="undefined") return;
-  Object.values(charts).forEach(c=>{try{c.destroy();}catch(e){}});
-  charts={};
-
-  const baseOpts={
-    responsive:true, maintainAspectRatio:false,
-    plugins:{legend:{display:false}},
-    scales:{
-      x:{ticks:{color:"#717171",font:{family:"Cairo",size:11}},grid:{color:"rgba(0,0,0,.06)"}},
-      y:{ticks:{color:"#717171",font:{family:"Cairo",size:11}},grid:{color:"rgba(0,0,0,.06)"},beginAtZero:true}
-    }
-  };
-
-  const oCtx=$("chart-orders");
-  if(oCtx){
-    const cC=(gD.carOrders||[]).filter(x=>x.status==="completed").length;
-    const cP=(gD.carOrders||[]).filter(x=>x.status==="pending").length;
-    const hC=(gD.hotelBookings||[]).filter(x=>x.status==="completed").length;
-    const hP=(gD.hotelBookings||[]).filter(x=>x.status==="pending").length;
-    charts.orders=new Chart(oCtx,{
-      type:"bar",
-      data:{
-        labels:["سيارات (مكتمل)","سيارات (معلق)","فنادق (مكتمل)","فنادق (معلق)"],
-        datasets:[{data:[cC,cP,hC,hP],backgroundColor:["#00A699","#FC642D","#0066CC","#FF385C"],borderRadius:8,borderSkipped:false}]
-      },
-      options:{...baseOpts}
-    });
-  }
-
-  const rCtx=$("chart-revenue");
-  if(rCtx){
-    const carRev=(gD.carOrders||[]).filter(o=>o.status==="completed").reduce((s,o)=>s+cleanN(o.total),0);
-    const hotRev=(gD.hotelBookings||[]).filter(b=>b.status==="completed").reduce((s,b)=>s+cleanN(b.total),0);
-    const carDbt=(gD.carOffices||[]).reduce((s,x)=>s+cleanN(x.debt),0);
-    const hotDbt=(gD.hotels||[]).reduce((s,x)=>s+cleanN(x.debt),0);
-    charts.revenue=new Chart(rCtx,{
-      type:"doughnut",
-      data:{
-        labels:["إيرادات سيارات","إيرادات فنادق","ديون سيارات","ديون فنادق"],
-        datasets:[{data:[carRev,hotRev,carDbt,hotDbt],backgroundColor:["#00A699","#0066CC","#FC642D","#FF385C"],borderColor:"rgba(255,255,255,.8)",borderWidth:3,hoverOffset:8}]
-      },
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{color:"#717171",font:{family:"Cairo",size:11},padding:12}}}}
-    });
-  }
-}
-
-/* ══════════════════════════════════════════════════════
-   PARTNERS
-══════════════════════════════════════════════════════ */
-function renderOffices(){
-  if(!gD) return;
-  const q=($("sOff")?.value||"").toLowerCase().trim();
-  let list=(gD.carOffices||[]);
-  const counts={all:list.length,active:0,pending:0,blocked:0};
-  list.forEach(x=>{if(counts[x.status]!==undefined)counts[x.status]++;});
-  ["all","act","pend","blk"].forEach((k,i)=>{
-    const statuses=["all","active","pending","blocked"];
-    const el=$(`eof-${k}`); if(el)el.textContent=counts[statuses[i]]||0;
-  });
-  if(q) list=list.filter(x=>x.name.toLowerCase().includes(q)||(x.phone||"").includes(q));
-  if(offFiltMode!=="all") list=list.filter(x=>x.status===offFiltMode);
-  const c=$("officesList");
-  if(!list.length){c.innerHTML=`<div class="lp-empty" style="grid-column:1/-1">لا مكاتب</div>`;return;}
-  c.innerHTML=list.map(off=>renderEntityCard("office",off)).join("");
-}
-
-function renderHotels(){
-  if(!gD) return;
-  const q=($("sHot")?.value||"").toLowerCase().trim();
-  let list=(gD.hotels||[]);
-  const counts={all:list.length,active:0,pending:0,blocked:0};
-  list.forEach(x=>{if(counts[x.status]!==undefined)counts[x.status]++;});
-  ["all","act","pend","blk"].forEach((k,i)=>{
-    const statuses=["all","active","pending","blocked"];
-    const el=$(`ehot-${k}`); if(el)el.textContent=counts[statuses[i]]||0;
-  });
-  if(q) list=list.filter(x=>x.name.toLowerCase().includes(q)||(x.phone||"").includes(q));
-  if(hotFiltMode!=="all") list=list.filter(x=>x.status===hotFiltMode);
-  const c=$("hotelsList");
-  if(!list.length){c.innerHTML=`<div class="lp-empty" style="grid-column:1/-1">لا فنادق</div>`;return;}
-  c.innerHTML=list.map(h=>renderEntityCard("hotel",h)).join("");
-}
-
-function renderEntityCard(type, e){
-  const isH=type==="hotel";
-  const sc={active:"s-active",pending:"s-pending",blocked:"s-blocked"}[e.status]||"s-pending";
-  const sl={active:"نشط ✅",pending:"معلق ⏳",blocked:"موقوف 🚫"}[e.status]||e.status;
-  const imgHtml=isH&&e.photo_url
-    ?`<img class="ec-img" src="${esc(e.photo_url)}" onerror="this.parentNode.innerHTML='<div class=\\'ec-noimg\\'>🏨</div>'">`
-    :`<div class="ec-noimg">${isH?"🏨":"🚗"}</div>`;
-  const commTxt=isH?"":e.comm_type==="monthly"?`📅 شهري: ${fmt(e.comm_val)} د.ع`
-    :e.comm_type==="split"?`📊 مناصفة: ${e.comm_val}`:`💰 ${fmt(e.comm_val)} د.ع/طلب`;
-  const phn=normalizePhone(e.phone);
-  const waBtn=phn?`<button class="ea ea-wa" onclick="openWaAdmin('partner',{phone:'${phn}',entity:'${esc(e.name)}',type:'${type}'})">💬</button>`:"";
-  const entityType=isH?"Hotel":"CarOffice";
-  return `
-  <div class="ec ${sc}">
-    <div class="ec-bar"></div>
-    ${imgHtml}
-    <div class="ec-body">
-      <div class="ec-name">${esc(e.name)}</div>
-      <div class="ec-meta">
-        <div class="ec-city">${esc(e.city)}</div>
-        ${isH?`<div style="font-size:.68rem;color:var(--amber)">${"⭐".repeat(Math.min(parseInt(e.stars)||0,5))}</div>`:""}
-        <div class="ec-ph">${esc(e.phone||"—")}</div>
-      </div>
-      <div class="ec-stats">
-        <div class="est"><div class="est-v">${isH?(e.total_bookings||0):(e.total_orders||0)}</div><div class="est-l">${isH?"الحجوزات":"الطلبات"}</div></div>
-        <div class="est"><div class="est-v g" style="font-size:.8rem">${fmt(e.total_rev||0)}</div><div class="est-l">إيرادات</div></div>
-        <div class="est"><div class="est-v r">${fmt(e.debt||0)}</div><div class="est-l">ديون</div></div>
-      </div>
-      ${isH?`<div class="ec-comm" style="display:grid;grid-template-columns:1fr 1fr;gap:3px;font-size:.63rem"><span>🛏 ${fmt(e.price_single)} د.ع</span><span>🛏🛏 ${fmt(e.price_double)} د.ع</span><span style="grid-column:1/3">👑 ${fmt(e.price_suite)} د.ع</span></div>`:`<div class="ec-comm">${commTxt}</div>`}
-      <div style="font-size:.64rem;color:var(--tx3);font-weight:700">الحالة: <span style="color:${e.status==="active"?"var(--green)":e.status==="pending"?"var(--amber)":"var(--red)"}">${sl}</span></div>
-    </div>
-    <div class="ec-acts">
-      ${e.status!=="active"?`<button class="ea ea-ok" onclick="setStatus('${entityType}','${esc(e.id)}','active',this)">✅ تفعيل</button>`:""}
-      ${e.status!=="blocked"?`<button class="ea ea-blk" onclick="setStatus('${entityType}','${esc(e.id)}','blocked',this)">🚫 وقف</button>`:""}
-      <button class="ea ea-rst" onclick="resetDebt('${entityType}','${esc(e.id)}',this)">💰 تصفير</button>
-      <button class="ea ea-edit" onclick="openEdit('${type}','${esc(e.id)}')">✏️</button>
-      ${waBtn}
-    </div>
-  </div>`;
-}
-
-window.setEntFilt = function(type, filt, btn){
-  if(type==="office")offFiltMode=filt; else hotFiltMode=filt;
-  btn.closest(".efil").querySelectorAll(".ef").forEach(b=>b.classList.remove("on"));
+/* ══ LISTINGS PAGE — Cars + Rooms ══ */
+let listingsTabMode="cars";
+window.switchListTab=function(tab,btn){
+  listingsTabMode=tab;
+  document.querySelectorAll(".lst-tab").forEach(b=>b.classList.remove("on"));
   btn.classList.add("on");
-  if(type==="office")renderOffices(); else renderHotels();
+  renderListings();
 };
 
-/* ══ ENTITY ACTIONS ══ */
-window.setStatus = async function(entityType, id, status, btn){
-  const labels={active:"تفعيل",blocked:"توقيف"};
-  if(!confirm(`تأكيد ${labels[status]||status}؟`)) return;
-  if(btn)btn.classList.add("btn-ld");
-  try{
-    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"ADMIN_UPDATE_STATUS",entityType,id,status,token:API_TOKEN,pass:MP})});
-    const d=await res.json();
-    if(d.success){toast("تم تحديث الحالة ✅");await loadSystemData();}
-    else toast(d.msg||"فشل","e");
-  }catch(e){toast("تم الإرسال","s");await loadSystemData();}
-  finally{if(btn)btn.classList.remove("btn-ld");}
-};
+function renderListings(){
+  if(!gD)return;
+  const q=($("lstSearch")?.value||"").toLowerCase().trim();
+  const sf=$("lstStatusF")?.value||"all";
 
-window.resetDebt = async function(entityType, id, btn){
-  if(!confirm("تأكيد استلام المبالغ وتصفير الديون؟")) return;
-  if(btn)btn.classList.add("btn-ld");
-  try{
-    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"resetDebt",entityType,id,token:API_TOKEN,pass:MP})});
-    const d=await res.json();
-    if(d.success){toast(`✅ تم التصفير — السابق: ${fmt(d.prev_debt||0)} د.ع`);await loadSystemData();}
-    else toast(d.msg||"فشل","e");
-  }catch(e){toast("تم الإرسال","s");await loadSystemData();}
-  finally{if(btn)btn.classList.remove("btn-ld");}
-};
+  if(listingsTabMode==="cars"){
+    // All cars from all offices + shared
+    let cars=[];
+    (gD.carFleet||gD.cars||[]).forEach(c=>cars.push({...c,_type:"car"}));
+    if(!cars.length&&gD.carOffices){
+      // Fall back to building from offices' raw data
+    }
+    // Filter
+    if(q)cars=cars.filter(c=>c.name?.toLowerCase().includes(q)||c.plate?.toLowerCase().includes(q)||(c.office_id||"").toLowerCase().includes(q));
+    if(sf==="available")cars=cars.filter(c=>c.status==="available"||!c.status);
+    if(sf==="rented")  cars=cars.filter(c=>c.status==="rented"||c.orders>0);
+    if(sf==="inactive")cars=cars.filter(c=>c.status==="inactive");
 
-/* ══ EDIT MODAL ══ */
-window.openEdit = function(type, id){
-  editCtx={type,id};
-  const list=type==="office"?(gD?.carOffices||[]):(gD?.hotels||[]);
-  editCtx.data=list.find(x=>String(x.id)===String(id));
-  if(!editCtx.data){toast("لم توجد البيانات","e");return;}
-  $("mod-title").textContent=type==="office"?"تعديل بيانات المكتب":"تعديل بيانات الفندق";
-  $("mod-sub").textContent=editCtx.data.name;
-  $("mod-name").value=editCtx.data.name||"";
-  $("mod-pass").value="";
-  const hx=$("mod-hotel-x"), ox=$("mod-office-x");
-  if(type==="hotel"){
-    hx.classList.remove("dn");ox.classList.add("dn");
-    $("mod-ps").value=editCtx.data.price_single||"";
-    $("mod-pd").value=editCtx.data.price_double||"";
-    $("mod-pu").value=editCtx.data.price_suite||"";
-    $("mod-feat").value=editCtx.data.features||"";
-    $("mod-photo").value=editCtx.data.photo_url||"";
+    const cntEl=$("lst-cnt-cars");if(cntEl)cntEl.textContent=cars.length;
+    const grid=$("listings-grid");
+    if(!cars.length){grid.innerHTML=`<div class="lp-empty" style="grid-column:1/-1;background:var(--white);border-radius:var(--r4);padding:36px;">لا توجد سيارات مسجلة</div>`;return;}
+    grid.innerHTML=cars.map(c=>buildCarListingCard(c)).join("");
+
   }else{
-    hx.classList.add("dn");ox.classList.remove("dn");
-    $("mod-ct").value=editCtx.data.comm_type||"fixed";
-    $("mod-cv").value=editCtx.data.comm_val||"";
-  }
-  $("editModal").classList.add("open");
-};
-window.closeMod = id => { const m=$(id); if(m){m.classList.remove("open");} };
-
-window.saveEdit = async function(){
-  setBtn("mod-save-btn",true);
-  const entityType=editCtx.type==="office"?"CarOffice":"Hotel";
-  const updates={name:$("mod-name").value.trim()};
-  const pass=$("mod-pass").value.trim(); if(pass)updates.pass=pass;
-  if(editCtx.type==="hotel"){
-    const ps=$("mod-ps").value; if(ps)updates.price_single=Number(ps);
-    const pd=$("mod-pd").value; if(pd)updates.price_double=Number(pd);
-    const pu=$("mod-pu").value; if(pu)updates.price_suite=Number(pu);
-    const ft=$("mod-feat").value; if(ft)updates.features=ft;
-    updates.photo_url=$("mod-photo").value;
-  }else{
-    const ct=$("mod-ct").value; if(ct)updates.comm_type=ct;
-    const cv=$("mod-cv").value; if(cv)updates.comm_val=cv;
-  }
-  if(!updates.name){toast("الاسم مطلوب","e");setBtn("mod-save-btn",false);return;}
-  try{
-    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({action:"updateEntityInfo",entityType,id:editCtx.id,updates,token:API_TOKEN,pass:MP})});
-    const d=await res.json();
-    if(d.success){toast("تم الحفظ ✅");closeMod("editModal");await loadSystemData();}
-    else toast(d.msg||"فشل","e");
-  }catch(e){toast("تم الإرسال","s");closeMod("editModal");await loadSystemData();}
-  finally{setBtn("mod-save-btn",false);}
-};
-
-/* ══════════════════════════════════════════════════════
-   WHATSAPP ADMIN QUICK REPLIES
-══════════════════════════════════════════════════════ */
-function normalizePhone(p){
-  p=String(p||"").replace(/\D/g,"");
-  if(p.startsWith("0"))p="964"+p.slice(1);
-  if(p.startsWith("7"))p="964"+p;
-  return p;
-}
-function getPartnerPhone(order){
-  if(!gD) return "";
-  if(order.type==="car"){
-    const off=(gD.carOffices||[]).find(o=>o.name===order.entity);
-    return normalizePhone(off?.phone||"");
-  }
-  const h=(gD.hotels||[]).find(h=>h.name===order.entity);
-  return normalizePhone(h?.phone||"");
-}
-
-const waTemplates = {
-  customer:[
-    {label:"تأخير ⏳", text:"نعتذر عن التأخير، طلبك قيد المعالجة وسيتواصل معك الشريك قريباً ⏳"},
-    {label:"موقع 📍",  text:"يرجى تزويدنا بموقعك الدقيق لتسهيل وصول السيارة 📍"},
-    {label:"تأكيد ✅", text:"✅ تم تأكيد طلبك بنجاح! ستصلك رسالة من الشريك قريباً."},
-    {label:"شكر 🌟",   text:"شكراً لاختيارك منصة الحوت 🐋 نتمنى لك تجربة ممتازة 🌟"},
-  ],
-  partner:[
-    {label:"طلب معلق 🚨",   text:"🚨 يوجد طلب معلق في رادارك، يرجى قبوله فوراً لتجنب الإلغاء التلقائي."},
-    {label:"ديون 💳",        text:"💳 يرجى تسديد الديون المستحقة لتجنب إيقاف الحساب. تواصل معنا للتسوية."},
-    {label:"تنبيه جودة ⚠️", text:"⚠️ تنبيه إداري: يرجى الالتزام بمعايير جودة المنصة للحفاظ على تقييمك."},
-    {label:"ترحيب 🎉",       text:"🎉 مرحباً بك في منصة الحوت! تم تفعيل حسابك بنجاح. يسعدنا تعاونكم 🐋"},
-  ]
-};
-
-window.openWaAdmin = function(ctxType, orderOrEntity){
-  waCtx={ctxType, data:orderOrEntity};
-  let phone="";
-  if(ctxType==="customer"){
-    phone=normalizePhone(orderOrEntity.phone||orderOrEntity.raw?.phone||"");
-  }else{
-    phone=normalizePhone(orderOrEntity.phone||"");
-  }
-  const chip=$("wa-phone-chip"); if(chip) chip.textContent="📱 "+(phone||"لا رقم");
-  const ctx=$("wa-ctx-label"); if(ctx) ctx.textContent=ctxType==="customer"?"قوالب للزبون":"قوالب للشريك";
-  const tmps = waTemplates[ctxType]||waTemplates.customer;
-  $("wa-tmps").innerHTML = tmps.map((t,i)=>`
-    <div class="wa-tmp" onclick="sendWaAdminMsg(${i})">
-      <div class="wa-tmp-txt">${t.text}</div>
-      <div class="wa-tmp-row">
-        <span class="wa-tmp-lbl">${t.label}</span>
-        <button class="wa-snd" onclick="event.stopPropagation();sendWaAdminMsg(${i})">إرسال ➤</button>
-      </div>
-    </div>`).join("");
-  $("waModal").classList.remove("dn");
-};
-
-window.sendWaAdminMsg = function(idx){
-  if(!waCtx) return;
-  const tmps=waTemplates[waCtx.ctxType]||waTemplates.customer;
-  const t=tmps[idx]; if(!t) return;
-  const phone=waCtx.ctxType==="customer"
-    ?normalizePhone(waCtx.data.phone||waCtx.data.raw?.phone||"")
-    :normalizePhone(waCtx.data.phone||"");
-  if(!phone){toast("لا يوجد رقم هاتف","e");return;}
-  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(t.text)}`,"_blank");
-  closeWaModal(); toast("جاري فتح واتساب ✅");
-};
-function closeWaModal(){$("waModal").classList.add("dn");waCtx=null;}
-window.closeWaModal=closeWaModal;
-
-/* ══════════════════════════════════════════════════════
-   BROADCAST
-══════════════════════════════════════════════════════ */
-async function doBroadcast(msg){
-  if(!msg.trim()){toast("اكتب الرسالة أولاً","e");return;}
-  if(!db){toast("Firebase غير متصل","e");return;}
-  try{
-    await db.ref("system_broadcast").set({
-      msg:msg.trim(),ts:new Date().toISOString(),
-      by:"الإدارة العامة"
+    // Hotel rooms (from hotels data)
+    let rooms=[];
+    (gD.hotels||[]).forEach(h=>{
+      const rs=[
+        {id:h.id+"_single",hotel_id:h.id,hotel_name:h.name,city:h.city,type:"single",name:"غرفة مفردة",price:h.price_single,photo_url:h.photo_url},
+        {id:h.id+"_double",hotel_id:h.id,hotel_name:h.name,city:h.city,type:"double",name:"غرفة مزدوجة",price:h.price_double,photo_url:h.photo_url},
+        {id:h.id+"_suite", hotel_id:h.id,hotel_name:h.name,city:h.city,type:"suite", name:"جناح VIP",   price:h.price_suite, photo_url:h.photo_url},
+      ];
+      rs.forEach(r=>{if(r.price>0)rooms.push(r);});
     });
-    toast("📡 تم البث لكل الشركاء ✅");
-  }catch(e){toast("فشل البث","e");}
-}
-window.sendBroadcast  = ()=>{ const m=$("bcMsg"); doBroadcast(m.value); m.value=""; };
-window.sendBroadcast2 = ()=>{ const m=$("bcMsg2"); doBroadcast(m.value); m.value=""; };
-
-/* ══════════════════════════════════════════════════════
-   SHARED FLEET — ImgBB + Canvas
-══════════════════════════════════════════════════════ */
-function compressImage(file,maxDim=1000,quality=0.8){
-  return new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onerror=rej;
-    r.onload=e=>{
-      const img=new Image();
-      img.onerror=rej;
-      img.onload=()=>{
-        let{width:w,height:h}=img;
-        if(w>maxDim||h>maxDim){if(w>h){h=Math.round(h*maxDim/w);w=maxDim;}else{w=Math.round(w*maxDim/h);h=maxDim;}}
-        const cv=document.createElement("canvas");
-        cv.width=w;cv.height=h;
-        const ctx=cv.getContext("2d");
-        ctx.fillStyle="#fff";ctx.fillRect(0,0,w,h);
-        ctx.drawImage(img,0,0,w,h);
-        res(cv.toDataURL("image/jpeg",quality));
-      };
-      img.src=e.target.result;
-    };
-    r.readAsDataURL(file);
-  });
-}
-
-async function uploadImg(b64){
-  if(!b64)return"";
-  try{
-    const rawBase64=b64.includes(",")?b64.split(",")[1]:b64;
-    const formData=new FormData();
-    formData.append("key",IMGBB_KEY);
-    formData.append("image",rawBase64);
-    const controller=new AbortController();
-    const tid=setTimeout(()=>controller.abort(),15000);
-    const res=await fetch("https://api.imgbb.com/1/upload",{method:"POST",body:formData,signal:controller.signal});
-    clearTimeout(tid);
-    const data=await res.json();
-    return(data&&data.success)?data.data.url:"";
-  }catch(e){console.warn("ImgBB:",e);return"";}
-}
-
-function handleSharedImg(input){
-  if(!input.files?.length)return;
-  const file=input.files[0];
-  const origKB=Math.round(file.size/1024);
-  const lbl=$("uz-sh-l"); if(lbl)lbl.textContent="جاري الضغط...";
-  compressImage(file)
-    .then(compressed=>{
-      b64Shared=compressed;
-      const p=$("uz-sh-p"); if(p){p.src=compressed;p.style.display="block";}
-      const i=$("uz-sh-i"); if(i)i.style.display="none";
-      if(lbl)lbl.style.display="none";
-      $("uz-sh")?.classList.add("filled");
-      const compKB=Math.round(compressed.length*0.75/1024);
-      const badge=$("uz-sh-badge"); if(badge){badge.textContent=`✓ ${compKB}KB (كان ${origKB}KB)`;badge.style.opacity="1";}
-    })
-    .catch(()=>toast("فشل معالجة الصورة","e"));
-}
-window.handleSharedImg=handleSharedImg;
-
-window.saveSharedCar = async function(){
-  const nm=$("sh-nm").value.trim(), pr=$("sh-pr").value.trim(), pl=$("sh-pl").value.trim(), ct=$("sh-ct").value, cl=$("sh-cl").value.trim();
-  if(!nm||!pr||!pl){toast("أكمل الاسم والسعر واللوحة","e");return;}
-  setBtn("sh-sv",true);
-  showLoad(true,"جاري رفع الصورة إلى ImgBB...");
-  let photoUrl="";
-  if(b64Shared)photoUrl=await uploadImg(b64Shared);
-  showLoad(true,"جاري حفظ بيانات السيارة...");
-  try{
-    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({
-      action:"ADD_CAR_TO_FLEET",token:API_TOKEN,
-      office_id:"SHARED",
-      name:nm,price:pr,plate:pl,cat:ct,color:cl,photo_url:photoUrl
-    })});
-    const d=await res.json(); showLoad(false);
-    if(d.success){
-      toast(`🚙 تمت إضافة ${nm} لأسطول المنصة!`);
-      $("sh-nm").value="";$("sh-pr").value="";$("sh-pl").value="";$("sh-cl").value="";
-      b64Shared=null;
-      const p=$("uz-sh-p");if(p)p.style.display="none";
-      const i=$("uz-sh-i");if(i){i.style.display="";i.textContent="📷";}
-      const l=$("uz-sh-l");if(l){l.style.display="";l.textContent="ارفع صورة السيارة";}
-      $("uz-sh")?.classList.remove("filled");
-      const bg=$("uz-sh-badge");if(bg)bg.style.opacity="0";
-      renderSharedFleet();
-    }else toast(d.msg||"فشل الإضافة","e");
-  }catch(e){showLoad(false);toast("فشل الاتصال","e");}
-  finally{setBtn("sh-sv",false);}
-};
-
-async function renderSharedFleet(){
-  const c=$("shared-fleet-list"); if(!c) return;
-  // Pull shared cars from gD or fetch separately
-  let shared=(gD?.carFleet||[]).filter(x=>x.office_id==="SHARED"||x.office_id===undefined);
-  if(!shared.length){
-    c.innerHTML=`<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:36px;text-align:center;color:var(--tx3);"><div style="font-size:1.8rem;margin-bottom:8px">🚙</div>لا توجد سيارات بعد</div>`;
-    return;
+    if(q)rooms=rooms.filter(r=>r.name?.toLowerCase().includes(q)||r.hotel_name?.toLowerCase().includes(q));
+    const cntEl=$("lst-cnt-rooms");if(cntEl)cntEl.textContent=rooms.length;
+    const grid=$("listings-grid");
+    if(!rooms.length){grid.innerHTML=`<div class="lp-empty" style="grid-column:1/-1;background:var(--white);border-radius:var(--r4);padding:36px;">لا توجد غرف مسجلة</div>`;return;}
+    grid.innerHTML=rooms.map(r=>buildRoomListingCard(r)).join("");
   }
-  c.innerHTML=`<div class="entity-g">`+shared.map(car=>`
-    <div class="ec s-active">
-      <div class="ec-bar"></div>
-      ${car.photo_url?`<img class="ec-img" src="${esc(car.photo_url)}">`:`<div class="ec-noimg">🚙</div>`}
-      <div class="ec-body">
-        <div class="ec-name">${esc(car.name||"—")}</div>
-        <div class="ec-meta">
-          <div class="ec-city">${esc(car.cat||"—")}</div>
-          <div class="ec-ph">${esc(car.plate||"—")}</div>
-        </div>
-        <div class="ec-stats">
-          <div class="est"><div class="est-v g">${fmt(car.price)}</div><div class="est-l">د.ع/يوم</div></div>
-          <div class="est"><div class="est-v">${esc(car.color||"—")}</div><div class="est-l">اللون</div></div>
-          <div class="est"><div class="est-v">${esc(car.status||"متاح")}</div><div class="est-l">الحالة</div></div>
-        </div>
-      </div>
-    </div>`).join("")+`</div>`;
 }
 
-/* ══════════════════════════════════════════════════════
-   NAVIGATION
-══════════════════════════════════════════════════════ */
-window.goTab = function(name, btn){
-  document.querySelectorAll(".tab-page").forEach(p=>p.classList.remove("on"));
-  const pg=$("pg-"+name); if(pg)pg.classList.add("on");
-  document.querySelectorAll(".sbn,.bni").forEach(b=>b.classList.remove("on"));
-  const sbn=$("sbn-"+name); if(sbn)sbn.classList.add("on");
-  if(btn)btn.classList.add("on");
-  if(name==="live"&&map) setTimeout(()=>map.invalidateSize(),300);
-  if(name==="reports"){renderArchTable();renderCharts();}
-  if(name==="offices")renderOffices();
-  if(name==="hotels")renderHotels();
-  if(name==="shared")renderSharedFleet();
-};
-
-window.doLogout = function(){
-  if(!confirm("تأكيد مغادرة النظام؟"))return;
-  try{if(db){db.ref("hut_car_orders").off();db.ref("hut_hotel_bookings").off();db.ref("ledgers").off();db.ref(".info/connected").off();}}catch(e){}
-  MP="";gD=null;location.reload();
-};
-
-// Initial tab setup
-const liveEl=$("pg-live");
-if(liveEl){liveEl.style.display="none";liveEl.style.flexDirection="column";}
-</script>
-</body>
-</html>
+function buildCarListingCard(c){
+  const isShared=c.office_id==="SHARED"||!c.office_id;
+  const ownerLabel=isShared?"🟣 منصة مشتركة":"🚗 "+esc(c.office_id||"—");
+  const statusCls=

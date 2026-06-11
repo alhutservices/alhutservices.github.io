@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <script>
-const _V="5.5",_K="hut_hotel_front_v";
+const _V="6.0",_K="hut_hotel_front_v";
 try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("caches"in window)caches.keys().then(n=>n.forEach(k=>caches.delete(k)));if("serviceWorker"in navigator)navigator.serviceWorker.getRegistrations().then(r=>r.forEach(s=>s.unregister()));}}catch(e){}
 </script>
 <meta charset="UTF-8">
@@ -18,7 +18,7 @@ try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("
 
 <style>
 /* ════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM — Al-Hut Hotels · Clean Light
+   DESIGN SYSTEM — Al-Hut Hotels · Airbnb-Inspired Clean Light
 ════════════════════════════════════════════════════════════════ */
 :root{
   --bg:      #F7F7F7;
@@ -32,6 +32,7 @@ try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("
   --red-g:   linear-gradient(135deg,#FF385C,#E31C5F);
   --green:   #00A699;
   --green-l: #E6F7F6;
+  --green-m: rgba(0,166,153,.12);
   --tx0:     #222222;
   --tx1:     #484848;
   --tx2:     #717171;
@@ -51,107 +52,150 @@ body{
   min-height:100vh;background:var(--bg);
   font-family:'Cairo',sans-serif;color:var(--tx0);
   overflow-x:hidden;-webkit-tap-highlight-color:transparent;
+  -webkit-font-smoothing:antialiased;
 }
 img{max-width:100%;display:block;}
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
 .dn{display:none!important;}
-button,input,select,textarea{font-family:'Cairo',sans-serif;color:inherit;}
-
-/* ════ TOASTS ════ */
-#toasts{position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:8px;width:min(96%,380px);pointer-events:none;}
-.ti{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:12px 16px;box-shadow:var(--sh-modal);display:flex;align-items:center;gap:9px;font-size:.83rem;font-weight:700;animation:tIn .35s ease;pointer-events:auto;}
-.ti-ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
-.ts .ti-ic{background:var(--green-l);color:var(--green);}
-.te .ti-ic{background:var(--red-l);color:var(--red);}
-.ti-msg{flex:1;color:var(--tx1);}
-@keyframes tIn{from{opacity:0;transform:translateY(-10px) scale(.95)}to{opacity:1;transform:none}}
+button,input,select,textarea{font-family:'Cairo',sans-serif;color:inherit;outline:none;}
 
 /* ════ LOADING ════ */
-#splash{position:fixed;inset:0;z-index:80000;background:var(--white);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
-.sp-logo{width:80px;height:80px;border-radius:24px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:var(--sh-btn);animation:spP 1.4s infinite;}
+#splash{
+  position:fixed;inset:0;z-index:80000;
+  background:var(--white);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;
+}
+.sp-logo{
+  width:80px;height:80px;border-radius:24px;background:var(--red-g);
+  display:flex;align-items:center;justify-content:center;font-size:38px;
+  box-shadow:var(--sh-btn);animation:spP 1.4s ease-in-out infinite;
+}
 @keyframes spP{0%,100%{transform:scale(1);box-shadow:var(--sh-btn)}50%{transform:scale(1.06);box-shadow:0 8px 28px rgba(255,56,92,.45)}}
+.sp-bar{width:140px;height:3px;background:var(--border);border-radius:99px;overflow:hidden;}
+.sp-fill{height:100%;background:var(--red-g);border-radius:99px;animation:spF 1.4s ease-in-out infinite;}
+@keyframes spF{0%{width:0%;margin-left:0}50%{width:55%;margin-left:20%}100%{width:0%;margin-left:100%}}
+.sp-txt{font-size:.78rem;font-weight:700;color:var(--tx2);}
 
 /* ════ STICKY HEADER ════ */
-.site-header{position:sticky;top:0;z-index:900;background:rgba(255,255,255,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:var(--header-h);display:flex;align-items:center;padding:0 max(20px,env(safe-area-inset-left));gap:14px;}
+.site-header{
+  position:sticky;top:0;z-index:900;
+  background:rgba(255,255,255,.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  height:var(--header-h);
+  display:flex;align-items:center;padding:0 max(20px,env(safe-area-inset-left));
+  gap:14px;
+}
 .header-logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;}
-.header-logo-ic{width:38px;height:38px;border-radius:11px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--sh-btn);flex-shrink:0;}
+.header-logo-ic{
+  width:38px;height:38px;border-radius:11px;background:var(--red-g);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  box-shadow:var(--sh-btn);flex-shrink:0;
+}
 .header-logo-nm{font-size:.9rem;font-weight:900;color:var(--tx0);}
-.header-search{flex:1;max-width:520px;background:var(--bg);border:1.5px solid var(--border);border-radius:99px;display:flex;align-items:center;gap:8px;padding:0 14px;transition:.2s;height:42px;}
-.header-search:focus-within{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);background:var(--white);}
-.header-search input{flex:1;border:none;background:transparent;font-size:.84rem;font-weight:700;color:var(--tx0);outline:none;}
-.header-filter-btn{display:flex;align-items:center;gap:6px;padding:0 14px;height:38px;border-radius:99px;border:1.5px solid var(--border);background:var(--white);font-size:.78rem;font-weight:800;color:var(--tx1);cursor:pointer;transition:.18s;}
-.header-filter-btn:hover{border-color:var(--red);color:var(--red);}
+.header-logo-sub{font-size:.6rem;font-weight:700;color:var(--tx2);}
 
 /* ════ HERO SECTION ════ */
-.hero{background:var(--red-g);padding:48px 20px 80px;position:relative;text-align:center;}
-.hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:48px;background:var(--bg);border-radius:40px 40px 0 0;}
+.hero{
+  background:var(--red-g);
+  padding:48px 20px 80px;
+  position:relative;text-align:center;
+}
+.hero::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;
+  height:48px;background:var(--bg);border-radius:40px 40px 0 0;
+}
 .hero-inner{position:relative;z-index:1;}
 .hero-title{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;color:#fff;margin-bottom:8px;}
 .hero-sub{font-size:clamp(.8rem,2vw,.95rem);font-weight:600;color:rgba(255,255,255,.75);margin-bottom:28px;}
-.hero-search-wrap{max-width:560px;margin:0 auto;background:var(--white);border-radius:var(--r6);box-shadow:var(--sh-lg);overflow:hidden;}
+.hero-search-wrap{
+  max-width:560px;margin:0 auto;background:var(--white);
+  border-radius:var(--r6);box-shadow:var(--sh-lg);overflow:hidden;
+}
 .hero-search-row{display:flex;}
 .hero-search-field{flex:1;display:flex;align-items:center;gap:9px;padding:14px 18px;border-left:1px solid var(--border);}
-.hero-search-field:last-of-type{border-left:none;}
 .hsf-lbl{font-size:.62rem;font-weight:900;color:var(--tx2);display:block;}
 .hsf-val input{border:none;background:transparent;font-size:.84rem;font-weight:700;color:var(--tx0);outline:none;width:100%;}
-.hero-search-btn{background:var(--red-g);color:#fff;border:none;padding:14px 22px;font-size:.88rem;font-weight:900;cursor:pointer;}
 
 /* ════ HOTELS GRID ════ */
-.sec-h{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 12px;}
-.sec-h-title{font-size:1.05rem;font-weight:900;}
-.hotels-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;padding:4px 20px 24px;}
-.hotel-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r5);overflow:hidden;box-shadow:var(--sh-card);cursor:pointer;transition:.2s;}
-.hotel-card:hover{box-shadow:var(--sh-lg);transform:translateY(-3px);}
-.hc-img{width:100%;height:200px;background:var(--bg);}
+.sec-h{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 12px;max-width:1200px;margin:0 auto;}
+.sec-h-title{font-size:1.1rem;font-weight:900;}
+.hotels-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:20px;padding:4px 20px 40px;max-width:1200px;margin:0 auto;
+}
+.hotel-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r5);overflow:hidden;box-shadow:var(--sh-card);
+  cursor:pointer;transition:.2s;display:flex;flex-direction:column;
+}
+.hotel-card:hover{box-shadow:var(--sh-lg);transform:translateY(-4px);}
+.hc-img{width:100%;height:220px;background:var(--light);position:relative;}
 .hc-img img{width:100%;height:100%;object-fit:cover;}
-.hc-body{padding:14px;}
-.hc-city{font-size:.65rem;font-weight:800;color:var(--tx2);margin-bottom:4px;}
-.hc-name{font-size:.98rem;font-weight:900;margin-bottom:5px;}
-.hc-foot{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border);margin-top:10px;}
-.hc-price-val{font-size:1.05rem;font-weight:900;color:var(--red);}
-.hc-cta{padding:9px 16px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r3);font-size:.76rem;font-weight:900;cursor:pointer;}
+.hc-body{padding:16px;display:flex;flex-direction:column;flex:1;}
+.hc-city{font-size:.7rem;font-weight:800;color:var(--tx2);margin-bottom:4px;}
+.hc-name{font-size:1.1rem;font-weight:900;margin-bottom:5px;}
+.hc-foot{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);margin-top:auto;}
+.hc-price-val{font-size:1.1rem;font-weight:900;color:var(--red);}
+.hc-cta{padding:10px 18px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r3);font-size:.8rem;font-weight:900;cursor:pointer;}
 
-/* ════ HOTEL DETAIL MODAL ════ */
+/* ════ HOTEL DETAIL MODAL & ROOMS ════ */
 #hotelModal{position:fixed;inset:0;z-index:60000;display:flex;align-items:flex-end;justify-content:center;}
 .hm-overlay{position:absolute;inset:0;background:rgba(34,34,34,.4);backdrop-filter:blur(6px);}
-.hm-sheet{position:relative;z-index:1;background:var(--white);width:100%;max-width:680px;border-radius:var(--r6) var(--r6) 0 0;max-height:96vh;overflow-y:auto;padding-bottom:20px;animation:fdUp .3s ease;}
+.hm-sheet{
+  position:relative;z-index:1;background:var(--bg);width:100%;max-width:680px;
+  border-radius:var(--r6) var(--r6) 0 0;max-height:96vh;overflow-y:auto;
+  padding-bottom:30px;animation:fdUp .3s ease;
+}
 @keyframes fdUp{from{transform:translateY(100%)}to{transform:none}}
-.hm-close-bar{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
-.hm-close-btn{width:32px;height:32px;border-radius:50%;background:var(--bg);border:1px solid var(--border);cursor:pointer;}
-.hm-gallery{height:280px;background:var(--bg);}
+.hm-close-bar{
+  position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;
+  align-items:center;padding:12px 16px;background:rgba(255,255,255,.95);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--border);
+}
+.hm-close-btn{width:34px;height:34px;border-radius:50%;background:var(--light);border:none;cursor:pointer;font-weight:900;color:var(--tx1);}
+.hm-gallery{height:260px;background:var(--light);}
 .hm-gallery img{width:100%;height:100%;object-fit:cover;}
-.hm-info{padding:18px;}
-.hm-name{font-size:1.25rem;font-weight:900;margin-bottom:6px;}
-.hm-rooms-sec{padding:0 18px 14px;}
-.room-card{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r4);margin-bottom:12px;overflow:hidden;}
+.hm-info{padding:20px;background:var(--white);border-bottom:1px solid var(--border);}
+.hm-name{font-size:1.3rem;font-weight:900;margin-bottom:6px;}
+
+.hm-rooms-sec{padding:20px;}
+.rooms-list{display:flex;flex-direction:column;gap:14px;}
+
+/* ── Room Card ── */
+.room-card{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--r4);overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:var(--sh-card);
+}
 .rc-head{display:flex;}
-.rc-thumb{width:110px;height:100px;background:var(--white);}
+.rc-thumb{width:120px;height:110px;background:var(--light);flex-shrink:0;}
 .rc-thumb img{width:100%;height:100%;object-fit:cover;}
-.rc-info{flex:1;padding:11px 13px;}
-.rc-name{font-size:.86rem;font-weight:900;}
-.rc-foot{display:flex;justify-content:space-between;align-items:center;padding:9px 13px;border-top:1px solid var(--border);background:var(--white);}
-.rc-price{font-size:1.05rem;font-weight:900;color:var(--tx0);}
-.rc-book-btn{padding:8px 18px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r3);font-weight:900;cursor:pointer;}
+.rc-info{flex:1;padding:12px;display:flex;flex-direction:column;justify-content:center;}
+.rc-name{font-size:.95rem;font-weight:900;color:var(--tx0);margin-bottom:4px;}
+.rc-bed{font-size:.7rem;font-weight:700;color:var(--tx2);background:var(--bg);padding:2px 8px;border-radius:8px;display:inline-block;width:fit-content;}
+.rc-desc{font-size:.75rem;font-weight:600;color:var(--tx2);margin-top:6px;line-height:1.5;}
+.rc-foot{display:flex;justify-content:space-between;align-items:center;padding:12px;border-top:1px solid var(--border);background:var(--white);}
+.rc-price{font-size:1.1rem;font-weight:900;color:var(--tx0);}
+.rc-book-btn{padding:10px 20px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r3);font-weight:900;cursor:pointer;}
 
 /* ════ BOOKING FORM (Redirects to addons) ════ */
 #bookingModal{position:fixed;inset:0;z-index:70000;display:flex;align-items:flex-end;justify-content:center;}
 .bm-sheet{position:relative;z-index:1;background:var(--white);width:100%;max-width:500px;border-radius:var(--r6) var(--r6) 0 0;padding:24px;box-shadow:var(--sh-lg);animation:fdUp .3s ease;}
 .bm-hd{display:flex;justify-content:space-between;margin-bottom:16px;}
-.bm-in{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:12px 14px;font-size:.88rem;font-weight:700;margin-bottom:12px;outline:none;}
+.bm-in{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:12px 14px;font-size:.9rem;font-weight:700;margin-bottom:12px;outline:none;}
 .bm-in:focus{border-color:var(--red);}
-.bm-submit{width:100%;padding:15px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r4);font-size:.95rem;font-weight:900;cursor:pointer;margin-top:10px;}
+.bm-submit{width:100%;padding:16px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r4);font-size:1rem;font-weight:900;cursor:pointer;margin-top:10px;box-shadow:var(--sh-btn);}
 </style>
 </head>
 <body>
 
-<div id="toasts"></div>
-<div id="splash"><div class="sp-logo">🐋</div><div class="sp-bar"><div class="sp-fill"></div></div><div class="sp-txt">جاري تحميل الفنادق...</div></div>
+<div id="splash"><div class="sp-logo">🐋</div><div class="sp-bar"><div class="sp-fill"></div></div><div class="sp-txt">جاري تجهيز الفنادق...</div></div>
 
 <header class="site-header">
-  <a class="header-logo" href="#">
+  <a class="header-logo" href="index.html">
     <div class="header-logo-ic">🐋</div>
-    <div><div class="header-logo-nm">الحوت</div><div class="header-logo-sub">منصة الإقامة والسياحة</div></div>
+    <div><div class="header-logo-nm">الحوت</div><div class="header-logo-sub">منصة الإقامة الفندقية</div></div>
   </a>
 </header>
 
@@ -161,7 +205,7 @@ button,input,select,textarea{font-family:'Cairo',sans-serif;color:inherit;}
     <div class="hero-search-wrap">
       <div class="hero-search-row">
         <div class="hero-search-field">
-          <div style="flex:1"><span class="hsf-lbl">الوجهة</span><div class="hsf-val"><input type="text" id="hero-city" placeholder="أي مدينة؟" oninput="applyAllFilters()"></div></div>
+          <div style="flex:1"><span class="hsf-lbl">وجهتك القادمة</span><div class="hsf-val"><input type="text" id="hero-city" placeholder="ابحث بالمدينة..." oninput="applyAllFilters()"></div></div>
         </div>
       </div>
     </div>
@@ -183,21 +227,21 @@ button,input,select,textarea{font-family:'Cairo',sans-serif;color:inherit;}
   <div class="bm-sheet">
     <div class="bm-hd"><h3 style="font-weight:900;margin:0" id="bm-title">تفاصيل الحجز</h3><button onclick="closeBooking()" style="background:none;border:none;font-size:20px;">✕</button></div>
     
-    <label style="font-size:.7rem;font-weight:800;color:var(--tx2);">تاريخ الوصول</label>
+    <label style="font-size:.75rem;font-weight:800;color:var(--tx2);">تاريخ الوصول</label>
     <input type="date" id="bm-checkin" class="bm-in">
     
-    <label style="font-size:.7rem;font-weight:800;color:var(--tx2);">عدد الليالي</label>
+    <label style="font-size:.75rem;font-weight:800;color:var(--tx2);">عدد الليالي</label>
     <input type="number" id="bm-nights" class="bm-in" value="1" min="1" oninput="updateBookingCalc()">
     
-    <label style="font-size:.7rem;font-weight:800;color:var(--tx2);">اسم الضيف المبدئي (اختياري)</label>
+    <label style="font-size:.75rem;font-weight:800;color:var(--tx2);">اسم الضيف المبدئي</label>
     <input type="text" id="bm-name" class="bm-in" placeholder="اسمك الكريم">
 
-    <div style="background:var(--green-l);padding:12px;border-radius:12px;margin:10px 0;text-align:center;">
-      <div style="font-size:.8rem;font-weight:700;">الإجمالي المبدئي</div>
-      <div style="font-size:1.2rem;font-weight:900;color:var(--green);" id="bm-total-val">0 د.ع</div>
+    <div style="background:var(--green-l);padding:14px;border-radius:14px;margin:15px 0;text-align:center;border:1px solid rgba(0,166,153,.2);">
+      <div style="font-size:.85rem;font-weight:800;color:var(--tx1);">الإجمالي المبدئي</div>
+      <div style="font-size:1.3rem;font-weight:900;color:var(--green);" id="bm-total-val">0 د.ع</div>
     </div>
 
-    <div id="bm-err" style="color:var(--red);font-size:.8rem;font-weight:700;text-align:center;margin-bottom:10px;"></div>
+    <div id="bm-err" style="color:var(--red);font-size:.85rem;font-weight:700;text-align:center;margin-bottom:10px;"></div>
     
     <button class="bm-submit" onclick="goToAddons()">الاستمرار لاختيار الإضافات ➔</button>
   </div>
@@ -208,19 +252,17 @@ const API = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50
 const TOKEN = "HUT_CLOUD_2026";
 
 let allHotels = [];
-let allRooms = {};
 let filteredHotels = [];
 let bookingCtx = null;
 
 const $ = id => document.getElementById(id);
 const fmt = n => Math.round(Number(n)||0).toLocaleString("ar-EG");
-function esc(s){ return String(s||"").replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">").replace(/"/g,"""); }
+function esc(s){ return String(s||"").replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">").replace(/"/g,""").replace(/'/g,"'"); }
 
 window.addEventListener("DOMContentLoaded", async () => {
   const tom = new Date(); tom.setDate(tom.getDate()+1);
   $("bm-checkin").value = tom.toISOString().split("T")[0];
   await loadHotels();
-  $("splash").classList.add("dn");
 });
 
 async function loadHotels(){
@@ -229,12 +271,11 @@ async function loadHotels(){
     const data = await res.json();
     if(data.success) {
       allHotels = (data.hotels||[]).filter(h=>h.status==="active");
-      // Simulated Rooms Fetch - If using Firebase, you can add it here.
-      // For now we rely on the hotel's base prices.
       filteredHotels = [...allHotels];
       renderHotelsGrid();
     }
   } catch(e) { console.error("Error loading hotels"); }
+  finally { $("splash").classList.add("dn"); }
 }
 
 function getMinPrice(hotel){
@@ -257,7 +298,7 @@ function renderHotelsGrid(){
         <div class="hc-city">📍 ${esc(h.city)}</div>
         <div class="hc-name">${esc(h.name)}</div>
         <div class="hc-foot">
-          <div><span class="hc-price-val">${fmt(price)}</span> د.ع / ليلة</div>
+          <div><span style="font-size:0.75rem;color:var(--tx2);">يبدأ من</span><br><span class="hc-price-val">${fmt(price)}</span> د.ع</div>
           <button class="hc-cta">عرض الغرف</button>
         </div>
       </div>
@@ -271,45 +312,80 @@ window.applyAllFilters = () => {
   renderHotelsGrid();
 };
 
-/* ════ HOTEL DETAIL & ROOMS ════ */
-window.openHotelDetail = (id) => {
+/* ════ HOTEL DETAIL & DYNAMIC ROOMS ════ */
+window.openHotelDetail = async (id) => {
   const h = allHotels.find(x => String(x.id) === String(id));
   if(!h) return;
   
-  // Create fallback rooms based on hotel pricing
-  const rooms = [
-    { id: "s", room_type: "single", room_name: "غرفة مفردة", price: h.price_single, photo_url: h.photo_url },
-    { id: "d", room_type: "double", room_name: "غرفة مزدوجة", price: h.price_double, photo_url: h.photo_url },
-    { id: "u", room_type: "suite", room_name: "جناح VIP", price: h.price_suite, photo_url: h.photo_url }
-  ].filter(r => Number(r.price) > 0);
-
   const sheet = $("hm-sheet");
+  // 1. إظهار واجهة التحميل المبدئية داخل الفندق
   sheet.innerHTML = `
     <div class="hm-close-bar">
-      <div style="font-weight:900;">${esc(h.name)}</div>
+      <div style="font-weight:900;font-size:1.1rem;">${esc(h.name)}</div>
       <button class="hm-close-btn" onclick="closeHotelModal()">✕</button>
     </div>
     <div class="hm-gallery"><img src="${esc(h.photo_url)}"></div>
     <div class="hm-info">
-      <div style="font-size:1.2rem;font-weight:900;margin-bottom:10px;">🛏 الغرف المتاحة</div>
-      <div class="rooms-list">
-        ${rooms.map(r => `
-          <div class="room-card">
-            <div class="rc-head">
-              <div class="rc-info">
-                <div class="rc-name">${esc(r.room_name)}</div>
-              </div>
-            </div>
-            <div class="rc-foot">
-              <div class="rc-price">${fmt(r.price)} د.ع / ليلة</div>
-              <button class="rc-book-btn" onclick="openBookingModal('${esc(h.id)}', '${esc(r.id)}', ${r.price}, '${esc(r.room_name)}')">احجز الآن</button>
-            </div>
-          </div>
-        `).join("")}
+      <div class="hm-name">${esc(h.name)}</div>
+      <div style="font-size:0.85rem;color:var(--tx2);font-weight:700;">📍 ${esc(h.city)}</div>
+    </div>
+    <div class="hm-rooms-sec">
+      <div style="font-size:1.2rem;font-weight:900;margin-bottom:14px;">🛏 الغرف المتاحة</div>
+      <div style="text-align:center;padding:30px;color:var(--tx2);font-weight:700;">
+        جاري جلب الغرف المتاحة من الفندق...
       </div>
     </div>
   `;
   $("hotelModal").classList.remove("dn");
+
+  // 2. جلب الغرف الحقيقية التي سجلها الشريك من السيرفر
+  let dynamicRooms = [];
+  try {
+    const res = await fetch(`${API}?action=getRoomsByHotel&hotel_id=${encodeURIComponent(h.id)}&token=${TOKEN}`);
+    const data = await res.json();
+    if(Array.isArray(data)) dynamicRooms = data;
+    else if(data.rooms) dynamicRooms = data.rooms;
+  } catch(e) { console.warn("Failed to fetch rooms"); }
+
+  // تصفية الغرف المتاحة فقط
+  let roomsToShow = dynamicRooms.filter(r => r.status !== "inactive" && Number(r.price) > 0);
+
+  // 3. الحل البديل (Fallback) إذا لم يقم الشريك بإضافة غرف مخصصة
+  if(roomsToShow.length === 0) {
+    roomsToShow = [
+      { id: "s", room_type: "single", room_name: "غرفة مفردة", price: h.price_single, photo_url: h.photo_url },
+      { id: "d", room_type: "double", room_name: "غرفة مزدوجة", price: h.price_double, photo_url: h.photo_url },
+      { id: "u", room_type: "suite", room_name: "جناح VIP", price: h.price_suite, photo_url: h.photo_url }
+    ].filter(r => Number(r.price) > 0);
+  }
+
+  // 4. إعادة بناء قسم الغرف بالغرف الحقيقية
+  sheet.querySelector(".hm-rooms-sec").innerHTML = `
+    <div style="font-size:1.2rem;font-weight:900;margin-bottom:14px;">🛏 الغرف المتاحة</div>
+    <div class="rooms-list">
+      ${roomsToShow.length > 0 ? roomsToShow.map(r => {
+        const rname = r.room_name || r.room_type || "غرفة";
+        const rphoto = r.photo_url || h.photo_url;
+        return `
+        <div class="room-card">
+          <div class="rc-head">
+            <div class="rc-thumb">
+              ${rphoto ? `<img src="${esc(rphoto)}" onerror="this.style.display='none'">` : `<div style="width:100%;height:100%;background:var(--light);display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--tx4);">🛏</div>`}
+            </div>
+            <div class="rc-info">
+              <div class="rc-name">${esc(rname)}</div>
+              ${r.bed_type ? `<div class="rc-bed">🛌 سرير ${esc(r.bed_type)}</div>` : ''}
+              ${r.description ? `<div class="rc-desc">${esc(r.description)}</div>` : ''}
+            </div>
+          </div>
+          <div class="rc-foot">
+            <div class="rc-price">${fmt(r.price)} <span style="font-size:0.7rem;color:var(--tx2);">د.ع / ليلة</span></div>
+            <button class="rc-book-btn" onclick="openBookingModal('${esc(h.id)}', '${esc(r.id)}', ${r.price}, '${esc(rname)}')">احجز الآن</button>
+          </div>
+        </div>`;
+      }).join("") : `<div style="text-align:center;padding:20px;color:var(--tx2);font-weight:700;border:1px dashed var(--border);border-radius:12px;">عذراً، لا توجد غرف متاحة حالياً.</div>`}
+    </div>
+  `;
 };
 
 window.closeHotelModal = () => $("hotelModal").classList.add("dn");
@@ -340,21 +416,22 @@ window.updateBookingCalc = () => {
 window.goToAddons = () => {
   const checkin = $("bm-checkin").value;
   if(!checkin) { $("bm-err").textContent = "يرجى تحديد تاريخ الوصول"; return; }
+  const name = $("bm-name").value.trim();
+  if(!name) { $("bm-err").textContent = "يرجى كتابة الاسم"; return; }
 
-  // Save the booking context to sessionStorage
   const orderData = {
     hotel_id: bookingCtx.hotel.id,
     hotel_name: bookingCtx.hotel.name,
     hotel_city: bookingCtx.hotel.city,
     room_id: bookingCtx.room.id,
-    room_type: "room", // generic
+    room_type: "room", 
     room_name: bookingCtx.room.room_name,
     price: bookingCtx.room.price,
     date_arrive: checkin,
     nights: bookingCtx.nights,
-    guests: 1, // default
-    guest_name: $("bm-name").value.trim(),
-    service_type: "hotel" // flag to know it's a hotel booking
+    guests: 1, 
+    guest_name: name,
+    service_type: "hotel" 
   };
 
   sessionStorage.setItem("hut_booking_draft", JSON.stringify(orderData));

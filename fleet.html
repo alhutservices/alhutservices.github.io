@@ -177,11 +177,14 @@ button,input{font-family:'Cairo',sans-serif;outline:none;}
   font-size:.65rem;font-weight:900;color:var(--tx0);
   box-shadow:var(--sh-sm);
 }
-.office-badge{
+/* [تعديل] شارة المنصة بدل شارة المكتب */
+.platform-badge{
   position:absolute;bottom:12px;right:12px;
-  background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
-  padding:4px 10px;border-radius:99px;
-  font-size:.65rem;font-weight:800;color:var(--white);
+  background:var(--red-g);
+  padding:4px 12px;border-radius:99px;
+  font-size:.65rem;font-weight:900;color:var(--white);
+  box-shadow:var(--sh-btn);
+  display:flex;align-items:center;gap:4px;
 }
 
 .car-body{padding:16px 4px 8px;flex:1;display:flex;flex-direction:column;}
@@ -246,7 +249,7 @@ button,input{font-family:'Cairo',sans-serif;outline:none;}
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-title" id="heroTitle">اختر سيارتك</div>
-    <div class="hero-sub" id="heroSub">أسطول متكامل وجاهز للانطلاق من مكاتبنا المعتمدة</div>
+    <div class="hero-sub" id="heroSub">أسطول المنصة الرسمي — سيارات مختارة ومضمونة من الحوت</div>
     <div class="hero-pills" id="heroPills"></div>
   </div>
 </div>
@@ -288,20 +291,25 @@ button,input{font-family:'Cairo',sans-serif;outline:none;}
 const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
 const API_TOKEN = "HUT_CLOUD_2026";
 
+/* [تعديل] معرّف سيارات الإدارة — يجب أن يطابق ما يرسله admin.html في saveSharedCar */
+const ADMIN_OFFICE_ID = "SHARED";
+
+/* البيانات الاحتياطية الآن سيارات إدارة فقط (office_id = SHARED) */
 const FALLBACK_CARS = [
-  {id:"C001",name:"تويوتا كورولا 2025",cat:"economy",price:45000,color:"أبيض",plate:"كركوك",orders:12,office_id:"مكتب النورس"},
-  {id:"C002",name:"مرسيدس S-Class",cat:"luxury",price:150000,color:"أسود",plate:"بغداد",orders:5,office_id:"VIP كلاس"},
-  {id:"C003",name:"هيونداي توسان",cat:"family",price:60000,color:"رمادي",plate:"أربيل",orders:8,office_id:"السيف للسيارات"}
+  {id:"C001",name:"تويوتا كورولا 2025",cat:"economy",price:45000,color:"أبيض",plate:"كركوك",orders:12,office_id:"SHARED"},
+  {id:"C002",name:"مرسيدس S-Class",cat:"luxury",price:150000,color:"أسود",plate:"بغداد",orders:5,office_id:"SHARED"},
+  {id:"C003",name:"هيونداي توسان",cat:"family",price:60000,color:"رمادي",plate:"أربيل",orders:8,office_id:"SHARED"}
 ];
 
 const i18n = {
   ar:{
     dir:"rtl", logo:"الحوت", back:"← العودة للرئيسية",
-    heroTitle:"اختر سيارتك", heroSub:"أسطول متكامل وجاهز للانطلاق",
+    heroTitle:"اختر سيارتك", heroSub:"أسطول المنصة الرسمي",
     cats:["الكل","اقتصادية","عائلية","فاخرة VIP","زفاف"],
     catKeys:["all","economy","family","luxury","wedding"],
     catBadge:{economy:"اقتصادية",family:"عائلية",luxury:"VIP فاخرة",wedding:"للزفاف"},
-    available:"سيارة متاحة", perDay:"/ يوم", cur:"د.ع", select:"حجز", cityPH:"ابحث بالمدينة..."
+    available:"سيارة متاحة", perDay:"/ يوم", cur:"د.ع", select:"حجز", cityPH:"ابحث بالمدينة...",
+    platform:"🐋 المنصة"
   }
 };
 
@@ -356,6 +364,14 @@ function buildFilters() {
 }
 
 /* ════════════════════════════════════════════════════════
+   [تعديل] فلتر سيارات الإدارة فقط
+   نعتبر السيارة "من الإدارة" إذا كان office_id يساوي SHARED
+════════════════════════════════════════════════════════ */
+function isAdminCar(car){
+  return String(car.office_id || "").trim().toUpperCase() === ADMIN_OFFICE_ID;
+}
+
+/* ════════════════════════════════════════════════════════
    FETCH FLEET
 ════════════════════════════════════════════════════════ */
 async function fetchFleet() {
@@ -375,12 +391,17 @@ async function fetchFleet() {
     const data = await res.json();
     
     let cars = Array.isArray(data) ? data : (data.cars || []);
-    if(cars.length === 0) cars = FALLBACK_CARS;
+
+    /* [تعديل] احتفظ بسيارات الإدارة فقط */
+    cars = cars.filter(isAdminCar);
+
+    /* إذا لم توجد أي سيارة إدارة من السيرفر، اعرض الاحتياطي (سيارات إدارة) */
+    if(cars.length === 0) cars = FALLBACK_CARS.filter(isAdminCar);
     
     allCars = cars;
     banner.style.display = "none";
   } catch(err) {
-    allCars = FALLBACK_CARS;
+    allCars = FALLBACK_CARS.filter(isAdminCar);
     banner.className = "api-banner fallback";
     document.getElementById("apiBannerTxt").textContent = "تعذر الاتصال بالسيرفر. يتم عرض البيانات المؤقتة.";
   }
@@ -426,6 +447,7 @@ function renderFleet() {
   const grid = document.getElementById("fleetGrid");
   
   filtered = allCars.filter(c => {
+    if(!isAdminCar(c)) return false;                 /* [تعديل] حماية إضافية */
     if(c.status && c.status !== "available") return false;
     if(cityQuery && c.city && !c.city.includes(cityQuery)) return false;
     if(activeCat !== "all" && (c.cat||"economy").toLowerCase() !== activeCat) return false;
@@ -438,7 +460,7 @@ function renderFleet() {
   document.getElementById("resultsCount").innerHTML = `<strong>${filtered.length}</strong> ${t.available}`;
 
   if(filtered.length === 0) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;background:var(--white);border:1px dashed var(--border-d);border-radius:var(--r5);"><div style="font-size:3rem;margin-bottom:10px;opacity:.5">🚗</div><h3 style="font-weight:900;color:var(--tx1);">لا توجد سيارات متاحة</h3><p style="color:var(--tx2);font-size:.85rem;">حاول تعديل خيارات البحث أو المدينة</p></div>`;
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;background:var(--white);border:1px dashed var(--border-d);border-radius:var(--r5);"><div style="font-size:3rem;margin-bottom:10px;opacity:.5">🚗</div><h3 style="font-weight:900;color:var(--tx1);">لا توجد سيارات متاحة</h3><p style="color:var(--tx2);font-size:.85rem;">لم تُضِف الإدارة سيارات بعد، أو لا تطابق بحثك</p></div>`;
     return;
   }
 
@@ -451,7 +473,6 @@ function buildCard(car) {
   const cat   = (car.cat||"economy").toLowerCase();
   const color = car.color || "";
   const plate = car.plate || "";
-  const offId = car.office_id || "";
   
   const imgHtml = car.photo_url 
     ? `<img src="${escHtml(car.photo_url)}" loading="lazy">` 
@@ -462,7 +483,7 @@ function buildCard(car) {
     <div class="car-img-wrap">
       ${imgHtml}
       <div class="cat-badge">${t.catBadge[cat]||cat}</div>
-      ${offId ? `<div class="office-badge">🏢 ${escHtml(offId)}</div>` : ''}
+      <div class="platform-badge">${t.platform}</div>
     </div>
     <div class="car-body">
       <div class="car-top">

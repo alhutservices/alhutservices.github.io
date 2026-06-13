@@ -1589,12 +1589,82 @@ function resetAssetUpload(type) {
   $(`uz-${type}`).classList.remove("filled");
 }
 
-/* ── Fetch & Render Gallery ── */
+/* ── Fetch & Render Gallery (تم الإصلاح ليتوافق مع السيرفر) ── */
 window.fetchInventory = async (force=false) => {
   if(inventoryLoaded && !force) return;
   const isH = pData.type === "hotel";
   const grid = $("gallery-list");
-  grid.innerHTML = `<div style="text-align:center;padding:40px;color:var(--tx2);font-weight:800;"><div class="spinner"></div><br>جاري جلب الأصول...</div>`;
+  
+  grid.innerHTML = `<div style="text-align:center;padding:40px;color:var(--tx2);font-weight:800;"><div class="spinner" style="margin:0 auto 10px;"></div><br>جاري جلب الأصول...</div>`;
+  
+  try {
+    let items = [];
+
+    if (isH) {
+      // بالنسبة للفنادق (إذا لم يكن الأمر موجوداً في السيرفر سيفشل بهدوء ويعرض فارغ)
+      const res = await fetch(`${API_URL}?action=getRoomsByHotel&hotel_id=${encodeURIComponent(pData.id)}&token=${API_TOKEN}`);
+      const data = await res.json();
+      items = Array.isArray(data) ? data : (data.rooms || []);
+    } else {
+      // بالنسبة للسيارات: نستخدم الأمر المضمون في سيرفرك
+      const res = await fetch(`${API_URL}?action=getAvailableCars&token=${API_TOKEN}`);
+      const data = await res.json();
+      const allCars = Array.isArray(data) ? data : (data.cars || data.fleet || []);
+      
+      // الفلترة اللحظية: نعرض فقط السيارات التي يطابق الـ office_id الخاص بها هوية الشريك الحالي
+      items = allCars.filter(c => String(c.office_id) === String(pData.id) || String(c.office_id) === String(pData.name));
+    }
+
+    inventoryLoaded = true;
+
+    if(!items.length) {
+      grid.innerHTML = `<div style="text-align:center;padding:40px;border:1px dashed var(--border-d);border-radius:16px;color:var(--tx3);font-weight:700;">لا توجد أصول مضافة بعد. أضف عنصراً من الأعلى وسيظهر هنا فوراً.</div>`;
+      return;
+    }
+
+    grid.innerHTML = items.map(i => {
+      const isAvail = i.status !== "inactive";
+      const nm = isH ? i.room_name : i.name;
+      const id = esc(i.id || i.room_name || i.plate || "");
+      
+      const img = i.photo_url 
+        ? `<img src="${esc(i.photo_url)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">` 
+        : `<div class="ac-noimg" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;background:var(--light);color:var(--tx4);">${isH?"🛏":"🚗"}</div>`;
+      
+      let specs = "";
+      if(isH) {
+        specs = `<div class="ac-spec">🛌 ${esc(i.bed_type||"")}</div><div class="ac-spec">${esc(i.description||"")}</div>`;
+      } else {
+        specs = `<div class="ac-spec">🎨 ${esc(i.color||"—")}</div><div class="ac-spec">🪪 ${esc(i.plate||"—")}</div><div style="width:100%;font-size:.65rem;color:var(--tx3);margin-top:4px;">${esc(i.details||"")}</div>`;
+      }
+
+      return `
+      <div class="asset-card">
+        <div class="ac-img">${img}<div class="ac-badge">${isH?"غرفة":"سيارة"}</div></div>
+        <div class="ac-body">
+          <div class="ac-title">${esc(nm)}</div>
+          <div class="ac-specs">${specs}</div>
+          <div class="ac-price">${fmt(i.price)} <span style="font-size:.65rem;color:var(--tx2)">د.ع/${isH?"ليلة":"يوم"}</span></div>
+          <div class="ac-stats">
+            <div class="ac-stat"><div class="acs-v" style="color:var(--blue)">${i.orders||i.bookings||0}</div><div class="acs-l">حجوزات</div></div>
+            <div class="ac-stat"><div class="acs-v" style="color:var(--green)">${fmt(i.revenue||i.total_revenue||0)}</div><div class="acs-l">إيرادات</div></div>
+          </div>
+          <div class="ac-toggle">
+            <span style="font-size:.75rem;font-weight:700;color:var(--tx2)">التوفر</span>
+            <label class="switch"><input type="checkbox" ${isAvail?"checked":""} onchange="toggleAssetStatus('${id}',this)"><span class="slider"></span></label>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button style="flex:1;padding:8px;background:var(--white);color:var(--blue);border:1px solid var(--border-d);border-radius:8px;font-weight:800;cursor:pointer;" onclick='openEditAsset(${safeJSON(i)})'>✏️ تعديل</button>
+            <button style="flex:1;padding:8px;background:var(--red-l);color:var(--red);border:1px dashed var(--red);border-radius:8px;font-weight:800;cursor:pointer;" onclick="deleteAsset('${id}',this)">🗑 حذف</button>
+          </div>
+        </div>
+      </div>`;
+    }).join("");
+  } catch(e) {
+    grid.innerHTML = `<div style="text-align:center;padding:20px;color:var(--red);font-weight:700;">فشل جلب الأصول. تأكد من اتصالك بالإنترنت.</div>`;
+  }
+};
+
   
   try {
     const ac = isH ? "getRoomsByHotel" : "getCarsByOffice";

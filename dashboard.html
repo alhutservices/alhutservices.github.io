@@ -1129,7 +1129,6 @@ let b64Reg = null, b64Asset = null, b64Edit = null;
 let waitTimer = null;
 let alertOrder = null, waCurrentOrder = null, editCtx = null;
 let inventoryLoaded = false;
-let carOrdersFB = [], hotelBookingsFB = [];
 
 /* ════════════════════════════════════════════════════════
    UTILITIES
@@ -1368,6 +1367,7 @@ function bootDashboard() {
 
   startFirebase();
   fetchInventory(); 
+  loadLedger();
 }
 
 function startFirebase() {
@@ -1375,12 +1375,14 @@ function startFirebase() {
   const sp = pData.type === "hotel" ? "hut_hotel_bookings" : "hut_car_orders";
   db.ref(sp).on("value", snap => { processOrders(snap.val() || {}); });
   
+  // Realtime Ledger update
   const ledPath = pData.type === "hotel" ? "hotels" : "car_offices";
   const pKey = String(pData.id||"").replace(/\D/g,"") || pData.name.replace(/\s+/g,"_");
   db.ref(`ledgers/${ledPath}/${pKey}`).on("value", snap => {
     const l = snap.val() || {};
     $("lg-debt").textContent = fmt(l.debt || 0);
     $("lg-rev").textContent = fmt(l.total_revenue || 0);
+    $("lg-c").textContent = l.completed_orders || 0;
   });
 }
 
@@ -1443,7 +1445,7 @@ function renderOrders(list) {
           <span class="oc-st ${stClass==="pending"?"st-pend":stClass==="completed"?"st-done":"st-act"}">${stText}</span>
         </div>
         <div class="oc-mid">
-          <div class="oc-svc">${isH?"🏨":"🚗"} ${esc(title)}</div>
+          <div class="oc-title">${isH?"🏨":"🚗"} ${esc(title)}</div>
           <div class="oc-grid">
             <div><div class="oc-lbl">العميل</div><div class="oc-val">${esc(custName)}</div></div>
             <div><div class="oc-lbl">الهاتف</div><div class="oc-val" style="color:var(--blue);font-family:'IBM Plex Mono',monospace;">${esc(phone)}</div></div>
@@ -1530,7 +1532,7 @@ window.openWaModal = (phone, name, svc) => {
 window.closeWaModal = () => $("waModal").classList.add("dn");
 
 /* ════════════════════════════════════════════════════════════════
-   INVENTORY (ADD ASSET & GALLERY)
+   INVENTORY (ADD ASSET & GALLERY) - FIXED FOR FALLBACK
 ════════════════════════════════════════════════════════════════ */
 window.saveCar = async () => {
   const nm = $("car-nm").value.trim(), pr = $("car-pr").value.trim();
@@ -1589,7 +1591,7 @@ function resetAssetUpload(type) {
   $(`uz-${type}`).classList.remove("filled");
 }
 
-/* ── Fetch & Render Gallery (تم الإصلاح ليتوافق مع السيرفر) ── */
+/* ── Fetch & Render Gallery (FIXED LOGIC) ── */
 window.fetchInventory = async (force=false) => {
   if(inventoryLoaded && !force) return;
   const isH = pData.type === "hotel";
@@ -1601,17 +1603,15 @@ window.fetchInventory = async (force=false) => {
     let items = [];
 
     if (isH) {
-      // بالنسبة للفنادق (إذا لم يكن الأمر موجوداً في السيرفر سيفشل بهدوء ويعرض فارغ)
       const res = await fetch(`${API_URL}?action=getRoomsByHotel&hotel_id=${encodeURIComponent(pData.id)}&token=${API_TOKEN}`);
       const data = await res.json();
       items = Array.isArray(data) ? data : (data.rooms || []);
     } else {
-      // بالنسبة للسيارات: نستخدم الأمر المضمون في سيرفرك
       const res = await fetch(`${API_URL}?action=getAvailableCars&token=${API_TOKEN}`);
       const data = await res.json();
       const allCars = Array.isArray(data) ? data : (data.cars || data.fleet || []);
       
-      // الفلترة اللحظية: نعرض فقط السيارات التي يطابق الـ office_id الخاص بها هوية الشريك الحالي
+      // Filter locally for this specific partner
       items = allCars.filter(c => String(c.office_id) === String(pData.id) || String(c.office_id) === String(pData.name));
     }
 
@@ -1665,58 +1665,6 @@ window.fetchInventory = async (force=false) => {
   }
 };
 
-  
-  try {
-    const ac = isH ? "getRoomsByHotel" : "getCarsByOffice";
-    const pi = isH ? "hotel_id" : "office_id";
-    const res = await fetch(`${API_URL}?action=${ac}&${pi}=${encodeURIComponent(pData.id)}&token=${API_TOKEN}`);
-    const data = await res.json();
-    const items = Array.isArray(data) ? data : (data.rooms || data.cars || []);
-    inventoryLoaded = true;
-
-    if(!items.length) {
-      grid.innerHTML = `<div style="text-align:center;padding:40px;border:1px dashed var(--border-d);border-radius:16px;color:var(--tx3);font-weight:700;">لا توجد أصول مضافة بعد.</div>`;
-      return;
-    }
-
-    grid.innerHTML = items.map(i => {
-      const isAvail = i.status !== "inactive";
-      const nm = isH ? i.room_name : i.name;
-      const id = esc(i.id || i.room_name || i.plate || "");
-      const img = i.photo_url ? `<img src="${esc(i.photo_url)}" loading="lazy">` : `<div class="ac-noimg">${isH?"🛏":"🚗"}</div>`;
-      
-      let specs = "";
-      if(isH) {
-        specs = `<div class="ac-spec">🛌 ${esc(i.bed_type||"")}</div><div class="ac-spec">${esc(i.description||"")}</div>`;
-      } else {
-        specs = `<div class="ac-spec">🎨 ${esc(i.color||"—")}</div><div class="ac-spec">🪪 ${esc(i.plate||"—")}</div><div style="width:100%;font-size:.65rem;color:var(--tx3);">${esc(i.details||"")}</div>`;
-      }
-
-      return `
-      <div class="asset-card">
-        <div class="ac-img">${img}<div class="ac-badge">${isH?"غرفة":"سيارة"}</div></div>
-        <div class="ac-body">
-          <div class="ac-title">${esc(nm)}</div>
-          <div class="ac-specs">${specs}</div>
-          <div class="ac-price">${fmt(i.price)} <span style="font-size:.65rem;color:var(--tx2)">د.ع/${isH?"ليلة":"يوم"}</span></div>
-          <div class="ac-stats">
-            <div class="ac-stat"><div class="acs-v" style="color:var(--blue)">${i.orders||i.bookings||0}</div><div class="acs-l">حجوزات</div></div>
-            <div class="ac-stat"><div class="acs-v" style="color:var(--green)">${fmt(i.revenue||i.total_revenue||0)}</div><div class="acs-l">إيرادات</div></div>
-          </div>
-          <div class="ac-toggle">
-            <span style="font-size:.75rem;font-weight:700;color:var(--tx2)">التوفر</span>
-            <label class="switch"><input type="checkbox" ${isAvail?"checked":""} onchange="toggleAssetStatus('${id}',this)"><span class="slider"></span></label>
-          </div>
-          <div style="display:flex;gap:8px;margin-top:10px;">
-            <button style="flex:1;padding:8px;background:var(--white);color:var(--blue);border:1px solid var(--border-d);border-radius:8px;font-weight:800;cursor:pointer;" onclick='openEditAsset(${safeJSON(i)})'>✏️ تعديل</button>
-            <button style="flex:1;padding:8px;background:var(--red-l);color:var(--red);border:1px dashed var(--red);border-radius:8px;font-weight:800;cursor:pointer;" onclick="deleteAsset('${id}',this)">🗑 حذف</button>
-          </div>
-        </div>
-      </div>`;
-    }).join("");
-  } catch(e) { grid.innerHTML = `<div style="text-align:center;padding:20px;color:var(--red);font-weight:700;">فشل جلب الأصول.</div>`; }
-};
-
 window.toggleAssetStatus = async (id, cb) => {
   const st = cb.checked ? "available" : "inactive";
   try {
@@ -1724,7 +1672,7 @@ window.toggleAssetStatus = async (id, cb) => {
     const bd = { action: ac, token: API_TOKEN, status: st };
     if(pData.type === "car") bd.id = id; else { bd.room_id = id; bd.hotel_id = pData.id; }
     await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) });
-    toast(`✅ تم تحديث الحالة`);
+    toast(`✅ تم التحديث`);
   } catch(e) { cb.checked = !cb.checked; toast("فشل","e"); }
 };
 
@@ -1737,7 +1685,7 @@ window.deleteAsset = async (id, btn) => {
     if(pData.type === "car") { bd.id = id; bd.office_id = pData.id; } else { bd.room_id = id; bd.hotel_id = pData.id; }
     await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) });
     toast("🗑 تم الحذف"); fetchInventory(true);
-  } catch(e) { toast("فشل החذف","e"); setBtn(btn, false); }
+  } catch(e) { toast("فشل الحذف","e"); setBtn(btn, false); }
 };
 
 /* ── EDIT ASSET ── */
@@ -1759,7 +1707,6 @@ window.openEditAsset = (item) => {
   
   if(item.photo_url) { $("ea-prev").src = item.photo_url; $("ea-prev").style.display = "block"; }
   else { $("ea-prev").style.display = "none"; }
-  $("ea-badge").style.opacity = "0";
   
   $("editAssetModal").classList.remove("dn");
 };
@@ -1793,14 +1740,64 @@ window.saveAssetEdit = async () => {
     }
     const res = await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) });
     const d = await res.json(); showLoad(false);
-    if(d.success) { toast("✅ تم حفظ التعديلات"); closeEditAsset(); fetchInventory(true); }
+    if(d.success) { toast("✅ تم الحفظ"); closeEditAsset(); fetchInventory(true); }
     else toast("فشل","e");
   } catch(e) { showLoad(false); toast("فشل الاتصال","e"); }
   finally { setBtn("ea-btn", false); }
 };
 
 /* ════════════════════════════════════════════════════════════════
-   NAVIGATION & LOGOUT
+   LEDGER / HISTORY TAB
+════════════════════════════════════════════════════════════════ */
+async function loadHistory() {
+  const listEl = $("ledger-list");
+  listEl.innerHTML = `<div style="text-align:center;padding:40px;color:var(--tx2);font-weight:800;"><div class="spinner" style="margin:0 auto 10px;"></div><br>جاري جلب السجلات...</div>`;
+  
+  try {
+    const ac = pData.type === "car" ? "getCarOrders" : "getHotelBookings";
+    const pm = pData.type === "car" ? `office=${encodeURIComponent(pData.name)}` : `hotel_name=${encodeURIComponent(pData.name)}`;
+    const res = await fetch(`${API_URL}?action=${ac}&${pm}&token=${API_TOKEN}`);
+    const list = await res.json();
+    
+    if(!Array.isArray(list)) {
+      listEl.innerHTML = `<div class="empty-s">فشل جلب السجلات</div>`;
+      return;
+    }
+    
+    const done = list.filter(o => o.status === "completed");
+    
+    if(!done.length) {
+      listEl.innerHTML = `<div class="empty-s"><div class="ei">📊</div>لا توجد سجلات بعد</div>`;
+      return;
+    }
+    
+    const isH = pData.type === "hotel";
+    listEl.innerHTML = done.slice(0, 50).map(o => {
+      const nm = isH ? (o.guest_name||"—") : (o.name||"—");
+      const dt = isH ? (o.date_arrive||"—") : (o.date||"—");
+      const dur = isH ? `${o.nights||1} ليلة` : `${o.days||1} يوم`;
+      const svc = isH ? (o.room_type||"غرفة") : (o.car||"سيارة");
+      return `
+        <div class="lr-card">
+          <div>
+            <div class="lr-id">#${esc(o.id)}</div>
+            <div class="lr-nm">${esc(svc)}</div>
+            <div class="lr-dt">${esc(nm)} · ${esc(dt)}</div>
+          </div>
+          <div style="text-align:left;">
+            <div class="lr-am">${fmt(o.total||0)}</div>
+            <div style="font-size:.65rem;font-weight:700;color:var(--tx2)">${esc(dur)}</div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  } catch(e) {
+    listEl.innerHTML = `<div class="empty-s">فشل الاتصال</div>`;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   NAVIGATION & TABS
 ════════════════════════════════════════════════════════════════ */
 window.switchTab = (tab, btn) => {
   document.querySelectorAll('.bni').forEach(b => b.classList.remove('on'));
@@ -1808,6 +1805,7 @@ window.switchTab = (tab, btn) => {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.add('dn'));
   $("tab-"+tab).classList.remove("dn");
   if(tab === "inventory") fetchInventory();
+  if(tab === "ledger") loadHistory();
 };
 
 window.doLogout = () => {

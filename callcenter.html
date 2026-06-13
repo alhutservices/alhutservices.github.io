@@ -9,7 +9,7 @@
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=IBM+Plex+Mono:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@600&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
@@ -37,7 +37,7 @@
   --sh-card: 0 4px 12px rgba(0,0,0,.06);
   --sh-hover: 0 8px 24px rgba(0,0,0,.1);
   --sh-btn: 0 4px 12px rgba(255,56,92,.25);
-  --r3: 12px; --r4: 16px; --r5: 20px;
+  --r2: 8px; --r3: 12px; --r4: 16px; --r5: 20px;
 }
 
 *,::before,::after{box-sizing:border-box;margin:0;padding:0;}
@@ -85,7 +85,7 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
 .tc-car{font-size:.75rem;font-weight:700;color:var(--tx1);margin-bottom:4px;}
 .tc-off{font-size:.65rem;font-weight:800;color:var(--tx2);background:var(--bg);padding:3px 8px;border-radius:6px;display:inline-block;margin-bottom:8px;}
 .tc-acts{display:grid;grid-template-columns:1fr 1fr;gap:6px;border-top:1px solid var(--border);padding-top:8px;}
-.tc-btn{padding:8px;border-radius:8px;border:none;font-size:.7rem;font-weight:800;cursor:pointer;font-family:'Cairo',sans-serif;transition:.2s;}
+.tc-btn{padding:8px;border-radius:8px;border:none;font-size:.7rem;font-weight:800;cursor:pointer;font-family:'Cairo',sans-serif;transition:.2s;display:flex;align-items:center;justify-content:center;gap:4px;}
 .tc-btn:active{transform:scale(.95);}
 .tc-btn.wa{background:#25D366;color:#fff;}
 .tc-btn.acc{background:var(--blue-l);color:var(--blue);}
@@ -93,7 +93,7 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
 .tc-btn.del{background:var(--red-l);color:var(--red);}
 
 /* ── RIGHT: MASTER FLEET ── */
-.fleet-panel{flex:1;display:flex;flex-direction:column;background:var(--bg);min-width:0;}
+.fleet-panel{flex:1;display:flex;flex-direction:column;background:var(--bg);min-width:0;position:relative;}
 .fp-filters{
   padding:16px 24px;background:var(--white);border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:var(--sh-card);z-index:10;
@@ -108,9 +108,22 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
 .f-sel{
   padding:9px 14px;border-radius:99px;border:1px solid var(--border-d);
   background:var(--white);font-size:.8rem;font-weight:800;color:var(--tx1);
-  cursor:pointer;outline:none;
+  cursor:pointer;transition:.2s;
 }
 .f-sel:focus{border-color:var(--red);}
+
+/* Dynamic Days Calculator */
+.f-days-wrap{
+  display:flex;align-items:center;gap:6px;background:var(--amber-l);
+  border:1px solid rgba(252,100,45,.3);border-radius:99px;padding:6px 14px;
+}
+.f-days-wrap span{font-size:.75rem;font-weight:800;color:var(--amber);}
+.f-days-in{
+  width:40px;border:none;background:var(--white);border-radius:6px;
+  text-align:center;font-weight:900;color:var(--tx0);padding:4px;
+  font-family:'IBM Plex Mono',monospace;
+}
+
 .fp-count{font-size:.8rem;font-weight:800;color:var(--tx2);margin-right:auto;}
 
 .fp-grid{
@@ -122,25 +135,52 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
 .mc{
   background:var(--white);border:1px solid var(--border);border-radius:var(--r4);
   overflow:hidden;box-shadow:var(--sh-card);transition:.2s;display:flex;flex-direction:column;
+  position:relative;
 }
+.mc.selected{border-color:var(--green);box-shadow:0 0 0 3px var(--green-l);}
 .mc:hover{box-shadow:var(--sh-hover);transform:translateY(-3px);}
 .mc-img{width:100%;height:160px;background:var(--light);position:relative;}
 .mc-img img{width:100%;height:100%;object-fit:cover;}
 .mc-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--tx4);}
 .mc-badge{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.9);padding:3px 10px;border-radius:99px;font-size:.65rem;font-weight:900;}
-.mc-office{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.7);color:#fff;padding:3px 10px;border-radius:99px;font-size:.65rem;font-weight:800;backdrop-filter:blur(4px);}
-.mc-bd{padding:14px;flex:1;}
+
+/* Checkbox overlay */
+.mc-check{
+  position:absolute;top:10px;left:10px;width:26px;height:26px;
+  background:rgba(255,255,255,.9);border:2px solid var(--border-d);
+  border-radius:6px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:.2s;z-index:2;
+}
+.mc.selected .mc-check{background:var(--green);border-color:var(--green);color:#fff;}
+
+.mc-office{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.7);color:#fff;padding:4px 10px;border-radius:99px;font-size:.65rem;font-weight:800;backdrop-filter:blur(4px);display:flex;align-items:center;gap:5px;}
+.mc-status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite;}
+
+.mc-bd{padding:14px;flex:1;display:flex;flex-direction:column;}
 .mc-title{font-size:1.05rem;font-weight:900;margin-bottom:4px;color:var(--tx0);}
 .mc-specs{display:flex;gap:6px;font-size:.7rem;font-weight:700;color:var(--tx2);margin-bottom:10px;flex-wrap:wrap;}
 .mc-spec{background:var(--bg);padding:2px 8px;border-radius:6px;border:1px solid var(--border);}
-.mc-price{font-size:1.15rem;font-weight:900;color:var(--green);margin-bottom:12px;}
-.mc-notes{font-size:.7rem;font-weight:600;color:var(--tx1);background:var(--amber-l);padding:8px;border-radius:8px;border:1px dashed rgba(252,100,45,.3);margin-bottom:12px;}
-.mc-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto;}
-.mcb{padding:10px;border-radius:8px;border:none;font-size:.75rem;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:.2s;}
+.mc-price{font-size:1.15rem;font-weight:900;color:var(--green);margin-bottom:2px;}
+.mc-price-sub{font-size:.65rem;font-weight:700;color:var(--tx3);margin-bottom:12px;}
+
+.mc-acts{display:grid;grid-template-columns:1fr;gap:8px;margin-top:auto;}
+.mcb{padding:10px;border-radius:8px;border:none;font-size:.8rem;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:.2s;font-family:'Cairo',sans-serif;}
 .mcb:active{transform:scale(.95);}
-.mcb.wa{background:var(--blue-l);color:var(--blue);}
-.mcb.wa:hover{background:var(--blue);color:#fff;}
-.mcb.book{background:var(--red-g);color:#fff;box-shadow:var(--sh-btn);}
+.mcb.book{background:var(--red-l);color:var(--red);border:1px solid rgba(255,56,92,.2);}
+.mcb.book:hover{background:var(--red);color:#fff;}
+
+/* Multi-Send FAB */
+.fab-multi{
+  position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+  background:var(--green);color:#fff;padding:14px 28px;
+  border-radius:99px;font-size:.9rem;font-weight:900;
+  box-shadow:0 10px 25px rgba(0,166,153,.3);
+  display:flex;align-items:center;gap:8px;cursor:pointer;
+  transition:.3s cubic-bezier(.34,1.56,.64,1);z-index:9000;
+}
+.fab-multi:hover{transform:translateX(-50%) translateY(-3px);box-shadow:0 14px 30px rgba(0,166,153,.4);}
+.fab-multi:active{transform:translateX(-50%) scale(.95);}
+.fab-badge{background:#fff;color:var(--green);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;}
 
 /* ── MODALS ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:90000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.3s;}
@@ -152,11 +192,15 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
 .md-car-info{background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:12px;margin-bottom:16px;}
 .md-ci-n{font-size:.9rem;font-weight:900;}
 .md-ci-o{font-size:.75rem;font-weight:700;color:var(--tx2);}
-.md-fld{margin-bottom:14px;}
+
+.md-fld{margin-bottom:14px;position:relative;}
 .md-lbl{font-size:.75rem;font-weight:800;color:var(--tx1);margin-bottom:6px;display:block;}
 .md-in{width:100%;background:var(--white);border:1.5px solid var(--border-d);border-radius:var(--r2);padding:10px 14px;font-size:.85rem;font-weight:700;transition:.2s;}
 .md-in:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);}
-.md-btn{width:100%;padding:14px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r3);font-size:.95rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);margin-top:10px;}
+.crm-badge{font-size:.7rem;font-weight:800;margin-top:5px;display:inline-block;padding:2px 8px;border-radius:6px;}
+
+.md-btn{width:100%;padding:14px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r3);font-size:.95rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);margin-top:10px;font-family:'Cairo',sans-serif;}
+.md-btn:active{transform:scale(.97);}
 
 /* Mobile responsiveness */
 @media(max-width:900px){
@@ -166,27 +210,25 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
 }
 @media(max-width:600px){
   .fp-grid{grid-template-columns:1fr;padding:16px;}
+  .fp-filters{flex-direction:column;align-items:stretch;}
 }
 </style>
 </head>
 <body>
 <audio id="sndNew" src="https://actions.google.com/sounds/v1/alarms/submarine_dive_horn.ogg" preload="auto"></audio>
 
-<div id="toasts"></div>
-
 <header class="header">
   <a href="admin.html" class="h-logo">
     <div class="h-logo-ic">🐋</div>
     <div>
       <div class="h-title">دليل الحجوزات المركزية</div>
-      <div class="h-sub">إدارة الطلبات الهاتفية والأسطول</div>
+      <div class="h-sub">إدارة الأسطول والطلبات الهاتفية</div>
     </div>
   </a>
-  <div class="h-status"><div class="dot"></div> متصل بالشبكة</div>
+  <div class="h-status"><div class="dot"></div> متصل</div>
 </header>
 
 <div class="layout">
-  
   <!-- LEFT: TRACKER -->
   <aside class="tracker-panel">
     <div class="tp-head">
@@ -203,25 +245,53 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
     <div class="fp-filters">
       <div class="f-search">
         <i data-lucide="search" size="18" color="var(--tx3)"></i>
-        <input type="text" id="searchInput" placeholder="ابحث عن سيارة أو مكتب..." oninput="applyFilters()">
+        <input type="text" id="searchInput" placeholder="ابحث عن سيارة، لوحة، مكتب..." oninput="applyFilters()">
       </div>
+      
+      <!-- New Filters -->
+      <select class="f-sel" id="cityFilter" onchange="applyFilters()">
+        <option value="all">📍 كل المحافظات</option>
+        <option value="بغداد">بغداد</option>
+        <option value="أربيل">أربيل</option>
+        <option value="كركوك">كركوك</option>
+        <option value="السليمانية">السليمانية</option>
+        <option value="الموصل">الموصل</option>
+        <option value="النجف">النجف</option>
+        <option value="كربلاء">كربلاء</option>
+        <option value="البصرة">البصرة</option>
+      </select>
+
       <select class="f-sel" id="catFilter" onchange="applyFilters()">
-        <option value="all">كل الفئات</option>
+        <option value="all">🚗 كل الفئات</option>
         <option value="economy">اقتصادية</option>
         <option value="family">عائلية</option>
         <option value="luxury">فخمة VIP</option>
         <option value="wedding">زفاف</option>
       </select>
+
       <select class="f-sel" id="sortFilter" onchange="applyFilters()">
-        <option value="default">ترتيب الافتراضي</option>
+        <option value="default">↕️ الترتيب الافتراضي</option>
         <option value="price_asc">الأرخص أولاً</option>
         <option value="price_desc">الأغلى أولاً</option>
       </select>
+
+      <!-- Dynamic Days Calculator -->
+      <div class="f-days-wrap">
+        <span>🌙 الأيام:</span>
+        <input type="number" id="globalDays" class="f-days-in" value="1" min="1" oninput="applyFilters()">
+      </div>
+
       <div class="fp-count" id="fleetCount">0 سيارة متاحة</div>
     </div>
 
     <div class="fp-grid" id="fleetGrid">
       <div class="tp-empty" style="grid-column:1/-1">⏳ جاري جلب الأسطول المركزي...</div>
+    </div>
+
+    <!-- Floating Action Button for Multi-Select -->
+    <div id="fabMultiWa" class="fab-multi dn" onclick="sendMultiWa()">
+      <i data-lucide="send" size="18"></i> إرسال العروض للزبون
+      <div class="fab-badge" id="fabCount">0</div>
     </div>
   </main>
 </div>
@@ -234,16 +304,17 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
       <button class="md-close" onclick="closeBookModal()">✕</button>
     </div>
     <div class="md-car-info">
-      <div class="md-ci-n" id="md-car-name">تويوتا كامري</div>
-      <div class="md-ci-o" id="md-office-name">مكتب النورس</div>
+      <div class="md-ci-n" id="md-car-name">--</div>
+      <div class="md-ci-o" id="md-office-name">--</div>
+    </div>
+    <div class="md-fld">
+      <label class="md-lbl">رقم هاتف الزبون</label>
+      <input type="tel" class="md-in" id="md-cust-phone" placeholder="07XXXXXXXX" dir="ltr" style="text-align:right" oninput="checkCustomerHistory(this.value)">
+      <div id="crmBadge" class="crm-badge" style="display:none"></div>
     </div>
     <div class="md-fld">
       <label class="md-lbl">اسم الزبون</label>
       <input type="text" class="md-in" id="md-cust-name" placeholder="الاسم الكامل">
-    </div>
-    <div class="md-fld">
-      <label class="md-lbl">رقم هاتف الزبون</label>
-      <input type="tel" class="md-in" id="md-cust-phone" placeholder="07XXXXXXXX" dir="ltr" style="text-align:right">
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
       <div class="md-fld">
@@ -252,7 +323,7 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
       </div>
       <div class="md-fld">
         <label class="md-lbl">الإجمالي (د.ع)</label>
-        <input type="text" class="md-in" id="md-total" readonly style="background:var(--bg);color:var(--green);">
+        <input type="text" class="md-in" id="md-total" readonly style="background:var(--bg);color:var(--green);font-weight:900;">
       </div>
     </div>
     <button class="md-btn" onclick="submitPhoneBooking()">تأكيد وإرسال للرادار 🚀</button>
@@ -265,72 +336,84 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
 ═══════════════════════════════════════════════════════════ */
 const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
 const API_TOKEN = "HUT_CLOUD_2026";
-let MP = localStorage.getItem("hut_master_pass") || ""; // We assume admin is logged in from main dashboard
 
 let db;
 try {
   firebase.initializeApp({
     apiKey:"AIzaSyAo1rmqUzieYZU3RIwXOAN87GkpNrp-_Hc",
     authDomain:"alhut-for-rent.firebaseapp.com",
-    databaseURL:"https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId:"alhut-for-rent"
+    databaseURL:"https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app"
   });
   db = firebase.database();
-} catch(e) { console.warn("Firebase Init Error", e); }
+} catch(e) { console.warn("Firebase Init Error"); }
 
 /* ════ STATE ════ */
-let fullFleet = [];
-let filteredFleet = [];
-let trackedOrders = [];
-let bookingCtx = null; // {car object}
-let timerInterval = null;
+let gD = null;            // Global Data from Admin API
+let fullFleet = [];       // All active cars
+let filteredFleet = [];   
+let trackedOrders = [];   // Phone orders in radar
+let selectedCars = [];    // Array of Car IDs for Multi-Select
+let bookingCtx = null; 
 
 const $ = id => document.getElementById(id);
 const fmt = n => Math.round(Number(n)||0).toLocaleString("ar-EG");
-function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-
-function toast(msg, type="s") {
-  const c=$("toasts"); const el=document.createElement("div"); el.className=`ti t${type}`;
-  el.innerHTML=`<div class="ti-ic">${type==="s"?"✓":"✕"}</div><div class="ti-msg">${msg}</div>`;
-  c.appendChild(el); setTimeout(()=>{el.style.opacity="0";setTimeout(()=>el.remove(),300);},3500);
-}
+function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+function safeJSON(o){ return JSON.stringify(o).replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 
 document.addEventListener("DOMContentLoaded", () => {
   lucide.createIcons();
-  fetchMasterFleet();
+  fetchMasterData();
   startTrackerListener();
-  
-  // Timer loop for active phone orders
-  timerInterval = setInterval(updateTimers, 60000); // update every minute
+  setInterval(updateTimers, 60000); 
 });
 
 /* ═══════════════════════════════════════════════════════════
-   FETCH MASTER FLEET
+   FETCH MASTER DATA (Cars, Offices, Orders for CRM)
 ═══════════════════════════════════════════════════════════ */
-async function fetchMasterFleet() {
+async function fetchMasterData() {
   try {
-    // Get ALL cars (active)
-    const res = await fetch(`${API_URL}?action=getAvailableCars&token=${API_TOKEN}`);
-    const data = await res.json();
-    fullFleet = Array.isArray(data) ? data : (data.cars || []);
+    const res = await fetch(`${API_URL}?action=getAdminFullData&token=${API_TOKEN}&_t=${Date.now()}`);
+    gD = await res.json();
     
-    // We only want cars that are available or belong to offices
-    fullFleet = fullFleet.filter(c => c.status !== "inactive");
+    // Combine cars from offices and shared fleet
+    let allCars = [];
+    (gD.carOffices || []).forEach(off => {
+      // We assume cars are attached or we fetch them. 
+      // Actually, getAdminFullData doesn't return cars natively in V9.2. We need getAvailableCars.
+    });
     
+    // Fetch fleet specifically
+    const fRes = await fetch(`${API_URL}?action=getAvailableCars&token=${API_TOKEN}`);
+    const fData = await fRes.json();
+    fullFleet = (Array.isArray(fData) ? fData : (fData.cars || [])).filter(c => c.status !== "inactive");
+
     applyFilters();
   } catch(e) {
     $("fleetGrid").innerHTML = `<div class="tp-empty" style="grid-column:1/-1;color:var(--red)">❌ فشل جلب الأسطول. تحقق من الاتصال.</div>`;
   }
 }
 
-function applyFilters() {
+/* ═══════════════════════════════════════════════════════════
+   FILTER & RENDER FLEET
+═══════════════════════════════════════════════════════════ */
+window.applyFilters = function() {
   const q = $("searchInput").value.toLowerCase().trim();
   const cat = $("catFilter").value;
+  const city = $("cityFilter").value;
   const sort = $("sortFilter").value;
+  const daysMulti = Number($("globalDays").value) || 1;
 
   filteredFleet = fullFleet.filter(c => {
+    // Determine Car City (fallback to office city)
+    let cCity = c.city || "";
+    if(!cCity && gD && gD.carOffices) {
+      const off = gD.carOffices.find(o => o.name === c.office_id);
+      if(off) cCity = off.city;
+    }
+
+    if(city !== "all" && cCity !== city) return false;
     if(cat !== "all" && (c.cat||"economy").toLowerCase() !== cat) return false;
-    if(q && !c.name.toLowerCase().includes(q) && !(c.office_id||"").toLowerCase().includes(q)) return false;
+    if(q && !c.name.toLowerCase().includes(q) && !(c.office_id||"").toLowerCase().includes(q) && !(c.plate||"").toLowerCase().includes(q)) return false;
     return true;
   });
 
@@ -338,10 +421,10 @@ function applyFilters() {
   if(sort === "price_desc") filteredFleet.sort((a,b) => (Number(b.price)||0) - (Number(a.price)||0));
 
   $("fleetCount").textContent = `${filteredFleet.length} سيارة متاحة`;
-  renderFleet();
-}
+  renderFleet(daysMulti);
+};
 
-function renderFleet() {
+function renderFleet(daysMulti) {
   const grid = $("fleetGrid");
   if(!filteredFleet.length) {
     grid.innerHTML = `<div class="tp-empty" style="grid-column:1/-1;font-size:1.2rem;">🚗 لا توجد سيارات تطابق بحثك</div>`;
@@ -353,36 +436,45 @@ function renderFleet() {
   grid.innerHTML = filteredFleet.map(c => {
     const cName = esc(c.name);
     const oName = esc(c.office_id || "سيارة منصة");
-    const price = Number(c.price)||0;
+    const basePrice = Number(c.price)||0;
+    const calcPrice = basePrice * daysMulti; // Dynamic Calculator
+    
     const cat = catNames[c.cat] || c.cat || "اقتصادية";
     const img = c.photo_url ? `<img src="${esc(c.photo_url)}" loading="lazy">` : `<div class="mc-noimg">🚗</div>`;
     
-    // Notes logic: you can add specific office notes here if fetched from Admin data, 
-    // for now we'll put a dummy note or format the color/plate
-    const notes = c.office_id === "SHARED" ? "سيارة منصة مشتركة، متاحة للجميع." : `سيارة تابعة لمكتب ${oName}. يفضل التأكد من توفرها هاتفياً قبل إرسال العميل.`;
+    // Check Office Status (Mini logic)
+    let isOnline = true; // Default
+    if(gD && gD.carOffices) {
+      const off = gD.carOffices.find(o => o.name === c.office_id);
+      if(off && off.status !== "active") isOnline = false;
+    }
+    const dotColor = isOnline ? "var(--green)" : "var(--tx3)";
+    
+    const isChecked = selectedCars.includes(String(c.id));
 
     return `
-    <div class="mc">
+    <div class="mc ${isChecked ? 'selected' : ''}">
       <div class="mc-img">
         ${img}
+        <!-- Multi-select Checkbox -->
+        <div class="mc-check" onclick="toggleCarSelection('${esc(c.id)}')">
+          ${isChecked ? '<i data-lucide="check" size="16"></i>' : ''}
+        </div>
         <div class="mc-badge">${cat}</div>
-        <div class="mc-office">🏢 ${oName}</div>
+        <div class="mc-office"><div class="mc-status-dot" style="background:${dotColor}"></div> 🏢 ${oName}</div>
       </div>
       <div class="mc-bd">
         <div class="mc-title">${cName}</div>
         <div class="mc-specs">
-          <div class="mc-spec">🎨 ${esc(c.color||"غير محدد")}</div>
-          <div class="mc-spec">🪪 ${esc(c.plate||"غير محدد")}</div>
+          <div class="mc-spec">🎨 ${esc(c.color||"—")}</div>
+          <div class="mc-spec">🪪 ${esc(c.plate||"—")}</div>
         </div>
-        <div class="mc-price">${fmt(price)} <span style="font-size:.7rem;color:var(--tx2)">د.ع/يوم</span></div>
-        <div class="mc-notes">📝 ${notes}</div>
+        <div class="mc-price">${fmt(calcPrice)} <span style="font-size:.7rem;color:var(--tx2)">د.ع</span></div>
+        <div class="mc-price-sub">${fmt(basePrice)} د.ع لليوم الواحد × ${daysMulti} أيام</div>
         
         <div class="mc-acts">
-          <button class="mcb wa" onclick='exportToWhatsApp(${safeJSON(c)})'>
-            <i data-lucide="share-2" size="14"></i> إرسال للزبون
-          </button>
           <button class="mcb book" onclick='openBookModal(${safeJSON(c)})'>
-            <i data-lucide="phone-call" size="14"></i> حجز يدوي
+            <i data-lucide="phone-call" size="14"></i> حجز سريع
           </button>
         </div>
       </div>
@@ -392,15 +484,57 @@ function renderFleet() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   EXPORT TO WHATSAPP (SEND TO CUSTOMER)
+   MULTI-SELECT & SEND TO WHATSAPP
 ═══════════════════════════════════════════════════════════ */
-window.exportToWhatsApp = function(car) {
-  const txt = `*عرض تأجير من منصة الحوت* 🐋\n\n🚗 السيارة: ${car.name}\n🏢 المكتب: ${car.office_id||"منصة الحوت"}\n🎨 اللون: ${car.color||"—"}\n💰 السعر اليومي: ${fmt(car.price)} د.ع\n\nللحجز والاستفسار يرجى الرد على هذه الرسالة بتأكيد رغبتك.`;
+window.toggleCarSelection = function(carId) {
+  if(selectedCars.includes(carId)) {
+    selectedCars = selectedCars.filter(id => id !== carId);
+  } else {
+    if(selectedCars.length >= 4) return alert("الحد الأقصى للمقارنة هو 4 سيارات في الرسالة الواحدة.");
+    selectedCars.push(carId);
+  }
+  
+  const fab = $("fabMultiWa");
+  if(selectedCars.length > 0) {
+    fab.classList.remove("dn");
+    $("fabCount").textContent = selectedCars.length;
+  } else {
+    fab.classList.add("dn");
+  }
+  
+  // Re-render minimally or re-apply filters to update visuals
+  const daysMulti = Number($("globalDays").value) || 1;
+  renderFleet(daysMulti);
+};
+
+window.sendMultiWa = function() {
+  if(selectedCars.length === 0) return;
+  const daysMulti = Number($("globalDays").value) || 1;
+  
+  let txt = `*عروض تأجير السيارات من منصة الحوت* 🐋\n(المدة: ${daysMulti} أيام)\n\n`;
+  
+  selectedCars.forEach((id, idx) => {
+    const c = fullFleet.find(x => String(x.id) === String(id));
+    if(c) {
+      txt += `*${idx+1}. ${c.name}*\n`;
+      txt += `🎨 اللون: ${c.color||"—"}\n`;
+      txt += `🏢 المكتب: ${c.office_id||"سيارة منصة"}\n`;
+      txt += `💰 الإجمالي: ${fmt(c.price * daysMulti)} د.ع\n`;
+      txt += `--------------------\n`;
+    }
+  });
+  
+  txt += `\nيرجى الرد برقم السيارة التي تناسبك لتأكيد الحجز.`;
   window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
+  
+  // Clear selection after send
+  selectedCars = [];
+  $("fabMultiWa").classList.add("dn");
+  applyFilters();
 };
 
 /* ═══════════════════════════════════════════════════════════
-   MANUAL BOOKING FLOW
+   MANUAL BOOKING & MINI CRM
 ═══════════════════════════════════════════════════════════ */
 window.openBookModal = function(car) {
   bookingCtx = car;
@@ -408,7 +542,8 @@ window.openBookModal = function(car) {
   $("md-office-name").textContent = car.office_id || "سيارة منصة";
   $("md-cust-name").value = "";
   $("md-cust-phone").value = "";
-  $("md-days").value = "1";
+  $("md-days").value = $("globalDays").value || "1";
+  $("crmBadge").style.display = "none";
   calcTotal();
   $("bookModal").classList.add("open");
 };
@@ -425,35 +560,47 @@ window.calcTotal = function() {
   $("md-total").value = fmt(t);
 };
 
+// MINI CRM: Check history when phone is typed
+window.checkCustomerHistory = function(phone) {
+  const badge = $("crmBadge");
+  const p = phone.replace(/\D/g, "");
+  if(p.length < 10) { badge.style.display = "none"; return; }
+  
+  if(!gD || !gD.carOrders) { badge.style.display = "none"; return; }
+  
+  // Find past completed orders
+  const pastOrders = gD.carOrders.filter(o => {
+    const oPhone = String(o.phone||"").replace(/\D/g, "");
+    return oPhone.includes(p) || p.includes(oPhone);
+  });
+  
+  const completed = pastOrders.filter(o => o.status === "completed").length;
+  const cancelled = pastOrders.filter(o => o.status === "cancelled" || o.status === "rejected").length;
+  
+  badge.style.display = "inline-block";
+  if(pastOrders.length === 0) {
+    badge.style.background = "var(--blue-l)"; badge.style.color = "var(--blue)";
+    badge.textContent = "🆕 زبون جديد";
+  } else if(completed > 0) {
+    badge.style.background = "var(--green-l)"; badge.style.color = "var(--green)";
+    badge.textContent = `⭐ زبون موثوق (أكمل ${completed} حجوزات)`;
+  } else if(cancelled > 0) {
+    badge.style.background = "var(--red-l)"; badge.style.color = "var(--red)";
+    badge.textContent = `⚠️ لديه ${cancelled} إلغاءات سابقة`;
+  } else {
+    badge.style.background = "var(--bg)"; badge.style.color = "var(--tx1)";
+    badge.textContent = "معروف بالمنصة";
+  }
+};
+
 window.submitPhoneBooking = async function() {
   const cName = $("md-cust-name").value.trim();
   const cPhone = $("md-cust-phone").value.trim();
   const days = Number($("md-days").value) || 1;
   
   if(!cName || !cPhone) return toast("أدخل اسم ورقم الزبون", "e");
-  
   const total = (Number(bookingCtx.price)||0) * days;
   
-  const body = {
-    action: "claimOrder", // Or a dedicated createPhoneOrder action if you have one, but we can simulate via API
-    // Actually, to CREATE an order via API, we need a 'CREATE_ORDER' endpoint. 
-    // Assuming the API supports booking cars:
-    token: API_TOKEN,
-    car_id: bookingCtx.id,
-    car: bookingCtx.name,
-    office: bookingCtx.office_id,
-    name: cName,
-    phone: cPhone,
-    days: days,
-    total: total,
-    city: "حجز هاتفي مركز",
-    addon: "حجز من الكول سنتر",
-    source: "phone" // Special flag
-  };
-
-  // Because the standard backend might only have 'claimOrder' or 'completeOrder', 
-  // We will directly inject it into Firebase for the tracker, AND call backend to register it if needed.
-  // Assuming we can write directly to Firebase 'hut_car_orders' to bypass client-side limitations for Admins:
   try {
     const orderId = "PH" + Date.now();
     const orderObj = {
@@ -464,7 +611,7 @@ window.submitPhoneBooking = async function() {
       phone: cPhone,
       days: days,
       total: total,
-      city: "مركز الاتصال",
+      city: "حجز هاتفي مركز",
       status: "pending",
       source: "phone",
       created_at: new Date().toISOString()
@@ -472,10 +619,8 @@ window.submitPhoneBooking = async function() {
     
     if(db) {
       await db.ref(`hut_car_orders/${orderId}`).set(orderObj);
-      toast("تم إنشاء الطلب ورفعه للرادار ✅");
+      toast("تم إنشاء الطلب وإرساله لرادار الشريك ✅");
       closeBookModal();
-    } else {
-      toast("Firebase غير متصل", "e");
     }
   } catch(e) { toast("فشل إنشاء الطلب", "e"); }
 };
@@ -487,23 +632,19 @@ function startTrackerListener() {
   if(!db) return;
   db.ref("hut_car_orders").on("value", snap => {
     const all = snap.val() || {};
-    // Only track orders that are 'pending' or 'active' and specifically from phone (or just all active to help admin)
-    // We will show ALL pending/active car orders so the Admin Call Center can manage them easily.
+    // Show pending/active orders that came from phone
     trackedOrders = Object.values(all)
-      .filter(o => ["pending", "active", "confirmed"].includes(o.status))
+      .filter(o => o.source === "phone" && ["pending", "active"].includes(o.status))
       .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
       
     renderTracker();
   });
 }
 
-function updateTimers() {
-  // Re-render to update elapsed time
-  if(trackedOrders.length > 0) renderTracker();
-}
+function updateTimers() { if(trackedOrders.length > 0) renderTracker(); }
 
 function getElapsedTime(isoString) {
-  const diff = Math.floor((Date.now() - new Date(isoString).getTime()) / 60000); // in minutes
+  const diff = Math.floor((Date.now() - new Date(isoString).getTime()) / 60000);
   if(diff < 0) return "الآن";
   if(diff < 60) return `${diff} دقيقة`;
   return `${Math.floor(diff/60)} ساعة`;
@@ -514,7 +655,7 @@ function renderTracker() {
   $("trackerCount").textContent = trackedOrders.length;
   
   if(!trackedOrders.length) {
-    list.innerHTML = `<div class="tp-empty">لا توجد طلبات نشطة حالياً</div>`;
+    list.innerHTML = `<div class="tp-empty">لا توجد طلبات هاتفية نشطة حالياً</div>`;
     return;
   }
 
@@ -523,19 +664,15 @@ function renderTracker() {
     const statusClass = isPending ? "pending" : "active";
     const timeElapsed = getElapsedTime(o.created_at);
     
-    // Warn if pending > 15 mins
-    const warnColor = (isPending && timeElapsed.includes("دقيقة") && parseInt(timeElapsed) > 15) || timeElapsed.includes("ساعة") ? "color:var(--red);" : "";
-
     let acts = "";
     if(isPending) {
       acts = `
-        <button class="tc-btn wa" onclick="waOffice('${esc(o.office)}')"><i data-lucide="phone" size="12"></i> اتصال المكتب</button>
-        <button class="tc-btn acc" onclick="adminConfirmOrder('${esc(o.id)}')"><i data-lucide="check" size="12"></i> تأكيد (وافق)</button>
-        <button class="tc-btn del" style="grid-column:1/3" onclick="adminCancelOrder('${esc(o.id)}')">✕ إلغاء الطلب</button>
+        <button class="tc-btn acc" onclick="adminConfirmOrder('${esc(o.id)}')"><i data-lucide="check" size="12"></i> تأكيد الشريك</button>
+        <button class="tc-btn del" onclick="adminCancelOrder('${esc(o.id)}')">إلغاء</button>
       `;
     } else {
       acts = `
-        <button class="tc-btn comp" onclick="adminCompleteOrder('${esc(o.id)}', '${esc(o.office)}')"><i data-lucide="wallet" size="14"></i> تم الاستلام (تسجيل العمولة)</button>
+        <button class="tc-btn comp" onclick="adminCompleteOrder('${esc(o.id)}', '${esc(o.office)}')">تم التسليم (سجل العمولة)</button>
       `;
     }
 
@@ -543,7 +680,7 @@ function renderTracker() {
     <div class="tc ${statusClass}">
       <div class="tc-hd">
         <div class="tc-cust">👤 ${esc(o.name)}</div>
-        <div class="tc-timer" style="${warnColor}"><i data-lucide="clock" size="12"></i> ${timeElapsed}</div>
+        <div class="tc-timer"><i data-lucide="clock" size="12"></i> ${timeElapsed}</div>
       </div>
       <div class="tc-car">🚗 ${esc(o.car)}</div>
       <div class="tc-off">🏢 ${esc(o.office || "غير محدد")}</div>
@@ -551,47 +688,34 @@ function renderTracker() {
       <div class="tc-acts">${acts}</div>
     </div>`;
   }).join("");
-  
   lucide.createIcons();
 }
 
-/* ── TRACKER ACTIONS ── */
-window.waOffice = function(officeName) {
-  toast("يجب جلب رقم المكتب من قاعدة البيانات للاتصال به", "s");
-  // If you have gD.carOffices accessible, you can find the phone here.
-};
-
 window.adminConfirmOrder = async function(id) {
-  if(!confirm("تأكيد موافقة المكتب على هذا الطلب؟")) return;
-  // Update status to active
+  if(!confirm("تأكيد موافقة المكتب هاتفياً على هذا الطلب؟")) return;
   try {
     if(db) await db.ref(`hut_car_orders/${id}`).update({ status: "active", last_update: new Date().toISOString() });
-    toast("تم تأكيد الطلب بنجاح");
-  } catch(e) { toast("خطأ في التأكيد", "e"); }
+    toast("تم تأكيد الطلب");
+  } catch(e) {}
 };
 
 window.adminCancelOrder = async function(id) {
-  if(!confirm("إلغاء هذا الطلب وإزالته؟")) return;
+  if(!confirm("إلغاء الطلب؟")) return;
   try {
     if(db) await db.ref(`hut_car_orders/${id}`).update({ status: "cancelled", last_update: new Date().toISOString() });
-    toast("تم إلغاء الطلب");
-  } catch(e) { toast("خطأ", "e"); }
+  } catch(e) {}
 };
 
 window.adminCompleteOrder = async function(id, officeName) {
-  if(!confirm("هل استلم الزبون السيارة؟ (سيتم إغلاق الطلب واحتساب العمولة لمحفظة المنصة)")) return;
-  
-  // Call the official backend API to ensure ledgers are updated properly
+  if(!confirm("هل استلم الزبون السيارة؟ (سيتم تسجيل العمولة للمنصة)")) return;
   try {
-    toast("جاري تسجيل العمولة...", "s");
+    toast("جاري التسجيل...", "s");
     await fetch(API_URL, {
       method: "POST",
       body: JSON.stringify({ action: "completeOrder", id: id, office: officeName, token: API_TOKEN })
     });
-    toast("✅ تم الإغلاق وتسجيل العمولة بنجاح!");
-  } catch(e) {
-    toast("حدث خطأ أثناء التسجيل", "e");
-  }
+    toast("✅ تم تسجيل العمولة بنجاح!");
+  } catch(e) { toast("خطأ", "e"); }
 };
 
 </script>

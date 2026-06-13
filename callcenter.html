@@ -6,7 +6,6 @@
 <title>الحوت — دليل الحجوزات المركزية</title>
 <meta name="theme-color" content="#F7F7F7">
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@600&display=swap" rel="stylesheet">
@@ -210,6 +209,14 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
 .wa-lbl{font-size:.85rem;font-weight:900;color:var(--tx0);}
 .wa-txt{font-size:.75rem;font-weight:600;color:var(--tx2);line-height:1.5;}
 
+/* TOASTS */
+#toasts{position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:8px;width:min(90%,360px);pointer-events:none;}
+.toast{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);padding:14px;box-shadow:var(--sh-card);display:flex;align-items:center;gap:12px;font-weight:800;font-size:.85rem;animation:tIn .3s ease;pointer-events:auto;}
+.toast-i{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;}
+.toast.s .toast-i{background:var(--green);}
+.toast.e .toast-i{background:var(--red);}
+@keyframes tIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+
 /* Mobile responsiveness */
 @media(max-width:900px){
   .layout{flex-direction:column-reverse;}
@@ -238,7 +245,6 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
 </header>
 
 <div class="layout">
-  <!-- LEFT: TRACKER -->
   <aside class="tracker-panel">
     <div class="tp-head">
       <div class="tp-title">الطلبات الهاتفية النشطة</div>
@@ -249,7 +255,6 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
     </div>
   </aside>
 
-  <!-- RIGHT: MASTER FLEET -->
   <main class="fleet-panel">
     <div class="fp-filters">
       <div class="f-search">
@@ -257,7 +262,6 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
         <input type="text" id="searchInput" placeholder="ابحث عن سيارة، لوحة، مكتب..." oninput="applyFilters()">
       </div>
       
-      <!-- Filters -->
       <select class="f-sel" id="cityFilter" onchange="applyFilters()">
         <option value="all">📍 كل المحافظات</option>
         <option value="بغداد">بغداد</option>
@@ -284,7 +288,6 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
         <option value="price_desc">الأغلى أولاً</option>
       </select>
 
-      <!-- Dynamic Days Calculator -->
       <div class="f-days-wrap">
         <span>🌙 الأيام:</span>
         <input type="number" id="globalDays" class="f-days-in" value="1" min="1" oninput="applyFilters()">
@@ -297,7 +300,6 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
       <div class="tp-empty" style="grid-column:1/-1">⏳ جاري جلب الأسطول المركزي...</div>
     </div>
 
-    <!-- Floating Action Button for Multi-Select -->
     <div id="fabMultiWa" class="fab-multi dn" onclick="sendMultiWa()">
       <i data-lucide="send" size="18"></i> إرسال العروض للزبون
       <div class="fab-badge" id="fabCount">0</div>
@@ -305,7 +307,6 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
   </main>
 </div>
 
-<!-- BOOKING MODAL -->
 <div class="modal-overlay" id="bookModal" onclick="closeBookModal()">
   <div class="modal-card" onclick="event.stopPropagation()">
     <div class="md-title">
@@ -339,7 +340,6 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
   </div>
 </div>
 
-<!-- WHATSAPP SMART MODAL -->
 <div class="modal-overlay" id="waModal" onclick="closeWaModal()">
   <div class="modal-card" onclick="event.stopPropagation()">
     <div class="md-title">
@@ -350,8 +350,7 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
       <span style="background:var(--green-l);color:var(--green);padding:4px 12px;border-radius:99px;font-weight:800;font-size:.8rem;" id="wa-phone-disp">📱 ---</span>
     </div>
     <div id="wa-templates-list" class="wa-tmps">
-      <!-- Templates injected here -->
-    </div>
+      </div>
   </div>
 </div>
 
@@ -387,6 +386,12 @@ const fmt = n => Math.round(Number(n)||0).toLocaleString("ar-EG");
 function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 function safeJSON(o){ return JSON.stringify(o).replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 
+function toast(msg, type="s") {
+  const c=$("toasts"); const el=document.createElement("div"); el.className=`toast ${type}`;
+  el.innerHTML=`<div class="toast-i">${type==="s"?"✓":"✕"}</div><div>${msg}</div>`;
+  c.appendChild(el); setTimeout(()=>{el.style.opacity="0";setTimeout(()=>el.remove(),300);},3500);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   lucide.createIcons();
   fetchMasterData();
@@ -394,14 +399,8 @@ document.addEventListener("DOMContentLoaded", () => {
   timerInterval = setInterval(updateTimers, 60000); 
 });
 
-function toast(msg, type="s") {
-  const c=$("toasts"); const el=document.createElement("div"); el.className=`ti t${type}`;
-  el.innerHTML=`<div class="ti-ic">${type==="s"?"✓":"✕"}</div><div class="ti-msg">${msg}</div>`;
-  c.appendChild(el); setTimeout(()=>{el.style.opacity="0";setTimeout(()=>el.remove(),300);},3500);
-}
-
 /* ═══════════════════════════════════════════════════════════
-   FETCH MASTER DATA (Simultaneous Fetch to prevent white screen)
+   FETCH MASTER DATA
 ═══════════════════════════════════════════════════════════ */
 async function fetchMasterData() {
   try {
@@ -437,7 +436,6 @@ window.applyFilters = function() {
   const daysMulti = Number($("globalDays").value) || 1;
 
   filteredFleet = fullFleet.filter(c => {
-    // Safe city check (from car or office)
     let cCity = c.city || "";
     if(!cCity && gD && gD.carOffices) {
       const off = gD.carOffices.find(o => o.name === c.office_id);
@@ -475,7 +473,6 @@ function renderFleet(daysMulti) {
     const cat = catNames[c.cat] || c.cat || "اقتصادية";
     const img = c.photo_url ? `<img src="${esc(c.photo_url)}" loading="lazy">` : `<div class="mc-noimg">🚗</div>`;
     
-    // Status Dot Logic
     let isOnline = true; 
     if(gD && gD.carOffices && c.office_id !== "SHARED") {
       const off = gD.carOffices.find(o => o.name === c.office_id);
@@ -661,7 +658,7 @@ window.submitPhoneBooking = async function() {
 };
 
 /* ═══════════════════════════════════════════════════════════
-   PHONE ORDERS TRACKER (SIDEBAR) & WHATSAPP SMART REPLIES
+   PHONE ORDERS TRACKER (SIDEBAR)
 ═══════════════════════════════════════════════════════════ */
 function startTrackerListener() {
   if(!db) return;
@@ -773,7 +770,6 @@ window.openWaModal = function(type, order) {
   if(type === "customer") {
     phone = normalizePhone(order.phone);
   } else {
-    // Attempt to find partner phone
     if(gD && gD.carOffices) {
       const off = gD.carOffices.find(o => o.name === order.office);
       if(off) phone = normalizePhone(off.phone);
@@ -812,5 +808,3 @@ window.closeWaModal = function() {
   waCtx = null;
 };
 </script>
-</body>
-</html>

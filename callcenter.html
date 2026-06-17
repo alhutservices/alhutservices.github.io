@@ -424,3 +424,614 @@ button,input,select{font-family:'Cairo',sans-serif;outline:none;}
     <div id="dir-list"></div>
   </div>
 </div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   CONFIG
+════════════════════════════════════════════════════════════════ */
+const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
+const API_TOKEN = "HUT_CLOUD_2026";
+
+/* قاعدة Firebase Realtime — يكفيها databaseURL للقراءة/الكتابة */
+firebase.initializeApp({ databaseURL: "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app" });
+const db = firebase.database();
+
+const CITIES = ["بغداد","أربيل","كركوك","السليمانية","الموصل","البصرة","النجف","كربلاء","ديالى","الأنبار","واسط","ذي قار","بابل","صلاح الدين","ميسان","المثنى","القادسية","دهوك","حلبجة"];
+
+/* ════════════════════════════════════════════════════════════════
+   STATE & HELPERS
+════════════════════════════════════════════════════════════════ */
+let gD = { carOffices:[], hotels:[], carOrders:[] };
+let fullFleet = [];
+let filtered  = [];
+let selected  = new Set();
+let activeOrders = [];
+let bookingCtx = null;
+let lastOrder  = null;
+let waCtx = null;
+let trackerTimer = null;
+
+const $ = id => document.getElementById(id);
+const fmt = n => Math.round(Number(n)||0).toLocaleString("ar-EG");
+
+/* دالة الهروب الصحيحة (لا نكرر عطب hotels) */
+function esc(s){
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+/* أرقام الهاتف */
+function waPhone(p){ let c=String(p||"").replace(/\D/g,""); if(c.startsWith("00964"))c=c.slice(5); if(c.startsWith("964"))c=c.slice(3); if(c.startsWith("0"))c=c.slice(1); return "964"+c; }
+function telPhone(p){ let c=String(p||"").replace(/\D/g,""); if(c.startsWith("964"))c=c.slice(3); if(!c.startsWith("0"))c="0"+c; return c; }
+function openWaLink(phone,msg){ window.open(`https://wa.me/${waPhone(phone)}?text=${encodeURIComponent(msg)}`,"_blank"); }
+function refreshIcons(){ if(window.lucide) lucide.createIcons(); }
+
+function toast(msg,type="s"){
+  const t=document.createElement("div");
+  t.className=`toast ${type}`;
+  const ic=type==="s"?"✓":type==="e"?"!":"i";
+  t.innerHTML=`<div class="toast-i">${ic}</div><div>${esc(msg)}</div>`;
+  $("toasts").appendChild(t);
+  setTimeout(()=>{t.style.opacity="0";t.style.transition=".3s";setTimeout(()=>t.remove(),300);},3200);
+}
+
+/* حلّ المكتب التابع للسيارة (أو null إن كانت سيارة منصة SHARED) */
+function officeOf(car){
+  if(!car.office_id || String(car.office_id).toUpperCase()==="SHARED") return null;
+  return (gD.carOffices||[]).find(o => String(o.id)===String(car.office_id) || o.name===car.office_id) || null;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   FETCH MASTER DATA
+════════════════════════════════════════════════════════════════ */
+async function fetchMasterData(){
+  showSkeleton();
+  try{
+    const ctrl=new AbortController(); const to=setTimeout(()=>ctrl.abort(),13000);
+    const [adminRes, carsRes] = await Promise.all([
+      fetch(`${API_URL}?action=getAdminFullData&token=${API_TOKEN}&_t=${Date.now()}`,{signal:ctrl.signal}),
+      fetch(`${API_URL}?action=getAvailableCars&token=${API_TOKEN}&_t=${Date.now()}`,{signal:ctrl.signal})
+    ]);
+    clearTimeout(to);
+    const admin = await adminRes.json();
+    const cars  = await carsRes.json();
+
+    if(admin && admin.success){
+      gD.carOffices = admin.carOffices || [];
+      gD.hotels     = admin.hotels || [];
+      gD.carOrders  = admin.carOrders || [];
+    }
+    fullFleet = Array.isArray(cars) ? cars : (cars.cars || []);
+
+    buildCityFilter();
+    populateBookCities();
+    updateKpis();
+    applyFilters();
+  }catch(e){
+    console.error("master data error:",e);
+    showError();
+  }
+}
+
+function updateKpis(){
+  $("kpi-cars").textContent    = fullFleet.length;
+  $("kpi-active").textContent  = activeOrders.length;
+  $("kpi-offices").textContent = (gD.carOffices||[]).filter(o=>o.status==="active").length;
+}
+
+function buildCityFilter(){
+  const sel=$("cityFilter");
+  const cur=sel.value;
+  const cities=new Set(CITIES);
+  (gD.carOffices||[]).forEach(o=>{ if(o.city) cities.add(o.city); });
+  sel.innerHTML=`<option value="all">📍 كل المحافظات</option>`+[...cities].map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
+  if(cur && [...sel.options].some(o=>o.value===cur)) sel.value=cur;
+}
+
+function populateBookCities(){
+  $("md-city").innerHTML = `<option value="">— اختر —</option>` + CITIES.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
+}
+
+/* ════════════════════════════════════════════════════════════════
+   FILTER + RENDER FLEET
+════════════════════════════════════════════════════════════════ */
+function showSkeleton(){
+  let s=""; for(let i=0;i<8;i++) s+=`<div class="sk"><div class="sk-img"></div><div class="sk-b"><div class="sk-l" style="width:55%"></div><div class="sk-l" style="width:80%"></div><div class="sk-l" style="width:40%"></div></div></div>`;
+  $("fleetGrid").innerHTML=s; $("fleetCount").textContent="جاري التحميل...";
+}
+function showError(){
+  $("fleetCount").textContent="تعذّر التحميل";
+  $("fleetGrid").innerHTML=`<div class="state-box"><div class="state-ic">📡</div><div class="state-t">تعذّر جلب الأسطول</div><div class="state-s">تحقّق من الاتصال وحاول مجدداً.</div><button class="state-btn" onclick="fetchMasterData()">إعادة المحاولة</button></div>`;
+}
+
+window.applyFilters = () => {
+  const q=$("searchInput").value.toLowerCase().trim();
+  const city=$("cityFilter").value;
+  const cat=$("catFilter").value;
+  const sort=$("sortFilter").value;
+
+  filtered = fullFleet.filter(c=>{
+    const off=officeOf(c);
+    const cityName = off ? off.city : "";
+    const hay = `${c.name||""} ${c.plate||""} ${c.office_id||""} ${off?off.name:"المنصة"} ${cityName}`.toLowerCase();
+    const matchQ = !q || hay.includes(q);
+    const matchCity = city==="all" || cityName===city || (!off && city==="all");
+    const matchCat = cat==="all" || c.cat===cat;
+    return matchQ && matchCity && matchCat;
+  });
+
+  if(sort==="price_asc") filtered.sort((a,b)=>(Number(a.price)||0)-(Number(b.price)||0));
+  else if(sort==="price_desc") filtered.sort((a,b)=>(Number(b.price)||0)-(Number(a.price)||0));
+
+  renderFleet();
+};
+
+function renderFleet(){
+  const days=Math.max(1,Number($("globalDays").value)||1);
+  $("fleetCount").textContent=`${filtered.length} سيارة`;
+  const grid=$("fleetGrid");
+
+  if(!filtered.length){
+    grid.innerHTML=`<div class="state-box"><div class="state-ic">🔍</div><div class="state-t">لا توجد سيارات مطابقة</div><div class="state-s">جرّب تغيير الفلاتر أو البحث.</div><button class="state-btn" onclick="resetFilters()">مسح الفلاتر</button></div>`;
+    return;
+  }
+
+  grid.innerHTML=filtered.map(c=>{
+    const off=officeOf(c);
+    const offName = off ? off.name : "🏢 المنصة";
+    const offActive = off ? off.status==="active" : true;
+    const sdot = offActive ? "var(--green)" : "var(--red)";
+    const total=(Number(c.price)||0)*days;
+    const isSel=selected.has(String(c.id));
+    const catMap={economy:"اقتصادية",family:"عائلية",luxury:"فخمة",wedding:"زفاف"};
+    const img = c.photo_url
+      ? `<img src="${esc(c.photo_url)}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\\'mc-noimg\\'>🚗</div>'">`
+      : `<div class="mc-noimg">🚗</div>`;
+
+    return `
+    <div class="mc ${isSel?"selected":""}" data-id="${esc(c.id)}">
+      <div class="mc-img">
+        ${img}
+        <div class="mc-check" onclick="toggleSelect('${esc(c.id)}',event)">${isSel?'<i data-lucide="check" size="15"></i>':''}</div>
+        ${c.cat?`<div class="mc-badge">${esc(catMap[c.cat]||c.cat)}</div>`:""}
+        <div class="mc-office"><span class="mc-sdot" style="background:${sdot}"></span><span class="nm">${esc(offName)}</span></div>
+      </div>
+      <div class="mc-bd">
+        <div class="mc-title">${esc(c.name)}</div>
+        <div class="mc-specs">
+          ${c.color?`<span class="mc-spec">${esc(c.color)}</span>`:""}
+          ${c.plate?`<span class="mc-spec">🔢 ${esc(c.plate)}</span>`:""}
+          ${c.details?`<span class="mc-spec">${esc(String(c.details).split("|")[0].trim())}</span>`:""}
+        </div>
+        <div class="mc-price-row">
+          <span class="mc-price">${fmt(total)}</span>
+          <span class="mc-price-sub">د.ع / ${days} ${days>1?"أيام":"يوم"}</span>
+        </div>
+        <button class="mc-book" onclick="openBookModal('${esc(c.id)}')"><i data-lucide="phone-call" size="16"></i> حجز هاتفي</button>
+        <div class="mc-comm">
+          <button class="mcc send" onclick="sendOneToCustomer('${esc(c.id)}')" title="إرسال عرض للزبون"><i data-lucide="send" size="13"></i> للزبون</button>
+          ${off?`<button class="mcc call" onclick="callOffice('${esc(c.id)}')" title="اتصال بالمكتب"><i data-lucide="phone" size="13"></i> اتصال</button>
+                 <button class="mcc wa" onclick="waOffice('${esc(c.id)}')" title="واتساب المكتب"><i data-lucide="message-circle" size="13"></i> واتساب</button>`
+               :`<button class="mcc call" disabled style="opacity:.4" title="سيارة منصة — لا مكتب"><i data-lucide="building" size="13"></i> منصة</button>
+                 <button class="mcc wa" disabled style="opacity:.4"><i data-lucide="minus" size="13"></i> —</button>`}
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+  refreshIcons();
+}
+
+window.resetFilters = () => {
+  $("searchInput").value=""; $("cityFilter").value="all"; $("catFilter").value="all"; $("sortFilter").value="default";
+  applyFilters();
+};
+
+/* ════════════════════════════════════════════════════════════════
+   MULTI-SELECT → إرسال عدة عروض للزبون
+════════════════════════════════════════════════════════════════ */
+window.toggleSelect = (id,ev) => {
+  if(ev) ev.stopPropagation();
+  id=String(id);
+  if(selected.has(id)) selected.delete(id); else selected.add(id);
+  const fab=$("fabMultiWa");
+  if(selected.size>0){ fab.classList.remove("dn"); $("fabCount").textContent=selected.size; }
+  else fab.classList.add("dn");
+  renderFleet();
+};
+
+window.sendMultiWa = () => {
+  if(selected.size===0) return;
+  const days=Math.max(1,Number($("globalDays").value)||1);
+  const phone=prompt("📱 رقم هاتف الزبون لإرسال العروض:");
+  if(!phone) return;
+  const cars=fullFleet.filter(c=>selected.has(String(c.id)));
+  let msg=`🐋 *عروض سيارات من الحوت*\n\nمرحباً، إليك السيارات المتاحة:\n\n`;
+  cars.forEach((c,i)=>{
+    const off=officeOf(c); const total=(Number(c.price)||0)*days;
+    msg+=`*${i+1}. ${c.name}*\n`;
+    if(c.color) msg+=`   اللون: ${c.color}\n`;
+    msg+=`   السعر: ${fmt(c.price)} د.ع/يوم\n`;
+    msg+=`   الإجمالي (${days} ${days>1?"أيام":"يوم"}): *${fmt(total)} د.ع*\n`;
+    msg+=`   ${off?"المكتب: "+off.name+" — "+off.city:"عبر منصة الحوت"}\n\n`;
+  });
+  msg+=`للحجز أو الاستفسار، تواصل معنا 🚗`;
+  openWaLink(phone,msg);
+  toast(`تم تجهيز ${cars.length} عرض للإرسال`,"s");
+  selected.clear(); $("fabMultiWa").classList.add("dn"); renderFleet();
+};
+
+window.sendOneToCustomer = (id) => {
+  const c=fullFleet.find(x=>String(x.id)===String(id)); if(!c) return;
+  const days=Math.max(1,Number($("globalDays").value)||1);
+  const phone=prompt(`📱 رقم الزبون لإرسال عرض "${c.name}":`);
+  if(!phone) return;
+  const off=officeOf(c); const total=(Number(c.price)||0)*days;
+  const msg=`🐋 *عرض سيارة من الحوت*\n\n*${c.name}*\n${c.color?"اللون: "+c.color+"\n":""}السعر: ${fmt(c.price)} د.ع/يوم\nالإجمالي (${days} ${days>1?"أيام":"يوم"}): *${fmt(total)} د.ع*\n${off?"المكتب: "+off.name+" — "+off.city:"عبر منصة الحوت"}\n\nللحجز تواصل معنا 🚗`;
+  openWaLink(phone,msg);
+};
+
+/* ════════════════════════════════════════════════════════════════
+   PARTNER COMMS (اتصال/واتساب المكتب)
+════════════════════════════════════════════════════════════════ */
+window.callOffice = (id) => {
+  const c=fullFleet.find(x=>String(x.id)===String(id)); const off=officeOf(c);
+  if(!off||!off.phone) return toast("لا يوجد رقم لهذا المكتب","e");
+  window.location.href=`tel:${telPhone(off.phone)}`;
+};
+window.waOffice = (id) => {
+  const c=fullFleet.find(x=>String(x.id)===String(id)); const off=officeOf(c);
+  if(!off||!off.phone) return toast("لا يوجد رقم لهذا المكتب","e");
+  openWaWith("partner", off.phone, { office:off.name, car:c.name });
+};
+
+/* ════════════════════════════════════════════════════════════════
+   BOOKING MODAL
+════════════════════════════════════════════════════════════════ */
+window.openBookModal = (id) => {
+  const c=fullFleet.find(x=>String(x.id)===String(id)); if(!c) return;
+  const off=officeOf(c);
+  bookingCtx = { car:c, office:off, price:Number(c.price)||0 };
+
+  // بطاقة السيارة داخل النموذج
+  const img = c.photo_url ? `<img class="md-ci-img" src="${esc(c.photo_url)}" onerror="this.outerHTML='<div class=\\'md-ci-noimg\\'>🚗</div>'">` : `<div class="md-ci-noimg">🚗</div>`;
+  $("md-car-info").innerHTML = `${img}<div><div class="md-ci-n">${esc(c.name)}</div><div class="md-ci-o">${off?"🏢 "+esc(off.name)+" — "+esc(off.city):"🏢 منصة الحوت (يُبثّ للمكاتب)"}</div></div>`;
+
+  // المدينة: تلقائية للمكتب، أو اختيار للمنصة
+  const citySel=$("md-city"); const hint=$("md-city-hint");
+  if(off){
+    if(off.city && ![...citySel.options].some(o=>o.value===off.city)) citySel.insertAdjacentHTML("beforeend",`<option value="${esc(off.city)}">${esc(off.city)}</option>`);
+    citySel.value=off.city||""; citySel.disabled=true; hint.textContent="(تلقائي: مدينة المكتب)";
+  } else {
+    const pre=$("cityFilter").value; citySel.value=(pre&&pre!=="all")?pre:""; citySel.disabled=false; hint.textContent="(اختر مدينة الزبون)";
+  }
+
+  $("md-cust-phone").value=""; $("md-cust-name").value="";
+  $("md-days").value=Math.max(1,Number($("globalDays").value)||1);
+  $("crmBadge").style.display="none"; $("md-err").textContent="";
+  $("bookFormView").classList.remove("dn"); $("bookSuccessView").classList.add("dn");
+  calcTotal();
+  $("bookModal").classList.add("open");
+  refreshIcons();
+};
+window.closeBookModal = () => { $("bookModal").classList.remove("open"); bookingCtx=null; };
+
+window.calcTotal = () => {
+  if(!bookingCtx) return;
+  const days=Math.max(1,Number($("md-days").value)||1);
+  $("md-total").value=`${fmt(bookingCtx.price*days)} د.ع`;
+};
+
+/* mini-CRM: تاريخ الزبون من الطلبات السابقة */
+window.checkCustomerHistory = (phone) => {
+  const badge=$("crmBadge");
+  const p=String(phone||"").replace(/\D/g,"");
+  if(p.length<6){ badge.style.display="none"; return; }
+  const norm=telPhone(p);
+  const prev=(gD.carOrders||[]).filter(o=>telPhone(o.phone)===norm);
+  if(prev.length===0){
+    badge.style.display="inline-block"; badge.style.background="var(--blue-l)"; badge.style.color="var(--blue)";
+    badge.textContent="🆕 زبون جديد";
+    // محاولة استرجاع الاسم تلقائياً غير متاحة لزبون جديد
+  } else {
+    const last=prev[0];
+    const spent=prev.filter(o=>o.status==="completed").reduce((s,o)=>s+(Number(o.total)||0),0);
+    badge.style.display="inline-block"; badge.style.background="var(--green-l)"; badge.style.color="var(--green-d)";
+    badge.textContent=`⭐ زبون عائد · ${prev.length} طلب${spent>0?" · صرف "+fmt(spent)+" د.ع":""}`;
+    if(!$("md-cust-name").value && last.name) $("md-cust-name").value=last.name;
+  }
+};
+
+/* ════════════════════════════════════════════════════════════════
+   [إصلاح #1] الحجز الهاتفي → يُرسَل عبر السيرفر (يُسجَّل في الشيت)
+════════════════════════════════════════════════════════════════ */
+window.submitPhoneBooking = async () => {
+  if(!bookingCtx) return;
+  const name=$("md-cust-name").value.trim();
+  const phone=$("md-cust-phone").value.trim();
+  const days=Math.max(1,Number($("md-days").value)||1);
+  const city=$("md-city").value;
+  const err=$("md-err");
+
+  if(!phone){ err.textContent="أدخل رقم هاتف الزبون"; return; }
+  if(!name){ err.textContent="أدخل اسم الزبون"; return; }
+  if(!bookingCtx.office && !city){ err.textContent="اختر مدينة الزبون (سيارة منصة تُبثّ للمكاتب)"; return; }
+  err.textContent="";
+
+  const office = bookingCtx.office ? bookingCtx.office.name : "";
+  const finalCity = bookingCtx.office ? (bookingCtx.office.city||city) : city;
+  const total = bookingCtx.price*days;
+  const orderId = "PH-"+Date.now();
+
+  const btn=$("btnSubmitOrder"); btn.disabled=true; btn.textContent="جاري الإرسال...";
+
+  try{
+    await fetch(API_URL,{
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({
+        action:"NEW_CAR_ORDER", token:API_TOKEN,
+        order_id:orderId, name, phone,
+        car:bookingCtx.car.name, office, province:finalCity, city:finalCity,
+        days, total_price:total, service:"شخصي", source:"phone"
+      })
+    });
+
+    lastOrder={ id:orderId, name, phone, car:bookingCtx.car.name, office, city:finalCity, days, total };
+    // شاشة النجاح + زر تأكيد واتساب
+    $("bk-su-id").textContent="#"+orderId;
+    $("bk-su-wa-btn").onclick=()=>{
+      const msg=`🐋 *تأكيد حجز — الحوت*\n\nمرحباً ${name} 👋\nتم تأكيد حجزك:\n\n🚗 السيارة: *${bookingCtx?bookingCtx.car.name:lastOrder.car}*\n📅 المدة: ${days} ${days>1?"أيام":"يوم"}\n💰 الإجمالي: *${fmt(total)} د.ع*\n📍 ${finalCity}\n🔖 رقم الطلب: ${orderId}\n\n${office?"سيتواصل معك مكتب "+office+" قريباً.":"سيتواصل معك أقرب مكتب متاح قريباً."}\nشكراً لاختيارك الحوت 🐋`;
+      openWaLink(phone,msg);
+    };
+    $("bookFormView").classList.add("dn"); $("bookSuccessView").classList.remove("dn");
+    refreshIcons();
+    toast("تم إنشاء الطلب وإرساله للرادار ✅","s");
+  }catch(e){
+    console.error(e); err.textContent="فشل الإرسال — حاول مجدداً";
+  }finally{
+    btn.disabled=false; btn.textContent="تأكيد الحجز وإرساله للرادار 🚀";
+  }
+};
+
+/* ════════════════════════════════════════════════════════════════
+   TRACKER — الطلبات الهاتفية النشطة (Firebase)
+════════════════════════════════════════════════════════════════ */
+function startTracker(){
+  db.ref("hut_car_orders").on("value", snap=>{
+    const all=snap.val()||{};
+    activeOrders = Object.values(all)
+      .filter(o => o && o.source==="phone" && (o.status==="pending"||o.status==="active"))
+      .sort((a,b)=> new Date(b.created_at||0) - new Date(a.created_at||0));
+    renderTracker();
+    updateKpis();
+    $("connStatus").classList.remove("off"); $("connStatus").innerHTML='<div class="dot"></div> متصل';
+  }, err=>{
+    console.warn("tracker error:",err);
+    $("connStatus").classList.add("off"); $("connStatus").innerHTML='<div class="dot"></div> غير متصل';
+  });
+}
+
+function sinceLabel(iso){
+  if(!iso) return "—";
+  const mins=Math.floor((Date.now()-new Date(iso).getTime())/60000);
+  if(mins<1) return "الآن";
+  if(mins<60) return `${mins} د`;
+  const h=Math.floor(mins/60); return `${h} س ${mins%60} د`;
+}
+
+function renderTracker(){
+  $("trackerCount").textContent=activeOrders.length;
+  const list=$("trackerList");
+  if(activeOrders.length===0){
+    list.innerHTML=`<div class="tp-empty"><div class="tp-empty-ic">📭</div>لا توجد طلبات هاتفية نشطة.<br>أنشئ حجزاً من الأسطول ←</div>`;
+    return;
+  }
+  list.innerHTML=activeOrders.map(o=>{
+    const off=(gD.carOffices||[]).find(x=>x.name===o.office);
+    const st=o.status;
+    return `
+    <div class="tc ${st}">
+      <div class="tc-top">
+        <div class="tc-cust">👤 ${esc(o.name||"زبون")}</div>
+        <div class="tc-timer">⏱ ${sinceLabel(o.created_at)}</div>
+      </div>
+      <div class="tc-id">${esc(o.id)}</div>
+      <div class="tc-meta">
+        <div class="tc-row"><span class="k">السيارة</span><span class="v">${esc(o.car||"—")}</span></div>
+        <div class="tc-row"><span class="k">الهاتف</span><span class="v phone">${esc(telPhone(o.phone))}</span></div>
+        <div class="tc-row"><span class="k">المدينة</span><span class="v">${esc(o.city||"—")}</span></div>
+        <div class="tc-row"><span class="k">المكتب</span><span class="v">${o.office?esc(o.office):"بثّ عام"}</span></div>
+        <div class="tc-row"><span class="k">الإجمالي</span><span class="v price">${fmt(o.total)} د.ع</span></div>
+        <div class="tc-row"><span class="k">الحالة</span><span class="tc-st ${st}">${st==="pending"?"بانتظار المكتب":"قيد التنفيذ"}</span></div>
+      </div>
+
+      <div class="tc-sec-label">📞 تواصل مع الزبون</div>
+      <div class="tc-acts">
+        <button class="tc-btn call" onclick="location.href='tel:${telPhone(o.phone)}'"><i data-lucide="phone" size="13"></i> اتصال</button>
+        <button class="tc-btn wa" onclick="waCustomerOrder('${esc(o.id)}')"><i data-lucide="message-circle" size="13"></i> واتساب</button>
+      </div>
+
+      ${o.office&&off?`
+      <div class="tc-sec-label">🏢 تواصل مع المكتب</div>
+      <div class="tc-acts">
+        <button class="tc-btn call" onclick="location.href='tel:${telPhone(off.phone)}'"><i data-lucide="phone" size="13"></i> اتصال</button>
+        <button class="tc-btn partner" onclick="waPartnerOrder('${esc(o.id)}')"><i data-lucide="message-circle" size="13"></i> واتساب</button>
+      </div>`:""}
+
+      <div class="tc-sec-label">⚙️ إجراءات الطلب</div>
+      <div class="tc-acts">
+        ${st==="pending"?`<button class="tc-btn acc" onclick="acceptOrder('${esc(o.id)}')"><i data-lucide="check" size="13"></i> قبول للمكتب</button>
+                          <button class="tc-btn del" onclick="cancelOrder('${esc(o.id)}')"><i data-lucide="x" size="13"></i> إلغاء</button>`
+                        :`<button class="tc-btn comp" onclick="completeOrder('${esc(o.id)}')"><i data-lucide="check-check" size="13"></i> تم التسليم</button>
+                          <button class="tc-btn del" onclick="cancelOrder('${esc(o.id)}')"><i data-lucide="x" size="13"></i> إلغاء</button>`}
+      </div>
+    </div>`;
+  }).join("");
+  refreshIcons();
+}
+
+/* رسائل واتساب مرتبطة بطلب نشط */
+window.waCustomerOrder = (id) => {
+  const o=activeOrders.find(x=>String(x.id)===String(id)); if(!o) return;
+  openWaWith("customer", o.phone, { name:o.name, car:o.car, total:o.total, days:o.days, id:o.id, office:o.office });
+};
+window.waPartnerOrder = (id) => {
+  const o=activeOrders.find(x=>String(x.id)===String(id)); if(!o) return;
+  openWaWith("partner", "", { office:o.office, car:o.car, name:o.name, phone:o.phone, id:o.id, orderPhone:o.phone });
+  // رقم المكتب
+  const off=(gD.carOffices||[]).find(x=>x.name===o.office);
+  if(off) { waCtx.phone=off.phone; $("wa-phone-disp").textContent="📱 "+telPhone(off.phone); }
+};
+
+/* إجراءات الطلب عبر السيرفر (تحدّث الشيت + Firebase) */
+async function orderAction(action, id, extra){
+  try{
+    const u=new URLSearchParams({action, token:API_TOKEN, id, ...(extra||{}), _t:Date.now()});
+    const res=await fetch(`${API_URL}?${u.toString()}`);
+    const d=await res.json();
+    return d && d.success;
+  }catch(e){ console.error(e); return false; }
+}
+window.acceptOrder = async (id) => {
+  const o=activeOrders.find(x=>String(x.id)===String(id));
+  const office=o?o.office:"";
+  if(!office){ toast("طلب بثّ عام — يقبله المكتب من لوحته","i"); return; }
+  toast("جاري القبول...","i");
+  const ok=await orderAction("claim", id, {office});
+  toast(ok?"تم قبول الطلب للمكتب ✅":"تعذّر القبول","s");
+};
+window.completeOrder = async (id) => {
+  const o=activeOrders.find(x=>String(x.id)===String(id));
+  const office=o?o.office:"";
+  toast("جاري الإغلاق...","i");
+  const ok=await orderAction("complete", id, {office});
+  toast(ok?"تم تسليم الطلب وحساب العمولة ✅":"تعذّر الإغلاق","s");
+};
+window.cancelOrder = async (id) => {
+  if(!confirm("إلغاء هذا الطلب؟")) return;
+  const ok=await orderAction("cancelRequest", id);
+  toast(ok?"تم إلغاء الطلب":"تعذّر الإلغاء","s");
+};
+
+/* ════════════════════════════════════════════════════════════════
+   WHATSAPP SMART MODAL (قوالب الزبون / الشريك)
+════════════════════════════════════════════════════════════════ */
+function custTemplates(c){
+  const name=c.name||"عزيزنا"; const car=c.car||"السيارة"; const total=c.total?fmt(c.total)+" د.ع":""; const id=c.id||"";
+  return [
+    {lbl:"✅ تأكيد الحجز", txt:`مرحباً ${name} 👋\nتم تأكيد حجزك لـ *${car}*${total?" بقيمة "+total:""}.\nرقم الطلب: ${id}\nسيتواصل معك المكتب قريباً. شكراً لاختيارك الحوت 🐋`},
+    {lbl:"📍 طلب الموقع", txt:`مرحباً ${name}، لتسهيل تسليم السيارة يرجى مشاركة موقعك عبر الواتساب (📎 ← الموقع). شكراً لك 🚗`},
+    {lbl:"🪪 طلب الهوية والإجازة", txt:`مرحباً ${name}، لإتمام إجراءات الحجز يرجى إرسال صورة الهوية وإجازة السوق. مع الشكر 🙏`},
+    {lbl:"🚗 السيارة في الطريق", txt:`مرحباً ${name}، سيارتك *${car}* في الطريق إليك الآن. يرجى الاستعداد لاستلامها 🛣️`},
+    {lbl:"🙏 اعتذار / بديل", txt:`نعتذر ${name}، تعذّر توفير *${car}* حالياً. لدينا بدائل ممتازة بنفس الفئة — هل تودّ أن نقترح عليك؟ 🐋`},
+  ];
+}
+function partnerTemplates(c){
+  const office=c.office||"المكتب"; const car=c.car||"السيارة"; const cust=c.name||"الزبون"; const ph=c.orderPhone?telPhone(c.orderPhone):""; const id=c.id||"";
+  return [
+    {lbl:"❓ تحقق من التوفر", txt:`السلام عليكم ${office} 👋\nعندنا زبون يطلب *${car}*. هل متوفرة الآن للتسليم؟ يرجى الإفادة بأسرع وقت 🚗`},
+    {lbl:"🆕 طلب هاتفي جديد", txt:`طلب هاتفي جديد في رادارك 📞\n🚗 ${car}\n👤 الزبون: ${cust}${ph?"\n📱 "+ph:""}\n🔖 ${id}\nيرجى القبول من لوحتك والتجهيز.`},
+    {lbl:"⏰ تذكير بالتأخير", txt:`تنبيه: طلب الزبون ${cust} (${car}) ينتظر منذ فترة. يرجى الإسراع بالتسليم أو الإفادة 🙏`},
+    {lbl:"✅ تأكيد التسليم", txt:`هل تم تسليم *${car}* للزبون ${cust}؟ يرجى التأكيد لإغلاق الطلب ${id} 🤝`},
+  ];
+}
+
+function openWaWith(kind, phone, ctx){
+  waCtx={ kind, phone, ctx };
+  const isCust = kind==="customer";
+  $("wa-modal-title").textContent = isCust ? "📲 مراسلة الزبون" : "📲 مراسلة المكتب";
+  $("wa-modal-sub").textContent = isCust ? "قوالب جاهزة للزبون — اختر وأرسل" : "قوالب جاهزة للشريك — اختر وأرسل";
+  $("wa-phone-disp").textContent = phone ? "📱 "+telPhone(phone) : "📱 رقم المكتب";
+
+  $("wa-call-btn").onclick=()=>{ if(waCtx.phone) location.href=`tel:${telPhone(waCtx.phone)}`; else toast("لا يوجد رقم","e"); };
+  $("wa-copy-btn").onclick=()=>{ if(waCtx.phone){ navigator.clipboard.writeText(telPhone(waCtx.phone)); toast("تم نسخ الرقم","s"); } };
+
+  const tmps = isCust ? custTemplates(ctx) : partnerTemplates(ctx);
+  $("wa-templates-list").innerHTML = tmps.map((t,i)=>`
+    <div class="wa-tmp" onclick="sendTmp(${i})">
+      <div class="wa-tmp-lbl">${esc(t.lbl)}<span class="wa-tmp-send">إرسال ←</span></div>
+      <div class="wa-tmp-txt">${esc(t.txt)}</div>
+    </div>`).join("");
+  window._waTmps = tmps;
+  $("waModal").classList.add("open");
+  refreshIcons();
+}
+window.sendTmp = (i) => {
+  const t=window._waTmps[i]; if(!t) return;
+  if(!waCtx.phone){ toast("لا يوجد رقم لهذا المرسل إليه","e"); return; }
+  openWaLink(waCtx.phone, t.txt);
+  closeWaModal();
+};
+window.closeWaModal = () => $("waModal").classList.remove("open");
+
+/* ════════════════════════════════════════════════════════════════
+   DIRECTORY — دليل المكاتب (للتوجيه)
+════════════════════════════════════════════════════════════════ */
+window.openDirectory = () => { $("dir-search").value=""; renderDirectory(); $("dirModal").classList.add("open"); };
+window.closeDirectory = () => $("dirModal").classList.remove("open");
+
+window.renderDirectory = () => {
+  const q=$("dir-search").value.toLowerCase().trim();
+  const offices=(gD.carOffices||[]).filter(o=>{
+    const hay=`${o.name||""} ${o.city||""}`.toLowerCase();
+    return !q || hay.includes(q);
+  });
+  // عدد سيارات كل مكتب
+  const carCount={};
+  fullFleet.forEach(c=>{ const off=officeOf(c); if(off){ carCount[off.id]=(carCount[off.id]||0)+1; } });
+
+  // تجميع حسب المدينة
+  const byCity={};
+  offices.forEach(o=>{ const city=o.city||"غير محدد"; (byCity[city]=byCity[city]||[]).push(o); });
+
+  const cities=Object.keys(byCity).sort();
+  if(cities.length===0){ $("dir-list").innerHTML=`<div class="tp-empty"><div class="tp-empty-ic">🔍</div>لا توجد مكاتب مطابقة.</div>`; return; }
+
+  $("dir-list").innerHTML=cities.map(city=>`
+    <div class="dir-city-group">
+      <div class="dir-city-h">📍 ${esc(city)} <span class="cnt">${byCity[city].length} مكتب</span></div>
+      ${byCity[city].map(o=>{
+        const active=o.status==="active";
+        return `
+        <div class="dir-off">
+          <div class="dir-off-main">
+            <div class="dir-off-nm"><span class="dir-off-st" style="background:${active?"var(--green)":"var(--red)"}"></span>${esc(o.name)}</div>
+            <div class="dir-off-meta">
+              <span class="dir-off-ph">${esc(telPhone(o.phone))}</span>
+              <span>🚗 ${carCount[o.id]||0} سيارة</span>
+              <span>${active?"✅ نشط":"⛔ موقوف"}</span>
+            </div>
+          </div>
+          <div class="dir-off-acts">
+            <button class="dir-ab call" onclick="location.href='tel:${telPhone(o.phone)}'" title="اتصال"><i data-lucide="phone" size="16"></i></button>
+            <button class="dir-ab wa" onclick="dirWa('${esc(o.name)}','${esc(o.phone)}')" title="واتساب"><i data-lucide="message-circle" size="16"></i></button>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`).join("");
+  refreshIcons();
+};
+window.dirWa = (name,phone) => {
+  if(!phone){ toast("لا يوجد رقم","e"); return; }
+  openWaLink(phone, `السلام عليكم ${name} 👋\nنتواصل معكم من مركز حجوزات الحوت بخصوص طلب زبون. يرجى الإفادة بالتوفر 🚗`);
+};
+
+/* ════════════════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════════════════ */
+document.addEventListener("keydown", e=>{
+  if(e.key==="Escape"){
+    ["bookModal","waModal","dirModal"].forEach(m=>$(m).classList.remove("open"));
+  }
+});
+
+(function init(){
+  fetchMasterData();
+  startTracker();
+  // تحديث المؤقتات كل 30 ثانية
+  trackerTimer=setInterval(()=>{ if(activeOrders.length) renderTracker(); }, 30000);
+  refreshIcons();
+})();
+</script>
+</body>
+</html>

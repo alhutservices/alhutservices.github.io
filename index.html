@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الحوت | تأجير سيارات، فنادق، وتدريب قيادة في العراق</title>
-    <meta name="description" content="منصة الحوت: الخيار الأول لتأجير سيارات، حجز فنادق، وتدريب قيادة في بغداد، كركوك، أربيل وكافة مدن العراق.">
+    <title>الحوت | سيارات، فنادق، قاعات، ومدارس قيادة</title>
+    <meta name="description" content="منصة الحوت: الخيار الأول لتأجير السيارات، الفنادق، قاعات الأعراس، ومدارس القيادة في العراق.">
     <link rel="icon" type="image/png" href="Cars/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -179,6 +179,7 @@
             display: flex;
             border-bottom: 1px solid var(--light);
             padding: 0 8px;
+            overflow-x: auto;
         }
         .search-tab {
             padding: 18px 24px;
@@ -234,7 +235,6 @@
             width: 100%;
             cursor: pointer;
         }
-        .search-field select option { font-family: 'Tajawal', sans-serif; }
 
         .search-btn {
             margin: 12px;
@@ -413,7 +413,7 @@
                 <span id="h1line1">ابحث، احجز،</span><br>
                 <span class="highlight" id="h1line2">واستمتع بتجربتك</span>
             </h1>
-            <p class="hero-sub" id="heroSub">سيارات للإيجار، فنادق فاخرة، وتدريب قيادة احترافي في بغداد، كركوك، أربيل وكافة محافظات العراق.</p>
+            <p class="hero-sub" id="heroSub">سيارات للإيجار، فنادق فاخرة، قاعات أعراس، ومدارس قيادة احترافية في بغداد، كركوك، أربيل وكافة محافظات العراق.</p>
 
             <!-- Search Box -->
             <div class="search-box">
@@ -424,11 +424,11 @@
                     <div class="search-tab" onclick="setService('hotel')" id="tab-hotel">
                         <i class="fas fa-hotel"></i> <span id="tabHotel">حجز فنادق</span>
                     </div>
-                    <div class="search-tab" onclick="setService('wedding')" id="tab-wedding">
-                        <i class="fas fa-ring"></i> <span id="tabWedding">سيارات أعراس</span>
+                    <div class="search-tab" onclick="setService('hall')" id="tab-hall">
+                        <i class="fas fa-glass-cheers"></i> <span id="tabHall">قاعات أعراس</span>
                     </div>
-                    <div class="search-tab" onclick="setService('training')" id="tab-training">
-                        <i class="fas fa-graduation-cap"></i> <span id="tabTraining">تعليم سياقة</span>
+                    <div class="search-tab" onclick="setService('school')" id="tab-school">
+                        <i class="fas fa-graduation-cap"></i> <span id="tabSchool">مدارس قيادة</span>
                     </div>
                 </div>
                 <div class="search-fields">
@@ -480,14 +480,14 @@
                 <div class="category-name" id="cat2">حجز فنادق</div>
                 <div class="category-count" id="cat2sub">فنادق مختارة بعناية</div>
             </a>
-            <a href="#" onclick="setService('wedding');startBooking();return false;" class="category-card">
-                <span class="category-icon">💍</span>
-                <div class="category-name" id="cat3">سيارات أعراس</div>
-                <div class="category-count" id="cat3sub">أفخم الموكب الملكي</div>
+            <a href="#" onclick="setService('hall');startBooking();return false;" class="category-card">
+                <span class="category-icon">🥂</span>
+                <div class="category-name" id="cat3">قاعات أعراس</div>
+                <div class="category-count" id="cat3sub">أجمل ليالي العمر</div>
             </a>
-            <a href="#" onclick="setService('training');startBooking();return false;" class="category-card">
+            <a href="#" onclick="setService('school');startBooking();return false;" class="category-card">
                 <span class="category-icon">🎓</span>
-                <div class="category-name" id="cat4">تعليم قيادة</div>
+                <div class="category-name" id="cat4">مدارس القيادة</div>
                 <div class="category-count" id="cat4sub">مدربون معتمدون</div>
             </a>
         </div>
@@ -532,84 +532,84 @@
         ar: {
             dir:'rtl', tag:'الأول في العراق لعام 2026',
             h1a:'ابحث، احجز،', h1b:'واستمتع بتجربتك',
-            sub:'سيارات للإيجار، فنادق فاخرة، وتدريب قيادة احترافي في بغداد، كركوك، أربيل وكافة محافظات العراق.',
-            tabCar:'تأجير سيارات', tabHotel:'حجز فنادق', tabWedding:'سيارات أعراس', tabTraining:'تعليم سياقة',
-            lblCity:'المدينة', lblDate:'تاريخ البدء', lblDays:'عدد الأيام',
+            sub:'سيارات للإيجار، فنادق فاخرة، قاعات أعراس، ومدارس قيادة احترافية في بغداد، كركوك، أربيل وكافة محافظات العراق.',
+            tabCar:'تأجير سيارات', tabHotel:'حجز فنادق', tabHall:'قاعات أعراس', tabSchool:'مدارس قيادة',
+            lblCity:'المدينة', lblDate:'التاريخ', lblDays:'عدد الأيام',
             catTitle:'استكشف خدماتنا', catSub:'كل ما تحتاجه في مكان واحد',
             cat1:'تأجير سيارات', cat1sub:'أرخص الأسعار',
             cat2:'حجز فنادق', cat2sub:'فنادق مختارة بعناية',
-            cat3:'سيارات أعراس', cat3sub:'أفخم الموكب الملكي',
-            cat4:'تعليم قيادة', cat4sub:'مدربون معتمدون',
+            cat3:'قاعات أعراس', cat3sub:'أجمل ليالي العمر',
+            cat4:'مدارس القيادة', cat4sub:'مدربون معتمدون',
             citiesTitle:'نخدم جميع المحافظات', citiesSub:'اختر مدينتك لعرض العروض المتاحة',
             faqTitle:'الأسئلة الشائعة', faqSub:'كل ما تريد معرفته عن الحوت',
             faqs:[
                 {q:'كيف أجد أرخص مكتب تأجير سيارات في بغداد وكركوك؟',a:'منصة الحوت تقارن الأسعار في بغداد وكركوك وأربيل لتعطيك أرخص سعر للإيجار اليومي والشهري.'},
                 {q:'هل يتوفر حجز فنادق في جميع المدن؟',a:'نعم، نوفر خيارات فنادق متنوعة من الاقتصادية إلى الفاخرة في كافة محافظات العراق.'},
-                {q:'هل يتوفر تدريب قيادة للنساء في البصرة والموصل؟',a:'نعم، نوفر أفضل المدربات لتعليم السياقة للنساء في البصرة، الموصل، وكافة المحافظات.'},
-                {q:'ما هي أسعار تأجير سيارات الأعراس في السليمانية؟',a:'نوفر أفخم سيارات الزفة في السليمانية وبأفضل الأسعار التنافسية.'},
+                {q:'هل يمكنني تصفح قاعات الأعراس وحجزها عبر المنصة؟',a:'نعم، نوفر دليلاً كاملاً لأفخم قاعات الأعراس والمناسبات مع تفاصيل الأسعار والخدمات.'},
+                {q:'هل يتوفر تدريب قيادة للنساء في البصرة والموصل؟',a:'نعم، نوفر أفضل المدربات لتعليم السياقة للنساء عبر مدارس مرخصة في كافة المحافظات.'},
             ],
             alert:'يرجى ملء جميع الحقول 🐋'
         },
         ku: {
             dir:'rtl', tag:'یەکەم لە عێراق ٢٠٢٦',
             h1a:'بگەڕێ، بکرێ،', h1b:'ورازی بە کاتەکەت',
-            sub:'ئۆتۆمبێلی کرێ، هۆتێلی ناوازە، و کۆرسی شۆفێری پیشەیی لە هەموو پارێزگاکانی عێراق.',
-            tabCar:'بەکرێگرتنی سەیارە', tabHotel:'هۆتێل', tabWedding:'سەیارەی زەماوەند', tabTraining:'فێربوونی شۆفێری',
-            lblCity:'شار', lblDate:'بەرواری دەستپێکردن', lblDays:'ژمارەی ڕۆژەکان',
+            sub:'ئۆتۆمبێلی کرێ، هۆتێلی ناوازە، هۆڵی زەماوەند، و کۆرسی شۆفێری پیشەیی لە هەموو پارێزگاکانی عێراق.',
+            tabCar:'بەکرێگرتنی سەیارە', tabHotel:'هۆتێل', tabHall:'هۆڵی زەماوەند', tabSchool:'قوتابخانەی شۆفێری',
+            lblCity:'شار', lblDate:'بەروار', lblDays:'ژمارەی ڕۆژەکان',
             catTitle:'خزمەتگوزارییەکان', catSub:'هەموو داواکارییەکانت لەیەک شوێن',
             cat1:'بەکرێگرتنی سەیارە', cat1sub:'هەرزانترین نرخ',
             cat2:'هۆتێل', cat2sub:'هۆتێلی هەڵبژێردراو',
-            cat3:'سەیارەی زەماوەند', cat3sub:'شاهانەترین کاروان',
-            cat4:'فێربوونی شۆفێری', cat4sub:'ڕاهێنەری پیشەیی',
+            cat3:'هۆڵی زەماوەند', cat3sub:'جوانترین شەوەکان',
+            cat4:'قوتابخانەی شۆفێری', cat4sub:'ڕاهێنەری پیشەیی',
             citiesTitle:'هەموو پارێزگاکان', citiesSub:'شارەکەت هەڵبژێرە',
             faqTitle:'پرسیارە باوەکان', faqSub:'هەموو شتێک دەربارەی حوت',
             faqs:[
                 {q:'هەرزانترین کرێی سەیارە لە کوێیە؟',a:'ئەلحووت هەرزانترین نرخ لە بەغداد، کەرکوک و هەولێر دابین دەکات.'},
                 {q:'ئایا حجزی هۆتێل لە هەموو شارەکاندا هەیە؟',a:'بەڵێ، جۆرەجۆر هۆتێل لە هەموو پارێزگاکانی عێراق دابین دەکات.'},
-                {q:'فێربوونی شۆفێری بۆ ئافرەتان هەیە؟',a:'بەڵێ، باشترین ڕاهێنەری شارەزامان هەیە لە هەموو پارێزگاکان.'},
-                {q:'نرخی سەیارەی زەماوەند لە سلێمانی چەندە؟',a:'باشترین نرخ و ناوازەترین سەیارەکان دابین دەکات.'},
+                {q:'دەتوانم هۆڵی زەماوەند بەکرێ بگرم؟',a:'بەڵێ، لیستی باشترین هۆڵەکانی زەماوەند بەردەستە لەگەڵ نرخەکانیان.'},
+                {q:'فێربوونی شۆفێری بۆ ئافرەتان هەیە؟',a:'بەڵێ، باشترین قوتابخانەکان بەردەستن لە هەموو پارێزگاکان.'},
             ],
             alert:'تکایە هەموو خانەکان پڕبکەرەوە 🐋'
         },
         tr: {
             dir:'ltr', tag:'Irak\'ın 1 Numarası — 2026',
             h1a:'Ara, Rezervasyon Yap,', h1b:'Deneyimini Yaşa',
-            sub:'Bağdat, Kerkük, Erbil ve Irak\'ın tüm illerinde araç kiralama, otel rezervasyonu ve ehliyet kursu.',
-            tabCar:'Araç Kiralama', tabHotel:'Otel Rezervasyonu', tabWedding:'Düğün Araçları', tabTraining:'Ehliyet Kursu',
-            lblCity:'Şehir', lblDate:'Başlangıç Tarihi', lblDays:'Gün Sayısı',
+            sub:'Bağdat, Kerkük, Erbil ve Irak\'ın tüm illerinde araç kiralama, otel rezervasyonu, düğün salonları ve ehliyet kursları.',
+            tabCar:'Araç Kiralama', tabHotel:'Otel Rezervasyonu', tabHall:'Düğün Salonları', tabSchool:'Ehliyet Kursu',
+            lblCity:'Şehir', lblDate:'Tarih', lblDays:'Gün Sayısı',
             catTitle:'Hizmetlerimizi Keşfedin', catSub:'İhtiyacınız olan her şey tek yerde',
             cat1:'Araç Kiralama', cat1sub:'En uygun fiyatlar',
             cat2:'Otel Rezervasyonu', cat2sub:'Özenle seçilmiş oteller',
-            cat3:'Düğün Araçları', cat3sub:'Kraliyet konvoyu',
-            cat4:'Ehliyet Kursu', cat4sub:'Sertifikalı eğitmenler',
+            cat3:'Düğün Salonları', cat3sub:'En güzel geceler için',
+            cat4:'Ehliyet Kursu', cat4sub:'Sertifikalı okullar',
             citiesTitle:'Tüm İllere Hizmet', citiesSub:'Teklifleri görmek için şehrinizi seçin',
             faqTitle:'Sıkça Sorulan Sorular', faqSub:'Al-Hut hakkında merak ettikleriniz',
             faqs:[
                 {q:'En ucuz araç kiralama nerede bulunur?',a:'Al-Hut, Bağdat, Kerkük ve Erbil\'de en uygun araç kiralama fiyatlarını sunar.'},
                 {q:'Tüm şehirlerde otel rezervasyonu yapılabiliyor mu?',a:'Evet, Irak\'ın tüm illerinde ekonomik ve lüks otel seçenekleri mevcuttur.'},
-                {q:'Bayanlar için ehliyet kursu var mı?',a:'Evet, tüm şehirlerde profesyonel bayan eğitmenlerimiz mevcuttur.'},
-                {q:'Süleymaniye\'de düğün aracı fiyatları nedir?',a:'En lüks düğün konvoyunu en rekabetçi fiyatlarla sunuyoruz.'},
+                {q:'Platform üzerinden düğün salonu rezerve edebilir miyim?',a:'Evet, en iyi düğün salonları tüm detaylarıyla platformumuzda mevcuttur.'},
+                {q:'Bayanlar için ehliyet kursu var mı?',a:'Evet, lisanslı okullar aracılığıyla profesyonel bayan eğitmenlerimiz mevcuttur.'},
             ],
             alert:'Lütfen tüm alanları doldurun 🐋'
         },
         en: {
             dir:'ltr', tag:'Iraq\'s #1 Platform — 2026',
             h1a:'Search, Book,', h1b:'Enjoy Your Experience',
-            sub:'Car rentals, luxury hotels, and professional driving training across Baghdad, Kirkuk, Erbil and all Iraq.',
-            tabCar:'Car Rental', tabHotel:'Hotel Booking', tabWedding:'Wedding Cars', tabTraining:'Driving School',
-            lblCity:'City', lblDate:'Start Date', lblDays:'Number of Days',
+            sub:'Car rentals, luxury hotels, wedding halls, and professional driving schools across Baghdad, Kirkuk, Erbil and all Iraq.',
+            tabCar:'Car Rental', tabHotel:'Hotel Booking', tabHall:'Wedding Halls', tabSchool:'Driving School',
+            lblCity:'City', lblDate:'Date', lblDays:'Number of Days',
             catTitle:'Explore Our Services', catSub:'Everything you need in one place',
             cat1:'Car Rental', cat1sub:'Cheapest prices',
             cat2:'Hotel Booking', cat2sub:'Handpicked hotels',
-            cat3:'Wedding Cars', cat3sub:'Royal convoy',
-            cat4:'Driving School', cat4sub:'Certified instructors',
+            cat3:'Wedding Halls', cat3sub:'For unforgettable nights',
+            cat4:'Driving School', cat4sub:'Certified schools',
             citiesTitle:'We Serve All Provinces', citiesSub:'Select your city to see available offers',
             faqTitle:'FAQ', faqSub:'Everything you want to know about Al-Hut',
             faqs:[
-                {q:'Where to find the cheapest car rental in Iraq?',a:'Al-Hut compares prices in Baghdad, Kirkuk, and Erbil to give you the best daily and monthly deals.'},
-                {q:'Is hotel booking available in all cities?',a:'Yes, we offer a variety of hotel options from budget to luxury across all Iraqi provinces.'},
-                {q:'Is there driving training for women?',a:'Yes, we provide professional female instructors in Basra, Mosul, and all provinces.'},
-                {q:'What are wedding car prices in Sulaymaniyah?',a:'We offer the most luxurious wedding convoys at the best competitive prices.'},
+                {q:'Where to find the cheapest car rental in Iraq?',a:'Al-Hut compares prices in Baghdad, Kirkuk, and Erbil to give you the best deals.'},
+                {q:'Is hotel booking available in all cities?',a:'Yes, we offer a variety of hotel options across all Iraqi provinces.'},
+                {q:'Can I browse and book wedding halls via the platform?',a:'Yes, we provide a complete directory of the most luxurious wedding and event halls.'},
+                {q:'Is there driving training for women?',a:'Yes, we provide professional female instructors through licensed schools across all provinces.'},
             ],
             alert:'Please fill all fields 🐋'
         }
@@ -632,8 +632,8 @@
         document.getElementById('heroSub').innerText = l.sub;
         document.getElementById('tabCar').innerText = l.tabCar;
         document.getElementById('tabHotel').innerText = l.tabHotel;
-        document.getElementById('tabWedding').innerText = l.tabWedding;
-        document.getElementById('tabTraining').innerText = l.tabTraining;
+        document.getElementById('tabHall').innerText = l.tabHall;
+        document.getElementById('tabSchool').innerText = l.tabSchool;
         document.getElementById('lblCity').innerText = l.lblCity;
         document.getElementById('lblDate').innerText = l.lblDate;
         document.getElementById('lblDays').innerText = l.lblDays;
@@ -678,8 +678,9 @@
         currentService = svc;
         document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
         document.getElementById('tab-'+svc).classList.add('active');
-        // Show/hide days for hotel
-        document.getElementById('daysField').style.display = (svc === 'training') ? 'none' : 'block';
+        
+        // Hide "Number of Days" for schools and halls since they are booked by date/course
+        document.getElementById('daysField').style.display = (svc === 'school' || svc === 'hall') ? 'none' : 'block';
     }
 
     function startBooking() {
@@ -687,8 +688,13 @@
         const date = document.getElementById('dateInput').value;
         const days = document.getElementById('daysInput').value;
         if (!date) { alert(t[currentLang].alert); return; }
+        
         if (currentService === 'hotel') {
             window.location.href = `hotels.html?city=${city}&date=${date}&days=${days}&lang=${currentLang}`;
+        } else if (currentService === 'school') {
+            window.location.href = `schools.html?city=${city}&date=${date}&lang=${currentLang}`;
+        } else if (currentService === 'hall') {
+            window.location.href = `halls.html?city=${city}&date=${date}&lang=${currentLang}`;
         } else {
             window.location.href = `fleet.html?type=${currentService}&city=${city}&date=${date}&days=${days}&lang=${currentLang}`;
         }

@@ -10,12 +10,15 @@ try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("
 <meta name="theme-color" content="#F7F7F7">
 <title>شركاء الحوت | بوابة الأعمال</title>
 
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
+<!-- Leaflet Map -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+<!-- Fonts & Icons -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=IBM+Plex+Mono:wght@600&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -33,7 +36,6 @@ try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("
   --red:        #FF385C;
   --red-d:      #E31C5F;
   --red-l:      #FFF0F2;
-  --red-m:      rgba(255,56,92,.12);
   --red-g:      linear-gradient(135deg, #FF385C, #E31C5F);
   
   --green:      #00A699;
@@ -50,7 +52,6 @@ try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("
   
   --sh-card:    0 4px 12px rgba(0,0,0,.05);
   --sh-hover:   0 8px 24px rgba(0,0,0,.08);
-  --sh-nav:     0 1px 0 rgba(0,0,0,.06);
   --sh-modal:   0 16px 48px rgba(0,0,0,.18);
   --sh-btn:     0 4px 14px rgba(255,56,92,.3);
   
@@ -149,7 +150,7 @@ button, input, select, textarea { font-family: 'Cairo', sans-serif; outline: non
 .oc-lbl { font-size: .65rem; color: var(--tx2); font-weight: 700; } .oc-val { font-size: .8rem; font-weight: 900; }
 .oc-bot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--bg); padding-top: 12px; margin-top: 12px; }
 .oc-price { font-size: 1.1rem; font-weight: 900; color: var(--green); }
-.oc-acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.oc-acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; width: 100%; }
 
 .ab { padding: 8px 14px; border-radius: 8px; font-size: .8rem; font-weight: 800; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; font-family: 'Cairo', sans-serif; transition: 0.2s; }
 .ab:active { transform: scale(.95); }
@@ -225,6 +226,7 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
 
 <audio id="sndNew" src="https://actions.google.com/sounds/v1/alarms/submarine_dive_horn.ogg" preload="auto"></audio>
 
+<!-- ════════ AUTH PAGE ════════ -->
 <div id="authPage" class="auth-wrapper">
   <div class="auth-inner">
     <div class="a-header">
@@ -239,6 +241,7 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
     </div>
 
     <div class="a-body">
+      <!-- LOGIN -->
       <div id="panel-login" class="a-panel on">
         <div class="fld">
           <label class="lbl">رقم الهاتف أو اسم المنشأة</label>
@@ -251,6 +254,7 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
         <button class="btn-main mt-4" id="btn-login" onclick="doLogin()">تسجيل الدخول</button>
       </div>
 
+      <!-- REGISTER -->
       <div id="panel-register" class="a-panel">
         <label class="lbl">نوع الشراكة</label>
         <div class="ptype-grid">
@@ -273,12 +277,14 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
 
         <div class="fld"><label class="lbl">الاسم الرسمي للمنشأة</label><input type="text" id="rg-name" class="inp" placeholder="الاسم التجاري"></div>
         
+        <!-- Dynamic Extras -->
         <div class="g2" id="reg-car-extras">
           <div class="fld"><label class="lbl">فئة المكتب</label><select id="rg-office-type" class="inp"><option value="مكتب تأجير">مكتب تأجير</option><option value="شركة سيارات فاخرة">شركة VIP</option><option value="وكالة سياحة وسفر">وكالة سياحة</option></select></div>
+          <div class="fld"><label class="lbl">أوقات العمل</label><select id="rg-hours" class="inp"><option value="24_hours">مفتوح 24 ساعة</option><option value="morning_evening">08:00 ص - 10:00 م</option><option value="morning_only">08:00 ص - 04:00 م</option></select></div>
         </div>
         
         <div class="g2 dn" id="reg-hotel-extras">
-          <div class="fld"><label class="lbl">تصنيف الفندق</label><select id="rg-stars" class="inp"><option value="5">⭐⭐⭐⭐⭐ 5 نجوم</option><option value="4">⭐⭐⭐⭐ 4 نجوم</option><option value="3">⭐⭐⭐ 3 نجوم</option><option value="2">⭐⭐ نجمتين</option><option value="1">⭐ نجمة واحدة</option><option value="0">شقق فندقية</option></select></div>
+          <div class="fld" style="grid-column:1/3"><label class="lbl">تصنيف الفندق</label><select id="rg-stars" class="inp"><option value="5">⭐⭐⭐⭐⭐ 5 نجوم</option><option value="4">⭐⭐⭐⭐ 4 نجوم</option><option value="3">⭐⭐⭐ 3 نجوم</option><option value="2">⭐⭐ نجمتين</option><option value="1">⭐ نجمة واحدة</option><option value="0">شقق فندقية</option></select></div>
         </div>
 
         <div class="g2 dn" id="reg-hall-extras">
@@ -293,9 +299,15 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
           <div class="fld" style="grid-column:1/3"><label class="lbl">المميزات</label><input type="text" id="rg-school-feat" class="inp" placeholder="مدربات نساء، سيارات حديثة..."></div>
         </div>
 
+        <!-- Common -->
         <div class="g2">
-          <div class="fld"><label class="lbl">المدينة</label><select id="rg-city" class="inp"><option value="بغداد">بغداد</option><option value="أربيل">أربيل</option><option value="كركوك">كركوك</option><option value="السليمانية">السليمانية</option><option value="البصرة">البصرة</option></select></div>
+          <div class="fld"><label class="lbl">المدينة</label><select id="rg-city" class="inp"><option value="بغداد">بغداد</option><option value="أربيل">أربيل</option><option value="كركوك">كركوك</option><option value="السليمانية">السليمانية</option><option value="البصرة">البصرة</option><option value="الموصل">الموصل</option></select></div>
+          <div class="fld"><label class="lbl">نسبة العمولة المقترحة (د.ع)</label><input type="number" id="rg-comm" class="inp" placeholder="مثال: 5000"></div>
+        </div>
+        
+        <div class="g2">
           <div class="fld"><label class="lbl">📞 هاتف الإدارة</label><input type="tel" id="rg-phone-admin" class="inp" placeholder="للطوارئ والإدارة" dir="ltr" style="text-align:right"></div>
+          <div class="fld"><label class="lbl">💬 واتساب الحجوزات</label><input type="tel" id="rg-phone-sales" class="inp" placeholder="لتواصل الزبائن" dir="ltr" style="text-align:right"></div>
         </div>
 
         <div class="fld"><label class="lbl">كلمة المرور</label><input type="password" id="rg-pass" class="inp" placeholder="أنشئ كلمة مرور قوية"></div>
@@ -311,6 +323,7 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
         <button class="btn-main mt-4" id="btn-reg" onclick="doRegister()">إرسال طلب الانضمام</button>
       </div>
 
+      <!-- WAIT ROOM -->
       <div id="panel-wait" class="a-panel">
         <div style="text-align:center;padding:40px 20px;border:1px solid var(--border);border-radius:var(--r4);">
           <i data-lucide="hourglass" size="48" color="var(--amber)" style="margin-bottom:16px;"></i>
@@ -323,6 +336,7 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
   </div>
 </div>
 
+<!-- ════════ DASHBOARD PAGE ════════ -->
 <div id="dashPage" class="dn">
   <div class="d-header">
     <div>
@@ -334,6 +348,7 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
 
   <div class="page-body">
     
+    <!-- ── TAB: RADAR (ORDERS) ── -->
     <div id="tab-radar" class="tab-content">
       <div class="sec-title">الطلبات الواردة</div>
       <div class="kpi-wrap">
@@ -343,6 +358,7 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
       <div id="orders-list"></div>
     </div>
 
+    <!-- ── TAB: INVENTORY (ASSETS) - ONLY FOR CARS & HOTELS ── -->
     <div id="tab-inventory" class="tab-content dn">
       <div class="sec-title">
         <span>إدارة الأسطول والأصول</span>
@@ -396,11 +412,13 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
       <div id="gallery-list" class="asset-grid"></div>
     </div>
 
+    <!-- ── TAB: LEDGER ── -->
     <div id="tab-ledger" class="tab-content dn">
       <div class="sec-title">السجلات والحسابات</div>
-      <div class="kpi-wrap">
-        <div class="kpi-c"><div class="kpi-v" style="color:var(--green)" id="lg-rev">0</div><div class="kpi-l">إجمالي الإيرادات</div></div>
-        <div class="kpi-c"><div class="kpi-v" style="color:var(--red)" id="lg-debt">0</div><div class="kpi-l">ديون مستحقة للمنصة</div></div>
+      <div class="kpi-wrap" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="kpi-c"><div class="kpi-v" style="color:var(--green)" id="lg-rev">0</div><div class="kpi-l">الإيرادات</div></div>
+        <div class="kpi-c"><div class="kpi-v" style="color:var(--tx0)" id="lg-c">0</div><div class="kpi-l">مكتملة</div></div>
+        <div class="kpi-c"><div class="kpi-v" style="color:var(--red)" id="lg-debt">0</div><div class="kpi-l">الديون</div></div>
       </div>
       <div id="ledger-list"></div>
     </div>
@@ -417,7 +435,8 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
   </nav>
 </div>
 
-<div id="waModal" class="modal-overlay" onclick="closeWaModal()">
+<!-- ════ WA MODAL ════ -->
+<div id="waModal" class="modal-overlay dn" onclick="closeWaModal()">
   <div class="bottom-sheet" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
       <h3 style="font-weight:900;margin:0;">مراسلة الزبون</h3>
@@ -425,6 +444,56 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
     </div>
     <div style="text-align:center;margin-bottom:15px;"><span style="background:var(--green-l);color:var(--green);padding:4px 12px;border-radius:99px;font-weight:800;font-size:.8rem;" id="wa-phone">📱 ---</span></div>
     <div id="wa-templates-list"></div>
+  </div>
+</div>
+
+<!-- ════ CANCEL MODAL ════ -->
+<div id="cancelModal" class="modal-overlay dn" onclick="closeCancelModal()">
+  <div class="bottom-sheet" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
+      <h3 style="font-weight:900;margin:0;">طلب إلغاء حجز</h3>
+      <button onclick="closeCancelModal()" style="background:none;border:none;font-size:20px;">✕</button>
+    </div>
+    <div style="background:var(--red-l);color:var(--red);padding:10px;border-radius:12px;font-size:.8rem;font-weight:700;margin-bottom:15px;">⏳ سيتم تعليق الطلب حتى توافق الإدارة المركزية وتتواصل مع الزبون.</div>
+    <label class="lbl">سبب الإلغاء</label>
+    <textarea id="cc-reason" class="inp" rows="3" style="resize:none;" placeholder="اكتب السبب بوضوح (مثال: السيارة غير جاهزة)..."></textarea>
+    <input type="hidden" id="cc-id">
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn-sec" style="flex:1" onclick="closeCancelModal()">تراجع</button>
+      <button class="btn-main" id="cc-btn" style="flex:1" onclick="submitCancelRequest()">إرسال للإدارة</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ EDIT ASSET MODAL ════ -->
+<div id="editAssetModal" class="modal-overlay dn" onclick="closeEditAsset()">
+  <div class="bottom-sheet" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
+      <h3 style="font-weight:900;margin:0;">تعديل العنصر</h3>
+      <button onclick="closeEditAsset()" style="background:none;border:none;font-size:20px;">✕</button>
+    </div>
+    
+    <label class="uz" id="ea-uz" style="height:140px; margin-bottom: 16px;">
+      <input type="file" class="dn" accept="image/*" onchange="handleEditImg(this)">
+      <img id="ea-prev" class="uz-prev" style="display:none;">
+      <div class="uz-badge" id="ea-badge">✓ صورة جديدة</div>
+      <div style="position:absolute;bottom:10px;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:8px;font-size:.75rem;font-weight:800;color:var(--tx0);z-index: 10;">📷 تغيير الصورة</div>
+    </label>
+
+    <div class="g2">
+      <div class="fld" style="grid-column:1/3"><label class="lbl">الاسم</label><input type="text" id="ea-nm" class="inp"></div>
+      <div class="fld"><label class="lbl">السعر (د.ع)</label><input type="number" id="ea-pr" class="inp"></div>
+      
+      <div class="fld" id="ea-car-cat"><label class="lbl">الفئة</label><select id="ea-cat" class="inp"><option value="economy">اقتصادية</option><option value="family">عائلية</option><option value="luxury">فخمة VIP</option><option value="wedding">زفاف</option></select></div>
+      <div class="fld" id="ea-car-col"><label class="lbl">اللون</label><input type="text" id="ea-col" class="inp"></div>
+      <div class="fld" id="ea-car-plt" style="grid-column:1/3"><label class="lbl">رقم اللوحة</label><input type="text" id="ea-plt" class="inp"></div>
+      
+      <div class="fld dn" id="ea-hot-bed" style="grid-column:1/3"><label class="lbl">نوع السرير</label><select id="ea-bed" class="inp"><option value="single">مفرد</option><option value="double">مزدوج كبير</option><option value="twin">سريرين توأم</option><option value="king">كينج سايز</option></select></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn-sec" style="flex:1" onclick="closeEditAsset()">إلغاء</button>
+      <button class="btn-main" id="ea-btn" style="flex:1" onclick="saveAssetEdit()">حفظ التعديلات</button>
+    </div>
   </div>
 </div>
 
@@ -455,6 +524,7 @@ let pickerMap = null;
 let regLat = 35.468, regLng = 44.392;
 let b64Reg = null, b64Asset = null, b64Edit = null;
 let waitTimer = null;
+let editCtx = null;
 let inventoryLoaded = false;
 let pollingInterval = null;
 
@@ -590,7 +660,6 @@ window.doLogin = async () => {
   
   setBtn("btn-login", true); showLoad(true, "التحقق من البيانات...");
   try {
-    // Chain fetch for all 4 types
     let type = "car";
     let res = await fetch(`${API_URL}?action=checkCarOffice&name=${encodeURIComponent(name)}&pass=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
     let data = await res.json();
@@ -628,8 +697,11 @@ window.doLogin = async () => {
 };
 
 window.doRegister = async () => {
-  const name = $("rg-name").value.trim(), phoneAdmin = $("rg-phone-admin").value.trim();
-  const city = $("rg-city").value, pass = $("rg-pass").value.trim();
+  const name = $("rg-name").value.trim();
+  const phoneAdmin = $("rg-phone-admin").value.trim();
+  const phoneSales = $("rg-phone-sales").value.trim() || phoneAdmin;
+  const city = $("rg-city").value;
+  const pass = $("rg-pass").value.trim();
   const comm = $("rg-comm").value.trim() || "5000";
   
   if(!name || !phoneAdmin || !pass) return toast("أكمل الحقول الأساسية", "e");
@@ -645,9 +717,13 @@ window.doRegister = async () => {
   if(regType === "hall") action = "REGISTER_HALL";
   if(regType === "school") action = "REGISTER_DRIVE_SCHOOL";
 
+  // Incorporate sales phone inside details or natively
+  const hours = $("rg-hours") ? $("rg-hours").value : "24_hours";
+  let detailsText = `مبيعات: ${phoneSales} | ساعات: ${hours}`;
+
   const body = { 
     action, token: API_TOKEN, name, phone: phoneAdmin, city, pass, lat: regLat, lng: regLng, 
-    comm_type: "fixed", comm_val: comm, photo_url: coverUrl 
+    comm_type: "fixed", comm_val: comm, photo_url: coverUrl, details: detailsText
   };
 
   if(regType === "car") { body.cat = $("rg-office-type").value; }
@@ -749,6 +825,7 @@ function startFirebase() {
     const l = snap.val() || {};
     $("lg-debt").textContent = fmt(l.debt || 0);
     $("lg-rev").textContent = fmt(l.total_revenue || 0);
+    $("lg-c").textContent = l.completed_orders || 0; // Completed orders restored
   });
 }
 
@@ -904,7 +981,7 @@ window.openWaModal = (phone, name, svc) => {
 window.closeWaModal = () => $("waModal").classList.add("dn");
 
 /* ════════════════════════════════════════════════════════════════
-   INVENTORY (ADD ASSET & GALLERY)
+   INVENTORY (ADD ASSET, GALLERY & EDIT)
 ════════════════════════════════════════════════════════════════ */
 window.handleAssetImg = async (input, type) => {
   if(!input.files || !input.files[0]) return;
@@ -1005,12 +1082,70 @@ window.fetchInventory = async (force=false) => {
             <label class="switch"><input type="checkbox" ${isAvail?"checked":""} onchange="toggleAssetStatus('${id}',this)"><span class="slider"></span></label>
           </div>
           <div style="display:flex;gap:8px;margin-top:10px;">
+            <button style="flex:1;padding:8px;background:var(--white);color:var(--blue);border:1px solid var(--border-d);border-radius:8px;font-weight:800;cursor:pointer;" onclick='openEditAsset(${safeJSON(i)})'>✏️ تعديل</button>
             <button style="flex:1;padding:8px;background:var(--red-l);color:var(--red);border:1px dashed var(--red);border-radius:8px;font-weight:800;cursor:pointer;" onclick="deleteAsset('${id}',this)">🗑 حذف</button>
           </div>
         </div>
       </div>`;
     }).join("");
   } catch(e) { grid.innerHTML = `<div style="text-align:center;padding:20px;color:var(--red);font-weight:700;">فشل جلب الأصول.</div>`; }
+};
+
+/* ── EDIT ASSET MODAL LOGIC ── */
+window.openEditAsset = (item) => {
+  editCtx = item; b64Edit = null;
+  const isH = pData.type === "hotel";
+  $("ea-nm").value = isH ? item.room_name : item.name;
+  $("ea-pr").value = item.price;
+  
+  if(isH) {
+    $("ea-car-cat").classList.add("dn"); $("ea-car-col").classList.add("dn"); $("ea-car-plt").classList.add("dn");
+    $("ea-hot-bed").classList.remove("dn");
+    $("ea-bed").value = item.bed_type === "مفرد" ? "single" : item.bed_type === "مزدوج كبير" ? "double" : "twin";
+  } else {
+    $("ea-car-cat").classList.remove("dn"); $("ea-car-col").classList.remove("dn"); $("ea-car-plt").classList.remove("dn");
+    $("ea-hot-bed").classList.add("dn");
+    $("ea-cat").value = item.cat || "economy"; $("ea-col").value = item.color || ""; $("ea-plt").value = item.plate || "";
+  }
+  
+  if(item.photo_url) { $("ea-prev").src = item.photo_url; $("ea-prev").style.display = "block"; }
+  else { $("ea-prev").style.display = "none"; }
+  
+  $("editAssetModal").classList.remove("dn");
+};
+window.closeEditAsset = () => $("editAssetModal").classList.add("dn");
+
+window.handleEditImg = async (input) => {
+  if(!input.files?.length) return;
+  try {
+    b64Edit = await compressImage(input.files[0]);
+    $("ea-prev").src = b64Edit; $("ea-prev").style.display = "block";
+  } catch(e) { toast("فشل الصورة","e"); }
+};
+
+window.saveAssetEdit = async () => {
+  if(!editCtx) return;
+  setBtn("ea-btn", true); showLoad(true, "حفظ التعديلات...");
+  
+  let photoUrl = editCtx.photo_url || "";
+  if(b64Edit) { showLoad(true, "رفع الصورة..."); photoUrl = await uploadToImgBB(b64Edit); }
+  
+  try {
+    let bd = { token: API_TOKEN };
+    if(pData.type === "car") {
+      bd.action = "UPDATE_CAR"; bd.office_id = pData.id; bd.id = editCtx.id;
+      bd.name = $("ea-nm").value; bd.price = Number($("ea-pr").value); bd.cat = $("ea-cat").value; bd.color = $("ea-col").value; bd.plate = $("ea-plt").value; bd.photo_url = photoUrl;
+    } else {
+      bd.action = "UPDATE_HOTEL_ROOM"; bd.hotel_id = pData.id; bd.room_id = editCtx.id;
+      const bedAr = $("ea-bed").value==="single"?"مفرد":$("ea-bed").value==="double"?"مزدوج كبير":"توأم";
+      bd.room_name = $("ea-nm").value; bd.price = Number($("ea-pr").value); bd.bed_type = bedAr; bd.photo_url = photoUrl;
+    }
+    const res = await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) });
+    const d = await res.json(); showLoad(false);
+    if(d.success) { toast("✅ تم الحفظ"); closeEditAsset(); fetchInventory(true); }
+    else toast("فشل","e");
+  } catch(e) { showLoad(false); toast("فشل الاتصال","e"); }
+  finally { setBtn("ea-btn", false); }
 };
 
 window.toggleAssetStatus = async (id, cb) => {
@@ -1022,6 +1157,7 @@ window.toggleAssetStatus = async (id, cb) => {
     await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) }); toast(`✅ تم التحديث`);
   } catch(e) { cb.checked = !cb.checked; }
 };
+
 window.deleteAsset = async (id, btn) => {
   if(!confirm("تأكيد الحذف النهائي؟")) return;
   setBtn(btn, true);

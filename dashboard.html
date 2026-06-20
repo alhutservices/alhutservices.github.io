@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <script>
-const _V="6.0",_K="hut_partner_v6";
+const _V="9.5",_K="hut_partner_v95";
 try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("caches"in window)caches.keys().then(n=>n.forEach(k=>caches.delete(k)));if("serviceWorker"in navigator)navigator.serviceWorker.getRegistrations().then(r=>r.forEach(s=>s.unregister()));}}catch(e){}
 </script>
 <meta charset="UTF-8">
@@ -21,7 +21,7 @@ try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("
 
 <style>
 /* ════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM — Al-Hut Partners V6 (Airbnb Light)
+   DESIGN SYSTEM — Al-Hut Partners V9.5 (Airbnb Light)
 ════════════════════════════════════════════════════════════════ */
 :root {
   --bg:         #F7F7F7;
@@ -54,783 +54,165 @@ try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("
   --sh-modal:   0 16px 48px rgba(0,0,0,.18);
   --sh-btn:     0 4px 14px rgba(255,56,92,.3);
   
-  --r2: 8px; 
-  --r3: 12px; 
-  --r4: 16px; 
-  --r5: 20px;
+  --r2: 8px; --r3: 12px; --r4: 16px; --r5: 20px;
   --nav-h: 70px;
 }
 
-/* ── RESET & BASE ── */
-*, ::before, ::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: var(--bg);
-  font-family: 'Cairo', sans-serif;
-  color: var(--tx0);
-  min-height: 100vh;
-  overflow-x: hidden;
-  -webkit-tap-highlight-color: transparent;
-}
-
-button, input, select, textarea {
-  font-family: 'Cairo', sans-serif;
-  outline: none;
-}
-
+*, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); font-family: 'Cairo', sans-serif; color: var(--tx0); min-height: 100vh; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+button, input, select, textarea { font-family: 'Cairo', sans-serif; outline: none; }
 .dn { display: none !important; }
-
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-thumb { background: var(--border-d); border-radius: 99px; }
 
-/* ── LOADING SCREEN ── */
-#loadingScreen {
-  position: fixed;
-  inset: 0;
-  z-index: 60000;
-  background: rgba(255,255,255,.9);
-  backdrop-filter: blur(5px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.spinner {
-  width: 48px;
-  height: 48px;
-  border: 4px solid var(--border);
-  border-top-color: var(--red);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
+/* LOADING SCREEN */
+#loadingScreen { position: fixed; inset: 0; z-index: 60000; background: rgba(255,255,255,.9); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 15px; }
+.spinner { width: 48px; height: 48px; border: 4px solid var(--border); border-top-color: var(--red); border-radius: 50%; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+#ldMsg { font-weight: 800; color: var(--tx0); font-size: 1.1rem; }
 
-#ldMsg {
-  font-weight: 800;
-  color: var(--tx0);
-  font-size: 1.1rem;
-}
+/* TOASTS */
+#toasts { position: fixed; top: max(16px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; flex-direction: column; gap: 8px; width: min(90%, 360px); pointer-events: none; }
+.toast { background: var(--white); border: 1px solid var(--border); border-radius: var(--r3); padding: 14px; box-shadow: var(--sh-card); display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: .85rem; animation: tIn .3s ease; pointer-events: auto; }
+.toast-i { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+.toast.s .toast-i { background: var(--green); } .toast.e .toast-i { background: var(--red); }
+@keyframes tIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
 
-/* ── TOASTS ── */
-#toasts {
-  position: fixed;
-  top: max(16px, env(safe-area-inset-top));
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 99999;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: min(90%, 360px);
-  pointer-events: none;
-}
+/* AUTH PAGE */
+.auth-wrapper { min-height: 100vh; display: flex; flex-direction: column; background: var(--white); }
+.a-header { padding: 40px 20px 20px; text-align: center; border-bottom: 1px solid var(--border); }
+.a-logo { width: 64px; height: 64px; background: var(--red-l); color: var(--red); border-radius: 18px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+.a-title { font-size: 1.6rem; font-weight: 900; color: var(--tx0); letter-spacing: -.5px; margin-bottom: 4px; }
+.a-sub { color: var(--tx2); font-weight: 700; font-size: .85rem; }
 
-.toast {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r3);
-  padding: 14px;
-  box-shadow: var(--sh-card);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-weight: 800;
-  font-size: .85rem;
-  animation: tIn .3s ease;
-  pointer-events: auto;
-}
+.auth-tabs { display: flex; background: var(--bg); border-radius: 99px; margin: 20px; padding: 5px; }
+.at-btn { flex: 1; text-align: center; padding: 11px; font-weight: 800; font-size: .85rem; color: var(--tx2); border-radius: 99px; cursor: pointer; transition: .2s; }
+.at-btn.on { background: var(--white); color: var(--red); box-shadow: var(--sh-card); }
 
-.toast-i {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  flex-shrink: 0;
-}
-
-.toast.s .toast-i { background: var(--green); }
-.toast.e .toast-i { background: var(--red); }
-
-@keyframes tIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: none; }
-}
-
-/* ── AUTH PAGE ── */
-.auth-wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--white);
-}
-
-.a-header {
-  padding: 40px 20px 20px;
-  text-align: center;
-  border-bottom: 1px solid var(--border);
-}
-
-.a-logo {
-  width: 64px;
-  height: 64px;
-  background: var(--red-l);
-  color: var(--red);
-  border-radius: 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
-}
-
-.a-title {
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: var(--tx0);
-  letter-spacing: -.5px;
-  margin-bottom: 4px;
-}
-
-.a-sub {
-  color: var(--tx2);
-  font-weight: 700;
-  font-size: .85rem;
-}
-
-.auth-tabs {
-  display: flex;
-  background: var(--bg);
-  border-radius: 99px;
-  margin: 20px;
-  padding: 5px;
-}
-
-.at-btn {
-  flex: 1;
-  text-align: center;
-  padding: 11px;
-  font-weight: 800;
-  font-size: .85rem;
-  color: var(--tx2);
-  border-radius: 99px;
-  cursor: pointer;
-  transition: .2s;
-}
-
-.at-btn.on {
-  background: var(--white);
-  color: var(--red);
-  box-shadow: var(--sh-card);
-}
-
-.a-body {
-  padding: 10px 20px 40px;
-  max-width: 540px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.a-panel { display: none; }
-.a-panel.on { display: block; animation: fade .3s ease; }
-
-@keyframes fade {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: none; }
-}
+.a-body { padding: 10px 20px 40px; max-width: 540px; margin: 0 auto; width: 100%; }
+.a-panel { display: none; } .a-panel.on { display: block; animation: fade .3s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
 .fld { margin-bottom: 16px; }
+.lbl { display: block; font-size: .75rem; font-weight: 800; margin-bottom: 6px; color: var(--tx1); }
+.inp { width: 100%; background: var(--white); border: 1px solid var(--border-d); border-radius: var(--r3); padding: 14px; font-size: .9rem; font-weight: 700; transition: .2s; color: var(--tx0); }
+.inp:focus { border-color: var(--tx0); box-shadow: 0 0 0 1px var(--tx0); }
+.inp::placeholder { color: var(--tx3); font-weight: 600; }
 
-.lbl {
-  display: block;
-  font-size: .75rem;
-  font-weight: 800;
-  margin-bottom: 6px;
-  color: var(--tx1);
-}
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-.inp {
-  width: 100%;
-  background: var(--white);
-  border: 1px solid var(--border-d);
-  border-radius: var(--r3);
-  padding: 14px;
-  font-size: .9rem;
-  font-weight: 700;
-  transition: .2s;
-  color: var(--tx0);
-}
+/* 4 Types Grid */
+.ptype-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.ptype { border: 1.5px solid var(--border-d); border-radius: var(--r3); padding: 12px 5px; text-align: center; cursor: pointer; transition: .2s; }
+.ptype.on { border-color: var(--red); background: var(--red-l); color: var(--red); }
+.ptype-ic { margin-bottom: 4px; } .ptype-tx { font-size: .85rem; font-weight: 900; }
 
-.inp:focus {
-  border-color: var(--tx0);
-  box-shadow: 0 0 0 1px var(--tx0);
-}
-
-.inp::placeholder {
-  color: var(--tx3);
-  font-weight: 600;
-}
-
-.g2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.ptype-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.ptype {
-  border: 1.5px solid var(--border-d);
-  border-radius: var(--r3);
-  padding: 16px 5px;
-  text-align: center;
-  cursor: pointer;
-  transition: .2s;
-}
-
-.ptype.on {
-  border-color: var(--red);
-  background: var(--red-l);
-  color: var(--red);
-}
-
-.ptype-ic { margin-bottom: 6px; }
-.ptype-tx { font-size: .85rem; font-weight: 900; }
-
-/* Image Upload Zones */
-.uz {
-  border: 2px dashed var(--border-d);
-  border-radius: var(--r3);
-  background: var(--bg);
-  height: 140px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 8px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: .2s;
-}
-
-.uz:hover {
-  border-color: var(--red);
-  background: var(--red-l);
-}
-
-.uz.filled {
-  border-style: solid;
-  border-color: var(--border);
-}
-
-.uz-prev {
-  position: absolute;
-  inset: 0;
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-}
-
-.uz-badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: var(--green);
-  color: #fff;
-  font-size: .65rem;
-  font-weight: 800;
-  padding: 4px 10px;
-  border-radius: 99px;
-  opacity: 0;
-  z-index: 10;
-}
-
+.uz { border: 2px dashed var(--border-d); border-radius: var(--r3); background: var(--bg); height: 140px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; cursor: pointer; position: relative; overflow: hidden; transition: .2s; }
+.uz:hover { border-color: var(--red); background: var(--red-l); }
+.uz.filled { border-style: solid; border-color: var(--border); }
+.uz-prev { position: absolute; inset: 0; object-fit: cover; width: 100%; height: 100%; }
+.uz-badge { position: absolute; top: 8px; right: 8px; background: var(--green); color: #fff; font-size: .65rem; font-weight: 800; padding: 4px 10px; border-radius: 99px; opacity: 0; z-index: 10; }
 .uz.filled .uz-badge { opacity: 1; }
+.uz-txt { font-size: .8rem; font-weight: 800; color: var(--tx2); }
 
-.uz-txt {
-  font-size: .8rem;
-  font-weight: 800;
-  color: var(--tx2);
-}
+.map-box { height: 180px; border-radius: var(--r3); border: 1px solid var(--border-d); position: relative; overflow: hidden; }
 
-.map-box {
-  height: 180px;
-  border-radius: var(--r3);
-  border: 1px solid var(--border-d);
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-main {
-  width: 100%;
-  background: var(--red-g);
-  color: var(--white);
-  border: none;
-  border-radius: var(--r3);
-  padding: 16px;
-  font-size: 1rem;
-  font-weight: 900;
-  cursor: pointer;
-  transition: .2s;
-  box-shadow: var(--sh-btn);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.btn-main:active {
-  transform: scale(.97);
-  box-shadow: none;
-}
-
-.btn-sec {
-  padding: 10px 20px;
-  border-radius: var(--r3);
-  border: 1px solid var(--border-d);
-  background: var(--white);
-  font-weight: 800;
-  cursor: pointer;
-  transition: .2s;
-}
-
+.btn-main { width: 100%; background: var(--red-g); color: var(--white); border: none; border-radius: var(--r3); padding: 16px; font-size: 1rem; font-weight: 900; cursor: pointer; transition: .2s; box-shadow: var(--sh-btn); display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-main:active { transform: scale(.97); box-shadow: none; }
+.btn-sec { padding: 10px 20px; border-radius: var(--r3); border: 1px solid var(--border-d); background: var(--white); font-weight: 800; cursor: pointer; transition: .2s; }
 .btn-sec:hover { border-color: var(--tx0); }
 
-/* ── DASHBOARD LAYOUT ── */
-.d-header {
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  padding: max(16px, env(safe-area-inset-top)) 20px 16px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+/* DASHBOARD LAYOUT */
+.d-header { background: var(--white); border-bottom: 1px solid var(--border); padding: max(16px, env(safe-area-inset-top)) 20px 16px; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+.dh-name { font-size: 1.2rem; font-weight: 900; color: var(--tx0); }
+.dh-badge { font-size: .7rem; font-weight: 800; color: var(--tx2); background: var(--bg); padding: 4px 10px; border-radius: 99px; border: 1px solid var(--border); margin-top: 4px; display: inline-block; }
 
-.dh-name {
-  font-size: 1.2rem;
-  font-weight: 900;
-  color: var(--tx0);
-}
+.page-body { padding: 20px 20px calc(var(--nav-h) + 30px); max-width: 1200px; margin: 0 auto; }
+.sec-title { font-size: 1.15rem; font-weight: 900; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
 
-.dh-badge {
-  font-size: .7rem;
-  font-weight: 800;
-  color: var(--tx2);
-  background: var(--bg);
-  padding: 4px 10px;
-  border-radius: 99px;
-  border: 1px solid var(--border);
-  margin-top: 4px;
-  display: inline-block;
-}
+/* KPI CARDS */
+.kpi-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+.kpi-c { background: var(--white); border: 1px solid var(--border); border-radius: var(--r4); padding: 16px; box-shadow: var(--sh-card); }
+.kpi-v { font-size: 1.5rem; font-weight: 900; color: var(--tx0); }
+.kpi-l { font-size: .75rem; font-weight: 700; color: var(--tx2); margin-top: 2px; }
 
-.page-body {
-  padding: 20px 20px calc(var(--nav-h) + 30px);
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.sec-title {
-  font-size: 1.15rem;
-  font-weight: 900;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* ── KPI CARDS ── */
-.kpi-wrap {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.kpi-c {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r4);
-  padding: 16px;
-  box-shadow: var(--sh-card);
-}
-
-.kpi-v {
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: var(--tx0);
-}
-
-.kpi-l {
-  font-size: .75rem;
-  font-weight: 700;
-  color: var(--tx2);
-  margin-top: 2px;
-}
-
-/* ── ORDER CARDS (RADAR) ── */
-.ord-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r4);
-  padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: var(--sh-card);
-  border-right: 4px solid var(--border-d);
-}
-
-.ord-card.pending { border-right-color: var(--amber); }
-.ord-card.active { border-right-color: var(--blue); }
-.ord-card.completed { border-right-color: var(--green); }
-
-.oc-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  border-bottom: 1px solid var(--bg);
-  padding-bottom: 12px;
-}
-
-.oc-id {
-  font-family: 'IBM Plex Mono', monospace;
-  font-weight: 700;
-  color: var(--tx2);
-  font-size: .8rem;
-}
-
-.oc-st {
-  font-size: .7rem;
-  font-weight: 800;
-  padding: 4px 10px;
-  border-radius: 99px;
-}
-
-.st-pend { background: var(--amber-l); color: var(--amber); }
-.st-act { background: var(--blue-l); color: var(--blue); }
-.st-done { background: var(--green-l); color: var(--green); }
-
+/* ORDER CARDS (RADAR) */
+.ord-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r4); padding: 16px; margin-bottom: 16px; box-shadow: var(--sh-card); border-right: 4px solid var(--border-d); }
+.ord-card.pending { border-right-color: var(--amber); } .ord-card.active { border-right-color: var(--blue); } .ord-card.completed { border-right-color: var(--green); }
+.oc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--bg); padding-bottom: 12px; }
+.oc-id { font-family: 'IBM Plex Mono', monospace; font-weight: 700; color: var(--tx2); font-size: .8rem; }
+.oc-st { font-size: .7rem; font-weight: 800; padding: 4px 10px; border-radius: 99px; }
+.st-pend { background: var(--amber-l); color: var(--amber); } .st-act { background: var(--blue-l); color: var(--blue); } .st-done { background: var(--green-l); color: var(--green); }
 .oc-mid { margin-bottom: 12px; }
 .oc-svc { font-size: 1rem; font-weight: 900; margin-bottom: 8px; }
-
-.oc-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  background: var(--bg);
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-}
-
-.oc-lbl { font-size: .65rem; color: var(--tx2); font-weight: 700; }
-.oc-val { font-size: .8rem; font-weight: 900; }
-
-.oc-bot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid var(--bg);
-  padding-top: 12px;
-  margin-top: 12px;
-}
-
+.oc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: var(--bg); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
+.oc-lbl { font-size: .65rem; color: var(--tx2); font-weight: 700; } .oc-val { font-size: .8rem; font-weight: 900; }
+.oc-bot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--bg); padding-top: 12px; margin-top: 12px; }
 .oc-price { font-size: 1.1rem; font-weight: 900; color: var(--green); }
 .oc-acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 
-.btn-sm {
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: .8rem;
-  font-weight: 800;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
+.ab { padding: 8px 14px; border-radius: 8px; font-size: .8rem; font-weight: 800; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; font-family: 'Cairo', sans-serif; transition: 0.2s; }
+.ab:active { transform: scale(.95); }
+.ab.acc { background: var(--green); color: #fff; } .ab.act { background: var(--blue); color: #fff; }
+.ab.wa { background: var(--white); color: #25D366; border: 1px solid #bbf7d0; } .ab.wa:hover { background: #f0fdf4; }
+.ab.rej { background: var(--bg); color: var(--red); border: 1px dashed var(--red); }
 
-.btn-sm.pri { background: var(--green); color: #fff; }
-.btn-sm.act { background: var(--blue); color: #fff; }
-.btn-sm.wa { background: var(--white); color: #25D366; border: 1px solid #bbf7d0; }
-.btn-sm.wa:hover { background: #f0fdf4; }
-.btn-sm.sec { background: var(--bg); color: var(--tx0); border: 1px solid var(--border-d); }
-.btn-sm.dan { background: var(--white); color: var(--tx2); border: 1px dashed var(--border-d); }
-.btn-sm.dan:hover { color: var(--red); border-color: var(--red); }
-
-/* ── INVENTORY ADD CARD ── */
-.add-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r4);
-  padding: 24px;
-  box-shadow: var(--sh-card);
-  margin-bottom: 24px;
-}
-
-/* ── ASSET GALLERY (CARDS) ── */
-.asset-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-}
-
-.asset-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r4);
-  overflow: hidden;
-  box-shadow: var(--sh-card);
-  display: flex;
-  flex-direction: column;
-}
-
-.ac-img {
-  width: 100%;
-  height: 160px;
-  background: var(--bg);
-  position: relative;
-}
-
-.ac-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.ac-noimg {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-  color: var(--tx4);
-}
-
-.ac-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255,255,255,.9);
-  padding: 4px 10px;
-  border-radius: 99px;
-  font-size: .65rem;
-  font-weight: 900;
-}
-
+/* ASSET GALLERY */
+.add-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r4); padding: 24px; box-shadow: var(--sh-card); margin-bottom: 24px; }
+.asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.asset-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r4); overflow: hidden; box-shadow: var(--sh-card); display: flex; flex-direction: column; }
+.ac-img { width: 100%; height: 160px; background: var(--bg); position: relative; }
+.ac-img img { width: 100%; height: 100%; object-fit: cover; }
+.ac-noimg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--tx4); }
+.ac-badge { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,.9); padding: 4px 10px; border-radius: 99px; font-size: .65rem; font-weight: 900; }
 .ac-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
 .ac-title { font-size: 1.05rem; font-weight: 900; margin-bottom: 6px; }
 .ac-price { font-size: 1rem; font-weight: 900; color: var(--green); margin-bottom: 10px; }
-
-.ac-specs {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-
-.ac-spec {
-  font-size: .65rem;
-  font-weight: 800;
-  color: var(--tx2);
-  background: var(--bg);
-  padding: 3px 8px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-}
-
-.ac-stats {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-  background: var(--light);
-  padding: 8px;
-  border-radius: 8px;
-}
-
-.ac-stat { flex: 1; text-align: center; }
-.acs-v { font-size: .85rem; font-weight: 900; }
-.acs-l { font-size: .6rem; font-weight: 700; color: var(--tx2); }
-
-.ac-toggle {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-  margin-top: auto;
-}
+.ac-specs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.ac-spec { font-size: .65rem; font-weight: 800; color: var(--tx2); background: var(--bg); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--border); }
+.ac-stats { display: flex; gap: 10px; margin-bottom: 12px; background: var(--light); padding: 8px; border-radius: 8px; }
+.ac-stat { flex: 1; text-align: center; } .acs-v { font-size: .85rem; font-weight: 900; } .acs-l { font-size: .6rem; font-weight: 700; color: var(--tx2); }
+.ac-toggle { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid var(--border); margin-top: auto; }
 
 .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; inset: 0; background-color: var(--border-d); transition: .3s; border-radius: 34px; }
 .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-input:checked + .slider { background-color: var(--green); }
-input:checked + .slider:before { transform: translateX(20px); }
+input:checked + .slider { background-color: var(--green); } input:checked + .slider:before { transform: translateX(20px); }
 
-/* ── LEDGER LIST ── */
-.lr-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r3);
-  padding: 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  box-shadow: var(--sh-card);
-}
+/* LEDGER LIST */
+.lr-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r3); padding: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; box-shadow: var(--sh-card); }
 .lr-id { font-family: 'IBM Plex Mono', monospace; font-size: .7rem; font-weight: 700; color: var(--tx2); }
 .lr-nm { font-size: .9rem; font-weight: 900; margin-top: 2px; }
 .lr-dt { font-size: .7rem; font-weight: 600; color: var(--tx2); margin-top: 2px; }
 .lr-am { font-size: 1.1rem; font-weight: 900; color: var(--green); }
 
-/* ── MODALS (OVERLAYS) ── */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.5);
-  z-index: 90000;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
+/* MODALS */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 90000; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: .3s; }
+.modal-overlay.open { opacity: 1; pointer-events: auto; }
+.bottom-sheet { background: var(--white); width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 24px; box-shadow: var(--sh-modal); transform: translateY(100%); transition: .3s ease; max-height: 85vh; overflow-y: auto; }
+.modal-overlay.open .bottom-sheet { transform: translateY(0); }
+.wa-tpl { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: .2s; }
+.wa-tpl:hover { border-color: var(--green); background: var(--green-l); }
 
-.bottom-sheet {
-  background: var(--white);
-  width: 100%;
-  max-width: 500px;
-  border-radius: 24px 24px 0 0;
-  padding: 24px;
-  box-shadow: var(--sh-modal);
-  animation: slideUp .3s ease;
-  max-height: 85vh;
-  overflow-y: auto;
-}
-
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: none; }
-}
-
-.wa-tpl {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: .2s;
-}
-
-.wa-tpl:hover {
-  border-color: var(--green);
-  background: var(--green-l);
-}
-
-/* ── BOTTOM NAV ── */
-.bnav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: var(--nav-h);
-  background: rgba(255,255,255,.95);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  z-index: 9000;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-.bni {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  color: var(--tx3);
-  font-weight: 800;
-  font-size: .7rem;
-  cursor: pointer;
-}
-
+/* BOTTOM NAV */
+.bnav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-h); background: rgba(255,255,255,.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 9000; padding-bottom: env(safe-area-inset-bottom); }
+.bni { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--tx3); font-weight: 800; font-size: .7rem; cursor: pointer; }
 .bni.on { color: var(--red); }
-.bni-badge {
-  position: absolute;
-  top: 5px;
-  right: 15px;
-  width: 8px;
-  height: 8px;
-  background: var(--red);
-  border-radius: 50%;
-  display: none;
-}
+.bni-badge { position: absolute; top: 5px; right: 15px; width: 8px; height: 8px; background: var(--red); border-radius: 50%; display: none; }
 .bni-badge.show { display: block; }
 
-/* ── RESPONSIVE DESKTOP ── */
 @media(min-width: 768px) {
-  #authPage {
-    background: var(--bg);
-    align-items: center;
-    justify-content: center;
-  }
-  .auth-wrapper {
-    flex-direction: row;
-    justify-content: center;
-  }
-  .auth-inner {
-    width: 100%;
-    max-width: 540px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--r5);
-    box-shadow: var(--sh-modal);
-    overflow: hidden;
-    margin: 40px 0;
-  }
+  #authPage { background: var(--bg); align-items: center; justify-content: center; }
+  .auth-wrapper { flex-direction: row; justify-content: center; }
+  .auth-inner { width: 100%; max-width: 540px; background: var(--white); border: 1px solid var(--border); border-radius: var(--r5); box-shadow: var(--sh-modal); overflow: hidden; margin: 40px 0; }
   .a-header { padding: 40px 20px 20px; }
-  .bottom-sheet {
-    margin: auto;
-    border-radius: var(--r5);
-  }
+  .bottom-sheet { margin: auto; border-radius: var(--r5); }
   .modal-overlay { align-items: center; }
 }
 
-/* Button Loading State */
 .btn-ld { color: transparent !important; pointer-events: none; position: relative; }
-.btn-ld::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 20px;
-  height: 20px;
-  margin: -10px;
-  border: 3px solid rgba(255,255,255,.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-}
+.btn-ld::after { content: ''; position: absolute; left: 50%; top: 50%; width: 20px; height: 20px; margin: -10px; border: 3px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
 </style>
 </head>
 <body>
@@ -859,7 +241,7 @@ input:checked + .slider:before { transform: translateX(20px); }
     <div class="a-body">
       <div id="panel-login" class="a-panel on">
         <div class="fld">
-          <label class="lbl">رقم هاتف الإدارة أو اسم المنشأة</label>
+          <label class="lbl">رقم الهاتف أو اسم المنشأة</label>
           <input type="text" id="lg-name" class="inp" placeholder="أدخل البيانات هنا">
         </div>
         <div class="fld">
@@ -872,12 +254,14 @@ input:checked + .slider:before { transform: translateX(20px); }
       <div id="panel-register" class="a-panel">
         <label class="lbl">نوع الشراكة</label>
         <div class="ptype-grid">
-          <div class="ptype on" onclick="pickType('car',this)"><div class="ptype-ic"><i data-lucide="car"></i></div><div class="ptype-tx">مكاتب سيارات</div></div>
-          <div class="ptype" onclick="pickType('hotel',this)"><div class="ptype-ic"><i data-lucide="bed-double"></i></div><div class="ptype-tx">فنادق وشقق</div></div>
+          <div class="ptype on" onclick="pickType('car',this)"><div class="ptype-ic"><i data-lucide="car"></i></div><div class="ptype-tx">سيارات</div></div>
+          <div class="ptype" onclick="pickType('hotel',this)"><div class="ptype-ic"><i data-lucide="bed-double"></i></div><div class="ptype-tx">فنادق</div></div>
+          <div class="ptype" onclick="pickType('hall',this)"><div class="ptype-ic"><i data-lucide="glass-water"></i></div><div class="ptype-tx">قاعات</div></div>
+          <div class="ptype" onclick="pickType('school',this)"><div class="ptype-ic"><i data-lucide="graduation-cap"></i></div><div class="ptype-tx">مدارس قيادة</div></div>
         </div>
 
         <div class="fld">
-          <label class="lbl">صورة الواجهة / شعار المنشأة</label>
+          <label class="lbl">صورة الواجهة / الشعار</label>
           <label class="uz" id="uz-reg" for="img-reg">
             <input type="file" id="img-reg" accept="image/*" class="dn" onchange="handleRegImg(this)">
             <img class="uz-prev" id="uz-reg-p" style="display:none">
@@ -887,23 +271,31 @@ input:checked + .slider:before { transform: translateX(20px); }
           </label>
         </div>
 
-        <div class="fld"><label class="lbl">الاسم الرسمي للمنشأة</label><input type="text" id="rg-name" class="inp" placeholder="مثال: شركة النورس، فندق الرشيد"></div>
+        <div class="fld"><label class="lbl">الاسم الرسمي للمنشأة</label><input type="text" id="rg-name" class="inp" placeholder="الاسم التجاري"></div>
         
         <div class="g2" id="reg-car-extras">
-          <div class="fld"><label class="lbl">فئة المكتب</label><select id="rg-office-type" class="inp"><option value="مكتب تأجير">مكتب تأجير سيارات</option><option value="شركة سيارات فاخرة">شركة سيارات فاخرة VIP</option><option value="وكالة سياحة وسفر">وكالة سياحة وسفر</option></select></div>
+          <div class="fld"><label class="lbl">فئة المكتب</label><select id="rg-office-type" class="inp"><option value="مكتب تأجير">مكتب تأجير</option><option value="شركة سيارات فاخرة">شركة VIP</option><option value="وكالة سياحة وسفر">وكالة سياحة</option></select></div>
         </div>
+        
         <div class="g2 dn" id="reg-hotel-extras">
           <div class="fld"><label class="lbl">تصنيف الفندق</label><select id="rg-stars" class="inp"><option value="5">⭐⭐⭐⭐⭐ 5 نجوم</option><option value="4">⭐⭐⭐⭐ 4 نجوم</option><option value="3">⭐⭐⭐ 3 نجوم</option><option value="2">⭐⭐ نجمتين</option><option value="1">⭐ نجمة واحدة</option><option value="0">شقق فندقية</option></select></div>
         </div>
 
-        <div class="g2">
-          <div class="fld"><label class="lbl">المدينة</label><select id="rg-city" class="inp"><option value="بغداد">بغداد</option><option value="أربيل">أربيل</option><option value="كركوك">كركوك</option><option value="السليمانية">السليمانية</option><option value="البصرة">البصرة</option></select></div>
-          <div class="fld"><label class="lbl">أوقات العمل</label><select id="rg-hours" class="inp"><option value="24_hours">مفتوح 24 ساعة</option><option value="morning_evening">08:00 ص - 10:00 م</option><option value="morning_only">08:00 ص - 04:00 م</option></select></div>
+        <div class="g2 dn" id="reg-hall-extras">
+          <div class="fld"><label class="lbl">السعة الاستيعابية</label><input type="text" id="rg-hall-cap" class="inp" placeholder="مثال: 300 - 500 شخص"></div>
+          <div class="fld"><label class="lbl">سعر السهرة (د.ع)</label><input type="number" id="rg-hall-price" class="inp" placeholder="2500000"></div>
+          <div class="fld" style="grid-column:1/3"><label class="lbl">أبرز الخدمات والمميزات</label><input type="text" id="rg-hall-feat" class="inp" placeholder="بوفيه، إضاءة، كوشة..."></div>
+        </div>
+
+        <div class="g2 dn" id="reg-school-extras">
+          <div class="fld"><label class="lbl">سعر الكورس الأساسي</label><input type="number" id="rg-school-basic" class="inp" placeholder="150000"></div>
+          <div class="fld"><label class="lbl">سعر الكورس المتقدم</label><input type="number" id="rg-school-adv" class="inp" placeholder="250000"></div>
+          <div class="fld" style="grid-column:1/3"><label class="lbl">المميزات</label><input type="text" id="rg-school-feat" class="inp" placeholder="مدربات نساء، سيارات حديثة..."></div>
         </div>
 
         <div class="g2">
+          <div class="fld"><label class="lbl">المدينة</label><select id="rg-city" class="inp"><option value="بغداد">بغداد</option><option value="أربيل">أربيل</option><option value="كركوك">كركوك</option><option value="السليمانية">السليمانية</option><option value="البصرة">البصرة</option></select></div>
           <div class="fld"><label class="lbl">📞 هاتف الإدارة</label><input type="tel" id="rg-phone-admin" class="inp" placeholder="للطوارئ والإدارة" dir="ltr" style="text-align:right"></div>
-          <div class="fld"><label class="lbl">💬 واتساب المبيعات</label><input type="tel" id="rg-phone-sales" class="inp" placeholder="لتواصل الزبائن" dir="ltr" style="text-align:right"></div>
         </div>
 
         <div class="fld"><label class="lbl">كلمة المرور</label><input type="password" id="rg-pass" class="inp" placeholder="أنشئ كلمة مرور قوية"></div>
@@ -914,11 +306,6 @@ input:checked + .slider:before { transform: translateX(20px); }
             <div id="pickerMap" style="width:100%;height:100%;"></div>
             <button type="button" style="position:absolute;bottom:10px;right:10px;z-index:1000;background:#fff;border:1px solid var(--border);padding:6px 12px;border-radius:8px;font-weight:800;font-size:.8rem;color:var(--tx0);box-shadow:var(--sh-card);cursor:pointer;" onclick="locateMe()">📍 موقعي</button>
           </div>
-        </div>
-
-        <div class="fld">
-          <label class="lbl">نسبة العمولة المقترحة للمنصة (د.ع)</label>
-          <input type="number" id="rg-comm" class="inp" placeholder="مثال: 5000">
         </div>
 
         <button class="btn-main mt-4" id="btn-reg" onclick="doRegister()">إرسال طلب الانضمام</button>
@@ -951,7 +338,7 @@ input:checked + .slider:before { transform: translateX(20px); }
       <div class="sec-title">الطلبات الواردة</div>
       <div class="kpi-wrap">
         <div class="kpi-c"><div class="kpi-v" id="kpi-pend">0</div><div class="kpi-l">قيد الانتظار</div></div>
-        <div class="kpi-c"><div class="kpi-v" id="kpi-act">0</div><div class="kpi-l">جاري التنفيذ</div></div>
+        <div class="kpi-c"><div class="kpi-v" id="kpi-act">0</div><div class="kpi-l">حجوزات نشطة</div></div>
       </div>
       <div id="orders-list"></div>
     </div>
@@ -963,7 +350,6 @@ input:checked + .slider:before { transform: translateX(20px); }
 
       <div class="add-card dn" id="add-car-form">
         <h3 style="font-weight:900;margin-bottom:16px;">🚗 إضافة سيارة جديدة</h3>
-        
         <label class="uz" id="uz-car" for="img-car">
           <input type="file" id="img-car" accept="image/*" class="dn" onchange="handleAssetImg(this, 'car')">
           <img class="uz-prev" id="uz-car-p" style="display:none">
@@ -971,28 +357,21 @@ input:checked + .slider:before { transform: translateX(20px); }
           <i data-lucide="camera" id="uz-car-i" color="var(--tx3)"></i>
           <div class="uz-txt" id="uz-car-t">ارفع صورة للسيارة</div>
         </label>
-
         <div class="fld"><label class="lbl">اسم السيارة (النوع)</label><input type="text" id="car-nm" class="inp" placeholder="مثال: تويوتا كامري"></div>
-        
         <div class="g2">
           <div class="fld"><label class="lbl">الموديل (سنة الصنع)</label><input type="number" id="car-year" class="inp" placeholder="2024"></div>
           <div class="fld"><label class="lbl">السعر اليومي (د.ع)</label><input type="number" id="car-pr" class="inp" placeholder="60000"></div>
-          
           <div class="fld"><label class="lbl">الفئة</label><select id="car-ct" class="inp"><option value="economy">اقتصادية</option><option value="family">عائلية</option><option value="luxury">فخمة VIP</option><option value="wedding">سيارة زفاف</option></select></div>
           <div class="fld"><label class="lbl">اللون</label><input type="text" id="car-cl" class="inp" placeholder="أبيض"></div>
-          
           <div class="fld"><label class="lbl">ناقل الحركة (الجير)</label><select id="car-trans" class="inp"><option value="auto">أوتوماتيك</option><option value="manual">عادي</option></select></div>
           <div class="fld"><label class="lbl">نوع الوقود</label><select id="car-fuel" class="inp"><option value="petrol">بنزين</option><option value="hybrid">هايبرد (هجين)</option><option value="diesel">ديزل</option></select></div>
-          
           <div class="fld" style="grid-column:1/3"><label class="lbl">رقم اللوحة</label><input type="text" id="car-pl" class="inp" placeholder="بغداد 12345"></div>
         </div>
-        
         <button class="btn-main mt-2" id="btn-save-car" onclick="saveCar()">إضافة السيارة للأسطول 📥</button>
       </div>
 
       <div class="add-card dn" id="add-room-form">
         <h3 style="font-weight:900;margin-bottom:16px;">🛏️ إضافة غرفة أو جناح</h3>
-        
         <label class="uz" id="uz-room" for="img-room">
           <input type="file" id="img-room" accept="image/*" class="dn" onchange="handleAssetImg(this, 'room')">
           <img class="uz-prev" id="uz-room-p" style="display:none">
@@ -1000,17 +379,13 @@ input:checked + .slider:before { transform: translateX(20px); }
           <i data-lucide="camera" id="uz-room-i" color="var(--tx3)"></i>
           <div class="uz-txt" id="uz-room-t">ارفع صورة للغرفة</div>
         </label>
-
         <div class="g2">
           <div class="fld" style="grid-column:1/3"><label class="lbl">اسم الغرفة / الجناح</label><input type="text" id="rm-nm" class="inp" placeholder="غرفة ديلوكس مطلة"></div>
-          
           <div class="fld"><label class="lbl">نوع الغرفة</label><select id="rm-type" class="inp"><option value="single">مفردة</option><option value="double">مزدوجة</option><option value="suite">جناح</option><option value="family">عائلية</option></select></div>
           <div class="fld"><label class="lbl">السعر لليلة (د.ع)</label><input type="number" id="rm-pr" class="inp" placeholder="80000"></div>
-          
           <div class="fld"><label class="lbl">نوع السرير</label><select id="rm-bed" class="inp"><option value="single">مفرد</option><option value="double">مزدوج كبير</option><option value="twin">سريرين توأم</option><option value="king">كينج سايز</option></select></div>
           <div class="fld"><label class="lbl">الاستيعاب الأقصى</label><input type="number" id="rm-cap" class="inp" placeholder="عدد الأشخاص (مثال: 2)" min="1"></div>
         </div>
-        
         <button class="btn-main mt-2" id="btn-save-room" onclick="saveRoom()">إضافة الغرفة للمنصة 📥</button>
       </div>
 
@@ -1019,7 +394,6 @@ input:checked + .slider:before { transform: translateX(20px); }
         <button class="btn-sec" style="padding:6px 12px;font-size:.8rem;" onclick="fetchInventory(true)"><i data-lucide="refresh-cw" size="14"></i> تحديث</button>
       </div>
       <div id="gallery-list" class="asset-grid"></div>
-
     </div>
 
     <div id="tab-ledger" class="tab-content dn">
@@ -1038,12 +412,12 @@ input:checked + .slider:before { transform: translateX(20px); }
       <div style="position:relative"><i data-lucide="radar"></i><div class="bni-badge" id="nav-badge-r"></div></div>
       <span>الرادار</span>
     </div>
-    <div class="bni" onclick="switchTab('inventory',this)"><i data-lucide="layers"></i><span>الأسطول</span></div>
+    <div class="bni dn" id="nav-inventory" onclick="switchTab('inventory',this)"><i data-lucide="layers"></i><span>الأسطول</span></div>
     <div class="bni" onclick="switchTab('ledger',this)"><i data-lucide="wallet"></i><span>الحسابات</span></div>
   </nav>
 </div>
 
-<div id="waModal" class="modal-overlay dn" onclick="closeWaModal()">
+<div id="waModal" class="modal-overlay" onclick="closeWaModal()">
   <div class="bottom-sheet" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
       <h3 style="font-weight:900;margin:0;">مراسلة الزبون</h3>
@@ -1054,53 +428,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   </div>
 </div>
 
-<div id="cancelModal" class="modal-overlay dn" onclick="closeCancelModal()">
-  <div class="bottom-sheet" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-      <h3 style="font-weight:900;margin:0;">طلب إلغاء</h3>
-      <button onclick="closeCancelModal()" style="background:none;border:none;font-size:20px;">✕</button>
-    </div>
-    <div style="background:var(--red-l);color:var(--red);padding:10px;border-radius:12px;font-size:.8rem;font-weight:700;margin-bottom:15px;">⏳ سيتم تعليق الطلب حتى توافق الإدارة المركزية.</div>
-    <label class="lbl">سبب الإلغاء (اختياري)</label>
-    <textarea id="cc-reason" class="inp" rows="3" style="resize:none;" placeholder="اكتب السبب..."></textarea>
-    <input type="hidden" id="cc-id">
-    <div style="display:flex;gap:10px;margin-top:16px;">
-      <button class="btn-sec" style="flex:1" onclick="closeCancelModal()">تراجع</button>
-      <button class="btn-main" id="cc-btn" style="flex:1" onclick="submitCancelRequest()">إرسال للإدارة</button>
-    </div>
-  </div>
-</div>
-
-<div id="editAssetModal" class="modal-overlay dn" onclick="closeEditAsset()">
-  <div class="bottom-sheet" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-      <h3 style="font-weight:900;margin:0;">تعديل العنصر</h3>
-      <button onclick="closeEditAsset()" style="background:none;border:none;font-size:20px;">✕</button>
-    </div>
-    
-    <label class="up-zone" id="ea-uz" style="height:120px;">
-      <input type="file" class="dn" accept="image/*" onchange="handleEditImg(this)">
-      <img id="ea-prev" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;">
-      <div class="uz-badge" id="ea-badge">✓ جاهزة</div>
-      <div style="position:absolute;bottom:10px;left:10px;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:8px;font-size:.75rem;font-weight:800;color:var(--tx0);">📷 تغيير الصورة</div>
-    </label>
-
-    <div class="g2 mt-3">
-      <div style="grid-column:1/3"><label class="lbl">الاسم</label><input type="text" id="ea-nm" class="inp"></div>
-      <div><label class="lbl">السعر (د.ع)</label><input type="number" id="ea-pr" class="inp"></div>
-      
-      <div id="ea-car-cat"><label class="lbl">الفئة</label><select id="ea-cat" class="inp"><option value="economy">اقتصادية</option><option value="family">عائلية</option><option value="luxury">فخمة VIP</option><option value="wedding">زفاف</option></select></div>
-      <div id="ea-car-col"><label class="lbl">اللون</label><input type="text" id="ea-col" class="inp"></div>
-      <div id="ea-car-plt" style="grid-column:1/3"><label class="lbl">رقم اللوحة</label><input type="text" id="ea-plt" class="inp"></div>
-      
-      <div id="ea-hot-bed" class="dn" style="grid-column:1/3"><label class="lbl">نوع السرير</label><select id="ea-bed" class="inp"><option value="single">مفرد</option><option value="double">مزدوج كبير</option><option value="twin">سريرين توأم</option><option value="king">كينج سايز</option></select></div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:16px;">
-      <button class="btn-sec" style="flex:1" onclick="closeEditAsset()">إلغاء</button>
-      <button class="btn-main" id="ea-btn" style="flex:1" onclick="saveAssetEdit()">حفظ التعديلات</button>
-    </div>
-  </div>
-</div> <script>
+<script>
 /* ════════════════════════════════════════════════════════
    CONFIGURATION & FIREBASE
 ════════════════════════════════════════════════════════ */
@@ -1127,8 +455,8 @@ let pickerMap = null;
 let regLat = 35.468, regLng = 44.392;
 let b64Reg = null, b64Asset = null, b64Edit = null;
 let waitTimer = null;
-let alertOrder = null, waCurrentOrder = null, editCtx = null;
 let inventoryLoaded = false;
+let pollingInterval = null;
 
 /* ════════════════════════════════════════════════════════
    UTILITIES
@@ -1153,8 +481,8 @@ function showLoad(on, msg="جاري التحميل...") {
 function setBtn(id, loading) {
   const el = $(id); if(!el) return;
   el.disabled = loading;
-  if(loading) { el.dataset.txt = el.innerHTML; el.innerHTML = "⏳ جاري..."; }
-  else { el.innerHTML = el.dataset.txt || el.innerHTML; }
+  if(loading) { el.dataset.txt = el.innerHTML; el.innerHTML = "⏳ جاري..."; el.classList.add("btn-ld"); }
+  else { el.innerHTML = el.dataset.txt || el.innerHTML; el.classList.remove("btn-ld"); }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1186,8 +514,13 @@ window.pickType = (type, el) => {
   regType = type;
   document.querySelectorAll('.ptype').forEach(b => b.classList.remove('on'));
   el.classList.add('on');
-  $("reg-car-extras").classList.toggle("dn", type!=="car");
-  $("reg-hotel-extras").classList.toggle("dn", type!=="hotel");
+  
+  $("reg-car-extras").classList.add("dn");
+  $("reg-hotel-extras").classList.add("dn");
+  $("reg-hall-extras").classList.add("dn");
+  $("reg-school-extras").classList.add("dn");
+  
+  $(`reg-${type}-extras`).classList.remove("dn");
 };
 
 function initPickerMap() {
@@ -1207,7 +540,6 @@ window.locateMe = () => {
   );
 };
 
-/* ── Image Compression & ImgBB ── */
 function compressImage(file, maxDim=1000, quality=0.8) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader(); reader.onerror = reject;
@@ -1252,30 +584,28 @@ window.handleRegImg = async (input) => {
   } catch(e) { $("uz-reg-t").textContent = "فشل المعالجة"; }
 };
 
-window.handleAssetImg = async (input, type) => {
-  if(!input.files || !input.files[0]) return;
-  $(`uz-${type}-t`).textContent = "جاري الضغط...";
-  try {
-    b64Asset = await compressImage(input.files[0]);
-    $(`uz-${type}-p`).src = b64Asset; $(`uz-${type}-p`).style.display = "block";
-    $(`uz-${type}-i`).style.display = "none"; $(`uz-${type}-t`).style.display = "none";
-    $(`uz-${type}`).classList.add("filled");
-  } catch(e) { $(`uz-${type}-t`).textContent = "فشل المعالجة"; }
-};
-
-/* ── Login & Register ── */
 window.doLogin = async () => {
   const name = $("lg-name").value.trim(), pass = $("lg-pass").value.trim();
   if(!name || !pass) return toast("أدخل الاسم وكلمة المرور", "e");
   
-  setBtn("btn-login", true); showLoad(true, "تسجيل الدخول...");
+  setBtn("btn-login", true); showLoad(true, "التحقق من البيانات...");
   try {
+    // Chain fetch for all 4 types
+    let type = "car";
     let res = await fetch(`${API_URL}?action=checkCarOffice&name=${encodeURIComponent(name)}&pass=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
-    let data = await res.json(); let type = "car";
+    let data = await res.json();
     
     if(data.status === "not_found") {
       res = await fetch(`${API_URL}?action=checkHotel&name=${encodeURIComponent(name)}&pass=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
       data = await res.json(); type = "hotel";
+    }
+    if(data.status === "not_found") {
+      res = await fetch(`${API_URL}?action=checkHall&name=${encodeURIComponent(name)}&pass=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
+      data = await res.json(); type = "hall";
+    }
+    if(data.status === "not_found") {
+      res = await fetch(`${API_URL}?action=checkDriveSchool&name=${encodeURIComponent(name)}&pass=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
+      data = await res.json(); type = "school";
     }
     
     showLoad(false);
@@ -1293,32 +623,45 @@ window.doLogin = async () => {
     localStorage.setItem("hut_partner_sess", JSON.stringify(pData));
     const snd = $("sndNew"); if(snd) { snd.currentTime=0; snd.play().catch(()=>{}); }
     bootDashboard();
-  } catch(e) { showLoad(false); toast("فشل الاتصال", "e"); }
+  } catch(e) { showLoad(false); toast("فشل الاتصال بالسيرفر", "e"); }
   finally { setBtn("btn-login", false); }
 };
 
 window.doRegister = async () => {
   const name = $("rg-name").value.trim(), phoneAdmin = $("rg-phone-admin").value.trim();
-  const phoneSales = $("rg-phone-sales").value.trim() || phoneAdmin;
-  const city = $("rg-city").value, hours = $("rg-hours").value, pass = $("rg-pass").value.trim();
+  const city = $("rg-city").value, pass = $("rg-pass").value.trim();
   const comm = $("rg-comm").value.trim() || "5000";
   
   if(!name || !phoneAdmin || !pass) return toast("أكمل الحقول الأساسية", "e");
-  if(!b64Reg) return toast("يجب رفع صورة الواجهة", "e");
+  if(!b64Reg) return toast("يجب رفع صورة الواجهة أو الشعار", "e");
   
-  setBtn("btn-reg", true); showLoad(true, "رفع الصورة...");
+  setBtn("btn-reg", true); showLoad(true, "رفع الصورة للسحابة...");
   const coverUrl = await uploadToImgBB(b64Reg);
   if(!coverUrl) { showLoad(false); setBtn("btn-reg", false); return toast("فشل رفع الصورة", "e"); }
 
-  showLoad(true, "إرسال الطلب...");
-  const action = regType === "hotel" ? "REGISTER_HOTEL" : "REGISTER_CAR_OFFICE";
+  showLoad(true, "إرسال طلب التسجيل...");
+  let action = "REGISTER_CAR_OFFICE";
+  if(regType === "hotel") action = "REGISTER_HOTEL";
+  if(regType === "hall") action = "REGISTER_HALL";
+  if(regType === "school") action = "REGISTER_DRIVE_SCHOOL";
+
   const body = { 
     action, token: API_TOKEN, name, phone: phoneAdmin, city, pass, lat: regLat, lng: regLng, 
-    comm_type: "fixed", comm_val: comm, photo_url: coverUrl, details: `مبيعات: ${phoneSales} | ساعات: ${hours}`
+    comm_type: "fixed", comm_val: comm, photo_url: coverUrl 
   };
 
-  if(regType === "hotel") { body.stars = Number($("rg-stars").value) || 0; body.cat = "premium"; } 
-  else { body.cat = $("rg-office-type").value; }
+  if(regType === "car") { body.cat = $("rg-office-type").value; }
+  else if(regType === "hotel") { body.stars = Number($("rg-stars").value) || 0; body.cat = "premium"; }
+  else if(regType === "hall") {
+    body.capacity = $("rg-hall-cap").value;
+    body.price = $("rg-hall-price").value;
+    body.features = $("rg-hall-feat").value;
+  }
+  else if(regType === "school") {
+    body.price_basic = $("rg-school-basic").value;
+    body.price_advanced = $("rg-school-adv").value;
+    body.features = $("rg-school-feat").value;
+  }
   
   try {
     const res = await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
@@ -1337,7 +680,11 @@ function startWaitPolling() { if(waitTimer) clearInterval(waitTimer); waitTimer 
 async function checkWait() {
   if(!pData) return;
   try {
-    const action = pData.type === "hotel" ? "checkHotel" : "checkCarOffice";
+    let action = "checkCarOffice";
+    if(pData.type === 'hotel') action = 'checkHotel';
+    if(pData.type === 'hall') action = 'checkHall';
+    if(pData.type === 'school') action = 'checkDriveSchool';
+    
     const res = await fetch(`${API_URL}?action=${action}&name=${encodeURIComponent(pData.name)}&pass=${encodeURIComponent(pData.pass)}&token=${API_TOKEN}`);
     const data = await res.json();
     if(data.status === "active") {
@@ -1348,52 +695,89 @@ async function checkWait() {
 }
 window.checkWait = () => { checkWait(); toast("جاري التحقق..."); };
 
-/* ════════════════════════════════════════════════════════════════
-   DASHBOARD & FIREBASE
-════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════
+   DASHBOARD & LOGIC
+════════════════════════════════════════════════════════ */
 function bootDashboard() {
   $("authPage").classList.add("dn");
   $("dashPage").classList.remove("dn");
   
   $("dh-name").textContent = pData.name;
-  const isH = pData.type === "hotel";
-  $("dh-type").textContent = isH ? "🏨 فندق / شقق" : "🚗 مكتب سيارات";
   
-  if(isH) {
-    $("add-car-form").classList.add("dn"); $("add-room-form").classList.remove("dn");
+  const typeMap = { car: "🚗 مكتب سيارات", hotel: "🏨 فندق / شقق", hall: "🥂 قاعة مناسبات", school: "🎓 مدرسة قيادة" };
+  $("dh-type").textContent = typeMap[pData.type];
+  
+  // Show Inventory Only for Cars and Hotels
+  if(pData.type === "car" || pData.type === "hotel") {
+    $("nav-inventory").classList.remove("dn");
+    if(pData.type === "hotel") {
+      $("add-car-form").classList.add("dn"); $("add-room-form").classList.remove("dn");
+    } else {
+      $("add-room-form").classList.add("dn"); $("add-car-form").classList.remove("dn");
+    }
+    fetchInventory(); 
   } else {
-    $("add-room-form").classList.add("dn"); $("add-car-form").classList.remove("dn");
+    // Halls & Schools don't have sub-assets inventory right now
+    $("nav-inventory").classList.add("dn");
   }
 
   startFirebase();
-  fetchInventory(); 
-  loadLedger();
+  loadHistory();
 }
 
 function startFirebase() {
   if(!db) return;
-  const sp = pData.type === "hotel" ? "hut_hotel_bookings" : "hut_car_orders";
-  db.ref(sp).on("value", snap => { processOrders(snap.val() || {}); });
+  
+  // Listen for Orders
+  let sp = "";
+  if(pData.type === "hotel") sp = "hut_hotel_bookings";
+  else if(pData.type === "car") sp = "hut_car_orders";
+  else if(pData.type === "hall") sp = "hut_hall_bookings";
+  
+  if(sp) {
+    db.ref(sp).on("value", snap => { processOrders(snap.val() || {}); });
+  } else if (pData.type === "school") {
+    // Drive Schools use polling since they aren't on Firebase real-time in this exact iteration
+    fetchMyOrders();
+    pollingInterval = setInterval(fetchMyOrders, 20000);
+  }
   
   // Realtime Ledger update
-  const ledPath = pData.type === "hotel" ? "hotels" : "car_offices";
-  const pKey = String(pData.id||"").replace(/\D/g,"") || pData.name.replace(/\s+/g,"_");
-  db.ref(`ledgers/${ledPath}/${pKey}`).on("value", snap => {
+  const lPath = { car: "car_offices", hotel: "hotels", hall: "halls", school: "drive_schools" }[pData.type];
+  const pKey = String(pData.id||"").replace(/\D/g,"") || String(pData.id);
+  db.ref(`ledgers/${lPath}/${pKey}`).on("value", snap => {
     const l = snap.val() || {};
     $("lg-debt").textContent = fmt(l.debt || 0);
     $("lg-rev").textContent = fmt(l.total_revenue || 0);
-    $("lg-c").textContent = l.completed_orders || 0;
   });
 }
 
-function processOrders(raw) {
-  const all = Object.values(raw);
+// Fallback Polling for non-Firebase entities (Schools)
+async function fetchMyOrders() {
+  if(!pData) return;
+  try {
+    let action = "", paramStr = "";
+    if(pData.type === 'school') { action = "getDriveStudents"; paramStr = `school_id=${encodeURIComponent(pData.id)}`; }
+    if(action) {
+      const res = await fetch(`${API_URL}?action=${action}&${paramStr}&token=${API_TOKEN}`);
+      const data = await res.json();
+      processOrders(data, true);
+    }
+  } catch(e) { }
+}
+
+function processOrders(raw, isArray = false) {
+  const all = isArray ? raw : Object.values(raw);
   let mine = [];
   
   all.forEach(o => {
     if(pData.type === "hotel") {
       if(o.hotel_name === pData.name || String(o.hotel_id) === String(pData.id)) mine.push(o);
-    } else {
+    } else if(pData.type === "hall") {
+      if(o.hall_name === pData.name || String(o.hall_id) === String(pData.id)) mine.push(o);
+    } else if(pData.type === "school") {
+      if(String(o.school_id) === String(pData.id)) mine.push(o);
+    } else { // car
       if(o.office === pData.name || (o.status === "pending" && o.city === pData.city && !o.office)) mine.push(o);
     }
   });
@@ -1416,26 +800,34 @@ function renderOrders(list) {
     return;
   }
 
-  const isH = pData.type === "hotel";
-
   container.innerHTML = list.map(o => {
     const isCP = o.cancel_requested;
     const stClass = isCP ? "pending" : (o.status === "pending" ? "pending" : o.status === "completed" ? "completed" : "active");
-    const stText = isCP ? "إلغاء معلق" : (o.status === "pending" ? "معلق" : o.status === "completed" ? "مكتمل" : "جاري التنفيذ");
-    const title = isH ? (o.room_type||"غرفة") : (o.car||"سيارة");
-    const custName = o.name || o.guest_name || "زبون";
+    const stText = isCP ? "إلغاء معلق" : (o.status === "pending" ? "معلق" : o.status === "completed" ? "مكتمل" : "جاري/نشط");
+    
+    let title = o.car || o.room_type || o.event_type || o.course || "طلب جديد";
+    const custName = o.name || o.guest_name || o.student_name || "زبون";
     const phone = o.phone || o.guest_phone || "";
+    const dateStr = o.date || o.date_arrive || "—";
     
     let acts = "";
     if(o.status === "pending" && !isCP) {
-      acts += `<button class="ab acc" onclick="acceptOrder('${esc(o.id)}')">✅ قبول</button>`;
-      acts += `<button class="ab rej" onclick="rejectOrder('${esc(o.id)}')">✕ رفض</button>`;
-    } else if (!["completed","cancelled"].includes(o.status) && !isCP) {
-      if(!isH) acts += `<button class="ab acc" onclick="completeOrder('${esc(o.id)}')">🔑 إنهاء التأجير</button>`;
-      else acts += `<button class="ab acc" onclick="checkoutGuest('${esc(o.id)}')">🚪 خروج النزيل</button>`;
+      if(pData.type === "car") {
+        acts += `<button class="ab acc" onclick="doActionAPI('claimOrder', '${o.id}')">✅ قبول</button>`;
+      } else if(pData.type === "hotel") {
+        acts += `<button class="ab acc" onclick="doActionAPI('confirmBooking', '${o.id}')">✅ تأكيد</button>`;
+        acts += `<button class="ab rej" onclick="doActionAPI('rejectBooking', '${o.id}')">✕ رفض</button>`;
+      } else if(pData.type === "hall") {
+        acts += `<button class="ab acc" onclick="doActionAPI('confirmHallBooking', '${o.id}')">✅ قبول</button>`;
+        acts += `<button class="ab rej" onclick="doActionAPI('rejectHallBooking', '${o.id}')">✕ رفض</button>`;
+      }
+    } else if (["active", "confirmed"].includes(o.status) && !isCP) {
+      if(pData.type === "car") acts += `<button class="ab acc" onclick="doActionAPI('completeOrder', '${o.id}')">🔑 إنهاء التأجير</button>`;
+      if(pData.type === "hotel") acts += `<button class="ab acc" onclick="doActionAPI('checkoutGuest', '${o.id}')">🚪 خروج النزيل</button>`;
+      if(pData.type === "hall") acts += `<button class="ab acc" onclick="doActionAPI('completeHallBooking', '${o.id}')">🥂 إتمام السهرة</button>`;
       
-      acts += `<button class="ab wa" onclick="openWaModal('${esc(phone)}', '${esc(custName)}', '${esc(title)}')"><i data-lucide="message-circle" size="14"></i> واتساب</button>`;
-      acts += `<button class="ab rej" onclick="openCancelModal('${esc(o.id)}')">🗑 إلغاء</button>`;
+      acts += `<button class="ab wa" onclick="openWaModal('${esc(phone)}', '${esc(custName)}', '${esc(title)}')"><i data-lucide="message-circle" size="14"></i> مراسلة</button>`;
+      if(pData.type !== "school") acts += `<button class="ab rej" onclick="openCancelModal('${esc(o.id)}')">🗑 طلب إلغاء</button>`;
     }
 
     return `
@@ -1445,18 +837,17 @@ function renderOrders(list) {
           <span class="oc-st ${stClass==="pending"?"st-pend":stClass==="completed"?"st-done":"st-act"}">${stText}</span>
         </div>
         <div class="oc-mid">
-          <div class="oc-title">${isH?"🏨":"🚗"} ${esc(title)}</div>
+          <div class="oc-title">${esc(title)}</div>
           <div class="oc-grid">
             <div><div class="oc-lbl">العميل</div><div class="oc-val">${esc(custName)}</div></div>
             <div><div class="oc-lbl">الهاتف</div><div class="oc-val" style="color:var(--blue);font-family:'IBM Plex Mono',monospace;">${esc(phone)}</div></div>
-            <div><div class="oc-lbl">التاريخ</div><div class="oc-val">${esc(o.date || o.date_arrive)}</div></div>
-            <div><div class="oc-lbl">${isH?"الليالي":"الأيام"}</div><div class="oc-val">${o.nights || o.days || 1}</div></div>
+            <div><div class="oc-lbl">التاريخ</div><div class="oc-val">${esc(dateStr)}</div></div>
+            <div><div class="oc-lbl">السعر</div><div class="oc-val" style="color:var(--green)">${fmt(o.total || o.price)} د.ع</div></div>
           </div>
           ${isCP ? `<div style="background:var(--red-l);color:var(--red);padding:6px;border-radius:6px;font-size:.7rem;font-weight:700;margin-top:8px;">⏳ بانتظار موافقة الإدارة على الإلغاء</div>` : ""}
         </div>
         <div class="oc-bot">
-          <div class="oc-price">${fmt(o.total)} د.ع</div>
-          <div class="oc-acts">${acts}</div>
+          <div class="oc-acts" style="width:100%">${acts}</div>
         </div>
       </div>
     `;
@@ -1464,36 +855,19 @@ function renderOrders(list) {
   lucide.createIcons();
 }
 
-/* ── Order Actions ── */
-window.acceptOrder = async (id) => {
-  showLoad(true, "تأكيد الطلب...");
-  const action = pData.type === "car" ? "claimOrder" : "confirmBooking";
-  const body = { action, id, token: API_TOKEN };
-  if(pData.type === "car") body.office = pData.name; else body.hotel = pData.name;
+window.doActionAPI = async (act, id) => {
+  if(!confirm("تأكيد هذه العملية؟")) return;
+  showLoad(true);
   try {
-    await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
-    toast("تم قبول الطلب بنجاح!");
+    let bd = { action: act, id: id, token: API_TOKEN };
+    if(act === 'confirmHallBooking' || act === 'completeHallBooking') bd.hall = pData.name;
+    if(act === 'confirmBooking' || act === 'checkoutGuest') bd.hotel = pData.name;
+    if(act === 'claimOrder' || act === 'completeOrder') bd.office = pData.name;
+    
+    await fetch(API_URL, { method: "POST", body: JSON.stringify(bd) });
+    toast("تمت العملية بنجاح!");
   } catch(e) { toast("خطأ", "e"); }
   finally { showLoad(false); }
-};
-
-window.rejectOrder = async (id) => {
-  if(!confirm("تأكيد رفض الطلب؟")) return;
-  showLoad(true);
-  const action = pData.type === "hotel" ? "rejectBooking" : "cancelRequest";
-  try { await fetch(API_URL, { method: "POST", body: JSON.stringify({ action, id, token: API_TOKEN }) }); toast("تم الرفض"); } catch(e) {} finally { showLoad(false); }
-};
-
-window.completeOrder = async (id) => {
-  if(!confirm("استلام السيارة وإنهاء التأجير؟ (ستحسب العمولة)")) return;
-  showLoad(true);
-  try { await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "completeOrder", id, office: pData.name, token: API_TOKEN }) }); toast("تم إنهاء التأجير"); } catch(e) {} finally { showLoad(false); }
-};
-
-window.checkoutGuest = async (id) => {
-  if(!confirm("تسجيل خروج النزيل؟")) return;
-  showLoad(true);
-  try { await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "checkoutGuest", id, hotel: pData.name, token: API_TOKEN }) }); toast("تم الخروج"); } catch(e) {} finally { showLoad(false); }
 };
 
 window.openCancelModal = (id) => { $("cc-id").value = id; $("cc-reason").value = ""; $("cancelModal").classList.remove("dn"); };
@@ -1502,8 +876,8 @@ window.submitCancelRequest = async () => {
   const id = $("cc-id").value; const reason = $("cc-reason").value.trim() || "بدون سبب";
   if(!id) return; setBtn("cc-btn", true);
   try {
-    const sp = pData.type === "hotel" ? "hut_hotel_bookings" : "hut_car_orders";
-    if(db) await db.ref(`${sp}/${id}`).update({ cancel_requested: true, cancel_reason: reason, cancel_by: pData.name, cancel_at: new Date().toISOString() });
+    const sp = pData.type === "hotel" ? "hut_hotel_bookings" : pData.type === "hall" ? "hut_hall_bookings" : "hut_car_orders";
+    if(db && sp) await db.ref(`${sp}/${id}`).update({ cancel_requested: true, cancel_reason: reason, cancel_by: pData.name, cancel_at: new Date().toISOString() });
     toast("تم إرسال طلب الإلغاء للإدارة"); closeCancelModal();
   } catch(e) { toast("خطأ", "e"); } finally { setBtn("cc-btn", false); }
 };
@@ -1513,12 +887,10 @@ window.openWaModal = (phone, name, svc) => {
   let p = String(phone).replace(/\D/g, ""); if(p.startsWith("0")) p = "964" + p.slice(1);
   $("wa-phone").textContent = "📱 " + p;
   
-  const tmps = pData.type === "hotel" ? [
-    { l: "تأكيد وصول 🕒", t: `مرحباً ${name}، ننتظر وصولكم لفندق (${pData.name}) لحجز ${svc}.` },
-    { l: "طلب هوية 🆔", t: `مرحباً، نرجو إرسال صورة الهوية لإتمام الحجز.` }
-  ] : [
-    { l: "السيارة جاهزة 🚗", t: `مرحباً ${name}، سيارتك (${svc}) جاهزة للاستلام من مكتب ${pData.name}.` },
-    { l: "طلب إجازة 💳", t: `مرحباً، نرجو إرسال صورة من إجازة السوق.` }
+  const tmps = [
+    { l: "تأكيد الطلب ✅", t: `مرحباً ${name}، نؤكد لكم حجز (${svc}) عبر منصة الحوت.` },
+    { l: "طلب هوية 🆔", t: `مرحباً، نرجو إرسال صورة الهوية لإتمام إجراءات الحجز.` },
+    { l: "مشاركة الموقع 📍", t: `مرحباً، يرجى تزويدنا بموقعكم الدقيق لتسهيل الوصول.` }
   ];
 
   $("wa-templates-list").innerHTML = tmps.map(t => `
@@ -1532,42 +904,45 @@ window.openWaModal = (phone, name, svc) => {
 window.closeWaModal = () => $("waModal").classList.add("dn");
 
 /* ════════════════════════════════════════════════════════════════
-   INVENTORY (ADD ASSET & GALLERY) - FIXED FOR FALLBACK
+   INVENTORY (ADD ASSET & GALLERY)
 ════════════════════════════════════════════════════════════════ */
+window.handleAssetImg = async (input, type) => {
+  if(!input.files || !input.files[0]) return;
+  $(`uz-${type}-t`).textContent = "جاري الضغط...";
+  try {
+    b64Asset = await compressImage(input.files[0]);
+    $(`uz-${type}-p`).src = b64Asset; $(`uz-${type}-p`).style.display = "block";
+    $(`uz-${type}-i`).style.display = "none"; $(`uz-${type}-t`).style.display = "none";
+    $(`uz-${type}`).classList.add("filled");
+  } catch(e) { $(`uz-${type}-t`).textContent = "فشل المعالجة"; }
+};
+
 window.saveCar = async () => {
   const nm = $("car-nm").value.trim(), pr = $("car-pr").value.trim();
-  if(!nm || !pr) return toast("أدخل الاسم والسعر", "e");
-  if(!b64Asset) return toast("ارفع صورة السيارة", "e");
-  
-  setBtn("btn-save-car", true); showLoad(true, "رفع الصورة للسحابة...");
+  if(!nm || !pr || !b64Asset) return toast("أدخل البيانات والصورة", "e");
+  setBtn("btn-save-car", true); showLoad(true, "رفع الصورة...");
   const url = await uploadToImgBB(b64Asset);
-  if(!url) { showLoad(false); setBtn("btn-save-car", false); return toast("فشل رفع الصورة", "e"); }
+  if(!url) { showLoad(false); setBtn("btn-save-car", false); return toast("فشل الرفع", "e"); }
 
-  showLoad(true, "حفظ السيارة...");
   try {
     await fetch(API_URL, { method: "POST", body: JSON.stringify({
       action: "ADD_CAR_TO_FLEET", token: API_TOKEN, office_id: pData.id,
       name: nm, price: pr, cat: $("car-ct").value, color: $("car-cl").value.trim(), plate: $("car-pl").value.trim(),
-      photo_url: url,
-      details: `سنة: ${$("car-year").value} | قير: ${$("car-trans").value==="auto"?"أوتوماتيك":"عادي"} | وقود: ${$("car-fuel").value==="petrol"?"بنزين":$("car-fuel").value==="hybrid"?"هايبرد":"ديزل"}`
+      photo_url: url, details: `سنة: ${$("car-year").value} | قير: ${$("car-trans").value==="auto"?"أوتوماتيك":"عادي"} | وقود: ${$("car-fuel").value==="petrol"?"بنزين":$("car-fuel").value==="hybrid"?"هايبرد":"ديزل"}`
     })});
     showLoad(false); toast("تمت الإضافة بنجاح!");
     $("car-nm").value=""; $("car-pr").value=""; $("car-year").value=""; $("car-cl").value=""; $("car-pl").value="";
     resetAssetUpload("car"); fetchInventory(true);
-  } catch(e) { showLoad(false); toast("خطأ بالاتصال", "e"); }
-  finally { setBtn("btn-save-car", false); }
+  } catch(e) {} finally { setBtn("btn-save-car", false); }
 };
 
 window.saveRoom = async () => {
   const nm = $("rm-nm").value.trim(), pr = $("rm-pr").value.trim();
-  if(!nm || !pr) return toast("أدخل الاسم والسعر", "e");
-  if(!b64Asset) return toast("ارفع صورة الغرفة", "e");
-  
+  if(!nm || !pr || !b64Asset) return toast("أكمل البيانات والصورة", "e");
   setBtn("btn-save-room", true); showLoad(true, "رفع الصورة...");
   const url = await uploadToImgBB(b64Asset);
   if(!url) { showLoad(false); setBtn("btn-save-room", false); return toast("فشل الرفع", "e"); }
 
-  showLoad(true, "حفظ الغرفة...");
   try {
     const bed = $("rm-bed").value;
     const bedAr = bed==="single"?"مفرد":bed==="double"?"مزدوج كبير":bed==="twin"?"توأم":"كينج";
@@ -1576,11 +951,10 @@ window.saveRoom = async () => {
       room_name: nm, room_type: $("rm-type").value, price: Number(pr), photo_url: url,
       bed_type: bedAr, description: `تتسع لـ: ${$("rm-cap").value || 1} أشخاص`
     })});
-    showLoad(false); toast("تمت إضافة الغرفة!");
+    showLoad(false); toast("تمت الإضافة!");
     $("rm-nm").value=""; $("rm-pr").value=""; $("rm-cap").value="";
     resetAssetUpload("room"); fetchInventory(true);
-  } catch(e) { showLoad(false); toast("خطأ بالاتصال", "e"); }
-  finally { setBtn("btn-save-room", false); }
+  } catch(e) {} finally { setBtn("btn-save-room", false); }
 };
 
 function resetAssetUpload(type) {
@@ -1591,78 +965,52 @@ function resetAssetUpload(type) {
   $(`uz-${type}`).classList.remove("filled");
 }
 
-/* ── Fetch & Render Gallery (FIXED LOGIC) ── */
 window.fetchInventory = async (force=false) => {
-  if(inventoryLoaded && !force) return;
+  if((inventoryLoaded && !force) || (pData.type !== 'car' && pData.type !== 'hotel')) return;
   const isH = pData.type === "hotel";
   const grid = $("gallery-list");
-  
   grid.innerHTML = `<div style="text-align:center;padding:40px;color:var(--tx2);font-weight:800;"><div class="spinner" style="margin:0 auto 10px;"></div><br>جاري جلب الأصول...</div>`;
   
   try {
     let items = [];
-
     if (isH) {
       const res = await fetch(`${API_URL}?action=getRoomsByHotel&hotel_id=${encodeURIComponent(pData.id)}&token=${API_TOKEN}`);
-      const data = await res.json();
-      items = Array.isArray(data) ? data : (data.rooms || []);
+      const data = await res.json(); items = Array.isArray(data) ? data : (data.rooms || []);
     } else {
       const res = await fetch(`${API_URL}?action=getAvailableCars&token=${API_TOKEN}`);
       const data = await res.json();
       const allCars = Array.isArray(data) ? data : (data.cars || data.fleet || []);
-      
-      // Filter locally for this specific partner
       items = allCars.filter(c => String(c.office_id) === String(pData.id) || String(c.office_id) === String(pData.name));
     }
-
     inventoryLoaded = true;
 
-    if(!items.length) {
-      grid.innerHTML = `<div style="text-align:center;padding:40px;border:1px dashed var(--border-d);border-radius:16px;color:var(--tx3);font-weight:700;">لا توجد أصول مضافة بعد. أضف عنصراً من الأعلى وسيظهر هنا فوراً.</div>`;
-      return;
-    }
+    if(!items.length) { grid.innerHTML = `<div style="text-align:center;padding:40px;border:1px dashed var(--border-d);border-radius:16px;color:var(--tx3);font-weight:700;">لا توجد أصول مضافة بعد.</div>`; return; }
 
     grid.innerHTML = items.map(i => {
       const isAvail = i.status !== "inactive";
       const nm = isH ? i.room_name : i.name;
       const id = esc(i.id || i.room_name || i.plate || "");
-      
-      const img = i.photo_url 
-        ? `<img src="${esc(i.photo_url)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">` 
-        : `<div class="ac-noimg" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;background:var(--light);color:var(--tx4);">${isH?"🛏":"🚗"}</div>`;
-      
-      let specs = "";
-      if(isH) {
-        specs = `<div class="ac-spec">🛌 ${esc(i.bed_type||"")}</div><div class="ac-spec">${esc(i.description||"")}</div>`;
-      } else {
-        specs = `<div class="ac-spec">🎨 ${esc(i.color||"—")}</div><div class="ac-spec">🪪 ${esc(i.plate||"—")}</div><div style="width:100%;font-size:.65rem;color:var(--tx3);margin-top:4px;">${esc(i.details||"")}</div>`;
-      }
+      const img = i.photo_url ? `<img src="${esc(i.photo_url)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">` : `<div class="ac-noimg">${isH?"🛏":"🚗"}</div>`;
+      let specs = isH ? `<div class="ac-spec">🛌 ${esc(i.bed_type||"")}</div><div class="ac-spec">${esc(i.description||"")}</div>` : `<div class="ac-spec">🎨 ${esc(i.color||"—")}</div><div class="ac-spec">🪪 ${esc(i.plate||"—")}</div><div style="width:100%;font-size:.65rem;color:var(--tx3);margin-top:4px;">${esc(i.details||"")}</div>`;
 
       return `
       <div class="asset-card">
-        <div class="ac-img">${img}<div class="ac-badge">${isH?"غرفة":"سيارة"}</div></div>
+        <div class="ac-img">${img}</div>
         <div class="ac-body">
           <div class="ac-title">${esc(nm)}</div>
           <div class="ac-specs">${specs}</div>
           <div class="ac-price">${fmt(i.price)} <span style="font-size:.65rem;color:var(--tx2)">د.ع/${isH?"ليلة":"يوم"}</span></div>
-          <div class="ac-stats">
-            <div class="ac-stat"><div class="acs-v" style="color:var(--blue)">${i.orders||i.bookings||0}</div><div class="acs-l">حجوزات</div></div>
-            <div class="ac-stat"><div class="acs-v" style="color:var(--green)">${fmt(i.revenue||i.total_revenue||0)}</div><div class="acs-l">إيرادات</div></div>
-          </div>
           <div class="ac-toggle">
             <span style="font-size:.75rem;font-weight:700;color:var(--tx2)">التوفر</span>
             <label class="switch"><input type="checkbox" ${isAvail?"checked":""} onchange="toggleAssetStatus('${id}',this)"><span class="slider"></span></label>
           </div>
           <div style="display:flex;gap:8px;margin-top:10px;">
-            <button style="flex:1;padding:8px;background:var(--white);color:var(--blue);border:1px solid var(--border-d);border-radius:8px;font-weight:800;cursor:pointer;" onclick='openEditAsset(${safeJSON(i)})'>✏️ تعديل</button>
             <button style="flex:1;padding:8px;background:var(--red-l);color:var(--red);border:1px dashed var(--red);border-radius:8px;font-weight:800;cursor:pointer;" onclick="deleteAsset('${id}',this)">🗑 حذف</button>
           </div>
         </div>
       </div>`;
     }).join("");
-  } catch(e) {
-    grid.innerHTML = `<div style="text-align:center;padding:20px;color:var(--red);font-weight:700;">فشل جلب الأصول. تأكد من اتصالك بالإنترنت.</div>`;
-  }
+  } catch(e) { grid.innerHTML = `<div style="text-align:center;padding:20px;color:var(--red);font-weight:700;">فشل جلب الأصول.</div>`; }
 };
 
 window.toggleAssetStatus = async (id, cb) => {
@@ -1671,11 +1019,9 @@ window.toggleAssetStatus = async (id, cb) => {
     const ac = pData.type === "car" ? "UPDATE_CAR_STATUS" : "UPDATE_ROOM_STATUS";
     const bd = { action: ac, token: API_TOKEN, status: st };
     if(pData.type === "car") bd.id = id; else { bd.room_id = id; bd.hotel_id = pData.id; }
-    await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) });
-    toast(`✅ تم التحديث`);
-  } catch(e) { cb.checked = !cb.checked; toast("فشل","e"); }
+    await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) }); toast(`✅ تم التحديث`);
+  } catch(e) { cb.checked = !cb.checked; }
 };
-
 window.deleteAsset = async (id, btn) => {
   if(!confirm("تأكيد الحذف النهائي؟")) return;
   setBtn(btn, true);
@@ -1683,67 +1029,8 @@ window.deleteAsset = async (id, btn) => {
     const ac = pData.type === "car" ? "DELETE_CAR" : "DELETE_HOTEL_ROOM";
     const bd = { action: ac, token: API_TOKEN };
     if(pData.type === "car") { bd.id = id; bd.office_id = pData.id; } else { bd.room_id = id; bd.hotel_id = pData.id; }
-    await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) });
-    toast("🗑 تم الحذف"); fetchInventory(true);
-  } catch(e) { toast("فشل الحذف","e"); setBtn(btn, false); }
-};
-
-/* ── EDIT ASSET ── */
-window.openEditAsset = (item) => {
-  editCtx = item; b64Edit = null;
-  const isH = pData.type === "hotel";
-  $("ea-nm").value = isH ? item.room_name : item.name;
-  $("ea-pr").value = item.price;
-  
-  if(isH) {
-    $("ea-car-cat").classList.add("dn"); $("ea-car-col").classList.add("dn"); $("ea-car-plt").classList.add("dn");
-    $("ea-hot-bed").classList.remove("dn");
-    $("ea-bed").value = item.bed_type === "مفرد" ? "single" : item.bed_type === "مزدوج كبير" ? "double" : "twin";
-  } else {
-    $("ea-car-cat").classList.remove("dn"); $("ea-car-col").classList.remove("dn"); $("ea-car-plt").classList.remove("dn");
-    $("ea-hot-bed").classList.add("dn");
-    $("ea-cat").value = item.cat || "economy"; $("ea-col").value = item.color || ""; $("ea-plt").value = item.plate || "";
-  }
-  
-  if(item.photo_url) { $("ea-prev").src = item.photo_url; $("ea-prev").style.display = "block"; }
-  else { $("ea-prev").style.display = "none"; }
-  
-  $("editAssetModal").classList.remove("dn");
-};
-window.closeEditAsset = () => $("editAssetModal").classList.add("dn");
-
-window.handleEditImg = async (input) => {
-  if(!input.files?.length) return;
-  try {
-    b64Edit = await compressImage(input.files[0]);
-    $("ea-prev").src = b64Edit; $("ea-prev").style.display = "block";
-    $("ea-badge").style.opacity = "1";
-  } catch(e) { toast("فشل الصورة","e"); }
-};
-
-window.saveAssetEdit = async () => {
-  if(!editCtx) return;
-  setBtn("ea-btn", true); showLoad(true, "حفظ التعديلات...");
-  
-  let photoUrl = editCtx.photo_url || "";
-  if(b64Edit) { showLoad(true, "رفع الصورة..."); photoUrl = await uploadToImgBB(b64Edit); }
-  
-  try {
-    let bd = { token: API_TOKEN };
-    if(pData.type === "car") {
-      bd.action = "UPDATE_CAR"; bd.office_id = pData.id; bd.id = editCtx.id;
-      bd.name = $("ea-nm").value; bd.price = Number($("ea-pr").value); bd.cat = $("ea-cat").value; bd.color = $("ea-col").value; bd.plate = $("ea-plt").value; bd.photo_url = photoUrl;
-    } else {
-      bd.action = "UPDATE_HOTEL_ROOM"; bd.hotel_id = pData.id; bd.room_id = editCtx.id;
-      const bedAr = $("ea-bed").value==="single"?"مفرد":$("ea-bed").value==="double"?"مزدوج كبير":"توأم";
-      bd.room_name = $("ea-nm").value; bd.price = Number($("ea-pr").value); bd.bed_type = bedAr; bd.photo_url = photoUrl;
-    }
-    const res = await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) });
-    const d = await res.json(); showLoad(false);
-    if(d.success) { toast("✅ تم الحفظ"); closeEditAsset(); fetchInventory(true); }
-    else toast("فشل","e");
-  } catch(e) { showLoad(false); toast("فشل الاتصال","e"); }
-  finally { setBtn("ea-btn", false); }
+    await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) }); toast("🗑 تم الحذف"); fetchInventory(true);
+  } catch(e) { setBtn(btn, false); }
 };
 
 /* ════════════════════════════════════════════════════════════════
@@ -1752,52 +1039,36 @@ window.saveAssetEdit = async () => {
 async function loadHistory() {
   const listEl = $("ledger-list");
   listEl.innerHTML = `<div style="text-align:center;padding:40px;color:var(--tx2);font-weight:800;"><div class="spinner" style="margin:0 auto 10px;"></div><br>جاري جلب السجلات...</div>`;
-  
   try {
-    const ac = pData.type === "car" ? "getCarOrders" : "getHotelBookings";
-    const pm = pData.type === "car" ? `office=${encodeURIComponent(pData.name)}` : `hotel_name=${encodeURIComponent(pData.name)}`;
+    let ac = "", pm = "";
+    if(pData.type === "car") { ac = "getCarOrders"; pm = `office=${encodeURIComponent(pData.name)}`; }
+    else if(pData.type === "hotel") { ac = "getHotelBookings"; pm = `hotel_name=${encodeURIComponent(pData.name)}`; }
+    else if(pData.type === "hall") { ac = "getHallBookings"; pm = `hall_name=${encodeURIComponent(pData.name)}`; }
+    else if(pData.type === "school") { ac = "getDriveStudents"; pm = `school_id=${encodeURIComponent(pData.id)}`; }
+    
     const res = await fetch(`${API_URL}?action=${ac}&${pm}&token=${API_TOKEN}`);
     const list = await res.json();
     
-    if(!Array.isArray(list)) {
-      listEl.innerHTML = `<div class="empty-s">فشل جلب السجلات</div>`;
-      return;
-    }
+    if(!Array.isArray(list)) return listEl.innerHTML = `<div class="empty-s">فشل جلب السجلات</div>`;
+    const done = list.filter(o => o.status === "completed" || (pData.type === 'school' && o.status === 'active'));
+    if(!done.length) return listEl.innerHTML = `<div class="empty-s">لا توجد سجلات بعد</div>`;
     
-    const done = list.filter(o => o.status === "completed");
-    
-    if(!done.length) {
-      listEl.innerHTML = `<div class="empty-s"><div class="ei">📊</div>لا توجد سجلات بعد</div>`;
-      return;
-    }
-    
-    const isH = pData.type === "hotel";
     listEl.innerHTML = done.slice(0, 50).map(o => {
-      const nm = isH ? (o.guest_name||"—") : (o.name||"—");
-      const dt = isH ? (o.date_arrive||"—") : (o.date||"—");
-      const dur = isH ? `${o.nights||1} ليلة` : `${o.days||1} يوم`;
-      const svc = isH ? (o.room_type||"غرفة") : (o.car||"سيارة");
+      const nm = o.name || o.guest_name || o.student_name || "—";
+      const dt = o.date || o.date_arrive || "—";
+      let svc = o.car || o.room_type || o.event_type || o.course || "—";
       return `
         <div class="lr-card">
-          <div>
-            <div class="lr-id">#${esc(o.id)}</div>
-            <div class="lr-nm">${esc(svc)}</div>
-            <div class="lr-dt">${esc(nm)} · ${esc(dt)}</div>
-          </div>
-          <div style="text-align:left;">
-            <div class="lr-am">${fmt(o.total||0)}</div>
-            <div style="font-size:.65rem;font-weight:700;color:var(--tx2)">${esc(dur)}</div>
-          </div>
+          <div><div class="lr-id">#${esc(o.id)}</div><div class="lr-nm">${esc(svc)}</div><div class="lr-dt">${esc(nm)} · ${esc(dt)}</div></div>
+          <div style="text-align:left;"><div class="lr-am">${fmt(o.total||o.price||0)}</div></div>
         </div>
       `;
     }).join("");
-  } catch(e) {
-    listEl.innerHTML = `<div class="empty-s">فشل الاتصال</div>`;
-  }
+  } catch(e) { listEl.innerHTML = `<div class="empty-s">فشل الاتصال</div>`; }
 }
 
 /* ════════════════════════════════════════════════════════════════
-   NAVIGATION & TABS
+   NAVIGATION & LOGOUT
 ════════════════════════════════════════════════════════════════ */
 window.switchTab = (tab, btn) => {
   document.querySelectorAll('.bni').forEach(b => b.classList.remove('on'));

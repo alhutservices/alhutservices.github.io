@@ -49,6 +49,7 @@ try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("
   --tx1:        #484848;
   --tx2:        #717171;
   --tx3:        #AAAAAA;
+  --tx4:        #CCCCCC;   /* [إصلاح] كان مفقوداً */
   
   --sh-card:    0 4px 12px rgba(0,0,0,.05);
   --sh-hover:   0 8px 24px rgba(0,0,0,.08);
@@ -63,6 +64,12 @@ try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("
 body { background: var(--bg); font-family: 'Cairo', sans-serif; color: var(--tx0); min-height: 100vh; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 button, input, select, textarea { font-family: 'Cairo', sans-serif; outline: none; }
 .dn { display: none !important; }
+
+/* [إصلاح] أصناف مساعدة كانت مُستخدمة في HTML وغير معرّفة */
+.mt-2 { margin-top: 8px; }
+.mt-4 { margin-top: 16px; }
+.empty-s { text-align: center; padding: 40px; color: var(--tx3); font-weight: 700; border: 1px dashed var(--border-d); border-radius: 16px; }
+
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-thumb { background: var(--border-d); border-radius: 99px; }
 
@@ -145,7 +152,7 @@ button, input, select, textarea { font-family: 'Cairo', sans-serif; outline: non
 .oc-st { font-size: .7rem; font-weight: 800; padding: 4px 10px; border-radius: 99px; }
 .st-pend { background: var(--amber-l); color: var(--amber); } .st-act { background: var(--blue-l); color: var(--blue); } .st-done { background: var(--green-l); color: var(--green); }
 .oc-mid { margin-bottom: 12px; }
-.oc-svc { font-size: 1rem; font-weight: 900; margin-bottom: 8px; }
+.oc-title { font-size: 1rem; font-weight: 900; margin-bottom: 8px; }
 .oc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: var(--bg); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
 .oc-lbl { font-size: .65rem; color: var(--tx2); font-weight: 700; } .oc-val { font-size: .8rem; font-weight: 900; }
 .oc-bot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--bg); padding-top: 12px; margin-top: 12px; }
@@ -171,8 +178,6 @@ button, input, select, textarea { font-family: 'Cairo', sans-serif; outline: non
 .ac-price { font-size: 1rem; font-weight: 900; color: var(--green); margin-bottom: 10px; }
 .ac-specs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
 .ac-spec { font-size: .65rem; font-weight: 800; color: var(--tx2); background: var(--bg); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--border); }
-.ac-stats { display: flex; gap: 10px; margin-bottom: 12px; background: var(--light); padding: 8px; border-radius: 8px; }
-.ac-stat { flex: 1; text-align: center; } .acs-v { font-size: .85rem; font-weight: 900; } .acs-l { font-size: .6rem; font-weight: 700; color: var(--tx2); }
 .ac-toggle { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid var(--border); margin-top: auto; }
 
 .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
@@ -301,7 +306,7 @@ input:checked + .slider { background-color: var(--green); } input:checked + .sli
 
         <!-- Common -->
         <div class="g2">
-          <div class="fld"><label class="lbl">المدينة</label><select id="rg-city" class="inp"><option value="بغداد">بغداد</option><option value="أربيل">أربيل</option><option value="كركوك">كركوك</option><option value="السليمانية">السليمانية</option><option value="البصرة">البصرة</option><option value="الموصل">الموصل</option></select></div>
+          <div class="fld"><label class="lbl">المدينة</label><select id="rg-city" class="inp"><option value="بغداد">بغداد</option><option value="أربيل">أربيل</option><option value="كركوك">كركوك</option><option value="السليمانية">السليمانية</option><option value="البصرة">البصرة</option><option value="الموصل">الموصل</option><option value="النجف">النجف</option><option value="كربلاء">كربلاء</option><option value="ديالى">ديالى</option><option value="الأنبار">الأنبار</option></select></div>
           <div class="fld"><label class="lbl">نسبة العمولة المقترحة (د.ع)</label><input type="number" id="rg-comm" class="inp" placeholder="مثال: 5000"></div>
         </div>
         
@@ -717,7 +722,6 @@ window.doRegister = async () => {
   if(regType === "hall") action = "REGISTER_HALL";
   if(regType === "school") action = "REGISTER_DRIVE_SCHOOL";
 
-  // Incorporate sales phone inside details or natively
   const hours = $("rg-hours") ? $("rg-hours").value : "24_hours";
   let detailsText = `مبيعات: ${phoneSales} | ساعات: ${hours}`;
 
@@ -793,7 +797,6 @@ function bootDashboard() {
     }
     fetchInventory(); 
   } else {
-    // Halls & Schools don't have sub-assets inventory right now
     $("nav-inventory").classList.add("dn");
   }
 
@@ -813,7 +816,7 @@ function startFirebase() {
   if(sp) {
     db.ref(sp).on("value", snap => { processOrders(snap.val() || {}); });
   } else if (pData.type === "school") {
-    // Drive Schools use polling since they aren't on Firebase real-time in this exact iteration
+    // Drive Schools use polling
     fetchMyOrders();
     pollingInterval = setInterval(fetchMyOrders, 20000);
   }
@@ -825,7 +828,7 @@ function startFirebase() {
     const l = snap.val() || {};
     $("lg-debt").textContent = fmt(l.debt || 0);
     $("lg-rev").textContent = fmt(l.total_revenue || 0);
-    $("lg-c").textContent = l.completed_orders || 0; // Completed orders restored
+    $("lg-c").textContent = l.completed_orders || 0;
   });
 }
 

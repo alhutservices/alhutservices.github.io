@@ -1,683 +1,807 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlRoot">
+<html lang="ar" dir="rtl">
 <head>
-<script>
-/* مسح الكاش عند تحديث الإصدار */
-const _V="9.3",_K="hut_hotel_front_v";
-try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("caches"in window)caches.keys().then(n=>n.forEach(k=>caches.delete(k)));if("serviceWorker"in navigator)navigator.serviceWorker.getRegistrations().then(r=>r.forEach(s=>s.unregister()));}}catch(e){}
-</script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>الحوت · حجز الفنادق</title>
 <meta name="theme-color" content="#FF385C">
-<meta name="description" content="اكتشف واحجز أفضل الفنادق في العراق عبر منصة الحوت — أسعار واضحة وحجز فوري.">
-<title>فنادق الحوت | ابحث واحجز</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<meta name="description" content="احجز فندقك من منصة الحوت — فنادق موثوقة في كل مدينة، أسعار شفافة، تأكيد سريع.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
-/* ════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM — Al-Hut Hotels (موحّد مع باقي المنصة)
-════════════════════════════════════════════════════════════════ */
 :root{
-  --bg:      #F7F7F7;
-  --white:   #FFFFFF;
-  --border:  #DDDDDD;
-  --border-l:#EBEBEB;
-  --light:   #EEEEEE;
-  --red:     #FF385C;
-  --red-d:   #E31C5F;
-  --red-l:   #FFF0F2;
-  --red-m:   rgba(255,56,92,.12);
-  --red-g:   linear-gradient(135deg,#FF385C,#E31C5F);
-  --green:   #00A699;
-  --green-l: #E6F7F6;
-  --green-m: rgba(0,166,153,.12);
-  --amber:   #FC642D;
-  --amber-l: #FFF3EE;
-  --gold:    #F5A623;
-  --tx0:     #222222;
-  --tx1:     #484848;
-  --tx2:     #717171;
-  --tx3:     #AAAAAA;
-  --tx4:     #CCCCCC;
-  --sh-card: 0 1px 2px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.06);
-  --sh-lg:   0 8px 32px rgba(0,0,0,.12);
-  --sh-modal:0 16px 48px rgba(0,0,0,.18),0 4px 12px rgba(0,0,0,.1);
-  --sh-btn:  0 4px 14px rgba(255,56,92,.35);
-  --r2:8px;--r3:12px;--r4:16px;--r5:20px;--r6:24px;
-  --header-h:72px;
+  --bg:#F7F7F7;--white:#FFFFFF;--border:#E4E4E4;--line:#EFEFEF;
+  --red:#FF385C;--red-d:#E31C5F;--red-l:#FFF0F2;--red-m:rgba(255,56,92,.1);
+  --red-g:linear-gradient(135deg,#FF385C 0%,#E31C5F 100%);
+  --green:#00A699;--green-l:#E6F7F6;
+  --amber:#FC642D;--amber-l:#FFF3EE;
+  --blue:#0066CC;--blue-l:#EEF5FF;
+  --violet:#6B46C1;--violet-l:#F3F0FF;
+  --gold:#F5A623;--gold-l:#FFF8EC;
+  --tx0:#1A1A1A;--tx1:#484848;--tx2:#717171;--tx3:#A8A8A8;--tx4:#CFCFCF;
+  --sh-sm:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);
+  --sh-md:0 2px 6px rgba(0,0,0,.07),0 8px 24px rgba(0,0,0,.06);
+  --sh-lg:0 8px 28px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.08);
+  --sh-red:0 6px 20px rgba(255,56,92,.32);
+  --r2:8px;--r3:12px;--r4:16px;--r5:20px;--r6:28px;--r-pill:999px;
+  --nav-h:64px;
 }
-
 *,::before,::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
-body{
-  min-height:100vh;background:var(--bg);
-  font-family:'Cairo',sans-serif;color:var(--tx0);
-  overflow-x:hidden;-webkit-tap-highlight-color:transparent;
-  -webkit-font-smoothing:antialiased;
-}
-img{max-width:100%;display:block;}
-::-webkit-scrollbar{width:5px;height:5px;}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:'Cairo',system-ui,sans-serif;color:var(--tx0);-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden;}
+body.ltr{direction:ltr;text-align:left;}
+button,input,select,textarea{font-family:inherit;color:inherit;}
+button{cursor:pointer;border:none;background:none;}
+a{text-decoration:none;color:inherit;}
+img{display:block;max-width:100%;}
 .dn{display:none!important;}
-button,input,select,textarea{font-family:'Cairo',sans-serif;color:inherit;outline:none;}
+::-webkit-scrollbar{width:7px;height:7px;}
+::-webkit-scrollbar-thumb{background:var(--tx4);border-radius:99px;}
+.mono{font-family:'IBM Plex Mono',monospace;}
 
-/* ════ SPLASH ════ */
-#splash{
-  position:fixed;inset:0;z-index:80000;background:var(--white);
-  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;
-  transition:opacity .4s ease;
-}
-#splash.hide{opacity:0;pointer-events:none;}
-.sp-logo{
-  width:80px;height:80px;border-radius:24px;background:var(--red-g);
-  display:flex;align-items:center;justify-content:center;font-size:38px;
-  box-shadow:var(--sh-btn);animation:spP 1.4s ease-in-out infinite;
-}
-@keyframes spP{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-.sp-bar{width:140px;height:3px;background:var(--border);border-radius:99px;overflow:hidden;}
-.sp-fill{height:100%;background:var(--red-g);border-radius:99px;animation:spF 1.4s ease-in-out infinite;}
-@keyframes spF{0%{width:0%;margin-left:0}50%{width:55%;margin-left:20%}100%{width:0%;margin-left:100%}}
-.sp-txt{font-size:.78rem;font-weight:700;color:var(--tx2);}
+/* SPLASH */
+#splash{position:fixed;inset:0;z-index:9999;background:var(--white);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s,visibility .5s;}
+#splash.gone{opacity:0;visibility:hidden;}
+.sp-whale{font-size:3.4rem;animation:spB 1.5s ease-in-out infinite;}
+@keyframes spB{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+.sp-bar{width:130px;height:3px;background:var(--line);border-radius:99px;overflow:hidden;}
+.sp-fill{height:100%;width:40%;background:var(--red-g);border-radius:99px;animation:spF 1.3s ease-in-out infinite;}
+@keyframes spF{0%{margin-left:-40%}100%{margin-left:100%}}
 
-/* ════ HEADER ════ */
-.site-header{
-  position:sticky;top:0;z-index:900;
-  background:rgba(255,255,255,.95);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);height:var(--header-h);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 max(20px,env(safe-area-inset-left));gap:14px;
-}
-.header-logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;}
-.header-logo-ic{width:38px;height:38px;border-radius:11px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:var(--sh-btn);flex-shrink:0;}
-.header-logo-nm{font-size:.95rem;font-weight:900;color:var(--tx0);}
-.header-logo-sub{font-size:.6rem;font-weight:700;color:var(--tx2);}
-.header-back{margin-right:auto;display:flex;align-items:center;gap:6px;font-size:.82rem;font-weight:800;color:var(--tx1);text-decoration:none;padding:8px 16px;border-radius:99px;border:1px solid var(--border);background:var(--white);transition:.2s;}
-.header-back:hover{border-color:var(--tx0);}
+/* NAV */
+.nav{position:sticky;top:0;z-index:500;height:var(--nav-h);background:rgba(255,255,255,.88);backdrop-filter:blur(18px) saturate(180%);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,40px);}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.15rem;letter-spacing:-.02em;}
+.nav-logo .whale{width:38px;height:38px;border-radius:11px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:var(--sh-red);}
+.nav-logo .sub{font-size:.6rem;font-weight:700;color:var(--tx2);letter-spacing:.04em;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.lang-wrap{position:relative;}
+.lang-btn{display:flex;align-items:center;gap:6px;padding:8px 13px;border-radius:var(--r-pill);background:var(--bg);border:1px solid var(--border);font-size:.78rem;font-weight:800;transition:.18s;}
+.lang-btn:hover{border-color:var(--tx3);}
+.lang-menu{position:absolute;top:calc(100% + 8px);inset-inline-end:0;background:var(--white);border:1px solid var(--border);border-radius:var(--r3);box-shadow:var(--sh-lg);padding:6px;min-width:150px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:.2s;z-index:60;}
+.lang-menu.open{opacity:1;visibility:visible;transform:none;}
+.lang-opt{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:var(--r2);font-size:.82rem;font-weight:700;width:100%;text-align:start;transition:.15s;}
+.lang-opt:hover{background:var(--bg);}
+.lang-opt.on{background:var(--red-l);color:var(--red);font-weight:900;}
+.lang-opt .flag{font-size:1.05rem;}
+.nav-partner{padding:9px 16px;border-radius:var(--r-pill);background:var(--tx0);color:#fff;font-size:.78rem;font-weight:800;transition:.2s;white-space:nowrap;}
+.nav-partner:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.18);}
 
-/* ════ HERO + SEARCH ════ */
-.hero{background:var(--red-g);padding:42px 20px 76px;position:relative;text-align:center;}
-.hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:48px;background:var(--bg);border-radius:40px 40px 0 0;}
-.hero-inner{position:relative;z-index:1;}
-.hero-title{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;color:#fff;margin-bottom:8px;letter-spacing:-.01em;}
-.hero-sub{font-size:clamp(.8rem,2vw,.95rem);font-weight:600;color:rgba(255,255,255,.78);margin-bottom:26px;}
-.hero-search-wrap{max-width:560px;margin:0 auto;background:var(--white);border-radius:var(--r6);box-shadow:var(--sh-lg);overflow:hidden;}
-.hero-search-row{display:flex;align-items:center;}
-.hero-search-field{flex:1;display:flex;align-items:center;gap:10px;padding:15px 20px;}
-.hsf-ic{font-size:1.1rem;flex-shrink:0;}
-.hsf-lbl{font-size:.62rem;font-weight:900;color:var(--tx2);display:block;text-align:right;margin-bottom:2px;}
-.hsf-val input{border:none;background:transparent;font-size:.9rem;font-weight:700;color:var(--tx0);outline:none;width:100%;}
-.hsf-val input::placeholder{color:var(--tx3);font-weight:600;}
+/* HERO */
+.hero{position:relative;padding:clamp(36px,7vw,76px) clamp(16px,4vw,40px) clamp(60px,9vw,96px);overflow:hidden;background:var(--white);}
+.hero::before{content:'';position:absolute;inset:0;background:var(--red-g);opacity:.06;}
+.hero-wave{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:90px;z-index:1;}
+.hero-inner{position:relative;z-index:2;max-width:980px;margin:0 auto;text-align:center;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;padding:6px 15px;border-radius:var(--r-pill);background:var(--white);border:1px solid var(--border);box-shadow:var(--sh-sm);font-size:.74rem;font-weight:800;color:var(--red);margin-bottom:20px;}
+.hero-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px var(--green-l);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px var(--green-l)}50%{box-shadow:0 0 0 6px transparent}}
+.hero-h1{font-size:clamp(2rem,6vw,3.5rem);font-weight:900;letter-spacing:-.03em;line-height:1.08;margin-bottom:14px;}
+.hero-h1 .grad{background:var(--red-g);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-p{font-size:clamp(.92rem,2.2vw,1.1rem);font-weight:600;color:var(--tx2);max-width:560px;margin:0 auto 32px;}
 
-/* ════ CITY CHIPS ════ */
-.chips-wrap{max-width:1200px;margin:0 auto;padding:6px 20px 0;}
-.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;}
-.chips::-webkit-scrollbar{display:none;}
-.chip{flex-shrink:0;padding:8px 16px;border-radius:99px;background:var(--white);border:1.5px solid var(--border);font-size:.8rem;font-weight:800;color:var(--tx1);cursor:pointer;transition:.18s;white-space:nowrap;}
-.chip:hover{border-color:var(--tx2);}
-.chip.on{background:var(--tx0);border-color:var(--tx0);color:#fff;}
+/* SEARCH CARD */
+.search-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r6);box-shadow:var(--sh-lg);padding:14px;display:flex;align-items:stretch;gap:10px;max-width:760px;margin:0 auto;flex-wrap:wrap;}
+.sf{flex:1;min-width:150px;display:flex;flex-direction:column;gap:5px;padding:10px 16px;border-radius:var(--r4);transition:.18s;position:relative;text-align:start;}
+.sf:hover{background:var(--bg);}
+.sf+.sf{border-inline-start:1px solid var(--line);}
+.sf-lbl{font-size:.64rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;}
+.sf-ctl{border:none;background:transparent;font-size:.92rem;font-weight:800;color:var(--tx0);outline:none;width:100%;padding:0;}
+.sf-ctl::placeholder{color:var(--tx3);font-weight:600;}
+select.sf-ctl{cursor:pointer;appearance:none;}
+.search-go{flex:0 0 auto;align-self:center;width:54px;height:54px;border-radius:var(--r4);background:var(--red-g);color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:var(--sh-red);transition:.2s;}
+.search-go:hover{transform:scale(1.05);}
+.search-go:active{transform:scale(.95);}
 
-/* ════ SECTION HEAD ════ */
-.sec-h{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 12px;max-width:1200px;margin:0 auto;gap:12px;flex-wrap:wrap;}
-.sec-h-title{font-size:1.1rem;font-weight:900;}
-.sec-h-count{font-size:.78rem;font-weight:800;color:var(--tx2);background:var(--white);border:1px solid var(--border);padding:5px 12px;border-radius:99px;}
+/* SECTION SHELL */
+.wrap{max-width:1220px;margin:0 auto;padding:0 clamp(16px,4vw,40px);}
+.sec{padding:clamp(28px,5vw,48px) 0;}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:24px;flex-wrap:wrap;}
+.sec-title{font-size:clamp(1.4rem,3.5vw,2rem);font-weight:900;letter-spacing:-.02em;}
+.sec-sub{font-size:.82rem;font-weight:600;color:var(--tx2);margin-top:4px;}
+.count-chip{font-size:.74rem;font-weight:800;color:var(--tx2);background:var(--white);border:1px solid var(--border);border-radius:var(--r-pill);padding:6px 14px;white-space:nowrap;}
 
-/* ════ HOTELS GRID ════ */
-.hotels-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;padding:4px 20px 60px;max-width:1200px;margin:0 auto;}
-.hotel-card{background:var(--white);border:1px solid var(--border-l);border-radius:var(--r5);overflow:hidden;box-shadow:var(--sh-card);cursor:pointer;transition:.22s;display:flex;flex-direction:column;}
-.hotel-card:hover{box-shadow:var(--sh-lg);transform:translateY(-4px);}
-.hotel-card:active{transform:scale(.99);}
-.hc-img{width:100%;height:210px;background:var(--light);position:relative;overflow:hidden;}
-.hc-img img{width:100%;height:100%;object-fit:cover;transition:.4s ease;}
-.hotel-card:hover .hc-img img{transform:scale(1.05);}
-.hc-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.2rem;color:var(--tx4);background:linear-gradient(135deg,#f0f0f0,#e8e8e8);}
-.hc-stars{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);padding:4px 10px;border-radius:99px;font-size:.72rem;font-weight:900;color:var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.1);}
-.hc-cat{position:absolute;top:12px;left:12px;background:var(--red-g);padding:4px 11px;border-radius:99px;font-size:.62rem;font-weight:900;color:#fff;box-shadow:var(--sh-btn);}
-.hc-body{padding:16px;display:flex;flex-direction:column;flex:1;}
-.hc-city{font-size:.7rem;font-weight:800;color:var(--tx2);margin-bottom:5px;display:flex;align-items:center;gap:4px;}
-.hc-name{font-size:1.15rem;font-weight:900;margin-bottom:8px;line-height:1.3;}
-.hc-feats{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
-.hc-feat{font-size:.64rem;font-weight:700;color:var(--tx2);background:var(--bg);border:1px solid var(--border-l);padding:3px 9px;border-radius:7px;}
-.hc-foot{display:flex;align-items:flex-end;justify-content:space-between;padding-top:13px;border-top:1px solid var(--border-l);margin-top:auto;}
-.hc-price-lbl{font-size:.68rem;color:var(--tx2);font-weight:600;}
-.hc-price-val{font-size:1.2rem;font-weight:900;color:var(--red);}
-.hc-price-cur{font-size:.72rem;font-weight:700;color:var(--tx2);}
-.hc-cta{padding:10px 18px;background:var(--tx0);color:#fff;border:none;border-radius:var(--r3);font-size:.8rem;font-weight:900;cursor:pointer;transition:.2s;white-space:nowrap;}
-.hc-cta:hover{background:var(--red);}
+/* FILTER BAR */
+.filter-bar{display:flex;align-items:center;gap:12px;margin-bottom:26px;flex-wrap:wrap;}
+.cat-pills{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;flex:1;}
+.cat-pills::-webkit-scrollbar{display:none;}
+.cat-pill{flex-shrink:0;display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:var(--r-pill);background:var(--white);border:1.5px solid var(--border);font-size:.8rem;font-weight:800;color:var(--tx1);transition:.18s;white-space:nowrap;}
+.cat-pill:hover{border-color:var(--tx3);transform:translateY(-1px);}
+.cat-pill.on{background:var(--tx0);color:#fff;border-color:var(--tx0);}
+.cat-pill .ic{font-size:1rem;}
+.search-mini{display:flex;align-items:center;gap:8px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-pill);padding:8px 16px;min-width:200px;transition:.18s;}
+.search-mini:focus-within{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);}
+.search-mini input{border:none;background:transparent;outline:none;font-size:.82rem;font-weight:700;width:100%;}
+.search-mini .ic{color:var(--tx3);font-size:15px;}
 
-/* ════ SKELETON ════ */
-.sk-card{background:var(--white);border:1px solid var(--border-l);border-radius:var(--r5);overflow:hidden;}
-.sk-img{height:210px;background:linear-gradient(90deg,var(--bg) 25%,var(--light) 50%,var(--bg) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
-.sk-body{padding:16px;}
-.sk-line{height:13px;border-radius:99px;background:linear-gradient(90deg,var(--bg) 25%,var(--light) 50%,var(--bg) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;margin-bottom:10px;}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* GRID + HOTEL CARD */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r5);overflow:hidden;box-shadow:var(--sh-sm);transition:transform .25s cubic-bezier(.34,1.3,.64,1),box-shadow .25s;display:flex;flex-direction:column;opacity:0;animation:cardIn .5s forwards;}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.card:hover{transform:translateY(-5px);box-shadow:var(--sh-md);}
+.card-img-wrap{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--bg);}
+.card-img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
+.card:hover .card-img{transform:scale(1.06);}
+.card-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.2rem;color:var(--tx4);background:linear-gradient(135deg,#fafafa,#f0f0f0);}
+.card-stars{position:absolute;top:12px;inset-inline-start:12px;padding:5px 11px;border-radius:var(--r-pill);font-size:.72rem;font-weight:900;backdrop-filter:blur(8px);background:rgba(245,166,35,.95);color:#fff;display:flex;align-items:center;gap:3px;letter-spacing:1px;}
+.card-fav{position:absolute;top:12px;inset-inline-end:12px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--tx2);transition:.18s;box-shadow:var(--sh-sm);}
+.card-fav:hover{color:var(--red);transform:scale(1.12);}
+.card-fav.on{color:var(--red);}
+.card-city-chip{position:absolute;bottom:12px;inset-inline-start:12px;padding:4px 11px;border-radius:var(--r-pill);font-size:.68rem;font-weight:800;backdrop-filter:blur(8px);background:rgba(26,26,26,.7);color:#fff;display:flex;align-items:center;gap:4px;}
+.card-body{padding:16px 18px 12px;flex:1;}
+.card-name{font-size:1.08rem;font-weight:900;letter-spacing:-.01em;margin-bottom:10px;line-height:1.25;}
+.amenities{display:flex;gap:6px;flex-wrap:wrap;}
+.amenity{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;color:var(--tx2);background:var(--bg);border:1px solid var(--line);border-radius:var(--r2);padding:4px 9px;}
+.card-foot{padding:14px 18px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.card-price{display:flex;flex-direction:column;}
+.card-price .from{font-size:.62rem;font-weight:700;color:var(--tx3);}
+.card-price .amt{font-size:1.2rem;font-weight:900;color:var(--tx0);line-height:1.1;}
+.card-price .amt .cur{font-size:.7rem;font-weight:700;color:var(--tx2);}
+.card-price .per{font-size:.66rem;font-weight:700;color:var(--tx3);}
+.btn-book{padding:11px 22px;border-radius:var(--r3);background:var(--red-g);color:#fff;font-size:.84rem;font-weight:900;box-shadow:var(--sh-red);transition:.2s;white-space:nowrap;}
+.btn-book:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(255,56,92,.4);}
+.btn-book:active{transform:scale(.96);}
 
-/* ════ EMPTY / ERROR STATES ════ */
-.state-box{grid-column:1/-1;text-align:center;padding:56px 24px;background:var(--white);border:1px dashed var(--border);border-radius:var(--r5);}
-.state-ic{font-size:3rem;margin-bottom:12px;opacity:.6;}
-.state-title{font-size:1.05rem;font-weight:900;color:var(--tx1);margin-bottom:6px;}
-.state-sub{font-size:.85rem;font-weight:600;color:var(--tx2);line-height:1.7;margin-bottom:18px;}
-.state-btn{padding:11px 24px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r3);font-size:.85rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);}
-.state-btn:active{transform:scale(.96);}
+/* SKELETON */
+.sk{background:var(--white);border:1px solid var(--border);border-radius:var(--r5);overflow:hidden;}
+.sk-img{aspect-ratio:16/10;background:linear-gradient(100deg,#f0f0f0 30%,#f8f8f8 50%,#f0f0f0 70%);background-size:200% 100%;animation:shim 1.4s infinite;}
+.sk-line{height:13px;border-radius:6px;background:linear-gradient(100deg,#f0f0f0 30%,#f8f8f8 50%,#f0f0f0 70%);background-size:200% 100%;animation:shim 1.4s infinite;margin:14px 18px;}
+@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-/* ════ HOTEL MODAL ════ */
-#hotelModal{position:fixed;inset:0;z-index:60000;display:flex;align-items:flex-end;justify-content:center;}
-.hm-overlay{position:absolute;inset:0;background:rgba(34,34,34,.45);backdrop-filter:blur(6px);}
-.hm-sheet{position:relative;z-index:1;background:var(--bg);width:100%;max-width:680px;border-radius:var(--r6) var(--r6) 0 0;max-height:96vh;overflow-y:auto;padding-bottom:30px;animation:fdUp .32s cubic-bezier(.34,1.1,.64,1);}
-@keyframes fdUp{from{transform:translateY(100%)}to{transform:none}}
-.hm-close-bar{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
-.hm-close-bar-title{font-weight:900;font-size:1.05rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.hm-close-btn{width:34px;height:34px;border-radius:50%;background:var(--light);border:none;cursor:pointer;font-weight:900;color:var(--tx1);flex-shrink:0;}
-.hm-gallery{height:260px;background:var(--light);position:relative;}
-.hm-gallery img{width:100%;height:100%;object-fit:cover;}
-.hm-gallery-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;color:var(--tx4);background:linear-gradient(135deg,#f0f0f0,#e8e8e8);}
-.hm-gallery-badges{position:absolute;bottom:14px;right:14px;display:flex;gap:6px;}
-.hm-gb{background:rgba(0,0,0,.6);backdrop-filter:blur(4px);color:#fff;padding:5px 12px;border-radius:99px;font-size:.7rem;font-weight:900;}
-.hm-gb.gold{color:var(--gold);}
-.hm-info{padding:20px;background:var(--white);border-bottom:1px solid var(--border);}
-.hm-name{font-size:1.35rem;font-weight:900;margin-bottom:6px;}
-.hm-loc{font-size:.85rem;color:var(--tx2);font-weight:700;display:flex;align-items:center;gap:4px;margin-bottom:12px;}
-.hm-feats{display:flex;gap:6px;flex-wrap:wrap;}
-.hm-feat{font-size:.7rem;font-weight:700;color:var(--tx1);background:var(--bg);border:1px solid var(--border-l);padding:5px 11px;border-radius:8px;}
-.hm-rooms-sec{padding:20px;}
-.hm-rooms-title{font-size:1.2rem;font-weight:900;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-.rooms-list{display:flex;flex-direction:column;gap:14px;}
+/* EMPTY */
+.empty{grid-column:1/-1;text-align:center;padding:72px 20px;}
+.empty-ic{font-size:3.4rem;margin-bottom:14px;opacity:.6;}
+.empty-t{font-size:1.05rem;font-weight:900;margin-bottom:6px;}
+.empty-s{font-size:.84rem;font-weight:600;color:var(--tx2);max-width:360px;margin:0 auto 18px;}
+.empty-btn{padding:10px 22px;border-radius:var(--r3);background:var(--tx0);color:#fff;font-size:.82rem;font-weight:800;}
 
-/* ── Room Card ── */
-.room-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r4);overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--sh-card);transition:.18s;}
-.room-card:hover{border-color:var(--red-m);box-shadow:var(--sh-lg);}
-.rc-head{display:flex;}
-.rc-thumb{width:120px;height:118px;background:var(--light);flex-shrink:0;}
-.rc-thumb img{width:100%;height:100%;object-fit:cover;}
-.rc-thumb-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--tx4);}
-.rc-info{flex:1;padding:13px;display:flex;flex-direction:column;justify-content:center;min-width:0;}
-.rc-name{font-size:.98rem;font-weight:900;color:var(--tx0);margin-bottom:5px;}
-.rc-bed{font-size:.68rem;font-weight:700;color:var(--tx2);background:var(--bg);padding:3px 9px;border-radius:8px;display:inline-block;width:fit-content;border:1px solid var(--border-l);}
-.rc-desc{font-size:.74rem;font-weight:600;color:var(--tx2);margin-top:6px;line-height:1.5;}
-.rc-foot{display:flex;justify-content:space-between;align-items:center;padding:12px 13px;border-top:1px solid var(--border-l);background:var(--white);}
-.rc-price{font-size:1.1rem;font-weight:900;color:var(--tx0);}
-.rc-price-cur{font-size:.68rem;color:var(--tx2);font-weight:600;}
-.rc-book-btn{padding:10px 22px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r3);font-weight:900;cursor:pointer;font-size:.85rem;transition:.2s;box-shadow:var(--sh-btn);}
-.rc-book-btn:active{transform:scale(.95);}
-.rooms-empty{text-align:center;padding:24px;color:var(--tx2);font-weight:700;border:1px dashed var(--border);border-radius:var(--r3);font-size:.85rem;}
-.rooms-loading{text-align:center;padding:30px;color:var(--tx2);font-weight:700;}
-.rl-spin{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+/* MODAL */
+.modal-back{position:fixed;inset:0;z-index:800;background:rgba(26,26,26,.5);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:.28s;}
+.modal-back.open{opacity:1;visibility:visible;}
+.modal{background:var(--white);border-radius:var(--r6);width:100%;max-width:520px;max-height:92vh;overflow-y:auto;box-shadow:var(--sh-lg);transform:translateY(24px) scale(.97);transition:transform .3s cubic-bezier(.34,1.4,.64,1);}
+.modal-back.open .modal{transform:none;}
+.modal-hero{position:relative;height:170px;background:var(--bg);overflow:hidden;}
+.modal-hero img{width:100%;height:100%;object-fit:cover;}
+.modal-hero-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.6rem;color:var(--tx4);background:linear-gradient(135deg,#fafafa,#eee);}
+.modal-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent 55%);}
+.modal-hero-info{position:absolute;bottom:14px;inset-inline-start:18px;inset-inline-end:18px;z-index:2;color:#fff;}
+.modal-hero-info .stars{font-size:.78rem;font-weight:900;color:#FFD66B;margin-bottom:3px;letter-spacing:2px;}
+.modal-hero-info h3{font-size:1.35rem;font-weight:900;letter-spacing:-.01em;text-shadow:0 1px 8px rgba(0,0,0,.4);}
+.modal-hero-info .loc{font-size:.78rem;font-weight:700;margin-top:2px;opacity:.95;display:flex;align-items:center;gap:4px;}
+.modal-close{position:absolute;top:14px;inset-inline-end:14px;z-index:3;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--tx0);box-shadow:var(--sh-sm);transition:.18s;}
+.modal-close:hover{transform:rotate(90deg);}
+.modal-body{padding:22px;}
+.modal-sec-title{font-size:.8rem;font-weight:900;color:var(--tx1);margin-bottom:11px;display:flex;align-items:center;gap:7px;}
+
+/* ROOM CARDS */
+.room-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.room-card{display:flex;gap:12px;padding:11px;border:1.5px solid var(--border);border-radius:var(--r4);cursor:pointer;transition:.18s;align-items:center;}
+.room-card:hover{border-color:var(--tx3);}
+.room-card.on{border-color:var(--red);background:var(--red-l);box-shadow:0 0 0 3px var(--red-m);}
+.room-thumb{width:74px;height:64px;border-radius:var(--r3);object-fit:cover;flex-shrink:0;background:var(--bg);}
+.room-thumb-noimg{width:74px;height:64px;border-radius:var(--r3);background:linear-gradient(135deg,#fafafa,#eee);display:flex;align-items:center;justify-content:center;font-size:1.7rem;color:var(--tx4);flex-shrink:0;}
+.room-info{flex:1;min-width:0;}
+.room-name{font-size:.92rem;font-weight:900;margin-bottom:3px;}
+.room-meta{font-size:.7rem;font-weight:700;color:var(--tx2);display:flex;gap:9px;flex-wrap:wrap;}
+.room-price-col{text-align:end;flex-shrink:0;}
+.room-price{font-size:1rem;font-weight:900;color:var(--tx0);line-height:1.1;}
+.room-price .cur{font-size:.62rem;font-weight:700;color:var(--tx2);}
+.room-radio{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.15s;}
+.room-card.on .room-radio{border-color:var(--red);}
+.room-card.on .room-radio::after{content:'';width:11px;height:11px;border-radius:50%;background:var(--red);}
+.rooms-loading{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.room-sk{height:88px;border-radius:var(--r4);background:linear-gradient(100deg,#f2f2f2 30%,#fafafa 50%,#f2f2f2 70%);background-size:200% 100%;animation:shim 1.4s infinite;}
+
+/* FIELDS */
+.field{margin-bottom:16px;}
+.field-lbl{font-size:.72rem;font-weight:900;color:var(--tx1);margin-bottom:7px;display:block;}
+.field-input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:13px 15px;font-size:.92rem;font-weight:700;outline:none;transition:.18s;}
+.field-input:focus{border-color:var(--red);background:var(--white);box-shadow:0 0 0 3px var(--red-m);}
+.field-input::placeholder{color:var(--tx3);font-weight:600;}
+textarea.field-input{resize:vertical;min-height:64px;font-family:inherit;}
+select.field-input{cursor:pointer;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.stepper{display:flex;align-items:center;justify-content:space-between;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:7px 9px;}
+.stepper button{width:38px;height:38px;border-radius:var(--r2);background:var(--white);border:1px solid var(--border);font-size:18px;font-weight:900;color:var(--red);display:flex;align-items:center;justify-content:center;transition:.15s;}
+.stepper button:active{transform:scale(.9);}
+.stepper .val{font-size:1.1rem;font-weight:900;}
+.total-bar{background:var(--tx0);border-radius:var(--r4);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;margin:18px 0;}
+.total-bar .lbl{color:rgba(255,255,255,.7);font-size:.78rem;font-weight:700;}
+.total-bar .sub{color:rgba(255,255,255,.5);font-size:.64rem;font-weight:600;margin-top:2px;}
+.total-bar .amt{color:#fff;font-size:1.5rem;font-weight:900;}
+.total-bar .amt .cur{font-size:.78rem;font-weight:700;opacity:.7;}
+.btn-confirm{width:100%;padding:15px;border-radius:var(--r4);background:var(--red-g);color:#fff;font-size:.96rem;font-weight:900;box-shadow:var(--sh-red);transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-confirm:hover{transform:translateY(-2px);}
+.btn-confirm:active{transform:scale(.98);}
+.btn-confirm:disabled{opacity:.6;pointer-events:none;}
+.btn-confirm.loading{color:transparent;position:relative;}
+.btn-confirm.loading::after{content:'';position:absolute;width:20px;height:20px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ════ BOOKING MODAL ════ */
-#bookingModal{position:fixed;inset:0;z-index:70000;display:flex;align-items:flex-end;justify-content:center;}
-.bm-overlay{position:absolute;inset:0;background:rgba(34,34,34,.45);backdrop-filter:blur(6px);}
-.bm-sheet{position:relative;z-index:1;background:var(--white);width:100%;max-width:500px;border-radius:var(--r6) var(--r6) 0 0;padding:22px;box-shadow:var(--sh-lg);animation:fdUp .32s cubic-bezier(.34,1.1,.64,1);max-height:94vh;overflow-y:auto;}
-.bm-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-.bm-hd h3{font-weight:900;margin:0;font-size:1.15rem;}
-.bm-hd button{background:none;border:none;font-size:20px;cursor:pointer;color:var(--tx2);}
-.bm-room-tag{font-size:.78rem;font-weight:700;color:var(--tx2);margin-bottom:18px;}
-.bm-lbl{font-size:.72rem;font-weight:800;color:var(--tx2);display:block;margin-bottom:6px;}
-.bm-in{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:12px 14px;font-size:.9rem;font-weight:700;margin-bottom:14px;transition:.18s;}
-.bm-in:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);}
-.bm-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.bm-total{background:var(--green-l);padding:14px;border-radius:var(--r4);margin:6px 0 14px;text-align:center;border:1px solid rgba(0,166,153,.2);}
-.bm-total-lbl{font-size:.82rem;font-weight:800;color:var(--tx1);margin-bottom:2px;}
-.bm-total-val{font-size:1.4rem;font-weight:900;color:var(--green);}
-.bm-total-calc{font-size:.66rem;font-weight:600;color:var(--tx2);margin-top:2px;}
-.bm-err{color:var(--red);font-size:.82rem;font-weight:800;text-align:center;margin-bottom:12px;min-height:18px;}
-.bm-submit{width:100%;padding:16px;background:var(--red-g);color:#fff;border:none;border-radius:var(--r4);font-size:1rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);transition:.2s;}
-.bm-submit:active{transform:scale(.97);}
+/* SUCCESS */
+.success-wrap{text-align:center;padding:30px 24px 8px;}
+.success-ring{width:88px;height:88px;border-radius:50%;background:var(--green-l);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;position:relative;animation:popIn .5s cubic-bezier(.34,1.6,.64,1);}
+.success-ring::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--green);opacity:.3;animation:ring 1.4s ease-out infinite;}
+@keyframes ring{0%{transform:scale(.9);opacity:.5}100%{transform:scale(1.3);opacity:0}}
+@keyframes popIn{0%{transform:scale(0)}100%{transform:scale(1)}}
+.success-check{font-size:2.6rem;}
+.success-t{font-size:1.5rem;font-weight:900;margin-bottom:8px;}
+.success-s{font-size:.88rem;font-weight:600;color:var(--tx2);margin-bottom:20px;}
+.order-box{background:var(--bg);border:1.5px dashed var(--border);border-radius:var(--r4);padding:16px;margin-bottom:20px;}
+.order-box .lbl{font-size:.68rem;font-weight:800;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;}
+.order-box .id{font-size:1.4rem;font-weight:900;color:var(--red);margin-top:4px;letter-spacing:.02em;}
+.success-acts{display:flex;flex-direction:column;gap:10px;}
+.btn-wa{padding:14px;border-radius:var(--r4);background:#25D366;color:#fff;font-size:.9rem;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;transition:.18s;}
+.btn-wa:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(37,211,102,.35);}
+.btn-ghost{padding:13px;border-radius:var(--r4);background:var(--bg);border:1.5px solid var(--border);font-size:.88rem;font-weight:800;color:var(--tx1);transition:.18s;}
+.btn-ghost:hover{background:var(--line);}
 
-@media(max-width:480px){
-  .bm-row{grid-template-columns:1fr;}
-  .rc-thumb{width:96px;height:auto;}
+/* TOAST */
+#toast-wrap{position:fixed;top:calc(var(--nav-h) + 14px);inset-inline:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:1000;pointer-events:none;}
+.toast{background:var(--tx0);color:#fff;padding:12px 20px;border-radius:var(--r-pill);font-size:.82rem;font-weight:800;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:9px;animation:tIn .35s cubic-bezier(.34,1.5,.64,1);max-width:90vw;}
+.toast.err{background:var(--red);}
+@keyframes tIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+
+/* FOOTER */
+.footer{background:var(--white);border-top:1px solid var(--line);padding:36px clamp(16px,4vw,40px) 28px;margin-top:30px;}
+.footer-inner{max-width:1220px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
+.footer-brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.05rem;}
+.footer-brand .whale{width:34px;height:34px;border-radius:10px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.footer-links{display:flex;gap:8px;flex-wrap:wrap;}
+.footer-link{padding:8px 15px;border-radius:var(--r-pill);background:var(--bg);font-size:.78rem;font-weight:800;color:var(--tx1);transition:.15s;}
+.footer-link:hover{background:var(--red-l);color:var(--red);}
+.footer-copy{font-size:.72rem;font-weight:600;color:var(--tx3);width:100%;text-align:center;margin-top:22px;}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .search-card{flex-direction:column;border-radius:var(--r5);gap:4px;padding:10px;}
+  .sf+.sf{border-inline-start:none;border-top:1px solid var(--line);}
+  .search-go{width:100%;height:50px;border-radius:var(--r4);margin-top:8px;}
+  .grid{grid-template-columns:1fr;gap:18px;}
+  .nav-partner{display:none;}
+  .field-row{grid-template-columns:1fr;}
+  .modal{border-radius:var(--r6) var(--r6) 0 0;max-height:94vh;align-self:flex-end;}
+  .modal-back{align-items:flex-end;padding:0;}
 }
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
 </head>
 <body>
+<div id="splash"><div class="sp-whale">🐋</div><div class="sp-bar"><div class="sp-fill"></div></div></div>
+<div id="toast-wrap"></div>
 
-<div id="splash"><div class="sp-logo">🐋</div><div class="sp-bar"><div class="sp-fill"></div></div><div class="sp-txt">جاري تجهيز الفنادق...</div></div>
-
-<header class="site-header">
-  <a class="header-logo" href="index.html">
-    <div class="header-logo-ic">🐋</div>
-    <div><div class="header-logo-nm">الحوت</div><div class="header-logo-sub">منصة الإقامة الفندقية</div></div>
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <span class="whale">🐋</span>
+    <span>الحوت<br><span class="sub" data-i18n="nav_sub">حجز الفنادق</span></span>
   </a>
-  <a class="header-back" href="index.html">← الرئيسية</a>
+  <div class="nav-right">
+    <div class="lang-wrap">
+      <button class="lang-btn" onclick="toggleLangMenu(event)">
+        <span id="lang-flag">🇮🇶</span><span id="lang-name">عربي</span><span style="font-size:9px">▾</span>
+      </button>
+      <div class="lang-menu" id="lang-menu">
+        <button class="lang-opt on" onclick="setLang('ar')"><span class="flag">🇮🇶</span> العربية</button>
+        <button class="lang-opt" onclick="setLang('ku')"><span class="flag">🌞</span> کوردی</button>
+        <button class="lang-opt" onclick="setLang('tr')"><span class="flag">🇹🇷</span> Türkçe</button>
+        <button class="lang-opt" onclick="setLang('en')"><span class="flag">🇬🇧</span> English</button>
+      </div>
+    </div>
+    <a href="partners.html" class="nav-partner" data-i18n="nav_partner">كن شريكاً</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <svg class="hero-wave" viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 C240,90 480,0 720,35 C960,70 1200,10 1440,45 L1440,90 L0,90 Z" fill="#F7F7F7"/>
+  </svg>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span class="dot"></span><span data-i18n="hero_eyebrow">فنادق موثوقة في كل مدينة</span></div>
+    <h1 class="hero-h1"><span data-i18n="hero_h1_a">إقامة تليق بك</span> <span class="grad" data-i18n="hero_h1_b">بسعر واضح</span></h1>
+    <p class="hero-p" data-i18n="hero_p">اختر مدينتك وتاريخ وصولك، قارن الفنادق والغرف بأسعار شفافة، وأكّد حجزك في خطوات بسيطة.</p>
+
+    <div class="search-card">
+      <label class="sf">
+        <span class="sf-lbl" data-i18n="f_city">المدينة</span>
+        <select class="sf-ctl" id="searchCity" onchange="applySearch()"></select>
+      </label>
+      <label class="sf">
+        <span class="sf-lbl" data-i18n="f_date">تاريخ الوصول</span>
+        <input type="date" class="sf-ctl" id="searchDate">
+      </label>
+      <label class="sf">
+        <span class="sf-lbl" data-i18n="f_guests">الضيوف</span>
+        <select class="sf-ctl" id="searchGuests">
+          <option value="1">1</option><option value="2" selected>2</option>
+          <option value="3">3</option><option value="4">4</option><option value="5">5+</option>
+        </select>
+      </label>
+      <button class="search-go" onclick="applySearch()" aria-label="search">🔍</button>
+    </div>
+  </div>
 </header>
 
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-title">اكتشف أجمل الفنادق في العراق</div>
-    <div class="hero-sub">أسعار واضحة، غرف حقيقية، وحجز فوري</div>
-    <div class="hero-search-wrap">
-      <div class="hero-search-row">
-        <div class="hero-search-field">
-          <span class="hsf-ic">🔍</span>
-          <div style="flex:1">
-            <span class="hsf-lbl">ابحث عن فندق أو مدينة</span>
-            <div class="hsf-val"><input type="text" id="hero-city" placeholder="مثال: بغداد، أو اسم الفندق..." oninput="applyAllFilters()"></div>
-          </div>
-        </div>
+<main class="wrap">
+  <section class="sec">
+    <div class="sec-head">
+      <div>
+        <h2 class="sec-title"><span data-i18n="sec_title">فنادق</span> <span id="cityName"></span></h2>
+        <p class="sec-sub" data-i18n="sec_sub">فنادق شريكة معتمدة — تأكيد مباشر من الفندق</p>
       </div>
+      <div class="count-chip"><span id="countNum">0</span> <span data-i18n="hotels_word">فندق</span></div>
+    </div>
+
+    <div class="filter-bar">
+      <div class="cat-pills" id="catPills">
+        <button class="cat-pill on" data-star="" onclick="filterStar('',this)"><span class="ic">✦</span><span data-i18n="star_all">الكل</span></button>
+        <button class="cat-pill" data-star="5" onclick="filterStar('5',this)"><span class="ic">⭐</span><span data-i18n="star_5">5 نجوم</span></button>
+        <button class="cat-pill" data-star="4" onclick="filterStar('4',this)"><span class="ic">⭐</span><span data-i18n="star_4">4 نجوم</span></button>
+        <button class="cat-pill" data-star="3" onclick="filterStar('3',this)"><span class="ic">⭐</span><span data-i18n="star_3">3 فأقل</span></button>
+      </div>
+      <div class="search-mini">
+        <span class="ic">🔍</span>
+        <input type="text" id="miniSearch" data-i18n-ph="search_ph" placeholder="ابحث عن فندق..." oninput="renderHotels()">
+      </div>
+    </div>
+
+    <div class="grid" id="hotelGrid"></div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand"><span class="whale">🐋</span> الحوت</div>
+    <div class="footer-links">
+      <a href="fleet.html" class="footer-link" data-i18n="nav_cars">السيارات</a>
+      <a href="hotels.html" class="footer-link" data-i18n="nav_hotels">الفنادق</a>
+      <a href="halls.html" class="footer-link" data-i18n="nav_halls">القاعات</a>
+      <a href="schools.html" class="footer-link" data-i18n="nav_schools">مدارس القيادة</a>
     </div>
   </div>
-</section>
+  <div class="footer-copy">© 2026 منصة الحوت · جميع الحقوق محفوظة</div>
+</footer>
 
-<div class="chips-wrap">
-  <div class="chips" id="cityChips"></div>
-</div>
-
-<div id="main-hotels">
-  <div class="sec-h">
-    <div class="sec-h-title">🏨 الفنادق المتاحة</div>
-    <div class="sec-h-count" id="hotelCount">جاري التحميل...</div>
-  </div>
-  <div class="hotels-grid" id="hotelsGrid"></div>
-</div>
-
-<div id="hotelModal" class="dn">
-  <div class="hm-overlay" onclick="closeHotelModal()"></div>
-  <div class="hm-sheet" id="hm-sheet"></div>
-</div>
-
-<div id="bookingModal" class="dn">
-  <div class="bm-overlay" onclick="closeBooking()"></div>
-  <div class="bm-sheet">
-    <div class="bm-hd"><h3 id="bm-title">تفاصيل الحجز</h3><button onclick="closeBooking()">✕</button></div>
-    <div class="bm-room-tag" id="bm-roomtag">—</div>
-
-    <div class="bm-row">
-      <div>
-        <label class="bm-lbl">تاريخ الوصول</label>
-        <input type="date" id="bm-checkin" class="bm-in">
-      </div>
-      <div>
-        <label class="bm-lbl">عدد الليالي</label>
-        <input type="number" id="bm-nights" class="bm-in" value="1" min="1" max="60" oninput="updateBookingCalc()">
-      </div>
-    </div>
-
-    <label class="bm-lbl">الاسم الكامل</label>
-    <input type="text" id="bm-name" class="bm-in" placeholder="اسم النزيل">
-
-    <div class="bm-row">
-      <div>
-        <label class="bm-lbl">رقم الهاتف</label>
-        <input type="tel" id="bm-phone" class="bm-in" dir="ltr" style="text-align:right" placeholder="07XX XXX XXXX">
-      </div>
-      <div>
-        <label class="bm-lbl">عدد النزلاء</label>
-        <input type="number" id="bm-guests" class="bm-in" value="2" min="1" max="20">
-      </div>
-    </div>
-
-    <label class="bm-lbl">رقم الهوية / الجواز</label>
-    <input type="text" id="bm-id" class="bm-in" placeholder="للتحقق عند الوصول">
-
-    <label class="bm-lbl">طلبات خاصة (اختياري)</label>
-    <input type="text" id="bm-req" class="bm-in" placeholder="مثال: غرفة في طابق مرتفع...">
-
-    <div class="bm-total">
-      <div class="bm-total-lbl">الإجمالي</div>
-      <div class="bm-total-val" id="bm-total-val">0 د.ع</div>
-      <div class="bm-total-calc" id="bm-total-calc"></div>
-    </div>
-
-    <div class="bm-err" id="bm-err"></div>
-    <button class="bm-submit" onclick="goToReview()">مراجعة الحجز ➔</button>
-  </div>
+<div class="modal-back" id="bookModal" onclick="if(event.target===this)closeBook()">
+  <div class="modal"><div id="bookContent"></div></div>
 </div>
 
 <script>
-/* ════════════════════════════════════════════════════════════════
-   CONFIG
-════════════════════════════════════════════════════════════════ */
-const API   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
-const TOKEN = "HUT_CLOUD_2026";
+/* ═══════════════ CONFIG ═══════════════ */
+const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
+const API_TOKEN = "HUT_CLOUD_2026";
+const WA_SUPPORT = "9647700000000";
+const CITIES = ["بغداد","البصرة","أربيل","السليمانية","كركوك","نينوى","النجف","كربلاء","ديالى","الأنبار","دهوك","ذي قار","بابل","واسط","صلاح الدين","ميسان","المثنى","القادسية"];
 
-/* قراءة معاملات الـ URL القادمة من index.html (city / date / days / lang) */
-const P        = new URLSearchParams(location.search);
-const lang     = P.get("lang") || "ar";
-const urlCity  = P.get("city") || "";
-const urlDate  = P.get("date") || "";
-const urlDays  = parseInt(P.get("days")) || 1;
+/* ═══════════════ i18n ═══════════════ */
+const I18N = {
+  ar:{ dir:"rtl", flag:"🇮🇶", name:"عربي",
+    nav_sub:"حجز الفنادق", nav_partner:"كن شريكاً", nav_cars:"السيارات", nav_hotels:"الفنادق", nav_halls:"القاعات", nav_schools:"مدارس القيادة",
+    hero_eyebrow:"فنادق موثوقة في كل مدينة", hero_h1_a:"إقامة تليق بك", hero_h1_b:"بسعر واضح",
+    hero_p:"اختر مدينتك وتاريخ وصولك، قارن الفنادق والغرف بأسعار شفافة، وأكّد حجزك في خطوات بسيطة.",
+    f_city:"المدينة", f_date:"تاريخ الوصول", f_guests:"الضيوف",
+    sec_title:"فنادق", sec_sub:"فنادق شريكة معتمدة — تأكيد مباشر من الفندق", hotels_word:"فندق",
+    star_all:"الكل", star_5:"5 نجوم", star_4:"4 نجوم", star_3:"3 فأقل",
+    search_ph:"ابحث عن فندق...", from_price:"يبدأ من", per_night:"/ ليلة", cur:"د.ع",
+    book_now:"احجز الآن", reviews:"حجز",
+    empty_t:"لا توجد فنادق في هذه المدينة", empty_s:"جرّب اختيار مدينة أخرى، أو امسح الفلتر لعرض كل الفنادق المتاحة.", empty_btn:"عرض الكل",
+    bk_choose_room:"اختر الغرفة", loading_rooms:"جاري تحميل الغرف...",
+    rt_single:"غرفة مفردة", rt_double:"غرفة مزدوجة", rt_suite:"جناح", rt_room:"غرفة",
+    bed_word:"سرير", guest_cap:"ضيف",
+    bk_details:"بيانات الحجز", bk_name:"الاسم الكامل", bk_name_ph:"مثال: أحمد علي", bk_phone:"رقم الهاتف", bk_phone_ph:"07XXXXXXXXX",
+    bk_arrive:"تاريخ الوصول", bk_nights:"عدد الليالي", bk_guests:"عدد الضيوف",
+    bk_special:"طلبات خاصة (اختياري)", bk_special_ph:"إفطار، طابق مرتفع، سرير إضافي...",
+    nights_word:"ليلة", total:"الإجمالي", confirm:"تأكيد الحجز",
+    succ_t:"تم إرسال طلب الحجز!", succ_s:"سيؤكّد الفندق توفّر الغرفة ويتواصل معك لإتمام الحجز قريباً.", order_no:"رقم الحجز", wa_btn:"تواصل عبر واتساب", done:"تصفّح المزيد",
+    err_fields:"يرجى إدخال الاسم ورقم الهاتف", err_phone:"رقم هاتف غير صحيح", err_room:"يرجى اختيار غرفة", err_net:"تعذّر الاتصال، حاول مجدداً",
+    loading:"جاري التحميل..." },
 
-/* قائمة المدن للـ chips */
-const CITIES = ["بغداد","أربيل","كركوك","السليمانية","الموصل","البصرة","النجف","كربلاء","ديالى","الأنبار"];
+  ku:{ dir:"rtl", flag:"🌞", name:"کوردی",
+    nav_sub:"حیجزکردنی هۆتێل", nav_partner:"ببە بە هاوبەش", nav_cars:"ئۆتۆمبێل", nav_hotels:"هۆتێل", nav_halls:"هۆڵ", nav_schools:"خوێندنگەی لێخوڕین",
+    hero_eyebrow:"هۆتێلی متمانەپێکراو لە هەموو شارێک", hero_h1_a:"مانەوەیەکی شیاو", hero_h1_b:"بە نرخی ڕوون",
+    hero_p:"شارەکەت و بەرواری گەیشتنت هەڵبژێرە، هۆتێل و ژوورەکان بەراورد بکە بە نرخی ڕوون، و حیجزەکەت تەواو بکە.",
+    f_city:"شار", f_date:"بەرواری گەیشتن", f_guests:"میوانەکان",
+    sec_title:"هۆتێلەکانی", sec_sub:"هۆتێلی هاوبەشی پەسەندکراو — دڵنیاکردنەوەی ڕاستەوخۆ", hotels_word:"هۆتێل",
+    star_all:"هەموو", star_5:"5 ئەستێرە", star_4:"4 ئەستێرە", star_3:"3 و کەمتر",
+    search_ph:"بەدوای هۆتێلدا بگەڕێ...", from_price:"دەستپێدەکات لە", per_night:"/ شەو", cur:"د.ع",
+    book_now:"ئێستا حیجز بکە", reviews:"حیجز",
+    empty_t:"هیچ هۆتێلێک لەم شارەدا نییە", empty_s:"شارێکی تر هەڵبژێرە، یان فلتەرەکە بسڕەوە بۆ پیشاندانی هەموو هۆتێلەکان.", empty_btn:"پیشاندانی هەموو",
+    bk_choose_room:"ژوور هەڵبژێرە", loading_rooms:"ژوورەکان بار دەکرێن...",
+    rt_single:"ژووری تاک", rt_double:"ژووری دووانە", rt_suite:"سویت", rt_room:"ژوور",
+    bed_word:"قەرەوێڵە", guest_cap:"میوان",
+    bk_details:"زانیاری حیجز", bk_name:"ناوی تەواو", bk_name_ph:"نموونە: ئەحمەد عەلی", bk_phone:"ژمارەی مۆبایل", bk_phone_ph:"07XXXXXXXXX",
+    bk_arrive:"بەرواری گەیشتن", bk_nights:"ژمارەی شەو", bk_guests:"ژمارەی میوان",
+    bk_special:"داواکاری تایبەت (ئارەزوومەندانە)", bk_special_ph:"نانی بەیانی، نهۆمی بەرز، قەرەوێڵەی زیاتر...",
+    nights_word:"شەو", total:"کۆی گشتی", confirm:"دڵنیاکردنەوەی حیجز",
+    succ_t:"داواکاری حیجز نێردرا!", succ_s:"هۆتێلەکە بەردەستی ژوورەکە دڵنیادەکاتەوە و پەیوەندیت پێوە دەکات.", order_no:"ژمارەی حیجز", wa_btn:"پەیوەندی بە واتساپ", done:"زیاتر ببینە",
+    err_fields:"تکایە ناو و ژمارەی مۆبایل بنووسە", err_phone:"ژمارەی مۆبایل هەڵەیە", err_room:"تکایە ژوورێک هەڵبژێرە", err_net:"پەیوەندی نەکرا، دووبارە هەوڵبدە",
+    loading:"بارکردن..." },
 
-let allHotels = [];
-let filteredHotels = [];
-let activeCity = urlCity;     // فلتر المدينة النشط
-let bookingCtx = null;
+  tr:{ dir:"ltr", flag:"🇹🇷", name:"Türkçe",
+    nav_sub:"Otel Rezervasyonu", nav_partner:"Ortak Ol", nav_cars:"Araçlar", nav_hotels:"Oteller", nav_halls:"Salonlar", nav_schools:"Sürücü Kursu",
+    hero_eyebrow:"Her şehirde güvenilir oteller", hero_h1_a:"Size yakışan konaklama", hero_h1_b:"net fiyatla",
+    hero_p:"Şehrinizi ve varış tarihinizi seçin, otelleri ve odaları şeffaf fiyatlarla karşılaştırın, rezervasyonunuzu kolayca onaylayın.",
+    f_city:"Şehir", f_date:"Varış tarihi", f_guests:"Misafir",
+    sec_title:"Oteller —", sec_sub:"Onaylı ortak oteller — otelden doğrudan onay", hotels_word:"otel",
+    star_all:"Tümü", star_5:"5 yıldız", star_4:"4 yıldız", star_3:"3 ve altı",
+    search_ph:"Otel ara...", from_price:"başlangıç", per_night:"/ gece", cur:"IQD",
+    book_now:"Rezervasyon", reviews:"rezervasyon",
+    empty_t:"Bu şehirde otel yok", empty_s:"Başka bir şehir seçin veya tüm otelleri görmek için filtreyi temizleyin.", empty_btn:"Tümünü göster",
+    bk_choose_room:"Oda seçin", loading_rooms:"Odalar yükleniyor...",
+    rt_single:"Tek kişilik oda", rt_double:"Çift kişilik oda", rt_suite:"Suit", rt_room:"Oda",
+    bed_word:"yatak", guest_cap:"misafir",
+    bk_details:"Rezervasyon bilgileri", bk_name:"Ad soyad", bk_name_ph:"Örn: Ahmed Ali", bk_phone:"Telefon", bk_phone_ph:"07XXXXXXXXX",
+    bk_arrive:"Varış tarihi", bk_nights:"Gece sayısı", bk_guests:"Misafir sayısı",
+    bk_special:"Özel istekler (isteğe bağlı)", bk_special_ph:"Kahvaltı, üst kat, ek yatak...",
+    nights_word:"gece", total:"Toplam", confirm:"Rezervasyonu onayla",
+    succ_t:"Rezervasyon talebi gönderildi!", succ_s:"Otel oda uygunluğunu onaylayacak ve kısa sürede sizinle iletişime geçecek.", order_no:"Rezervasyon no", wa_btn:"WhatsApp ile iletişim", done:"Daha fazla göz at",
+    err_fields:"Lütfen ad ve telefon girin", err_phone:"Geçersiz telefon", err_room:"Lütfen bir oda seçin", err_net:"Bağlantı kurulamadı, tekrar deneyin",
+    loading:"Yükleniyor..." },
 
-const $ = id => document.getElementById(id);
-const fmt = n => Math.round(Number(n)||0).toLocaleString("ar-EG");
-
-/* دالة الهروب الصحيحة (كانت معطوبة وتكسر كل السكربت) */
-function esc(s){
-  return String(s||"")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#39;");
-}
-
-/* ════════════════════════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════════════════════════ */
-window.addEventListener("DOMContentLoaded", () => {
-  // تعبئة تاريخ الوصول الافتراضي (من الرابط أو الغد)
-  const tom = new Date(); tom.setDate(tom.getDate()+1);
-  $("bm-checkin").value = urlDate || tom.toISOString().split("T")[0];
-  if(urlDays > 1) $("bm-nights").value = urlDays;
-
-  // إن جاءت مدينة من الرئيسية، اعرضها في حقل البحث
-  if(urlCity) $("hero-city").value = urlCity;
-
-  buildCityChips();
-  loadHotels();
-});
-
-function buildCityChips(){
-  const wrap = $("cityChips");
-  const chips = [`<div class="chip ${!activeCity?"on":""}" onclick="pickCity('')">🌍 الكل</div>`];
-  CITIES.forEach(c => {
-    chips.push(`<div class="chip ${activeCity===c?"on":""}" onclick="pickCity('${c}')">${c}</div>`);
-  });
-  wrap.innerHTML = chips.join("");
-}
-
-window.pickCity = (city) => {
-  activeCity = city;
-  $("hero-city").value = city;
-  buildCityChips();
-  applyAllFilters();
+  en:{ dir:"ltr", flag:"🇬🇧", name:"English",
+    nav_sub:"Hotel Booking", nav_partner:"Become a partner", nav_cars:"Cars", nav_hotels:"Hotels", nav_halls:"Halls", nav_schools:"Driving schools",
+    hero_eyebrow:"Trusted hotels in every city", hero_h1_a:"A stay you deserve", hero_h1_b:"at a clear price",
+    hero_p:"Pick your city and arrival date, compare hotels and rooms at transparent prices, and confirm your booking in a few simple steps.",
+    f_city:"City", f_date:"Arrival date", f_guests:"Guests",
+    sec_title:"Hotels in", sec_sub:"Verified partner hotels — direct confirmation from the hotel", hotels_word:"hotels",
+    star_all:"All", star_5:"5 stars", star_4:"4 stars", star_3:"3 & under",
+    search_ph:"Search for a hotel...", from_price:"from", per_night:"/ night", cur:"IQD",
+    book_now:"Book now", reviews:"bookings",
+    empty_t:"No hotels in this city", empty_s:"Try a different city, or clear the filter to see all available hotels.", empty_btn:"Show all",
+    bk_choose_room:"Choose a room", loading_rooms:"Loading rooms...",
+    rt_single:"Single room", rt_double:"Double room", rt_suite:"Suite", rt_room:"Room",
+    bed_word:"bed", guest_cap:"guests",
+    bk_details:"Booking details", bk_name:"Full name", bk_name_ph:"e.g. Ahmed Ali", bk_phone:"Phone number", bk_phone_ph:"07XXXXXXXXX",
+    bk_arrive:"Arrival date", bk_nights:"Number of nights", bk_guests:"Number of guests",
+    bk_special:"Special requests (optional)", bk_special_ph:"Breakfast, high floor, extra bed...",
+    nights_word:"nights", total:"Total", confirm:"Confirm booking",
+    succ_t:"Booking request sent!", succ_s:"The hotel will confirm room availability and contact you to finalize shortly.", order_no:"Booking number", wa_btn:"Contact via WhatsApp", done:"Browse more",
+    err_fields:"Please enter name and phone", err_phone:"Invalid phone number", err_room:"Please select a room", err_net:"Connection failed, try again",
+    loading:"Loading..." }
 };
 
-/* ════════════════════════════════════════════════════════════════
-   LOAD HOTELS (مع مهلة زمنية + معالجة أخطاء)
-════════════════════════════════════════════════════════════════ */
-async function loadHotels(){
-  showSkeleton();
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 12000);
-    const res = await fetch(`${API}?action=getAdminFullData&token=${TOKEN}&_t=${Date.now()}`, { signal: controller.signal });
-    clearTimeout(timeout);
+let LANG = "ar";
 
-    const data = await res.json();
-    if(data && data.success){
-      allHotels = (data.hotels||[]).filter(h => h.status === "active");
-      applyAllFilters();
-    } else {
-      showError();
-    }
-  } catch(e) {
-    console.error("Hotels load error:", e);
-    showError();
-  } finally {
-    $("splash").classList.add("hide");
+/* ═══════════════ STATE ═══════════════ */
+let allHotels = [];
+let activeStar = "";
+let favorites = new Set();
+let bookCtx = null;
+let roomsCache = {};
+
+/* ═══════════════ HELPERS ═══════════════ */
+const $ = id => document.getElementById(id);
+const cleanN = v => { const n=Number(String(v||"").replace(/[^\d.-]/g,"")); return isNaN(n)?0:n; };
+const T = k => (I18N[LANG][k] ?? I18N.ar[k] ?? k);
+function fmt(n){ return Math.round(cleanN(n)).toLocaleString(LANG==="ar"||LANG==="ku"?"ar-EG":"en-US"); }
+function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+function normPhone(p){ p=String(p||"").replace(/\D/g,""); if(p.startsWith("00964"))p=p.slice(2); if(p.startsWith("0"))p="964"+p.slice(1); else if(p.startsWith("7"))p="964"+p; return p; }
+function validPhone(p){ const n=normPhone(p); return n.length>=12 && n.startsWith("9647"); }
+function starsRow(n){ n=Math.min(parseInt(n)||0,5); return "★".repeat(n); }
+function minPrice(h){ const ps=[h.price_single,h.price_double,h.price_suite].map(cleanN).filter(x=>x>0); return ps.length?Math.min(...ps):0; }
+
+function toast(msg, err){
+  const w=$("toast-wrap");
+  const el=document.createElement("div");
+  el.className="toast"+(err?" err":"");
+  el.innerHTML=`<span>${err?"⚠️":"✅"}</span><span>${esc(msg)}</span>`;
+  w.appendChild(el);
+  setTimeout(()=>{el.style.opacity="0";el.style.transition=".3s";setTimeout(()=>el.remove(),300);},3200);
+}
+
+/* ═══════════════ LANGUAGE ═══════════════ */
+window.toggleLangMenu = e => { e.stopPropagation(); $("lang-menu").classList.toggle("open"); };
+document.addEventListener("click", ()=>$("lang-menu")?.classList.remove("open"));
+
+window.setLang = function(lang){
+  LANG = lang;
+  const cfg = I18N[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = cfg.dir;
+  document.body.classList.toggle("ltr", cfg.dir==="ltr");
+  $("lang-flag").textContent = cfg.flag;
+  $("lang-name").textContent = cfg.name;
+  document.querySelectorAll(".lang-opt").forEach(o=>o.classList.remove("on"));
+  event?.target?.closest(".lang-opt")?.classList.add("on");
+  document.querySelectorAll("[data-i18n]").forEach(el=>{ const k=el.getAttribute("data-i18n"); if(I18N[lang][k]!==undefined) el.textContent=I18N[lang][k]; });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{ const k=el.getAttribute("data-i18n-ph"); if(I18N[lang][k]!==undefined) el.placeholder=I18N[lang][k]; });
+  try{ localStorage.setItem("hut_lang", lang); }catch(e){}
+  $("lang-menu").classList.remove("open");
+  renderHotels();
+  if(bookCtx) openBook(bookCtx.hotel.id);
+};
+
+/* ═══════════════ INIT ═══════════════ */
+function initControls(){
+  const sel=$("searchCity");
+  const params=new URLSearchParams(location.search);
+  sel.innerHTML = CITIES.map(c=>`<option value="${c}">${c}</option>`).join("");
+  const urlCity=params.get("city");
+  if(urlCity && CITIES.includes(urlCity)) sel.value=urlCity;
+  const today=new Date().toISOString().split("T")[0];
+  $("searchDate").min=today;
+  $("searchDate").value=params.get("date")||today;
+  let saved="ar"; try{ saved=localStorage.getItem("hut_lang")||params.get("lang")||"ar"; }catch(e){ saved=params.get("lang")||"ar"; }
+  if(I18N[saved]) setLang(saved);
+}
+
+async function loadHotels(){
+  const city=$("searchCity").value;
+  $("cityName").textContent=city;
+  // هياكل تحميل
+  $("hotelGrid").innerHTML=Array(6).fill(`<div class="sk"><div class="sk-img"></div><div class="sk-line" style="width:70%"></div><div class="sk-line" style="width:45%"></div></div>`).join("");
+  try{
+    const res=await fetch(`${API_URL}?action=getHotelsForCity&city=${encodeURIComponent(city)}&token=${API_TOKEN}&_t=${Date.now()}`);
+    const data=await res.json();
+    allHotels=Array.isArray(data)?data:(data.hotels||[]);
+    renderHotels();
+  }catch(e){
+    allHotels=[];
+    $("hotelGrid").innerHTML=`<div class="empty"><div class="empty-ic">📡</div><div class="empty-t">${T("err_net")}</div><div class="empty-s">${T("empty_s")}</div></div>`;
+  }finally{
+    setTimeout(()=>$("splash").classList.add("gone"),350);
   }
 }
 
-function showSkeleton(){
-  let sk = "";
-  for(let i=0;i<6;i++) sk += `<div class="sk-card"><div class="sk-img"></div><div class="sk-body"><div class="sk-line" style="width:45%"></div><div class="sk-line" style="width:80%"></div><div class="sk-line" style="width:60%"></div></div></div>`;
-  $("hotelsGrid").innerHTML = sk;
-}
-
-function showError(){
-  $("hotelCount").textContent = "تعذّر التحميل";
-  $("hotelsGrid").innerHTML = `
-    <div class="state-box">
-      <div class="state-ic">📡</div>
-      <div class="state-title">تعذّر جلب الفنادق</div>
-      <div class="state-sub">تحقّق من اتصالك بالإنترنت وحاول مرة أخرى.</div>
-      <button class="state-btn" onclick="loadHotels()">إعادة المحاولة</button>
-    </div>`;
-}
-
-/* ════════════════════════════════════════════════════════════════
-   FILTER & RENDER
-════════════════════════════════════════════════════════════════ */
-function getMinPrice(hotel){
-  const ps = [hotel.price_single, hotel.price_double, hotel.price_suite].filter(p => Number(p) > 0);
-  return ps.length ? Math.min(...ps.map(Number)) : 0;
-}
-
-function parseFeatures(featStr){
-  return String(featStr||"").split(/[،,]/).map(s=>s.trim()).filter(Boolean).slice(0,3);
-}
-
-window.applyAllFilters = () => {
-  const q = $("hero-city").value.toLowerCase().trim();
-  filteredHotels = allHotels.filter(h => {
-    const matchSearch = !q || (h.city||"").toLowerCase().includes(q) || (h.name||"").toLowerCase().includes(q);
-    const matchCity   = !activeCity || h.city === activeCity;
-    return matchSearch && matchCity;
-  });
-  renderHotelsGrid();
+window.applySearch = function(){
+  loadHotels();
+  document.querySelector(".sec")?.scrollIntoView({behavior:"smooth",block:"start"});
 };
 
-function renderHotelsGrid(){
-  const grid = $("hotelsGrid");
-  $("hotelCount").textContent = `${filteredHotels.length} فندق`;
+/* ═══════════════ RENDER HOTELS ═══════════════ */
+window.filterStar = function(star, btn){
+  activeStar=star;
+  document.querySelectorAll(".cat-pill").forEach(p=>p.classList.remove("on"));
+  btn.classList.add("on");
+  renderHotels();
+};
 
-  if(!filteredHotels.length){
-    grid.innerHTML = `
-      <div class="state-box">
-        <div class="state-ic">🔍</div>
-        <div class="state-title">لا توجد فنادق مطابقة</div>
-        <div class="state-sub">جرّب تغيير المدينة أو كلمة البحث.</div>
-        <button class="state-btn" onclick="pickCity('')">عرض كل الفنادق</button>
-      </div>`;
+function renderHotels(){
+  const grid=$("hotelGrid");
+  const q=($("miniSearch")?.value||"").toLowerCase().trim();
+  let list=allHotels.slice();
+  if(activeStar){
+    const s=parseInt(activeStar);
+    if(s===3) list=list.filter(h=>(parseInt(h.stars)||0)<=3);
+    else list=list.filter(h=>(parseInt(h.stars)||0)===s);
+  }
+  if(q) list=list.filter(h=>String(h.name).toLowerCase().includes(q));
+
+  $("countNum").textContent=list.length;
+
+  if(!list.length){
+    grid.innerHTML=`<div class="empty"><div class="empty-ic">🏨</div><div class="empty-t">${T("empty_t")}</div><div class="empty-s">${T("empty_s")}</div><button class="empty-btn" onclick="clearFilters()">${T("empty_btn")}</button></div>`;
     return;
   }
 
-  grid.innerHTML = filteredHotels.map(h => {
-    const price = getMinPrice(h);
-    const stars = parseInt(h.stars) || 0;
-    const feats = parseFeatures(h.features);
-    const catLabel = h.cat === "premium" ? "مميّز" : (h.cat || "");
+  grid.innerHTML=list.map((h,i)=>{
     const img = h.photo_url
-      ? `<img src="${esc(h.photo_url)}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\\'hc-noimg\\'>🏨</div>'">`
-      : `<div class="hc-noimg">🏨</div>`;
-
+      ? `<img class="card-img" src="${esc(h.photo_url)}" alt="${esc(h.name)}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\\'card-noimg\\'>🏨</div>'">`
+      : `<div class="card-noimg">🏨</div>`;
+    const stars=parseInt(h.stars)||0;
+    const fav=favorites.has(String(h.id))?"on":"";
+    const amenities=String(h.features||"").split(/[,،]/).map(s=>s.trim()).filter(Boolean).slice(0,3);
+    const amenHtml=amenities.length
+      ? `<div class="amenities">${amenities.map(a=>`<span class="amenity">✓ ${esc(a)}</span>`).join("")}</div>`
+      : `<div class="amenities"><span class="amenity">🏨 ${T("rt_room")}</span></div>`;
+    const mp=minPrice(h);
     return `
-    <div class="hotel-card" onclick="openHotelDetail('${esc(h.id)}')">
-      <div class="hc-img">
+    <article class="card" style="animation-delay:${Math.min(i*55,500)}ms">
+      <div class="card-img-wrap">
         ${img}
-        ${stars > 0 ? `<div class="hc-stars">${"★".repeat(Math.min(stars,5))}</div>` : ""}
-        ${catLabel ? `<div class="hc-cat">${esc(catLabel)}</div>` : ""}
+        ${stars>0?`<span class="card-stars">${starsRow(stars)} ${stars}</span>`:""}
+        <button class="card-fav ${fav}" onclick="toggleFav('${esc(h.id)}',this)" aria-label="favorite">♥</button>
+        <span class="card-city-chip">📍 ${esc(h.city)}</span>
       </div>
-      <div class="hc-body">
-        <div class="hc-city">📍 ${esc(h.city)}</div>
-        <div class="hc-name">${esc(h.name)}</div>
-        ${feats.length ? `<div class="hc-feats">${feats.map(f=>`<span class="hc-feat">${esc(f)}</span>`).join("")}</div>` : ""}
-        <div class="hc-foot">
-          <div>
-            <div class="hc-price-lbl">يبدأ من</div>
-            <span class="hc-price-val">${fmt(price)}</span> <span class="hc-price-cur">د.ع / ليلة</span>
-          </div>
-          <button class="hc-cta">عرض الغرف</button>
+      <div class="card-body">
+        <h3 class="card-name">${esc(h.name)}</h3>
+        ${amenHtml}
+      </div>
+      <div class="card-foot">
+        <div class="card-price">
+          ${mp>0?`<span class="from">${T("from_price")}</span><span class="amt">${fmt(mp)} <span class="cur">${T("cur")}</span></span><span class="per">${T("per_night")}</span>`:`<span class="amt" style="font-size:.9rem">${T("rt_room")}</span>`}
         </div>
+        <button class="btn-book" onclick="openBook('${esc(h.id)}')">${T("book_now")}</button>
       </div>
-    </div>`;
+    </article>`;
   }).join("");
 }
 
-/* ════════════════════════════════════════════════════════════════
-   HOTEL DETAIL + DYNAMIC ROOMS
-════════════════════════════════════════════════════════════════ */
-window.openHotelDetail = async (id) => {
-  const h = allHotels.find(x => String(x.id) === String(id));
-  if(!h) return;
+window.clearFilters = function(){
+  activeStar=""; $("miniSearch").value="";
+  document.querySelectorAll(".cat-pill").forEach(p=>p.classList.toggle("on", p.dataset.star===""));
+  renderHotels();
+};
+window.toggleFav = function(id, btn){
+  id=String(id);
+  if(favorites.has(id)){ favorites.delete(id); btn.classList.remove("on"); }
+  else { favorites.add(id); btn.classList.add("on"); }
+};
 
-  const stars = parseInt(h.stars) || 0;
-  const feats = parseFeatures(h.features);
-  const galleryImg = h.photo_url
-    ? `<img src="${esc(h.photo_url)}" onerror="this.parentNode.innerHTML='<div class=\\'hm-gallery-noimg\\'>🏨</div>'">`
-    : `<div class="hm-gallery-noimg">🏨</div>`;
+/* ═══════════════ BOOKING FLOW ═══════════════ */
+async function openBook(hotelId){
+  const hotel=allHotels.find(h=>String(h.id)===String(hotelId));
+  if(!hotel) return;
+  bookCtx={ hotel, nights:1, guests:parseInt($("searchGuests").value)||2, selectedRoom:null, rooms:[] };
 
-  const sheet = $("hm-sheet");
-  sheet.innerHTML = `
-    <div class="hm-close-bar">
-      <div class="hm-close-bar-title">${esc(h.name)}</div>
-      <button class="hm-close-btn" onclick="closeHotelModal()">✕</button>
-    </div>
-    <div class="hm-gallery">
-      ${galleryImg}
-      <div class="hm-gallery-badges">
-        ${stars > 0 ? `<div class="hm-gb gold">${"★".repeat(Math.min(stars,5))}</div>` : ""}
-        <div class="hm-gb">📍 ${esc(h.city)}</div>
+  const stars=parseInt(hotel.stars)||0;
+  const img = hotel.photo_url
+    ? `<img src="${esc(hotel.photo_url)}" alt="${esc(hotel.name)}" onerror="this.parentNode.innerHTML='<div class=\\'modal-hero-noimg\\'>🏨</div>'">`
+    : `<div class="modal-hero-noimg">🏨</div>`;
+
+  $("bookContent").innerHTML=`
+    <div class="modal-hero">
+      ${img}
+      <button class="modal-close" onclick="closeBook()" aria-label="close">✕</button>
+      <div class="modal-hero-info">
+        ${stars>0?`<div class="stars">${starsRow(stars)}</div>`:""}
+        <h3>${esc(hotel.name)}</h3>
+        <div class="loc">📍 ${esc(hotel.city)}</div>
       </div>
     </div>
-    <div class="hm-info">
-      <div class="hm-name">${esc(h.name)}</div>
-      <div class="hm-loc">📍 ${esc(h.city)}</div>
-      ${feats.length ? `<div class="hm-feats">${feats.map(f=>`<span class="hm-feat">✓ ${esc(f)}</span>`).join("")}</div>` : ""}
-    </div>
-    <div class="hm-rooms-sec">
-      <div class="hm-rooms-title">🛏 الغرف المتاحة</div>
-      <div class="rooms-loading"><div class="rl-spin"></div>جاري جلب الغرف من الفندق...</div>
+    <div class="modal-body">
+      <div class="modal-sec-title">🛏 ${T("bk_choose_room")}</div>
+      <div id="roomArea"><div class="rooms-loading">${Array(3).fill('<div class="room-sk"></div>').join("")}</div></div>
+
+      <div class="modal-sec-title">📝 ${T("bk_details")}</div>
+      <div class="field">
+        <label class="field-lbl">${T("bk_name")}</label>
+        <input type="text" class="field-input" id="bkName" placeholder="${T("bk_name_ph")}">
+      </div>
+      <div class="field">
+        <label class="field-lbl">${T("bk_phone")}</label>
+        <input type="tel" class="field-input mono" id="bkPhone" placeholder="${T("bk_phone_ph")}" dir="ltr">
+      </div>
+      <div class="field">
+        <label class="field-lbl">${T("bk_arrive")}</label>
+        <input type="date" class="field-input" id="bkDate" min="${new Date().toISOString().split("T")[0]}" value="${$("searchDate").value}">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-lbl">${T("bk_nights")}</label>
+          <div class="stepper"><button onclick="changeNights(-1)">−</button><span class="val" id="bkNights">1</span><button onclick="changeNights(1)">+</button></div>
+        </div>
+        <div class="field">
+          <label class="field-lbl">${T("bk_guests")}</label>
+          <div class="stepper"><button onclick="changeGuests(-1)">−</button><span class="val" id="bkGuests">${bookCtx.guests}</span><button onclick="changeGuests(1)">+</button></div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-lbl">${T("bk_special")}</label>
+        <textarea class="field-input" id="bkSpecial" placeholder="${T("bk_special_ph")}"></textarea>
+      </div>
+      <div class="total-bar">
+        <div><div class="lbl">${T("total")}</div><div class="sub" id="bkBreakdown">—</div></div>
+        <span class="amt" id="bkTotal">0 <span class="cur">${T("cur")}</span></span>
+      </div>
+      <button class="btn-confirm" id="bkConfirm" onclick="submitBooking()">🏨 ${T("confirm")}</button>
     </div>`;
-  $("hotelModal").classList.remove("dn");
-  document.body.style.overflow = "hidden";
 
-  // جلب الغرف الحقيقية من السيرفر
-  let dynamicRooms = [];
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
-    const res = await fetch(`${API}?action=getRoomsByHotel&hotel_id=${encodeURIComponent(h.id)}&token=${TOKEN}&_t=${Date.now()}`, { signal: controller.signal });
-    clearTimeout(timeout);
-    const data = await res.json();
-    if(Array.isArray(data)) dynamicRooms = data;
-    else if(data && data.rooms) dynamicRooms = data.rooms;
-  } catch(e) { console.warn("Rooms fetch failed:", e); }
+  $("bookModal").classList.add("open");
+  document.body.style.overflow="hidden";
+  loadRooms(hotel);
+}
+window.openBook=openBook;
 
-  let roomsToShow = dynamicRooms.filter(r => r.status !== "inactive" && Number(r.price) > 0);
+async function loadRooms(hotel){
+  let rooms=[];
+  try{
+    if(roomsCache[hotel.id]){ rooms=roomsCache[hotel.id]; }
+    else {
+      const res=await fetch(`${API_URL}?action=getRoomsByHotel&hotel_id=${encodeURIComponent(hotel.id)}&token=${API_TOKEN}&_t=${Date.now()}`);
+      const data=await res.json();
+      rooms=(Array.isArray(data)?data:(data.rooms||[])).filter(r=>r.status!=="unavailable");
+      roomsCache[hotel.id]=rooms;
+    }
+  }catch(e){ rooms=[]; }
 
-  // الحل البديل: أسعار الفندق الأساسية إن لم يُضِف الشريك غرفاً مخصصة
-  if(roomsToShow.length === 0){
-    roomsToShow = [
-      { id:"single", room_type:"single", room_name:"غرفة مفردة", price:h.price_single, photo_url:h.photo_url, bed_type:"مفرد" },
-      { id:"double", room_type:"double", room_name:"غرفة مزدوجة", price:h.price_double, photo_url:h.photo_url, bed_type:"مزدوج" },
-      { id:"suite",  room_type:"suite",  room_name:"جناح VIP",   price:h.price_suite,  photo_url:h.photo_url, bed_type:"كينج" }
-    ].filter(r => Number(r.price) > 0);
+  // احتياطي: الأسعار الأساسية إن لم تُضف غرف
+  if(!rooms.length){
+    rooms=[
+      {id:"base-single", room_name:T("rt_single"), room_type:"single", price:cleanN(hotel.price_single), bed_type:"", _base:true},
+      {id:"base-double", room_name:T("rt_double"), room_type:"double", price:cleanN(hotel.price_double), bed_type:"", _base:true},
+      {id:"base-suite",  room_name:T("rt_suite"),  room_type:"suite",  price:cleanN(hotel.price_suite),  bed_type:"", _base:true}
+    ].filter(r=>r.price>0);
+  }
+  if(!bookCtx) return;
+  bookCtx.rooms=rooms;
+
+  if(!rooms.length){
+    $("roomArea").innerHTML=`<div style="text-align:center;padding:18px;color:var(--tx2);font-weight:700;font-size:.84rem;background:var(--bg);border-radius:var(--r3);margin-bottom:20px">⚠️ ${T("err_room")}</div>`;
+    return;
   }
 
-  const roomsHtml = roomsToShow.length > 0
-    ? roomsToShow.map(r => {
-        const rname  = r.room_name || r.room_type || "غرفة";
-        const rphoto = r.photo_url || h.photo_url;
-        const thumb  = rphoto
-          ? `<img src="${esc(rphoto)}" onerror="this.parentNode.innerHTML='<div class=\\'rc-thumb-noimg\\'>🛏</div>'">`
-          : `<div class="rc-thumb-noimg">🛏</div>`;
-        return `
-        <div class="room-card">
-          <div class="rc-head">
-            <div class="rc-thumb">${thumb}</div>
-            <div class="rc-info">
-              <div class="rc-name">${esc(rname)}</div>
-              ${r.bed_type ? `<div class="rc-bed">🛌 سرير ${esc(r.bed_type)}</div>` : ""}
-              ${r.description ? `<div class="rc-desc">${esc(r.description)}</div>` : ""}
-            </div>
-          </div>
-          <div class="rc-foot">
-            <div><span class="rc-price">${fmt(r.price)}</span> <span class="rc-price-cur">د.ع / ليلة</span></div>
-            <button class="rc-book-btn" onclick="openBookingModal('${esc(h.id)}','${esc(r.id)}',${Number(r.price)||0},'${esc(rname)}','${esc(r.room_type||rname)}')">احجز الآن</button>
-          </div>
-        </div>`;
-      }).join("")
-    : `<div class="rooms-empty">لا توجد غرف متاحة في هذا الفندق حالياً.</div>`;
+  const rtLabel=t=>({single:T("rt_single"),double:T("rt_double"),suite:T("rt_suite")}[t]||T("rt_room"));
+  $("roomArea").innerHTML=`<div class="room-list">${rooms.map((r,i)=>{
+    const thumb=r.photo_url?`<img class="room-thumb" src="${esc(r.photo_url)}" onerror="this.outerHTML='<div class=\\'room-thumb-noimg\\'>🛏</div>'">`:`<div class="room-thumb-noimg">🛏</div>`;
+    const meta=[rtLabel(r.room_type), r.bed_type?`🛏 ${esc(r.bed_type)}`:""].filter(Boolean).join(" · ");
+    return `<div class="room-card" id="room-${i}" onclick="selectRoom(${i})">
+      ${thumb}
+      <div class="room-info"><div class="room-name">${esc(r.room_name)}</div><div class="room-meta">${meta}${r.description?` · ${esc(String(r.description).slice(0,40))}`:""}</div></div>
+      <div class="room-price-col"><div class="room-price">${fmt(r.price)} <span class="cur">${T("cur")}</span></div></div>
+      <div class="room-radio"></div>
+    </div>`;
+  }).join("")}</div>`;
 
-  const roomsSec = sheet.querySelector(".hm-rooms-sec");
-  if(roomsSec){
-    roomsSec.innerHTML = `<div class="hm-rooms-title">🛏 الغرف المتاحة</div><div class="rooms-list">${roomsHtml}</div>`;
-  }
+  selectRoom(0); // اختيار الأولى افتراضياً
+}
+
+window.selectRoom=function(idx){
+  if(!bookCtx||!bookCtx.rooms[idx]) return;
+  bookCtx.selectedRoom=bookCtx.rooms[idx];
+  document.querySelectorAll(".room-card").forEach(c=>c.classList.remove("on"));
+  $("room-"+idx)?.classList.add("on");
+  calcTotal();
+};
+window.changeNights=function(d){ if(!bookCtx)return; bookCtx.nights=Math.max(1,Math.min(30,bookCtx.nights+d)); $("bkNights").textContent=bookCtx.nights; calcTotal(); };
+window.changeGuests=function(d){ if(!bookCtx)return; bookCtx.guests=Math.max(1,Math.min(12,bookCtx.guests+d)); $("bkGuests").textContent=bookCtx.guests; calcTotal(); };
+
+function calcTotal(){
+  if(!bookCtx||!bookCtx.selectedRoom){ $("bkTotal").innerHTML=`0 <span class="cur">${T("cur")}</span>`; return 0; }
+  const price=cleanN(bookCtx.selectedRoom.price);
+  const total=price*bookCtx.nights;
+  $("bkTotal").innerHTML=`${fmt(total)} <span class="cur">${T("cur")}</span>`;
+  $("bkBreakdown").textContent=`${fmt(price)} × ${bookCtx.nights} ${T("nights_word")}`;
+  return total;
+}
+
+window.submitBooking=async function(){
+  if(!bookCtx) return;
+  if(!bookCtx.selectedRoom){ toast(T("err_room"),true); return; }
+  const name=$("bkName").value.trim();
+  const phone=$("bkPhone").value.trim();
+  if(!name||!phone){ toast(T("err_fields"),true); return; }
+  if(!validPhone(phone)){ toast(T("err_phone"),true); $("bkPhone").focus(); return; }
+
+  const btn=$("bkConfirm");
+  btn.classList.add("loading"); btn.disabled=true;
+  const total=calcTotal();
+  const room=bookCtx.selectedRoom;
+
+  const payload={
+    action:"NEW_HOTEL_BOOKING",
+    token:API_TOKEN,
+    name, phone,
+    hotel_name:bookCtx.hotel.name,
+    hotel_id:bookCtx.hotel.id,
+    room_type:room.room_type||"double",
+    city:bookCtx.hotel.city,
+    date:$("bkDate").value,
+    nights:bookCtx.nights,
+    days:bookCtx.nights,
+    guests:bookCtx.guests,
+    total_price:total,
+    special_req:`${room.room_name} — ${$("bkSpecial").value.trim()}`.trim().replace(/—\s*$/,""),
+    source:"web_hotels"
+  };
+
+  try{
+    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify(payload)});
+    const d=await res.json();
+    if(d.success){ showSuccess(d.order_id, phone); }
+    else { toast(d.msg||T("err_net"),true); btn.classList.remove("loading"); btn.disabled=false; }
+  }catch(e){ toast(T("err_net"),true); btn.classList.remove("loading"); btn.disabled=false; }
 };
 
-window.closeHotelModal = () => { $("hotelModal").classList.add("dn"); document.body.style.overflow = ""; };
+function showSuccess(orderId){
+  const waMsg=encodeURIComponent(`${T("succ_t")} ${orderId} — ${bookCtx.hotel.name}`);
+  $("bookContent").innerHTML=`
+    <div class="success-wrap">
+      <div class="success-ring"><span class="success-check">🎉</span></div>
+      <div class="success-t">${T("succ_t")}</div>
+      <div class="success-s">${T("succ_s")}</div>
+      <div class="order-box"><div class="lbl">${T("order_no")}</div><div class="id mono">#${esc(orderId)}</div></div>
+      <div class="success-acts">
+        <a class="btn-wa" href="https://wa.me/${WA_SUPPORT}?text=${waMsg}" target="_blank">💬 ${T("wa_btn")}</a>
+        <button class="btn-ghost" onclick="closeBook()">${T("done")}</button>
+      </div>
+    </div>`;
+}
 
-/* ════════════════════════════════════════════════════════════════
-   BOOKING MODAL
-════════════════════════════════════════════════════════════════ */
-window.openBookingModal = (hotelId, roomId, price, roomName, roomType) => {
-  const hotel = allHotels.find(h => String(h.id) === String(hotelId));
-  if(!hotel) return;
-  bookingCtx = { hotel, room: { id: roomId, price: Number(price)||0, room_name: roomName, room_type: roomType }, nights: 1 };
+window.closeBook=function(){ $("bookModal").classList.remove("open"); document.body.style.overflow=""; bookCtx=null; };
 
-  $("bm-title").textContent = "إتمام الحجز";
-  $("bm-roomtag").textContent = `${hotel.name} — ${roomName}`;
-  $("bm-nights").value = (urlDays > 1 ? urlDays : 1);
-  $("bm-err").textContent = "";
-  updateBookingCalc();
-
-  $("hotelModal").classList.add("dn");
-  $("bookingModal").classList.remove("dn");
-  document.body.style.overflow = "hidden";
-};
-
-window.closeBooking = () => { $("bookingModal").classList.add("dn"); document.body.style.overflow = ""; };
-
-window.updateBookingCalc = () => {
-  if(!bookingCtx) return;
-  const n = Math.max(1, Number($("bm-nights").value) || 1);
-  bookingCtx.nights = n;
-  const total = bookingCtx.room.price * n;
-  $("bm-total-val").textContent = `${fmt(total)} د.ع`;
-  $("bm-total-calc").textContent = `${fmt(bookingCtx.room.price)} د.ع × ${n} ليلة`;
-};
-
-/* الانتقال مباشرة لصفحة المراجعة (review.html) عبر الرابط —
-   متخطّياً addons لأنها مخصصة للسيارات ولا تملك إضافات فندقية */
-window.goToReview = () => {
-  const checkin = $("bm-checkin").value;
-  const name    = $("bm-name").value.trim();
-  const phone   = $("bm-phone").value.trim();
-  const idNo    = $("bm-id").value.trim();
-  const guests  = $("bm-guests").value || "1";
-  const req     = $("bm-req").value.trim();
-  const nights  = Math.max(1, Number($("bm-nights").value) || 1);
-
-  if(!checkin){ $("bm-err").textContent = "يرجى تحديد تاريخ الوصول"; return; }
-  if(!name){    $("bm-err").textContent = "يرجى كتابة الاسم"; return; }
-  if(!phone){   $("bm-err").textContent = "يرجى كتابة رقم الهاتف"; return; }
-  if(!idNo){    $("bm-err").textContent = "يرجى كتابة رقم الهوية"; return; }
-
-  const total   = bookingCtx.room.price * nights;
-  const orderId = "HTL-" + Math.floor(1000 + Math.random()*9000);
-
-  const u = new URLSearchParams();
-  u.set("order_id",     orderId);
-  u.set("service",      "فندق");
-  u.set("type",         "hotel");
-  u.set("lang",         lang);
-  u.set("name",         name);
-  u.set("phone",        phone);
-  u.set("national_id",  idNo);
-  u.set("guests",       guests);
-  u.set("special_req",  req);
-  u.set("province",     bookingCtx.hotel.city || "");
-  u.set("city",         bookingCtx.hotel.city || "");
-  u.set("hotel_name",   bookingCtx.hotel.name || "");
-  u.set("hotel_id",     bookingCtx.hotel.id || "");
-  u.set("room_type",    bookingCtx.room.room_name || "");
-  u.set("car",          `${bookingCtx.hotel.name} — ${bookingCtx.room.room_name}`); // لعرض الخدمة في review/success
-  u.set("date",         checkin);
-  u.set("days",         nights);
-  u.set("nights",       nights);
-  u.set("total_price",  total);
-  u.set("location_link","");
-
-  window.location.href = `review.html?${u.toString()}`;
-};
-
-/* إغلاق المودالات بزر Esc */
-document.addEventListener("keydown", (e) => {
-  if(e.key === "Escape"){
-    if(!$("bookingModal").classList.contains("dn")) closeBooking();
-    else if(!$("hotelModal").classList.contains("dn")) closeHotelModal();
-  }
-});
+/* ═══════════════ BOOT ═══════════════ */
+initControls();
+loadHotels();
 </script>
 </body>
 </html>

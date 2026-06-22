@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlTag">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title id="docTitle">إكمال الحجز | الحوت 🐋</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <style>
+        body { font-family: 'Tajawal', 'Poppins', sans-serif; background-color: #f0f2f5; transition: 0.5s; overflow-x: hidden; }
+        .hero-bg { background: linear-gradient(135deg, #002349 0%, #004d99 100%); position: relative; padding-top: 3rem; padding-bottom: 10rem; overflow: hidden; border-bottom: 4px solid #D4AF37; }
+        .dynamic-pattern { position: absolute; inset: 0; opacity: 0.20; pointer-events: none; background-repeat: repeat; animation: bgMove 40s linear infinite; }
+        @keyframes bgMove { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
+        .city-overlay { position: absolute; inset: 0; opacity: 0.7; transition: 1s; pointer-events: none; }
+        .section-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border-radius: 3.5rem; box-shadow: 0 25px 60px rgba(0,0,0,0.1); position: relative; z-index: 20; }
+        .glass-input { width: 100%; padding: 1.1rem 1.5rem; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 1.5rem; font-weight: 700; outline: none; transition: 0.3s; color: #002349; }
+        .glass-input:focus { border-color: #D4AF37; background: white; transform: translateY(-2px); }
+        #map { height: 280px; border-radius: 2.5rem; border: 4px solid #f1f5f9; z-index: 1; }
+        .gender-btn { flex: 1; padding: 1.1rem; border: 2px solid #e2e8f0; border-radius: 1.5rem; font-weight: 900; transition: 0.4s; cursor: pointer; text-align: center; background: white; }
+        .gender-btn.active { background: #002349; color: white; border-color: #002349; transform: scale(1.05); }
+        .summary-badge { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-radius: 1.5rem; padding: 12px 20px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.3); font-size: 0.85rem; }
+        .btn-confirm { background: #002349; color: #D4AF37; font-weight: 900; border-radius: 2.5rem; transition: 0.4s; }
+        .btn-confirm:hover { background: #D4AF37; color: #002349; transform: translateY(-5px); }
+        .label-text { font-weight: 900; font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem; margin-right: 0.5rem; display: block; }
+    </style>
+</head>
+<body class="text-[#002349]">
+
+    <header class="hero-bg text-white text-center">
+        <div id="cityOverlay" class="city-overlay"></div>
+        <div id="patternBox" class="dynamic-pattern"></div>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-5xl mb-4">🐋</div>
+            <h1 id="pageTitle" class="text-3xl md:text-5xl font-black text-[#D4AF37] mb-6">---</h1>
+            <div class="flex flex-wrap justify-center gap-3">
+                <div class="summary-badge"><i class="fas fa-car text-amber-400"></i><span id="carLabel"></span></div>
+                <div class="summary-badge"><i class="fas fa-calendar-alt text-amber-400"></i><span id="dateLabel"></span></div>
+                <div class="summary-badge"><i class="fas fa-clock text-amber-400"></i><span id="daysLabel"></span></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 -mt-24 relative z-20 pb-20">
+        <div class="section-card p-8 md:p-12 max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-slate-100 p-3 rounded-2xl text-[#002349]"><i class="fas fa-user-edit text-xl"></i></div>
+                        <h3 id="personalInfoTitle" class="font-black text-2xl">---</h3>
+                    </div>
+                    <div>
+                        <label id="lblFullName" class="label-text">---</label>
+                        <input type="text" id="custName" class="glass-input">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label id="lblPhone" class="label-text">---</label>
+                            <input type="tel" id="custPhone" class="glass-input text-left" dir="ltr" placeholder="07xx xxx xxxx">
+                        </div>
+                        <div>
+                            <label id="lblAge" class="label-text">---</label>
+                            <input type="number" id="custAge" class="glass-input" value="20">
+                        </div>
+                    </div>
+                    <div>
+                        <label id="lblGender" class="label-text">---</label>
+                        <div class="flex gap-4">
+                            <div id="maleBtn" onclick="setGender('Male')" class="gender-btn active">---</div>
+                            <div id="femaleBtn" onclick="setGender('Female')" class="gender-btn">---</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-slate-100 p-3 rounded-2xl text-[#002349]"><i class="fas fa-id-card text-xl"></i></div>
+                        <h3 id="docsTitle" class="font-black text-2xl">---</h3>
+                    </div>
+                    <div>
+                        <label id="lblID" class="label-text">---</label>
+                        <input type="text" id="idNumber" class="glass-input">
+                    </div>
+                    <div>
+                        <label id="lblLicense" class="label-text">---</label>
+                        <input type="text" id="drivingLicense" class="glass-input">
+                    </div>
+                    <div id="warningBox" class="p-5 bg-amber-50 rounded-[2rem] border border-amber-100 flex gap-3 items-start">
+                        <span class="text-2xl">⚠️</span>
+                        <p id="warningText" class="text-[12px] font-bold text-amber-800 leading-relaxed">---</p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 space-y-4">
+                    <div class="flex justify-between items-center px-2">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-slate-100 p-3 rounded-2xl text-[#002349]"><i class="fas fa-search-location"></i></div>
+                            <h3 id="mapTitle" class="font-black text-2xl">---</h3>
+                        </div>
+                        <button id="gpsBtn" onclick="getGPS()" class="text-[#002349] font-black text-sm bg-white px-5 py-3 rounded-2xl border-2 shadow-sm transition-all">---</button>
+                    </div>
+                    <div id="map"></div>
+                </div>
+
+                <button id="confirmBtn" onclick="confirmBooking()" class="btn-confirm md:col-span-2 w-full py-6 text-2xl shadow-2xl active:scale-95 flex items-center justify-center gap-4">
+                    <span id="btnSubmitText">---</span> <i id="btnIcon" class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let map, marker, selectedGender = 'Male';
+        const u = new URLSearchParams(window.location.search);
+        const lang = u.get('lang') || 'ar';
+        const city = u.get('city') || 'بغداد';
+        const days = parseInt(u.get('days') || '1');
+
+        const data = {
+            ar: {
+                title: "إكمال بيانات الحجز", personal: "المعلومات الشخصية", docs: "الوثائق المطلوبة",
+                lblN: "اسم المستأجر الكامل", lblP: "رقم الهاتف", lblA: "العمر", lblG: "الجنس",
+                lblID: "رقم الهوية الوطنية / الجواز", lblL: "رقم إجازة السوق", male: "👨 ذكر", female: "👩 أنثى",
+                warn: "تنبيه: يجب إحضار الوثائق الأصلية عند استلام السيارة لمطابقتها رسمياً.",
+                map: "موقع التوصيل / الاستلام", gps: "تحديد موقعي الحالي 🛰️", review: "مراجعة بيانات الطلب",
+                alert: "يرجى إكمال البيانات الأساسية للهوية والاتصال 🐋", mapP: "ابحث عن منطقة أو شارع...", curr: "د.ع", day: "يوم"
+            },
+            ku: {
+                title: "تەواوکردنی زانیارییەکان", personal: "زانیارییە کەسییەکان", docs: "بەڵگەنامە داواکراوەکان",
+                lblN: "ناوی تەواوی کرێنشین", lblP: "ژمارەی مۆبایل", lblA: "تەمەن", lblG: "ڕەگەز",
+                lblID: "ژمارەی ناسنامە / پاسپۆرت", lblL: "ژمارەی مۆڵەتی شۆفێری", male: "👨 نێر", female: "👩 مێ",
+                warn: "ئاگاداری: پێویستە بەڵگەنامە ئەسڵییەکان لەگەڵ خۆت بهێنیت كاتی وەرگرتنی ئۆتۆمبێل.",
+                map: "شوێنی وەرگرتن", gps: "دیاریکردنی شوێنەکەم 🛰️", review: "پێداچوونەوەی داواکاری",
+                alert: "تکایە زانیارییەکان تەواو بکە 🐋", mapP: "بگەڕێ بۆ شوێنێک...", curr: "د.ع", day: "ڕۆژ"
+            },
+            tr: {
+                title: "Rezervasyon Tamamlama", personal: "Kişisel Bilgiler", docs: "Gerekli Belgeler",
+                lblN: "Tam Ad Soyad", lblP: "Telefon Numarası", lblA: "Yaş", lblG: "Cinsiyet",
+                lblID: "T.C. Kimlik / Pasaport", lblL: "Ehliyet Numarası", male: "👨 Erkek", female: "👩 Kadın",
+                warn: "Uyarı: Aracı teslim alırken orijinal belgeleri yanınızda bulundurmalısınız.",
+                map: "Teslimat Konumu", gps: "Konumumu Bul 🛰️", review: "Siparişi İncele",
+                alert: "Lütfen tüm zorunlu alanları doldurun 🐋", mapP: "Bölge veya sokak ara...", curr: "IQD", day: "Gün"
+            },
+            en: {
+                title: "Complete Booking", personal: "Personal Information", docs: "Required Documents",
+                lblN: "Full Name", lblP: "Phone Number", lblA: "Age", lblG: "Gender",
+                lblID: "National ID / Passport", lblL: "Driving License No", male: "👨 Male", female: "👩 Female",
+                warn: "Note: Original documents must be presented upon car pickup.",
+                map: "Delivery Location", gps: "Get My Location 🛰️", review: "Review Order",
+                alert: "Please fill in all required fields 🐋", mapP: "Search area or street...", curr: "IQD", day: "Day"
+            }
+        };
+
+        const styleColor = { 
+            'كركوك': '#004d40', 'بغداد': '#1a237e', 'أربيل': '#2e7d32', 
+            'السليمانية': '#6a1b9a', 'الموصل': '#4e342e', 'البصرة': '#0277bd', 
+            'الأنبار': '#ef6c00', 'ديالى': '#558b2f' 
+        };
+
+        window.onload = function() {
+            const l = data[lang] || data['ar'];
+            const isRtl = (lang === 'ar' || lang === 'ku');
+            document.getElementById('htmlTag').dir = isRtl ? 'rtl' : 'ltr';
+
+            document.getElementById('pageTitle').innerText = l.title;
+            document.getElementById('personalInfoTitle').innerText = l.personal;
+            document.getElementById('docsTitle').innerText = l.docs;
+            document.getElementById('lblFullName').innerText = l.lblN;
+            document.getElementById('lblPhone').innerText = l.lblP;
+            document.getElementById('lblAge').innerText = l.lblA;
+            document.getElementById('lblGender').innerText = l.lblG;
+            document.getElementById('maleBtn').innerText = l.male;
+            document.getElementById('femaleBtn').innerText = l.female;
+            document.getElementById('lblID').innerText = l.lblID;
+            document.getElementById('lblLicense').innerText = l.lblL;
+            document.getElementById('warningText').innerText = l.warn;
+            document.getElementById('mapTitle').innerText = l.map;
+            document.getElementById('gpsBtn').innerText = l.gps;
+            document.getElementById('btnSubmitText').innerText = l.review;
+            document.getElementById('btnIcon').className = `fas fa-chevron-${isRtl ? 'left' : 'right'}`;
+
+            document.getElementById('cityOverlay').style.backgroundColor = styleColor[city] || '#002349';
+            document.getElementById('carLabel').innerText = u.get('car') || '---';
+            document.getElementById('dateLabel').innerText = u.get('date') || '---';
+            document.getElementById('daysLabel').innerText = `${days} ${l.day}`;
+
+            map = L.map('map').setView([33.3152, 44.3661], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            marker = L.marker([33.3152, 44.3661], {draggable: true}).addTo(map);
+
+            L.Control.geocoder({
+                defaultMarkGeocode: false,
+                placeholder: l.mapP
+            }).on('markgeocode', function(e) {
+                map.setView(e.geocode.center, 16);
+                marker.setLatLng(e.geocode.center);
+            }).addTo(map);
+        };
+
+        function setGender(g) {
+            selectedGender = g;
+            document.getElementById('maleBtn').classList.toggle('active', g === 'Male');
+            document.getElementById('femaleBtn').classList.toggle('active', g === 'Female');
+        }
+
+        function getGPS() { 
+            navigator.geolocation.getCurrentPosition(p => { 
+                const c = [p.coords.latitude, p.coords.longitude]; 
+                map.setView(c, 16); marker.setLatLng(c); 
+            }); 
+        }
+
+        function confirmBooking() {
+            const l = data[lang] || data['ar'];
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const id_no = document.getElementById('idNumber').value;
+            
+            if(!name || !phone || !id_no) { alert(l.alert); return; }
+            
+            const orderId = "HUT-" + Math.floor(1000 + Math.random() * 9000);
+            const pos = marker.getLatLng();
+            
+            // حساب السعر النهائي بدقة (سعر السيارة + سعر الإضافة) * عدد الأيام
+            const carPrice = parseInt(u.get('basePrice') || 0);
+            const addonPrice = parseInt(u.get('addon_price') || 0);
+            const finalTotal = (carPrice + addonPrice) * days;
+
+            u.set('order_id', orderId);
+            u.set('name', name);
+            u.set('phone', phone);
+            u.set('age', document.getElementById('custAge').value);
+            u.set('gender', selectedGender === 'Male' ? 'ذكر' : 'أنثى');
+            u.set('national_id', id_no);
+            u.set('license_no', document.getElementById('drivingLicense').value);
+            u.set('province', city);
+            u.set('location_link', `https://www.google.com/maps?q=${pos.lat},${pos.lng}`);
+            u.set('service', u.get('type') === 'wedding' ? 'زفاف' : 'شخصي');
+            u.set('total_price', finalTotal);
+            
+            window.location.href = `review.html?${u.toString()}`;
+        }
+    </script>
+</body>
+</html>

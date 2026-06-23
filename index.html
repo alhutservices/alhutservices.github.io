@@ -1,715 +1,655 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlTag">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الحوت | سيارات، فنادق، قاعات، ومدارس قيادة</title>
-    <meta name="description" content="منصة الحوت: الخيار الأول لتأجير السيارات، الفنادق، قاعات الأعراس، ومدارس القيادة في العراق.">
-    <link rel="icon" type="image/png" href="Cars/logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #FF385C;
-            --primary-dark: #E31C5F;
-            --dark: #222222;
-            --mid: #717171;
-            --light: #DDDDDD;
-            --bg: #F7F7F7;
-            --white: #FFFFFF;
-            --shadow: 0 6px 20px rgba(0,0,0,0.12);
-            --shadow-hover: 0 8px 28px rgba(0,0,0,0.2);
-            --radius: 16px;
-            --radius-sm: 12px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>الحوت · سيارات وفنادق وقاعات ومدارس قيادة في العراق</title>
+<meta name="theme-color" content="#FF385C">
+<meta name="description" content="منصة الحوت — الخيار الأول في العراق لتأجير السيارات، حجز الفنادق، قاعات الأعراس، ومدارس تعليم القيادة. أسعار واضحة وحجز فوري في كل المحافظات.">
+<meta property="og:title" content="منصة الحوت 🐋 — كل خدماتك في مكان واحد">
+<meta property="og:description" content="سيارات · فنادق · قاعات أعراس · مدارس قيادة — في بغداد وكركوك وأربيل وكل العراق.">
+<meta property="og:type" content="website">
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
 
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background: var(--bg);
-            color: var(--dark);
-            overflow-x: hidden;
-        }
+<style>
+:root{
+  --bg:#F7F7F7;--white:#FFFFFF;--border:#E4E4E4;--line:#EFEFEF;
+  --red:#FF385C;--red-d:#E31C5F;--red-l:#FFF0F2;--red-m:rgba(255,56,92,.1);
+  --red-g:linear-gradient(135deg,#FF385C 0%,#E31C5F 100%);
+  --green:#00A699;--green-l:#E6F7F6;
+  --amber:#FC642D;--amber-l:#FFF3EE;
+  --blue:#0066CC;--blue-l:#EEF5FF;
+  --violet:#6B46C1;--violet-l:#F3F0FF;
+  --gold:#F5A623;--gold-l:#FFF8EC;
+  --tx0:#1A1A1A;--tx1:#484848;--tx2:#717171;--tx3:#A8A8A8;--tx4:#CFCFCF;
+  --sh-sm:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);
+  --sh-md:0 2px 6px rgba(0,0,0,.07),0 8px 24px rgba(0,0,0,.06);
+  --sh-lg:0 8px 28px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.08);
+  --sh-red:0 6px 20px rgba(255,56,92,.32);
+  --r2:8px;--r3:12px;--r4:16px;--r5:20px;--r6:28px;--r-pill:999px;
+  --nav-h:64px;
+}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:'Cairo',system-ui,sans-serif;color:var(--tx0);-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden;}
+body.ltr{direction:ltr;text-align:left;}
+button,input,select,textarea{font-family:inherit;color:inherit;}
+button{cursor:pointer;border:none;background:none;}
+a{text-decoration:none;color:inherit;}
+img{display:block;max-width:100%;}
+.dn{display:none!important;}
+::-webkit-scrollbar{width:7px;height:7px;}
+::-webkit-scrollbar-thumb{background:var(--tx4);border-radius:99px;}
+.mono{font-family:'IBM Plex Mono',monospace;}
 
-        /* ===== NAVBAR ===== */
-        .navbar {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 1000;
-            background: white;
-            border-bottom: 1px solid var(--light);
-            padding: 0 24px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: box-shadow 0.3s;
-        }
-        .navbar.scrolled { box-shadow: var(--shadow); }
+/* NAV */
+.nav{position:sticky;top:0;z-index:500;height:var(--nav-h);background:rgba(255,255,255,.88);backdrop-filter:blur(18px) saturate(180%);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,40px);transition:box-shadow .3s;}
+.nav.scrolled{box-shadow:var(--sh-sm);}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.15rem;letter-spacing:-.02em;}
+.nav-logo .whale{width:38px;height:38px;border-radius:11px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:var(--sh-red);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.lang-wrap{position:relative;}
+.lang-btn{display:flex;align-items:center;gap:6px;padding:8px 13px;border-radius:var(--r-pill);background:var(--bg);border:1px solid var(--border);font-size:.78rem;font-weight:800;transition:.18s;}
+.lang-btn:hover{border-color:var(--tx3);}
+.lang-menu{position:absolute;top:calc(100% + 8px);inset-inline-end:0;background:var(--white);border:1px solid var(--border);border-radius:var(--r3);box-shadow:var(--sh-lg);padding:6px;min-width:150px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:.2s;z-index:60;}
+.lang-menu.open{opacity:1;visibility:visible;transform:none;}
+.lang-opt{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:var(--r2);font-size:.82rem;font-weight:700;width:100%;text-align:start;transition:.15s;}
+.lang-opt:hover{background:var(--bg);}
+.lang-opt.on{background:var(--red-l);color:var(--red);font-weight:900;}
+.lang-opt .flag{font-size:1.05rem;}
+.nav-partner{padding:9px 16px;border-radius:var(--r-pill);background:var(--tx0);color:#fff;font-size:.78rem;font-weight:800;transition:.2s;white-space:nowrap;}
+.nav-partner:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.18);}
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--primary);
-            text-decoration: none;
-        }
-        .logo span { font-size: 1.8rem; }
+/* HERO */
+.hero{position:relative;padding:clamp(40px,7vw,84px) clamp(16px,4vw,40px) clamp(70px,10vw,110px);overflow:hidden;background:var(--white);}
+.hero::before{content:'';position:absolute;inset:0;background:var(--red-g);opacity:.05;}
+.hero-blob{position:absolute;border-radius:50%;pointer-events:none;}
+.hero-blob.b1{top:-120px;inset-inline-end:-160px;width:520px;height:520px;background:radial-gradient(circle,rgba(255,56,92,.1) 0%,transparent 70%);}
+.hero-blob.b2{bottom:-120px;inset-inline-start:-160px;width:440px;height:440px;background:radial-gradient(circle,rgba(107,70,193,.07) 0%,transparent 70%);}
+.hero-whale{position:absolute;inset-inline-start:4vw;top:50%;transform:translateY(-50%);font-size:clamp(6rem,15vw,12rem);opacity:.07;animation:floatW 6s ease-in-out infinite;pointer-events:none;z-index:1;}
+@keyframes floatW{0%,100%{transform:translateY(-50%) rotate(-5deg)}50%{transform:translateY(calc(-50% - 22px)) rotate(5deg)}}
+.hero-wave{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:90px;z-index:1;}
+.hero-inner{position:relative;z-index:2;max-width:880px;margin:0 auto;text-align:center;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;padding:6px 15px;border-radius:var(--r-pill);background:var(--white);border:1px solid var(--border);box-shadow:var(--sh-sm);font-size:.74rem;font-weight:800;color:var(--red);margin-bottom:22px;}
+.hero-eyebrow .star{color:var(--gold);}
+.hero-h1{font-size:clamp(2.1rem,6vw,3.7rem);font-weight:900;letter-spacing:-.03em;line-height:1.1;margin-bottom:16px;}
+.hero-h1 .grad{background:var(--red-g);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-p{font-size:clamp(.95rem,2.2vw,1.15rem);font-weight:600;color:var(--tx2);max-width:600px;margin:0 auto 36px;}
 
-        .lang-bar {
-            display: flex;
-            gap: 6px;
-        }
-        .lang-btn {
-            padding: 8px 16px;
-            border-radius: 24px;
-            font-weight: 700;
-            font-size: 0.82rem;
-            cursor: pointer;
-            border: 1.5px solid var(--light);
-            background: white;
-            color: var(--dark);
-            transition: 0.25s;
-        }
-        .lang-btn:hover { border-color: var(--dark); }
-        .lang-btn.active {
-            background: var(--primary);
-            border-color: var(--primary);
-            color: white;
-        }
+/* SEARCH BOX */
+.search-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r6);box-shadow:var(--sh-lg);overflow:hidden;max-width:860px;margin:0 auto;text-align:start;}
+.search-tabs{display:flex;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;padding:0 6px;}
+.search-tabs::-webkit-scrollbar{display:none;}
+.search-tab{padding:16px 20px;font-weight:800;font-size:.86rem;cursor:pointer;color:var(--tx2);border-bottom:2.5px solid transparent;transition:.2s;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.search-tab .ic{font-size:1.05rem;}
+.search-tab:hover{color:var(--tx1);}
+.search-tab.on{color:var(--tx0);border-bottom-color:var(--red);}
+.search-fields{display:grid;grid-template-columns:1.3fr 1fr 1fr auto;gap:0;align-items:stretch;}
+.sf{padding:16px 22px;border-inline-start:1px solid var(--line);transition:background .18s;position:relative;}
+.sf:first-child{border-inline-start:none;}
+.sf:hover{background:var(--bg);}
+.sf label{display:block;font-size:.64rem;font-weight:900;color:var(--tx2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;}
+.sf select,.sf input{border:none;outline:none;font-family:inherit;font-size:.95rem;font-weight:800;color:var(--tx0);background:transparent;width:100%;cursor:pointer;}
+.sf select{appearance:none;}
+.search-go-wrap{display:flex;align-items:center;justify-content:center;padding:12px;}
+.search-go{background:var(--red-g);color:#fff;border-radius:var(--r4);width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:var(--sh-red);transition:.25s;flex-shrink:0;}
+.search-go:hover{transform:scale(1.05);}
+.search-go:active{transform:scale(.95);}
 
-        /* ===== HERO ===== */
-        .hero {
-            padding-top: 80px;
-            background: linear-gradient(160deg, #fff5f7 0%, #ffffff 50%, #fff0f3 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -100px; right: -200px;
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(255,56,92,0.08) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -100px; left: -200px;
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(255,56,92,0.05) 0%, transparent 70%);
-            border-radius: 50%;
-        }
+/* TRUST STRIP */
+.trust{display:flex;justify-content:center;gap:clamp(18px,5vw,52px);flex-wrap:wrap;margin-top:34px;position:relative;z-index:2;}
+.trust-item{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.trust-v{font-size:clamp(1.3rem,3.5vw,1.7rem);font-weight:900;color:var(--red);line-height:1;}
+.trust-l{font-size:.68rem;font-weight:700;color:var(--tx2);}
 
-        .hero-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 24px;
-            width: 100%;
-            position: relative;
-            z-index: 2;
-        }
+/* SECTION */
+.wrap{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,40px);}
+.sec{padding:clamp(34px,6vw,60px) 0;}
+.sec-head{text-align:center;margin-bottom:34px;}
+.sec-title{font-size:clamp(1.5rem,4vw,2.1rem);font-weight:900;letter-spacing:-.02em;}
+.sec-sub{font-size:.9rem;font-weight:600;color:var(--tx2);margin-top:6px;}
 
-        .hero-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255,56,92,0.08);
-            color: var(--primary);
-            padding: 8px 18px;
-            border-radius: 24px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            margin-bottom: 24px;
-        }
+/* CATEGORY CARDS */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;}
+.cat-card{position:relative;background:var(--white);border:1px solid var(--border);border-radius:var(--r5);padding:30px 22px;text-align:center;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.3,.64,1),box-shadow .25s,border-color .25s;overflow:hidden;display:block;}
+.cat-card::before{content:'';position:absolute;inset:0 0 auto 0;height:4px;transform:scaleX(0);transition:transform .3s;transform-origin:center;}
+.cat-card:hover{transform:translateY(-6px);box-shadow:var(--sh-md);}
+.cat-card.c-car:hover{border-color:var(--red);} .cat-card.c-car::before{background:var(--red-g);}
+.cat-card.c-hotel:hover{border-color:var(--green);} .cat-card.c-hotel::before{background:linear-gradient(135deg,#00C2B3,#00A699);}
+.cat-card.c-hall:hover{border-color:var(--violet);} .cat-card.c-hall::before{background:linear-gradient(135deg,#7C5CD6,#553C9A);}
+.cat-card.c-school:hover{border-color:var(--blue);} .cat-card.c-school::before{background:linear-gradient(135deg,#1E88E5,#004C99);}
+.cat-card:hover::before{transform:scaleX(1);}
+.cat-icon{width:72px;height:72px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin:0 auto 16px;transition:transform .3s;}
+.cat-card.c-car .cat-icon{background:var(--red-l);} .cat-card.c-hotel .cat-icon{background:var(--green-l);} .cat-card.c-hall .cat-icon{background:var(--violet-l);} .cat-card.c-school .cat-icon{background:var(--blue-l);}
+.cat-card:hover .cat-icon{transform:scale(1.1) rotate(-5deg);}
+.cat-name{font-weight:900;font-size:1.08rem;margin-bottom:5px;}
+.cat-sub{font-size:.78rem;font-weight:600;color:var(--tx2);}
+.cat-arrow{margin-top:14px;display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:800;color:var(--red);opacity:0;transform:translateY(4px);transition:.25s;}
+.cat-card.c-hotel .cat-arrow{color:var(--green);} .cat-card.c-hall .cat-arrow{color:var(--violet);} .cat-card.c-school .cat-arrow{color:var(--blue);}
+.cat-card:hover .cat-arrow{opacity:1;transform:none;}
 
-        .hero h1 {
-            font-size: clamp(2.2rem, 5vw, 3.8rem);
-            font-weight: 900;
-            line-height: 1.15;
-            color: var(--dark);
-            margin-bottom: 20px;
-        }
-        .hero h1 .highlight {
-            color: var(--primary);
-            position: relative;
-        }
+/* CITIES */
+.cities-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
+.city-pill{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-pill);padding:13px 18px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:.22s;font-weight:700;font-size:.88rem;}
+.city-pill:hover{border-color:var(--red);color:var(--red);transform:translateY(-2px);box-shadow:var(--sh-sm);}
+.city-pill .ci-ic{font-size:1.05rem;}
 
-        .hero-sub {
-            font-size: 1.1rem;
-            color: var(--mid);
-            font-weight: 500;
-            margin-bottom: 48px;
-            max-width: 560px;
-            line-height: 1.7;
-        }
+/* STEPS */
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;}
+.step{background:var(--white);border:1px solid var(--border);border-radius:var(--r5);padding:26px 22px;text-align:center;position:relative;}
+.step-num{position:absolute;top:18px;inset-inline-end:20px;font-size:2.4rem;font-weight:900;color:var(--line);line-height:1;}
+.step-ic{width:56px;height:56px;border-radius:16px;background:var(--red-l);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 14px;}
+.step-t{font-weight:900;font-size:1rem;margin-bottom:6px;}
+.step-d{font-size:.82rem;font-weight:600;color:var(--tx2);line-height:1.6;}
 
-        .whale-emoji {
-            position: absolute;
-            left: 40px; top: 50%;
-            transform: translateY(-50%);
-            font-size: 10rem;
-            opacity: 0.12;
-            animation: float 5s ease-in-out infinite;
-            pointer-events: none;
-        }
-        @keyframes float {
-            0%,100% { transform: translateY(-50%) rotate(-5deg); }
-            50% { transform: translateY(calc(-50% - 20px)) rotate(5deg); }
-        }
+/* FAQ */
+.faq-list{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+.faq-item{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);overflow:hidden;transition:.2s;}
+.faq-item.open{border-color:var(--red);box-shadow:var(--sh-sm);}
+.faq-q{padding:18px 20px;font-weight:800;font-size:.92rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.faq-q .chev{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--tx2);transition:.25s;}
+.faq-item.open .faq-q .chev{background:var(--red);color:#fff;transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;padding:0 20px;font-size:.86rem;font-weight:600;color:var(--tx2);line-height:1.75;}
+.faq-item.open .faq-a{max-height:300px;padding:0 20px 18px;}
 
-        /* ===== SEARCH BOX ===== */
-        .search-box {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 2px 40px rgba(0,0,0,0.12);
-            border: 1px solid var(--light);
-            overflow: hidden;
-            max-width: 820px;
-        }
+/* CTA PARTNER */
+.cta{background:var(--tx0);border-radius:var(--r6);padding:clamp(30px,5vw,52px);text-align:center;position:relative;overflow:hidden;}
+.cta::before{content:'🐋';position:absolute;inset-inline-end:-10px;bottom:-30px;font-size:9rem;opacity:.06;}
+.cta-h{color:#fff;font-size:clamp(1.4rem,3.5vw,2rem);font-weight:900;margin-bottom:10px;letter-spacing:-.02em;}
+.cta-p{color:rgba(255,255,255,.7);font-size:.92rem;font-weight:600;max-width:480px;margin:0 auto 24px;}
+.cta-btn{display:inline-flex;align-items:center;gap:9px;padding:14px 30px;border-radius:var(--r4);background:var(--red-g);color:#fff;font-size:.92rem;font-weight:900;box-shadow:var(--sh-red);transition:.2s;}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,56,92,.42);}
 
-        .search-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--light);
-            padding: 0 8px;
-            overflow-x: auto;
-        }
-        .search-tab {
-            padding: 18px 24px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            color: var(--mid);
-            border-bottom: 2px solid transparent;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-        .search-tab.active {
-            color: var(--dark);
-            border-bottom-color: var(--dark);
-        }
-        .search-tab:hover { color: var(--dark); }
+/* FOOTER */
+.footer{background:var(--white);border-top:1px solid var(--line);padding:40px clamp(16px,4vw,40px) 28px;margin-top:30px;}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.footer-brand{display:flex;flex-direction:column;gap:8px;max-width:280px;}
+.footer-brand .row{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.1rem;}
+.footer-brand .whale{width:36px;height:36px;border-radius:11px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.footer-brand .desc{font-size:.78rem;font-weight:600;color:var(--tx2);line-height:1.6;}
+.footer-col h4{font-size:.7rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;}
+.footer-col a{display:block;font-size:.84rem;font-weight:700;color:var(--tx1);padding:5px 0;transition:.15s;}
+.footer-col a:hover{color:var(--red);}
+.footer-copy{max-width:1200px;margin:26px auto 0;padding-top:22px;border-top:1px solid var(--line);font-size:.74rem;font-weight:600;color:var(--tx3);text-align:center;}
 
-        .search-fields {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr auto;
-            gap: 0;
-        }
-        .search-field {
-            padding: 20px 24px;
-            border-left: 1px solid var(--light);
-            cursor: pointer;
-            transition: background 0.2s;
-            position: relative;
-        }
-        .search-field:last-child { border-left: none; }
-        .search-field:hover { background: var(--bg); }
-        .search-field label {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--dark);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .search-field select,
-        .search-field input {
-            border: none;
-            outline: none;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--dark);
-            background: transparent;
-            width: 100%;
-            cursor: pointer;
-        }
+/* TOAST */
+#toast-wrap{position:fixed;top:calc(var(--nav-h) + 14px);inset-inline:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:1000;pointer-events:none;}
+.toast{background:var(--tx0);color:#fff;padding:12px 20px;border-radius:var(--r-pill);font-size:.82rem;font-weight:800;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:9px;animation:tIn .35s cubic-bezier(.34,1.5,.64,1);max-width:90vw;}
+.toast.err{background:var(--red);}
+@keyframes tIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
 
-        .search-btn {
-            margin: 12px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            width: 56px; height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: 0.25s;
-            flex-shrink: 0;
-            align-self: center;
-        }
-        .search-btn:hover {
-            background: var(--primary-dark);
-            transform: scale(1.05);
-        }
+/* REVEAL ON SCROLL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s;}
+.reveal.in{opacity:1;transform:none;}
 
-        /* ===== CATEGORIES ===== */
-        .section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 24px;
-        }
-        .section-title {
-            font-size: 1.6rem;
-            font-weight: 900;
-            color: var(--dark);
-            margin-bottom: 8px;
-        }
-        .section-sub {
-            color: var(--mid);
-            font-size: 0.95rem;
-            margin-bottom: 36px;
-        }
-
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-        }
-        .category-card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 28px 20px;
-            text-align: center;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: 0.25s;
-            text-decoration: none;
-            color: var(--dark);
-        }
-        .category-card:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow);
-            transform: translateY(-4px);
-        }
-        .category-icon {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-            display: block;
-        }
-        .category-name {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 4px;
-        }
-        .category-count {
-            font-size: 0.8rem;
-            color: var(--mid);
-        }
-
-        /* ===== CITIES ===== */
-        .cities-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 12px;
-        }
-        .city-pill {
-            background: white;
-            border-radius: 50px;
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            border: 1.5px solid var(--light);
-            transition: 0.25s;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .city-pill:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            box-shadow: var(--shadow);
-        }
-        .city-pill.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* ===== FAQ ===== */
-        .faq-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .faq-item {
-            background: white;
-            border-radius: var(--radius);
-            padding: 24px;
-            border: 1px solid var(--light);
-            transition: 0.25s;
-        }
-        .faq-item:hover { box-shadow: var(--shadow); }
-        .faq-q {
-            font-weight: 800;
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-            color: var(--dark);
-        }
-        .faq-a {
-            font-size: 0.88rem;
-            color: var(--mid);
-            line-height: 1.7;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            background: var(--dark);
-            color: #aaa;
-            text-align: center;
-            padding: 32px 24px;
-            font-size: 0.85rem;
-        }
-        .footer strong { color: white; }
-
-        /* ===== DIVIDER ===== */
-        .divider { height: 1px; background: var(--light); margin: 0 24px; }
-
-        /* Responsive */
-        @media(max-width: 640px) {
-            .search-fields { grid-template-columns: 1fr 1fr; }
-            .search-field:nth-child(3) { border-top: 1px solid var(--light); }
-            .whale-emoji { display: none; }
-            .lang-bar .lang-btn { padding: 6px 10px; font-size: 0.75rem; }
-        }
-    </style>
+/* RESPONSIVE */
+@media(max-width:680px){
+  .search-fields{grid-template-columns:1fr 1fr;}
+  .sf:nth-child(3){grid-column:1/-1;border-inline-start:none;border-top:1px solid var(--line);}
+  .search-go-wrap{grid-column:1/-1;border-top:1px solid var(--line);}
+  .search-go{width:100%;border-radius:var(--r4);}
+  .hero-whale{display:none;}
+  .nav-partner{display:none;}
+  .footer-inner{flex-direction:column;gap:20px;}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
 </head>
 <body>
+<div id="toast-wrap"></div>
 
-<nav class="navbar" id="navbar">
-    <a href="index.html" class="logo"><span>🐋</span> الحوت</a>
-    <div class="lang-bar">
-        <button onclick="changeLang('ar')" id="btn-ar" class="lang-btn active">العربية</button>
-        <button onclick="changeLang('ku')" id="btn-ku" class="lang-btn">کوردی</button>
-        <button onclick="changeLang('tr')" id="btn-tr" class="lang-btn">Türkçe</button>
-        <button onclick="changeLang('en')" id="btn-en" class="lang-btn">English</button>
+<nav class="nav" id="nav">
+  <a href="index.html" class="nav-logo"><span class="whale">🐋</span> الحوت</a>
+  <div class="nav-right">
+    <div class="lang-wrap">
+      <button class="lang-btn" onclick="toggleLangMenu(event)">
+        <span id="lang-flag">🇮🇶</span><span id="lang-name">عربي</span><span style="font-size:9px">▾</span>
+      </button>
+      <div class="lang-menu" id="lang-menu">
+        <button class="lang-opt on" onclick="setLang('ar')"><span class="flag">🇮🇶</span> العربية</button>
+        <button class="lang-opt" onclick="setLang('ku')"><span class="flag">🌞</span> کوردی</button>
+        <button class="lang-opt" onclick="setLang('tr')"><span class="flag">🇹🇷</span> Türkçe</button>
+        <button class="lang-opt" onclick="setLang('en')"><span class="flag">🇬🇧</span> English</button>
+      </div>
     </div>
+    <a href="partners.html" class="nav-partner" data-i18n="nav_partner">كن شريكاً</a>
+  </div>
 </nav>
 
+<header class="hero">
+  <div class="hero-blob b1"></div>
+  <div class="hero-blob b2"></div>
+  <div class="hero-whale">🐋</div>
+  <svg class="hero-wave" viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 C240,90 480,0 720,35 C960,70 1200,10 1440,45 L1440,90 L0,90 Z" fill="#F7F7F7"/>
+  </svg>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span class="star">★</span><span data-i18n="hero_eyebrow">الأول في العراق لعام 2026</span></div>
+    <h1 class="hero-h1"><span data-i18n="hero_h1_a">ابحث، احجز،</span> <span class="grad" data-i18n="hero_h1_b">واستمتع بتجربتك</span></h1>
+    <p class="hero-p" data-i18n="hero_p">سيارات للإيجار، فنادق فاخرة، قاعات أعراس، ومدارس قيادة احترافية في بغداد وكركوك وأربيل وكل محافظات العراق.</p>
+
+    <div class="search-box">
+      <div class="search-tabs">
+        <div class="search-tab on" id="tab-personal" onclick="setService('personal')"><span class="ic">🚗</span> <span data-i18n="tab_car">تأجير سيارات</span></div>
+        <div class="search-tab" id="tab-hotel" onclick="setService('hotel')"><span class="ic">🏨</span> <span data-i18n="tab_hotel">حجز فنادق</span></div>
+        <div class="search-tab" id="tab-hall" onclick="setService('hall')"><span class="ic">🥂</span> <span data-i18n="tab_hall">قاعات أعراس</span></div>
+        <div class="search-tab" id="tab-school" onclick="setService('school')"><span class="ic">🎓</span> <span data-i18n="tab_school">مدارس قيادة</span></div>
+      </div>
+      <div class="search-fields">
+        <div class="sf">
+          <label data-i18n="f_city">المدينة</label>
+          <select id="citySelect"></select>
+        </div>
+        <div class="sf">
+          <label data-i18n="f_date">التاريخ</label>
+          <input type="date" id="dateInput">
+        </div>
+        <div class="sf" id="daysField">
+          <label data-i18n="f_days">عدد الأيام</label>
+          <input type="number" id="daysInput" value="1" min="1" max="60">
+        </div>
+        <div class="search-go-wrap">
+          <button class="search-go" onclick="startBooking()" aria-label="search">🔍</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="trust">
+      <div class="trust-item"><span class="trust-v">4</span><span class="trust-l" data-i18n="trust_services">خدمات متكاملة</span></div>
+      <div class="trust-item"><span class="trust-v">18+</span><span class="trust-l" data-i18n="trust_cities">محافظة</span></div>
+      <div class="trust-item"><span class="trust-v">⭐ 4.8</span><span class="trust-l" data-i18n="trust_rating">تقييم العملاء</span></div>
+    </div>
+  </div>
+</header>
+
 <main>
-    <section class="hero">
-        <div class="whale-emoji">🐋</div>
-        <div class="hero-inner">
-            <div class="hero-tag">
-                <i class="fas fa-star"></i>
-                <span id="tagText">الأول في العراق لعام 2026</span>
-            </div>
-            <h1>
-                <span id="h1line1">ابحث، احجز،</span><br>
-                <span class="highlight" id="h1line2">واستمتع بتجربتك</span>
-            </h1>
-            <p class="hero-sub" id="heroSub">سيارات للإيجار، فنادق فاخرة، قاعات أعراس، ومدارس قيادة احترافية في بغداد، كركوك، أربيل وكافة محافظات العراق.</p>
-
-            <!-- Search Box -->
-            <div class="search-box">
-                <div class="search-tabs">
-                    <div class="search-tab active" onclick="setService('personal')" id="tab-personal">
-                        <i class="fas fa-car"></i> <span id="tabCar">تأجير سيارات</span>
-                    </div>
-                    <div class="search-tab" onclick="setService('hotel')" id="tab-hotel">
-                        <i class="fas fa-hotel"></i> <span id="tabHotel">حجز فنادق</span>
-                    </div>
-                    <div class="search-tab" onclick="setService('hall')" id="tab-hall">
-                        <i class="fas fa-glass-cheers"></i> <span id="tabHall">قاعات أعراس</span>
-                    </div>
-                    <div class="search-tab" onclick="setService('school')" id="tab-school">
-                        <i class="fas fa-graduation-cap"></i> <span id="tabSchool">مدارس قيادة</span>
-                    </div>
-                </div>
-                <div class="search-fields">
-                    <div class="search-field">
-                        <label id="lblCity">المدينة</label>
-                        <select id="citySelect">
-                            <option value="كركوك">كركوك 💎</option>
-                            <option value="بغداد">بغداد 🏰</option>
-                            <option value="أربيل">أربيل 🏔️</option>
-                            <option value="السليمانية">السليمانية 🌲</option>
-                            <option value="الموصل">الموصل 🏹</option>
-                            <option value="البصرة">البصرة ⚓</option>
-                            <option value="الأنبار">الأنبار 🌴</option>
-                            <option value="ديالى">ديالى 🍊</option>
-                        </select>
-                    </div>
-                    <div class="search-field">
-                        <label id="lblDate">تاريخ البدء</label>
-                        <input type="date" id="dateInput">
-                    </div>
-                    <div class="search-field" id="daysField">
-                        <label id="lblDays">عدد الأيام</label>
-                        <input type="number" id="daysInput" value="1" min="1" max="30">
-                    </div>
-                    <div style="display:flex;align-items:center;padding:8px;">
-                        <button class="search-btn" onclick="startBooking()" id="searchBtn">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- Categories -->
-    <div class="section">
-        <h2 class="section-title" id="catTitle">استكشف خدماتنا</h2>
-        <p class="section-sub" id="catSub">كل ما تحتاجه في مكان واحد</p>
-        <div class="categories-grid">
-            <a href="#" onclick="setService('personal');startBooking();return false;" class="category-card">
-                <span class="category-icon">🚗</span>
-                <div class="category-name" id="cat1">تأجير سيارات</div>
-                <div class="category-count" id="cat1sub">أرخص الأسعار</div>
-            </a>
-            <a href="#" onclick="setService('hotel');startBooking();return false;" class="category-card">
-                <span class="category-icon">🏨</span>
-                <div class="category-name" id="cat2">حجز فنادق</div>
-                <div class="category-count" id="cat2sub">فنادق مختارة بعناية</div>
-            </a>
-            <a href="#" onclick="setService('hall');startBooking();return false;" class="category-card">
-                <span class="category-icon">🥂</span>
-                <div class="category-name" id="cat3">قاعات أعراس</div>
-                <div class="category-count" id="cat3sub">أجمل ليالي العمر</div>
-            </a>
-            <a href="#" onclick="setService('school');startBooking();return false;" class="category-card">
-                <span class="category-icon">🎓</span>
-                <div class="category-name" id="cat4">مدارس القيادة</div>
-                <div class="category-count" id="cat4sub">مدربون معتمدون</div>
-            </a>
-        </div>
+  <!-- CATEGORIES -->
+  <section class="sec wrap reveal">
+    <div class="sec-head">
+      <h2 class="sec-title" data-i18n="cat_title">استكشف خدماتنا</h2>
+      <p class="sec-sub" data-i18n="cat_sub">كل ما تحتاجه في مكان واحد</p>
     </div>
-
-    <div class="divider"></div>
-
-    <!-- Cities -->
-    <div class="section">
-        <h2 class="section-title" id="citiesTitle">نخدم جميع المحافظات</h2>
-        <p class="section-sub" id="citiesSub">اختر مدينتك لعرض العروض المتاحة</p>
-        <div class="cities-grid" id="citiesGrid"></div>
+    <div class="cat-grid">
+      <a class="cat-card c-car" onclick="goService('personal')">
+        <div class="cat-icon">🚗</div>
+        <div class="cat-name" data-i18n="cat1">تأجير سيارات</div>
+        <div class="cat-sub" data-i18n="cat1_sub">أسطول واسع بأسعار واضحة</div>
+        <div class="cat-arrow"><span data-i18n="explore">تصفّح الآن</span> ←</div>
+      </a>
+      <a class="cat-card c-hotel" onclick="goService('hotel')">
+        <div class="cat-icon">🏨</div>
+        <div class="cat-name" data-i18n="cat2">حجز فنادق</div>
+        <div class="cat-sub" data-i18n="cat2_sub">فنادق مختارة بعناية</div>
+        <div class="cat-arrow"><span data-i18n="explore">تصفّح الآن</span> ←</div>
+      </a>
+      <a class="cat-card c-hall" onclick="goService('hall')">
+        <div class="cat-icon">🥂</div>
+        <div class="cat-name" data-i18n="cat3">قاعات أعراس</div>
+        <div class="cat-sub" data-i18n="cat3_sub">أجمل ليالي العمر</div>
+        <div class="cat-arrow"><span data-i18n="explore">تصفّح الآن</span> ←</div>
+      </a>
+      <a class="cat-card c-school" onclick="goService('school')">
+        <div class="cat-icon">🎓</div>
+        <div class="cat-name" data-i18n="cat4">مدارس القيادة</div>
+        <div class="cat-sub" data-i18n="cat4_sub">مدرّبون معتمدون</div>
+        <div class="cat-arrow"><span data-i18n="explore">تصفّح الآن</span> ←</div>
+      </a>
     </div>
+  </section>
 
-    <div class="divider"></div>
-
-    <!-- FAQ -->
-    <div class="section">
-        <h2 class="section-title" id="faqTitle">الأسئلة الشائعة</h2>
-        <p class="section-sub" id="faqSub">كل ما تريد معرفته عن الحوت</p>
-        <div class="faq-grid" id="faqGrid"></div>
+  <!-- HOW IT WORKS -->
+  <section class="sec wrap reveal">
+    <div class="sec-head">
+      <h2 class="sec-title" data-i18n="how_title">كيف يعمل الحوت؟</h2>
+      <p class="sec-sub" data-i18n="how_sub">ثلاث خطوات تفصلك عن خدمتك</p>
     </div>
+    <div class="steps-grid">
+      <div class="step"><div class="step-num">1</div><div class="step-ic">🔍</div><div class="step-t" data-i18n="step1_t">اختر وابحث</div><div class="step-d" data-i18n="step1_d">حدّد الخدمة ومدينتك والتاريخ، وتصفّح الخيارات المتاحة بأسعار واضحة.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-ic">✅</div><div class="step-t" data-i18n="step2_t">احجز فوراً</div><div class="step-d" data-i18n="step2_d">أكمل طلبك في خطوات بسيطة دون أي تعقيد أو رسوم خفية.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-ic">📞</div><div class="step-t" data-i18n="step3_t">تواصل مباشر</div><div class="step-d" data-i18n="step3_d">يتواصل معك الشريك مباشرةً لتأكيد التفاصيل وإتمام الخدمة.</div></div>
+    </div>
+  </section>
+
+  <!-- CITIES -->
+  <section class="sec wrap reveal">
+    <div class="sec-head">
+      <h2 class="sec-title" data-i18n="cities_title">نخدم جميع المحافظات</h2>
+      <p class="sec-sub" data-i18n="cities_sub">اختر مدينتك لعرض الخيارات المتاحة</p>
+    </div>
+    <div class="cities-grid" id="citiesGrid"></div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="sec wrap reveal">
+    <div class="sec-head">
+      <h2 class="sec-title" data-i18n="faq_title">الأسئلة الشائعة</h2>
+      <p class="sec-sub" data-i18n="faq_sub">كل ما تريد معرفته عن الحوت</p>
+    </div>
+    <div class="faq-list" id="faqList"></div>
+  </section>
+
+  <!-- PARTNER CTA -->
+  <section class="sec wrap reveal">
+    <div class="cta">
+      <h2 class="cta-h" data-i18n="cta_h">هل تملك مكتباً أو فندقاً أو قاعة؟</h2>
+      <p class="cta-p" data-i18n="cta_p">انضمّ إلى منصة الحوت ووسّع أعمالك — اعرض خدماتك أمام آلاف العملاء في كل العراق.</p>
+      <a href="partners.html" class="cta-btn">🤝 <span data-i18n="cta_btn">سجّل كشريك الآن</span></a>
+    </div>
+  </section>
 </main>
 
 <footer class="footer">
-    <strong>🐋 منصة الحوت</strong> — جميع الحقوق محفوظة © 2026
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="row"><span class="whale">🐋</span> الحوت</div>
+      <div class="desc" data-i18n="footer_desc">منصتك الأولى في العراق للسيارات والفنادق وقاعات الأعراس ومدارس القيادة.</div>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer_services">الخدمات</h4>
+      <a href="fleet.html" data-i18n="nav_cars">السيارات</a>
+      <a href="hotels.html" data-i18n="nav_hotels">الفنادق</a>
+      <a href="halls.html" data-i18n="nav_halls">القاعات</a>
+      <a href="schools.html" data-i18n="nav_schools">مدارس القيادة</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer_company">المنصة</h4>
+      <a href="partners.html" data-i18n="nav_partner">كن شريكاً</a>
+      <a href="#" onclick="scrollFaq();return false;" data-i18n="faq_title">الأسئلة الشائعة</a>
+    </div>
+  </div>
+  <div class="footer-copy">© 2026 منصة الحوت · جميع الحقوق محفوظة 🐋</div>
 </footer>
 
 <script>
-    const citiesList = [
-        {key:'كركوك', ar:'كركوك 💎', ku:'کەرکوک 💎', tr:'Kerkük 💎', en:'Kirkuk 💎'},
-        {key:'بغداد', ar:'بغداد 🏰', ku:'بەغداد 🏰', tr:'Bağdat 🏰', en:'Baghdad 🏰'},
-        {key:'أربيل', ar:'أربيل 🏔️', ku:'هەولێر 🏔️', tr:'Erbil 🏔️', en:'Erbil 🏔️'},
-        {key:'السليمانية', ar:'السليمانية 🌲', ku:'سلێمانی 🌲', tr:'Süleymaniye 🌲', en:'Sulaymaniyah 🌲'},
-        {key:'الموصل', ar:'الموصل 🏹', ku:'مووسڵ 🏹', tr:'Musul 🏹', en:'Mosul 🏹'},
-        {key:'البصرة', ar:'البصرة ⚓', ku:'بەسرە ⚓', tr:'Basra ⚓', en:'Basra ⚓'},
-        {key:'الأنبار', ar:'الأنبار 🌴', ku:'ئەنبار 🌴', tr:'Anbar 🌴', en:'Anbar 🌴'},
-        {key:'ديالى', ar:'ديالى 🍊', ku:'دیالە 🍊', tr:'Diyala 🍊', en:'Diyala 🍊'},
-    ];
+/* ═══════════════ CITIES ═══════════════ */
+const CITIES = [
+  {key:"بغداد",      ic:"🏰", ar:"بغداد", ku:"بەغداد", tr:"Bağdat", en:"Baghdad"},
+  {key:"كركوك",      ic:"💎", ar:"كركوك", ku:"کەرکوک", tr:"Kerkük", en:"Kirkuk"},
+  {key:"أربيل",      ic:"🏔️", ar:"أربيل", ku:"هەولێر", tr:"Erbil", en:"Erbil"},
+  {key:"السليمانية", ic:"🌲", ar:"السليمانية", ku:"سلێمانی", tr:"Süleymaniye", en:"Sulaymaniyah"},
+  {key:"نينوى",      ic:"🏹", ar:"نينوى / الموصل", ku:"نەینەوا", tr:"Musul", en:"Mosul"},
+  {key:"البصرة",     ic:"⚓", ar:"البصرة", ku:"بەسرە", tr:"Basra", en:"Basra"},
+  {key:"النجف",      ic:"🕌", ar:"النجف", ku:"نەجەف", tr:"Necef", en:"Najaf"},
+  {key:"كربلاء",     ic:"🕌", ar:"كربلاء", ku:"کەربەلا", tr:"Kerbela", en:"Karbala"},
+  {key:"ديالى",      ic:"🍊", ar:"ديالى", ku:"دیالە", tr:"Diyala", en:"Diyala"},
+  {key:"الأنبار",    ic:"🌴", ar:"الأنبار", ku:"ئەنبار", tr:"Anbar", en:"Anbar"},
+  {key:"دهوك",       ic:"⛰️", ar:"دهوك", ku:"دهۆک", tr:"Dahuk", en:"Duhok"},
+  {key:"بابل",       ic:"🦁", ar:"بابل", ku:"بابل", tr:"Babil", en:"Babylon"}
+];
 
-    const t = {
-        ar: {
-            dir:'rtl', tag:'الأول في العراق لعام 2026',
-            h1a:'ابحث، احجز،', h1b:'واستمتع بتجربتك',
-            sub:'سيارات للإيجار، فنادق فاخرة، قاعات أعراس، ومدارس قيادة احترافية في بغداد، كركوك، أربيل وكافة محافظات العراق.',
-            tabCar:'تأجير سيارات', tabHotel:'حجز فنادق', tabHall:'قاعات أعراس', tabSchool:'مدارس قيادة',
-            lblCity:'المدينة', lblDate:'التاريخ', lblDays:'عدد الأيام',
-            catTitle:'استكشف خدماتنا', catSub:'كل ما تحتاجه في مكان واحد',
-            cat1:'تأجير سيارات', cat1sub:'أرخص الأسعار',
-            cat2:'حجز فنادق', cat2sub:'فنادق مختارة بعناية',
-            cat3:'قاعات أعراس', cat3sub:'أجمل ليالي العمر',
-            cat4:'مدارس القيادة', cat4sub:'مدربون معتمدون',
-            citiesTitle:'نخدم جميع المحافظات', citiesSub:'اختر مدينتك لعرض العروض المتاحة',
-            faqTitle:'الأسئلة الشائعة', faqSub:'كل ما تريد معرفته عن الحوت',
-            faqs:[
-                {q:'كيف أجد أرخص مكتب تأجير سيارات في بغداد وكركوك؟',a:'منصة الحوت تقارن الأسعار في بغداد وكركوك وأربيل لتعطيك أرخص سعر للإيجار اليومي والشهري.'},
-                {q:'هل يتوفر حجز فنادق في جميع المدن؟',a:'نعم، نوفر خيارات فنادق متنوعة من الاقتصادية إلى الفاخرة في كافة محافظات العراق.'},
-                {q:'هل يمكنني تصفح قاعات الأعراس وحجزها عبر المنصة؟',a:'نعم، نوفر دليلاً كاملاً لأفخم قاعات الأعراس والمناسبات مع تفاصيل الأسعار والخدمات.'},
-                {q:'هل يتوفر تدريب قيادة للنساء في البصرة والموصل؟',a:'نعم، نوفر أفضل المدربات لتعليم السياقة للنساء عبر مدارس مرخصة في كافة المحافظات.'},
-            ],
-            alert:'يرجى ملء جميع الحقول 🐋'
-        },
-        ku: {
-            dir:'rtl', tag:'یەکەم لە عێراق ٢٠٢٦',
-            h1a:'بگەڕێ، بکرێ،', h1b:'ورازی بە کاتەکەت',
-            sub:'ئۆتۆمبێلی کرێ، هۆتێلی ناوازە، هۆڵی زەماوەند، و کۆرسی شۆفێری پیشەیی لە هەموو پارێزگاکانی عێراق.',
-            tabCar:'بەکرێگرتنی سەیارە', tabHotel:'هۆتێل', tabHall:'هۆڵی زەماوەند', tabSchool:'قوتابخانەی شۆفێری',
-            lblCity:'شار', lblDate:'بەروار', lblDays:'ژمارەی ڕۆژەکان',
-            catTitle:'خزمەتگوزارییەکان', catSub:'هەموو داواکارییەکانت لەیەک شوێن',
-            cat1:'بەکرێگرتنی سەیارە', cat1sub:'هەرزانترین نرخ',
-            cat2:'هۆتێل', cat2sub:'هۆتێلی هەڵبژێردراو',
-            cat3:'هۆڵی زەماوەند', cat3sub:'جوانترین شەوەکان',
-            cat4:'قوتابخانەی شۆفێری', cat4sub:'ڕاهێنەری پیشەیی',
-            citiesTitle:'هەموو پارێزگاکان', citiesSub:'شارەکەت هەڵبژێرە',
-            faqTitle:'پرسیارە باوەکان', faqSub:'هەموو شتێک دەربارەی حوت',
-            faqs:[
-                {q:'هەرزانترین کرێی سەیارە لە کوێیە؟',a:'ئەلحووت هەرزانترین نرخ لە بەغداد، کەرکوک و هەولێر دابین دەکات.'},
-                {q:'ئایا حجزی هۆتێل لە هەموو شارەکاندا هەیە؟',a:'بەڵێ، جۆرەجۆر هۆتێل لە هەموو پارێزگاکانی عێراق دابین دەکات.'},
-                {q:'دەتوانم هۆڵی زەماوەند بەکرێ بگرم؟',a:'بەڵێ، لیستی باشترین هۆڵەکانی زەماوەند بەردەستە لەگەڵ نرخەکانیان.'},
-                {q:'فێربوونی شۆفێری بۆ ئافرەتان هەیە؟',a:'بەڵێ، باشترین قوتابخانەکان بەردەستن لە هەموو پارێزگاکان.'},
-            ],
-            alert:'تکایە هەموو خانەکان پڕبکەرەوە 🐋'
-        },
-        tr: {
-            dir:'ltr', tag:'Irak\'ın 1 Numarası — 2026',
-            h1a:'Ara, Rezervasyon Yap,', h1b:'Deneyimini Yaşa',
-            sub:'Bağdat, Kerkük, Erbil ve Irak\'ın tüm illerinde araç kiralama, otel rezervasyonu, düğün salonları ve ehliyet kursları.',
-            tabCar:'Araç Kiralama', tabHotel:'Otel Rezervasyonu', tabHall:'Düğün Salonları', tabSchool:'Ehliyet Kursu',
-            lblCity:'Şehir', lblDate:'Tarih', lblDays:'Gün Sayısı',
-            catTitle:'Hizmetlerimizi Keşfedin', catSub:'İhtiyacınız olan her şey tek yerde',
-            cat1:'Araç Kiralama', cat1sub:'En uygun fiyatlar',
-            cat2:'Otel Rezervasyonu', cat2sub:'Özenle seçilmiş oteller',
-            cat3:'Düğün Salonları', cat3sub:'En güzel geceler için',
-            cat4:'Ehliyet Kursu', cat4sub:'Sertifikalı okullar',
-            citiesTitle:'Tüm İllere Hizmet', citiesSub:'Teklifleri görmek için şehrinizi seçin',
-            faqTitle:'Sıkça Sorulan Sorular', faqSub:'Al-Hut hakkında merak ettikleriniz',
-            faqs:[
-                {q:'En ucuz araç kiralama nerede bulunur?',a:'Al-Hut, Bağdat, Kerkük ve Erbil\'de en uygun araç kiralama fiyatlarını sunar.'},
-                {q:'Tüm şehirlerde otel rezervasyonu yapılabiliyor mu?',a:'Evet, Irak\'ın tüm illerinde ekonomik ve lüks otel seçenekleri mevcuttur.'},
-                {q:'Platform üzerinden düğün salonu rezerve edebilir miyim?',a:'Evet, en iyi düğün salonları tüm detaylarıyla platformumuzda mevcuttur.'},
-                {q:'Bayanlar için ehliyet kursu var mı?',a:'Evet, lisanslı okullar aracılığıyla profesyonel bayan eğitmenlerimiz mevcuttur.'},
-            ],
-            alert:'Lütfen tüm alanları doldurun 🐋'
-        },
-        en: {
-            dir:'ltr', tag:'Iraq\'s #1 Platform — 2026',
-            h1a:'Search, Book,', h1b:'Enjoy Your Experience',
-            sub:'Car rentals, luxury hotels, wedding halls, and professional driving schools across Baghdad, Kirkuk, Erbil and all Iraq.',
-            tabCar:'Car Rental', tabHotel:'Hotel Booking', tabHall:'Wedding Halls', tabSchool:'Driving School',
-            lblCity:'City', lblDate:'Date', lblDays:'Number of Days',
-            catTitle:'Explore Our Services', catSub:'Everything you need in one place',
-            cat1:'Car Rental', cat1sub:'Cheapest prices',
-            cat2:'Hotel Booking', cat2sub:'Handpicked hotels',
-            cat3:'Wedding Halls', cat3sub:'For unforgettable nights',
-            cat4:'Driving School', cat4sub:'Certified schools',
-            citiesTitle:'We Serve All Provinces', citiesSub:'Select your city to see available offers',
-            faqTitle:'FAQ', faqSub:'Everything you want to know about Al-Hut',
-            faqs:[
-                {q:'Where to find the cheapest car rental in Iraq?',a:'Al-Hut compares prices in Baghdad, Kirkuk, and Erbil to give you the best deals.'},
-                {q:'Is hotel booking available in all cities?',a:'Yes, we offer a variety of hotel options across all Iraqi provinces.'},
-                {q:'Can I browse and book wedding halls via the platform?',a:'Yes, we provide a complete directory of the most luxurious wedding and event halls.'},
-                {q:'Is there driving training for women?',a:'Yes, we provide professional female instructors through licensed schools across all provinces.'},
-            ],
-            alert:'Please fill all fields 🐋'
-        }
-    };
+/* ═══════════════ i18n ═══════════════ */
+const I18N = {
+  ar:{ dir:"rtl", flag:"🇮🇶", name:"عربي",
+    nav_partner:"كن شريكاً", nav_cars:"السيارات", nav_hotels:"الفنادق", nav_halls:"القاعات", nav_schools:"مدارس القيادة",
+    hero_eyebrow:"الأول في العراق لعام 2026", hero_h1_a:"ابحث، احجز،", hero_h1_b:"واستمتع بتجربتك",
+    hero_p:"سيارات للإيجار، فنادق فاخرة، قاعات أعراس، ومدارس قيادة احترافية في بغداد وكركوك وأربيل وكل محافظات العراق.",
+    tab_car:"تأجير سيارات", tab_hotel:"حجز فنادق", tab_hall:"قاعات أعراس", tab_school:"مدارس قيادة",
+    f_city:"المدينة", f_date:"التاريخ", f_days:"عدد الأيام",
+    trust_services:"خدمات متكاملة", trust_cities:"محافظة", trust_rating:"تقييم العملاء",
+    cat_title:"استكشف خدماتنا", cat_sub:"كل ما تحتاجه في مكان واحد", explore:"تصفّح الآن",
+    cat1:"تأجير سيارات", cat1_sub:"أسطول واسع بأسعار واضحة",
+    cat2:"حجز فنادق", cat2_sub:"فنادق مختارة بعناية",
+    cat3:"قاعات أعراس", cat3_sub:"أجمل ليالي العمر",
+    cat4:"مدارس القيادة", cat4_sub:"مدرّبون معتمدون",
+    how_title:"كيف يعمل الحوت؟", how_sub:"ثلاث خطوات تفصلك عن خدمتك",
+    step1_t:"اختر وابحث", step1_d:"حدّد الخدمة ومدينتك والتاريخ، وتصفّح الخيارات المتاحة بأسعار واضحة.",
+    step2_t:"احجز فوراً", step2_d:"أكمل طلبك في خطوات بسيطة دون أي تعقيد أو رسوم خفية.",
+    step3_t:"تواصل مباشر", step3_d:"يتواصل معك الشريك مباشرةً لتأكيد التفاصيل وإتمام الخدمة.",
+    cities_title:"نخدم جميع المحافظات", cities_sub:"اختر مدينتك لعرض الخيارات المتاحة",
+    faq_title:"الأسئلة الشائعة", faq_sub:"كل ما تريد معرفته عن الحوت",
+    cta_h:"هل تملك مكتباً أو فندقاً أو قاعة؟", cta_p:"انضمّ إلى منصة الحوت ووسّع أعمالك — اعرض خدماتك أمام آلاف العملاء في كل العراق.", cta_btn:"سجّل كشريك الآن",
+    footer_desc:"منصتك الأولى في العراق للسيارات والفنادق وقاعات الأعراس ومدارس القيادة.", footer_services:"الخدمات", footer_company:"المنصة",
+    err_date:"يرجى اختيار التاريخ أولاً 🐋",
+    faqs:[
+      {q:"كيف أجد أرخص مكتب تأجير سيارات في بغداد وكركوك؟", a:"منصة الحوت تعرض أسطول المنصة بأسعار يومية واضحة في بغداد وكركوك وأربيل وكل المحافظات، لتختار الأنسب لك بسهولة."},
+      {q:"هل يتوفر حجز فنادق في جميع المدن؟", a:"نعم، نوفّر خيارات فنادق متنوعة من الاقتصادية إلى الفاخرة في كافة محافظات العراق، مع تأكيد مباشر من الفندق."},
+      {q:"هل يمكنني تصفّح قاعات الأعراس وحجزها عبر المنصة؟", a:"نعم، نوفّر دليلاً كاملاً لأفخم قاعات الأعراس والمناسبات مع السعة والأسعار، وتحجز موعدك مباشرةً عبر المنصة."},
+      {q:"هل يتوفر تدريب قيادة للنساء؟", a:"نعم، العديد من المدارس الشريكة توفّر مدرّبات لتعليم السياقة للنساء، ويمكنك تحديد ذلك عند التسجيل."},
+      {q:"هل الحجز عبر الحوت يكلّف رسوماً إضافية؟", a:"لا، الأسعار المعروضة واضحة وشفافة، وتتعامل مباشرةً مع الشريك دون رسوم خفية من المنصة."},
+      {q:"كيف أصبح شريكاً في المنصة؟", a:"إن كنت تملك مكتب سيارات أو فندقاً أو قاعة أو مدرسة قيادة، سجّل عبر صفحة \"كن شريكاً\" وسيتم تفعيل حسابك بعد المراجعة."}
+    ]},
 
-    let currentLang = 'ar';
-    let currentService = 'personal';
+  ku:{ dir:"rtl", flag:"🌞", name:"کوردی",
+    nav_partner:"ببە بە هاوبەش", nav_cars:"ئۆتۆمبێل", nav_hotels:"هۆتێل", nav_halls:"هۆڵ", nav_schools:"خوێندنگەی لێخوڕین",
+    hero_eyebrow:"یەکەم لە عێراق ٢٠٢٦", hero_h1_a:"بگەڕێ، حیجز بکە،", hero_h1_b:"چێژ لە کاتەکەت ببینە",
+    hero_p:"ئۆتۆمبێلی کرێ، هۆتێلی ناوازە، هۆڵی زەماوەند، و خوێندنگەی شۆفێری پیشەیی لە هەموو پارێزگاکانی عێراق.",
+    tab_car:"بەکرێگرتنی سەیارە", tab_hotel:"هۆتێل", tab_hall:"هۆڵی زەماوەند", tab_school:"خوێندنگەی شۆفێری",
+    f_city:"شار", f_date:"بەروار", f_days:"ژمارەی ڕۆژ",
+    trust_services:"خزمەتگوزاری", trust_cities:"پارێزگا", trust_rating:"هەڵسەنگاندنی کڕیار",
+    cat_title:"خزمەتگوزارییەکان", cat_sub:"هەموو پێداویستییەکانت لەیەک شوێندا", explore:"ئێستا بگەڕێ",
+    cat1:"بەکرێگرتنی سەیارە", cat1_sub:"هێزی فراوان بە نرخی ڕوون",
+    cat2:"هۆتێل", cat2_sub:"هۆتێلی هەڵبژێردراو",
+    cat3:"هۆڵی زەماوەند", cat3_sub:"جوانترین شەوەکان",
+    cat4:"خوێندنگەی شۆفێری", cat4_sub:"ڕاهێنەری پەسەندکراو",
+    how_title:"حوت چۆن کاردەکات؟", how_sub:"سێ هەنگاو دەتگەیەنێت بە خزمەتگوزارییەکەت",
+    step1_t:"هەڵبژێرە و بگەڕێ", step1_d:"خزمەتگوزاری و شار و بەروار دیاری بکە، و هەڵبژاردنە بەردەستەکان ببینە بە نرخی ڕوون.",
+    step2_t:"یەکسەر حیجز بکە", step2_d:"داواکارییەکەت تەواو بکە بە چەند هەنگاوێکی سادە بەبێ هیچ ئاڵۆزییەک.",
+    step3_t:"پەیوەندی ڕاستەوخۆ", step3_d:"هاوبەشەکە ڕاستەوخۆ پەیوەندیت پێوە دەکات بۆ دڵنیاکردنەوەی وردەکارییەکان.",
+    cities_title:"خزمەتی هەموو پارێزگاکان", cities_sub:"شارەکەت هەڵبژێرە بۆ بینینی هەڵبژاردنەکان",
+    faq_title:"پرسیارە باوەکان", faq_sub:"هەموو شتێک دەربارەی حوت",
+    cta_h:"خاوەنی نووسینگە یان هۆتێل یان هۆڵیت؟", cta_p:"بەشداربە لە پلاتفۆرمی حوت و کارەکەت فراوان بکە — خزمەتگوزارییەکانت پیشان بدە بە هەزاران کڕیار.", cta_btn:"ئێستا وەک هاوبەش تۆمار بکە",
+    footer_desc:"یەکەم پلاتفۆرمت لە عێراق بۆ سەیارە و هۆتێل و هۆڵی زەماوەند و خوێندنگەی شۆفێری.", footer_services:"خزمەتگوزاری", footer_company:"پلاتفۆرم",
+    err_date:"تکایە سەرەتا بەروار هەڵبژێرە 🐋",
+    faqs:[
+      {q:"چۆن هەرزانترین نووسینگەی کرێی سەیارە بدۆزمەوە؟", a:"حوت هێزی پلاتفۆرم بە نرخی ڕۆژانەی ڕوون پیشان دەدات لە هەموو پارێزگاکاندا، تا بە ئاسانی باشترین هەڵبژاردن بکەیت."},
+      {q:"ئایا حیجزی هۆتێل لە هەموو شارەکاندا هەیە؟", a:"بەڵێ، جۆرەجۆر هۆتێل لە ئابوورییەوە تا ناوازە لە هەموو پارێزگاکاندا، لەگەڵ دڵنیاکردنەوەی ڕاستەوخۆ."},
+      {q:"دەتوانم هۆڵی زەماوەند بەکرێ بگرم؟", a:"بەڵێ، لیستی تەواوی باشترین هۆڵەکان بەردەستە لەگەڵ گونجایش و نرخ، و ڕاستەوخۆ حیجز دەکەیت."},
+      {q:"فێربوونی شۆفێری بۆ ئافرەتان هەیە؟", a:"بەڵێ، زۆرێک لە خوێندنگە هاوبەشەکان ڕاهێنەری ئافرەت دابین دەکەن، دەتوانیت لە کاتی تۆمارکردندا دیاری بکەیت."},
+      {q:"ئایا حیجز لە حوت کرێی زیادە دەوێت؟", a:"نەخێر، نرخەکان ڕوون و ئاشکران، و ڕاستەوخۆ لەگەڵ هاوبەشەکە مامەڵە دەکەیت بەبێ کرێی شاراوە."},
+      {q:"چۆن ببم بە هاوبەش؟", a:"ئەگەر خاوەنی نووسینگەی سەیارە یان هۆتێل یان هۆڵ یان خوێندنگەی شۆفێریت، لە پەڕەی \"ببە بە هاوبەش\" تۆمار بکە و دوای پێداچوونەوە چالاک دەکرێت."}
+    ]},
 
-    function changeLang(lang) {
-        currentLang = lang;
-        const l = t[lang];
-        document.getElementById('htmlTag').dir = l.dir;
-        document.getElementById('htmlTag').lang = lang;
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById('btn-'+lang).classList.add('active');
+  tr:{ dir:"ltr", flag:"🇹🇷", name:"Türkçe",
+    nav_partner:"Ortak Ol", nav_cars:"Araçlar", nav_hotels:"Oteller", nav_halls:"Salonlar", nav_schools:"Sürücü Kursu",
+    hero_eyebrow:"Irak'ın 1 Numarası — 2026", hero_h1_a:"Ara, rezervasyon yap,", hero_h1_b:"deneyimini yaşa",
+    hero_p:"Bağdat, Kerkük, Erbil ve Irak'ın tüm illerinde araç kiralama, otel rezervasyonu, düğün salonları ve profesyonel sürücü kursları.",
+    tab_car:"Araç Kiralama", tab_hotel:"Otel Rezervasyonu", tab_hall:"Düğün Salonları", tab_school:"Sürücü Kursu",
+    f_city:"Şehir", f_date:"Tarih", f_days:"Gün Sayısı",
+    trust_services:"entegre hizmet", trust_cities:"il", trust_rating:"müşteri puanı",
+    cat_title:"Hizmetlerimizi Keşfedin", cat_sub:"İhtiyacınız olan her şey tek yerde", explore:"Şimdi göz at",
+    cat1:"Araç Kiralama", cat1_sub:"Net fiyatlarla geniş filo",
+    cat2:"Otel Rezervasyonu", cat2_sub:"Özenle seçilmiş oteller",
+    cat3:"Düğün Salonları", cat3_sub:"En güzel geceler için",
+    cat4:"Sürücü Kursu", cat4_sub:"Sertifikalı eğitmenler",
+    how_title:"Al-Hut nasıl çalışır?", how_sub:"Hizmetinize üç adım kaldı",
+    step1_t:"Seç ve ara", step1_d:"Hizmeti, şehri ve tarihi belirleyin, mevcut seçenekleri net fiyatlarla inceleyin.",
+    step2_t:"Hemen rezervasyon", step2_d:"Talebinizi gizli ücret olmadan birkaç basit adımda tamamlayın.",
+    step3_t:"Doğrudan iletişim", step3_d:"Ortak, detayları onaylamak için sizinle doğrudan iletişime geçer.",
+    cities_title:"Tüm İllere Hizmet", cities_sub:"Seçenekleri görmek için şehrinizi seçin",
+    faq_title:"Sıkça Sorulan Sorular", faq_sub:"Al-Hut hakkında merak ettikleriniz",
+    cta_h:"Ofisiniz, oteliniz veya salonunuz mu var?", cta_p:"Al-Hut platformuna katılın ve işinizi büyütün — hizmetlerinizi binlerce müşteriye sunun.", cta_btn:"Hemen ortak olarak kaydol",
+    footer_desc:"Araç, otel, düğün salonu ve sürücü kursları için Irak'taki ilk platformunuz.", footer_services:"Hizmetler", footer_company:"Platform",
+    err_date:"Lütfen önce tarih seçin 🐋",
+    faqs:[
+      {q:"En ucuz araç kiralama nerede bulunur?", a:"Al-Hut, tüm illerde net günlük fiyatlarla platform filosunu sunarak size en uygun seçeneği kolayca seçtirir."},
+      {q:"Tüm şehirlerde otel rezervasyonu var mı?", a:"Evet, Irak'ın tüm illerinde ekonomikten lükse otel seçenekleri ve otelden doğrudan onay sunuyoruz."},
+      {q:"Platform üzerinden düğün salonu rezerve edebilir miyim?", a:"Evet, kapasite ve fiyatlarla en iyi salonların tam bir rehberini sunuyoruz ve tarihinizi doğrudan rezerve edersiniz."},
+      {q:"Kadınlar için sürücü eğitimi var mı?", a:"Evet, birçok ortak kurs kadın eğitmenler sunar, kayıt sırasında bunu belirtebilirsiniz."},
+      {q:"Al-Hut üzerinden rezervasyon ek ücret gerektirir mi?", a:"Hayır, gösterilen fiyatlar net ve şeffaftır, gizli ücret olmadan doğrudan ortakla işlem yaparsınız."},
+      {q:"Nasıl ortak olabilirim?", a:"Bir araç ofisi, otel, salon veya sürücü kursunuz varsa \"Ortak Ol\" sayfasından kaydolun, inceleme sonrası hesabınız etkinleştirilir."}
+    ]},
 
-        document.getElementById('tagText').innerText = l.tag;
-        document.getElementById('h1line1').innerText = l.h1a;
-        document.getElementById('h1line2').innerText = l.h1b;
-        document.getElementById('heroSub').innerText = l.sub;
-        document.getElementById('tabCar').innerText = l.tabCar;
-        document.getElementById('tabHotel').innerText = l.tabHotel;
-        document.getElementById('tabHall').innerText = l.tabHall;
-        document.getElementById('tabSchool').innerText = l.tabSchool;
-        document.getElementById('lblCity').innerText = l.lblCity;
-        document.getElementById('lblDate').innerText = l.lblDate;
-        document.getElementById('lblDays').innerText = l.lblDays;
-        document.getElementById('catTitle').innerText = l.catTitle;
-        document.getElementById('catSub').innerText = l.catSub;
-        document.getElementById('cat1').innerText = l.cat1;
-        document.getElementById('cat1sub').innerText = l.cat1sub;
-        document.getElementById('cat2').innerText = l.cat2;
-        document.getElementById('cat2sub').innerText = l.cat2sub;
-        document.getElementById('cat3').innerText = l.cat3;
-        document.getElementById('cat3sub').innerText = l.cat3sub;
-        document.getElementById('cat4').innerText = l.cat4;
-        document.getElementById('cat4sub').innerText = l.cat4sub;
-        document.getElementById('citiesTitle').innerText = l.citiesTitle;
-        document.getElementById('citiesSub').innerText = l.citiesSub;
-        document.getElementById('faqTitle').innerText = l.faqTitle;
-        document.getElementById('faqSub').innerText = l.faqSub;
+  en:{ dir:"ltr", flag:"🇬🇧", name:"English",
+    nav_partner:"Become a partner", nav_cars:"Cars", nav_hotels:"Hotels", nav_halls:"Halls", nav_schools:"Driving schools",
+    hero_eyebrow:"Iraq's #1 platform — 2026", hero_h1_a:"Search, book,", hero_h1_b:"enjoy your experience",
+    hero_p:"Car rentals, luxury hotels, wedding halls, and professional driving schools across Baghdad, Kirkuk, Erbil and all of Iraq.",
+    tab_car:"Car Rental", tab_hotel:"Hotel Booking", tab_hall:"Wedding Halls", tab_school:"Driving School",
+    f_city:"City", f_date:"Date", f_days:"Number of Days",
+    trust_services:"integrated services", trust_cities:"provinces", trust_rating:"customer rating",
+    cat_title:"Explore Our Services", cat_sub:"Everything you need in one place", explore:"Browse now",
+    cat1:"Car Rental", cat1_sub:"A wide fleet at clear prices",
+    cat2:"Hotel Booking", cat2_sub:"Handpicked hotels",
+    cat3:"Wedding Halls", cat3_sub:"For unforgettable nights",
+    cat4:"Driving School", cat4_sub:"Certified instructors",
+    how_title:"How does Al-Hut work?", how_sub:"Three steps to your service",
+    step1_t:"Choose & search", step1_d:"Pick the service, your city and date, and browse available options at clear prices.",
+    step2_t:"Book instantly", step2_d:"Complete your request in a few simple steps with no hidden fees.",
+    step3_t:"Direct contact", step3_d:"The partner contacts you directly to confirm details and complete the service.",
+    cities_title:"We Serve All Provinces", cities_sub:"Select your city to see available options",
+    faq_title:"FAQ", faq_sub:"Everything you want to know about Al-Hut",
+    cta_h:"Own a car office, hotel, or hall?", cta_p:"Join the Al-Hut platform and grow your business — showcase your services to thousands of customers across Iraq.", cta_btn:"Register as a partner now",
+    footer_desc:"Your #1 platform in Iraq for cars, hotels, wedding halls, and driving schools.", footer_services:"Services", footer_company:"Platform",
+    err_date:"Please select a date first 🐋",
+    faqs:[
+      {q:"How do I find the cheapest car rental in Iraq?", a:"Al-Hut shows the platform fleet at clear daily prices across all provinces, so you can easily choose what suits you best."},
+      {q:"Is hotel booking available in all cities?", a:"Yes, we offer a variety of hotel options from budget to luxury across all Iraqi provinces, with direct confirmation from the hotel."},
+      {q:"Can I browse and book wedding halls via the platform?", a:"Yes, we provide a complete directory of the finest halls with capacity and prices, and you reserve your date directly."},
+      {q:"Is there driving training for women?", a:"Yes, many partner schools provide female instructors, and you can specify this when enrolling."},
+      {q:"Does booking via Al-Hut cost extra fees?", a:"No, the displayed prices are clear and transparent, and you deal directly with the partner with no hidden platform fees."},
+      {q:"How do I become a partner?", a:"If you own a car office, hotel, hall, or driving school, register via the \"Become a partner\" page and your account will be activated after review."}
+    ]}
+};
 
-        // Cities
-        const cg = document.getElementById('citiesGrid');
-        cg.innerHTML = citiesList.map(c => `
-            <div class="city-pill" onclick="document.getElementById('citySelect').value='${c.key}'">
-                ${c[lang]}
-            </div>
-        `).join('');
+let LANG = "ar";
+let currentService = "personal";
 
-        // Update citySelect
-        const cs = document.getElementById('citySelect');
-        cs.innerHTML = citiesList.map(c => `<option value="${c.key}">${c[lang]}</option>`).join('');
+/* ═══════════════ HELPERS ═══════════════ */
+const $ = id => document.getElementById(id);
+function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+const T = k => (I18N[LANG][k] ?? I18N.ar[k] ?? k);
 
-        // FAQ
-        const fg = document.getElementById('faqGrid');
-        fg.innerHTML = l.faqs.map(f => `
-            <div class="faq-item">
-                <div class="faq-q">${f.q}</div>
-                <div class="faq-a">${f.a}</div>
-            </div>
-        `).join('');
-    }
+function toast(msg, err){
+  const w=$("toast-wrap");
+  const el=document.createElement("div");
+  el.className="toast"+(err?" err":"");
+  el.innerHTML=`<span>${err?"⚠️":"✅"}</span><span>${esc(msg)}</span>`;
+  w.appendChild(el);
+  setTimeout(()=>{el.style.opacity="0";el.style.transition=".3s";setTimeout(()=>el.remove(),300);},3000);
+}
 
-    function setService(svc) {
-        currentService = svc;
-        document.querySelectorAll('.search-tab').forEach(t => t.classList.remove('active'));
-        document.getElementById('tab-'+svc).classList.add('active');
-        
-        // Hide "Number of Days" for schools and halls since they are booked by date/course
-        document.getElementById('daysField').style.display = (svc === 'school' || svc === 'hall') ? 'none' : 'block';
-    }
+/* ═══════════════ LANGUAGE ═══════════════ */
+window.toggleLangMenu = e => { e.stopPropagation(); $("lang-menu").classList.toggle("open"); };
+document.addEventListener("click", ()=>$("lang-menu")?.classList.remove("open"));
 
-    function startBooking() {
-        const city = document.getElementById('citySelect').value;
-        const date = document.getElementById('dateInput').value;
-        const days = document.getElementById('daysInput').value;
-        if (!date) { alert(t[currentLang].alert); return; }
-        
-        if (currentService === 'hotel') {
-            window.location.href = `hotels.html?city=${city}&date=${date}&days=${days}&lang=${currentLang}`;
-        } else if (currentService === 'school') {
-            window.location.href = `schools.html?city=${city}&date=${date}&lang=${currentLang}`;
-        } else if (currentService === 'hall') {
-            window.location.href = `halls.html?city=${city}&date=${date}&lang=${currentLang}`;
-        } else {
-            window.location.href = `fleet.html?type=${currentService}&city=${city}&date=${date}&days=${days}&lang=${currentLang}`;
-        }
-    }
+window.setLang = function(lang){
+  LANG = lang;
+  const cfg = I18N[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = cfg.dir;
+  document.body.classList.toggle("ltr", cfg.dir==="ltr");
+  $("lang-flag").textContent = cfg.flag;
+  $("lang-name").textContent = cfg.name;
+  document.querySelectorAll(".lang-opt").forEach(o=>o.classList.remove("on"));
+  event?.target?.closest(".lang-opt")?.classList.add("on");
+  // ترجمة العناصر
+  document.querySelectorAll("[data-i18n]").forEach(el=>{ const k=el.getAttribute("data-i18n"); if(I18N[lang][k]!==undefined) el.textContent=I18N[lang][k]; });
+  // حفظ اللغة بنفس مفتاح بقية الصفحات
+  try{ localStorage.setItem("hut_lang", lang); }catch(e){}
+  $("lang-menu").classList.remove("open");
+  renderCities();
+  renderFaqs();
+};
 
-    // Navbar scroll
-    window.addEventListener('scroll', () => {
-        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
-    });
+/* ═══════════════ CITIES ═══════════════ */
+function renderCities(){
+  const cur=$("citySelect").value;
+  // قائمة المدن المنسدلة
+  $("citySelect").innerHTML = CITIES.map(c=>`<option value="${c.key}">${c.ic} ${esc(c[LANG])}</option>`).join("");
+  if(cur) $("citySelect").value=cur;
+  // شبكة المدن
+  $("citiesGrid").innerHTML = CITIES.map(c=>`
+    <div class="city-pill" onclick="pickCity('${c.key}')">
+      <span class="ci-ic">${c.ic}</span><span>${esc(c[LANG])}</span>
+    </div>`).join("");
+}
+window.pickCity = function(key){
+  $("citySelect").value=key;
+  document.querySelector(".search-box")?.scrollIntoView({behavior:"smooth",block:"center"});
+  toast(T("f_city")+": "+key);
+};
 
-    window.onload = () => {
-        const now = new Date();
-        document.getElementById('dateInput').value = now.toISOString().split('T')[0];
-        changeLang('ar');
-    };
+/* ═══════════════ FAQ ═══════════════ */
+function renderFaqs(){
+  const faqs=I18N[LANG].faqs||[];
+  $("faqList").innerHTML = faqs.map((f,i)=>`
+    <div class="faq-item" id="faq-${i}">
+      <div class="faq-q" onclick="toggleFaq(${i})">
+        <span>${esc(f.q)}</span>
+        <span class="chev">▾</span>
+      </div>
+      <div class="faq-a">${esc(f.a)}</div>
+    </div>`).join("");
+}
+window.toggleFaq = function(i){
+  const el=$("faq-"+i);
+  const wasOpen=el.classList.contains("open");
+  document.querySelectorAll(".faq-item").forEach(x=>x.classList.remove("open"));
+  if(!wasOpen) el.classList.add("open");
+};
+window.scrollFaq = function(){ $("faqList")?.scrollIntoView({behavior:"smooth",block:"start"}); };
+
+/* ═══════════════ SERVICE TABS ═══════════════ */
+window.setService = function(svc){
+  currentService = svc;
+  document.querySelectorAll(".search-tab").forEach(t=>t.classList.remove("on"));
+  $("tab-"+svc)?.classList.add("on");
+  // إخفاء "عدد الأيام" للقاعات والمدارس (تُحجز بالتاريخ/الباقة لا بالأيام)
+  $("daysField").style.display = (svc==="school"||svc==="hall") ? "none" : "block";
+};
+
+/* ═══════════════ ROUTING (متطابق مع الصفحات الأربع) ═══════════════ */
+function buildURL(page, extra){
+  const city=encodeURIComponent($("citySelect").value);
+  const date=$("dateInput").value;
+  const params=[`city=${city}`,`lang=${LANG}`];
+  if(date) params.push(`date=${date}`);
+  if(extra) params.push(extra);
+  return `${page}?${params.join("&")}`;
+}
+
+window.startBooking = function(){
+  const date=$("dateInput").value;
+  // القاعات إلزامية التاريخ، الباقي يُفضّل
+  if((currentService==="hall") && !date){ toast(T("err_date"),true); $("dateInput").focus(); return; }
+
+  if(currentService==="hotel"){
+    const days=$("daysInput").value;
+    location.href = buildURL("hotels.html", `days=${days}`);
+  } else if(currentService==="school"){
+    location.href = buildURL("schools.html");
+  } else if(currentService==="hall"){
+    location.href = buildURL("halls.html");
+  } else {
+    // السيارات: fleet.html يقرأ cat (الفئة) لا type — نتركها فارغة لعرض كل الأسطول
+    const days=$("daysInput").value;
+    location.href = buildURL("fleet.html", `days=${days}`);
+  }
+};
+
+// الدخول السريع من بطاقات الخدمات
+window.goService = function(svc){
+  setService(svc);
+  startBooking();
+};
+
+/* ═══════════════ NAV SCROLL + REVEAL ═══════════════ */
+window.addEventListener("scroll", ()=>{
+  $("nav").classList.toggle("scrolled", window.scrollY>10);
+});
+
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+},{threshold:.12});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+
+/* ═══════════════ BOOT ═══════════════ */
+(function init(){
+  const params=new URLSearchParams(location.search);
+  // التاريخ الافتراضي: اليوم
+  const today=new Date().toISOString().split("T")[0];
+  $("dateInput").min=today;
+  $("dateInput").value=today;
+  // اللغة: من الرابط أو المحفوظة أو عربي
+  let saved="ar";
+  try{ saved=params.get("lang")||localStorage.getItem("hut_lang")||"ar"; }catch(e){ saved=params.get("lang")||"ar"; }
+  if(!I18N[saved]) saved="ar";
+  setLang(saved);
+  // المدينة من الرابط إن وُجدت
+  const urlCity=params.get("city");
+  if(urlCity && CITIES.some(c=>c.key===urlCity)) $("citySelect").value=urlCity;
+})();
 </script>
 </body>
 </html>

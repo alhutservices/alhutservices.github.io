@@ -1,1228 +1,990 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<script>
-const _V="9.5",_K="hut_partner_v95";
-try{const s=localStorage.getItem(_K);if(s!==_V){localStorage.setItem(_K,_V);if("caches"in window)caches.keys().then(n=>n.forEach(k=>caches.delete(k)));if("serviceWorker"in navigator)navigator.serviceWorker.getRegistrations().then(r=>r.forEach(s=>s.unregister()));}}catch(e){}
-</script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#F7F7F7">
-<title>شركاء الحوت | بوابة الأعمال</title>
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
-<!-- Leaflet Map -->
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>الحوت · بوابة الشركاء</title>
+<meta name="theme-color" content="#FF385C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<!-- Fonts & Icons -->
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=IBM+Plex+Mono:wght@600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest"></script>
-
 <style>
-/* ════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM — Al-Hut Partners V9.5 (Airbnb Light)
-════════════════════════════════════════════════════════════════ */
-:root {
-  --bg:         #F7F7F7;
-  --white:      #FFFFFF;
-  --border:     #EBEBEB;
-  --border-d:   #DDDDDD;
-  --light:      #EEEEEE;
-  
-  --red:        #FF385C;
-  --red-d:      #E31C5F;
-  --red-l:      #FFF0F2;
-  --red-g:      linear-gradient(135deg, #FF385C, #E31C5F);
-  
-  --green:      #00A699;
-  --green-l:    #E6F7F6;
-  --amber:      #FC642D;
-  --amber-l:    #FFF3EE;
-  --blue:       #0066CC;
-  --blue-l:     #EEF5FF;
-  
-  --tx0:        #222222;
-  --tx1:        #484848;
-  --tx2:        #717171;
-  --tx3:        #AAAAAA;
-  --tx4:        #CCCCCC;   /* [إصلاح] كان مفقوداً */
-  
-  --sh-card:    0 4px 12px rgba(0,0,0,.05);
-  --sh-hover:   0 8px 24px rgba(0,0,0,.08);
-  --sh-modal:   0 16px 48px rgba(0,0,0,.18);
-  --sh-btn:     0 4px 14px rgba(255,56,92,.3);
-  
-  --r2: 8px; --r3: 12px; --r4: 16px; --r5: 20px;
-  --nav-h: 70px;
+:root{
+  --bg:#F7F7F7;--white:#FFFFFF;--border:#DDDDDD;--light:#EEEEEE;
+  --red:#FF385C;--red-d:#E31C5F;--red-l:#FFF0F2;--red-m:rgba(255,56,92,.12);
+  --red-g:linear-gradient(135deg,#FF385C,#E31C5F);
+  --green:#00A699;--green-l:#E6F7F6;--green-m:rgba(0,166,153,.12);
+  --amber:#FC642D;--amber-l:#FFF3EE;--amber-m:rgba(252,100,45,.12);
+  --blue:#0066CC;--blue-l:#EEF5FF;--blue-m:rgba(0,102,204,.1);
+  --violet:#6B46C1;--violet-l:#F3F0FF;--violet-m:rgba(107,70,193,.1);
+  --gold:#F5A623;--gold-l:#FFF8EC;
+  --tx0:#222222;--tx1:#484848;--tx2:#717171;--tx3:#AAAAAA;--tx4:#CCCCCC;
+  --sh-card:0 1px 2px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.05);
+  --sh-modal:0 8px 28px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.08);
+  --sh-btn:0 4px 12px rgba(255,56,92,.3);
+  --r2:8px;--r3:12px;--r4:16px;--r5:20px;--r6:24px;--pill:999px;
 }
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'Cairo',system-ui,sans-serif;color:var(--tx0);-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden;}
+button,input,select,textarea{font-family:inherit;color:inherit;}
+button{cursor:pointer;border:none;background:none;}
+a{text-decoration:none;color:inherit;}
+img{display:block;max-width:100%;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+.dn{display:none!important;}
+::-webkit-scrollbar{width:7px;height:7px;}
+::-webkit-scrollbar-thumb{background:var(--tx4);border-radius:99px;}
 
-*, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); font-family: 'Cairo', sans-serif; color: var(--tx0); min-height: 100vh; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
-button, input, select, textarea { font-family: 'Cairo', sans-serif; outline: none; }
-.dn { display: none !important; }
+/* ═══ AUTH ═══ */
+#auth{position:fixed;inset:0;z-index:9000;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:18px;overflow-y:auto;}
+.auth-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r6);padding:34px 28px;width:100%;max-width:400px;box-shadow:var(--sh-modal);}
+.auth-whale{font-size:2.8rem;text-align:center;margin-bottom:6px;animation:bob 2.6s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-9px) rotate(4deg)}}
+.auth-t{font-size:1.3rem;font-weight:900;text-align:center;margin-bottom:3px;}
+.auth-s{font-size:.78rem;color:var(--tx2);text-align:center;font-weight:700;margin-bottom:22px;}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--bg);border-radius:var(--r3);padding:5px;margin-bottom:18px;}
+.seg button{padding:9px;border-radius:var(--r2);font-size:.78rem;font-weight:800;color:var(--tx2);transition:.16s;}
+.seg button.on{background:var(--white);color:var(--tx0);box-shadow:var(--sh-card);}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.tp{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r3);padding:13px 8px;text-align:center;transition:.16s;cursor:pointer;}
+.tp:hover{border-color:var(--tx3);}
+.tp.on{border-color:var(--red);background:var(--red-l);}
+.tp-ic{font-size:1.5rem;margin-bottom:4px;}
+.tp-t{font-size:.72rem;font-weight:800;color:var(--tx1);}
+.tp.on .tp-t{color:var(--red);}
+.el{display:block;font-size:.7rem;font-weight:900;color:var(--tx1);margin:0 0 6px;}
+.fc{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:12px 14px;font-size:.9rem;font-weight:700;outline:none;transition:.16s;margin-bottom:13px;}
+.fc:focus{border-color:var(--red);background:var(--white);box-shadow:0 0 0 3px var(--red-m);}
+.fc::placeholder{color:var(--tx3);font-weight:600;}
+textarea.fc{resize:vertical;min-height:62px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.btn-main{width:100%;padding:14px;border-radius:var(--r3);background:var(--red-g);color:#fff;font-size:.94rem;font-weight:900;box-shadow:var(--sh-btn);transition:.2s;}
+.btn-main:hover{transform:translateY(-2px);}
+.btn-main:active{transform:scale(.98);}
+.btn-main:disabled{opacity:.6;pointer-events:none;}
+.btn-ld{color:transparent!important;position:relative;pointer-events:none;}
+.btn-ld::after{content:'';position:absolute;top:50%;left:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border:2.4px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.auth-msg{font-size:.76rem;font-weight:800;text-align:center;margin-top:12px;min-height:20px;}
+.auth-msg.err{color:var(--red);} .auth-msg.ok{color:var(--green);}
+.auth-alt{text-align:center;font-size:.76rem;font-weight:700;color:var(--tx2);margin-top:16px;}
+.auth-alt span{color:var(--red);font-weight:900;cursor:pointer;}
 
-/* [إصلاح] أصناف مساعدة كانت مُستخدمة في HTML وغير معرّفة */
-.mt-2 { margin-top: 8px; }
-.mt-4 { margin-top: 16px; }
-.empty-s { text-align: center; padding: 40px; color: var(--tx3); font-weight: 700; border: 1px dashed var(--border-d); border-radius: 16px; }
+/* ═══ SHELL ═══ */
+#app{display:none;padding-bottom:76px;}
+#app.on{display:block;}
+.top{position:sticky;top:0;z-index:500;background:rgba(255,255,255,.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:11px clamp(13px,3vw,22px);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.top-l{display:flex;align-items:center;gap:10px;min-width:0;}
+.top-av{width:42px;height:42px;border-radius:13px;background:var(--red-l);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.top-av.hotel{background:var(--green-l);} .top-av.hall{background:var(--violet-l);} .top-av.school{background:var(--blue-l);}
+.top-info{min-width:0;}
+.top-nm{font-size:.92rem;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.top-meta{font-size:.66rem;font-weight:700;color:var(--tx2);display:flex;gap:6px;align-items:center;}
+.top-r{display:flex;gap:7px;align-items:center;flex-shrink:0;}
+.ib{width:36px;height:36px;border-radius:11px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--tx1);transition:.16s;}
+.ib:hover{background:var(--red-l);color:var(--red);}
+.live{display:flex;align-items:center;gap:5px;font-size:.62rem;font-weight:900;color:var(--green);background:var(--green-l);padding:5px 10px;border-radius:var(--pill);}
+.live .d{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.4s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-thumb { background: var(--border-d); border-radius: 99px; }
+.wrap{max-width:1100px;margin:0 auto;padding:16px clamp(13px,3vw,22px);}
+.pg{display:none;animation:fade .3s;}
+.pg.on{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
 
-/* LOADING SCREEN */
-#loadingScreen { position: fixed; inset: 0; z-index: 60000; background: rgba(255,255,255,.9); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 15px; }
-.spinner { width: 48px; height: 48px; border: 4px solid var(--border); border-top-color: var(--red); border-radius: 50%; animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-#ldMsg { font-weight: 800; color: var(--tx0); font-size: 1.1rem; }
+/* ═══ BANNERS ═══ */
+.banner{border-radius:var(--r4);padding:14px 16px;margin-bottom:16px;display:flex;gap:11px;align-items:flex-start;font-size:.8rem;font-weight:700;line-height:1.6;}
+.banner.warn{background:var(--amber-l);border:1px solid rgba(252,100,45,.24);color:#9a3412;}
+.banner.info{background:var(--blue-l);border:1px solid rgba(0,102,204,.2);color:#075985;}
+.banner.bad{background:var(--red-l);border:1px solid rgba(255,56,92,.25);color:#9f1239;}
+.banner .bi{font-size:1.2rem;flex-shrink:0;}
 
-/* TOASTS */
-#toasts { position: fixed; top: max(16px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; flex-direction: column; gap: 8px; width: min(90%, 360px); pointer-events: none; }
-.toast { background: var(--white); border: 1px solid var(--border); border-radius: var(--r3); padding: 14px; box-shadow: var(--sh-card); display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: .85rem; animation: tIn .3s ease; pointer-events: auto; }
-.toast-i { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
-.toast.s .toast-i { background: var(--green); } .toast.e .toast-i { background: var(--red); }
-@keyframes tIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+/* ═══ KPI ═══ */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:11px;margin-bottom:18px;}
+.kp{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:14px 16px;box-shadow:var(--sh-card);position:relative;overflow:hidden;}
+.kp::before{content:'';position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:var(--red);}
+.kp.g::before{background:var(--green);} .kp.a::before{background:var(--amber);} .kp.b::before{background:var(--blue);} .kp.v::before{background:var(--violet);}
+.kp-t{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.kp-l{font-size:.66rem;font-weight:800;color:var(--tx2);}
+.kp-i{font-size:1rem;}
+.kp-v{font-size:1.45rem;font-weight:900;line-height:1;}
+.kp-v.g{color:var(--green);} .kp-v.r{color:var(--red);} .kp-v.a{color:var(--amber);}
+.kp-v .u{font-size:.6rem;font-weight:700;color:var(--tx3);}
+.kp-s{font-size:.6rem;font-weight:700;color:var(--tx3);margin-top:5px;}
 
-/* AUTH PAGE */
-.auth-wrapper { min-height: 100vh; display: flex; flex-direction: column; background: var(--white); }
-.a-header { padding: 40px 20px 20px; text-align: center; border-bottom: 1px solid var(--border); }
-.a-logo { width: 64px; height: 64px; background: var(--red-l); color: var(--red); border-radius: 18px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 12px; }
-.a-title { font-size: 1.6rem; font-weight: 900; color: var(--tx0); letter-spacing: -.5px; margin-bottom: 4px; }
-.a-sub { color: var(--tx2); font-weight: 700; font-size: .85rem; }
+/* ═══ CARD BLOCK ═══ */
+.blk{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);box-shadow:var(--sh-card);overflow:hidden;margin-bottom:16px;}
+.blk-h{padding:14px 17px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:11px;flex-wrap:wrap;}
+.blk-t{font-size:.9rem;font-weight:900;display:flex;align-items:center;gap:7px;}
+.blk-t .n{font-size:.6rem;font-weight:900;background:var(--red-l);color:var(--red);padding:2px 8px;border-radius:99px;}
+.blk-b{padding:15px 17px;}
+.blk-b.flush{padding:0;}
+.badd{padding:8px 14px;border-radius:var(--r3);background:var(--red-g);color:#fff;font-size:.73rem;font-weight:900;box-shadow:var(--sh-btn);transition:.18s;}
+.badd:active{transform:scale(.95);}
 
-.auth-tabs { display: flex; background: var(--bg); border-radius: 99px; margin: 20px; padding: 5px; }
-.at-btn { flex: 1; text-align: center; padding: 11px; font-weight: 800; font-size: .85rem; color: var(--tx2); border-radius: 99px; cursor: pointer; transition: .2s; }
-.at-btn.on { background: var(--white); color: var(--red); box-shadow: var(--sh-card); }
+/* ═══ FILTER CHIPS ═══ */
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;}
+.chips::-webkit-scrollbar{display:none;}
+.chip{flex-shrink:0;padding:7px 13px;border-radius:var(--pill);background:var(--bg);border:1px solid var(--border);font-size:.72rem;font-weight:800;color:var(--tx2);transition:.16s;white-space:nowrap;}
+.chip.on{background:var(--tx0);color:#fff;border-color:var(--tx0);}
+.chip .n{opacity:.6;margin-inline-start:3px;}
 
-.a-body { padding: 10px 20px 40px; max-width: 540px; margin: 0 auto; width: 100%; }
-.a-panel { display: none; } .a-panel.on { display: block; animation: fade .3s ease; }
-@keyframes fade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+/* ═══ ORDER CARD ═══ */
+.oc{border-bottom:1px solid var(--light);padding:14px 17px;transition:.15s;}
+.oc:last-child{border-bottom:none;}
+.oc:hover{background:var(--bg);}
+.oc.new{background:linear-gradient(90deg,var(--red-l),transparent 60%);animation:newPulse 2s ease-out;}
+@keyframes newPulse{0%{background-color:var(--red-l)}100%{background-color:transparent}}
+.oc-h{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-bottom:8px;flex-wrap:wrap;}
+.oc-id{font-size:.64rem;font-weight:800;color:var(--tx3);}
+.stb{font-size:.62rem;font-weight:900;padding:3px 10px;border-radius:99px;display:inline-flex;align-items:center;gap:4px;}
+.stb .d{width:5px;height:5px;border-radius:50%;}
+.stb-p{background:var(--amber-l);color:var(--amber);} .stb-p .d{background:var(--amber);}
+.stb-a{background:var(--blue-l);color:var(--blue);} .stb-a .d{background:var(--blue);}
+.stb-c{background:var(--green-l);color:var(--green);} .stb-c .d{background:var(--green);}
+.stb-x{background:var(--red-l);color:var(--red);} .stb-x .d{background:var(--red);}
+.oc-ti{font-size:.95rem;font-weight:900;margin-bottom:5px;}
+.oc-d{font-size:.74rem;font-weight:700;color:var(--tx2);line-height:1.75;}
+.oc-d .sep{color:var(--tx4);margin:0 4px;}
+.oc-f{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-top:11px;flex-wrap:wrap;}
+.oc-pr{font-size:1.05rem;font-weight:900;color:var(--green);}
+.oc-pr .u{font-size:.62rem;color:var(--tx3);font-weight:700;}
+.oc-a{display:flex;gap:6px;flex-wrap:wrap;}
+.ob{padding:8px 14px;border-radius:var(--r2);font-size:.72rem;font-weight:900;transition:.16s;}
+.ob:active{transform:scale(.94);}
+.ob-ok{background:var(--green);color:#fff;}
+.ob-go{background:var(--blue);color:#fff;}
+.ob-no{background:var(--red-l);color:var(--red);border:1px solid rgba(255,56,92,.2);}
+.ob-wa{background:#25D366;color:#fff;}
+.empty{padding:44px 20px;text-align:center;color:var(--tx3);}
+.empty-i{font-size:2.4rem;margin-bottom:9px;opacity:.55;}
+.empty-t{font-size:.9rem;font-weight:900;color:var(--tx1);margin-bottom:4px;}
+.empty-s{font-size:.76rem;font-weight:700;}
 
-.fld { margin-bottom: 16px; }
-.lbl { display: block; font-size: .75rem; font-weight: 800; margin-bottom: 6px; color: var(--tx1); }
-.inp { width: 100%; background: var(--white); border: 1px solid var(--border-d); border-radius: var(--r3); padding: 14px; font-size: .9rem; font-weight: 700; transition: .2s; color: var(--tx0); }
-.inp:focus { border-color: var(--tx0); box-shadow: 0 0 0 1px var(--tx0); }
-.inp::placeholder { color: var(--tx3); font-weight: 600; }
+/* ═══ INVENTORY ═══ */
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:11px;}
+.iv{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);overflow:hidden;box-shadow:var(--sh-card);transition:.18s;}
+.iv:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.iv.off{opacity:.6;}
+.iv-img{width:100%;height:98px;object-fit:cover;background:var(--bg);}
+.iv-no{width:100%;height:98px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.9rem;color:var(--tx4);}
+.iv-b{padding:11px;}
+.iv-n{font-size:.84rem;font-weight:900;margin-bottom:5px;line-height:1.3;}
+.iv-tg{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px;}
+.tg{font-size:.6rem;font-weight:800;padding:2px 7px;border-radius:6px;background:var(--bg);color:var(--tx2);border:1px solid var(--border);}
+.tg.c{background:var(--red-l);color:var(--red);border-color:rgba(255,56,92,.15);}
+.tg.ok{background:var(--green-l);color:var(--green);border-color:rgba(0,166,153,.2);}
+.iv-p{font-size:.92rem;font-weight:900;color:var(--green);}
+.iv-p .u{font-size:.58rem;color:var(--tx3);font-weight:700;}
+.iv-s{font-size:.64rem;font-weight:700;color:var(--tx3);margin-top:4px;}
+.iv-a{padding:8px 11px;border-top:1px solid var(--light);display:flex;gap:5px;justify-content:flex-end;background:var(--bg);}
+.iva{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;transition:.15s;}
+.iva:active{transform:scale(.88);}
+.iva-e{background:var(--blue-l);color:var(--blue);}
+.iva-t{background:var(--amber-l);color:var(--amber);}
+.iva-d{background:var(--red-l);color:var(--red);}
 
-.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+/* ═══ PROFILE ═══ */
+.prof-photo{width:100%;height:165px;object-fit:cover;border-radius:var(--r4);margin-bottom:13px;background:var(--bg);}
+.prof-noph{width:100%;height:165px;border-radius:var(--r4);background:var(--bg);border:1.5px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--tx3);font-size:.78rem;font-weight:800;margin-bottom:13px;}
+.locked{background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:11px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;}
+.locked-k{font-size:.72rem;font-weight:800;color:var(--tx2);display:flex;align-items:center;gap:5px;}
+.locked-v{font-size:.82rem;font-weight:900;color:var(--tx1);}
+.hint{font-size:.66rem;font-weight:700;color:var(--tx3);margin:-8px 0 13px;line-height:1.6;}
+#pmap{height:210px;border-radius:var(--r4);border:1px solid var(--border);margin-bottom:12px;}
 
-/* 4 Types Grid */
-.ptype-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-.ptype { border: 1.5px solid var(--border-d); border-radius: var(--r3); padding: 12px 5px; text-align: center; cursor: pointer; transition: .2s; }
-.ptype.on { border-color: var(--red); background: var(--red-l); color: var(--red); }
-.ptype-ic { margin-bottom: 4px; } .ptype-tx { font-size: .85rem; font-weight: 900; }
+/* ═══ NAV ═══ */
+.nav{position:fixed;bottom:0;inset-inline:0;z-index:600;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;padding:7px 6px;gap:4px;}
+.nv{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 3px;border-radius:var(--r2);font-size:.6rem;font-weight:800;color:var(--tx3);transition:.15s;position:relative;}
+.nv .i{font-size:1.2rem;}
+.nv.on{color:var(--red);background:var(--red-l);}
+.nv .bdg{position:absolute;top:2px;inset-inline-end:16%;background:var(--red);color:#fff;font-size:.55rem;font-weight:900;min-width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+.nv .bdg.z{display:none;}
 
-.uz { border: 2px dashed var(--border-d); border-radius: var(--r3); background: var(--bg); height: 140px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; cursor: pointer; position: relative; overflow: hidden; transition: .2s; }
-.uz:hover { border-color: var(--red); background: var(--red-l); }
-.uz.filled { border-style: solid; border-color: var(--border); }
-.uz-prev { position: absolute; inset: 0; object-fit: cover; width: 100%; height: 100%; }
-.uz-badge { position: absolute; top: 8px; right: 8px; background: var(--green); color: #fff; font-size: .65rem; font-weight: 800; padding: 4px 10px; border-radius: 99px; opacity: 0; z-index: 10; }
-.uz.filled .uz-badge { opacity: 1; }
-.uz-txt { font-size: .8rem; font-weight: 800; color: var(--tx2); }
+/* ═══ MODAL ═══ */
+.mb{position:fixed;inset:0;z-index:8000;background:rgba(34,34,34,.4);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px;}
+.mb.on{display:flex;}
+.mc{background:var(--white);border-radius:var(--r5);width:100%;max-width:430px;max-height:88vh;overflow-y:auto;box-shadow:var(--sh-modal);padding:22px;}
+.mt{font-size:1.05rem;font-weight:900;margin-bottom:3px;}
+.ms{font-size:.74rem;font-weight:700;color:var(--tx2);margin-bottom:17px;}
+.ma{display:flex;gap:9px;margin-top:15px;}
+.ma button{flex:1;padding:12px;border-radius:var(--r3);font-size:.84rem;font-weight:900;transition:.16s;}
+.m-x{background:var(--bg);border:1px solid var(--border);color:var(--tx1);}
+.m-s{background:var(--red-g);color:#fff;box-shadow:var(--sh-btn);}
 
-.map-box { height: 180px; border-radius: var(--r3); border: 1px solid var(--border-d); position: relative; overflow: hidden; }
+/* ═══ TOAST ═══ */
+#tw{position:fixed;bottom:88px;inset-inline:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:9500;pointer-events:none;}
+.ts{background:var(--tx0);color:#fff;padding:11px 19px;border-radius:var(--pill);font-size:.79rem;font-weight:800;box-shadow:var(--sh-modal);display:flex;align-items:center;gap:8px;animation:tin .3s cubic-bezier(.34,1.5,.64,1);max-width:90vw;}
+.ts.e{background:var(--red);} .ts.g{background:var(--green);}
+@keyframes tin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
-.btn-main { width: 100%; background: var(--red-g); color: var(--white); border: none; border-radius: var(--r3); padding: 16px; font-size: 1rem; font-weight: 900; cursor: pointer; transition: .2s; box-shadow: var(--sh-btn); display: flex; align-items: center; justify-content: center; gap: 8px; }
-.btn-main:active { transform: scale(.97); box-shadow: none; }
-.btn-sec { padding: 10px 20px; border-radius: var(--r3); border: 1px solid var(--border-d); background: var(--white); font-weight: 800; cursor: pointer; transition: .2s; }
-.btn-sec:hover { border-color: var(--tx0); }
-
-/* DASHBOARD LAYOUT */
-.d-header { background: var(--white); border-bottom: 1px solid var(--border); padding: max(16px, env(safe-area-inset-top)) 20px 16px; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
-.dh-name { font-size: 1.2rem; font-weight: 900; color: var(--tx0); }
-.dh-badge { font-size: .7rem; font-weight: 800; color: var(--tx2); background: var(--bg); padding: 4px 10px; border-radius: 99px; border: 1px solid var(--border); margin-top: 4px; display: inline-block; }
-
-.page-body { padding: 20px 20px calc(var(--nav-h) + 30px); max-width: 1200px; margin: 0 auto; }
-.sec-title { font-size: 1.15rem; font-weight: 900; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
-
-/* KPI CARDS */
-.kpi-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-.kpi-c { background: var(--white); border: 1px solid var(--border); border-radius: var(--r4); padding: 16px; box-shadow: var(--sh-card); }
-.kpi-v { font-size: 1.5rem; font-weight: 900; color: var(--tx0); }
-.kpi-l { font-size: .75rem; font-weight: 700; color: var(--tx2); margin-top: 2px; }
-
-/* ORDER CARDS (RADAR) */
-.ord-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r4); padding: 16px; margin-bottom: 16px; box-shadow: var(--sh-card); border-right: 4px solid var(--border-d); }
-.ord-card.pending { border-right-color: var(--amber); } .ord-card.active { border-right-color: var(--blue); } .ord-card.completed { border-right-color: var(--green); }
-.oc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--bg); padding-bottom: 12px; }
-.oc-id { font-family: 'IBM Plex Mono', monospace; font-weight: 700; color: var(--tx2); font-size: .8rem; }
-.oc-st { font-size: .7rem; font-weight: 800; padding: 4px 10px; border-radius: 99px; }
-.st-pend { background: var(--amber-l); color: var(--amber); } .st-act { background: var(--blue-l); color: var(--blue); } .st-done { background: var(--green-l); color: var(--green); }
-.oc-mid { margin-bottom: 12px; }
-.oc-title { font-size: 1rem; font-weight: 900; margin-bottom: 8px; }
-.oc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: var(--bg); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
-.oc-lbl { font-size: .65rem; color: var(--tx2); font-weight: 700; } .oc-val { font-size: .8rem; font-weight: 900; }
-.oc-bot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--bg); padding-top: 12px; margin-top: 12px; }
-.oc-price { font-size: 1.1rem; font-weight: 900; color: var(--green); }
-.oc-acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; width: 100%; }
-
-.ab { padding: 8px 14px; border-radius: 8px; font-size: .8rem; font-weight: 800; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; font-family: 'Cairo', sans-serif; transition: 0.2s; }
-.ab:active { transform: scale(.95); }
-.ab.acc { background: var(--green); color: #fff; } .ab.act { background: var(--blue); color: #fff; }
-.ab.wa { background: var(--white); color: #25D366; border: 1px solid #bbf7d0; } .ab.wa:hover { background: #f0fdf4; }
-.ab.rej { background: var(--bg); color: var(--red); border: 1px dashed var(--red); }
-
-/* ASSET GALLERY */
-.add-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r4); padding: 24px; box-shadow: var(--sh-card); margin-bottom: 24px; }
-.asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-.asset-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r4); overflow: hidden; box-shadow: var(--sh-card); display: flex; flex-direction: column; }
-.ac-img { width: 100%; height: 160px; background: var(--bg); position: relative; }
-.ac-img img { width: 100%; height: 100%; object-fit: cover; }
-.ac-noimg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--tx4); }
-.ac-badge { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,.9); padding: 4px 10px; border-radius: 99px; font-size: .65rem; font-weight: 900; }
-.ac-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
-.ac-title { font-size: 1.05rem; font-weight: 900; margin-bottom: 6px; }
-.ac-price { font-size: 1rem; font-weight: 900; color: var(--green); margin-bottom: 10px; }
-.ac-specs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-.ac-spec { font-size: .65rem; font-weight: 800; color: var(--tx2); background: var(--bg); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--border); }
-.ac-toggle { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid var(--border); margin-top: auto; }
-
-.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; inset: 0; background-color: var(--border-d); transition: .3s; border-radius: 34px; }
-.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-input:checked + .slider { background-color: var(--green); } input:checked + .slider:before { transform: translateX(20px); }
-
-/* LEDGER LIST */
-.lr-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r3); padding: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; box-shadow: var(--sh-card); }
-.lr-id { font-family: 'IBM Plex Mono', monospace; font-size: .7rem; font-weight: 700; color: var(--tx2); }
-.lr-nm { font-size: .9rem; font-weight: 900; margin-top: 2px; }
-.lr-dt { font-size: .7rem; font-weight: 600; color: var(--tx2); margin-top: 2px; }
-.lr-am { font-size: 1.1rem; font-weight: 900; color: var(--green); }
-
-/* MODALS */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 90000; display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: .3s; }
-.modal-overlay.open { opacity: 1; pointer-events: auto; }
-.bottom-sheet { background: var(--white); width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 24px; box-shadow: var(--sh-modal); transform: translateY(100%); transition: .3s ease; max-height: 85vh; overflow-y: auto; }
-.modal-overlay.open .bottom-sheet { transform: translateY(0); }
-.wa-tpl { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: .2s; }
-.wa-tpl:hover { border-color: var(--green); background: var(--green-l); }
-
-/* BOTTOM NAV */
-.bnav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-h); background: rgba(255,255,255,.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 9000; padding-bottom: env(safe-area-inset-bottom); }
-.bni { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--tx3); font-weight: 800; font-size: .7rem; cursor: pointer; }
-.bni.on { color: var(--red); }
-.bni-badge { position: absolute; top: 5px; right: 15px; width: 8px; height: 8px; background: var(--red); border-radius: 50%; display: none; }
-.bni-badge.show { display: block; }
-
-@media(min-width: 768px) {
-  #authPage { background: var(--bg); align-items: center; justify-content: center; }
-  .auth-wrapper { flex-direction: row; justify-content: center; }
-  .auth-inner { width: 100%; max-width: 540px; background: var(--white); border: 1px solid var(--border); border-radius: var(--r5); box-shadow: var(--sh-modal); overflow: hidden; margin: 40px 0; }
-  .a-header { padding: 40px 20px 20px; }
-  .bottom-sheet { margin: auto; border-radius: var(--r5); }
-  .modal-overlay { align-items: center; }
-}
-
-.btn-ld { color: transparent !important; pointer-events: none; position: relative; }
-.btn-ld::after { content: ''; position: absolute; left: 50%; top: 50%; width: 20px; height: 20px; margin: -10px; border: 3px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+@media(max-width:560px){ .igrid{grid-template-columns:1fr 1fr;gap:9px;} .iv-img,.iv-no{height:84px;} .g2{grid-template-columns:1fr;} }
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
 </head>
 <body>
+<div id="tw"></div>
 
-<div id="toasts"></div>
-<div id="loadingScreen" class="dn">
-  <div class="spinner"></div>
-  <div id="ldMsg">جاري التحميل...</div>
+<!-- ═══ AUTH ═══ -->
+<div id="auth">
+  <div class="auth-card">
+    <div class="auth-whale">🐋</div>
+    <div class="auth-t">بوابة الشركاء</div>
+    <div class="auth-s">منصة الحوت · إدارة أعمالك بذكاء</div>
+
+    <div class="seg">
+      <button class="on" id="sg-login" onclick="setMode('login')">تسجيل الدخول</button>
+      <button id="sg-reg" onclick="setMode('reg')">شريك جديد</button>
+    </div>
+
+    <div class="type-grid" id="typeGrid">
+      <div class="tp on" data-t="office" onclick="pickType('office',this)"><div class="tp-ic">🚗</div><div class="tp-t">مكتب سيارات</div></div>
+      <div class="tp" data-t="hotel" onclick="pickType('hotel',this)"><div class="tp-ic">🏨</div><div class="tp-t">فندق</div></div>
+      <div class="tp" data-t="hall" onclick="pickType('hall',this)"><div class="tp-ic">🥂</div><div class="tp-t">قاعة أعراس</div></div>
+      <div class="tp" data-t="school" onclick="pickType('school',this)"><div class="tp-ic">🎓</div><div class="tp-t">مدرسة قيادة</div></div>
+    </div>
+
+    <div id="loginBox">
+      <label class="el">اسم المنشأة</label>
+      <input type="text" class="fc" id="lg-name" placeholder="اكتب الاسم كما سُجّل" onkeydown="if(event.key==='Enter')doLogin()">
+      <label class="el">كلمة المرور</label>
+      <input type="password" class="fc" id="lg-pass" placeholder="••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="btn-main" id="lg-btn" onclick="doLogin()">دخول 🔓</button>
+      <div class="auth-alt">ليس لديك حساب؟ <span onclick="setMode('reg')">سجّل منشأتك</span></div>
+    </div>
+
+    <div id="regBox" class="dn">
+      <label class="el">اسم المنشأة</label>
+      <input type="text" class="fc" id="rg-name" placeholder="مثال: مكتب النور لتأجير السيارات">
+      <div class="g2">
+        <div><label class="el">المدينة</label><select class="fc" id="rg-city"></select></div>
+        <div><label class="el">رقم الهاتف</label><input type="tel" class="fc mono" id="rg-phone" placeholder="07XXXXXXXXX" dir="ltr"></div>
+      </div>
+      <div id="rg-extra"></div>
+      <label class="el">كلمة المرور</label>
+      <input type="password" class="fc" id="rg-pass" placeholder="اختر كلمة مرور قوية">
+      <button class="btn-main" id="rg-btn" onclick="doRegister()">إنشاء الحساب 🚀</button>
+      <div class="auth-alt">لديك حساب؟ <span onclick="setMode('login')">سجّل الدخول</span></div>
+    </div>
+
+    <div class="auth-msg" id="authMsg"></div>
+  </div>
 </div>
 
-<audio id="sndNew" src="https://actions.google.com/sounds/v1/alarms/submarine_dive_horn.ogg" preload="auto"></audio>
-
-<!-- ════════ AUTH PAGE ════════ -->
-<div id="authPage" class="auth-wrapper">
-  <div class="auth-inner">
-    <div class="a-header">
-      <div class="a-logo"><i data-lucide="building-2" size="32"></i></div>
-      <div class="a-title">بوابة الشركاء</div>
-      <div class="a-sub">انضم لشبكة الحوت وقم بإدارة أعمالك باحترافية</div>
-    </div>
-    
-    <div class="auth-tabs">
-      <div class="at-btn on" onclick="switchAuth('login',this)">تسجيل الدخول</div>
-      <div class="at-btn" onclick="switchAuth('register',this)">انضمام كشريك</div>
-    </div>
-
-    <div class="a-body">
-      <!-- LOGIN -->
-      <div id="panel-login" class="a-panel on">
-        <div class="fld">
-          <label class="lbl">رقم الهاتف أو اسم المنشأة</label>
-          <input type="text" id="lg-name" class="inp" placeholder="أدخل البيانات هنا">
-        </div>
-        <div class="fld">
-          <label class="lbl">كلمة المرور</label>
-          <input type="password" id="lg-pass" class="inp" placeholder="••••••••">
-        </div>
-        <button class="btn-main mt-4" id="btn-login" onclick="doLogin()">تسجيل الدخول</button>
+<!-- ═══ APP ═══ -->
+<div id="app">
+  <div class="top">
+    <div class="top-l">
+      <div class="top-av" id="tAv">🚗</div>
+      <div class="top-info">
+        <div class="top-nm" id="tName">—</div>
+        <div class="top-meta" id="tMeta">—</div>
       </div>
+    </div>
+    <div class="top-r">
+      <div class="live" id="liveInd"><span class="d"></span><span>مباشر</span></div>
+      <button class="ib" onclick="loadAll()" title="تحديث">🔄</button>
+      <button class="ib" onclick="doLogout()" title="خروج">🚪</button>
+    </div>
+  </div>
 
-      <!-- REGISTER -->
-      <div id="panel-register" class="a-panel">
-        <label class="lbl">نوع الشراكة</label>
-        <div class="ptype-grid">
-          <div class="ptype on" onclick="pickType('car',this)"><div class="ptype-ic"><i data-lucide="car"></i></div><div class="ptype-tx">سيارات</div></div>
-          <div class="ptype" onclick="pickType('hotel',this)"><div class="ptype-ic"><i data-lucide="bed-double"></i></div><div class="ptype-tx">فنادق</div></div>
-          <div class="ptype" onclick="pickType('hall',this)"><div class="ptype-ic"><i data-lucide="glass-water"></i></div><div class="ptype-tx">قاعات</div></div>
-          <div class="ptype" onclick="pickType('school',this)"><div class="ptype-ic"><i data-lucide="graduation-cap"></i></div><div class="ptype-tx">مدارس قيادة</div></div>
+  <div class="wrap">
+    <!-- ORDERS -->
+    <section class="pg on" id="pg-orders">
+      <div id="statusBanner"></div>
+      <div class="kpis" id="kOrders"></div>
+      <div class="blk">
+        <div class="blk-h">
+          <div class="blk-t" id="ordTitle">📥 الطلبات <span class="n" id="ordCnt">0</span></div>
+          <div class="chips" id="ordChips"></div>
         </div>
+        <div class="blk-b flush" id="ordList"></div>
+      </div>
+    </section>
 
-        <div class="fld">
-          <label class="lbl">صورة الواجهة / الشعار</label>
-          <label class="uz" id="uz-reg" for="img-reg">
-            <input type="file" id="img-reg" accept="image/*" class="dn" onchange="handleRegImg(this)">
-            <img class="uz-prev" id="uz-reg-p" style="display:none">
-            <div class="uz-badge" id="uz-reg-b">✓ تم الإرفاق</div>
-            <i data-lucide="image-plus" color="var(--tx3)" id="uz-reg-i"></i>
-            <div class="uz-txt" id="uz-reg-t">اضغط لرفع صورة الواجهة</div>
-          </label>
-        </div>
+    <!-- INVENTORY -->
+    <section class="pg" id="pg-inv">
+      <div class="kpis" id="kInv"></div>
+      <div id="invContent"></div>
+    </section>
 
-        <div class="fld"><label class="lbl">الاسم الرسمي للمنشأة</label><input type="text" id="rg-name" class="inp" placeholder="الاسم التجاري"></div>
-        
-        <!-- Dynamic Extras -->
-        <div class="g2" id="reg-car-extras">
-          <div class="fld"><label class="lbl">فئة المكتب</label><select id="rg-office-type" class="inp"><option value="مكتب تأجير">مكتب تأجير</option><option value="شركة سيارات فاخرة">شركة VIP</option><option value="وكالة سياحة وسفر">وكالة سياحة</option></select></div>
-          <div class="fld"><label class="lbl">أوقات العمل</label><select id="rg-hours" class="inp"><option value="24_hours">مفتوح 24 ساعة</option><option value="morning_evening">08:00 ص - 10:00 م</option><option value="morning_only">08:00 ص - 04:00 م</option></select></div>
-        </div>
-        
-        <div class="g2 dn" id="reg-hotel-extras">
-          <div class="fld" style="grid-column:1/3"><label class="lbl">تصنيف الفندق</label><select id="rg-stars" class="inp"><option value="5">⭐⭐⭐⭐⭐ 5 نجوم</option><option value="4">⭐⭐⭐⭐ 4 نجوم</option><option value="3">⭐⭐⭐ 3 نجوم</option><option value="2">⭐⭐ نجمتين</option><option value="1">⭐ نجمة واحدة</option><option value="0">شقق فندقية</option></select></div>
-        </div>
-
-        <div class="g2 dn" id="reg-hall-extras">
-          <div class="fld"><label class="lbl">السعة الاستيعابية</label><input type="text" id="rg-hall-cap" class="inp" placeholder="مثال: 300 - 500 شخص"></div>
-          <div class="fld"><label class="lbl">سعر السهرة (د.ع)</label><input type="number" id="rg-hall-price" class="inp" placeholder="2500000"></div>
-          <div class="fld" style="grid-column:1/3"><label class="lbl">أبرز الخدمات والمميزات</label><input type="text" id="rg-hall-feat" class="inp" placeholder="بوفيه، إضاءة، كوشة..."></div>
-        </div>
-
-        <div class="g2 dn" id="reg-school-extras">
-          <div class="fld"><label class="lbl">سعر الكورس الأساسي</label><input type="number" id="rg-school-basic" class="inp" placeholder="150000"></div>
-          <div class="fld"><label class="lbl">سعر الكورس المتقدم</label><input type="number" id="rg-school-adv" class="inp" placeholder="250000"></div>
-          <div class="fld" style="grid-column:1/3"><label class="lbl">المميزات</label><input type="text" id="rg-school-feat" class="inp" placeholder="مدربات نساء، سيارات حديثة..."></div>
-        </div>
-
-        <!-- Common -->
-        <div class="g2">
-          <div class="fld"><label class="lbl">المدينة</label><select id="rg-city" class="inp"><option value="بغداد">بغداد</option><option value="أربيل">أربيل</option><option value="كركوك">كركوك</option><option value="السليمانية">السليمانية</option><option value="البصرة">البصرة</option><option value="الموصل">الموصل</option><option value="النجف">النجف</option><option value="كربلاء">كربلاء</option><option value="ديالى">ديالى</option><option value="الأنبار">الأنبار</option></select></div>
-          <div class="fld"><label class="lbl">نسبة العمولة المقترحة (د.ع)</label><input type="number" id="rg-comm" class="inp" placeholder="مثال: 5000"></div>
-        </div>
-        
-        <div class="g2">
-          <div class="fld"><label class="lbl">📞 هاتف الإدارة</label><input type="tel" id="rg-phone-admin" class="inp" placeholder="للطوارئ والإدارة" dir="ltr" style="text-align:right"></div>
-          <div class="fld"><label class="lbl">💬 واتساب الحجوزات</label><input type="tel" id="rg-phone-sales" class="inp" placeholder="لتواصل الزبائن" dir="ltr" style="text-align:right"></div>
-        </div>
-
-        <div class="fld"><label class="lbl">كلمة المرور</label><input type="password" id="rg-pass" class="inp" placeholder="أنشئ كلمة مرور قوية"></div>
-        
-        <div class="fld">
-          <label class="lbl">موقعك على الخريطة</label>
-          <div class="map-box">
-            <div id="pickerMap" style="width:100%;height:100%;"></div>
-            <button type="button" style="position:absolute;bottom:10px;right:10px;z-index:1000;background:#fff;border:1px solid var(--border);padding:6px 12px;border-radius:8px;font-weight:800;font-size:.8rem;color:var(--tx0);box-shadow:var(--sh-card);cursor:pointer;" onclick="locateMe()">📍 موقعي</button>
+    <!-- EARNINGS -->
+    <section class="pg" id="pg-money">
+      <div class="kpis" id="kMoney"></div>
+      <div class="blk">
+        <div class="blk-h"><div class="blk-t">💳 كيف تُحسب مستحقاتي؟</div></div>
+        <div class="blk-b">
+          <div class="banner info" style="margin:0">
+            <span class="bi">ℹ️</span>
+            <span>عند إكمال أي طلب تُضاف عمولة المنصة إلى رصيدك المستحق. تُراجَع الحسابات آلياً كل ليلة، وتُصفَّر بعد التسوية مع الإدارة. نسبة العمولة تحدّدها الإدارة ولا يمكن تعديلها من هنا.</span>
           </div>
         </div>
-
-        <button class="btn-main mt-4" id="btn-reg" onclick="doRegister()">إرسال طلب الانضمام</button>
       </div>
+      <div class="blk">
+        <div class="blk-h"><div class="blk-t">📜 آخر الطلبات المكتملة <span class="n" id="doneCnt">0</span></div></div>
+        <div class="blk-b flush" id="doneList"></div>
+      </div>
+    </section>
 
-      <!-- WAIT ROOM -->
-      <div id="panel-wait" class="a-panel">
-        <div style="text-align:center;padding:40px 20px;border:1px solid var(--border);border-radius:var(--r4);">
-          <i data-lucide="hourglass" size="48" color="var(--amber)" style="margin-bottom:16px;"></i>
-          <h3 style="font-weight:900;margin-bottom:8px;">طلبك قيد المراجعة</h3>
-          <p style="color:var(--tx2);font-weight:600;font-size:.9rem;line-height:1.6;">تم رفع بيانات منشأتك للإدارة. سيتم تفعيل حسابك قريباً.<br>النظام يتحقق تلقائياً من حالتك.</p>
-          <button class="btn-sec" style="margin-top:20px;width:100%;" onclick="checkWait()">🔄 تحديث الحالة</button>
+    <!-- PROFILE -->
+    <section class="pg" id="pg-profile">
+      <div class="banner info">
+        <span class="bi">✨</span>
+        <span>كل ما تعدّله هنا يظهر مباشرةً للزبائن في صفحة الحجز. صورة جيدة ووصف واضح وأسعار محدّثة = حجوزات أكثر.</span>
+      </div>
+      <div class="blk">
+        <div class="blk-h"><div class="blk-t">🖼 صورة المنشأة</div></div>
+        <div class="blk-b">
+          <div id="photoPrev"></div>
+          <label class="el">رابط الصورة</label>
+          <input type="text" class="fc" id="pf-photo" placeholder="https://i.ibb.co/..." oninput="previewPhoto()">
+          <div class="hint">ارفع صورتك على imgbb.com ثم الصق الرابط هنا. الصورة الجذابة أول ما يراه الزبون.</div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- ════════ DASHBOARD PAGE ════════ -->
-<div id="dashPage" class="dn">
-  <div class="d-header">
-    <div>
-      <div class="dh-name" id="dh-name">اسم الشريك</div>
-      <div class="dh-badge" id="dh-type">فئة الشريك</div>
-    </div>
-    <button class="btn-sec" style="padding:8px 12px;" onclick="doLogout()"><i data-lucide="log-out" size="18"></i></button>
-  </div>
-
-  <div class="page-body">
-    
-    <!-- ── TAB: RADAR (ORDERS) ── -->
-    <div id="tab-radar" class="tab-content">
-      <div class="sec-title">الطلبات الواردة</div>
-      <div class="kpi-wrap">
-        <div class="kpi-c"><div class="kpi-v" id="kpi-pend">0</div><div class="kpi-l">قيد الانتظار</div></div>
-        <div class="kpi-c"><div class="kpi-v" id="kpi-act">0</div><div class="kpi-l">حجوزات نشطة</div></div>
+      <div class="blk">
+        <div class="blk-h"><div class="blk-t">📋 معلومات المنشأة</div></div>
+        <div class="blk-b" id="profFields"></div>
       </div>
-      <div id="orders-list"></div>
-    </div>
-
-    <!-- ── TAB: INVENTORY (ASSETS) - ONLY FOR CARS & HOTELS ── -->
-    <div id="tab-inventory" class="tab-content dn">
-      <div class="sec-title">
-        <span>إدارة الأسطول والأصول</span>
-      </div>
-
-      <div class="add-card dn" id="add-car-form">
-        <h3 style="font-weight:900;margin-bottom:16px;">🚗 إضافة سيارة جديدة</h3>
-        <label class="uz" id="uz-car" for="img-car">
-          <input type="file" id="img-car" accept="image/*" class="dn" onchange="handleAssetImg(this, 'car')">
-          <img class="uz-prev" id="uz-car-p" style="display:none">
-          <div class="uz-badge" id="uz-car-b">✓ جاهزة</div>
-          <i data-lucide="camera" id="uz-car-i" color="var(--tx3)"></i>
-          <div class="uz-txt" id="uz-car-t">ارفع صورة للسيارة</div>
-        </label>
-        <div class="fld"><label class="lbl">اسم السيارة (النوع)</label><input type="text" id="car-nm" class="inp" placeholder="مثال: تويوتا كامري"></div>
-        <div class="g2">
-          <div class="fld"><label class="lbl">الموديل (سنة الصنع)</label><input type="number" id="car-year" class="inp" placeholder="2024"></div>
-          <div class="fld"><label class="lbl">السعر اليومي (د.ع)</label><input type="number" id="car-pr" class="inp" placeholder="60000"></div>
-          <div class="fld"><label class="lbl">الفئة</label><select id="car-ct" class="inp"><option value="economy">اقتصادية</option><option value="family">عائلية</option><option value="luxury">فخمة VIP</option><option value="wedding">سيارة زفاف</option></select></div>
-          <div class="fld"><label class="lbl">اللون</label><input type="text" id="car-cl" class="inp" placeholder="أبيض"></div>
-          <div class="fld"><label class="lbl">ناقل الحركة (الجير)</label><select id="car-trans" class="inp"><option value="auto">أوتوماتيك</option><option value="manual">عادي</option></select></div>
-          <div class="fld"><label class="lbl">نوع الوقود</label><select id="car-fuel" class="inp"><option value="petrol">بنزين</option><option value="hybrid">هايبرد (هجين)</option><option value="diesel">ديزل</option></select></div>
-          <div class="fld" style="grid-column:1/3"><label class="lbl">رقم اللوحة</label><input type="text" id="car-pl" class="inp" placeholder="بغداد 12345"></div>
+      <div class="blk">
+        <div class="blk-h"><div class="blk-t">📍 موقعك على الخريطة</div></div>
+        <div class="blk-b">
+          <div id="pmap"></div>
+          <div class="hint">اسحب المؤشّر إلى موقعك بدقة — يساعد الزبون في الوصول إليك ويحسّن ترتيبك في النتائج القريبة.</div>
+          <button class="btn-main" style="background:var(--bg);color:var(--tx1);box-shadow:none;border:1px solid var(--border)" onclick="useMyLocation()">📌 استخدام موقعي الحالي</button>
         </div>
-        <button class="btn-main mt-2" id="btn-save-car" onclick="saveCar()">إضافة السيارة للأسطول 📥</button>
       </div>
-
-      <div class="add-card dn" id="add-room-form">
-        <h3 style="font-weight:900;margin-bottom:16px;">🛏️ إضافة غرفة أو جناح</h3>
-        <label class="uz" id="uz-room" for="img-room">
-          <input type="file" id="img-room" accept="image/*" class="dn" onchange="handleAssetImg(this, 'room')">
-          <img class="uz-prev" id="uz-room-p" style="display:none">
-          <div class="uz-badge" id="uz-room-b">✓ جاهزة</div>
-          <i data-lucide="camera" id="uz-room-i" color="var(--tx3)"></i>
-          <div class="uz-txt" id="uz-room-t">ارفع صورة للغرفة</div>
-        </label>
-        <div class="g2">
-          <div class="fld" style="grid-column:1/3"><label class="lbl">اسم الغرفة / الجناح</label><input type="text" id="rm-nm" class="inp" placeholder="غرفة ديلوكس مطلة"></div>
-          <div class="fld"><label class="lbl">نوع الغرفة</label><select id="rm-type" class="inp"><option value="single">مفردة</option><option value="double">مزدوجة</option><option value="suite">جناح</option><option value="family">عائلية</option></select></div>
-          <div class="fld"><label class="lbl">السعر لليلة (د.ع)</label><input type="number" id="rm-pr" class="inp" placeholder="80000"></div>
-          <div class="fld"><label class="lbl">نوع السرير</label><select id="rm-bed" class="inp"><option value="single">مفرد</option><option value="double">مزدوج كبير</option><option value="twin">سريرين توأم</option><option value="king">كينج سايز</option></select></div>
-          <div class="fld"><label class="lbl">الاستيعاب الأقصى</label><input type="number" id="rm-cap" class="inp" placeholder="عدد الأشخاص (مثال: 2)" min="1"></div>
-        </div>
-        <button class="btn-main mt-2" id="btn-save-room" onclick="saveRoom()">إضافة الغرفة للمنصة 📥</button>
+      <div class="blk">
+        <div class="blk-h"><div class="blk-t">🔒 بيانات لا يمكن تعديلها</div></div>
+        <div class="blk-b" id="lockedFields"></div>
       </div>
-
-      <div class="sec-title mt-4">
-        <span>معرض الأصول الحالي</span>
-        <button class="btn-sec" style="padding:6px 12px;font-size:.8rem;" onclick="fetchInventory(true)"><i data-lucide="refresh-cw" size="14"></i> تحديث</button>
-      </div>
-      <div id="gallery-list" class="asset-grid"></div>
-    </div>
-
-    <!-- ── TAB: LEDGER ── -->
-    <div id="tab-ledger" class="tab-content dn">
-      <div class="sec-title">السجلات والحسابات</div>
-      <div class="kpi-wrap" style="grid-template-columns: 1fr 1fr 1fr;">
-        <div class="kpi-c"><div class="kpi-v" style="color:var(--green)" id="lg-rev">0</div><div class="kpi-l">الإيرادات</div></div>
-        <div class="kpi-c"><div class="kpi-v" style="color:var(--tx0)" id="lg-c">0</div><div class="kpi-l">مكتملة</div></div>
-        <div class="kpi-c"><div class="kpi-v" style="color:var(--red)" id="lg-debt">0</div><div class="kpi-l">الديون</div></div>
-      </div>
-      <div id="ledger-list"></div>
-    </div>
-
+      <button class="btn-main" id="pf-save" onclick="saveProfile()" style="margin-bottom:12px">💾 حفظ كل التعديلات</button>
+      <button class="btn-main" style="background:var(--bg);color:var(--tx1);box-shadow:none;border:1px solid var(--border)" onclick="openPassModal()">🔑 تغيير كلمة المرور</button>
+    </section>
   </div>
 
-  <nav class="bnav">
-    <div class="bni on" onclick="switchTab('radar',this)">
-      <div style="position:relative"><i data-lucide="radar"></i><div class="bni-badge" id="nav-badge-r"></div></div>
-      <span>الرادار</span>
-    </div>
-    <div class="bni dn" id="nav-inventory" onclick="switchTab('inventory',this)"><i data-lucide="layers"></i><span>الأسطول</span></div>
-    <div class="bni" onclick="switchTab('ledger',this)"><i data-lucide="wallet"></i><span>الحسابات</span></div>
+  <nav class="nav">
+    <div class="nv on" data-p="orders" onclick="goPg('orders',this)"><span class="i">📥</span>الطلبات<span class="bdg z" id="nb-ord">0</span></div>
+    <div class="nv" data-p="inv" onclick="goPg('inv',this)"><span class="i" id="nvInvIc">🚗</span><span id="nvInvT">الأسطول</span></div>
+    <div class="nv" data-p="money" onclick="goPg('money',this)"><span class="i">💰</span>المستحقات</div>
+    <div class="nv" data-p="profile" onclick="goPg('profile',this)"><span class="i">⚙️</span>ملفي</div>
   </nav>
 </div>
 
-<!-- ════ WA MODAL ════ -->
-<div id="waModal" class="modal-overlay dn" onclick="closeWaModal()">
-  <div class="bottom-sheet" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-      <h3 style="font-weight:900;margin:0;">مراسلة الزبون</h3>
-      <button onclick="closeWaModal()" style="background:none;border:none;font-size:20px;">✕</button>
-    </div>
-    <div style="text-align:center;margin-bottom:15px;"><span style="background:var(--green-l);color:var(--green);padding:4px 12px;border-radius:99px;font-weight:800;font-size:.8rem;" id="wa-phone">📱 ---</span></div>
-    <div id="wa-templates-list"></div>
+<!-- ITEM MODAL -->
+<div class="mb" id="itemMB" onclick="if(event.target===this)closeMB('itemMB')">
+  <div class="mc" onclick="event.stopPropagation()">
+    <div class="mt" id="im-t">إضافة</div>
+    <div class="ms" id="im-s">—</div>
+    <div id="im-f"></div>
+    <div class="ma"><button class="m-x" onclick="closeMB('itemMB')">إلغاء</button><button class="m-s" id="im-save" onclick="saveItem()">💾 حفظ</button></div>
   </div>
 </div>
 
-<!-- ════ CANCEL MODAL ════ -->
-<div id="cancelModal" class="modal-overlay dn" onclick="closeCancelModal()">
-  <div class="bottom-sheet" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-      <h3 style="font-weight:900;margin:0;">طلب إلغاء حجز</h3>
-      <button onclick="closeCancelModal()" style="background:none;border:none;font-size:20px;">✕</button>
-    </div>
-    <div style="background:var(--red-l);color:var(--red);padding:10px;border-radius:12px;font-size:.8rem;font-weight:700;margin-bottom:15px;">⏳ سيتم تعليق الطلب حتى توافق الإدارة المركزية وتتواصل مع الزبون.</div>
-    <label class="lbl">سبب الإلغاء</label>
-    <textarea id="cc-reason" class="inp" rows="3" style="resize:none;" placeholder="اكتب السبب بوضوح (مثال: السيارة غير جاهزة)..."></textarea>
-    <input type="hidden" id="cc-id">
-    <div style="display:flex;gap:10px;margin-top:16px;">
-      <button class="btn-sec" style="flex:1" onclick="closeCancelModal()">تراجع</button>
-      <button class="btn-main" id="cc-btn" style="flex:1" onclick="submitCancelRequest()">إرسال للإدارة</button>
-    </div>
+<!-- PASS MODAL -->
+<div class="mb" id="passMB" onclick="if(event.target===this)closeMB('passMB')">
+  <div class="mc" onclick="event.stopPropagation()">
+    <div class="mt">🔑 تغيير كلمة المرور</div>
+    <div class="ms">اختر كلمة مرور قوية لحماية حسابك</div>
+    <label class="el">كلمة المرور الحالية</label>
+    <input type="password" class="fc" id="pw-old" placeholder="••••••">
+    <label class="el">كلمة المرور الجديدة</label>
+    <input type="password" class="fc" id="pw-new" placeholder="4 أحرف على الأقل">
+    <label class="el">تأكيد الجديدة</label>
+    <input type="password" class="fc" id="pw-new2" placeholder="أعد كتابتها">
+    <div class="ma"><button class="m-x" onclick="closeMB('passMB')">إلغاء</button><button class="m-s" id="pw-save" onclick="savePass()">حفظ</button></div>
   </div>
 </div>
 
-<!-- ════ EDIT ASSET MODAL ════ -->
-<div id="editAssetModal" class="modal-overlay dn" onclick="closeEditAsset()">
-  <div class="bottom-sheet" onclick="event.stopPropagation()">
-    <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-      <h3 style="font-weight:900;margin:0;">تعديل العنصر</h3>
-      <button onclick="closeEditAsset()" style="background:none;border:none;font-size:20px;">✕</button>
-    </div>
-    
-    <label class="uz" id="ea-uz" style="height:140px; margin-bottom: 16px;">
-      <input type="file" class="dn" accept="image/*" onchange="handleEditImg(this)">
-      <img id="ea-prev" class="uz-prev" style="display:none;">
-      <div class="uz-badge" id="ea-badge">✓ صورة جديدة</div>
-      <div style="position:absolute;bottom:10px;background:rgba(255,255,255,.9);padding:4px 10px;border-radius:8px;font-size:.75rem;font-weight:800;color:var(--tx0);z-index: 10;">📷 تغيير الصورة</div>
-    </label>
-
-    <div class="g2">
-      <div class="fld" style="grid-column:1/3"><label class="lbl">الاسم</label><input type="text" id="ea-nm" class="inp"></div>
-      <div class="fld"><label class="lbl">السعر (د.ع)</label><input type="number" id="ea-pr" class="inp"></div>
-      
-      <div class="fld" id="ea-car-cat"><label class="lbl">الفئة</label><select id="ea-cat" class="inp"><option value="economy">اقتصادية</option><option value="family">عائلية</option><option value="luxury">فخمة VIP</option><option value="wedding">زفاف</option></select></div>
-      <div class="fld" id="ea-car-col"><label class="lbl">اللون</label><input type="text" id="ea-col" class="inp"></div>
-      <div class="fld" id="ea-car-plt" style="grid-column:1/3"><label class="lbl">رقم اللوحة</label><input type="text" id="ea-plt" class="inp"></div>
-      
-      <div class="fld dn" id="ea-hot-bed" style="grid-column:1/3"><label class="lbl">نوع السرير</label><select id="ea-bed" class="inp"><option value="single">مفرد</option><option value="double">مزدوج كبير</option><option value="twin">سريرين توأم</option><option value="king">كينج سايز</option></select></div>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:16px;">
-      <button class="btn-sec" style="flex:1" onclick="closeEditAsset()">إلغاء</button>
-      <button class="btn-main" id="ea-btn" style="flex:1" onclick="saveAssetEdit()">حفظ التعديلات</button>
-    </div>
-  </div>
-</div>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-/* ════════════════════════════════════════════════════════
-   CONFIGURATION & FIREBASE
-════════════════════════════════════════════════════════ */
-const API_URL = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
+/* ═══════════════ CONFIG ═══════════════ */
+const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
 const API_TOKEN = "HUT_CLOUD_2026";
-const IMGBB_KEY = "7f67d9adc91e89648de939ed301d20fe";
+const FB_URL    = "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app";
+const POLL_MS   = 12000;
+const CITIES = ["بغداد","البصرة","أربيل","السليمانية","كركوك","نينوى","النجف","كربلاء","ديالى","الأنبار","دهوك","ذي قار","بابل","واسط","صلاح الدين","ميسان","المثنى","القادسية"];
+const SK = "hut_partner_session";
 
-let db;
-try {
-  firebase.initializeApp({
-    apiKey: "AIzaSyAo1rmqUzieYZU3RIwXOAN87GkpNrp-_Hc",
-    authDomain: "alhut-for-rent.firebaseapp.com",
-    databaseURL: "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app"
-  });
-  db = firebase.database();
-} catch(e) { console.warn("Firebase Init Error", e); }
+// خريطة القطاعات — مصدر الحقيقة الوحيد لكل الفروقات بين الأنواع
+const T = {
+  office: { emoji:"🚗", label:"مكتب سيارات", entityType:"CarOffice", loginAction:"checkCarOffice", regAction:"REGISTER_CAR_OFFICE",
+            ordersNode:"hut_car_orders", ordersKey:"office", invLabel:"الأسطول", invIcon:"🚗", invNode:"hut_cars", invKey:"office_id" },
+  hotel:  { emoji:"🏨", label:"فندق", entityType:"Hotel", loginAction:"checkHotel", regAction:"REGISTER_HOTEL",
+            ordersNode:"hut_hotel_bookings", ordersKey:"hotel_name", invLabel:"الغرف", invIcon:"🛏", invNode:"hut_rooms", invKey:"hotel_id" },
+  hall:   { emoji:"🥂", label:"قاعة أعراس", entityType:"Hall", loginAction:"checkHall", regAction:"REGISTER_HALL",
+            ordersNode:"hut_hall_bookings", ordersKey:"hall_name", invLabel:"قاعتي", invIcon:"🥂", invNode:null, invKey:null },
+  school: { emoji:"🎓", label:"مدرسة قيادة", entityType:"DriveSchool", loginAction:"checkDriveSchool", regAction:"REGISTER_DRIVE_SCHOOL",
+            ordersNode:"hut_drive_students", ordersKey:"school_id", invLabel:"الباقات", invIcon:"🎓", invNode:null, invKey:null }
+};
 
-/* ════════════════════════════════════════════════════════
-   GLOBAL STATE
-════════════════════════════════════════════════════════ */
-let pData = null; 
-let regType = "car"; 
-let pickerMap = null;
-let regLat = 35.468, regLng = 44.392;
-let b64Reg = null, b64Asset = null, b64Edit = null;
-let waitTimer = null;
-let editCtx = null;
-let inventoryLoaded = false;
-let pollingInterval = null;
+/* ═══════════════ STATE ═══════════════ */
+let mode="login", pType="office";
+let ME=null;                 // بيانات الشريك بعد الدخول
+let ORDERS=[], INV=[];
+let ordFilter="pending";
+let pollTimer=null, pmap=null, pmarker=null, itemCtx=null, lastCount=0;
 
-/* ════════════════════════════════════════════════════════
-   UTILITIES
-════════════════════════════════════════════════════════ */
+/* ═══════════════ HELPERS ═══════════════ */
 const $ = id => document.getElementById(id);
-const fmt = n => Math.round(Number(n)||0).toLocaleString("ar-EG");
-function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
-function safeJSON(o){ return JSON.stringify(o).replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
-
-function toast(msg, type="s") {
-  const el = document.createElement("div"); el.className = `toast ${type}`;
-  el.innerHTML = `<div class="toast-i">${type==="s"?"✓":"✕"}</div><div>${msg}</div>`;
-  $("toasts").appendChild(el);
-  setTimeout(() => { el.style.opacity="0"; el.style.transition=".3s"; setTimeout(()=>el.remove(),300); }, 3500);
+const cleanN = v => { const n=Number(String(v==null?"":v).replace(/[^\d.-]/g,"")); return isNaN(n)?0:n; };
+const fmt = n => Math.round(cleanN(n)).toLocaleString("en-US");
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+function safeJSON(o){ return esc(JSON.stringify(o)); }
+function normPhone(p){ p=String(p||"").replace(/\D/g,""); if(p.startsWith("00964"))p=p.slice(2); if(p.startsWith("0"))p="964"+p.slice(1); else if(p.startsWith("7"))p="964"+p; return p; }
+function validPhone(p){ const n=normPhone(p); return n.length>=12 && n.startsWith("9647"); }
+function timeAgo(iso){
+  if(!iso) return "";
+  const d=new Date(iso); if(isNaN(d)) return "";
+  const s=Math.floor((Date.now()-d)/1000);
+  if(s<60) return "الآن"; if(s<3600) return `قبل ${Math.floor(s/60)} د`;
+  if(s<86400) return `قبل ${Math.floor(s/3600)} س`; return `قبل ${Math.floor(s/86400)} ي`;
+}
+function toast(m,k){ const e=document.createElement("div"); e.className="ts "+(k||""); e.innerHTML=`<span>${k==="e"?"⚠️":"✅"}</span><span>${esc(m)}</span>`; $("tw").appendChild(e); setTimeout(()=>{e.style.opacity="0";e.style.transition=".3s";setTimeout(()=>e.remove(),300);},3200); }
+function setBtn(id,on){ const b=$(id); if(b){ b.classList.toggle("btn-ld",on); b.disabled=on; } }
+function closeMB(id){ $(id).classList.remove("on"); }
+async function api(body){
+  const res=await fetch(API_URL,{method:"POST",body:JSON.stringify({...body,token:API_TOKEN})});
+  return await res.json();
+}
+async function fbGet(path){
+  try{ const r=await fetch(`${FB_URL}/${path}.json?_t=${Date.now()}`); return r.ok?await r.json():null; }catch(e){ return null; }
 }
 
-function showLoad(on, msg="جاري التحميل...") {
-  $("ldMsg").textContent = msg;
-  $("loadingScreen").classList.toggle("dn", !on);
+/* ═══════════════ AUTH UI ═══════════════ */
+window.setMode=function(m){
+  mode=m;
+  $("sg-login").classList.toggle("on",m==="login");
+  $("sg-reg").classList.toggle("on",m==="reg");
+  $("loginBox").classList.toggle("dn",m!=="login");
+  $("regBox").classList.toggle("dn",m!=="reg");
+  $("authMsg").textContent="";
+  if(m==="reg") renderRegExtra();
+};
+window.pickType=function(t,el){
+  pType=t;
+  document.querySelectorAll(".tp").forEach(x=>x.classList.remove("on"));
+  el.classList.add("on");
+  if(mode==="reg") renderRegExtra();
+};
+
+// حقول التسجيل الخاصة بكل نوع
+function renderRegExtra(){
+  const box=$("rg-extra");
+  if(pType==="hotel") box.innerHTML=`
+    <div class="g2">
+      <div><label class="el">التصنيف (نجوم)</label><select class="fc" id="rg-stars">${[5,4,3,2,1].map(s=>`<option value="${s}">${"⭐".repeat(s)} ${s}</option>`).join("")}</select></div>
+      <div><label class="el">سعر الغرفة المزدوجة</label><input type="number" class="fc" id="rg-pd" placeholder="75000"></div>
+    </div>`;
+  else if(pType==="hall") box.innerHTML=`
+    <div class="g2">
+      <div><label class="el">السعة (عدد الضيوف)</label><input type="text" class="fc" id="rg-cap" placeholder="500"></div>
+      <div><label class="el">سعر السهرة</label><input type="number" class="fc" id="rg-price" placeholder="1500000"></div>
+    </div>`;
+  else if(pType==="school") box.innerHTML=`
+    <div class="g2">
+      <div><label class="el">سعر الباقة الأساسية</label><input type="number" class="fc" id="rg-pb" placeholder="250000"></div>
+      <div><label class="el">سعر الباقة المتقدمة</label><input type="number" class="fc" id="rg-pa" placeholder="400000"></div>
+    </div>`;
+  else box.innerHTML="";
 }
 
-function setBtn(id, loading) {
-  const el = $(id); if(!el) return;
-  el.disabled = loading;
-  if(loading) { el.dataset.txt = el.innerHTML; el.innerHTML = "⏳ جاري..."; el.classList.add("btn-ld"); }
-  else { el.innerHTML = el.dataset.txt || el.innerHTML; el.classList.remove("btn-ld"); }
+/* ═══════════════ LOGIN ═══════════════ */
+window.doLogin=async function(){
+  const name=$("lg-name").value.trim(), pass=$("lg-pass").value.trim();
+  if(!name){ authMsg("اكتب اسم المنشأة","err"); return; }
+  setBtn("lg-btn",true); authMsg("");
+  try{
+    const url=`${API_URL}?action=${T[pType].loginAction}&name=${encodeURIComponent(name)}&pass=${encodeURIComponent(pass)}&token=${API_TOKEN}&_t=${Date.now()}`;
+    const res=await fetch(url); const d=await res.json();
+    if(d.status==="not_found"){ authMsg("لا يوجد حساب بهذا الاسم — تأكد من الاسم أو سجّل جديداً","err"); }
+    else if(d.status==="wrong_password"){ authMsg("كلمة المرور غير صحيحة","err"); }
+    else if(d.status==="rate_limited"){ authMsg("محاولات كثيرة — انتظر قليلاً ثم أعد المحاولة","err"); }
+    else {
+      ME={...d, _type:pType, _pass:pass};
+      try{ localStorage.setItem(SK, JSON.stringify({type:pType,name:d.name,pass})); }catch(e){}
+      enterApp();
+    }
+  }catch(e){ authMsg("تعذّر الاتصال — تحقق من الإنترنت","err"); }
+  finally{ setBtn("lg-btn",false); }
+};
+function authMsg(m,k){ const e=$("authMsg"); e.textContent=m; e.className="auth-msg "+(k||""); }
+
+/* ═══════════════ REGISTER ═══════════════ */
+window.doRegister=async function(){
+  const name=$("rg-name").value.trim(), city=$("rg-city").value,
+        phone=$("rg-phone").value.trim(), pass=$("rg-pass").value.trim();
+  if(!name||!phone||!pass){ authMsg("املأ كل الحقول المطلوبة","err"); return; }
+  if(!validPhone(phone)){ authMsg("رقم هاتف عراقي غير صحيح","err"); return; }
+  if(pass.length<4){ authMsg("كلمة المرور 4 أحرف على الأقل","err"); return; }
+  setBtn("rg-btn",true); authMsg("");
+  const body={ action:T[pType].regAction, name, city, phone, pass };
+  if(pType==="hotel"){ body.stars=$("rg-stars").value; body.price_double=cleanN($("rg-pd")?.value); }
+  if(pType==="hall"){ body.capacity=$("rg-cap")?.value||""; body.price=cleanN($("rg-price")?.value); }
+  if(pType==="school"){ body.price_basic=cleanN($("rg-pb")?.value); body.price_advanced=cleanN($("rg-pa")?.value); }
+  try{
+    const d=await api(body);
+    if(d.success){
+      authMsg("تم إنشاء الحساب ✅ — بانتظار موافقة الإدارة","ok");
+      setTimeout(()=>{ setMode("login"); $("lg-name").value=name; $("lg-pass").value=pass; },1400);
+    } else authMsg(d.msg||"تعذّر إنشاء الحساب","err");
+  }catch(e){ authMsg("تعذّر الاتصال","err"); }
+  finally{ setBtn("rg-btn",false); }
+};
+
+window.doLogout=function(){
+  if(!confirm("تسجيل الخروج من حسابك؟")) return;
+  try{ localStorage.removeItem(SK); }catch(e){}
+  stopPoll(); location.reload();
+};
+
+/* ═══════════════ ENTER APP ═══════════════ */
+function enterApp(){
+  const cfg=T[ME._type];
+  $("auth").style.display="none";
+  $("app").classList.add("on");
+  $("tAv").textContent=cfg.emoji;
+  $("tAv").className="top-av "+(ME._type==="office"?"":ME._type);
+  $("tName").textContent=ME.name;
+  const stTxt={active:"🟢 نشط",pending:"🟡 بانتظار الموافقة",blocked:"🔴 موقوف"}[ME.status]||ME.status;
+  $("tMeta").innerHTML=`<span>📍 ${esc(ME.city||"—")}</span><span>·</span><span>${stTxt}</span>`;
+  $("nvInvIc").textContent=cfg.invIcon;
+  $("nvInvT").textContent=cfg.invLabel;
+  buildProfileFields();
+  loadAll();
+  startPoll();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  if(typeof lucide !== 'undefined') lucide.createIcons();
-  checkSession();
-});
+/* ═══════════════ LOAD DATA ═══════════════ */
+async function loadAll(){
+  if(!ME) return;
+  const cfg=T[ME._type];
+  const [ordersRaw, invRaw] = await Promise.all([
+    fbGet(cfg.ordersNode),
+    cfg.invNode ? fbGet(cfg.invNode) : Promise.resolve(null)
+  ]);
+  // فلترة الطلبات الخاصة بهذا الشريك فقط (تطابق دقيق بالاسم أو المعرّف)
+  const all = ordersRaw ? Object.values(ordersRaw) : [];
+  ORDERS = all.filter(o=>matchesMe(o)).sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+  INV = invRaw ? Object.values(invRaw).filter(x=>String(x[cfg.invKey])===String(ME.id)) : [];
+  renderAll();
+}
 
-/* ════════════════════════════════════════════════════════
-   AUTH & ONBOARDING
-════════════════════════════════════════════════════════ */
-function checkSession() {
-  const sess = localStorage.getItem("hut_partner_sess");
-  if(sess) {
-    try { pData = JSON.parse(sess); if(pData?.name) { bootDashboard(); return; } } catch(e){}
+// التطابق: المكاتب بالاسم في حقل office، الفنادق/القاعات بالاسم، المدارس بالمعرّف
+function matchesMe(o){
+  const cfg=T[ME._type];
+  if(ME._type==="office"){
+    // طلب معلّق بلا مكتب = متاح للجميع في نفس المدينة (سباق القبول)
+    const off=String(o.office||"").trim();
+    if(!off) return String(o.city||"")===String(ME.city||"");
+    return off===ME.name;
   }
+  if(ME._type==="school") return String(o.school_id||"")===String(ME.id);
+  return String(o[cfg.ordersKey]||"")===ME.name;
 }
 
-window.switchAuth = (mode, btn) => {
-  document.querySelectorAll('.at-btn').forEach(b => b.classList.remove('on'));
-  if(btn) btn.classList.add('on');
-  $("panel-login").classList.remove("on");
-  $("panel-register").classList.remove("on");
-  $("panel-wait").classList.remove("on");
-  $("panel-"+mode).classList.add("on");
-  if(mode === "register") setTimeout(initPickerMap, 300);
+function startPoll(){ stopPoll(); pollTimer=setInterval(loadAll,POLL_MS); }
+function stopPoll(){ if(pollTimer){clearInterval(pollTimer);pollTimer=null;} }
+
+/* ═══════════════ ORDER FLOW (عقد دقيق لكل قطاع) ═══════════════ */
+// لكل نوع: الحالات، أزرارها، والفعل الخلفي المقابل
+const FLOW = {
+  office: {
+    pending:   [{lbl:"✅ قبول الطلب", cls:"ob-ok", act:"claimOrder", to:"active"}],
+    active:    [{lbl:"🏁 إكمال", cls:"ob-go", act:"completeOrder", to:"completed"}],
+    reject:    {lbl:"✕ رفض", act:"cancelRequest"}
+  },
+  hotel: {
+    pending:   [{lbl:"✅ تأكيد الحجز", cls:"ob-ok", act:"confirmBooking", to:"confirmed"}],
+    confirmed: [{lbl:"🏁 تسجيل مغادرة", cls:"ob-go", act:"checkoutGuest", to:"completed"}],
+    reject:    {lbl:"✕ رفض", act:"rejectBooking"}
+  },
+  hall: {
+    pending:   [{lbl:"✅ تأكيد الحجز", cls:"ob-ok", act:"confirmHallBooking", to:"confirmed"}],
+    confirmed: [{lbl:"🏁 إتمام المناسبة", cls:"ob-go", act:"completeHallBooking", to:"completed"}],
+    reject:    {lbl:"✕ رفض", act:"rejectHallBooking"}
+  },
+  school: { pending:[], confirmed:[], reject:null }   // المدارس: تسجيل فقط، لا إجراءات حالة
+};
+const ST_LBL={pending:"جديد",active:"جارٍ",confirmed:"مؤكّد",completed:"مكتمل",cancelled:"ملغى",rejected:"مرفوض"};
+const ST_CLS={pending:"stb-p",active:"stb-a",confirmed:"stb-a",completed:"stb-c",cancelled:"stb-x",rejected:"stb-x"};
+
+window.doOrderAction=async function(id,actKey,btn){
+  const cfg=T[ME._type];
+  const flow=FLOW[ME._type];
+  let act=null;
+  ["pending","active","confirmed"].forEach(s=>{ (flow[s]||[]).forEach(a=>{ if(a.act===actKey) act=a; }); });
+  if(!act && flow.reject && flow.reject.act===actKey) act=flow.reject;
+  if(!act) return;
+  if(actKey.startsWith("reject")||actKey==="cancelRequest"){ if(!confirm("تأكيد رفض هذا الطلب؟")) return; }
+
+  if(btn) btn.classList.add("btn-ld");
+  const body={ action:actKey, id };
+  // الحقل المطلوب لكل قطاع كما يتوقعه الـ backend
+  if(ME._type==="office") body.office=ME.name;
+  if(ME._type==="hotel")  body.hotel=ME.name;
+  if(ME._type==="hall")   body.hall=ME.name;
+  try{
+    const d=await api(body);
+    if(d.success===false){ toast(d.msg||"تعذّر التنفيذ","e"); }
+    else { toast(act.to==="completed"?"تم الإكمال ✅":"تم ✅","g"); }
+    setTimeout(loadAll,700);
+  }catch(e){ toast("تعذّر الاتصال","e"); }
+  finally{ if(btn) btn.classList.remove("btn-ld"); }
 };
 
-window.pickType = (type, el) => {
-  regType = type;
-  document.querySelectorAll('.ptype').forEach(b => b.classList.remove('on'));
-  el.classList.add('on');
-  
-  $("reg-car-extras").classList.add("dn");
-  $("reg-hotel-extras").classList.add("dn");
-  $("reg-hall-extras").classList.add("dn");
-  $("reg-school-extras").classList.add("dn");
-  
-  $(`reg-${type}-extras`).classList.remove("dn");
-};
+/* ═══════════════ RENDER ═══════════════ */
+function renderAll(){ renderStatusBanner(); renderOrders(); renderInventory(); renderMoney(); }
 
-function initPickerMap() {
-  if(pickerMap) { setTimeout(() => pickerMap.invalidateSize(), 300); return; }
-  pickerMap = L.map("pickerMap", { zoomControl: false }).setView([regLat, regLng], 13);
-  L.control.zoom({ position: "bottomleft" }).addTo(pickerMap);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", { maxZoom: 19 }).addTo(pickerMap);
-  pickerMap.on("move", () => { const c = pickerMap.getCenter(); regLat = c.lat; regLng = c.lng; });
+function renderStatusBanner(){
+  const b=$("statusBanner");
+  if(ME.status==="pending") b.innerHTML=`<div class="banner warn"><span class="bi">⏳</span><span><b>حسابك بانتظار موافقة الإدارة.</b> يمكنك تجهيز ملفك وأسعارك الآن، ولن تصلك طلبات حتى التفعيل.</span></div>`;
+  else if(ME.status==="blocked") b.innerHTML=`<div class="banner bad"><span class="bi">🚫</span><span><b>حسابك موقوف حالياً.</b> تواصل مع إدارة المنصة لمعرفة السبب وإعادة التفعيل.</span></div>`;
+  else if(cleanN(ME.debt)>0) b.innerHTML=`<div class="banner warn"><span class="bi">💳</span><span>عليك مستحقات بقيمة <b>${fmt(ME.debt)} د.ع</b> لصالح المنصة. سدّدها لتفادي إيقاف الحساب.</span></div>`;
+  else b.innerHTML="";
 }
 
-window.locateMe = () => {
-  if(!navigator.geolocation) return toast("GPS غير مدعوم", "e");
-  showLoad(true, "تحديد الموقع...");
-  navigator.geolocation.getCurrentPosition(
-    pos => { showLoad(false); regLat = pos.coords.latitude; regLng = pos.coords.longitude; pickerMap.flyTo([regLat, regLng], 16); },
-    () => { showLoad(false); toast("قم بتفعيل الـ GPS", "e"); }
-  );
-};
+function renderOrders(){
+  const cfg=T[ME._type];
+  const isSchool=ME._type==="school";
+  $("ordTitle").innerHTML=(isSchool?"🎓 الطلاب المسجّلون":"📥 الطلبات")+` <span class="n" id="ordCnt">${ORDERS.length}</span>`;
 
-function compressImage(file, maxDim=1000, quality=0.8) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader(); reader.onerror = reject;
-    reader.onload = e => {
-      const img = new Image(); img.onerror = reject;
-      img.onload = () => {
-        let { width, height } = img;
-        if(width > maxDim || height > maxDim) {
-          if(width > height) { height = Math.round(height * maxDim / width); width = maxDim; }
-          else { width = Math.round(width * maxDim / height); height = maxDim; }
-        }
-        const canvas = document.createElement("canvas"); canvas.width = width; canvas.height = height;
-        const ctx = canvas.getContext("2d"); ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,width,height);
-        ctx.drawImage(img,0,0,width,height);
-        resolve(canvas.toDataURL("image/jpeg", quality));
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
+  const counts={all:ORDERS.length};
+  ["pending","active","confirmed","completed"].forEach(s=>counts[s]=ORDERS.filter(o=>String(o.status)===s).length);
+  const activeLike=counts.active+counts.confirmed;
+  const chips=[["pending","جديد",counts.pending],["active","جارٍ",activeLike],["completed","مكتمل",counts.completed],["all","الكل",counts.all]];
+  $("ordChips").innerHTML=chips.map(([k,l,n])=>`<button class="chip ${ordFilter===k?"on":""}" onclick="setOrdFilter('${k}',this)">${l} <span class="n">${n}</span></button>`).join("");
+
+  const nb=$("nb-ord"); nb.textContent=counts.pending; nb.classList.toggle("z",counts.pending===0);
+
+  // KPIs
+  const rev=ORDERS.filter(o=>o.status==="completed").reduce((a,o)=>a+cleanN(o.total),0);
+  const today=new Date().toISOString().split("T")[0];
+  const todayN=ORDERS.filter(o=>String(o.created_at||"").startsWith(today)).length;
+  $("kOrders").innerHTML=`
+    ${kp("📥","طلبات جديدة",counts.pending,"","بحاجة ردّك","a")}
+    ${kp("🔄","قيد التنفيذ",activeLike,"","جارية الآن","b")}
+    ${kp("📅","طلبات اليوم",todayN,"","خلال 24 ساعة","")}
+    ${kp("💵","إيراد مكتمل",fmt(rev),"د.ع","من طلباتك","g")}`;
+
+  let list=ORDERS;
+  if(ordFilter==="active") list=ORDERS.filter(o=>["active","confirmed"].includes(String(o.status)));
+  else if(ordFilter!=="all") list=ORDERS.filter(o=>String(o.status)===ordFilter);
+
+  $("ordList").innerHTML = list.length ? list.map(o=>orderCard(o)).join("")
+    : `<div class="empty"><div class="empty-i">${ordFilter==="pending"?"🌊":"📭"}</div><div class="empty-t">${ordFilter==="pending"?"لا طلبات جديدة":"لا نتائج"}</div><div class="empty-s">${ordFilter==="pending"?"سنُعلمك فور وصول طلب":"جرّب تصنيفاً آخر"}</div></div>`;
+
+  // تنبيه صوتي بسيط عند طلب جديد
+  if(counts.pending>lastCount && lastCount>0) toast("🔔 وصلك طلب جديد!","g");
+  lastCount=counts.pending;
 }
+function kp(i,l,v,u,s,c){ return `<div class="kp ${c}"><div class="kp-t"><span class="kp-l">${l}</span><span class="kp-i">${i}</span></div><div class="kp-v ${c==="g"?"g":c==="a"?"a":""}">${v} ${u?`<span class="u">${u}</span>`:""}</div><div class="kp-s">${s}</div></div>`; }
+window.setOrdFilter=function(f,btn){ ordFilter=f; document.querySelectorAll("#ordChips .chip").forEach(c=>c.classList.remove("on")); btn.classList.add("on"); renderOrders(); };
 
-async function uploadToImgBB(b64) {
-  if(!b64) return "";
-  try {
-    const raw = b64.includes(",") ? b64.split(",")[1] : b64;
-    const fd = new FormData(); fd.append("key", IMGBB_KEY); fd.append("image", raw);
-    const res = await fetch("https://api.imgbb.com/1/upload", { method: "POST", body: fd });
-    const data = await res.json();
-    return (data && data.success) ? data.data.url : "";
-  } catch(e) { return ""; }
-}
+function orderCard(o){
+  const st=String(o.status||"pending");
+  const flow=FLOW[ME._type];
+  const isNew=st==="pending";
+  const phone=normPhone(o.phone||o.guest_phone);
+  let det="", title="";
 
-window.handleRegImg = async (input) => {
-  if(!input.files || !input.files[0]) return;
-  $("uz-reg-t").textContent = "جاري ضغط الصورة...";
-  try {
-    b64Reg = await compressImage(input.files[0]);
-    $("uz-reg-p").src = b64Reg; $("uz-reg-p").style.display = "block";
-    $("uz-reg-i").style.display = "none"; $("uz-reg-t").style.display = "none";
-    $("uz-reg").classList.add("filled");
-  } catch(e) { $("uz-reg-t").textContent = "فشل المعالجة"; }
-};
-
-window.doLogin = async () => {
-  const name = $("lg-name").value.trim(), pass = $("lg-pass").value.trim();
-  if(!name || !pass) return toast("أدخل الاسم وكلمة المرور", "e");
-  
-  setBtn("btn-login", true); showLoad(true, "التحقق من البيانات...");
-  try {
-    let type = "car";
-    let res = await fetch(`${API_URL}?action=checkCarOffice&name=${encodeURIComponent(name)}&pass=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
-    let data = await res.json();
-    
-    if(data.status === "not_found") {
-      res = await fetch(`${API_URL}?action=checkHotel&name=${encodeURIComponent(name)}&pass=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
-      data = await res.json(); type = "hotel";
-    }
-    if(data.status === "not_found") {
-      res = await fetch(`${API_URL}?action=checkHall&name=${encodeURIComponent(name)}&pass=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
-      data = await res.json(); type = "hall";
-    }
-    if(data.status === "not_found") {
-      res = await fetch(`${API_URL}?action=checkDriveSchool&name=${encodeURIComponent(name)}&pass=${encodeURIComponent(pass)}&token=${API_TOKEN}`);
-      data = await res.json(); type = "school";
-    }
-    
-    showLoad(false);
-    if(data.status === "wrong_password") return toast("كلمة المرور خاطئة", "e");
-    if(data.status === "not_found") return toast("الحساب غير موجود", "e");
-    if(data.status === "blocked") return toast("الحساب موقوف", "e");
-    
-    if(data.status === "pending") {
-      pData = { name: data.name||name, type, id: data.id||name, city: data.city||"", pass };
-      localStorage.setItem("hut_partner_sess", JSON.stringify(pData));
-      switchAuth("wait"); startWaitPolling(); return;
-    }
-
-    pData = { name: data.name||name, type, id: data.id||name, city: data.city||"", pass, debt: data.debt||0 };
-    localStorage.setItem("hut_partner_sess", JSON.stringify(pData));
-    const snd = $("sndNew"); if(snd) { snd.currentTime=0; snd.play().catch(()=>{}); }
-    bootDashboard();
-  } catch(e) { showLoad(false); toast("فشل الاتصال بالسيرفر", "e"); }
-  finally { setBtn("btn-login", false); }
-};
-
-window.doRegister = async () => {
-  const name = $("rg-name").value.trim();
-  const phoneAdmin = $("rg-phone-admin").value.trim();
-  const phoneSales = $("rg-phone-sales").value.trim() || phoneAdmin;
-  const city = $("rg-city").value;
-  const pass = $("rg-pass").value.trim();
-  const comm = $("rg-comm").value.trim() || "5000";
-  
-  if(!name || !phoneAdmin || !pass) return toast("أكمل الحقول الأساسية", "e");
-  if(!b64Reg) return toast("يجب رفع صورة الواجهة أو الشعار", "e");
-  
-  setBtn("btn-reg", true); showLoad(true, "رفع الصورة للسحابة...");
-  const coverUrl = await uploadToImgBB(b64Reg);
-  if(!coverUrl) { showLoad(false); setBtn("btn-reg", false); return toast("فشل رفع الصورة", "e"); }
-
-  showLoad(true, "إرسال طلب التسجيل...");
-  let action = "REGISTER_CAR_OFFICE";
-  if(regType === "hotel") action = "REGISTER_HOTEL";
-  if(regType === "hall") action = "REGISTER_HALL";
-  if(regType === "school") action = "REGISTER_DRIVE_SCHOOL";
-
-  const hours = $("rg-hours") ? $("rg-hours").value : "24_hours";
-  let detailsText = `مبيعات: ${phoneSales} | ساعات: ${hours}`;
-
-  const body = { 
-    action, token: API_TOKEN, name, phone: phoneAdmin, city, pass, lat: regLat, lng: regLng, 
-    comm_type: "fixed", comm_val: comm, photo_url: coverUrl, details: detailsText
-  };
-
-  if(regType === "car") { body.cat = $("rg-office-type").value; }
-  else if(regType === "hotel") { body.stars = Number($("rg-stars").value) || 0; body.cat = "premium"; }
-  else if(regType === "hall") {
-    body.capacity = $("rg-hall-cap").value;
-    body.price = $("rg-hall-price").value;
-    body.features = $("rg-hall-feat").value;
-  }
-  else if(regType === "school") {
-    body.price_basic = $("rg-school-basic").value;
-    body.price_advanced = $("rg-school-adv").value;
-    body.features = $("rg-school-feat").value;
-  }
-  
-  try {
-    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify(body) });
-    const data = await res.json(); showLoad(false);
-    if(data.success) {
-      toast("تم رفع الطلب للإدارة بنجاح!");
-      pData = { name, type: regType, id: data.id||name, city, pass };
-      localStorage.setItem("hut_partner_sess", JSON.stringify(pData));
-      switchAuth("wait"); startWaitPolling();
-    } else { toast(data.msg, "e"); }
-  } catch(e) { showLoad(false); toast("فشل الاتصال", "e"); }
-  finally { setBtn("btn-reg", false); }
-};
-
-function startWaitPolling() { if(waitTimer) clearInterval(waitTimer); waitTimer = setInterval(checkWait, 15000); }
-async function checkWait() {
-  if(!pData) return;
-  try {
-    let action = "checkCarOffice";
-    if(pData.type === 'hotel') action = 'checkHotel';
-    if(pData.type === 'hall') action = 'checkHall';
-    if(pData.type === 'school') action = 'checkDriveSchool';
-    
-    const res = await fetch(`${API_URL}?action=${action}&name=${encodeURIComponent(pData.name)}&pass=${encodeURIComponent(pData.pass)}&token=${API_TOKEN}`);
-    const data = await res.json();
-    if(data.status === "active") {
-      clearInterval(waitTimer); pData = { ...pData, ...data };
-      localStorage.setItem("hut_partner_sess", JSON.stringify(pData)); bootDashboard();
-    }
-  } catch(e) {}
-}
-window.checkWait = () => { checkWait(); toast("جاري التحقق..."); };
-
-/* ════════════════════════════════════════════════════════
-   DASHBOARD & LOGIC
-════════════════════════════════════════════════════════ */
-function bootDashboard() {
-  $("authPage").classList.add("dn");
-  $("dashPage").classList.remove("dn");
-  
-  $("dh-name").textContent = pData.name;
-  
-  const typeMap = { car: "🚗 مكتب سيارات", hotel: "🏨 فندق / شقق", hall: "🥂 قاعة مناسبات", school: "🎓 مدرسة قيادة" };
-  $("dh-type").textContent = typeMap[pData.type];
-  
-  // Show Inventory Only for Cars and Hotels
-  if(pData.type === "car" || pData.type === "hotel") {
-    $("nav-inventory").classList.remove("dn");
-    if(pData.type === "hotel") {
-      $("add-car-form").classList.add("dn"); $("add-room-form").classList.remove("dn");
-    } else {
-      $("add-room-form").classList.add("dn"); $("add-car-form").classList.remove("dn");
-    }
-    fetchInventory(); 
+  if(ME._type==="office"){
+    title=esc(o.car||"طلب سيارة");
+    det=`👤 ${esc(o.name||"—")}<span class="sep">·</span>📍 ${esc(o.city||"—")}<span class="sep">·</span>📅 ${esc(o.date||"—")}${o.days?`<span class="sep">·</span>⏱ ${esc(o.days)} يوم`:""}${o.location_link?`<br>📌 ${esc(o.location_link)}`:""}${o.addon?`<br>➕ ${esc(o.addon)}`:""}`;
+  } else if(ME._type==="hotel"){
+    title=esc(o.room_type?`حجز — ${o.room_type}`:"حجز غرفة");
+    det=`👤 ${esc(o.guest_name||o.name||"—")}<span class="sep">·</span>📅 ${esc(o.date_arrive||"—")}${o.nights?`<span class="sep">·</span>🌙 ${esc(o.nights)} ليلة`:""}${o.guests?`<span class="sep">·</span>👥 ${esc(o.guests)}`:""}${o.special_req?`<br>📝 ${esc(o.special_req)}`:""}`;
+  } else if(ME._type==="hall"){
+    title=esc(o.event_type||"حجز مناسبة");
+    det=`👤 ${esc(o.name||"—")}<span class="sep">·</span>📅 ${esc(o.date||"—")}${o.guests?`<span class="sep">·</span>👥 ${fmt(o.guests)} ضيف`:""}${o.special_req?`<br>📝 ${esc(o.special_req)}`:""}`;
   } else {
-    $("nav-inventory").classList.add("dn");
+    title=esc(o.course||"تسجيل طالب");
+    det=`👤 ${esc(o.name||"—")}<span class="sep">·</span>📅 ${esc(o.date||"—")}${o.age?`<span class="sep">·</span>🎂 ${esc(o.age)}`:""}${o.gender?`<span class="sep">·</span>${esc(o.gender)}`:""}`;
   }
 
-  startFirebase();
-  loadHistory();
+  let acts="";
+  (flow[st]||[]).forEach(a=>{ acts+=`<button class="ob ${a.cls}" onclick="doOrderAction('${esc(o.id)}','${a.act}',this)">${a.lbl}</button>`; });
+  if(flow.reject && ["pending","active","confirmed"].includes(st))
+    acts+=`<button class="ob ob-no" onclick="doOrderAction('${esc(o.id)}','${flow.reject.act}',this)">${flow.reject.lbl}</button>`;
+  if(phone) acts+=`<a class="ob ob-wa" href="https://wa.me/${phone}?text=${encodeURIComponent(`مرحباً، بخصوص طلبك #${o.id} في ${ME.name}`)}" target="_blank">💬 واتساب</a>`;
+
+  return `<div class="oc ${isNew?"new":""}">
+    <div class="oc-h"><span class="oc-id mono">#${esc(o.id||"")}</span><span class="stb ${ST_CLS[st]||"stb-p"}"><span class="d"></span>${ST_LBL[st]||st}</span><span style="font-size:.62rem;color:var(--tx3);font-weight:700">${timeAgo(o.created_at)}</span></div>
+    <div class="oc-ti">${title}</div>
+    <div class="oc-d">${det}</div>
+    <div class="oc-f"><div class="oc-pr">${fmt(o.total)} <span class="u">د.ع</span></div><div class="oc-a">${acts}</div></div>
+  </div>`;
 }
 
-function startFirebase() {
-  if(!db) return;
-  
-  // Listen for Orders
-  let sp = "";
-  if(pData.type === "hotel") sp = "hut_hotel_bookings";
-  else if(pData.type === "car") sp = "hut_car_orders";
-  else if(pData.type === "hall") sp = "hut_hall_bookings";
-  
-  if(sp) {
-    db.ref(sp).on("value", snap => { processOrders(snap.val() || {}); });
-  } else if (pData.type === "school") {
-    // Drive Schools use polling
-    fetchMyOrders();
-    pollingInterval = setInterval(fetchMyOrders, 20000);
+/* ═══════════════ INVENTORY ═══════════════ */
+const CAT_AR={economy:"اقتصادية",family:"عائلية",luxury:"فخمة VIP",wedding:"زفاف"};
+const RT_AR={single:"مفردة",double:"مزدوجة",suite:"جناح",family:"عائلية"};
+
+function renderInventory(){
+  const t=ME._type, box=$("invContent");
+  if(t==="office" || t==="hotel"){
+    const isCar=t==="office";
+    const avail=INV.filter(x=>x.status==="available").length;
+    $("kInv").innerHTML=`
+      ${kp(isCar?"🚗":"🛏","الإجمالي",INV.length,"",isCar?"سيارة":"غرفة","")}
+      ${kp("✅","متاح",avail,"","جاهز للحجز","g")}
+      ${kp("⏸","موقوف",INV.length-avail,"","غير معروض","a")}`;
+    box.innerHTML=`<div class="blk"><div class="blk-h">
+        <div class="blk-t">${isCar?"🚗 أسطولي":"🛏 غرفي"} <span class="n">${INV.length}</span></div>
+        <button class="badd" onclick="openItem('${isCar?"car":"room"}',null)">➕ إضافة ${isCar?"سيارة":"غرفة"}</button>
+      </div><div class="blk-b">${INV.length?`<div class="igrid">${INV.map(x=>invCard(x,isCar)).join("")}</div>`
+        :`<div class="empty"><div class="empty-i">${isCar?"🚗":"🛏"}</div><div class="empty-t">لا ${isCar?"سيارات":"غرف"} بعد</div><div class="empty-s">أضف ${isCar?"سياراتك":"غرفك"} ليراها الزبائن ويحجزوا</div></div>`}</div></div>`;
   }
-  
-  // Realtime Ledger update
-  const lPath = { car: "car_offices", hotel: "hotels", hall: "halls", school: "drive_schools" }[pData.type];
-  const pKey = String(pData.id||"").replace(/\D/g,"") || String(pData.id);
-  db.ref(`ledgers/${lPath}/${pKey}`).on("value", snap => {
-    const l = snap.val() || {};
-    $("lg-debt").textContent = fmt(l.debt || 0);
-    $("lg-rev").textContent = fmt(l.total_revenue || 0);
-    $("lg-c").textContent = l.completed_orders || 0;
-  });
-}
-
-// Fallback Polling for non-Firebase entities (Schools)
-async function fetchMyOrders() {
-  if(!pData) return;
-  try {
-    let action = "", paramStr = "";
-    if(pData.type === 'school') { action = "getDriveStudents"; paramStr = `school_id=${encodeURIComponent(pData.id)}`; }
-    if(action) {
-      const res = await fetch(`${API_URL}?action=${action}&${paramStr}&token=${API_TOKEN}`);
-      const data = await res.json();
-      processOrders(data, true);
-    }
-  } catch(e) { }
-}
-
-function processOrders(raw, isArray = false) {
-  const all = isArray ? raw : Object.values(raw);
-  let mine = [];
-  
-  all.forEach(o => {
-    if(pData.type === "hotel") {
-      if(o.hotel_name === pData.name || String(o.hotel_id) === String(pData.id)) mine.push(o);
-    } else if(pData.type === "hall") {
-      if(o.hall_name === pData.name || String(o.hall_id) === String(pData.id)) mine.push(o);
-    } else if(pData.type === "school") {
-      if(String(o.school_id) === String(pData.id)) mine.push(o);
-    } else { // car
-      if(o.office === pData.name || (o.status === "pending" && o.city === pData.city && !o.office)) mine.push(o);
-    }
-  });
-
-  mine.sort((a,b) => new Date(b.created_at||0) - new Date(a.created_at||0));
-  renderOrders(mine);
-}
-
-function renderOrders(list) {
-  const container = $("orders-list");
-  const pend = list.filter(o => o.status === "pending" && !o.cancel_requested).length;
-  const act  = list.filter(o => ["active","confirmed"].includes(o.status) && !o.cancel_requested).length;
-  
-  $("kpi-pend").textContent = pend;
-  $("kpi-act").textContent = act;
-  const nb = $("nav-badge-r"); if(nb) nb.classList.toggle("show", pend>0);
-
-  if(!list.length) {
-    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--tx3);font-weight:700;border:1px dashed var(--border-d);border-radius:16px;">لا توجد طلبات في الرادار حالياً.</div>`;
-    return;
+  else if(t==="hall"){
+    $("kInv").innerHTML=`${kp("👥","السعة",esc(ME.capacity||"—"),"","ضيف","")}${kp("💰","سعر السهرة",fmt(ME.price),"د.ع","المعروض للزبون","g")}`;
+    box.innerHTML=`<div class="blk"><div class="blk-h"><div class="blk-t">🥂 تفاصيل قاعتي</div><button class="badd" onclick="goPg('profile')">✏️ تعديل</button></div>
+      <div class="blk-b">
+        ${ME.photo_url?`<img src="${esc(ME.photo_url)}" class="prof-photo">`:`<div class="prof-noph"><span style="font-size:1.8rem">🖼</span>لم تُضف صورة بعد</div>`}
+        <div class="locked"><span class="locked-k">👥 السعة</span><span class="locked-v">${esc(ME.capacity||"—")}</span></div>
+        <div class="locked"><span class="locked-k">💰 سعر السهرة</span><span class="locked-v" style="color:var(--green)">${fmt(ME.price)} د.ع</span></div>
+        <div class="locked"><span class="locked-k">✦ المميزات</span><span class="locked-v" style="font-size:.74rem">${esc(ME.features||"—")}</span></div>
+      </div></div>`;
   }
-
-  container.innerHTML = list.map(o => {
-    const isCP = o.cancel_requested;
-    const stClass = isCP ? "pending" : (o.status === "pending" ? "pending" : o.status === "completed" ? "completed" : "active");
-    const stText = isCP ? "إلغاء معلق" : (o.status === "pending" ? "معلق" : o.status === "completed" ? "مكتمل" : "جاري/نشط");
-    
-    let title = o.car || o.room_type || o.event_type || o.course || "طلب جديد";
-    const custName = o.name || o.guest_name || o.student_name || "زبون";
-    const phone = o.phone || o.guest_phone || "";
-    const dateStr = o.date || o.date_arrive || "—";
-    
-    let acts = "";
-    if(o.status === "pending" && !isCP) {
-      if(pData.type === "car") {
-        acts += `<button class="ab acc" onclick="doActionAPI('claimOrder', '${o.id}')">✅ قبول</button>`;
-      } else if(pData.type === "hotel") {
-        acts += `<button class="ab acc" onclick="doActionAPI('confirmBooking', '${o.id}')">✅ تأكيد</button>`;
-        acts += `<button class="ab rej" onclick="doActionAPI('rejectBooking', '${o.id}')">✕ رفض</button>`;
-      } else if(pData.type === "hall") {
-        acts += `<button class="ab acc" onclick="doActionAPI('confirmHallBooking', '${o.id}')">✅ قبول</button>`;
-        acts += `<button class="ab rej" onclick="doActionAPI('rejectHallBooking', '${o.id}')">✕ رفض</button>`;
-      }
-    } else if (["active", "confirmed"].includes(o.status) && !isCP) {
-      if(pData.type === "car") acts += `<button class="ab acc" onclick="doActionAPI('completeOrder', '${o.id}')">🔑 إنهاء التأجير</button>`;
-      if(pData.type === "hotel") acts += `<button class="ab acc" onclick="doActionAPI('checkoutGuest', '${o.id}')">🚪 خروج النزيل</button>`;
-      if(pData.type === "hall") acts += `<button class="ab acc" onclick="doActionAPI('completeHallBooking', '${o.id}')">🥂 إتمام السهرة</button>`;
-      
-      acts += `<button class="ab wa" onclick="openWaModal('${esc(phone)}', '${esc(custName)}', '${esc(title)}')"><i data-lucide="message-circle" size="14"></i> مراسلة</button>`;
-      if(pData.type !== "school") acts += `<button class="ab rej" onclick="openCancelModal('${esc(o.id)}')">🗑 طلب إلغاء</button>`;
-    }
-
-    return `
-      <div class="ord-card ${stClass}">
-        <div class="oc-top">
-          <span class="oc-id">#${esc(o.id)}</span>
-          <span class="oc-st ${stClass==="pending"?"st-pend":stClass==="completed"?"st-done":"st-act"}">${stText}</span>
-        </div>
-        <div class="oc-mid">
-          <div class="oc-title">${esc(title)}</div>
-          <div class="oc-grid">
-            <div><div class="oc-lbl">العميل</div><div class="oc-val">${esc(custName)}</div></div>
-            <div><div class="oc-lbl">الهاتف</div><div class="oc-val" style="color:var(--blue);font-family:'IBM Plex Mono',monospace;">${esc(phone)}</div></div>
-            <div><div class="oc-lbl">التاريخ</div><div class="oc-val">${esc(dateStr)}</div></div>
-            <div><div class="oc-lbl">السعر</div><div class="oc-val" style="color:var(--green)">${fmt(o.total || o.price)} د.ع</div></div>
-          </div>
-          ${isCP ? `<div style="background:var(--red-l);color:var(--red);padding:6px;border-radius:6px;font-size:.7rem;font-weight:700;margin-top:8px;">⏳ بانتظار موافقة الإدارة على الإلغاء</div>` : ""}
-        </div>
-        <div class="oc-bot">
-          <div class="oc-acts" style="width:100%">${acts}</div>
-        </div>
-      </div>
-    `;
-  }).join("");
-  lucide.createIcons();
+  else {
+    const pb=cleanN(ME.price_basic), pa=cleanN(ME.price_advanced);
+    $("kInv").innerHTML=`${kp("📘","الأساسية",pb>0?fmt(pb):"—","د.ع","سعر الباقة","")}${kp("📗","المتقدمة",pa>0?fmt(pa):"—","د.ع","سعر الباقة","b")}`;
+    box.innerHTML=`<div class="blk"><div class="blk-h"><div class="blk-t">🎓 باقاتي التدريبية</div><button class="badd" onclick="goPg('profile')">✏️ تعديل الأسعار</button></div>
+      <div class="blk-b">
+        <div class="locked"><span class="locked-k">📘 الباقة الأساسية</span><span class="locked-v" style="color:var(--green)">${pb>0?fmt(pb)+" د.ع":"لم تُحدَّد"}</span></div>
+        <div class="locked"><span class="locked-k">📗 الباقة المتقدمة</span><span class="locked-v" style="color:var(--green)">${pa>0?fmt(pa)+" د.ع":"لم تُحدَّد"}</span></div>
+        <div class="locked"><span class="locked-k">✦ المميزات</span><span class="locked-v" style="font-size:.74rem">${esc(ME.features||"—")}</span></div>
+        <div class="hint" style="margin:10px 0 0">حدّد سعرَي الباقتين بوضوح — الزبون يقارن الأسعار قبل التسجيل.</div>
+      </div></div>`;
+  }
 }
 
-window.doActionAPI = async (act, id) => {
-  if(!confirm("تأكيد هذه العملية؟")) return;
-  showLoad(true);
-  try {
-    let bd = { action: act, id: id, token: API_TOKEN };
-    if(act === 'confirmHallBooking' || act === 'completeHallBooking') bd.hall = pData.name;
-    if(act === 'confirmBooking' || act === 'checkoutGuest') bd.hotel = pData.name;
-    if(act === 'claimOrder' || act === 'completeOrder') bd.office = pData.name;
-    
-    await fetch(API_URL, { method: "POST", body: JSON.stringify(bd) });
-    toast("تمت العملية بنجاح!");
-  } catch(e) { toast("خطأ", "e"); }
-  finally { showLoad(false); }
-};
-
-window.openCancelModal = (id) => { $("cc-id").value = id; $("cc-reason").value = ""; $("cancelModal").classList.remove("dn"); };
-window.closeCancelModal = () => $("cancelModal").classList.add("dn");
-window.submitCancelRequest = async () => {
-  const id = $("cc-id").value; const reason = $("cc-reason").value.trim() || "بدون سبب";
-  if(!id) return; setBtn("cc-btn", true);
-  try {
-    const sp = pData.type === "hotel" ? "hut_hotel_bookings" : pData.type === "hall" ? "hut_hall_bookings" : "hut_car_orders";
-    if(db && sp) await db.ref(`${sp}/${id}`).update({ cancel_requested: true, cancel_reason: reason, cancel_by: pData.name, cancel_at: new Date().toISOString() });
-    toast("تم إرسال طلب الإلغاء للإدارة"); closeCancelModal();
-  } catch(e) { toast("خطأ", "e"); } finally { setBtn("cc-btn", false); }
-};
-
-/* ── WhatsApp ── */
-window.openWaModal = (phone, name, svc) => {
-  let p = String(phone).replace(/\D/g, ""); if(p.startsWith("0")) p = "964" + p.slice(1);
-  $("wa-phone").textContent = "📱 " + p;
-  
-  const tmps = [
-    { l: "تأكيد الطلب ✅", t: `مرحباً ${name}، نؤكد لكم حجز (${svc}) عبر منصة الحوت.` },
-    { l: "طلب هوية 🆔", t: `مرحباً، نرجو إرسال صورة الهوية لإتمام إجراءات الحجز.` },
-    { l: "مشاركة الموقع 📍", t: `مرحباً، يرجى تزويدنا بموقعكم الدقيق لتسهيل الوصول.` }
-  ];
-
-  $("wa-templates-list").innerHTML = tmps.map(t => `
-    <div class="wa-tpl" onclick="window.open('https://wa.me/${p}?text=${encodeURIComponent(t.t)}','_blank');closeWaModal();">
-      <div style="font-weight:800;font-size:.85rem;color:var(--tx0);">${t.l}</div>
-      <div style="font-size:.75rem;color:var(--tx2);margin-top:4px;">${t.t}</div>
-    </div>
-  `).join("");
-  $("waModal").classList.remove("dn");
-};
-window.closeWaModal = () => $("waModal").classList.add("dn");
-
-/* ════════════════════════════════════════════════════════════════
-   INVENTORY (ADD ASSET, GALLERY & EDIT)
-════════════════════════════════════════════════════════════════ */
-window.handleAssetImg = async (input, type) => {
-  if(!input.files || !input.files[0]) return;
-  $(`uz-${type}-t`).textContent = "جاري الضغط...";
-  try {
-    b64Asset = await compressImage(input.files[0]);
-    $(`uz-${type}-p`).src = b64Asset; $(`uz-${type}-p`).style.display = "block";
-    $(`uz-${type}-i`).style.display = "none"; $(`uz-${type}-t`).style.display = "none";
-    $(`uz-${type}`).classList.add("filled");
-  } catch(e) { $(`uz-${type}-t`).textContent = "فشل المعالجة"; }
-};
-
-window.saveCar = async () => {
-  const nm = $("car-nm").value.trim(), pr = $("car-pr").value.trim();
-  if(!nm || !pr || !b64Asset) return toast("أدخل البيانات والصورة", "e");
-  setBtn("btn-save-car", true); showLoad(true, "رفع الصورة...");
-  const url = await uploadToImgBB(b64Asset);
-  if(!url) { showLoad(false); setBtn("btn-save-car", false); return toast("فشل الرفع", "e"); }
-
-  try {
-    await fetch(API_URL, { method: "POST", body: JSON.stringify({
-      action: "ADD_CAR_TO_FLEET", token: API_TOKEN, office_id: pData.id,
-      name: nm, price: pr, cat: $("car-ct").value, color: $("car-cl").value.trim(), plate: $("car-pl").value.trim(),
-      photo_url: url, details: `سنة: ${$("car-year").value} | قير: ${$("car-trans").value==="auto"?"أوتوماتيك":"عادي"} | وقود: ${$("car-fuel").value==="petrol"?"بنزين":$("car-fuel").value==="hybrid"?"هايبرد":"ديزل"}`
-    })});
-    showLoad(false); toast("تمت الإضافة بنجاح!");
-    $("car-nm").value=""; $("car-pr").value=""; $("car-year").value=""; $("car-cl").value=""; $("car-pl").value="";
-    resetAssetUpload("car"); fetchInventory(true);
-  } catch(e) {} finally { setBtn("btn-save-car", false); }
-};
-
-window.saveRoom = async () => {
-  const nm = $("rm-nm").value.trim(), pr = $("rm-pr").value.trim();
-  if(!nm || !pr || !b64Asset) return toast("أكمل البيانات والصورة", "e");
-  setBtn("btn-save-room", true); showLoad(true, "رفع الصورة...");
-  const url = await uploadToImgBB(b64Asset);
-  if(!url) { showLoad(false); setBtn("btn-save-room", false); return toast("فشل الرفع", "e"); }
-
-  try {
-    const bed = $("rm-bed").value;
-    const bedAr = bed==="single"?"مفرد":bed==="double"?"مزدوج كبير":bed==="twin"?"توأم":"كينج";
-    await fetch(API_URL, { method: "POST", body: JSON.stringify({
-      action: "ADD_HOTEL_ROOM", token: API_TOKEN, hotel_id: pData.id, hotel_name: pData.name,
-      room_name: nm, room_type: $("rm-type").value, price: Number(pr), photo_url: url,
-      bed_type: bedAr, description: `تتسع لـ: ${$("rm-cap").value || 1} أشخاص`
-    })});
-    showLoad(false); toast("تمت الإضافة!");
-    $("rm-nm").value=""; $("rm-pr").value=""; $("rm-cap").value="";
-    resetAssetUpload("room"); fetchInventory(true);
-  } catch(e) {} finally { setBtn("btn-save-room", false); }
-};
-
-function resetAssetUpload(type) {
-  b64Asset = null;
-  $(`uz-${type}-p`).style.display = "none";
-  $(`uz-${type}-i`).style.display = "block";
-  $(`uz-${type}-t`).style.display = "block";
-  $(`uz-${type}`).classList.remove("filled");
+function invCard(x,isCar){
+  const on=x.status==="available";
+  const img=x.photo_url?`<img class="iv-img" src="${esc(x.photo_url)}" onerror="this.outerHTML='<div class=\\'iv-no\\'>${isCar?"🚗":"🛏"}</div>'">`:`<div class="iv-no">${isCar?"🚗":"🛏"}</div>`;
+  const nm=isCar?x.name:x.room_name;
+  const tag=isCar?(CAT_AR[x.cat]||x.cat||"—"):(RT_AR[x.room_type]||x.room_type||"—");
+  const sub=isCar?`🪪 ${esc(x.plate||"—")}${x.color?` · 🎨 ${esc(x.color)}`:""}`:`${x.bed_type?`🛏 ${esc(x.bed_type)}`:""}${cleanN(x.orders)>0?` · 📊 ${fmt(x.orders)}`:""}`;
+  return `<div class="iv ${on?"":"off"}">${img}<div class="iv-b">
+    <div class="iv-n">${esc(nm)}</div>
+    <div class="iv-tg"><span class="tg c">${esc(tag)}</span><span class="tg ${on?"ok":""}">${on?"متاح":"موقوف"}</span></div>
+    <div class="iv-p">${fmt(x.price)} <span class="u">د.ع/${isCar?"يوم":"ليلة"}</span></div>
+    <div class="iv-s">${sub}</div>
+  </div><div class="iv-a">
+    <button class="iva iva-e" title="تعديل" onclick='openItem("${isCar?"car":"room"}",${safeJSON(x)})'>✏️</button>
+    <button class="iva iva-t" title="${on?"إيقاف":"تفعيل"}" onclick="toggleItem('${isCar?"car":"room"}','${esc(x.id)}','${on?"inactive":"available"}',this)">${on?"⏸":"▶️"}</button>
+    <button class="iva iva-d" title="حذف" onclick="delItem('${isCar?"car":"room"}','${esc(x.id)}',this)">🗑</button>
+  </div></div>`;
 }
 
-window.fetchInventory = async (force=false) => {
-  if((inventoryLoaded && !force) || (pData.type !== 'car' && pData.type !== 'hotel')) return;
-  const isH = pData.type === "hotel";
-  const grid = $("gallery-list");
-  grid.innerHTML = `<div style="text-align:center;padding:40px;color:var(--tx2);font-weight:800;"><div class="spinner" style="margin:0 auto 10px;"></div><br>جاري جلب الأصول...</div>`;
-  
-  try {
-    let items = [];
-    if (isH) {
-      const res = await fetch(`${API_URL}?action=getRoomsByHotel&hotel_id=${encodeURIComponent(pData.id)}&token=${API_TOKEN}`);
-      const data = await res.json(); items = Array.isArray(data) ? data : (data.rooms || []);
-    } else {
-      const res = await fetch(`${API_URL}?action=getAvailableCars&token=${API_TOKEN}`);
-      const data = await res.json();
-      const allCars = Array.isArray(data) ? data : (data.cars || data.fleet || []);
-      items = allCars.filter(c => String(c.office_id) === String(pData.id) || String(c.office_id) === String(pData.name));
-    }
-    inventoryLoaded = true;
-
-    if(!items.length) { grid.innerHTML = `<div style="text-align:center;padding:40px;border:1px dashed var(--border-d);border-radius:16px;color:var(--tx3);font-weight:700;">لا توجد أصول مضافة بعد.</div>`; return; }
-
-    grid.innerHTML = items.map(i => {
-      const isAvail = i.status !== "inactive";
-      const nm = isH ? i.room_name : i.name;
-      const id = esc(i.id || i.room_name || i.plate || "");
-      const img = i.photo_url ? `<img src="${esc(i.photo_url)}" loading="lazy" style="width:100%;height:100%;object-fit:cover;">` : `<div class="ac-noimg">${isH?"🛏":"🚗"}</div>`;
-      let specs = isH ? `<div class="ac-spec">🛌 ${esc(i.bed_type||"")}</div><div class="ac-spec">${esc(i.description||"")}</div>` : `<div class="ac-spec">🎨 ${esc(i.color||"—")}</div><div class="ac-spec">🪪 ${esc(i.plate||"—")}</div><div style="width:100%;font-size:.65rem;color:var(--tx3);margin-top:4px;">${esc(i.details||"")}</div>`;
-
-      return `
-      <div class="asset-card">
-        <div class="ac-img">${img}</div>
-        <div class="ac-body">
-          <div class="ac-title">${esc(nm)}</div>
-          <div class="ac-specs">${specs}</div>
-          <div class="ac-price">${fmt(i.price)} <span style="font-size:.65rem;color:var(--tx2)">د.ع/${isH?"ليلة":"يوم"}</span></div>
-          <div class="ac-toggle">
-            <span style="font-size:.75rem;font-weight:700;color:var(--tx2)">التوفر</span>
-            <label class="switch"><input type="checkbox" ${isAvail?"checked":""} onchange="toggleAssetStatus('${id}',this)"><span class="slider"></span></label>
-          </div>
-          <div style="display:flex;gap:8px;margin-top:10px;">
-            <button style="flex:1;padding:8px;background:var(--white);color:var(--blue);border:1px solid var(--border-d);border-radius:8px;font-weight:800;cursor:pointer;" onclick='openEditAsset(${safeJSON(i)})'>✏️ تعديل</button>
-            <button style="flex:1;padding:8px;background:var(--red-l);color:var(--red);border:1px dashed var(--red);border-radius:8px;font-weight:800;cursor:pointer;" onclick="deleteAsset('${id}',this)">🗑 حذف</button>
-          </div>
-        </div>
-      </div>`;
-    }).join("");
-  } catch(e) { grid.innerHTML = `<div style="text-align:center;padding:20px;color:var(--red);font-weight:700;">فشل جلب الأصول.</div>`; }
+window.openItem=function(kind,item){
+  itemCtx={kind,item,isNew:!item};
+  const isCar=kind==="car";
+  $("im-t").textContent=(item?"تعديل ":"إضافة ")+(isCar?"سيارة":"غرفة");
+  $("im-s").textContent=item?esc(isCar?item.name:item.room_name):"املأ البيانات ليراها الزبون";
+  const v=k=>item?esc(item[k]||""):"";
+  $("im-f").innerHTML = isCar ? `
+    <label class="el">اسم السيارة والموديل</label><input type="text" class="fc" id="i-name" value="${v("name")}" placeholder="تويوتا كورولا 2024">
+    <div class="g2"><div><label class="el">السعر اليومي</label><input type="number" class="fc" id="i-price" value="${item?cleanN(item.price):""}" placeholder="60000"></div>
+    <div><label class="el">الفئة</label><select class="fc" id="i-cat">${Object.keys(CAT_AR).map(k=>`<option value="${k}"${item&&item.cat===k?" selected":""}>${CAT_AR[k]}</option>`).join("")}</select></div></div>
+    <div class="g2"><div><label class="el">رقم اللوحة</label><input type="text" class="fc" id="i-plate" value="${v("plate")}" placeholder="بغداد 12345"></div>
+    <div><label class="el">اللون</label><input type="text" class="fc" id="i-color" value="${v("color")}" placeholder="أبيض"></div></div>
+    <label class="el">رابط الصورة</label><input type="text" class="fc" id="i-photo" value="${v("photo_url")}" placeholder="https://i.ibb.co/...">
+    <label class="el">مميزات تجذب الزبون</label><input type="text" class="fc" id="i-details" value="${v("details")}" placeholder="أوتوماتيك · مكيّف · فتحة سقف">`
+  : `
+    <label class="el">اسم الغرفة</label><input type="text" class="fc" id="i-name" value="${v("room_name")}" placeholder="غرفة ديلوكس بإطلالة">
+    <div class="g2"><div><label class="el">السعر لليلة</label><input type="number" class="fc" id="i-price" value="${item?cleanN(item.price):""}" placeholder="75000"></div>
+    <div><label class="el">النوع</label><select class="fc" id="i-rtype">${Object.keys(RT_AR).map(k=>`<option value="${k}"${item&&item.room_type===k?" selected":""}>${RT_AR[k]}</option>`).join("")}</select></div></div>
+    <label class="el">نوع السرير</label><input type="text" class="fc" id="i-bed" value="${v("bed_type")}" placeholder="سرير مزدوج كبير">
+    <label class="el">رابط الصورة</label><input type="text" class="fc" id="i-photo" value="${v("photo_url")}" placeholder="https://i.ibb.co/...">
+    <label class="el">الوصف والمميزات</label><textarea class="fc" id="i-desc" placeholder="إفطار مجاني · واي فاي · شرفة">${v("description")}</textarea>`;
+  $("itemMB").classList.add("on");
 };
 
-/* ── EDIT ASSET MODAL LOGIC ── */
-window.openEditAsset = (item) => {
-  editCtx = item; b64Edit = null;
-  const isH = pData.type === "hotel";
-  $("ea-nm").value = isH ? item.room_name : item.name;
-  $("ea-pr").value = item.price;
-  
-  if(isH) {
-    $("ea-car-cat").classList.add("dn"); $("ea-car-col").classList.add("dn"); $("ea-car-plt").classList.add("dn");
-    $("ea-hot-bed").classList.remove("dn");
-    $("ea-bed").value = item.bed_type === "مفرد" ? "single" : item.bed_type === "مزدوج كبير" ? "double" : "twin";
+window.saveItem=async function(){
+  if(!itemCtx) return;
+  const {kind,item,isNew}=itemCtx, isCar=kind==="car";
+  const name=$("i-name").value.trim(), price=cleanN($("i-price").value);
+  if(!name){ toast("الاسم مطلوب","e"); return; }
+  if(isNew && price<=0){ toast("السعر مطلوب","e"); return; }
+  setBtn("im-save",true);
+  let body;
+  if(isCar){
+    const plate=$("i-plate").value.trim();
+    if(isNew && !plate){ toast("رقم اللوحة مطلوب","e"); setBtn("im-save",false); return; }
+    body={ office_id:ME.id, name, price, cat:$("i-cat").value, plate, color:$("i-color").value.trim(),
+           photo_url:$("i-photo").value.trim(), details:$("i-details").value.trim(),
+           action:isNew?"ADD_CAR_TO_FLEET":"UPDATE_CAR" };
+    if(!isNew) body.id=item.id;
   } else {
-    $("ea-car-cat").classList.remove("dn"); $("ea-car-col").classList.remove("dn"); $("ea-car-plt").classList.remove("dn");
-    $("ea-hot-bed").classList.add("dn");
-    $("ea-cat").value = item.cat || "economy"; $("ea-col").value = item.color || ""; $("ea-plt").value = item.plate || "";
+    body={ hotel_id:ME.id, hotel_name:ME.name, room_name:name, price, room_type:$("i-rtype").value,
+           bed_type:$("i-bed").value.trim(), photo_url:$("i-photo").value.trim(), description:$("i-desc").value.trim(),
+           action:isNew?"ADD_HOTEL_ROOM":"UPDATE_HOTEL_ROOM" };
+    if(!isNew) body.room_id=item.id;
   }
-  
-  if(item.photo_url) { $("ea-prev").src = item.photo_url; $("ea-prev").style.display = "block"; }
-  else { $("ea-prev").style.display = "none"; }
-  
-  $("editAssetModal").classList.remove("dn");
-};
-window.closeEditAsset = () => $("editAssetModal").classList.add("dn");
-
-window.handleEditImg = async (input) => {
-  if(!input.files?.length) return;
-  try {
-    b64Edit = await compressImage(input.files[0]);
-    $("ea-prev").src = b64Edit; $("ea-prev").style.display = "block";
-  } catch(e) { toast("فشل الصورة","e"); }
+  try{
+    const d=await api(body);
+    if(d.success){ toast(isNew?"تمت الإضافة ✅":"تم التعديل ✅","g"); closeMB("itemMB"); setTimeout(loadAll,800); }
+    else toast(d.msg||"تعذّر الحفظ","e");
+  }catch(e){ toast("تعذّر الاتصال","e"); }
+  finally{ setBtn("im-save",false); }
 };
 
-window.saveAssetEdit = async () => {
-  if(!editCtx) return;
-  setBtn("ea-btn", true); showLoad(true, "حفظ التعديلات...");
-  
-  let photoUrl = editCtx.photo_url || "";
-  if(b64Edit) { showLoad(true, "رفع الصورة..."); photoUrl = await uploadToImgBB(b64Edit); }
-  
-  try {
-    let bd = { token: API_TOKEN };
-    if(pData.type === "car") {
-      bd.action = "UPDATE_CAR"; bd.office_id = pData.id; bd.id = editCtx.id;
-      bd.name = $("ea-nm").value; bd.price = Number($("ea-pr").value); bd.cat = $("ea-cat").value; bd.color = $("ea-col").value; bd.plate = $("ea-plt").value; bd.photo_url = photoUrl;
-    } else {
-      bd.action = "UPDATE_HOTEL_ROOM"; bd.hotel_id = pData.id; bd.room_id = editCtx.id;
-      const bedAr = $("ea-bed").value==="single"?"مفرد":$("ea-bed").value==="double"?"مزدوج كبير":"توأم";
-      bd.room_name = $("ea-nm").value; bd.price = Number($("ea-pr").value); bd.bed_type = bedAr; bd.photo_url = photoUrl;
-    }
-    const res = await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) });
-    const d = await res.json(); showLoad(false);
-    if(d.success) { toast("✅ تم الحفظ"); closeEditAsset(); fetchInventory(true); }
-    else toast("فشل","e");
-  } catch(e) { showLoad(false); toast("فشل الاتصال","e"); }
-  finally { setBtn("ea-btn", false); }
+window.toggleItem=async function(kind,id,st,btn){
+  if(btn)btn.classList.add("btn-ld");
+  const body = kind==="car" ? {action:"UPDATE_CAR_STATUS",id,status:st}
+                            : {action:"UPDATE_ROOM_STATUS",room_id:id,hotel_id:ME.id,status:st};
+  try{ await api(body); toast(st==="available"?"تم التفعيل ✅":"تم الإيقاف ⏸","g"); setTimeout(loadAll,800); }
+  catch(e){ toast("تعذّر التحديث","e"); }
+  finally{ if(btn)btn.classList.remove("btn-ld"); }
+};
+window.delItem=async function(kind,id,btn){
+  if(!confirm(`حذف ${kind==="car"?"السيارة":"الغرفة"} نهائياً؟`)) return;
+  if(btn)btn.classList.add("btn-ld");
+  const body = kind==="car" ? {action:"DELETE_CAR",id,office_id:ME.id}
+                            : {action:"DELETE_HOTEL_ROOM",room_id:id,hotel_id:ME.id};
+  try{ const d=await api(body); toast(d.success===false?(d.msg||"تعذّر الحذف"):"🗑 تم الحذف",d.success===false?"e":"g"); setTimeout(loadAll,800); }
+  catch(e){ toast("تعذّر الاتصال","e"); }
+  finally{ if(btn)btn.classList.remove("btn-ld"); }
 };
 
-window.toggleAssetStatus = async (id, cb) => {
-  const st = cb.checked ? "available" : "inactive";
-  try {
-    const ac = pData.type === "car" ? "UPDATE_CAR_STATUS" : "UPDATE_ROOM_STATUS";
-    const bd = { action: ac, token: API_TOKEN, status: st };
-    if(pData.type === "car") bd.id = id; else { bd.room_id = id; bd.hotel_id = pData.id; }
-    await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) }); toast(`✅ تم التحديث`);
-  } catch(e) { cb.checked = !cb.checked; }
-};
-
-window.deleteAsset = async (id, btn) => {
-  if(!confirm("تأكيد الحذف النهائي؟")) return;
-  setBtn(btn, true);
-  try {
-    const ac = pData.type === "car" ? "DELETE_CAR" : "DELETE_HOTEL_ROOM";
-    const bd = { action: ac, token: API_TOKEN };
-    if(pData.type === "car") { bd.id = id; bd.office_id = pData.id; } else { bd.room_id = id; bd.hotel_id = pData.id; }
-    await fetch(API_URL, { method:"POST", body:JSON.stringify(bd) }); toast("🗑 تم الحذف"); fetchInventory(true);
-  } catch(e) { setBtn(btn, false); }
-};
-
-/* ════════════════════════════════════════════════════════════════
-   LEDGER / HISTORY TAB
-════════════════════════════════════════════════════════════════ */
-async function loadHistory() {
-  const listEl = $("ledger-list");
-  listEl.innerHTML = `<div style="text-align:center;padding:40px;color:var(--tx2);font-weight:800;"><div class="spinner" style="margin:0 auto 10px;"></div><br>جاري جلب السجلات...</div>`;
-  try {
-    let ac = "", pm = "";
-    if(pData.type === "car") { ac = "getCarOrders"; pm = `office=${encodeURIComponent(pData.name)}`; }
-    else if(pData.type === "hotel") { ac = "getHotelBookings"; pm = `hotel_name=${encodeURIComponent(pData.name)}`; }
-    else if(pData.type === "hall") { ac = "getHallBookings"; pm = `hall_name=${encodeURIComponent(pData.name)}`; }
-    else if(pData.type === "school") { ac = "getDriveStudents"; pm = `school_id=${encodeURIComponent(pData.id)}`; }
-    
-    const res = await fetch(`${API_URL}?action=${ac}&${pm}&token=${API_TOKEN}`);
-    const list = await res.json();
-    
-    if(!Array.isArray(list)) return listEl.innerHTML = `<div class="empty-s">فشل جلب السجلات</div>`;
-    const done = list.filter(o => o.status === "completed" || (pData.type === 'school' && o.status === 'active'));
-    if(!done.length) return listEl.innerHTML = `<div class="empty-s">لا توجد سجلات بعد</div>`;
-    
-    listEl.innerHTML = done.slice(0, 50).map(o => {
-      const nm = o.name || o.guest_name || o.student_name || "—";
-      const dt = o.date || o.date_arrive || "—";
-      let svc = o.car || o.room_type || o.event_type || o.course || "—";
-      return `
-        <div class="lr-card">
-          <div><div class="lr-id">#${esc(o.id)}</div><div class="lr-nm">${esc(svc)}</div><div class="lr-dt">${esc(nm)} · ${esc(dt)}</div></div>
-          <div style="text-align:left;"><div class="lr-am">${fmt(o.total||o.price||0)}</div></div>
-        </div>
-      `;
-    }).join("");
-  } catch(e) { listEl.innerHTML = `<div class="empty-s">فشل الاتصال</div>`; }
+/* ═══════════════ MONEY ═══════════════ */
+function renderMoney(){
+  const done=ORDERS.filter(o=>o.status==="completed");
+  const rev=done.reduce((a,o)=>a+cleanN(o.total),0);
+  const m=new Date().toISOString().slice(0,7);
+  const monthRev=done.filter(o=>String(o.created_at||"").startsWith(m)).reduce((a,o)=>a+cleanN(o.total),0);
+  $("kMoney").innerHTML=`
+    ${kp("💵","إجمالي الإيراد",fmt(rev),"د.ع","من طلباتك المكتملة","g")}
+    ${kp("📆","إيراد هذا الشهر",fmt(monthRev),"د.ع","الشهر الحالي","b")}
+    ${kp("💳","المستحق للمنصة",fmt(ME.debt),"د.ع","عمولات غير مسدّدة","a")}
+    ${kp("✅","طلبات مكتملة",done.length,"","إجمالي المنجز","")}`;
+  $("doneCnt").textContent=done.length;
+  $("doneList").innerHTML = done.length ? done.slice(0,20).map(o=>`
+    <div class="oc"><div class="oc-h"><span class="oc-id mono">#${esc(o.id)}</span><span class="stb stb-c"><span class="d"></span>مكتمل</span><span style="font-size:.62rem;color:var(--tx3);font-weight:700">${esc(o.date||"")}</span></div>
+    <div class="oc-d">👤 ${esc(o.name||o.guest_name||"—")}</div>
+    <div class="oc-f"><div class="oc-pr">${fmt(o.total)} <span class="u">د.ع</span></div></div></div>`).join("")
+    : `<div class="empty"><div class="empty-i">📊</div><div class="empty-t">لا طلبات مكتملة بعد</div><div class="empty-s">ستظهر هنا بعد إكمال أول طلب</div></div>`;
 }
 
-/* ════════════════════════════════════════════════════════════════
-   NAVIGATION & LOGOUT
-════════════════════════════════════════════════════════════════ */
-window.switchTab = (tab, btn) => {
-  document.querySelectorAll('.bni').forEach(b => b.classList.remove('on'));
-  if(btn) btn.classList.add('on');
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.add('dn'));
-  $("tab-"+tab).classList.remove("dn");
-  if(tab === "inventory") fetchInventory();
-  if(tab === "ledger") loadHistory();
+/* ═══════════════ PROFILE ═══════════════ */
+function buildProfileFields(){
+  const t=ME._type;
+  let f=`<label class="el">رقم الهاتف <span style="color:var(--red)">*</span></label>
+    <input type="tel" class="fc mono" id="pf-phone" value="${esc(ME.phone||"")}" dir="ltr" placeholder="07XXXXXXXXX">
+    <div class="hint">الرقم الذي يتصل به الزبون — تأكد أنه يعمل دائماً.</div>
+    <label class="el">المدينة</label><select class="fc" id="pf-city">${CITIES.map(c=>`<option ${c===ME.city?"selected":""}>${c}</option>`).join("")}</select>`;
+  if(t==="hotel") f+=`
+    <div class="g2"><div><label class="el">التصنيف</label><select class="fc" id="pf-stars">${[5,4,3,2,1].map(s=>`<option value="${s}"${parseInt(ME.stars)===s?" selected":""}>${"⭐".repeat(s)} ${s}</option>`).join("")}</select></div>
+    <div><label class="el">الفئة</label><input type="text" class="fc" id="pf-cat" value="${esc(ME.cat||"")}" placeholder="سياحي / اقتصادي"></div></div>
+    <label class="el">أسعار الغرف الأساسية</label>
+    <div class="g2"><div><input type="number" class="fc" id="pf-ps" value="${cleanN(ME.price_single)||""}" placeholder="مفردة"></div>
+    <div><input type="number" class="fc" id="pf-pd" value="${cleanN(ME.price_double)||""}" placeholder="مزدوجة"></div></div>
+    <input type="number" class="fc" id="pf-psu" value="${cleanN(ME.price_suite)||""}" placeholder="جناح">
+    <div class="hint">تُستخدم عند عدم إضافة غرف تفصيلية — أبقِها محدّثة.</div>
+    <label class="el">مميزات الفندق</label><textarea class="fc" id="pf-features" placeholder="واي فاي مجاني، إفطار، موقف سيارات، مسبح">${esc(ME.features||"")}</textarea>`;
+  if(t==="hall") f+=`
+    <div class="g2"><div><label class="el">السعة (ضيف)</label><input type="text" class="fc" id="pf-cap" value="${esc(ME.capacity||"")}" placeholder="500"></div>
+    <div><label class="el">سعر السهرة</label><input type="number" class="fc" id="pf-price" value="${cleanN(ME.price)||""}" placeholder="1500000"></div></div>
+    <label class="el">مميزات القاعة</label><textarea class="fc" id="pf-features" placeholder="إضاءة ليزر، بوفيه مفتوح، كوشة فاخرة، موقف واسع">${esc(ME.features||"")}</textarea>`;
+  if(t==="school") f+=`
+    <label class="el">أسعار الباقات</label>
+    <div class="g2"><div><input type="number" class="fc" id="pf-pb" value="${cleanN(ME.price_basic)||""}" placeholder="أساسية"></div>
+    <div><input type="number" class="fc" id="pf-pa" value="${cleanN(ME.price_advanced)||""}" placeholder="متقدمة"></div></div>
+    <label class="el">مميزات المدرسة</label><textarea class="fc" id="pf-features" placeholder="مدرّبات للنساء، سيارات حديثة، تدريب على الاختبار">${esc(ME.features||"")}</textarea>`;
+  if(t==="office") f+=`
+    <label class="el">نطاق الخدمة (كم)</label><input type="number" class="fc" id="pf-radius" value="${cleanN(ME.radius)||""}" placeholder="15">
+    <div class="hint">المسافة التي تقبل استلام طلبات ضمنها من موقعك.</div>`;
+  $("profFields").innerHTML=f;
+  $("pf-photo").value=ME.photo_url||"";
+  previewPhoto();
+  $("lockedFields").innerHTML=`
+    <div class="locked"><span class="locked-k">🏷 اسم المنشأة</span><span class="locked-v">${esc(ME.name)}</span></div>
+    <div class="locked"><span class="locked-k">🆔 المعرّف</span><span class="locked-v mono">${esc(ME.id)}</span></div>
+    <div class="locked"><span class="locked-k">📊 نسبة العمولة</span><span class="locked-v">${esc(ME.comm_val||"—")}${ME.comm_type==="percent"?"%":""}</span></div>
+    <div class="hint" style="margin:6px 0 0">هذه البيانات تُدار من قِبل الإدارة فقط لضمان سلامة الحسابات. لتعديل الاسم أو مناقشة العمولة، تواصل مع إدارة المنصة.</div>`;
+  setTimeout(initMap,300);
+}
+window.previewPhoto=function(){
+  const u=$("pf-photo").value.trim();
+  $("photoPrev").innerHTML = u ? `<img src="${esc(u)}" class="prof-photo" onerror="this.outerHTML='<div class=\\'prof-noph\\'><span style=\\'font-size:1.8rem\\'>⚠️</span>تعذّر تحميل الصورة</div>'">`
+    : `<div class="prof-noph"><span style="font-size:1.8rem">🖼</span>لم تُضف صورة بعد</div>`;
 };
 
-window.doLogout = () => {
-  if(!confirm("تسجيل الخروج؟")) return;
-  localStorage.removeItem("hut_partner_sess");
-  location.reload();
+function initMap(){
+  if(pmap || !window.L || !$("pmap")) return;
+  const lat=cleanN(ME.lat)||33.3152, lng=cleanN(ME.lng)||44.3661;
+  pmap=L.map("pmap").setView([lat,lng],13);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OSM"}).addTo(pmap);
+  pmarker=L.marker([lat,lng],{draggable:true}).addTo(pmap);
+  setTimeout(()=>pmap.invalidateSize(),200);
+}
+window.useMyLocation=function(){
+  if(!navigator.geolocation){ toast("المتصفح لا يدعم تحديد الموقع","e"); return; }
+  navigator.geolocation.getCurrentPosition(p=>{
+    const{latitude:la,longitude:ln}=p.coords;
+    if(pmap&&pmarker){ pmarker.setLatLng([la,ln]); pmap.setView([la,ln],16); }
+    toast("تم تحديد موقعك 📍","g");
+  },()=>toast("تعذّر الحصول على الموقع","e"),{enableHighAccuracy:true,timeout:8000});
 };
+
+window.saveProfile=async function(){
+  const phone=$("pf-phone").value.trim();
+  if(phone && !validPhone(phone)){ toast("رقم هاتف عراقي غير صحيح","e"); return; }
+  setBtn("pf-save",true);
+  const u={ phone, city:$("pf-city").value, photo_url:$("pf-photo").value.trim() };
+  if(pmarker){ const ll=pmarker.getLatLng(); u.lat=ll.lat; u.lng=ll.lng; }
+  const t=ME._type, g=id=>$(id)?.value;
+  if(t==="hotel"){ u.stars=g("pf-stars"); u.cat=g("pf-cat"); u.price_single=cleanN(g("pf-ps")); u.price_double=cleanN(g("pf-pd")); u.price_suite=cleanN(g("pf-psu")); u.features=g("pf-features"); }
+  if(t==="hall"){ u.capacity=g("pf-cap"); u.price=cleanN(g("pf-price")); u.features=g("pf-features"); }
+  if(t==="school"){ u.price_basic=cleanN(g("pf-pb")); u.price_advanced=cleanN(g("pf-pa")); u.features=g("pf-features"); }
+  if(t==="office"){ u.radius=cleanN(g("pf-radius")); }
+  Object.keys(u).forEach(k=>{ if(u[k]===""||u[k]===undefined||(typeof u[k]==="number"&&u[k]===0&&k!=="lat"&&k!=="lng")) delete u[k]; });
+  try{
+    const d=await api({ action:"PARTNER_UPDATE_PROFILE", entityType:T[t].entityType, id:ME.id, pass:ME._pass, updates:u });
+    if(d.success){ Object.assign(ME,d.applied||u); toast("تم حفظ ملفك ✅","g"); renderInventory(); }
+    else toast(d.msg||"تعذّر الحفظ","e");
+  }catch(e){ toast("تعذّر الاتصال","e"); }
+  finally{ setBtn("pf-save",false); }
+};
+
+window.openPassModal=()=>$("passMB").classList.add("on");
+window.savePass=async function(){
+  const o=$("pw-old").value.trim(), n=$("pw-new").value.trim(), n2=$("pw-new2").value.trim();
+  if(n.length<4){ toast("كلمة المرور 4 أحرف على الأقل","e"); return; }
+  if(n!==n2){ toast("الكلمتان غير متطابقتين","e"); return; }
+  setBtn("pw-save",true);
+  try{
+    const d=await api({ action:"PARTNER_CHANGE_PASS", entityType:T[ME._type].entityType, id:ME.id, pass:o, new_pass:n });
+    if(d.success){
+      ME._pass=n;
+      try{ localStorage.setItem(SK, JSON.stringify({type:ME._type,name:ME.name,pass:n})); }catch(e){}
+      toast("تم تغيير كلمة المرور ✅","g"); closeMB("passMB");
+      ["pw-old","pw-new","pw-new2"].forEach(i=>$(i).value="");
+    } else toast(d.msg||"تعذّر التغيير","e");
+  }catch(e){ toast("تعذّر الاتصال","e"); }
+  finally{ setBtn("pw-save",false); }
+};
+
+/* ═══════════════ NAV ═══════════════ */
+window.goPg=function(p,el){
+  document.querySelectorAll(".pg").forEach(x=>x.classList.remove("on"));
+  $("pg-"+p).classList.add("on");
+  document.querySelectorAll(".nv").forEach(n=>n.classList.toggle("on",n.dataset.p===p));
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(p==="profile"&&pmap) setTimeout(()=>pmap.invalidateSize(),250);
+};
+window.loadAll=loadAll;
+
+/* ═══════════════ BOOT ═══════════════ */
+(function boot(){
+  $("rg-city").innerHTML=CITIES.map(c=>`<option>${c}</option>`).join("");
+  let s=null; try{ s=JSON.parse(localStorage.getItem(SK)||"null"); }catch(e){}
+  if(s&&s.name&&s.type&&T[s.type]){
+    pType=s.type;
+    $("lg-name").value=s.name; $("lg-pass").value=s.pass||"";
+    document.querySelectorAll(".tp").forEach(x=>x.classList.toggle("on",x.dataset.t===s.type));
+    doLogin();
+  }
+})();
 </script>
 </body>
 </html>

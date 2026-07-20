@@ -2,12 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
 <script>
-const V="2.3",VK="alhut_admin_v23";
+const V="2.4",VK="alhut_admin_v24";
 try{if(localStorage.getItem(VK)!==V){localStorage.setItem(VK,V);if("caches"in window)caches.keys().then(n=>n.forEach(k=>caches.delete(k)));}}catch(e){}
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-<title>الحوت — لوحة القيادة V2.3</title>
+<title>الحوت — لوحة القيادة V2.4</title>
 <meta name="theme-color" content="#F7F7F7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
@@ -159,6 +159,70 @@ button,input,select,textarea{font-family:'Cairo',sans-serif;}
 .oc{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);margin-bottom:10px;overflow:hidden;box-shadow:var(--sh-card);transition:.18s;}
 .oc:hover{box-shadow:0 3px 12px rgba(0,0,0,.09);}
 .oc-stripe{height:3px;}
+/* ══ [V2.4] درج إدارة المخزون ══ */
+#invDrawer{position:fixed;inset:0;z-index:47000;background:rgba(34,34,34,.4);backdrop-filter:blur(4px);display:none;justify-content:flex-start;}
+#invDrawer.open{display:flex;}
+.inv-panel{width:min(760px,100%);height:100vh;background:var(--bg);box-shadow:var(--sh-modal);display:flex;flex-direction:column;animation:invIn .32s cubic-bezier(.34,1.2,.64,1);overflow:hidden;}
+@keyframes invIn{from{transform:translateX(-100%)}to{transform:none}}
+body[dir="rtl"] .inv-panel{animation:invInR .32s cubic-bezier(.34,1.2,.64,1);}
+@keyframes invInR{from{transform:translateX(100%)}to{transform:none}}
+.inv-hd{background:var(--white);border-bottom:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:13px;flex-shrink:0;}
+.inv-avatar{width:52px;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;background:var(--red-l);}
+.inv-avatar.a-hotel{background:var(--green-l);} .inv-avatar.a-hall{background:var(--violet-l);} .inv-avatar.a-school{background:var(--blue-l);}
+.inv-hd-info{flex:1;min-width:0;}
+.inv-name{font-size:1.05rem;font-weight:900;color:var(--tx0);margin-bottom:3px;}
+.inv-meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;font-size:.7rem;font-weight:700;color:var(--tx2);}
+.inv-x{width:36px;height:36px;border-radius:11px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--tx2);cursor:pointer;transition:.16s;flex-shrink:0;}
+.inv-x:hover{background:var(--red-l);color:var(--red);}
+.inv-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:14px 20px;background:var(--white);border-bottom:1px solid var(--border);flex-shrink:0;}
+.inv-st{background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:10px;text-align:center;}
+.inv-st-v{font-size:1.05rem;font-weight:900;color:var(--tx0);line-height:1;}
+.inv-st-v.g{color:var(--green);} .inv-st-v.r{color:var(--red);}
+.inv-st-l{font-size:.6rem;font-weight:700;color:var(--tx3);margin-top:4px;}
+.inv-body{flex:1;overflow-y:auto;padding:18px 20px 30px;}
+.inv-sec-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px;flex-wrap:wrap;}
+.inv-sec-t{font-size:.88rem;font-weight:900;color:var(--tx0);display:flex;align-items:center;gap:7px;}
+.inv-sec-t .n{font-size:.62rem;font-weight:900;background:var(--red-l);color:var(--red);padding:2px 8px;border-radius:99px;}
+.inv-add{padding:8px 15px;border-radius:var(--r3);background:var(--red-g);color:#fff;border:none;font-size:.75rem;font-weight:900;cursor:pointer;box-shadow:var(--sh-btn);font-family:'Cairo',sans-serif;transition:.18s;}
+.inv-add:active{transform:scale(.95);}
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.iv{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);overflow:hidden;box-shadow:var(--sh-card);transition:.18s;display:flex;flex-direction:column;}
+.iv:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);transform:translateY(-2px);}
+.iv.off{opacity:.62;}
+.iv-img{width:100%;height:104px;object-fit:cover;background:var(--bg);}
+.iv-noimg{width:100%;height:104px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:2rem;color:var(--tx4);border-bottom:1px solid var(--border);}
+.iv-bd{padding:12px;flex:1;}
+.iv-nm{font-size:.86rem;font-weight:900;color:var(--tx0);margin-bottom:5px;line-height:1.35;}
+.iv-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
+.iv-tag{font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:6px;background:var(--bg);color:var(--tx2);border:1px solid var(--border);}
+.iv-tag.cat{background:var(--red-l);color:var(--red);border-color:rgba(255,56,92,.15);}
+.iv-tag.ok{background:var(--green-l);color:var(--green);border-color:rgba(0,166,153,.2);}
+.iv-tag.no{background:var(--bg);color:var(--tx3);}
+.iv-price{font-size:.95rem;font-weight:900;color:var(--green);}
+.iv-price .u{font-size:.6rem;font-weight:700;color:var(--tx3);}
+.iv-sub{font-size:.66rem;font-weight:700;color:var(--tx3);margin-top:4px;}
+.iv-acts{padding:9px 12px;border-top:1px solid var(--border);display:flex;gap:5px;justify-content:flex-end;background:var(--bg);}
+.iva{width:29px;height:29px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:.15s;}
+.iva:active{transform:scale(.88);}
+.iva-ed{background:var(--blue-l);color:var(--blue);}
+.iva-tg{background:var(--amber-l);color:var(--amber);}
+.iva-dl{background:var(--red-l);color:var(--red);}
+.inv-empty{background:var(--white);border:1px dashed var(--border);border-radius:var(--r4);padding:36px 20px;text-align:center;color:var(--tx3);font-size:.82rem;font-weight:700;}
+.inv-empty .ie-ic{font-size:2rem;margin-bottom:8px;}
+.inv-detail{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);padding:16px;box-shadow:var(--sh-card);}
+.idr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:12px;}
+.idr:last-child{border-bottom:none;}
+.idr-k{font-size:.74rem;font-weight:800;color:var(--tx2);}
+.idr-v{font-size:.84rem;font-weight:900;color:var(--tx0);text-align:left;}
+.idr-v.price{color:var(--green);}
+.pkg-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r4);padding:15px;box-shadow:var(--sh-card);}
+.pkg-card.adv{border-color:rgba(0,102,204,.25);background:linear-gradient(180deg,var(--blue-l),var(--white) 60%);}
+.pkg-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
+.pkg-nm{font-size:.88rem;font-weight:900;color:var(--tx0);display:flex;align-items:center;gap:6px;}
+.pkg-pr{font-size:1.2rem;font-weight:900;color:var(--green);}
+.pkg-pr .u{font-size:.62rem;color:var(--tx3);font-weight:700;}
+.pkg-ds{font-size:.72rem;font-weight:700;color:var(--tx2);line-height:1.6;}
+@media(max-width:768px){ .inv-panel{width:100%;} .inv-grid{grid-template-columns:1fr 1fr;gap:9px;} .iv-img,.iv-noimg{height:86px;} }
 /* [سفيان] كشف العالقة */
 .oc-stuck{border-color:rgba(255,56,92,.4);box-shadow:0 0 0 1px rgba(255,56,92,.15),var(--sh-card);}
 .stuck-badge{background:var(--red-l);color:var(--red);font-size:.58rem;font-weight:900;padding:2px 7px;border-radius:99px;border:1px solid rgba(255,56,92,.25);animation:stuckPulse 1.6s infinite;white-space:nowrap;}
@@ -361,8 +425,8 @@ select.fc option{background:var(--white);}
 .sov-item-n{font-size:.84rem;font-weight:900;color:var(--tx0);}
 .sov-item-s{font-size:.65rem;font-weight:700;color:var(--tx2);}
 
-#editModal,#sharedAddModal{position:fixed;inset:0;z-index:45000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;}
-#editModal.open,#sharedAddModal.open{display:flex;}
+#editModal,#sharedAddModal,#itemModal{position:fixed;inset:0;z-index:48000;background:rgba(34,34,34,.35);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;}
+#editModal.open,#sharedAddModal.open,#itemModal.open{display:flex;}
 .mod-card{background:var(--white);border-radius:var(--r5);width:100%;max-width:480px;padding:26px 22px;box-shadow:var(--sh-modal);animation:crIn .3s cubic-bezier(.34,1.3,.64,1);max-height:92vh;overflow-y:auto;}
 .mod-title{font-size:1rem;font-weight:900;color:var(--tx0);text-align:center;margin-bottom:4px;}
 .mod-sub{font-size:.74rem;font-weight:700;color:var(--tx2);text-align:center;margin-bottom:20px;}
@@ -420,7 +484,7 @@ select.fc option{background:var(--white);}
   <div class="auth-card">
     <div class="auth-logo">🐋</div>
     <div class="auth-h">منصة الحوت</div>
-    <div class="auth-s">لوحة القيادة العليا · V2.3 · مُحصّنة بنمط سفيان</div>
+    <div class="auth-s">لوحة القيادة العليا · V2.4 · إدارة المخزون الكاملة</div>
     <input type="password" id="mPW" class="auth-in" placeholder="••••" autocomplete="off" onkeypress="if(event.key==='Enter')doAuth()">
     <button class="auth-btn" id="authB" onclick="doAuth()">دخول النظام الآمن</button>
     <div class="auth-err" id="authErr"></div>
@@ -433,7 +497,7 @@ select.fc option{background:var(--white);}
       <div class="sb-logo">🐋</div>
       <div>
         <div class="sb-title">منصة الحوت</div>
-        <div class="sb-ver">V2.3 · الإدارة العليا</div>
+        <div class="sb-ver">V2.4 · الإدارة العليا</div>
       </div>
     </div>
     <nav class="sb-nav">
@@ -699,6 +763,33 @@ select.fc option{background:var(--white);}
   </div>
 </div>
 
+<div id="invDrawer" onclick="if(event.target===this)closeInventory()">
+  <div class="inv-panel" onclick="event.stopPropagation()">
+    <div class="inv-hd">
+      <div class="inv-avatar" id="inv-avatar">🚗</div>
+      <div class="inv-hd-info">
+        <div class="inv-name" id="inv-name">—</div>
+        <div class="inv-meta" id="inv-meta">—</div>
+      </div>
+      <button class="inv-x" onclick="closeInventory()">✕</button>
+    </div>
+    <div class="inv-stats" id="inv-stats"></div>
+    <div class="inv-body" id="inv-body"></div>
+  </div>
+</div>
+
+<div id="itemModal" onclick="if(event.target===this)closeMod('itemModal')">
+  <div class="mod-card" onclick="event.stopPropagation()">
+    <div class="mod-title" id="item-title">إضافة عنصر</div>
+    <div class="mod-sub" id="item-sub">—</div>
+    <div id="item-fields"></div>
+    <div class="mod-acts">
+      <button class="m-cancel" onclick="closeMod('itemModal')">إلغاء</button>
+      <button class="m-save" id="item-save" onclick="saveItem()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
 <div id="editModal" onclick="closeMod('editModal')">
   <div class="mod-card" onclick="event.stopPropagation()">
     <div class="mod-title" id="mod-title">تعديل بيانات الشريك</div>
@@ -755,6 +846,8 @@ const IMGBB_KEY = "7f67d9adc91e89648de939ed301d20fe";
 
 let MP = "", gD = null;
 let carOrdersFB = [], hotelBookingsFB = [], hallBookingsFB = [];
+let carsFB = [], roomsFB = [];          // [V2.4] المخزون الحيّ
+let invCtx = null, itemCtx = null;      // [V2.4] سياق إدارة المخزون
 let map, clusterLayer;
 let liveFilt = "all";
 let offFiltMode = "all", hotFiltMode = "all", hallFiltMode = "all", schFiltMode = "all";
@@ -891,6 +984,9 @@ function startFirebaseListeners(){
   db.ref("hut_car_orders").on("value", snap => { carOrdersFB = snap.val()?Object.values(snap.val()):[]; refreshLivePanel(); checkNewOrders(); });
   db.ref("hut_hotel_bookings").on("value", snap => { hotelBookingsFB = snap.val()?Object.values(snap.val()):[]; refreshLivePanel(); checkNewOrders(); });
   db.ref("hut_hall_bookings").on("value", snap => { hallBookingsFB = snap.val()?Object.values(snap.val()):[]; refreshLivePanel(); checkNewOrders(); });
+  // [V2.4] المخزون الحيّ: أسطول السيارات وغرف الفنادق مباشرة من فايربيس (كل الحالات لا المتاح فقط)
+  db.ref("hut_cars").on("value",  snap => { carsFB  = snap.val()?Object.values(snap.val()):[]; if(invCtx) renderInventoryBody(); });
+  db.ref("hut_rooms").on("value", snap => { roomsFB = snap.val()?Object.values(snap.val()):[]; if(invCtx) renderInventoryBody(); });
   db.ref("ledgers").on("value", snap => {
     const ledgers = snap.val()||{};
     if(!gD) return;
@@ -1361,7 +1457,7 @@ function renderEntityCard(type, e){
   else if(isSch){ infoBar = `<div class="ec-comm" style="display:grid;grid-template-columns:1fr 1fr;gap:3px;font-size:.63rem"><span>📘 أساسي: ${fmt(e.price_basic)} د.ع</span><span>📗 متقدم: ${fmt(e.price_advanced)} د.ع</span></div>`; }
   else { const commTxt=e.comm_type==="monthly"?`📅 شهري: ${fmt(e.comm_val)} د.ع`:e.comm_type==="split"?`📊 مناصفة: ${e.comm_val}`:`💰 ${fmt(e.comm_val)} د.ع/طلب`; infoBar = `<div class="ec-comm">${commTxt}</div>`; }
   const starsHtml = isH ? `<div style="font-size:.68rem;color:var(--amber)">${"⭐".repeat(Math.min(parseInt(e.stars)||0,5))}</div>` : "";
-  return `<div class="ec ${sc}"><div class="ec-bar"></div>${imgHtml}<div class="ec-body"><div class="ec-name">${esc(e.name)}</div><div class="ec-meta"><div class="ec-city">${esc(e.city)}</div>${starsHtml}<div class="ec-ph">${esc(e.phone||"—")}</div></div><div class="ec-stats"><div class="est"><div class="est-v">${bookingsVal}</div><div class="est-l">${bookingsLabel}</div></div><div class="est"><div class="est-v g" style="font-size:.8rem">${fmt(e.total_rev||0)}</div><div class="est-l">إيرادات</div></div><div class="est"><div class="est-v r">${fmt(e.debt||0)}</div><div class="est-l">ديون</div></div></div>${infoBar}<div style="font-size:.64rem;color:var(--tx3);font-weight:700">الحالة: <span style="color:${e.status==="active"?"var(--green)":e.status==="pending"?"var(--amber)":"var(--red)"}">${sl}</span></div></div><div class="ec-acts">${e.status!=="active"?`<button class="ea ea-ok" onclick="setStatus('${entityType}','${esc(e.id)}','active',this)">✅ تفعيل</button>`:""}${e.status!=="blocked"?`<button class="ea ea-blk" onclick="setStatus('${entityType}','${esc(e.id)}','blocked',this)">🚫 وقف</button>`:""}<button class="ea ea-rst" onclick="resetDebt('${entityType}','${esc(e.id)}',this)">💰 تصفير</button><button class="ea ea-edit" onclick="openEdit('${type}','${esc(e.id)}')">✏️</button>${waBtn}</div></div>`;
+  return `<div class="ec ${sc}"><div class="ec-bar"></div><div onclick="openInventory('${type}','${esc(e.id)}')" style="cursor:pointer">${imgHtml}<div class="ec-body"><div class="ec-name">${esc(e.name)} <span style="font-size:.62rem;color:var(--red);font-weight:900">📦 إدارة</span></div><div class="ec-meta"><div class="ec-city">${esc(e.city)}</div>${starsHtml}<div class="ec-ph">${esc(e.phone||"—")}</div></div><div class="ec-stats"><div class="est"><div class="est-v">${bookingsVal}</div><div class="est-l">${bookingsLabel}</div></div><div class="est"><div class="est-v g" style="font-size:.8rem">${fmt(e.total_rev||0)}</div><div class="est-l">إيرادات</div></div><div class="est"><div class="est-v r">${fmt(e.debt||0)}</div><div class="est-l">ديون</div></div></div>${infoBar}<div style="font-size:.64rem;color:var(--tx3);font-weight:700">الحالة: <span style="color:${e.status==="active"?"var(--green)":e.status==="pending"?"var(--amber)":"var(--red)"}">${sl}</span></div></div></div><div class="ec-acts">${e.status!=="active"?`<button class="ea ea-ok" onclick="setStatus('${entityType}','${esc(e.id)}','active',this)">✅ تفعيل</button>`:""}${e.status!=="blocked"?`<button class="ea ea-blk" onclick="setStatus('${entityType}','${esc(e.id)}','blocked',this)">🚫 وقف</button>`:""}<button class="ea ea-rst" onclick="resetDebt('${entityType}','${esc(e.id)}',this)">💰 تصفير</button><button class="ea ea-edit" onclick="openEdit('${type}','${esc(e.id)}')">✏️</button>${waBtn}</div></div>`;
 }
 
 window.setEntFilt = function(type, filt, btn){
@@ -1464,6 +1560,237 @@ window.saveEdit = async function(){
     else toast(d.msg||"فشل","e");
   }catch(e){toast("تم الإرسال","s");closeMod("editModal");await loadSystemData();}
   finally{setBtn("mod-save-btn",false);}
+};
+
+/* ══════════════════════════════════════════════════════════════
+   [V2.4] إدارة المخزون — أسطول المكاتب · غرف الفنادق · تفاصيل
+   القاعات · باقات مدارس القيادة — قراءة حيّة من فايربيس + تعديل
+══════════════════════════════════════════════════════════════ */
+const CAT_AR = {economy:"اقتصادية",family:"عائلية",luxury:"فخمة VIP",wedding:"زفاف"};
+const RT_AR  = {single:"مفردة",double:"مزدوجة",suite:"جناح",family:"عائلية"};
+
+window.openInventory = function(type, id){
+  const listMap={office:gD?.carOffices,hotel:gD?.hotels,hall:gD?.halls,school:gD?.driveSchools};
+  const ent=(listMap[type]||[]).find(x=>String(x.id)===String(id));
+  if(!ent){ toast("لم توجد بيانات الشريك","e"); return; }
+  invCtx={type,id,ent};
+
+  const emoji={office:"🚗",hotel:"🏨",hall:"🥂",school:"🎓"}[type];
+  const avCls={office:"",hotel:"a-hotel",hall:"a-hall",school:"a-school"}[type];
+  const stLbl={active:"نشط ✅",pending:"معلق ⏳",blocked:"موقوف 🚫"}[ent.status]||ent.status;
+  const stCol={active:"var(--green)",pending:"var(--amber)",blocked:"var(--red)"}[ent.status]||"var(--tx2)";
+
+  $("inv-avatar").className="inv-avatar "+avCls;
+  $("inv-avatar").textContent=emoji;
+  $("inv-name").textContent=ent.name;
+  $("inv-meta").innerHTML=`<span class="ec-city">${esc(ent.city)}</span><span>📱 ${esc(ent.phone||"—")}</span><span style="color:${stCol};font-weight:900">${stLbl}</span>`;
+
+  const ordLbl={office:"طلب",hotel:"حجز",hall:"حجز",school:"طالب"}[type];
+  const ordVal=type==="office"?(ent.total_orders||0):(ent.total_bookings||0);
+  $("inv-stats").innerHTML=`
+    <div class="inv-st"><div class="inv-st-v">${fmt(ordVal)}</div><div class="inv-st-l">${ordLbl}</div></div>
+    <div class="inv-st"><div class="inv-st-v g">${fmt(ent.total_rev||0)}</div><div class="inv-st-l">إيرادات د.ع</div></div>
+    <div class="inv-st"><div class="inv-st-v r">${fmt(ent.debt||0)}</div><div class="inv-st-l">ديون د.ع</div></div>`;
+
+  renderInventoryBody();
+  $("invDrawer").classList.add("open");
+  document.body.style.overflow="hidden";
+};
+window.closeInventory=function(){ $("invDrawer").classList.remove("open"); document.body.style.overflow=""; invCtx=null; };
+
+function renderInventoryBody(){
+  if(!invCtx) return;
+  const {type,id,ent}=invCtx;
+  const b=$("inv-body");
+  if(type==="office")      b.innerHTML=invFleetHTML(id);
+  else if(type==="hotel")  b.innerHTML=invRoomsHTML(id, ent);
+  else if(type==="hall")   b.innerHTML=invHallHTML(ent);
+  else                     b.innerHTML=invSchoolHTML(ent);
+}
+
+/* ─── أسطول مكتب السيارات ─── */
+function invFleetHTML(officeId){
+  const fleet=carsFB.filter(c=>String(c.office_id)===String(officeId));
+  const avail=fleet.filter(c=>c.status==="available").length;
+  const head=`<div class="inv-sec-hd"><div class="inv-sec-t">🚗 أسطول المكتب <span class="n">${fleet.length}</span>${fleet.length?`<span class="n" style="background:var(--green-l);color:var(--green)">${avail} متاح</span>`:""}</div><button class="inv-add" onclick="openItemEditor('car',null)">➕ إضافة سيارة</button></div>`;
+  if(!fleet.length) return head+`<div class="inv-empty"><div class="ie-ic">🚗</div>لا سيارات في أسطول هذا المكتب بعد<div style="font-size:.72rem;margin-top:6px;color:var(--tx4)">اضغط "إضافة سيارة" لتسجيل أول سيارة</div></div>`;
+  return head+`<div class="inv-grid">`+fleet.map(c=>{
+    const img=c.photo_url?`<img class="iv-img" src="${esc(c.photo_url)}" onerror="this.outerHTML='<div class=\\'iv-noimg\\'>🚗</div>'">`:`<div class="iv-noimg">🚗</div>`;
+    const on=c.status==="available";
+    return `<div class="iv ${on?"":"off"}">${img}<div class="iv-bd">
+      <div class="iv-nm">${esc(c.name)}</div>
+      <div class="iv-tags"><span class="iv-tag cat">${esc(CAT_AR[c.cat]||c.cat||"—")}</span><span class="iv-tag ${on?"ok":"no"}">${on?"متاحة":"موقوفة"}</span></div>
+      <div class="iv-price">${fmt(c.price)} <span class="u">د.ع/يوم</span></div>
+      <div class="iv-sub">🪪 ${esc(c.plate||"—")}${c.color?` · 🎨 ${esc(c.color)}`:""}${cleanN(c.orders)>0?` · 📊 ${fmt(c.orders)} طلب`:""}</div>
+      ${c.details?`<div class="iv-sub" style="margin-top:5px">📝 ${esc(c.details)}</div>`:""}
+    </div><div class="iv-acts">
+      <button class="iva iva-ed" title="تعديل" onclick='openItemEditor("car",${safeJSON(c)})'>✏️</button>
+      <button class="iva iva-tg" title="${on?"إيقاف":"تفعيل"}" onclick="toggleItem('car','${esc(c.id)}','${on?"inactive":"available"}',this)">${on?"⏸":"▶️"}</button>
+      <button class="iva iva-dl" title="حذف" onclick="deleteItem('car','${esc(c.id)}',this)">🗑</button>
+    </div></div>`;
+  }).join("")+`</div>`;
+}
+
+/* ─── غرف الفندق ─── */
+function invRoomsHTML(hotelId, ent){
+  const rooms=roomsFB.filter(r=>String(r.hotel_id)===String(hotelId));
+  const avail=rooms.filter(r=>r.status==="available").length;
+  const base=`<div class="inv-detail" style="margin-bottom:16px">
+      <div class="idr"><span class="idr-k">🛏 سعر المفردة الأساسي</span><span class="idr-v price">${fmt(ent.price_single)} د.ع</span></div>
+      <div class="idr"><span class="idr-k">🛏🛏 سعر المزدوجة الأساسي</span><span class="idr-v price">${fmt(ent.price_double)} د.ع</span></div>
+      <div class="idr"><span class="idr-k">👑 سعر الجناح الأساسي</span><span class="idr-v price">${fmt(ent.price_suite)} د.ع</span></div>
+      <div class="idr"><span class="idr-k">⭐ التصنيف</span><span class="idr-v">${"⭐".repeat(Math.min(parseInt(ent.stars)||0,5))||"—"}</span></div>
+      ${ent.features?`<div class="idr"><span class="idr-k">✦ المميزات</span><span class="idr-v" style="font-size:.74rem">${esc(ent.features)}</span></div>`:""}
+      <div class="idr"><span class="idr-k">✏️ تعديل الأسعار الأساسية</span><span class="idr-v"><button class="ea ea-edit" onclick="closeInventory();openEdit('hotel','${esc(ent.id)}')">فتح المحرّر</button></span></div>
+    </div>`;
+  const head=`<div class="inv-sec-hd"><div class="inv-sec-t">🛏 غرف الفندق <span class="n">${rooms.length}</span>${rooms.length?`<span class="n" style="background:var(--green-l);color:var(--green)">${avail} متاحة</span>`:""}</div><button class="inv-add" onclick="openItemEditor('room',null)">➕ إضافة غرفة</button></div>`;
+  if(!rooms.length) return base+head+`<div class="inv-empty"><div class="ie-ic">🛏</div>لا غرف مسجّلة — يعتمد الحجز على الأسعار الأساسية أعلاه<div style="font-size:.72rem;margin-top:6px;color:var(--tx4)">أضف غرفاً لعرض خيارات دقيقة للزبون</div></div>`;
+  return base+head+`<div class="inv-grid">`+rooms.map(r=>{
+    const img=r.photo_url?`<img class="iv-img" src="${esc(r.photo_url)}" onerror="this.outerHTML='<div class=\\'iv-noimg\\'>🛏</div>'">`:`<div class="iv-noimg">🛏</div>`;
+    const on=r.status==="available";
+    return `<div class="iv ${on?"":"off"}">${img}<div class="iv-bd">
+      <div class="iv-nm">${esc(r.room_name)}</div>
+      <div class="iv-tags"><span class="iv-tag cat">${esc(RT_AR[r.room_type]||r.room_type||"—")}</span><span class="iv-tag ${on?"ok":"no"}">${on?"متاحة":"موقوفة"}</span></div>
+      <div class="iv-price">${fmt(r.price)} <span class="u">د.ع/ليلة</span></div>
+      <div class="iv-sub">${r.bed_type?`🛏 ${esc(r.bed_type)}`:""}${cleanN(r.orders)>0?` · 📊 ${fmt(r.orders)} حجز`:""}${cleanN(r.revenue)>0?` · 💵 ${fmt(r.revenue)}`:""}</div>
+      ${r.description?`<div class="iv-sub" style="margin-top:5px">📝 ${esc(r.description)}</div>`:""}
+    </div><div class="iv-acts">
+      <button class="iva iva-ed" title="تعديل" onclick='openItemEditor("room",${safeJSON(r)})'>✏️</button>
+      <button class="iva iva-tg" title="${on?"إيقاف":"تفعيل"}" onclick="toggleItem('room','${esc(r.id)}','${on?"inactive":"available"}',this)">${on?"⏸":"▶️"}</button>
+      <button class="iva iva-dl" title="حذف" onclick="deleteItem('room','${esc(r.id)}',this)">🗑</button>
+    </div></div>`;
+  }).join("")+`</div>`;
+}
+
+/* ─── تفاصيل القاعة ─── */
+function invHallHTML(ent){
+  const bookings=hallBookingsFB.filter(b=>String(b.hall_id)===String(ent.id)||b.hall_name===ent.name);
+  const done=bookings.filter(b=>b.status==="completed").length;
+  return `<div class="inv-sec-hd"><div class="inv-sec-t">🥂 تفاصيل القاعة وأسعارها</div><button class="inv-add" onclick="closeInventory();openEdit('hall','${esc(ent.id)}')">✏️ تعديل التفاصيل</button></div>
+    <div class="inv-detail" style="margin-bottom:16px">
+      ${ent.photo_url?`<img src="${esc(ent.photo_url)}" style="width:100%;height:150px;object-fit:cover;border-radius:var(--r3);margin-bottom:12px">`:""}
+      <div class="idr"><span class="idr-k">👥 السعة الاستيعابية</span><span class="idr-v">${esc(ent.capacity||"—")}</span></div>
+      <div class="idr"><span class="idr-k">💰 سعر السهرة</span><span class="idr-v price">${fmt(ent.price)} د.ع</span></div>
+      <div class="idr"><span class="idr-k">✦ المميزات</span><span class="idr-v" style="font-size:.74rem">${esc(ent.features||"—")}</span></div>
+      <div class="idr"><span class="idr-k">📍 المدينة</span><span class="idr-v">${esc(ent.city)}</span></div>
+    </div>
+    <div class="inv-sec-hd"><div class="inv-sec-t">📅 حجوزات القاعة <span class="n">${bookings.length}</span>${done?`<span class="n" style="background:var(--green-l);color:var(--green)">${done} مكتمل</span>`:""}</div></div>
+    ${bookings.length?`<div class="inv-detail">`+bookings.slice(0,10).map(b=>`<div class="idr"><span class="idr-k">${esc(b.name||"—")} · ${esc(b.event_type||"مناسبة")}<br><span style="font-size:.64rem;color:var(--tx3)">${esc(b.date||"")} · ${fmt(b.guests||0)} ضيف</span></span><span class="idr-v price">${fmt(b.total)} د.ع</span></div>`).join("")+`</div>`
+      :`<div class="inv-empty"><div class="ie-ic">📅</div>لا حجوزات بعد</div>`}`;
+}
+
+/* ─── باقات مدرسة القيادة ─── */
+function invSchoolHTML(ent){
+  const pb=cleanN(ent.price_basic), pa=cleanN(ent.price_advanced);
+  return `<div class="inv-sec-hd"><div class="inv-sec-t">🎓 الكورسات والباقات</div><button class="inv-add" onclick="closeInventory();openEdit('school','${esc(ent.id)}')">✏️ تعديل الأسعار</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div class="pkg-card">
+        <div class="pkg-hd"><div class="pkg-nm">📘 الباقة الأساسية</div></div>
+        <div class="pkg-pr">${pb>0?fmt(pb):"—"} <span class="u">د.ع</span></div>
+        <div class="pkg-ds" style="margin-top:7px">تعليم القيادة الأساسي وقواعد المرور${pb>0?"":" — لم يُحدَّد السعر بعد"}</div>
+      </div>
+      <div class="pkg-card adv">
+        <div class="pkg-hd"><div class="pkg-nm">📗 الباقة المتقدمة ★</div></div>
+        <div class="pkg-pr">${pa>0?fmt(pa):"—"} <span class="u">د.ع</span></div>
+        <div class="pkg-ds" style="margin-top:7px">دورة شاملة + تدريب مكثّف للرخصة${pa>0?"":" — لم يُحدَّد السعر بعد"}</div>
+      </div>
+    </div>
+    <div class="inv-detail">
+      <div class="idr"><span class="idr-k">✦ المميزات</span><span class="idr-v" style="font-size:.74rem">${esc(ent.features||"—")}</span></div>
+      <div class="idr"><span class="idr-k">📍 المدينة</span><span class="idr-v">${esc(ent.city)}</span></div>
+      <div class="idr"><span class="idr-k">📱 الهاتف</span><span class="idr-v" style="direction:ltr">${esc(ent.phone||"—")}</span></div>
+    </div>`;
+}
+
+/* ─── محرّر العنصر (سيارة / غرفة) ─── */
+window.openItemEditor=function(kind, item){
+  if(!invCtx) return;
+  itemCtx={kind, item, isNew:!item};
+  const isCar=kind==="car";
+  $("item-title").textContent=(item?"تعديل ":"إضافة ")+(isCar?"سيارة":"غرفة");
+  $("item-sub").textContent=invCtx.ent.name;
+  const v=k=>item?esc(item[k]||""):"";
+  $("item-fields").innerHTML = isCar ? `
+    <label class="el">اسم السيارة والموديل</label><input type="text" class="fc" id="it-name" value="${v("name")}" placeholder="تويوتا كورولا 2024">
+    <div class="g2"><div><label class="el">السعر اليومي</label><input type="number" class="fc" id="it-price" value="${item?cleanN(item.price):""}" placeholder="60000"></div>
+    <div><label class="el">الفئة</label><select class="fc" id="it-cat">${Object.keys(CAT_AR).map(k=>`<option value="${k}"${item&&item.cat===k?" selected":""}>${CAT_AR[k]}</option>`).join("")}</select></div></div>
+    <div class="g2"><div><label class="el">رقم اللوحة</label><input type="text" class="fc" id="it-plate" value="${v("plate")}" placeholder="بغداد 12345"></div>
+    <div><label class="el">اللون</label><input type="text" class="fc" id="it-color" value="${v("color")}" placeholder="أبيض"></div></div>
+    <label class="el">رابط الصورة</label><input type="text" class="fc" id="it-photo" value="${v("photo_url")}" placeholder="https://...">
+    <label class="el">تفاصيل إضافية</label><input type="text" class="fc" id="it-details" value="${v("details")}" placeholder="ناقل أوتوماتيك، فتحة سقف...">`
+  : `
+    <label class="el">اسم الغرفة</label><input type="text" class="fc" id="it-name" value="${v("room_name")}" placeholder="غرفة ديلوكس بإطلالة">
+    <div class="g2"><div><label class="el">السعر لليلة</label><input type="number" class="fc" id="it-price" value="${item?cleanN(item.price):""}" placeholder="75000"></div>
+    <div><label class="el">النوع</label><select class="fc" id="it-rtype">${Object.keys(RT_AR).map(k=>`<option value="${k}"${item&&item.room_type===k?" selected":""}>${RT_AR[k]}</option>`).join("")}</select></div></div>
+    <label class="el">نوع السرير</label><input type="text" class="fc" id="it-bed" value="${v("bed_type")}" placeholder="سرير مزدوج كبير">
+    <label class="el">رابط الصورة</label><input type="text" class="fc" id="it-photo" value="${v("photo_url")}" placeholder="https://...">
+    <label class="el">الوصف</label><input type="text" class="fc" id="it-desc" value="${v("description")}" placeholder="إفطار مجاني، واي فاي، شرفة...">`;
+  $("itemModal").classList.add("open");
+};
+
+window.saveItem=async function(){
+  if(!itemCtx||!invCtx) return;
+  const {kind,item,isNew}=itemCtx;
+  const isCar=kind==="car";
+  const name=$("it-name").value.trim(), price=$("it-price").value.trim();
+  if(!name){ toast("الاسم مطلوب","e"); return; }
+  if(isNew && cleanN(price)<=0){ toast("السعر مطلوب","e"); return; }
+  setBtn("item-save",true);
+
+  let body;
+  if(isCar){
+    const plate=$("it-plate").value.trim();
+    if(isNew && !plate){ toast("رقم اللوحة مطلوب","e"); setBtn("item-save",false); return; }
+    body={ token:API_TOKEN, pass:MP, office_id:invCtx.id, name, price:cleanN(price),
+           cat:$("it-cat").value, plate, color:$("it-color").value.trim(),
+           photo_url:$("it-photo").value.trim(), details:$("it-details").value.trim() };
+    body.action = isNew ? "ADD_CAR_TO_FLEET" : "UPDATE_CAR";
+    if(!isNew) body.id=item.id;
+  } else {
+    body={ token:API_TOKEN, pass:MP, hotel_id:invCtx.id, hotel_name:invCtx.ent.name,
+           room_name:name, price:cleanN(price), room_type:$("it-rtype").value,
+           bed_type:$("it-bed").value.trim(), photo_url:$("it-photo").value.trim(),
+           description:$("it-desc").value.trim() };
+    body.action = isNew ? "ADD_HOTEL_ROOM" : "UPDATE_HOTEL_ROOM";
+    if(!isNew) body.room_id=item.id;
+  }
+
+  try{
+    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify(body)});
+    const d=await res.json();
+    if(d.success){ toast(isNew?"تمت الإضافة ✅":"تم التعديل ✅"); closeMod("itemModal"); setTimeout(renderInventoryBody,900); }
+    else toast(d.msg||"فشل الحفظ","e");
+  }catch(e){ toast("فشل الاتصال","e"); }
+  finally{ setBtn("item-save",false); }
+};
+
+window.toggleItem=async function(kind,id,newStatus,btn){
+  if(btn)btn.classList.add("btn-ld");
+  const body = kind==="car"
+    ? {action:"UPDATE_CAR_STATUS", id, status:newStatus, token:API_TOKEN, pass:MP}
+    : {action:"UPDATE_ROOM_STATUS", room_id:id, hotel_id:invCtx?.id, status:newStatus, token:API_TOKEN, pass:MP};
+  try{
+    await fetch(API_URL,{method:"POST",body:JSON.stringify(body)});
+    toast(newStatus==="available"?"تم التفعيل ✅":"تم الإيقاف ⏸");
+    setTimeout(renderInventoryBody,800);
+  }catch(e){ toast("فشل التحديث","e"); }
+  finally{ if(btn)btn.classList.remove("btn-ld"); }
+};
+
+window.deleteItem=async function(kind,id,btn){
+  if(!confirm(`تأكيد حذف ${kind==="car"?"السيارة":"الغرفة"} نهائياً؟`)) return;
+  if(btn)btn.classList.add("btn-ld");
+  const body = kind==="car"
+    ? {action:"DELETE_CAR", id, office_id:invCtx?.id, token:API_TOKEN, pass:MP}
+    : {action:"DELETE_HOTEL_ROOM", room_id:id, hotel_id:invCtx?.id, token:API_TOKEN, pass:MP};
+  try{
+    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify(body)});
+    const d=await res.json();
+    if(d.success!==false) toast("🗑 تم الحذف");
+    else toast(d.msg||"فشل الحذف","e");
+    setTimeout(renderInventoryBody,800);
+  }catch(e){ toast("فشل الاتصال","e"); }
+  finally{ if(btn)btn.classList.remove("btn-ld"); }
 };
 
 /* ══ WHATSAPP ══ */

@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>الحوت · محرّك الحجز النهائي</title>
+<meta name="theme-color" content="#FF385C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F7F7;--white:#FFFFFF;--border:#DDDDDD;--light:#EEEEEE;
+  --red:#FF385C;--red-d:#E31C5F;--red-l:#FFF0F2;--red-m:rgba(255,56,92,.12);
+  --red-g:linear-gradient(135deg,#FF385C,#E31C5F);
+  --green:#00A699;--green-l:#E6F7F6;
+  --amber:#FC642D;--amber-l:#FFF3EE;
+  --blue:#0066CC;--blue-l:#EEF5FF;
+  --violet:#6B46C1;--violet-l:#F3F0FF;
+  --gold:#F5A623;--gold-l:#FFF8EC;
+  --tx0:#222;--tx1:#484848;--tx2:#717171;--tx3:#AAA;--tx4:#CCC;
+  --sh:0 1px 2px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.05);
+  --sh-md:0 8px 28px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.08);
+  --sh-btn:0 4px 12px rgba(255,56,92,.3);
+  --r2:8px;--r3:12px;--r4:16px;--r5:20px;--r6:24px;--pill:999px;
+}
+*,::before,::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'Cairo',system-ui,sans-serif;color:var(--tx0);-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden;}
+button,input,select,textarea{font-family:inherit;color:inherit;}
+button{cursor:pointer;border:none;background:none;}
+a{text-decoration:none;color:inherit;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+.dn{display:none!important;}
+::-webkit-scrollbar{width:7px;height:7px;}
+::-webkit-scrollbar-thumb{background:var(--tx4);border-radius:99px;}
+
+/* GATE */
+#gate{position:fixed;inset:0;z-index:9000;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:18px;}
+.gc{background:var(--white);border:1px solid var(--border);border-radius:var(--r6);padding:36px 30px;width:100%;max-width:380px;text-align:center;box-shadow:var(--sh-md);}
+.gw{font-size:2.9rem;margin-bottom:8px;animation:bob 2.6s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-9px) rotate(4deg)}}
+.gt{font-size:1.28rem;font-weight:900;margin-bottom:3px;}
+.gs{font-size:.76rem;color:var(--tx2);font-weight:700;margin-bottom:22px;}
+.gi{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:13px;font-size:1rem;font-weight:800;text-align:center;letter-spacing:.08em;outline:none;margin-bottom:13px;transition:.16s;}
+.gi:focus{border-color:var(--red);background:var(--white);box-shadow:0 0 0 3px var(--red-m);}
+.gb{width:100%;padding:13px;border-radius:var(--r3);background:var(--red-g);color:#fff;font-size:.93rem;font-weight:900;box-shadow:var(--sh-btn);transition:.2s;}
+.gb:active{transform:scale(.98);}
+.ge{color:var(--red);font-size:.78rem;font-weight:800;margin-top:11px;min-height:19px;}
+
+/* APP */
+#app{display:none;padding-bottom:30px;}
+#app.on{display:block;}
+.top{position:sticky;top:0;z-index:500;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:11px clamp(13px,3vw,24px);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.tl{display:flex;align-items:center;gap:10px;}
+.tlogo{width:40px;height:40px;border-radius:12px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:var(--sh-btn);}
+.tt{font-size:.98rem;font-weight:900;}
+.tsub{font-size:.63rem;font-weight:700;color:var(--tx2);}
+.tr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+
+/* ENGINE SWITCH */
+.eng{display:flex;align-items:center;gap:9px;background:var(--green-l);border:1px solid rgba(0,166,153,.22);border-radius:var(--pill);padding:6px 8px 6px 14px;}
+.eng.off{background:var(--bg);border-color:var(--border);}
+.eng-t{font-size:.72rem;font-weight:900;color:var(--green);}
+.eng.off .eng-t{color:var(--tx2);}
+.sw{width:44px;height:25px;border-radius:99px;background:var(--green);position:relative;transition:.22s;cursor:pointer;flex-shrink:0;}
+.eng.off .sw{background:var(--tx4);}
+.sw::after{content:'';position:absolute;top:3px;inset-inline-end:3px;width:19px;height:19px;border-radius:50%;background:#fff;transition:.22s;}
+.eng.off .sw::after{inset-inline-end:22px;}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pl 1.3s infinite;}
+@keyframes pl{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.8)}}
+.ib{width:36px;height:36px;border-radius:11px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--tx1);transition:.16s;}
+.ib:hover{background:var(--red-l);color:var(--red);}
+
+.wrap{max-width:1240px;margin:0 auto;padding:16px clamp(13px,3vw,24px);}
+
+/* HERO STATS */
+.hero{background:var(--white);border:1px solid var(--border);border-radius:var(--r5);padding:20px;margin-bottom:16px;box-shadow:var(--sh);position:relative;overflow:hidden;}
+.hero::after{content:'🐋';position:absolute;inset-inline-end:-14px;bottom:-26px;font-size:6rem;opacity:.045;}
+.hero-h{display:flex;align-items:center;gap:10px;margin-bottom:15px;flex-wrap:wrap;}
+.hero-t{font-size:1.05rem;font-weight:900;}
+.chip-ai{font-size:.62rem;font-weight:900;padding:3px 10px;border-radius:99px;background:var(--violet-l);color:var(--violet);border:1px solid rgba(107,70,193,.2);}
+.chip-ai.tmpl{background:var(--bg);color:var(--tx2);border-color:var(--border);}
+.chip-ai.wa-on{background:#dcfce7;color:#15803d;border-color:#bbf7d0;}
+.chip-ai.wa-off{background:var(--bg);color:var(--tx2);border-color:var(--border);}
+.hstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:11px;position:relative;z-index:1;}
+.hs{background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:12px;}
+.hs-v{font-size:1.5rem;font-weight:900;line-height:1;}
+.hs-v.g{color:var(--green);}.hs-v.a{color:var(--amber);}.hs-v.r{color:var(--red);}.hs-v.b{color:var(--blue);}
+.hs-l{font-size:.62rem;font-weight:800;color:var(--tx2);margin-top:5px;}
+
+/* PIPELINE */
+.pipe{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px;margin-bottom:16px;}
+.col{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);box-shadow:var(--sh);overflow:hidden;display:flex;flex-direction:column;min-height:150px;}
+.col-h{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.col-t{font-size:.8rem;font-weight:900;display:flex;align-items:center;gap:6px;}
+.col-n{font-size:.6rem;font-weight:900;padding:2px 8px;border-radius:99px;background:var(--bg);color:var(--tx2);}
+.col.s1 .col-h{background:var(--amber-l);} .col.s1 .col-n{background:var(--amber);color:#fff;}
+.col.s2 .col-h{background:var(--blue-l);} .col.s2 .col-n{background:var(--blue);color:#fff;}
+.col.s3 .col-h{background:var(--violet-l);} .col.s3 .col-n{background:var(--violet);color:#fff;}
+.col.s4 .col-h{background:var(--green-l);} .col.s4 .col-n{background:var(--green);color:#fff;}
+.col-b{flex:1;overflow-y:auto;max-height:440px;padding:9px;}
+
+/* ORDER CARD */
+.oc{background:var(--white);border:1px solid var(--border);border-radius:var(--r3);padding:11px;margin-bottom:8px;transition:.16s;position:relative;}
+.oc:last-child{margin-bottom:0;}
+.oc:hover{box-shadow:var(--sh);border-color:var(--tx4);}
+.oc.act{border-color:var(--violet);box-shadow:0 0 0 2px var(--violet-l);}
+.oc-h{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-bottom:6px;}
+.oc-id{font-size:.6rem;font-weight:800;color:var(--tx3);}
+.oc-em{font-size:1rem;}
+.oc-t{font-size:.82rem;font-weight:900;margin-bottom:4px;line-height:1.35;}
+.oc-d{font-size:.68rem;font-weight:700;color:var(--tx2);line-height:1.65;}
+.oc-f{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-top:8px;padding-top:8px;border-top:1px solid var(--light);}
+.oc-p{font-size:.84rem;font-weight:900;color:var(--green);}
+.oc-p .u{font-size:.55rem;color:var(--tx3);}
+.tmr{font-size:.6rem;font-weight:900;padding:2px 8px;border-radius:99px;background:var(--bg);color:var(--tx2);}
+.tmr.warn{background:var(--amber-l);color:var(--amber);}
+.tmr.late{background:var(--red-l);color:var(--red);animation:pl 1.5s infinite;}
+.match{background:var(--blue-l);border:1px solid rgba(0,102,204,.18);border-radius:var(--r2);padding:7px 9px;margin-top:7px;font-size:.66rem;font-weight:800;color:var(--blue);line-height:1.6;}
+.match .sc{float:left;background:var(--blue);color:#fff;padding:1px 7px;border-radius:99px;font-size:.58rem;}
+.acts{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;}
+.ab{flex:1;min-width:66px;padding:7px 6px;border-radius:var(--r2);font-size:.65rem;font-weight:900;transition:.15s;text-align:center;}
+.ab:active{transform:scale(.94);}
+.ab-ai{background:var(--violet-l);color:var(--violet);border:1px solid rgba(107,70,193,.2);}
+.ab-wa{background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;}
+.ab-ok{background:var(--green-l);color:var(--green);border:1px solid rgba(0,166,153,.2);}
+.ab-no{background:var(--red-l);color:var(--red);border:1px solid rgba(255,56,92,.18);}
+.empty{padding:26px 12px;text-align:center;color:var(--tx3);}
+.empty-i{font-size:1.7rem;margin-bottom:6px;opacity:.5;}
+.empty-t{font-size:.75rem;font-weight:800;}
+
+/* LOG */
+.blk{background:var(--white);border:1px solid var(--border);border-radius:var(--r4);box-shadow:var(--sh);overflow:hidden;margin-bottom:16px;}
+.blk-h{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.blk-t{font-size:.88rem;font-weight:900;display:flex;align-items:center;gap:7px;}
+.blk-b{padding:0;max-height:300px;overflow-y:auto;}
+.lg{display:flex;gap:10px;padding:10px 16px;border-bottom:1px solid var(--light);align-items:flex-start;}
+.lg:last-child{border-bottom:none;}
+.lg-i{width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;background:var(--bg);}
+.lg-i.ai{background:var(--violet-l);}.lg-i.ok{background:var(--green-l);}.lg-i.up{background:var(--amber-l);}
+.lg-b{flex:1;min-width:0;}
+.lg-t{font-size:.75rem;font-weight:800;}
+.lg-s{font-size:.66rem;font-weight:700;color:var(--tx2);margin-top:2px;word-break:break-word;}
+.lg-m{font-size:.6rem;font-weight:700;color:var(--tx3);white-space:nowrap;}
+
+/* MODAL */
+.mb{position:fixed;inset:0;z-index:8000;background:rgba(34,34,34,.42);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px;}
+.mb.on{display:flex;}
+.mc{background:var(--white);border-radius:var(--r5);width:100%;max-width:470px;max-height:88vh;overflow-y:auto;box-shadow:var(--sh-md);padding:22px;}
+.mt{font-size:1.05rem;font-weight:900;margin-bottom:3px;}
+.ms{font-size:.73rem;font-weight:700;color:var(--tx2);margin-bottom:16px;}
+.msg-box{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:13px;font-size:.84rem;font-weight:700;line-height:1.85;white-space:pre-wrap;min-height:96px;color:var(--tx1);}
+.msg-box:focus{outline:none;border-color:var(--violet);background:var(--white);}
+.who{display:flex;gap:7px;margin-bottom:13px;}
+.who button{flex:1;padding:9px;border-radius:var(--r2);font-size:.75rem;font-weight:900;background:var(--bg);border:1px solid var(--border);color:var(--tx2);transition:.15s;}
+.who button.on{background:var(--violet-l);color:var(--violet);border-color:rgba(107,70,193,.25);}
+.ma{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.ma button{flex:1;min-width:110px;padding:12px;border-radius:var(--r3);font-size:.8rem;font-weight:900;transition:.16s;}
+.m-x{background:var(--bg);border:1px solid var(--border);color:var(--tx1);}
+.m-ai{background:var(--violet-l);color:var(--violet);border:1px solid rgba(107,70,193,.2);}
+.m-wa{background:#25D366;color:#fff;}
+.m-fb{background:var(--red-g);color:#fff;box-shadow:var(--sh-btn);}
+.hint{font-size:.65rem;font-weight:700;color:var(--tx3);margin-top:9px;line-height:1.65;}
+
+/* TOAST */
+#tw{position:fixed;bottom:20px;inset-inline:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:9500;pointer-events:none;}
+.ts{background:var(--tx0);color:#fff;padding:11px 19px;border-radius:var(--pill);font-size:.78rem;font-weight:800;box-shadow:var(--sh-md);display:flex;align-items:center;gap:8px;animation:tin .3s cubic-bezier(.34,1.5,.64,1);max-width:90vw;}
+.ts.e{background:var(--red);}.ts.g{background:var(--green);}.ts.v{background:var(--violet);}
+@keyframes tin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+@media(max-width:640px){ .hstats{grid-template-columns:1fr 1fr;} .pipe{grid-template-columns:1fr;} .col-b{max-height:300px;} }
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<div id="tw"></div>
+
+<div id="gate">
+  <div class="gc">
+    <div class="gw">🐋</div>
+    <div class="gt">محرّك الحجز النهائي</div>
+    <div class="gs">مراقبة المحرّك الذاتي للحجوزات</div>
+    <input type="password" class="gi" id="gp" placeholder="كلمة المرور" onkeydown="if(event.key==='Enter')tryIn()">
+    <button class="gb" onclick="tryIn()">تشغيل المحرّك ⚡</button>
+    <div class="ge" id="gerr"></div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="top">
+    <div class="tl">
+      <div class="tlogo">🐋</div>
+      <div><div class="tt">محرّك الحجز النهائي</div><div class="tsub">مراقبة المحرّك الذاتي · يعمل على الخادم ٢٤/٧</div></div>
+    </div>
+    <div class="tr">
+      <div class="eng" id="engBox" onclick="toggleEngine()">
+        <span class="pulse" id="engPulse"></span>
+        <span class="eng-t" id="engTxt">المحرّك يعمل</span>
+        <span class="sw"></span>
+      </div>
+      <button class="ib" onclick="runNow()" title="تشغيل دورة على الخادم">⚡</button>
+      <button class="ib" onclick="tick(true)" title="تحديث العرض">🔄</button>
+      <button class="ib" onclick="location.reload()" title="خروج">🚪</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-h">
+        <span class="hero-t">⚙️ حالة المحرّك</span>
+        <span class="chip-ai tmpl" id="aiChip">وضع القوالب الذكية</span>
+        <span class="chip-ai wa-off" id="waChip">💬 واتساب: يُفحص…</span>
+        <span style="font-size:.64rem;font-weight:800;color:var(--tx3)" id="lastRun">—</span>
+      </div>
+      <div class="hstats" id="hstats"></div>
+    </div>
+
+    <div class="pipe">
+      <div class="col s1">
+        <div class="col-h"><div class="col-t">📥 وارد جديد</div><span class="col-n" id="n1">0</span></div>
+        <div class="col-b" id="c1"></div>
+      </div>
+      <div class="col s2">
+        <div class="col-h"><div class="col-t">🎯 أُسنِد للشريك</div><span class="col-n" id="n2">0</span></div>
+        <div class="col-b" id="c2"></div>
+      </div>
+      <div class="col s3">
+        <div class="col-h"><div class="col-t">⏰ يحتاج تصعيداً</div><span class="col-n" id="n3">0</span></div>
+        <div class="col-b" id="c3"></div>
+      </div>
+      <div class="col s4">
+        <div class="col-h"><div class="col-t">✅ مُنجَز</div><span class="col-n" id="n4">0</span></div>
+        <div class="col-b" id="c4"></div>
+      </div>
+    </div>
+
+    <div class="blk">
+      <div class="blk-h">
+        <div class="blk-t">📜 سجلّ المحرّك <span class="col-n" id="logN">0</span></div>
+        <button class="ib" onclick="clearLog()" title="مسح">🧹</button>
+      </div>
+      <div class="blk-b" id="logList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="mb" id="msgMB" onclick="if(event.target===this)closeMB('msgMB')">
+  <div class="mc" onclick="event.stopPropagation()">
+    <div class="mt" id="mm-t">📨 رسالة الحجز</div>
+    <div class="ms" id="mm-s">—</div>
+    <div class="who">
+      <button id="w-partner" class="on" onclick="switchWho('partner')">🏢 للشريك</button>
+      <button id="w-customer" onclick="switchWho('customer')">👤 للزبون</button>
+    </div>
+    <div class="msg-box" id="mm-box" contenteditable="true"></div>
+    <div class="hint" id="mm-hint">الرسالة تُصاغ تلقائياً. يمكنك تعديلها قبل الإرسال.</div>
+    <div class="ma">
+      <button class="m-x" onclick="closeMB('msgMB')">إغلاق</button>
+      <button class="m-ai" id="mm-regen" onclick="regen()">🤖 إعادة الصياغة</button>
+      <button class="m-fb" id="mm-push" onclick="pushToPartner()">⚡ إرسال للوحة الشريك</button>
+      <button class="m-wa" id="mm-wa" onclick="sendWa()">💬 واتساب</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════ CONFIG ═══════════════ */
+const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
+const API_TOKEN = "HUT_CLOUD_2026";
+const FB_URL    = "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app";
+const PASS      = "Admin_2026";
+
+const TICK_MS      = 15000;  // دورة المحرّك
+const T_ASSIGN     = 3;      // دقيقة: بعدها يُسنَد الوارد تلقائياً
+const T_REMIND     = 10;     // دقيقة بلا رد → تذكير
+const T_ESCALATE   = 20;     // دقيقة بلا رد → تصعيد لشريك آخر
+
+// القطاعات: السيارات تحتاج إسناداً، الباقي الزبون اختار شريكه
+const SEC = {
+  car:    { node:"hut_car_orders",     emoji:"🚗", label:"سيارة",  needsMatch:true,  partnerField:"office",     pool:"carOffices"  },
+  hotel:  { node:"hut_hotel_bookings", emoji:"🏨", label:"فندق",   needsMatch:false, partnerField:"hotel_name", pool:"hotels"      },
+  hall:   { node:"hut_hall_bookings",  emoji:"🥂", label:"قاعة",   needsMatch:false, partnerField:"hall_name",  pool:"halls"       },
+  school: { node:"hut_drive_students", emoji:"🎓", label:"مدرسة",  needsMatch:false, partnerField:"school_name",pool:"driveSchools"}
+};
+const ACTIVE_ST = { car:"active", hotel:"confirmed", hall:"confirmed", school:"confirmed" };
+
+/* ═══════════════ STATE ═══════════════ */
+let ORDERS=[], PARTNERS={}, CARS=[], LOG=[], MSGS={};
+let engineOn=true, timer=null, aiMode=false, msgCtx=null, whoNow="partner";
+let waState="unknown";   // on | unconfigured | off | unknown
+
+/* ═══════════════ HELPERS ═══════════════ */
+const $ = id => document.getElementById(id);
+const cleanN = v => { const n=Number(String(v==null?"":v).replace(/[^\d.-]/g,"")); return isNaN(n)?0:n; };
+const fmt = n => Math.round(cleanN(n)).toLocaleString("en-US");
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+function normPhone(p){ p=String(p||"").replace(/\D/g,""); if(p.startsWith("00964"))p=p.slice(2); if(p.startsWith("0"))p="964"+p.slice(1); else if(p.startsWith("7"))p="964"+p; return p; }
+function ageMin(iso){ if(!iso) return 0; const d=new Date(iso); if(isNaN(d)) return 0; return Math.max(0,Math.floor((Date.now()-d.getTime())/60000)); }
+function ageLbl(m){ if(m<60) return m+"د"; const h=Math.floor(m/60),r=m%60; return r?`${h}س ${r}د`:`${h}س`; }
+function toast(m,k){ const e=document.createElement("div"); e.className="ts "+(k||""); e.innerHTML=`<span>${k==="e"?"⚠️":k==="v"?"🤖":"✅"}</span><span>${esc(m)}</span>`; $("tw").appendChild(e); setTimeout(()=>{e.style.opacity="0";e.style.transition=".3s";setTimeout(()=>e.remove(),300);},3000); }
+function closeMB(id){ $(id).classList.remove("on"); }
+async function api(b){ const r=await fetch(API_URL,{method:"POST",body:JSON.stringify({...b,token:API_TOKEN})}); return await r.json(); }
+async function fbGet(p){ try{ const r=await fetch(`${FB_URL}/${p}.json?_t=${Date.now()}`); return r.ok?await r.json():null; }catch(e){ return null; } }
+async function fbPatch(p,o){ try{ const r=await fetch(`${FB_URL}/${p}.json`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(o)}); return r.ok; }catch(e){ return false; } }
+async function fbPut(p,o){ try{ const r=await fetch(`${FB_URL}/${p}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(o)}); return r.ok; }catch(e){ return false; } }
+
+function logIt(kind,title,sub){
+  LOG.unshift({kind,title,sub,ts:Date.now()});
+  if(LOG.length>120) LOG.pop();
+  renderLog();
+}
+window.clearLog=()=>{ LOG=[]; renderLog(); };
+
+/* ═══════════════ GATE ═══════════════ */
+window.tryIn=function(){
+  if($("gp").value===PASS){
+    try{ sessionStorage.setItem("hut_eng","1"); }catch(e){}
+    open_();
+  } else { $("gerr").textContent="كلمة المرور غير صحيحة"; $("gp").value=""; }
+};
+function open_(){
+  $("gate").style.display="none";
+  $("app").classList.add("on");
+  checkWa();
+  loadAll().then(()=>{ tick(); startTimer(); });
+}
+
+/* ═══════════════ LOAD ═══════════════ */
+async function checkWa(){
+  try{
+    const d=await api({action:"WA_STATUS"});
+    waState = d && d.configured ? "on" : "unconfigured";
+  }catch(e){ waState="unconfigured"; }
+  updateWaChip();
+}
+
+async function loadAll(){
+  const [car,hotel,hall,school,cars,adminRes] = await Promise.all([
+    fbGet(SEC.car.node), fbGet(SEC.hotel.node), fbGet(SEC.hall.node), fbGet(SEC.school.node),
+    fbGet("hut_cars"),
+    fetch(`${API_URL}?action=getAdminFullData&token=${API_TOKEN}&_t=${Date.now()}`).then(r=>r.json()).catch(()=>null)
+  ]);
+  const pack=(obj,type)=> obj ? Object.keys(obj).map(k=>({...obj[k],_key:k,_type:type})) : [];
+  ORDERS=[...pack(car,"car"),...pack(hotel,"hotel"),...pack(hall,"hall"),...pack(school,"school")]
+         .sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+  CARS = cars ? Object.values(cars) : [];
+  if(adminRes && adminRes.success){
+    PARTNERS = { carOffices:adminRes.carOffices||[], hotels:adminRes.hotels||[], halls:adminRes.halls||[], driveSchools:adminRes.driveSchools||[] };
+  }
+  MSGS = (await fbGet("hut_engine_msgs")) || {};
+}
+
+/* ═══════════════ محرّك المطابقة ═══════════════
+   يختار أفضل شريك لطلب السيارة بمعايير موضوعية:
+   نفس المدينة (شرط) · نشِط (شرط) · لديه سيارات متاحة · دين أقل ·
+   خبرة أعلى · واستُبعد من قبل لهذا الطلب؟
+════════════════════════════════════════════════ */
+function scorePartner(p, order, excluded){
+  if(p.status!=="active") return null;
+  if(String(p.city||"").trim()!==String(order.city||"").trim()) return null;
+  if(excluded.includes(p.name)) return null;
+
+  let score=0; const why=[];
+  const fleet=CARS.filter(c=>String(c.office_id)===String(p.id));
+  const avail=fleet.filter(c=>c.status==="available");
+  if(avail.length){ score+=40; why.push(`${avail.length} سيارة متاحة`); }
+  else if(fleet.length){ score+=8; why.push("أسطول موقوف مؤقتاً"); }
+  else why.push("بلا أسطول مسجّل");
+
+  const debt=cleanN(p.debt);
+  if(debt===0){ score+=22; why.push("لا ديون"); }
+  else if(debt<100000){ score+=12; why.push("ديون قليلة"); }
+  else why.push("عليه ديون");
+
+  const done=cleanN(p.total_orders);
+  if(done>=20){ score+=20; why.push("خبرة عالية"); }
+  else if(done>=5){ score+=12; why.push("خبرة جيدة"); }
+  else { score+=5; why.push("شريك جديد"); }
+
+  // مطابقة الفئة إن وُجدت
+  if(order.car && avail.length){
+    const hit=avail.find(c=>String(order.car).includes(String(c.name).split(" ")[0]));
+    if(hit){ score+=18; why.push("لديه السيارة المطلوبة"); }
+  }
+  return { p, score, why };
+}
+
+function bestMatch(order){
+  const excluded = (order.engine_tried||"").split(",").filter(Boolean);
+  const cands=(PARTNERS.carOffices||[]).map(p=>scorePartner(p,order,excluded)).filter(Boolean);
+  if(!cands.length) return null;
+  cands.sort((a,b)=>b.score-a.score);
+  return cands[0];
+}
+
+// حالة الطلب في خط الإنتاج
+function stageOf(o){
+  const st=String(o.status||"pending");
+  if(st==="completed") return 4;
+  if(["cancelled","rejected"].includes(st)) return 0;
+  const cfg=SEC[o._type];
+  const assigned = !!String(o[cfg.partnerField]||"").trim();
+  const age=ageMin(o.created_at);
+  if(st==="pending"){
+    if(cfg.needsMatch && !assigned) return 1;              // ينتظر إسناداً
+    if(age>=T_ESCALATE) return 3;                          // الشريك لم يردّ
+    return 2;                                              // أُسنِد/اختير وينتظر رده
+  }
+  return 2;                                                 // active/confirmed
+}
+
+/* ═══════════════ الدورة الآلية ═══════════════ */
+// هذه الصفحة تعرض فقط — المحرّك الحقيقي يعمل على الخادم كل دقيقة
+window.tick=async function(manual){
+  await loadAll();
+  await pullEngineState();
+  render();
+  if(manual) toast("حُدِّث العرض","g");
+};
+
+// تشغيل دورة فورية على الخادم (لا في المتصفح)
+window.runNow=async function(){
+  toast("جارٍ تشغيل دورة على الخادم…");
+  try{
+    const d=await api({action:"ENGINE_RUN_NOW", pass:PASS});
+    if(d && d.success){ toast("نُفّذت دورة ✅","g"); setTimeout(()=>tick(false),1200); }
+    else toast(d.msg||"تعذّر التنفيذ","e");
+  }catch(e){ toast("تعذّر الاتصال","e"); }
+};
+
+// جلب حالة المحرّك وسجلّه من الخادم
+async function pullEngineState(){
+  try{
+    const d=await api({action:"ENGINE_STATUS"});
+    if(d && d.success){
+      engineOn = d.enabled !== false;
+      paintEngine();
+      $("lastRun").textContent = d.last_run
+        ? "آخر دورة: "+new Date(d.last_run).toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit",second:"2-digit"})+(d.last_summary?" · "+d.last_summary:"")
+        : "المحرّك لم يبدأ بعد";
+      if(!d.installed) showInstallHint();
+    }
+  }catch(e){}
+  const raw=await fbGet("hut_engine_log");
+  if(raw){
+    LOG = Object.keys(raw).map(k=>({
+      kind: raw[k].kind==="ok"?"ok":raw[k].kind==="warn"?"up":"ai",
+      title: raw[k].title, sub: raw[k].sub, ts: new Date(raw[k].ts||Number(k)).getTime()
+    })).sort((a,b)=>b.ts-a.ts).slice(0,80);
+    renderLog();
+  }
+}
+
+function showInstallHint(){
+  if($("instHint")) return;
+  const d=document.createElement("div");
+  d.id="instHint";
+  d.style.cssText="background:var(--amber-l);border:1px solid rgba(252,100,45,.25);border-radius:var(--r4);padding:14px 16px;margin-bottom:14px;font-size:.8rem;font-weight:800;color:#9a3412;line-height:1.7";
+  d.innerHTML='⚠️ المحرّك غير مُركّب بعد. افتح محرّر Apps Script وشغّل الدالة <b>installEngine()</b> مرة واحدة — بعدها يعمل ذاتياً كل دقيقة بلا متصفح. <button class="ab ab-ok" style="margin-top:8px" onclick="installEng()">⚡ تركيب الآن</button>';
+  $("app").querySelector(".wrap").prepend(d);
+}
+window.installEng=async function(){
+  try{
+    const d=await api({action:"ENGINE_INSTALL", pass:PASS});
+    if(d && d.success){ toast("رُكّب المحرّك ✅ يعمل ذاتياً الآن","g"); $("instHint")?.remove(); setTimeout(()=>tick(false),1500); }
+    else toast(d.msg||"تعذّر التركيب","e");
+  }catch(e){ toast("تعذّر الاتصال","e"); }
+};
+
+async function _legacyTick(manual){
+  if(!engineOn && !manual) return;
+  await loadAll();
+  let acted=0;
+
+  for(const o of ORDERS){
+    const st=String(o.status||"pending");
+    if(["cancelled","rejected"].includes(st)) continue;
+    const cfg=SEC[o._type];
+    const age=ageMin(o.created_at);
+    const assigned=String(o[cfg.partnerField]||"").trim();
+
+    // ① إسناد آلي لطلبات السيارات غير المسنَدة
+    if(cfg.needsMatch && !assigned && st==="pending" && age>=T_ASSIGN){
+      const m=bestMatch(o);
+      if(m){
+        const ok=await fbPatch(`${cfg.node}/${o._key}`,{
+          office:m.p.name, engine_assigned_at:new Date().toISOString(),
+          engine_score:m.score, engine_tried:((o.engine_tried||"")+","+m.p.name).replace(/^,/,"")
+        });
+        if(ok){
+          acted++;
+          logIt("ok","🎯 إسناد آلي",`#${o.id} → ${m.p.name} (${m.score} نقطة: ${m.why.slice(0,2).join("، ")})`);
+          await notifyPartner(o, m.p, "notify");
+        }
+      } else {
+        logIt("up","⚠️ بلا شريك مطابق",`#${o.id} — ${o.city||"—"} — لا مكتب نشِط متاح`);
+      }
+      continue;
+    }
+
+    // ② تذكير الشريك الصامت
+    if(assigned && st==="pending" && age>=T_REMIND && age<T_ESCALATE && !o.engine_reminded){
+      await fbPatch(`${cfg.node}/${o._key}`,{engine_reminded:true});
+      const p=findPartner(o._type, assigned);
+      await notifyPartner(o, p||{name:assigned}, "remind");
+      logIt("up","🔔 تذكير آلي",`#${o.id} → ${assigned} (بانتظار الرد ${ageLbl(age)})`);
+      acted++;
+      continue;
+    }
+
+    // ③ تصعيد: تحويل لشريك آخر (سيارات) أو تنبيه (بقية القطاعات)
+    if(assigned && st==="pending" && age>=T_ESCALATE && !o.engine_escalated){
+      if(cfg.needsMatch){
+        const tried=((o.engine_tried||"")+","+assigned).replace(/^,/,"");
+        const m=bestMatch({...o, engine_tried:tried});
+        if(m){
+          await fbPatch(`${cfg.node}/${o._key}`,{
+            office:m.p.name, engine_tried:tried, engine_reminded:false,
+            engine_escalated_at:new Date().toISOString()
+          });
+          logIt("up","🔄 تصعيد آلي",`#${o.id}: ${assigned} لم يردّ → حُوّل إلى ${m.p.name}`);
+          await notifyPartner(o, m.p, "notify");
+          acted++;
+        } else {
+          await fbPatch(`${cfg.node}/${o._key}`,{engine_escalated:true});
+          logIt("up","🚨 تعذّر التصعيد",`#${o.id} — لا بديل متاح في ${o.city||"—"}`);
+        }
+      } else {
+        await fbPatch(`${cfg.node}/${o._key}`,{engine_escalated:true});
+        const p=findPartner(o._type, assigned);
+        await notifyPartner(o, p||{name:assigned}, "escalate");
+        logIt("up","🚨 تنبيه أخير",`#${o.id} → ${assigned} (${ageLbl(age)} بلا رد)`);
+        acted++;
+      }
+      continue;
+    }
+
+    // ④ إشعار الزبون بالتأكيد
+    if(["active","confirmed"].includes(st) && !o.engine_customer_notified){
+      await fbPatch(`${cfg.node}/${o._key}`,{engine_customer_notified:true});
+      await notifyCustomer(o,"confirm");
+      logIt("ok","👤 أُشعِر الزبون",`#${o.id} — تم التأكيد من ${assigned||"الشريك"}`);
+      acted++;
+    }
+
+    // ⑤ شكر الزبون بعد الإكمال
+    if(st==="completed" && !o.engine_thanked){
+      await fbPatch(`${cfg.node}/${o._key}`,{engine_thanked:true});
+      await notifyCustomer(o,"done");
+      logIt("ok","🌟 شكر الزبون",`#${o.id} — اكتملت الخدمة`);
+      acted++;
+    }
+  }
+
+  $("lastRun").textContent="آخر دورة: "+new Date().toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  if(manual) toast(acted?`نُفّذ ${acted} إجراء`:"لا شيء يحتاج إجراءً","g");
+  render();
+};
+
+function findPartner(type,name){
+  const pool=PARTNERS[SEC[type].pool]||[];
+  return pool.find(p=>p.name===name);
+}
+
+// إشعار الشريك: واتساب آلي + نسخة في لوحته (مسار مزدوج لا يفشل)
+async function notifyPartner(order, partner, intent){
+  const ctx=ctxOf(order, partner);
+  const r=await composeMsg("partner", intent, ctx);
+  const key=`${partner.id||partner.name}`.replace(/[.#$/\[\]]/g,"_");
+  await fbPut(`hut_engine_msgs/${key}/${order.id}`,{
+    order_id:order.id, type:order._type, intent,
+    text:r.text, source:r.source, ts:new Date().toISOString(), read:false
+  });
+  if(r.source==="ai") logIt("ai","🤖 صياغة بالذكاء الاصطناعي",`رسالة ${intent} للشريك ${partner.name}`);
+  // إرسال واتساب آلي
+  const phone=normPhone(partner.phone||(findPartner(order._type,partner.name)||{}).phone);
+  if(phone) await waAuto(phone, r.text, intent, ctx, "partner");
+}
+
+// إشعار الزبون آلياً بالواتساب
+async function notifyCustomer(order, intent){
+  const cfg=SEC[order._type];
+  const partner=findPartner(order._type,String(order[cfg.partnerField]||""));
+  const ctx=ctxOf(order, partner);
+  const r=await composeMsg("customer", intent, ctx);
+  const phone=normPhone(order.phone||order.guest_phone);
+  if(phone) await waAuto(phone, r.text, intent, ctx, "customer");
+  return r;
+}
+
+/* ═══════════════ WHATSAPP AUTO-SEND ═══════════════
+   يحاول النص الحر أولاً. إن رفضته Meta (خارج نافذة 24 ساعة)
+   يحوّل تلقائياً إلى قالب معتمد. وإن لم يُهيَّأ واتساب بعد،
+   يسجّل ذلك بهدوء ويبقى رابط wa.me متاحاً يدوياً.        */
+const WA_TEMPLATES = {           // اسم القالب المعتمد في Meta ← عدّله لأسمائك
+  notify:   "hut_new_order",
+  remind:   "hut_order_reminder",
+  escalate: "hut_order_reminder",
+  confirm:  "hut_booking_confirmed",
+  waiting:  "hut_order_received",
+  done:     "hut_thank_you"
+};
+
+async function waAuto(phone, text, intent, ctx, who){
+  if(waState==="off") return false;
+  try{
+    let d=await api({action:"WA_SEND", to:phone, text, order_id:ctx.id});
+    if(d.success){ waState="on"; logIt("ok","💬 أُرسلت واتساب آلياً",`#${ctx.id} → ${who==="customer"?"الزبون":"الشريك"} (${phone})`); return true; }
+
+    if(d.reason==="not_configured"){
+      if(waState!=="unconfigured"){ waState="unconfigured"; updateWaChip(); logIt("up","⚙️ واتساب غير مُهيّأ","أضف WA_TOKEN و WA_PHONE_ID في Script Properties لتفعيل الإرسال الآلي"); }
+      return false;
+    }
+    // خارج نافذة 24 ساعة → قالب معتمد
+    if(d.reason==="needs_template"){
+      const tpl=WA_TEMPLATES[intent]||WA_TEMPLATES.notify;
+      const params=[ctx.customer||ctx.partner||"", String(ctx.id||""), ctx.service||"", ctx.date||""].filter(x=>x!=="");
+      const d2=await api({action:"WA_SEND", to:phone, template:tpl, params, lang:"ar", order_id:ctx.id});
+      if(d2.success){ waState="on"; logIt("ok","💬 أُرسلت بقالب معتمد",`#${ctx.id} → ${phone} (${tpl})`); return true; }
+      logIt("up","⚠️ تعذّر إرسال القالب",`${tpl}: ${d2.msg||"—"}`);
+      return false;
+    }
+    logIt("up","⚠️ تعذّر إرسال واتساب",`#${ctx.id}: ${d.msg||d.reason||"—"}`);
+  }catch(e){}
+  return false;
+}
+
+function updateWaChip(){
+  const c=$("waChip"); if(!c) return;
+  const map={ on:["💬 واتساب آلي مُفعّل","wa-on"], unconfigured:["💬 واتساب غير مُهيّأ","wa-off"], off:["💬 واتساب موقوف","wa-off"], unknown:["💬 واتساب: يُفحص…","wa-off"] };
+  const [t,cls]=map[waState]||map.unknown;
+  c.textContent=t; c.className="chip-ai "+cls;
+}
+
+/* ═══════════════ AI COMPOSE ═══════════════ */
+async function composeMsg(audience, intent, ctx){
+  try{
+    const d=await api({action:"AI_COMPOSE", audience, intent, ctx});
+    if(d && d.text){ if(d.source==="ai") setAiMode(true); return d; }
+  }catch(e){}
+  return { text:localTemplate(audience,intent,ctx), source:"local" };
+}
+function localTemplate(audience,intent,c){
+  const t=c.total?fmt(c.total)+" د.ع":"";
+  if(audience==="partner"){
+    if(intent==="remind") return `تذكير من منصة الحوت 🐋\nالطلب #${c.id} (${c.service}) ما زال بانتظار تأكيدك.\nيرجى الرد بأسرع وقت.`;
+    if(intent==="escalate") return `تنبيه أخير — منصة الحوت 🐋\nالطلب #${c.id} لم يُؤكَّد بعد وسيُحوَّل لشريك آخر.`;
+    return `طلب جديد 🐋 #${c.id}\n${c.service}${c.city?" — "+c.city:""}${c.date?" — "+c.date:""}${t?" — "+t:""}\nيرجى التأكيد من لوحتك.`;
+  }
+  if(intent==="confirm") return `تم تأكيد حجزك ✅ منصة الحوت 🐋\n#${c.id} — ${c.service}${c.partner?"\nمقدّم الخدمة: "+c.partner:""}\nسيتواصل معك لإتمام التفاصيل.`;
+  if(intent==="done") return `شكراً لاختيارك منصة الحوت 🐋\nنتمنى أن الخدمة نالت رضاك. رأيك يهمّنا 🌟`;
+  return `أهلاً${c.customer?" "+c.customer:""} 👋\nاستلمنا طلبك #${c.id} (${c.service}) ونجهّزه الآن.\nسنبلغك فور التأكيد. منصة الحوت 🐋`;
+}
+function setAiMode(on){
+  if(aiMode===on) return; aiMode=on;
+  const c=$("aiChip");
+  c.textContent = on ? "🤖 الذكاء الاصطناعي مُفعّل" : "وضع القوالب الذكية";
+  c.classList.toggle("tmpl",!on);
+}
+function ctxOf(o,partner){
+  const cfg=SEC[o._type];
+  return {
+    id:o.id, service:svcOf(o), city:o.city||"", date:o.date||o.date_arrive||"",
+    total:cleanN(o.total), customer:o.name||o.guest_name||"",
+    partner:(partner&&partner.name)||o[cfg.partnerField]||"", sector:cfg.label
+  };
+}
+function svcOf(o){
+  if(o._type==="car") return o.car||"تأجير سيارة";
+  if(o._type==="hotel") return (o.room_type?`غرفة ${o.room_type}`:"حجز فندق")+(o.hotel_name?` — ${o.hotel_name}`:"");
+  if(o._type==="hall") return (o.event_type||"مناسبة")+(o.hall_name?` — ${o.hall_name}`:"");
+  return (o.course||"كورس قيادة")+(o.school_name?` — ${o.school_name}`:"");
+}
+
+/* ═══════════════ RENDER ═══════════════ */
+function render(){
+  const live=ORDERS.filter(o=>!["cancelled","rejected"].includes(String(o.status)));
+  const cols={1:[],2:[],3:[],4:[]};
+  live.forEach(o=>{ const s=stageOf(o); if(cols[s]) cols[s].push(o); });
+
+  const today=new Date().toISOString().split("T")[0];
+  const todayN=live.filter(o=>String(o.created_at||"").startsWith(today)).length;
+  const doneRev=live.filter(o=>o.status==="completed").reduce((a,o)=>a+cleanN(o.total),0);
+  const autoN=live.filter(o=>o.engine_assigned_at).length;
+  $("hstats").innerHTML=`
+    <div class="hs"><div class="hs-v a">${cols[1].length}</div><div class="hs-l">بانتظار الإسناد</div></div>
+    <div class="hs"><div class="hs-v b">${cols[2].length}</div><div class="hs-l">لدى الشركاء</div></div>
+    <div class="hs"><div class="hs-v r">${cols[3].length}</div><div class="hs-l">يحتاج تصعيداً</div></div>
+    <div class="hs"><div class="hs-v g">${cols[4].length}</div><div class="hs-l">مُنجَز</div></div>
+    <div class="hs"><div class="hs-v">${autoN}</div><div class="hs-l">أسندها المحرّك</div></div>
+    <div class="hs"><div class="hs-v">${todayN}</div><div class="hs-l">طلبات اليوم</div></div>
+    <div class="hs"><div class="hs-v g">${fmt(doneRev)}</div><div class="hs-l">إيراد منجَز د.ع</div></div>`;
+
+  [1,2,3,4].forEach(s=>{
+    $("n"+s).textContent=cols[s].length;
+    const box=$("c"+s);
+    const sorted = s===4 ? cols[s].slice(0,25) : cols[s].sort((a,b)=>ageMin(b.created_at)-ageMin(a.created_at));
+    box.innerHTML = sorted.length ? sorted.map(o=>card(o,s)).join("")
+      : `<div class="empty"><div class="empty-i">${s===1?"📭":s===2?"🤝":s===3?"✅":"🌊"}</div><div class="empty-t">${s===3?"لا تأخير":"لا طلبات"}</div></div>`;
+  });
+}
+
+function card(o,stage){
+  const cfg=SEC[o._type];
+  const age=ageMin(o.created_at);
+  const partner=String(o[cfg.partnerField]||"").trim();
+  const tcls = age>=T_ESCALATE?"late":age>=T_REMIND?"warn":"";
+  const phone=normPhone(o.phone||o.guest_phone);
+
+  let matchHtml="";
+  if(stage===1 && cfg.needsMatch){
+    const m=bestMatch(o);
+    matchHtml = m ? `<div class="match"><span class="sc">${m.score}</span>🎯 الأنسب: <b>${esc(m.p.name)}</b><br><span style="font-weight:700;opacity:.85">${esc(m.why.join(" · "))}</span></div>`
+                  : `<div class="match" style="background:var(--red-l);border-color:rgba(255,56,92,.2);color:var(--red)">⚠️ لا شريك نشِط مطابق في ${esc(o.city||"—")}</div>`;
+  }
+
+  let acts="";
+  if(stage===1 && cfg.needsMatch){
+    const m=bestMatch(o);
+    if(m) acts+=`<button class="ab ab-ok" onclick="assignNow('${esc(o._type)}','${esc(o._key)}','${esc(m.p.name)}',${m.score})">🎯 إسناد الآن</button>`;
+  }
+  acts+=`<button class="ab ab-ai" onclick='openMsg(${JSON.stringify({t:o._type,k:o._key}).replace(/'/g,"&#39;")})'>🤖 رسالة</button>`;
+  if(phone) acts+=`<a class="ab ab-wa" href="https://wa.me/${phone}" target="_blank">💬 الزبون</a>`;
+  if(stage===3) acts+=`<button class="ab ab-no" onclick="escalateNow('${esc(o._type)}','${esc(o._key)}')">🔄 تصعيد</button>`;
+
+  return `<div class="oc ${stage===3?"act":""}">
+    <div class="oc-h"><span class="oc-em">${cfg.emoji}</span><span class="oc-id mono">#${esc(o.id||"")}</span><span class="tmr ${tcls}">${ageLbl(age)}</span></div>
+    <div class="oc-t">${esc(svcOf(o))}</div>
+    <div class="oc-d">👤 ${esc(o.name||o.guest_name||"—")} · 📍 ${esc(o.city||"—")}${partner?`<br>🏢 ${esc(partner)}`:""}</div>
+    ${matchHtml}
+    <div class="oc-f"><span class="oc-p">${fmt(o.total)} <span class="u">د.ع</span></span></div>
+    <div class="acts">${acts}</div>
+  </div>`;
+}
+
+function renderLog(){
+  $("logN").textContent=LOG.length;
+  $("logList").innerHTML = LOG.length ? LOG.slice(0,50).map(l=>`
+    <div class="lg"><div class="lg-i ${l.kind}">${l.kind==="ai"?"🤖":l.kind==="up"?"⚡":"✓"}</div>
+    <div class="lg-b"><div class="lg-t">${esc(l.title)}</div><div class="lg-s">${esc(l.sub)}</div></div>
+    <div class="lg-m">${new Date(l.ts).toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit"})}</div></div>`).join("")
+    : `<div class="empty"><div class="empty-i">📜</div><div class="empty-t">لم يبدأ المحرّك بعد</div></div>`;
+}
+
+/* ═══════════════ ACTIONS ═══════════════ */
+window.assignNow=async function(type,key,name,score){
+  const cfg=SEC[type];
+  const ok=await fbPatch(`${cfg.node}/${key}`,{office:name,engine_assigned_at:new Date().toISOString(),engine_score:score});
+  if(ok){
+    const o=ORDERS.find(x=>x._key===key);
+    logIt("ok","🎯 إسناد يدوي",`#${o?.id} → ${name}`);
+    if(o) await notifyPartner(o,{name},"notify");
+    toast("تم الإسناد ✅","g"); tick(false);
+  } else toast("تعذّر الإسناد","e");
+};
+window.escalateNow=async function(type,key){
+  const o=ORDERS.find(x=>x._key===key); if(!o) return;
+  const cfg=SEC[type], cur=String(o[cfg.partnerField]||"");
+  if(!cfg.needsMatch){ toast("هذا القطاع يختاره الزبون — أرسل تنبيهاً بدل التحويل","e"); return; }
+  const tried=((o.engine_tried||"")+","+cur).replace(/^,/,"");
+  const m=bestMatch({...o,engine_tried:tried});
+  if(!m){ toast("لا بديل متاح","e"); return; }
+  await fbPatch(`${cfg.node}/${key}`,{office:m.p.name,engine_tried:tried,engine_reminded:false});
+  logIt("up","🔄 تصعيد يدوي",`#${o.id}: ${cur} → ${m.p.name}`);
+  await notifyPartner(o,m.p,"notify");
+  toast(`حُوّل إلى ${m.p.name}`,"g"); tick(false);
+};
+
+window.openMsg=async function(ref){
+  const o=ORDERS.find(x=>x._key===ref.k && x._type===ref.t); if(!o) return;
+  msgCtx={o}; whoNow="partner";
+  $("mm-s").textContent=`#${o.id} — ${svcOf(o)}`;
+  switchWho("partner");
+  $("msgMB").classList.add("on");
+};
+window.switchWho=async function(w){
+  whoNow=w;
+  $("w-partner").classList.toggle("on",w==="partner");
+  $("w-customer").classList.toggle("on",w==="customer");
+  $("mm-push").style.display = w==="partner" ? "" : "none";
+  $("mm-hint").textContent = w==="partner"
+    ? "الإرسال للوحة الشريك آلي وفوري — يظهر داخل لوحته مباشرةً."
+    : "الرسالة جاهزة — أرسلها للزبون عبر واتساب بضغطة واحدة.";
+  await regen();
+};
+window.regen=async function(){
+  if(!msgCtx) return;
+  const o=msgCtx.o, cfg=SEC[o._type];
+  const st=String(o.status||"pending");
+  const intent = whoNow==="partner"
+    ? (ageMin(o.created_at)>=T_ESCALATE?"escalate":ageMin(o.created_at)>=T_REMIND?"remind":"notify")
+    : (st==="completed"?"done":["active","confirmed"].includes(st)?"confirm":"waiting");
+  $("mm-box").textContent="⏳ جاري الصياغة...";
+  const partner=findPartner(o._type,String(o[cfg.partnerField]||""));
+  const r=await composeMsg(whoNow,intent,ctxOf(o,partner));
+  $("mm-box").textContent=r.text;
+  $("mm-t").textContent = r.source==="ai" ? "🤖 صيغت بالذكاء الاصطناعي" : "📨 رسالة الحجز";
+};
+window.pushToPartner=async function(){
+  if(!msgCtx) return;
+  const o=msgCtx.o, cfg=SEC[o._type];
+  const pname=String(o[cfg.partnerField]||"").trim();
+  if(!pname){ toast("لا شريك مُسنَد بعد","e"); return; }
+  const p=findPartner(o._type,pname)||{name:pname};
+  const key=`${p.id||p.name}`.replace(/[.#$/\[\]]/g,"_");
+  const ok=await fbPut(`hut_engine_msgs/${key}/${o.id}`,{
+    order_id:o.id,type:o._type,intent:"manual",
+    text:$("mm-box").textContent,source:"engine",ts:new Date().toISOString(),read:false
+  });
+  if(ok){ logIt("ok","⚡ أُرسلت للوحة الشريك",`#${o.id} → ${pname}`); toast("وصلت لوحة الشريك ✅","g"); closeMB("msgMB"); }
+  else toast("تعذّر الإرسال","e");
+};
+window.sendWa=async function(){
+  if(!msgCtx) return;
+  const o=msgCtx.o, cfg=SEC[o._type];
+  const partner=findPartner(o._type,String(o[cfg.partnerField]||""));
+  let phone = whoNow==="customer" ? normPhone(o.phone||o.guest_phone) : normPhone((partner||{}).phone);
+  if(!phone){ toast("لا رقم متاح","e"); return; }
+  const text=$("mm-box").textContent;
+  const intent = whoNow==="partner" ? "notify" : "confirm";
+  const sent = await waAuto(phone, text, intent, ctxOf(o,partner), whoNow);
+  if(sent){ toast("أُرسلت آلياً عبر واتساب ✅","g"); closeMB("msgMB"); return; }
+  // ارتداد: فتح واتساب يدوياً
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`,"_blank");
+  logIt("ok","💬 فُتح واتساب يدوياً",`#${o.id} → ${whoNow==="customer"?"الزبون":"الشريك"}`);
+  closeMB("msgMB");
+};
+
+/* ═══════════════ ENGINE SWITCH ═══════════════ */
+// المفتاح يتحكّم بالمحرّك على الخادم (لا بالمتصفح)
+window.toggleEngine=async function(){
+  const want=!engineOn;
+  try{
+    const d=await api({action:"ENGINE_TOGGLE", enabled:want, pass:PASS});
+    if(d && d.success){
+      engineOn=d.enabled;
+      paintEngine();
+      toast(engineOn?"المحرّك يعمل على الخادم ⚡":"أُوقف المحرّك مؤقتاً", engineOn?"g":"e");
+    } else toast(d.msg||"تعذّر التغيير","e");
+  }catch(e){ toast("تعذّر الاتصال بالخادم","e"); }
+};
+function paintEngine(){
+  $("engBox").classList.toggle("off",!engineOn);
+  $("engTxt").textContent=engineOn?"المحرّك يعمل ذاتياً":"المحرّك متوقّف";
+  $("engPulse").style.display=engineOn?"":"none";
+}
+function startTimer(){ stopTimer(); timer=setInterval(()=>tick(false),TICK_MS); }
+function stopTimer(){ if(timer){clearInterval(timer);timer=null;} }
+
+/* ═══════════════ BOOT ═══════════════ */
+(function(){
+  let ok=false; try{ ok=sessionStorage.getItem("hut_eng")==="1"; }catch(e){}
+  if(ok) open_(); else $("gp").focus();
+  renderLog();
+})();
+</script>
+</body>
+</html>

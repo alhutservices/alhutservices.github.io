@@ -13,23 +13,14 @@
 
 <style>
 /* ═══════════════════════════════════════════════════════════
-   مركز الاتصال — أداة مكتبية كثيفة، عكس لوحة الشريك تماماً:
+   مركز الاتصال — أداة مكتبية كثيفة، عكس لوحة الشريك:
    ورق فاتح، تباين عالٍ، صفوف مضغوطة، لوحة مفاتيح أولاً.
    اللون يقول حالة توفّر فقط: أخضر متاح، رمادي مشغول.
 ═══════════════════════════════════════════════════════════ */
 :root{
-  --paper:#F2F5F7;
-  --card:#FFFFFF;
-  --line:#DCE4E8;
-  --line-2:#EDF1F3;
-  --ink:#16232B;
-  --ink-2:#4A616C;
-  --ink-3:#8398A3;
-  --free:#0E9F6E;      /* متاح */
-  --busy:#94A6AE;      /* مشغول */
-  --wait:#C77700;      /* بانتظار رد */
-  --stop:#D6453C;      /* ملغى / مرفوض */
-  --focus:#16232B;
+  --paper:#F2F5F7; --card:#FFFFFF; --line:#DCE4E8; --line-2:#EDF1F3;
+  --ink:#16232B; --ink-2:#4A616C; --ink-3:#8398A3;
+  --free:#0E9F6E; --busy:#94A6AE; --wait:#C77700; --stop:#D6453C;
   --r:10px;
   --sans:"IBM Plex Sans Arabic",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,monospace;
@@ -40,19 +31,19 @@ body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:
 button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 button{cursor:pointer;border:none;background:none}
 .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
-:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:6px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .hidden{display:none!important}
 
-/* ── الترويسة والبحث ── */
 .top{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--line)}
 .top-in{max-width:1180px;margin:0 auto;padding:12px 16px}
-.top-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.top-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
 .logo{font-weight:700;font-size:15px;white-space:nowrap;display:flex;align-items:center;gap:7px}
 .logo em{font-style:normal;font-size:18px}
 .logo small{color:var(--ink-3);font-weight:500;font-size:12px}
 .spacer{flex:1}
-.conn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);white-space:nowrap}
+.who{font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+.fresh{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);white-space:nowrap}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-3)}
 .dot.on{background:var(--free)}
 .dot.off{background:var(--stop)}
@@ -60,13 +51,10 @@ button{cursor:pointer;border:none;background:none}
 .ghost:hover{border-color:var(--ink-3)}
 
 .searchbar{position:relative}
-.searchbar input{
-  width:100%;padding:15px 46px 15px 16px;border-radius:12px;border:1.5px solid var(--line);
-  background:var(--card);font-size:16px;font-weight:500;
-}
+.searchbar input{width:100%;padding:15px 46px 15px 16px;border-radius:12px;border:1.5px solid var(--line);
+  background:var(--card);font-size:16px;font-weight:500}
 .searchbar input:focus{border-color:var(--ink);outline:none}
-.searchbar .mag{position:absolute;inset-inline-start:16px;top:50%;transform:translateY(-50%);
-  color:var(--ink-3);font-size:17px;pointer-events:none}
+.searchbar .mag{position:absolute;inset-inline-start:16px;top:50%;transform:translateY(-50%);color:var(--ink-3);font-size:17px;pointer-events:none}
 .searchbar .kbd{position:absolute;inset-inline-end:14px;top:50%;transform:translateY(-50%);
   font-family:var(--mono);font-size:11px;color:var(--ink-3);border:1px solid var(--line);
   border-radius:5px;padding:2px 6px;background:var(--paper)}
@@ -74,11 +62,9 @@ button{cursor:pointer;border:none;background:none}
 
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
 .filters select{padding:7px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);font-size:13px}
-.pill{padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--card);
-  font-size:13px;color:var(--ink-2);white-space:nowrap}
+.pill{padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:13px;color:var(--ink-2);white-space:nowrap}
 .pill.on{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:600}
 .count{font-size:12.5px;color:var(--ink-3);margin-inline-start:auto;white-space:nowrap}
-
 .tabs{display:flex;gap:2px;background:var(--line-2);padding:3px;border-radius:10px;width:max-content}
 .tabs button{padding:8px 18px;border-radius:8px;font-size:13.5px;color:var(--ink-2);font-weight:500}
 .tabs button.on{background:var(--card);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
@@ -91,10 +77,7 @@ main{max-width:1180px;margin:0 auto;padding:16px}
 .avail-hd b{font-size:15px}
 .avail-hd span{font-size:12.5px;color:var(--ink-3)}
 .offices{display:flex;gap:10px;overflow-x:auto;padding:14px 16px;scrollbar-width:thin}
-.office{
-  flex:none;min-width:212px;border:1px solid var(--line);border-radius:12px;padding:12px;
-  background:var(--paper);position:relative;
-}
+.office{flex:none;min-width:212px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--paper)}
 .office.has{border-color:rgba(14,159,110,.45);background:#F1FAF6}
 .office-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:3px}
 .office-hd b{font-size:14px;line-height:1.35}
@@ -106,12 +89,8 @@ main{max-width:1180px;margin:0 auto;padding:16px}
   border-radius:8px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;text-decoration:none}
 .call.off{background:var(--line);color:var(--ink-3);pointer-events:none}
 
-/* ── صفوف الأسطول ── */
-.row-car{
-  display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;
-  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-  padding:10px 12px;margin-bottom:8px;
-}
+.row-car{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin-bottom:8px}
 .row-car.busy{opacity:.62}
 .thumb{width:56px;height:44px;border-radius:7px;object-fit:cover;background:var(--line-2);display:block}
 .thumb-ph{width:56px;height:44px;border-radius:7px;background:var(--line-2);display:grid;place-items:center;font-size:17px;opacity:.5}
@@ -125,11 +104,8 @@ main{max-width:1180px;margin:0 auto;padding:16px}
 .state.free{color:var(--free)}
 .state.busy{color:var(--busy)}
 
-/* ── صفوف الطلبات ── */
-.row-ord{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-  padding:11px 13px;margin-bottom:8px;border-inline-start:3px solid var(--edge,var(--line));
-}
+.row-ord{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:11px 13px;margin-bottom:8px;border-inline-start:3px solid var(--edge,var(--line))}
 .row-ord.st-pending{--edge:var(--wait)}
 .row-ord.st-active,.row-ord.st-confirmed{--edge:var(--free)}
 .row-ord.st-completed{--edge:var(--busy)}
@@ -152,17 +128,21 @@ main{max-width:1180px;margin:0 auto;padding:16px}
 .empty .ico{font-size:34px;display:block;margin-bottom:12px;opacity:.4}
 .empty b{display:block;color:var(--ink-2);font-size:15px;margin-bottom:5px}
 .empty p{margin:0;font-size:13px;max-width:300px;margin-inline:auto}
-.note{background:#FDF3E0;border:1px solid #F2D9A8;color:#7A4C00;padding:11px 14px;
-  border-radius:var(--r);font-size:13px;margin-bottom:14px}
+.note{background:#FDF3E0;border:1px solid #F2D9A8;color:#7A4C00;padding:11px 14px;border-radius:var(--r);font-size:13px;margin-bottom:14px}
 
-/* ── بوابة الدخول ── */
+/* ── الدخول ── */
 .gate{min-height:100dvh;display:grid;place-items:center;padding:24px}
-.gate-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;width:100%;max-width:360px}
-.gate-card h1{font-size:19px;margin:0 0 5px}
-.gate-card p{color:var(--ink-3);font-size:13px;margin:0 0 20px}
-.gate-card input{width:100%;padding:13px;border-radius:9px;border:1.5px solid var(--line);margin-bottom:11px;text-align:center;font-family:var(--mono);font-size:17px;letter-spacing:.15em}
+.gate-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px;width:100%;max-width:370px}
+.gate-card .em{font-size:30px;display:block;text-align:center;margin-bottom:10px}
+.gate-card h1{font-size:19px;margin:0 0 5px;text-align:center}
+.gate-card p{color:var(--ink-3);font-size:13px;margin:0 0 20px;text-align:center}
+.gate-card label{display:block;font-size:12.5px;color:var(--ink-2);margin-bottom:5px;font-weight:500}
+.gate-card input{width:100%;padding:12px;border-radius:9px;border:1.5px solid var(--line);margin-bottom:12px}
+.gate-card input:focus{border-color:var(--ink);outline:none}
+.gate-card input.code{text-align:center;font-family:var(--mono);font-size:17px;letter-spacing:.15em}
 .gate-card button{width:100%;padding:13px;border-radius:9px;background:var(--ink);color:#fff;font-weight:600}
-.gate-err{color:var(--stop);font-size:13px;margin-bottom:11px;text-align:center}
+.gate-err{background:#FBEAE9;border:1px solid #F2C4C0;color:var(--stop);padding:10px 12px;border-radius:8px;font-size:13px;margin-bottom:13px}
+.gate-hint{font-size:12px;color:var(--ink-3);text-align:center;margin-top:14px;line-height:1.7}
 
 .toast{position:fixed;bottom:22px;inset-inline-start:50%;transform:translateX(50%);z-index:90;
   background:var(--ink);color:#fff;padding:11px 18px;border-radius:9px;font-size:13.5px;font-weight:500;
@@ -182,14 +162,19 @@ main{max-width:1180px;margin:0 auto;padding:16px}
 </head>
 <body>
 
-<!-- ══════════ بوابة الموظفين ══════════ -->
+<!-- ══════════ الدخول ══════════ -->
 <div id="gate" class="gate">
   <div class="gate-card">
+    <span class="em">🐋</span>
     <h1>مركز الاتصال</h1>
-    <p>أدخل رمز الموظف للمتابعة</p>
+    <p>سجّل الدخول باسمك ورمزك</p>
     <div id="gateErr" class="gate-err hidden"></div>
-    <input id="gateCode" type="password" inputmode="numeric" placeholder="••••••" autocomplete="off">
-    <button id="gateGo">دخول</button>
+    <label>اسم الموظف</label>
+    <input id="gName" autocomplete="username" placeholder="كما هو مسجّل في شيت الموظفين">
+    <label>رمز الدخول</label>
+    <input id="gCode" class="code" type="password" inputmode="numeric" autocomplete="current-password" placeholder="••••">
+    <button id="gGo">دخول</button>
+    <p class="gate-hint">نسيت رمزك؟ الإدارة تجده في شيت الموظفين.<br>تنتهي الجلسة تلقائياً بعد ٦ ساعات.</p>
   </div>
 </div>
 
@@ -205,8 +190,10 @@ main{max-width:1180px;margin:0 auto;padding:16px}
         <button data-tab="orders">الطلبات</button>
       </div>
       <div class="spacer"></div>
-      <div class="conn"><i class="dot" id="dot"></i><span id="connTxt">يتصل…</span></div>
-      <button class="ghost" id="btnSync">تحديث الدليل</button>
+      <span class="who" id="who"></span>
+      <div class="fresh"><i class="dot" id="dot"></i><span id="freshTxt">يُحمّل…</span></div>
+      <button class="ghost" id="btnSync">تحديث</button>
+      <button class="ghost" id="btnOut">خروج</button>
     </div>
 
     <div class="searchbar">
@@ -264,35 +251,21 @@ main{max-width:1180px;margin:0 auto;padding:16px}
 
 <div id="toastHost"></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   ① الإعدادات
+   ① الإعداد — قيمة واحدة فقط
+   لا توكن ولا رمز داخل هذه الصفحة: الدخول يتحقّق منه السيرفر
+   مقابل شيت Staff، ويعطي جلسة مؤقتة تنتهي بعد ٦ ساعات.
    ═══════════════════════════════════════════════════════════════ */
-const CFG = {
-  API       : "https://script.google.com/macros/s/PUT_YOUR_DEPLOYMENT_ID/exec",
-  TOKEN     : "PUT_YOUR_API_TOKEN",
-  STAFF_CODE: "PUT_A_STAFF_CODE",     // بوابة محلية — اقرأ الملاحظة الأمنية
-  FIREBASE  : {
-    apiKey           : "PUT_YOUR_WEB_API_KEY",
-    authDomain       : "alhut-for-rent.firebaseapp.com",
-    databaseURL      : "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId        : "alhut-for-rent",
-    storageBucket    : "alhut-for-rent.appspot.com",
-    messagingSenderId: "PUT_YOUR_SENDER_ID",
-    appId            : "PUT_YOUR_APP_ID"
-  },
-  DIR_TTL: 15 * 60 * 1000              // مدة صلاحية دليل الشركاء المخزّن
-};
+const API = "https://script.google.com/macros/s/PUT_YOUR_DEPLOYMENT_ID/exec";
+
+const REFRESH_MS = 45000;   // تحديث دوري خفيف؛ يتوقّف تلقائياً حين تُخفى الصفحة
 
 const SECTORS = {
-  car   : {node:"hut_car_orders",     label:"سيارات",      icon:"🚗", partner:"office"},
-  hotel : {node:"hut_hotel_bookings", label:"فنادق",       icon:"🏨", partner:"hotel_name"},
-  hall  : {node:"hut_hall_bookings",  label:"قاعات",       icon:"🥂", partner:"hall_name"},
-  school: {node:"hut_drive_students", label:"مدارس سياقة", icon:"🎓", partner:"school_name"}
+  car   : {label:"سيارات",      icon:"🚗"},
+  hotel : {label:"فنادق",       icon:"🏨"},
+  hall  : {label:"قاعات",       icon:"🥂"},
+  school: {label:"مدارس سياقة", icon:"🎓"}
 };
 const STATUS = {
   pending  :{t:"بانتظار الرد", c:"wait"},
@@ -308,205 +281,164 @@ const CATS = {economy:"اقتصادية", family:"عائلية", luxury:"فاخ�
    ② الحالة
    ═══════════════════════════════════════════════════════════════ */
 let S = {
+  session:"", staff:"",
   tab:"fleet", q:"", freeOnly:true,
-  cars:{},          /* id → سيارة (الشيت أساس، فايربيس يحدّث الحالة) */
-  offices:{},       /* office_id → {name, city, phone, status} */
-  orders:[],        /* موحّدة من القطاعات الأربعة */
-  cities:new Set()
+  cars:[], orders:[], offices:{}, cities:new Set(),
+  lastSync:0, timer:null
 };
-let db = null;
 
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money = n => (Number(n)||0).toLocaleString("en-US");
-const ready = v => v && String(v).indexOf("PUT_YOUR") !== 0 && String(v).indexOf("PUT_A") !== 0;
-const norm = s => String(s??"").toLowerCase().replace(/[\u064B-\u0652]/g,"").replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").trim();
+const norm = s => String(s??"").toLowerCase()
+  .replace(/[\u064B-\u0652]/g,"").replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").trim();
 
 /* ═══════════════════════════════════════════════════════════════
-   ③ البوابة
+   ③ الاتصال — JSONP يتجاوز قيود CORS في تحويلات Apps Script
    ═══════════════════════════════════════════════════════════════ */
-$("#gateGo").onclick = tryGate;
-$("#gateCode").addEventListener("keydown", e => { if(e.key === "Enter") tryGate(); });
-if(sessionStorage.getItem("hut_cc") === "1") openApp();
+function call(params){
+  return new Promise((resolve, reject) => {
+    const cb = "cc_" + Date.now() + Math.floor(Math.random()*1000);
+    const q  = new URLSearchParams(Object.assign({callback:cb}, params));
+    const sc = document.createElement("script");
+    const t  = setTimeout(() => { done(); reject(new Error("انتهت مهلة الاتصال")); }, 30000);
+    function done(){ clearTimeout(t); delete window[cb]; sc.remove(); }
+    window[cb] = d => { done(); resolve(d); };
+    sc.onerror = () => { done(); reject(new Error("تعذّر الوصول للخادم")); };
+    sc.src = API + "?" + q.toString();
+    document.body.appendChild(sc);
+  });
+}
 
-function tryGate(){
-  if(!ready(CFG.STAFF_CODE)) return gateErr("لم يُضبط رمز الموظف في إعدادات الملف بعد.");
-  if($("#gateCode").value.trim() !== CFG.STAFF_CODE) return gateErr("الرمز غير صحيح.");
-  sessionStorage.setItem("hut_cc","1");
-  openApp();
+/* ═══════════════════════════════════════════════════════════════
+   ④ الدخول
+   ═══════════════════════════════════════════════════════════════ */
+$("#gGo").onclick = doLogin;
+$("#gCode").addEventListener("keydown", e => { if(e.key === "Enter") doLogin(); });
+$("#gName").addEventListener("keydown", e => { if(e.key === "Enter") $("#gCode").focus(); });
+
+(function resume(){
+  const s = sessionStorage.getItem("hut_cc_session");
+  const n = sessionStorage.getItem("hut_cc_name");
+  if(s){ S.session = s; S.staff = n || ""; openApp(); }
+})();
+
+async function doLogin(){
+  const name = $("#gName").value.trim();
+  const code = $("#gCode").value.trim();
+  $("#gateErr").classList.add("hidden");
+  if(!name || !code) return gateErr("اكتب اسمك ورمزك.");
+  if(API.indexOf("PUT_YOUR") !== -1) return gateErr("ضع رابط النشر في المتغيّر API أعلى الملف.");
+
+  const btn = $("#gGo");
+  btn.innerHTML = '<span class="spin"></span>'; btn.disabled = true;
+  try{
+    const r = await call({action:"staffLogin", name, code});
+    if(!r || !r.success) return gateErr((r && r.msg) || "تعذّر الدخول.");
+    S.session = r.session; S.staff = r.name;
+    sessionStorage.setItem("hut_cc_session", r.session);
+    sessionStorage.setItem("hut_cc_name", r.name);
+    openApp();
+  }catch(e){ gateErr(e.message); }
+  finally{ btn.textContent = "دخول"; btn.disabled = false; }
 }
 function gateErr(m){ const e = $("#gateErr"); e.textContent = m; e.classList.remove("hidden"); }
 
 function openApp(){
   $("#gate").classList.add("hidden");
   $("#app").classList.remove("hidden");
-  boot();
+  $("#who").textContent = S.staff ? "أهلاً " + S.staff : "";
+  sync(true);
+  schedule();
 }
+
+function logout(){
+  clearInterval(S.timer);
+  sessionStorage.removeItem("hut_cc_session");
+  sessionStorage.removeItem("hut_cc_name");
+  location.reload();
+}
+$("#btnOut").onclick = () => { if(confirm("تسجيل الخروج؟")) logout(); };
 
 /* ═══════════════════════════════════════════════════════════════
-   ④ الاتصال
+   ⑤ اللقطة الدورية
    ═══════════════════════════════════════════════════════════════ */
-function apiGet(params){
-  return new Promise((resolve, reject) => {
-    const cb = "cc_cb_" + Date.now() + Math.floor(Math.random()*1000);
-    const q  = new URLSearchParams(Object.assign({token:CFG.TOKEN, callback:cb}, params));
-    const sc = document.createElement("script");
-    const t  = setTimeout(() => { done(); reject(new Error("انتهت مهلة الاتصال")); }, 25000);
-    function done(){ clearTimeout(t); delete window[cb]; sc.remove(); }
-    window[cb] = d => { done(); resolve(d); };
-    sc.onerror = () => { done(); reject(new Error("تعذّر الوصول للخادم")); };
-    sc.src = CFG.API + "?" + q.toString();
-    document.body.appendChild(sc);
-  });
+function schedule(){
+  clearInterval(S.timer);
+  S.timer = setInterval(() => { if(!document.hidden) sync(); }, REFRESH_MS);
 }
+document.addEventListener("visibilitychange", () => {
+  if(!document.hidden && Date.now() - S.lastSync > 15000) sync();
+});
 
-async function boot(){
-  if(!ready(CFG.API) || !ready(CFG.TOKEN)){
-    $("#fleetList").innerHTML = warn("أكمل إعدادات CFG في أعلى الملف (رابط النشر والتوكن) لتظهر البيانات.");
-    return;
-  }
-  await loadDirectory();
-  connectLive();
-}
-
-/* دليل الشركاء والأسطول من الشيت — مصدر الحقيقة، يتغيّر ببطء فيُخزَّن مؤقتاً */
-async function loadDirectory(force){
-  const cached = JSON.parse(localStorage.getItem("hut_cc_dir") || "null");
-  if(!force && cached && Date.now() - cached.ts < CFG.DIR_TTL){
-    applyDirectory(cached.data);
-    refreshFleetFromSheet();
-    return;
-  }
-  $("#fleetList").innerHTML = `<div class="empty"><span class="spin"></span><p style="margin-top:12px">يُحمّل الدليل…</p></div>`;
+async function sync(first){
+  if(first) $("#fleetList").innerHTML = `<div class="empty"><span class="spin"></span><p style="margin-top:12px">يُحمّل…</p></div>`;
+  setFresh(null, "يحدّث…");
   try{
-    const d = await apiGet({action:"getAdminFullData"});
-    if(!d || !d.success) throw new Error(d && d.msg || "رد غير متوقع");
-    const data = {
-      offices : d.carOffices   || [],
-      hotels  : d.hotels       || [],
-      halls   : d.halls        || [],
-      schools : d.driveSchools || []
-    };
-    localStorage.setItem("hut_cc_dir", JSON.stringify({ts:Date.now(), data}));
-    applyDirectory(data);
-    refreshFleetFromSheet();
+    const d = await call({action:"ccSnapshot", session:S.session});
+    if(!d || !d.success){
+      if(d && d.reason === "session"){ toast("انتهت الجلسة"); return logout(); }
+      throw new Error((d && d.msg) || "رد غير متوقع");
+    }
+    S.cars    = d.cars   || [];
+    S.orders  = d.orders || [];
+    S.offices = {};
+    (d.offices || []).forEach(o => {
+      S.offices[String(o.id)] = o;
+      if(o.city) S.cities.add(o.city);
+    });
+    S.cars.forEach(c => { if(c.city) S.cities.add(c.city); });
+    S.orders.forEach(o => { if(o.city) S.cities.add(o.city); });
+    fillCities();
+    S.lastSync = Date.now();
+    setFresh(true);
+    paint();
   }catch(e){
-    $("#fleetList").innerHTML = warn("تعذّر تحميل الدليل: " + e.message);
+    setFresh(false, "تعذّر التحديث");
+    if(first) $("#fleetList").innerHTML = `<div class="note">${esc(e.message)}</div>`;
   }
 }
 
-function applyDirectory(d){
-  S.offices = {};
-  d.offices.forEach(o => {
-    S.offices[String(o.id)] = {name:o.name, city:o.city, phone:o.phone, status:o.status};
-    if(o.city) S.cities.add(o.city);
-  });
-  [].concat(d.hotels, d.halls, d.schools).forEach(p => { if(p.city) S.cities.add(p.city); });
-  fillCities();
+$("#btnSync").onclick = async () => {
+  $("#btnSync").innerHTML = '<span class="spin"></span>';
+  await sync();
+  $("#btnSync").textContent = "تحديث";
+};
+
+function setFresh(ok, label){
+  $("#dot").className = "dot " + (ok === null ? "" : ok ? "on" : "off");
+  if(label){ $("#freshTxt").textContent = label; return; }
+  tickFresh();
 }
-
-/* الأسطول المتاح من الشيت (يشمل SHARED واسم المكتب ومدينته) */
-async function refreshFleetFromSheet(){
-  try{
-    const list = await apiGet({action:"getAvailableCars"});
-    if(!Array.isArray(list)) return;
-    list.forEach(c => {
-      S.cars[String(c.id)] = Object.assign({}, S.cars[String(c.id)], c, {status:"available", src:"sheet"});
-    });
-    renderFleet();
-  }catch(e){ toast("تعذّر تحديث الأسطول من الشيت"); }
+function tickFresh(){
+  if(!S.lastSync) return;
+  const s = Math.floor((Date.now() - S.lastSync) / 1000);
+  $("#freshTxt").textContent = s < 60 ? `محدّث قبل ${s} ثانية` : `محدّث قبل ${Math.floor(s/60)} دقيقة`;
 }
-
-/* ═══════════════════════════════════════════════════════════════
-   ⑤ الاتصال اللحظي
-   ═══════════════════════════════════════════════════════════════ */
-async function connectLive(){
-  if(!ready(CFG.FIREBASE.apiKey)){ setConn(false,"غير مربوط"); return; }
-  try{
-    if(!firebase.apps.length) firebase.initializeApp(CFG.FIREBASE);
-    db = firebase.database();
-    try{ await firebase.auth().signInAnonymously(); }catch(e){}
-    db.ref(".info/connected").on("value", s => setConn(!!s.val()));
-
-    /* الأسطول: فايربيس يكشف أيضاً السيارات الموقوفة التي لا يرجعها الشيت */
-    db.ref("hut_cars").on("value", snap => {
-      const raw = snap.val() || {};
-      Object.keys(raw).forEach(k => {
-        const c = raw[k]; if(!c || !c.id) return;
-        S.cars[String(c.id)] = Object.assign({}, S.cars[String(c.id)], c, {src:"fb"});
-      });
-      if(S.tab === "fleet") renderFleet();
-    });
-
-    /* الطلبات: القطاعات الأربعة */
-    Object.keys(SECTORS).forEach(sec => {
-      db.ref(SECTORS[sec].node).on("value", snap => {
-        const raw = snap.val() || {};
-        S.orders = S.orders.filter(o => o.sector !== sec)
-          .concat(Object.keys(raw).map(k => shape(raw[k], sec)).filter(Boolean));
-        S.orders.sort((a,b) => String(b.created_at||"").localeCompare(String(a.created_at||"")));
-        S.orders.forEach(o => { if(o.city) S.cities.add(o.city); });
-        fillCities();
-        if(S.tab === "orders") renderOrders();
-      });
-    });
-  }catch(e){ setConn(false,"انقطع"); }
-}
-
-function shape(o, sec){
-  if(!o || !o.id) return null;
-  const t = sec === "car"   ? (o.car || "تأجير سيارة")
-          : sec === "hotel" ? ("غرفة " + (o.room_type || ""))
-          : sec === "hall"  ? (o.event_type || "مناسبة")
-          :                   (o.course || "كورس سياقة");
-  return {
-    sector:sec, id:o.id, title:t,
-    customer:o.name || o.guest_name || "—",
-    phone:o.phone || o.guest_phone || "",
-    city:o.city || "", date:o.date || o.date_arrive || "",
-    total:o.total || 0, status:o.status || "pending",
-    partner:o[SECTORS[sec].partner] || "",
-    qty: sec==="car" ? (o.days||1)+" يوم" : sec==="hotel" ? (o.nights||1)+" ليلة"
-       : sec==="hall" ? (o.guests||0)+" ضيف" : "—",
-    created_at:o.created_at || ""
-  };
-}
-
-function setConn(on, label){
-  $("#dot").className = "dot " + (on ? "on" : "off");
-  $("#connTxt").textContent = label || (on ? "متصل لحظياً" : "غير متصل");
-}
+setInterval(tickFresh, 10000);
 
 function fillCities(){
-  const list = [...S.cities].sort();
+  const list = [...S.cities].filter(Boolean).sort();
   ["#fCity","#oCity"].forEach(sel => {
     const el = $(sel), cur = el.value;
     el.innerHTML = `<option value="">كل المدن</option>` +
-      list.map(c => `<option${c===cur?" selected":""}>${esc(c)}</option>`).join("");
+      list.map(c => `<option${c === cur ? " selected" : ""}>${esc(c)}</option>`).join("");
   });
 }
 
 /* ═══════════════════════════════════════════════════════════════
    ⑥ الأسطول — البحث وشريط التوفّر
    ═══════════════════════════════════════════════════════════════ */
-function officeOf(c){
-  const id = String(c.office_id || "").trim();
-  if(!id || id.toUpperCase() === "SHARED")
-    return {id:"SHARED", name:"أسطول المنصة", city:c.city || "—", phone:"", status:"active"};
-  return Object.assign({id}, S.offices[id] || {name:"مكتب غير معروف", city:c.city || "—", phone:"", status:"?"});
-}
-
 function fleetMatches(){
   const q = norm(S.q);
   const city = $("#fCity").value, cat = $("#fCat").value;
-  return Object.values(S.cars).filter(c => {
-    const off = officeOf(c);
-    if(city && off.city !== city) return false;
+  return S.cars.filter(c => {
+    if(city && c.city !== city) return false;
     if(cat && c.cat !== cat) return false;
     if(S.freeOnly && c.status !== "available") return false;
     if(!q) return true;
-    return [c.name, c.plate, c.color, CATS[c.cat] || c.cat, off.name, off.city]
+    return [c.name, c.plate, c.color, CATS[c.cat] || c.cat, c.office_name, c.city]
       .some(v => norm(v).includes(q));
   });
 }
@@ -522,7 +454,7 @@ function renderFleet(){
       ? `<div class="empty"><span class="ico">🔍</span><b>لا نتيجة لـ «${esc(S.q)}»</b>
          <p>جرّب اسماً أقصر، أو ألغِ «المتاحة فقط» لترى السيارات المشغولة أيضاً.</p></div>`
       : `<div class="empty"><span class="ico">🚗</span><b>لا سيارات مطابقة</b>
-         <p>عدّل الفلاتر أو حدّث الدليل.</p></div>`;
+         <p>عدّل الفلاتر أو اضغط تحديث.</p></div>`;
     return;
   }
   list.sort((a,b) =>
@@ -530,15 +462,15 @@ function renderFleet(){
     String(a.name).localeCompare(String(b.name), "ar"));
 
   box.innerHTML = list.map(c => {
-    const off = officeOf(c), free = c.status === "available";
+    const free = c.status === "available";
     return `<div class="row-car ${free?"":"busy"}">
       ${c.photo_url ? `<img class="thumb" src="${esc(c.photo_url)}" alt="" loading="lazy">`
                     : `<div class="thumb-ph">🚗</div>`}
       <div class="car-main">
         <b>${esc(c.name)}</b>
         <div class="car-sub">
-          <span>${esc(off.name)}</span>
-          <span>· ${esc(off.city)}</span>
+          <span>${esc(c.office_name)}</span>
+          ${c.city ? `<span>· ${esc(c.city)}</span>` : ""}
           ${c.plate ? `<span class="plate">${esc(c.plate)}</span>` : ""}
           ${c.color ? `<span>· ${esc(c.color)}</span>` : ""}
           ${c.cat ? `<span>· ${esc(CATS[c.cat] || c.cat)}</span>` : ""}
@@ -552,18 +484,20 @@ function renderFleet(){
   }).join("");
 }
 
-/* شريط التوفّر: جواب المكالمة في نظرة واحدة */
+/* جواب المكالمة في نظرة واحدة: أي مكتب فيه هذه السيارة الآن */
 function renderAvail(list){
   const box = $("#availStrip");
   if(!S.q.trim() || !list.length){ box.innerHTML = ""; return; }
 
   const by = {};
   list.forEach(c => {
-    const off = officeOf(c);
-    const k = off.id;
-    if(!by[k]) by[k] = {off, free:0, total:0, min:Infinity};
+    const k = c.office_id || "SHARED";
+    if(!by[k]) by[k] = {name:c.office_name, city:c.city, phone:c.office_phone, free:0, total:0, min:Infinity};
     by[k].total++;
-    if(c.status === "available"){ by[k].free++; by[k].min = Math.min(by[k].min, Number(c.price)||Infinity); }
+    if(c.status === "available"){
+      by[k].free++;
+      by[k].min = Math.min(by[k].min, Number(c.price) || Infinity);
+    }
   });
   const groups = Object.values(by).sort((a,b) => b.free - a.free);
   const totalFree = groups.reduce((s,g) => s + g.free, 0);
@@ -576,13 +510,12 @@ function renderAvail(list){
     <div class="offices">${groups.map(g => `
       <div class="office ${g.free?"has":""}">
         <div class="office-hd">
-          <b>${esc(g.off.name)}</b>
+          <b>${esc(g.name)}</b>
           <div class="stock">${g.free}<small>/${g.total}</small></div>
         </div>
-        <div class="office-meta">${esc(g.off.city)}${g.min!==Infinity ? " · من " + money(g.min) + " د.ع" : ""}</div>
-        ${g.off.phone
-          ? `<a class="call" href="tel:${esc(g.off.phone)}">📞 ${esc(g.off.phone)}</a>`
-          : `<span class="call off">لا رقم مسجّل</span>`}
+        <div class="office-meta">${esc(g.city||"—")}${g.min!==Infinity ? " · من " + money(g.min) + " د.ع" : ""}</div>
+        ${g.phone ? `<a class="call" href="tel:${esc(g.phone)}">📞 ${esc(g.phone)}</a>`
+                  : `<span class="call off">لا رقم مسجّل</span>`}
       </div>`).join("")}</div>
   </div>`;
 }
@@ -608,21 +541,22 @@ function renderOrders(){
       <p>ابحث برقم هاتف الزبون أو رقم الطلب للوصول إليه مباشرة.</p></div>`;
     return;
   }
-  box.innerHTML = list.slice(0, 300).map(o => {
+  box.innerHTML = list.map(o => {
     const s = STATUS[o.status] || {t:o.status, c:""};
+    const sec2 = SECTORS[o.sector] || {icon:"•"};
     return `<div class="row-ord st-${esc(o.status)}">
       <div class="ord-hd">
-        <span>${SECTORS[o.sector].icon}</span>
+        <span>${sec2.icon}</span>
         <b>${esc(o.title)}</b>
         <span class="tag ${s.c}">${s.t}</span>
         <span class="oid">#${esc(o.id)}</span>
       </div>
       <div class="ord-grid">
-        <div class="f"><span>الزبون</span><b>${esc(o.customer)}</b></div>
+        <div class="f"><span>الزبون</span><b>${esc(o.customer||"—")}</b></div>
         <div class="f"><span>الهاتف</span><b>${o.phone ? `<a class="tel" href="tel:${esc(o.phone)}">${esc(o.phone)}</a>` : "—"}</b></div>
         <div class="f"><span>المدينة</span><b>${esc(o.city||"—")}</b></div>
         <div class="f"><span>التاريخ</span><b>${esc(o.date||"—")}</b></div>
-        <div class="f"><span>المدة</span><b>${esc(o.qty)}</b></div>
+        <div class="f"><span>المدة</span><b>${esc(o.qty||"—")}</b></div>
         <div class="f"><span>المبلغ</span><b class="mono">${money(o.total)}</b></div>
         <div class="f"><span>الشريك</span><b>${esc(o.partner || "لم يُسنَد بعد")}</b></div>
       </div>
@@ -663,21 +597,12 @@ $("#fFree").onclick = () => {
 ["#fCity","#fCat"].forEach(s => $(s).onchange = renderFleet);
 ["#oSector","#oStatus","#oCity"].forEach(s => $(s).onchange = renderOrders);
 
-$("#btnSync").onclick = async () => {
-  $("#btnSync").innerHTML = '<span class="spin"></span>';
-  await loadDirectory(true);
-  $("#btnSync").textContent = "تحديث الدليل";
-  toast("حُدّث الدليل");
-};
-
-/* "/" يركّز البحث — الموظف لا يترك لوحة المفاتيح */
 document.addEventListener("keydown", e => {
   if(e.key === "/" && document.activeElement !== $("#q")){ e.preventDefault(); $("#q").focus(); $("#q").select(); }
   if(e.key === "Escape" && document.activeElement === $("#q")){ $("#q").value = ""; S.q = ""; paint(); $("#q").blur(); }
 });
 
 function paint(){ S.tab === "fleet" ? renderFleet() : renderOrders(); }
-function warn(m){ return `<div class="note">${esc(m)}</div>`; }
 
 let tT;
 function toast(m){

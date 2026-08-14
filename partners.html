@@ -4,43 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF">
+<meta name="robots" content="noindex,nofollow">
 <title>لوحة الشريك — منصة الحوت</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
-
 <style>
-/* ═══════════════════════════════════════════════════════════
-   نظام التصميم — أبيض، هادئ، بطاقات مصوّرة، لمسة وردية واحدة
-═══════════════════════════════════════════════════════════ */
 :root{
-  --bg:#FFFFFF;
-  --bg-soft:#F7F7F7;
-  --line:#DDDDDD;
-  --line-soft:#EBEBEB;
-  --text:#222222;
-  --text-2:#717171;
-  --text-3:#A0A0A0;
-  --rose:#FF385C;
-  --rose-d:#D70466;
-  --green:#008A05;
-  --amber:#B35309;
-  --red:#C13515;
+  --bg:#FFFFFF; --bg-soft:#F7F7F7; --line:#DDDDDD; --line-soft:#EBEBEB;
+  --text:#222222; --text-2:#717171; --text-3:#A0A0A0;
+  --rose:#FF385C; --rose-d:#D70466; --green:#008A05; --amber:#B35309; --red:#C13515;
   --r-s:8px; --r-m:12px; --r-l:16px; --r-pill:999px;
-  --sh:0 2px 8px rgba(0,0,0,.08);
-  --sh-up:0 6px 20px rgba(0,0,0,.14);
-  --ar:"Tajawal",system-ui,sans-serif;
-  --num:"Poppins",ui-monospace,monospace;
+  --sh:0 2px 8px rgba(0,0,0,.08); --sh-up:0 6px 20px rgba(0,0,0,.14);
+  --ar:"Tajawal",system-ui,sans-serif; --num:"Poppins",ui-monospace,monospace;
   --nav:66px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-body{
-  background:var(--bg);color:var(--text);font-family:var(--ar);
-  font-size:15px;line-height:1.6;
-  padding-bottom:calc(var(--nav) + env(safe-area-inset-bottom));
-}
+body{background:var(--bg);color:var(--text);font-family:var(--ar);font-size:15px;line-height:1.6;
+  padding-bottom:calc(var(--nav) + env(safe-area-inset-bottom))}
 h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.01em}
 button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
 button{cursor:pointer;border:none;background:none}
@@ -51,9 +33,7 @@ a{color:inherit}
 .hidden{display:none!important}
 .wrap{max-width:820px;margin:0 auto;padding:0 20px}
 
-/* ── الترويسة ── */
-.hdr{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line-soft);
-  padding-top:env(safe-area-inset-top)}
+.hdr{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line-soft);padding-top:env(safe-area-inset-top)}
 .hdr-in{max-width:820px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:12px}
 .mark{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--rose);font-size:17px;flex:none}
 .mark em{font-style:normal;font-size:21px}
@@ -66,40 +46,33 @@ a{color:inherit}
 .bdg{position:absolute;top:-3px;inset-inline-start:-3px;min-width:19px;height:19px;padding:0 5px;
   border-radius:var(--r-pill);background:var(--rose);color:#fff;font-size:11px;font-weight:700;
   display:grid;place-items:center;font-family:var(--num);border:2px solid var(--bg)}
-.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;
-  vertical-align:1px;margin-inline-end:4px}
+.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;vertical-align:1px;margin-inline-end:4px}
 .pulse-dot.off{background:var(--text-3)}
 
-/* ── الشرائح ── */
 .chips{display:flex;gap:8px;overflow-x:auto;padding:14px 0 6px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{padding:8px 16px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--bg);
   font-size:14px;white-space:nowrap;color:var(--text-2);transition:.15s}
 .chip.on{background:var(--text);color:#fff;border-color:var(--text);font-weight:500}
 
-/* ── البطاقات ── */
-.card{background:var(--bg);border:1px solid var(--line-soft);border-radius:var(--r-l);
-  padding:18px;margin-bottom:14px;transition:box-shadow .2s}
+.card{background:var(--bg);border:1px solid var(--line-soft);border-radius:var(--r-l);padding:18px;margin-bottom:14px;transition:box-shadow .2s}
 .card:hover{box-shadow:var(--sh)}
 .card-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
 .card-hd h3{font-size:16.5px;line-height:1.4}
 .meta{font-size:12.5px;color:var(--text-3);font-family:var(--num)}
-.state{font-size:12px;padding:5px 11px;border-radius:var(--r-pill);white-space:nowrap;flex:none;font-weight:500;
-  background:var(--bg-soft);color:var(--text-2)}
+.state{font-size:12px;padding:5px 11px;border-radius:var(--r-pill);white-space:nowrap;flex:none;font-weight:500;background:var(--bg-soft);color:var(--text-2)}
 .state.wait{background:#FFF4E5;color:var(--amber)}
 .state.ok{background:#E9F5EA;color:var(--green)}
 .state.no{background:#FDEAE6;color:var(--red)}
 .dl{display:grid;grid-template-columns:1fr 1fr;gap:9px 18px;margin:14px 0}
-.dl div{display:flex;justify-content:space-between;gap:10px;font-size:14px;min-width:0;
-  border-bottom:1px solid var(--line-soft);padding-bottom:7px}
+.dl div{display:flex;justify-content:space-between;gap:10px;font-size:14px;min-width:0;border-bottom:1px solid var(--line-soft);padding-bottom:7px}
 .dl span{color:var(--text-2);flex:none}
 .dl b{font-weight:500;text-align:end;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sum{color:var(--text);font-family:var(--num);font-weight:600}
 .tel{color:var(--rose);text-decoration:none;font-family:var(--num);font-weight:500}
-.req{background:var(--bg-soft);border-radius:var(--r-s);padding:10px 12px;font-size:13.5px;
-  color:var(--text-2);margin-bottom:12px}
+.masked{color:var(--text-3);font-size:13px}
+.req{background:var(--bg-soft);border-radius:var(--r-s);padding:10px 12px;font-size:13.5px;color:var(--text-2);margin-bottom:12px}
 
-/* ── الأزرار ── */
 .acts{display:flex;gap:10px;flex-wrap:wrap}
 .btn{flex:1;min-width:120px;padding:13px 18px;border-radius:var(--r-s);font-weight:700;font-size:15px;
   text-align:center;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.15s}
@@ -112,19 +85,15 @@ a{color:inherit}
 .btn-q{background:var(--bg);color:var(--text-2);border:1px solid var(--line)}
 .btn-w{width:100%;flex:none}
 
-/* ── الإشعارات ── */
 .note{display:flex;gap:13px;padding:16px;border:1px solid var(--line-soft);border-radius:var(--r-l);margin-bottom:12px}
 .note.new{border-color:var(--rose);background:#FFF5F7}
 .note-i{width:42px;height:42px;border-radius:50%;background:var(--bg-soft);display:grid;place-items:center;font-size:18px;flex:none}
 .note p{margin:0;font-size:14px;white-space:pre-line;line-height:1.6}
 .note small{color:var(--text-3);font-size:12px;display:block;margin-top:6px;font-family:var(--num)}
 
-/* ── الشبكة المصوّرة ── */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(164px,1fr));gap:16px}
-.tile{cursor:default}
 .tile-img{width:100%;aspect-ratio:1/1;border-radius:var(--r-m);object-fit:cover;background:var(--bg-soft);display:block}
-.tile-ph{width:100%;aspect-ratio:1/1;border-radius:var(--r-m);background:var(--bg-soft);
-  display:grid;place-items:center;font-size:30px;opacity:.3}
+.tile-ph{width:100%;aspect-ratio:1/1;border-radius:var(--r-m);background:var(--bg-soft);display:grid;place-items:center;font-size:30px;opacity:.3}
 .tile h4{font-size:14.5px;margin-top:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tile .p{font-size:13.5px;color:var(--text-2);margin-top:2px}
 .tile .p b{font-family:var(--num);color:var(--text)}
@@ -133,16 +102,13 @@ a{color:inherit}
 .tile-acts{display:flex;gap:7px;margin-top:9px}
 .tile-acts button{flex:1;padding:7px;border-radius:var(--r-s);border:1px solid var(--line);font-size:12.5px;background:var(--bg)}
 
-/* ── النماذج ── */
 .fld{margin-bottom:15px}
 .fld label{display:block;font-size:13px;color:var(--text-2);margin-bottom:6px;font-weight:500}
-.fld input,.fld select,.fld textarea{width:100%;padding:14px;border-radius:var(--r-s);
-  border:1px solid var(--line);background:var(--bg);font-size:15px}
+.fld input,.fld select,.fld textarea{width:100%;padding:14px;border-radius:var(--r-s);border:1px solid var(--line);background:var(--bg);font-size:15px}
 .fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--text);outline:none;box-shadow:0 0 0 1px var(--text)}
 .fld .phone{direction:ltr;text-align:start;font-family:var(--num);letter-spacing:.03em}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-/* ── منتقي الصور ── */
 .pick{border:1px dashed var(--line);border-radius:var(--r-m);padding:20px;text-align:center;position:relative;background:var(--bg)}
 .pick:hover{border-color:var(--text)}
 .pick input[type=file]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
@@ -151,12 +117,10 @@ a{color:inherit}
 .pick small{color:var(--text-3);font-size:12.5px}
 .prev{position:relative;border-radius:var(--r-m);overflow:hidden;margin-top:12px}
 .prev img{width:100%;display:block;max-height:200px;object-fit:cover}
-.prev .x{position:absolute;top:10px;inset-inline-end:10px;width:32px;height:32px;border-radius:50%;
-  background:rgba(255,255,255,.94);font-size:15px;box-shadow:var(--sh)}
+.prev .x{position:absolute;top:10px;inset-inline-end:10px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.94);font-size:15px;box-shadow:var(--sh)}
 .bar{height:3px;background:var(--line-soft);border-radius:var(--r-pill);overflow:hidden;margin-top:10px}
 .bar i{display:block;height:100%;background:var(--rose);width:0;transition:width .25s}
 
-/* ── العناوين والفراغ ── */
 .sec{display:flex;align-items:center;justify-content:space-between;margin:22px 0 14px;gap:12px}
 .sec h2{font-size:22px}
 .void{text-align:center;padding:64px 24px}
@@ -164,17 +128,13 @@ a{color:inherit}
 .void b{display:block;font-size:17px;margin-bottom:6px}
 .void p{margin:0;color:var(--text-2);font-size:14px;max-width:290px;margin-inline:auto}
 
-/* ── التنقّل السفلي ── */
-.nav{position:fixed;bottom:0;inset-inline:0;z-index:50;background:var(--bg);
-  border-top:1px solid var(--line-soft);padding-bottom:env(safe-area-inset-bottom)}
+.nav{position:fixed;bottom:0;inset-inline:0;z-index:50;background:var(--bg);border-top:1px solid var(--line-soft);padding-bottom:env(safe-area-inset-bottom)}
 .nav-in{display:flex;max-width:820px;margin:0 auto}
-.nav button{flex:1;height:var(--nav);display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:4px;color:var(--text-3);font-size:10.5px;position:relative}
+.nav button{flex:1;height:var(--nav);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--text-3);font-size:10.5px;position:relative}
 .nav button.on{color:var(--rose)}
 .nav button i{font-style:normal;font-size:20px}
 .nav .bdg{top:9px;inset-inline-start:calc(50% + 5px)}
 
-/* ── الطبقات ── */
 .sheet{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.42);display:flex;align-items:flex-end;justify-content:center}
 .sheet-in{background:var(--bg);width:100%;max-width:560px;border-radius:var(--r-l) var(--r-l) 0 0;
   padding:20px 20px calc(24px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto;
@@ -183,13 +143,10 @@ a{color:inherit}
 .grab{width:34px;height:4px;background:var(--line);border-radius:var(--r-pill);margin:0 auto 16px}
 .sheet-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
 .sheet-hd h3{font-size:19px}
-
 .toast{position:fixed;bottom:calc(var(--nav) + 20px);inset-inline:20px;z-index:99;background:var(--text);
-  color:#fff;padding:14px 18px;border-radius:var(--r-s);font-weight:500;font-size:14.5px;text-align:center;
-  box-shadow:var(--sh-up)}
+  color:#fff;padding:14px 18px;border-radius:var(--r-s);font-weight:500;font-size:14.5px;text-align:center;box-shadow:var(--sh-up)}
 .toast.no{background:var(--red)}
 
-/* ── الدخول والتسجيل ── */
 .auth{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:28px 20px}
 .auth-in{width:100%;max-width:420px;margin:0 auto}
 .auth-mark{text-align:center;margin-bottom:26px}
@@ -209,12 +166,9 @@ a{color:inherit}
 .msg.ok{background:#E9F5EA;color:var(--green)}
 .msg.wait{background:#FFF4E5;color:var(--amber)}
 .fine{font-size:12.5px;color:var(--text-3);text-align:center;margin-top:18px;line-height:1.8}
-
-.sp{width:17px;height:17px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;
-  border-radius:50%;animation:s .7s linear infinite;display:inline-block}
+.sp{width:17px;height:17px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite;display:inline-block}
 .btn-o .sp,.btn-q .sp{border-color:var(--line-soft);border-top-color:var(--text)}
 @keyframes s{to{transform:rotate(360deg)}}
-
 @media(min-width:720px){ .dl{grid-template-columns:repeat(3,1fr)} }
 </style>
 </head>
@@ -228,57 +182,33 @@ a{color:inherit}
       <h1>لوحة الشريك</h1>
       <p>استقبل طلباتك وأدر نشاطك من مكان واحد</p>
     </div>
-
     <div class="seg">
       <button class="on" id="segIn">تسجيل الدخول</button>
       <button id="segUp">حساب جديد</button>
     </div>
-
     <div id="authMsg" class="msg hidden"></div>
 
-    <!-- دخول -->
     <div id="formIn">
-      <div class="fld">
-        <label>نوع النشاط</label>
-        <div class="pick4" id="secIn"></div>
-      </div>
-      <div class="fld">
-        <label>رقم الهاتف</label>
-        <input id="inPhone" class="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="07XX XXX XXXX">
-      </div>
-      <div class="fld">
-        <label>كلمة المرور</label>
-        <input id="inPass" type="password" autocomplete="current-password" placeholder="••••">
-      </div>
+      <div class="fld"><label>نوع النشاط</label><div class="pick4" id="secIn"></div></div>
+      <div class="fld"><label>رقم الهاتف</label>
+        <input id="inPhone" class="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="07XX XXX XXXX"></div>
+      <div class="fld"><label>كلمة المرور</label>
+        <input id="inPass" type="password" autocomplete="current-password" placeholder="••••"></div>
       <button class="btn btn-p btn-w" id="btnIn">دخول</button>
       <p class="fine">نسيت كلمة المرور؟ راسل الإدارة لإعادة ضبطها.</p>
     </div>
 
-    <!-- تسجيل -->
     <div id="formUp" class="hidden">
-      <div class="fld">
-        <label>نوع النشاط</label>
-        <div class="pick4" id="secUp"></div>
-      </div>
-      <div class="fld">
-        <label>اسم النشاط</label>
-        <input id="upName" placeholder="مثال: مكتب الحوت لتأجير السيارات">
-      </div>
+      <div class="fld"><label>نوع النشاط</label><div class="pick4" id="secUp"></div></div>
+      <div class="fld"><label>اسم النشاط</label><input id="upName" placeholder="مثال: مكتب الحوت لتأجير السيارات"></div>
       <div class="two">
-        <div class="fld">
-          <label>المدينة</label>
-          <select id="upCity"></select>
-        </div>
-        <div class="fld">
-          <label>رقم الهاتف</label>
-          <input id="upPhone" class="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="07XX XXX XXXX">
-        </div>
+        <div class="fld"><label>المدينة</label><select id="upCity"></select></div>
+        <div class="fld"><label>رقم الهاتف</label>
+          <input id="upPhone" class="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="07XX XXX XXXX"></div>
       </div>
       <div id="upExtra"></div>
-      <div class="fld">
-        <label>كلمة المرور</label>
-        <input id="upPass" type="password" autocomplete="new-password" placeholder="4 أحرف على الأقل">
-      </div>
+      <div class="fld"><label>كلمة المرور</label>
+        <input id="upPass" type="password" autocomplete="new-password" placeholder="4 أحرف على الأقل"></div>
       <button class="btn btn-p btn-w" id="btnUp">إنشاء الحساب</button>
       <p class="fine">يراجع فريقنا الطلب ثم يفعّل حسابك.<br>رقم هاتفك هو اسم دخولك، فاحرص على صحته.</p>
     </div>
@@ -287,81 +217,75 @@ a{color:inherit}
 
 <!-- ══════════ التطبيق ══════════ -->
 <div id="app" class="hidden">
-
-<header class="hdr">
-  <div class="hdr-in">
-    <div class="mark"><em>🐋</em></div>
-    <div class="hdr-mid">
-      <b id="pName">—</b>
-      <span><i class="pulse-dot off" id="live"></i><span id="liveTxt">يتصل…</span></span>
-    </div>
-    <button class="ic" id="btnBell">🔔<span class="bdg hidden" id="bdgTop">0</span></button>
-  </div>
-</header>
-
-<main class="wrap">
-  <!-- الطلبات -->
-  <section id="vOrders">
-    <div class="chips" id="chips">
-      <button class="chip on" data-f="pending">بانتظار الرد</button>
-      <button class="chip" data-f="live">قيد التنفيذ</button>
-      <button class="chip" data-f="done">منتهية</button>
-      <button class="chip" data-f="all">الكل</button>
-    </div>
-    <div id="orders"></div>
-  </section>
-
-  <!-- الإشعارات -->
-  <section id="vInbox" class="hidden">
-    <div class="sec"><h2>الإشعارات</h2><button class="chip" id="btnRead">تعليم الكل كمقروء</button></div>
-    <div id="inbox"></div>
-  </section>
-
-  <!-- الأسطول / الغرف -->
-  <section id="vStock" class="hidden">
-    <div class="sec"><h2 id="stockT">الأسطول</h2><button class="btn btn-d" style="flex:none;min-width:auto;padding:10px 18px" id="btnAdd">إضافة</button></div>
-    <div id="stock" class="grid"></div>
-  </section>
-
-  <!-- الحساب -->
-  <section id="vAcc" class="hidden">
-    <div class="sec"><h2>حسابي</h2></div>
-    <div class="card">
-      <div class="dl" style="margin:0">
-        <div><span>المعرّف</span><b class="num" id="aId">—</b></div>
-        <div><span>الهاتف</span><b class="num" id="aPhone">—</b></div>
-        <div><span>الحالة</span><b id="aStat">—</b></div>
-        <div><span>المنجزة</span><b class="num" id="aOrd">0</b></div>
-        <div><span>الإيرادات</span><b class="sum" id="aRev">0</b></div>
-        <div><span>المستحق للمنصة</span><b class="sum" id="aDebt" style="color:var(--rose)">0</b></div>
+  <header class="hdr">
+    <div class="hdr-in">
+      <div class="mark"><em>🐋</em></div>
+      <div class="hdr-mid">
+        <b id="pName">—</b>
+        <span><i class="pulse-dot off" id="live"></i><span id="liveTxt">يتصل…</span></span>
       </div>
+      <button class="ic" id="btnBell" aria-label="الإشعارات">🔔<span class="bdg hidden" id="bdgTop">0</span></button>
     </div>
+  </header>
 
-    <div class="card">
-      <h3 style="font-size:17px;margin-bottom:16px">بيانات النشاط</h3>
-      <div id="profFields"></div>
-      <button class="btn btn-d btn-w" id="btnSave">حفظ التعديلات</button>
-      <p class="fine" style="text-align:start;margin-top:12px">الاسم والعمولة والحالة تعدّلها الإدارة فقط.</p>
+  <main class="wrap">
+    <section id="vOrders">
+      <div class="chips" id="chips">
+        <button class="chip on" data-f="pending">بانتظار الرد</button>
+        <button class="chip" data-f="live">قيد التنفيذ</button>
+        <button class="chip" data-f="done">منتهية</button>
+        <button class="chip" data-f="all">الكل</button>
+      </div>
+      <div id="orders"></div>
+    </section>
+
+    <section id="vInbox" class="hidden">
+      <div class="sec"><h2>الإشعارات</h2><button class="chip" id="btnRead">تعليم الكل كمقروء</button></div>
+      <div id="inbox"></div>
+    </section>
+
+    <section id="vStock" class="hidden">
+      <div class="sec"><h2 id="stockT">الأسطول</h2>
+        <button class="btn btn-d" style="flex:none;min-width:auto;padding:10px 18px" id="btnAdd">إضافة</button></div>
+      <div id="stock" class="grid"></div>
+    </section>
+
+    <section id="vAcc" class="hidden">
+      <div class="sec"><h2>حسابي</h2></div>
+      <div class="card">
+        <div class="dl" style="margin:0">
+          <div><span>المعرّف</span><b class="num" id="aId">—</b></div>
+          <div><span>الهاتف</span><b class="num" id="aPhone">—</b></div>
+          <div><span>الحالة</span><b id="aStat">—</b></div>
+          <div><span>المنجزة</span><b class="num" id="aOrd">0</b></div>
+          <div><span>الإيرادات</span><b class="sum" id="aRev">0</b></div>
+          <div><span>المستحق للمنصة</span><b class="sum" id="aDebt" style="color:var(--rose)">0</b></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:17px;margin-bottom:16px">بيانات النشاط</h3>
+        <div id="profFields"></div>
+        <button class="btn btn-d btn-w" id="btnSave">حفظ التعديلات</button>
+        <p class="fine" style="text-align:start;margin-top:12px">الاسم والعمولة والحالة تعدّلها الإدارة فقط.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:17px;margin-bottom:16px">كلمة المرور</h3>
+        <div class="fld"><label>كلمة المرور الجديدة</label><input id="np" type="password" placeholder="4 أحرف على الأقل"></div>
+        <button class="btn btn-o btn-w" id="btnPass">تغيير كلمة المرور</button>
+        <p class="fine" style="text-align:start;margin-top:12px">تغييرها يُخرج بقية أجهزتك تلقائياً.</p>
+      </div>
+      <button class="btn btn-q btn-w" id="btnOut" style="margin-bottom:24px">تسجيل الخروج</button>
+    </section>
+  </main>
+
+  <nav class="nav">
+    <div class="nav-in">
+      <button class="on" data-v="vOrders"><i>📋</i>الطلبات</button>
+      <button data-v="vInbox"><i>🔔</i>الإشعارات<span class="bdg hidden" id="bdgNav">0</span></button>
+      <button data-v="vStock" id="navStock"><i>🚗</i>الأسطول</button>
+      <button data-v="vAcc"><i>👤</i>حسابي</button>
     </div>
-
-    <div class="card">
-      <h3 style="font-size:17px;margin-bottom:16px">كلمة المرور</h3>
-      <div class="fld"><label>كلمة المرور الجديدة</label><input id="np" type="password" placeholder="4 أحرف على الأقل"></div>
-      <button class="btn btn-o btn-w" id="btnPass">تغيير كلمة المرور</button>
-    </div>
-
-    <button class="btn btn-q btn-w" id="btnOut" style="margin-bottom:24px">تسجيل الخروج</button>
-  </section>
-</main>
-
-<nav class="nav">
-  <div class="nav-in">
-    <button class="on" data-v="vOrders"><i>📋</i>الطلبات</button>
-    <button data-v="vInbox"><i>🔔</i>الإشعارات<span class="bdg hidden" id="bdgNav">0</span></button>
-    <button data-v="vStock" id="navStock"><i>🚗</i>الأسطول</button>
-    <button data-v="vAcc"><i>👤</i>حسابي</button>
-  </div>
-</nav>
+  </nav>
 </div>
 
 <div id="sheetHost"></div>
@@ -369,50 +293,46 @@ a{color:inherit}
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
-
 <script>
 /* ═══════════════════════════════════════════════════════════════
    ① الإعداد
-   لا يوجد أي سرّ هنا: الدخول يتحقّق منه السيرفر ويعيد رمزاً موقّعاً.
-   إعدادات Firebase أدناه عامة بطبيعتها، وتُستعمل لشيئين فقط:
-   عقدة النبض (أرقام وقت بلا بيانات) ورفع صور الأسطول.
-   ═══════════════════════════════════════════════════════════════ */
+   لا سرّ في هذه الصفحة إطلاقاً. الدخول يتحقّق منه الخادم ويعيد رمزاً
+   موقّعاً، والصور ترفع عبر الخادم إلى ImgBB فالمفتاح يبقى هناك.
+   Firebase هنا للنبضة وحدها: عقدة hut_pulse تحمل أرقام وقت فقط
+   وهي العقدة الوحيدة المقروءة علناً في القاعدة.
+═══════════════════════════════════════════════════════════════ */
 const API = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
 
 const FB = {
-  apiKey       : "PUT_YOUR_WEB_API_KEY",
-  authDomain   : "alhut-for-rent.firebaseapp.com",
-  databaseURL  : "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId    : "alhut-for-rent",
-  storageBucket: "alhut-for-rent.appspot.com",
-  appId        : "PUT_YOUR_APP_ID"
+  databaseURL: "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app"
 };
 
-const IDLE_MS = 60000;                 // تحديث احتياطي حين لا تصل نبضة
-const IMG = {MAX:1280, Q:.78};
+const IDLE_MS = 60000;
+const IMG = {MAX:1000, Q:.72};
 const CITIES = ["كركوك","بغداد","أربيل","السليمانية","الموصل","البصرة","الأنبار","ديالى"];
 
 const SEC = {
-  car   : {icon:"🚗", label:"مكتب سيارات", stock:"الأسطول", sIcon:"🚗"},
-  hotel : {icon:"🏨", label:"فندق",        stock:"الغرف",   sIcon:"🛏️"},
-  hall  : {icon:"🥂", label:"قاعة مناسبات", stock:null},
-  school: {icon:"🎓", label:"مدرسة سياقة",  stock:null}
+  car   : {icon:"🚗", label:"مكتب سيارات",  stock:"الأسطول", sIcon:"🚗"},
+  hotel : {icon:"🏨", label:"فندق",          stock:"الغرف",   sIcon:"🛏️"},
+  hall  : {icon:"🥂", label:"قاعة مناسبات",  stock:null},
+  school: {icon:"🎓", label:"مدرسة سياقة",   stock:null}
 };
+
 const ST = {
   pending  :{t:"بانتظار ردّك", c:"wait"},
   active   :{t:"قيد التنفيذ",  c:"ok"},
   confirmed:{t:"مؤكَّد",        c:"ok"},
   completed:{t:"منجز",         c:""},
   cancelled:{t:"ملغى",         c:"no"},
-  rejected :{t:"معتذَر عنه",    c:"no"}
+  rejected :{t:"معتذَر عنه",   c:"no"}
 };
+
 const CATS = {economy:"اقتصادية", family:"عائلية", luxury:"فاخرة", wedding:"زفاف"};
 const NICO = {notify:"🆕", remind:"🔔", escalate:"🚨", confirm:"✅", done:"🌟"};
 
 /* ═══════════════════════════════════════════════════════════════
    ② الحالة
-   ═══════════════════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 let S = {
   session:"", me:null, sector:"car",
   orders:[], inbox:[], stock:[], unread:0,
@@ -420,18 +340,19 @@ let S = {
   regSector:"car", seen:new Set(), warmed:false,
   timer:null, busy:false
 };
-let db = null, storage = null, pulseRef = null;
+let db = null, pulseRef = null;
 
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money = n => (Number(n)||0).toLocaleString("en-US");
-const set = (v) => v && String(v).indexOf("PUT_YOUR") !== 0;
+const set = v => v && String(v).indexOf("PUT_YOUR") !== 0;
 
 /* ═══════════════════════════════════════════════════════════════
    ③ الاتصال — POST أولاً، وJSONP احتياطياً
-   ═══════════════════════════════════════════════════════════════ */
-async function send(payload){
+   الرفع لا يستعمل JSONP: الصورة أكبر من أن تُحمل في رابط.
+═══════════════════════════════════════════════════════════════ */
+async function send(payload, noJsonp){
   try{
     const res = await fetch(API, {
       method:"POST",
@@ -440,7 +361,10 @@ async function send(payload){
     });
     const d = await res.json();
     if(d && typeof d === "object") return d;
-  }catch(e){ /* يسقط إلى JSONP */ }
+  }catch(e){
+    if(noJsonp) throw new Error("تعذّر الوصول للخادم");
+  }
+  if(noJsonp) throw new Error("تعذّر الوصول للخادم");
   return jsonp(payload);
 }
 
@@ -464,12 +388,12 @@ function jsonp(params){
 
 /* ═══════════════════════════════════════════════════════════════
    ④ شاشة الدخول والتسجيل
-   ═══════════════════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 function paintSectorPickers(){
-  const html = (sel, cur) => Object.keys(SEC).map(k =>
+  const html = cur => Object.keys(SEC).map(k =>
     `<button data-s="${k}" class="${k===cur?"on":""}"><i>${SEC[k].icon}</i><span>${SEC[k].label}</span></button>`).join("");
-  $("#secIn").innerHTML = html("in", S.sector);
-  $("#secUp").innerHTML = html("up", S.regSector);
+  $("#secIn").innerHTML = html(S.sector);
+  $("#secUp").innerHTML = html(S.regSector);
   $$("#secIn button").forEach(b => b.onclick = () => {
     S.sector = b.dataset.s;
     $$("#secIn button").forEach(x => x.classList.toggle("on", x === b));
@@ -488,6 +412,7 @@ const EXTRA = {
   hall  : [["capacity","السعة (عدد الضيوف)","number"],["price","سعر السهرة","number"]],
   school: [["price_basic","سعر الكورس الأساسي","number"],["price_advanced","سعر الكورس المتقدم","number"]]
 };
+
 function paintExtra(){
   const f = EXTRA[S.regSector] || [];
   $("#upExtra").innerHTML = f.length
@@ -545,8 +470,9 @@ $("#btnUp").onclick = async () => {
     phone:$("#upPhone").value.trim(), pass:$("#upPass").value.trim()
   };
   (EXTRA[S.regSector] || []).forEach(([k]) => { body[k] = $("#up_" + k).value; });
+
   $("#authMsg").classList.add("hidden");
-  if(!body.name)  return authMsg("اكتب اسم نشاطك.");
+  if(!body.name) return authMsg("اكتب اسم نشاطك.");
   if(!body.phone) return authMsg("اكتب رقم هاتفك.");
   if(body.pass.length < 4) return authMsg("كلمة المرور 4 أحرف على الأقل.");
 
@@ -571,7 +497,7 @@ paintExtra();
 
 /* ═══════════════════════════════════════════════════════════════
    ⑤ الإقلاع والتحديث
-   ═══════════════════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 async function start(silent){
   $("#auth").classList.add("hidden");
   $("#app").classList.remove("hidden");
@@ -602,7 +528,7 @@ async function refresh(first){
   try{
     const d = await send({action:"partnerSnapshot", session:S.session});
     if(!d || !d.success){
-      if(d && d.reason === "session"){ return logout(true); }
+      if(d && d.reason === "session") return logout(true);
       throw new Error((d && d.msg) || "تعذّر التحديث");
     }
     const firstLoad = !S.me;
@@ -626,26 +552,25 @@ function setLive(on){
 
 /* النبضة: عقدة تحمل رقم وقت فقط — تصل فوراً فنطلب لقطة جديدة */
 function connectPulse(){
-  if(!set(FB.apiKey) || !S.me) return;
+  if(!FB.databaseURL || !S.me) return;
   try{
     if(!firebase.apps.length) firebase.initializeApp(FB);
     db = firebase.database();
-    storage = firebase.storage();
     const key = (S.sector === "car" ? "city_" + (S.me.city || "") : S.me.id)
-      .replace(/[.#$/[\]\s]/g, "_");
+                  .replace(/[.#$/[\]\s]/g, "_");
     if(pulseRef) pulseRef.off();
     pulseRef = db.ref("hut_pulse/" + key);
     let firstTick = true;
     pulseRef.on("value", () => {
       if(firstTick){ firstTick = false; return; }
       refresh();
-    });
+    }, () => { /* لو رُفضت القراءة نكتفي بالتحديث الدوري */ });
   }catch(e){}
 }
 
 /* ═══════════════════════════════════════════════════════════════
    ⑥ التنبيه على الطلبات الجديدة
-   ═══════════════════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 function detectNew(){
   let n = 0;
   S.orders.forEach(o => {
@@ -656,6 +581,7 @@ function detectNew(){
   });
   if(n > 0) alertNew(n);
 }
+
 function alertNew(n){
   beep();
   if(navigator.vibrate) navigator.vibrate([200,80,200]);
@@ -665,6 +591,7 @@ function alertNew(n){
   }
   toast(body);
 }
+
 function beep(){
   try{
     const C = window.AudioContext || window.webkitAudioContext, c = new C();
@@ -680,6 +607,7 @@ function beep(){
     });
   }catch(e){}
 }
+
 $("#btnBell").onclick = async () => {
   if("Notification" in window && Notification.permission === "default"){
     const p = await Notification.requestPermission();
@@ -690,7 +618,7 @@ $("#btnBell").onclick = async () => {
 
 /* ═══════════════════════════════════════════════════════════════
    ⑦ العرض
-   ═══════════════════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 function render(){
   if(S.view === "vOrders") renderOrders();
   if(S.view === "vInbox")  renderInbox();
@@ -710,14 +638,20 @@ function renderOrders(){
     f === "pending" ? o.status === "pending" :
     f === "live"    ? ["active","confirmed"].includes(o.status) :
                       ["completed","cancelled","rejected"].includes(o.status));
+
   const box = $("#orders");
   if(!list.length){
     box.innerHTML = `<div class="void"><span class="i">📭</span><b>لا شيء هنا بعد</b>
       <p>${f === "pending" ? "ستظهر الطلبات الجديدة تلقائياً فور وصولها." : "لا توجد طلبات في هذا التصنيف."}</p></div>`;
     return;
   }
+
   box.innerHTML = list.map(o => {
     const s = ST[o.status] || {t:o.status, c:""};
+    /* هاتف الزبون يصل من الخادم فارغاً قبل الاستلام — يظهر للمكتب المستلم وحده */
+    const tel = o.phone
+      ? `<a class="tel" href="tel:${esc(o.phone)}">${esc(o.phone)}</a>`
+      : `<span class="masked">يظهر بعد الاستلام</span>`;
     return `<article class="card">
       <div class="card-hd">
         <div style="min-width:0">
@@ -728,7 +662,7 @@ function renderOrders(){
       </div>
       <div class="dl">
         <div><span>الزبون</span><b>${esc(o.customer||"—")}</b></div>
-        <div><span>الهاتف</span><b>${o.phone ? `<a class="tel" href="tel:${esc(o.phone)}">${esc(o.phone)}</a>` : "—"}</b></div>
+        <div><span>الهاتف</span><b>${tel}</b></div>
         <div><span>التاريخ</span><b>${esc(o.date||"—")}</b></div>
         <div><span>المدة</span><b>${esc(o.qty||"—")}</b></div>
         <div><span>المدينة</span><b>${esc(o.city||"—")}</b></div>
@@ -780,6 +714,7 @@ function renderInbox(){
       </div>
     </div>`).join("");
 }
+
 function ago(iso){
   const d = new Date(iso);
   if(isNaN(d)) return "";
@@ -789,6 +724,7 @@ function ago(iso){
   if(m < 1440) return "قبل " + Math.floor(m/60) + " ساعة";
   return d.toLocaleDateString("ar-IQ");
 }
+
 $("#btnRead").onclick = async () => {
   await send({action:"partnerAction", session:S.session, op:"inboxRead"});
   toast("عُلّمت كمقروءة"); refresh();
@@ -833,6 +769,7 @@ async function flip(id, on){
   toast(r && r.success ? "تم التحديث" : ((r && r.msg) || "لم ينجح"), !(r && r.success));
   refresh();
 }
+
 async function drop(id){
   if(!confirm("سيُحذف نهائياً. متأكد؟")) return;
   const r = await send({action:"partnerAction", session:S.session,
@@ -842,8 +779,8 @@ async function drop(id){
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   ⑧ الإضافة مع رفع الصور
-   ═══════════════════════════════════════════════════════════════ */
+   ⑧ الإضافة مع رفع الصور عبر ImgBB
+═══════════════════════════════════════════════════════════════ */
 $("#btnAdd").onclick = () => S.sector === "car" ? carSheet() : roomSheet();
 
 function carSheet(){
@@ -860,14 +797,14 @@ function carSheet(){
     </div>
     <div class="fld"><label>صورة السيارة</label>${picker()}</div>
     <button class="btn btn-p btn-w" id="xSave">إضافة السيارة</button>`, () => {
-      wire();
-      $("#xSave").onclick = () => {
-        const b = {op:"addCar", name:$("#x1").value.trim(), cat:$("#x2").value, price:$("#x3").value,
-          color:$("#x4").value.trim(), plate:$("#x5").value.trim(), photo_url:window.__ph || ""};
-        if(!b.name || !b.plate) return toast("الاسم ورقم اللوحة مطلوبان", true);
-        save(b, "أُضيفت السيارة");
-      };
-    });
+    wire();
+    $("#xSave").onclick = () => {
+      const b = {op:"addCar", name:$("#x1").value.trim(), cat:$("#x2").value, price:$("#x3").value,
+        color:$("#x4").value.trim(), plate:$("#x5").value.trim(), photo_url:window.__ph || ""};
+      if(!b.name || !b.plate) return toast("الاسم ورقم اللوحة مطلوبان", true);
+      save(b, "أُضيفت السيارة");
+    };
+  });
 }
 
 function roomSheet(){
@@ -882,14 +819,14 @@ function roomSheet(){
     <div class="fld"><label>وصف مختصر</label><textarea id="x4" rows="2" placeholder="إطلالة، تكييف، إفطار"></textarea></div>
     <div class="fld"><label>صورة الغرفة</label>${picker()}</div>
     <button class="btn btn-p btn-w" id="xSave">إضافة الغرفة</button>`, () => {
-      wire();
-      $("#xSave").onclick = () => {
-        const b = {op:"addRoom", room_name:$("#x1").value.trim(), room_type:$("#x2").value,
-          price:$("#x3").value, description:$("#x4").value.trim(), photo_url:window.__ph || ""};
-        if(!b.room_name || !Number(b.price)) return toast("الاسم والسعر مطلوبان", true);
-        save(b, "أُضيفت الغرفة");
-      };
-    });
+    wire();
+    $("#xSave").onclick = () => {
+      const b = {op:"addRoom", room_name:$("#x1").value.trim(), room_type:$("#x2").value,
+        price:$("#x3").value, description:$("#x4").value.trim(), photo_url:window.__ph || ""};
+      if(!b.room_name || !Number(b.price)) return toast("الاسم والسعر مطلوبان", true);
+      save(b, "أُضيفت الغرفة");
+    };
+  });
 }
 
 async function save(body, ok){
@@ -904,36 +841,65 @@ async function save(body, ok){
 
 function picker(){
   return `<div class="pick" id="pk"><span class="i">📷</span>
-      <b>اختر صورة من هاتفك</b>
-      <small>المعرض أو الكاميرا · تُضغط تلقائياً قبل الرفع</small>
-      <input type="file" accept="image/*" id="pkF"></div>
+    <b>اختر صورة من هاتفك</b>
+    <small>المعرض أو الكاميرا · تُضغط تلقائياً قبل الرفع</small>
+    <input type="file" accept="image/*" id="pkF"></div>
     <div class="bar hidden" id="pkB"><i></i></div><div id="pkP"></div>`;
 }
 
+/* الصورة تُضغط في المتصفح ثم تُرسل إلى الخادم، وهو يرفعها إلى ImgBB.
+   المفتاح يبقى على الخادم — لو كان هنا لاستطاع أي زائر الرفع إلى الحساب. */
 function wire(){
   window.__ph = "";
   const inp = $("#pkF");
   if(!inp) return;
+
   inp.onchange = async e => {
     const f = e.target.files[0];
     if(!f) return;
-    if(!storage) return toast("رفع الصور يحتاج إعداد Firebase.", true);
     const bar = $("#pkB"), fill = bar.querySelector("i");
-    bar.classList.remove("hidden"); fill.style.width = "8%";
+    bar.classList.remove("hidden");
+    fill.style.width = "15%";
+
     try{
       const blob = await shrink(f);
-      const task = storage.ref(`partners/${S.sector}/${S.me.id}/${Date.now()}.jpg`)
-        .put(blob, {contentType:"image/jpeg"});
-      task.on("state_changed", s => { fill.style.width = Math.max(8, s.bytesTransferred / s.totalBytes * 100) + "%"; });
-      await task;
-      window.__ph = await task.snapshot.ref.getDownloadURL();
-      $("#pkP").innerHTML = `<div class="prev"><img src="${window.__ph}" alt="معاينة">
-        <button class="x" onclick="unpick()">✕</button></div>`;
-      $("#pk").classList.add("hidden"); bar.classList.add("hidden");
+      fill.style.width = "35%";
+      const b64 = await toBase64(blob);
+      fill.style.width = "55%";
+
+      const r = await send({
+        action:"partnerAction", session:S.session,
+        op:"upload", image:b64, name:"hut_" + Date.now()
+      }, true);
+
+      if(!r || !r.success) throw new Error((r && r.msg) || "رفض الخادم الصورة");
+
+      window.__ph = r.url;
+      fill.style.width = "100%";
+      $("#pkP").innerHTML = `<div class="prev"><img src="${esc(r.url)}" alt="معاينة">
+        <button class="x" onclick="unpick()" aria-label="إزالة الصورة">✕</button></div>`;
+      $("#pk").classList.add("hidden");
+      bar.classList.add("hidden");
       toast("رُفعت الصورة (" + Math.round(blob.size/1024) + " ك.ب)");
-    }catch(err){ bar.classList.add("hidden"); toast("تعذّر الرفع: " + err.message, true); }
+
+    }catch(err){
+      bar.classList.add("hidden");
+      inp.value = "";
+      toast("تعذّر الرفع: " + err.message, true);
+    }
   };
 }
+
+/* Blob → base64 نقي بلا بادئة data: */
+function toBase64(blob){
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload  = () => { const s = String(r.result); res(s.substring(s.indexOf(",") + 1)); };
+    r.onerror = () => rej(new Error("تعذّرت قراءة الملف"));
+    r.readAsDataURL(blob);
+  });
+}
+
 function unpick(){ window.__ph = ""; $("#pkP").innerHTML = ""; $("#pk").classList.remove("hidden"); }
 
 function shrink(file){
@@ -954,7 +920,7 @@ function shrink(file){
 
 /* ═══════════════════════════════════════════════════════════════
    ⑨ الحساب
-   ═══════════════════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 const PROF = {
   car   : [["phone","الهاتف"],["city","المدينة"],["radius","نطاق التغطية (كم)","number"]],
   hotel : [["phone","الهاتف"],["city","المدينة"],["stars","النجوم","number"],
@@ -998,49 +964,62 @@ $("#btnPass").onclick = async () => {
     S.session = r.session;
     localStorage.setItem("hut_ps", r.session);
     $("#np").value = "";
-    toast(r.msg);
+    toast(r.msg || "تغيّرت كلمة المرور");
   } else toast((r && r.msg) || "لم ينجح", true);
 };
 
 $("#btnOut").onclick = () => { if(confirm("تسجيل الخروج من هذا الجهاز؟")) logout(); };
+
 function logout(expired){
-  clearInterval(S.timer);
-  if(pulseRef) pulseRef.off();
   localStorage.removeItem("hut_ps");
-  if(expired) toast("انتهت الجلسة — سجّل الدخول من جديد", true);
-  setTimeout(() => location.reload(), expired ? 1200 : 0);
+  clearInterval(S.timer);
+  if(pulseRef){ try{ pulseRef.off(); }catch(e){} pulseRef = null; }
+  S = {session:"", me:null, sector:"car", orders:[], inbox:[], stock:[], unread:0,
+       filter:"pending", view:"vOrders", regSector:"car", seen:new Set(), warmed:false,
+       timer:null, busy:false};
+  $("#app").classList.add("hidden");
+  $("#auth").classList.remove("hidden");
+  paintSectorPickers(); paintExtra(); segTo(true);
+  if(expired) authMsg("انتهت الجلسة — سجّل الدخول من جديد.", "wait");
 }
 
 /* ═══════════════════════════════════════════════════════════════
    ⑩ التنقّل والطبقات
-   ═══════════════════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 $$(".nav button").forEach(b => b.onclick = () => go(b.dataset.v));
-function go(v){
-  S.view = v;
-  ["vOrders","vInbox","vStock","vAcc"].forEach(x => $("#" + x).classList.toggle("hidden", x !== v));
-  $$(".nav button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+
+function go(view){
+  S.view = view;
+  ["vOrders","vInbox","vStock","vAcc"].forEach(v =>
+    $("#" + v).classList.toggle("hidden", v !== view));
+  $$(".nav button").forEach(b => b.classList.toggle("on", b.dataset.v === view));
   render();
   window.scrollTo({top:0, behavior:"smooth"});
 }
 
-function sheet(title, html, ready){
-  $("#sheetHost").innerHTML = `<div class="sheet" onclick="if(event.target===this)closeSheet()">
-    <div class="sheet-in"><div class="grab"></div>
-      <div class="sheet-hd"><h3>${esc(title)}</h3><button class="ic" onclick="closeSheet()">✕</button></div>
-      ${html}</div></div>`;
-  ready && ready();
-}
-function closeSheet(){ $("#sheetHost").innerHTML = ""; }
-
-let tT;
-function toast(m, bad){
-  clearTimeout(tT);
-  $("#toastHost").innerHTML = `<div class="toast ${bad?"no":""}">${esc(m)}</div>`;
-  tT = setTimeout(() => $("#toastHost").innerHTML = "", 3200);
+function sheet(title, html, after){
+  $("#sheetHost").innerHTML = `<div class="sheet" id="sh">
+    <div class="sheet-in" role="dialog" aria-modal="true">
+      <div class="grab"></div>
+      <div class="sheet-hd"><h3>${esc(title)}</h3>
+        <button class="ic" onclick="closeSheet()" aria-label="إغلاق">✕</button></div>
+      ${html}
+    </div></div>`;
+  $("#sh").onclick = e => { if(e.target.id === "sh") closeSheet(); };
+  if(after) after();
 }
 
+function closeSheet(){ $("#sheetHost").innerHTML = ""; window.__ph = ""; }
+
+let toastT = null;
+function toast(text, bad){
+  $("#toastHost").innerHTML = `<div class="toast ${bad ? "no" : ""}" role="status">${esc(text)}</div>`;
+  clearTimeout(toastT);
+  toastT = setTimeout(() => $("#toastHost").innerHTML = "", 2600);
+}
+
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeSheet(); });
 document.addEventListener("visibilitychange", () => { if(!document.hidden && S.session) refresh(); });
-if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 </script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="robots" content="noindex,nofollow">
-<title>لوحة الشريك — منصة الحوت</title>
+<title>لوحة الإدارة — منصة الحوت</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
 :root{
   --bg:#FFFFFF; --bg-soft:#F7F7F7; --line:#DDDDDD; --line-soft:#EBEBEB;
   --text:#222222; --text-2:#717171; --text-3:#A0A0A0;
-  --rose:#FF385C; --rose-d:#D70466; --green:#008A05; --amber:#B35309; --red:#C13515;
+  --rose:#FF385C; --green:#008A05; --amber:#B35309; --red:#C13515;
   --r-s:8px; --r-m:12px; --r-l:16px; --r-pill:999px;
   --sh:0 2px 8px rgba(0,0,0,.08); --sh-up:0 6px 20px rgba(0,0,0,.14);
   --ar:"Tajawal",system-ui,sans-serif; --num:"Poppins",ui-monospace,monospace;
@@ -26,28 +26,24 @@ body{background:var(--bg);color:var(--text);font-family:var(--ar);font-size:15px
 h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.01em}
 button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
 button{cursor:pointer;border:none;background:none}
-a{color:inherit}
 .num{font-family:var(--num);font-variant-numeric:tabular-nums}
 :focus-visible{outline:2px solid var(--text);outline-offset:2px;border-radius:6px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .hidden{display:none!important}
-.wrap{max-width:820px;margin:0 auto;padding:0 20px}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
 
 .hdr{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line-soft);padding-top:env(safe-area-inset-top)}
-.hdr-in{max-width:820px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:12px}
-.mark{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--rose);font-size:17px;flex:none}
+.hdr-in{max-width:960px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:12px}
+.mark{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;flex:none}
 .mark em{font-style:normal;font-size:21px}
 .hdr-mid{flex:1;min-width:0}
-.hdr-mid b{display:block;font-size:15px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hdr-mid b{display:block;font-size:15px}
 .hdr-mid span{font-size:12.5px;color:var(--text-2)}
 .ic{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
-  display:grid;place-items:center;font-size:17px;position:relative;flex:none;transition:box-shadow .18s}
+  display:grid;place-items:center;font-size:17px;flex:none;transition:box-shadow .18s}
 .ic:hover{box-shadow:var(--sh)}
-.bdg{position:absolute;top:-3px;inset-inline-start:-3px;min-width:19px;height:19px;padding:0 5px;
-  border-radius:var(--r-pill);background:var(--rose);color:#fff;font-size:11px;font-weight:700;
-  display:grid;place-items:center;font-family:var(--num);border:2px solid var(--bg)}
-.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;vertical-align:1px;margin-inline-end:4px}
-.pulse-dot.off{background:var(--text-3)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;vertical-align:1px;margin-inline-end:4px}
+.dot.off{background:var(--text-3)}
 
 .chips{display:flex;gap:8px;overflow-x:auto;padding:14px 0 6px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
@@ -55,7 +51,13 @@ a{color:inherit}
   font-size:14px;white-space:nowrap;color:var(--text-2);transition:.15s}
 .chip.on{background:var(--text);color:#fff;border-color:var(--text);font-weight:500}
 
-.card{background:var(--bg);border:1px solid var(--line-soft);border-radius:var(--r-l);padding:18px;margin-bottom:14px;transition:box-shadow .2s}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.kpi{border:1px solid var(--line-soft);border-radius:var(--r-l);padding:16px}
+.kpi span{display:block;font-size:12.5px;color:var(--text-2);margin-bottom:4px}
+.kpi b{font-size:24px;font-family:var(--num);font-weight:600;letter-spacing:-.02em}
+.kpi small{display:block;font-size:12px;color:var(--text-3);margin-top:2px}
+
+.card{border:1px solid var(--line-soft);border-radius:var(--r-l);padding:18px;margin-bottom:14px;transition:box-shadow .2s}
 .card:hover{box-shadow:var(--sh)}
 .card-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
 .card-hd h3{font-size:16.5px;line-height:1.4}
@@ -68,72 +70,38 @@ a{color:inherit}
 .dl div{display:flex;justify-content:space-between;gap:10px;font-size:14px;min-width:0;border-bottom:1px solid var(--line-soft);padding-bottom:7px}
 .dl span{color:var(--text-2);flex:none}
 .dl b{font-weight:500;text-align:end;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sum{color:var(--text);font-family:var(--num);font-weight:600}
+.sum{font-family:var(--num);font-weight:600}
 .tel{color:var(--rose);text-decoration:none;font-family:var(--num);font-weight:500}
-.masked{color:var(--text-3);font-size:13px}
-.req{background:var(--bg-soft);border-radius:var(--r-s);padding:10px 12px;font-size:13.5px;color:var(--text-2);margin-bottom:12px}
 
 .acts{display:flex;gap:10px;flex-wrap:wrap}
-.btn{flex:1;min-width:120px;padding:13px 18px;border-radius:var(--r-s);font-weight:700;font-size:15px;
+.btn{flex:1;min-width:110px;padding:12px 16px;border-radius:var(--r-s);font-weight:700;font-size:14.5px;
   text-align:center;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.15s}
 .btn:active{transform:scale(.985)}
 .btn:disabled{opacity:.4;pointer-events:none}
-.btn-p{background:linear-gradient(100deg,#E61E4D,#D70466);color:#fff}
-.btn-p:hover{filter:brightness(1.06)}
 .btn-d{background:var(--text);color:#fff}
 .btn-o{background:var(--bg);color:var(--text);border:1px solid var(--text)}
 .btn-q{background:var(--bg);color:var(--text-2);border:1px solid var(--line)}
+.btn-x{background:var(--bg);color:var(--red);border:1px solid #F0BDB0}
 .btn-w{width:100%;flex:none}
-
-.note{display:flex;gap:13px;padding:16px;border:1px solid var(--line-soft);border-radius:var(--r-l);margin-bottom:12px}
-.note.new{border-color:var(--rose);background:#FFF5F7}
-.note-i{width:42px;height:42px;border-radius:50%;background:var(--bg-soft);display:grid;place-items:center;font-size:18px;flex:none}
-.note p{margin:0;font-size:14px;white-space:pre-line;line-height:1.6}
-.note small{color:var(--text-3);font-size:12px;display:block;margin-top:6px;font-family:var(--num)}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(164px,1fr));gap:16px}
-.tile-img{width:100%;aspect-ratio:1/1;border-radius:var(--r-m);object-fit:cover;background:var(--bg-soft);display:block}
-.tile-ph{width:100%;aspect-ratio:1/1;border-radius:var(--r-m);background:var(--bg-soft);display:grid;place-items:center;font-size:30px;opacity:.3}
-.tile h4{font-size:14.5px;margin-top:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tile .p{font-size:13.5px;color:var(--text-2);margin-top:2px}
-.tile .p b{font-family:var(--num);color:var(--text)}
-.tile-on{font-size:12px;margin-top:3px;color:var(--green)}
-.tile-off{font-size:12px;margin-top:3px;color:var(--text-3)}
-.tile-acts{display:flex;gap:7px;margin-top:9px}
-.tile-acts button{flex:1;padding:7px;border-radius:var(--r-s);border:1px solid var(--line);font-size:12.5px;background:var(--bg)}
 
 .fld{margin-bottom:15px}
 .fld label{display:block;font-size:13px;color:var(--text-2);margin-bottom:6px;font-weight:500}
-.fld input,.fld select,.fld textarea{width:100%;padding:14px;border-radius:var(--r-s);border:1px solid var(--line);background:var(--bg);font-size:15px}
-.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--text);outline:none;box-shadow:0 0 0 1px var(--text)}
-.fld .phone{direction:ltr;text-align:start;font-family:var(--num);letter-spacing:.03em}
+.fld input,.fld select{width:100%;padding:14px;border-radius:var(--r-s);border:1px solid var(--line);background:var(--bg);font-size:15px}
+.fld input:focus,.fld select:focus{border-color:var(--text);outline:none;box-shadow:0 0 0 1px var(--text)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-
-.pick{border:1px dashed var(--line);border-radius:var(--r-m);padding:20px;text-align:center;position:relative;background:var(--bg)}
-.pick:hover{border-color:var(--text)}
-.pick input[type=file]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
-.pick .i{font-size:26px;display:block;margin-bottom:7px;opacity:.5}
-.pick b{display:block;font-size:14.5px}
-.pick small{color:var(--text-3);font-size:12.5px}
-.prev{position:relative;border-radius:var(--r-m);overflow:hidden;margin-top:12px}
-.prev img{width:100%;display:block;max-height:200px;object-fit:cover}
-.prev .x{position:absolute;top:10px;inset-inline-end:10px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.94);font-size:15px;box-shadow:var(--sh)}
-.bar{height:3px;background:var(--line-soft);border-radius:var(--r-pill);overflow:hidden;margin-top:10px}
-.bar i{display:block;height:100%;background:var(--rose);width:0;transition:width .25s}
 
 .sec{display:flex;align-items:center;justify-content:space-between;margin:22px 0 14px;gap:12px}
 .sec h2{font-size:22px}
-.void{text-align:center;padding:64px 24px}
-.void .i{font-size:40px;display:block;margin-bottom:14px;opacity:.35}
+.void{text-align:center;padding:56px 24px}
+.void .i{font-size:38px;display:block;margin-bottom:14px;opacity:.35}
 .void b{display:block;font-size:17px;margin-bottom:6px}
-.void p{margin:0;color:var(--text-2);font-size:14px;max-width:290px;margin-inline:auto}
+.void p{margin:0;color:var(--text-2);font-size:14px;max-width:300px;margin-inline:auto}
 
 .nav{position:fixed;bottom:0;inset-inline:0;z-index:50;background:var(--bg);border-top:1px solid var(--line-soft);padding-bottom:env(safe-area-inset-bottom)}
-.nav-in{display:flex;max-width:820px;margin:0 auto}
-.nav button{flex:1;height:var(--nav);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--text-3);font-size:10.5px;position:relative}
-.nav button.on{color:var(--rose)}
+.nav-in{display:flex;max-width:960px;margin:0 auto}
+.nav button{flex:1;height:var(--nav);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--text-3);font-size:10.5px}
+.nav button.on{color:var(--text);font-weight:700}
 .nav button i{font-style:normal;font-size:20px}
-.nav .bdg{top:9px;inset-inline-start:calc(50% + 5px)}
 
 .sheet{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.42);display:flex;align-items:flex-end;justify-content:center}
 .sheet-in{background:var(--bg);width:100%;max-width:560px;border-radius:var(--r-l) var(--r-l) 0 0;
@@ -148,19 +116,11 @@ a{color:inherit}
 .toast.no{background:var(--red)}
 
 .auth{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:28px 20px}
-.auth-in{width:100%;max-width:420px;margin:0 auto}
+.auth-in{width:100%;max-width:400px;margin:0 auto}
 .auth-mark{text-align:center;margin-bottom:26px}
 .auth-mark em{font-style:normal;font-size:44px;display:block;margin-bottom:10px}
 .auth-mark h1{font-size:25px;margin-bottom:6px}
 .auth-mark p{color:var(--text-2);font-size:14.5px;margin:0}
-.seg{display:flex;background:var(--bg-soft);padding:4px;border-radius:var(--r-pill);margin-bottom:24px}
-.seg button{flex:1;padding:10px;border-radius:var(--r-pill);font-size:14.5px;color:var(--text-2);font-weight:500}
-.seg button.on{background:var(--bg);color:var(--text);font-weight:700;box-shadow:var(--sh)}
-.pick4{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.pick4 button{padding:18px 10px;border-radius:var(--r-m);border:1px solid var(--line);background:var(--bg);text-align:center;transition:.15s}
-.pick4 button.on{border-color:var(--text);border-width:2px;background:var(--bg-soft)}
-.pick4 i{font-style:normal;font-size:25px;display:block;margin-bottom:6px}
-.pick4 span{font-size:13.5px;font-weight:500}
 .msg{padding:13px 15px;border-radius:var(--r-s);font-size:14px;margin-bottom:16px;line-height:1.55}
 .msg.no{background:#FDEAE6;color:var(--red)}
 .msg.ok{background:#E9F5EA;color:var(--green)}
@@ -174,44 +134,19 @@ a{color:inherit}
 </head>
 <body>
 
-<!-- ══════════ الدخول / التسجيل ══════════ -->
+<!-- ══════════ الدخول ══════════ -->
 <div id="auth" class="auth">
   <div class="auth-in">
     <div class="auth-mark">
       <em>🐋</em>
-      <h1>لوحة الشريك</h1>
-      <p>استقبل طلباتك وأدر نشاطك من مكان واحد</p>
-    </div>
-    <div class="seg">
-      <button class="on" id="segIn">تسجيل الدخول</button>
-      <button id="segUp">حساب جديد</button>
+      <h1>لوحة الإدارة</h1>
+      <p>الطلبات والشركاء والمحرّك في مكان واحد</p>
     </div>
     <div id="authMsg" class="msg hidden"></div>
-
-    <div id="formIn">
-      <div class="fld"><label>نوع النشاط</label><div class="pick4" id="secIn"></div></div>
-      <div class="fld"><label>رقم الهاتف</label>
-        <input id="inPhone" class="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="07XX XXX XXXX"></div>
-      <div class="fld"><label>كلمة المرور</label>
-        <input id="inPass" type="password" autocomplete="current-password" placeholder="••••"></div>
-      <button class="btn btn-p btn-w" id="btnIn">دخول</button>
-      <p class="fine">نسيت كلمة المرور؟ راسل الإدارة لإعادة ضبطها.</p>
-    </div>
-
-    <div id="formUp" class="hidden">
-      <div class="fld"><label>نوع النشاط</label><div class="pick4" id="secUp"></div></div>
-      <div class="fld"><label>اسم النشاط</label><input id="upName" placeholder="مثال: مكتب الحوت لتأجير السيارات"></div>
-      <div class="two">
-        <div class="fld"><label>المدينة</label><select id="upCity"></select></div>
-        <div class="fld"><label>رقم الهاتف</label>
-          <input id="upPhone" class="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="07XX XXX XXXX"></div>
-      </div>
-      <div id="upExtra"></div>
-      <div class="fld"><label>كلمة المرور</label>
-        <input id="upPass" type="password" autocomplete="new-password" placeholder="4 أحرف على الأقل"></div>
-      <button class="btn btn-p btn-w" id="btnUp">إنشاء الحساب</button>
-      <p class="fine">يراجع فريقنا الطلب ثم يفعّل حسابك.<br>رقم هاتفك هو اسم دخولك، فاحرص على صحته.</p>
-    </div>
+    <div class="fld"><label>كلمة مرور الإدارة</label>
+      <input id="pw" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+    <button class="btn btn-d btn-w" id="btnIn">دخول</button>
+    <p class="fine">تُحفظ كلمة المرور في هذه النافذة فقط، وتُمحى عند إغلاقها.</p>
   </div>
 </div>
 
@@ -221,69 +156,94 @@ a{color:inherit}
     <div class="hdr-in">
       <div class="mark"><em>🐋</em></div>
       <div class="hdr-mid">
-        <b id="pName">—</b>
-        <span><i class="pulse-dot off" id="live"></i><span id="liveTxt">يتصل…</span></span>
+        <b>لوحة الإدارة</b>
+        <span><i class="dot off" id="live"></i><span id="liveTxt">يتصل…</span></span>
       </div>
-      <button class="ic" id="btnBell" aria-label="الإشعارات">🔔<span class="bdg hidden" id="bdgTop">0</span></button>
+      <button class="ic" id="btnSync" aria-label="تحديث">↻</button>
     </div>
   </header>
 
   <main class="wrap">
-    <section id="vOrders">
-      <div class="chips" id="chips">
-        <button class="chip on" data-f="pending">بانتظار الرد</button>
+    <!-- نظرة عامة -->
+    <section id="vHome">
+      <div class="kpis" id="kpis"></div>
+      <div class="sec"><h2>يحتاج انتباهك</h2></div>
+      <div id="attention"></div>
+    </section>
+
+    <!-- الطلبات -->
+    <section id="vOrders" class="hidden">
+      <div class="chips" id="secChips">
+        <button class="chip on" data-s="car">سيارات</button>
+        <button class="chip" data-s="hotel">فنادق</button>
+        <button class="chip" data-s="hall">قاعات</button>
+        <button class="chip" data-s="school">سياقة</button>
+      </div>
+      <div class="chips" id="stChips">
+        <button class="chip on" data-f="all">الكل</button>
+        <button class="chip" data-f="pending">معلّق</button>
         <button class="chip" data-f="live">قيد التنفيذ</button>
-        <button class="chip" data-f="done">منتهية</button>
-        <button class="chip" data-f="all">الكل</button>
+        <button class="chip" data-f="done">منتهٍ</button>
       </div>
       <div id="orders"></div>
     </section>
 
-    <section id="vInbox" class="hidden">
-      <div class="sec"><h2>الإشعارات</h2><button class="chip" id="btnRead">تعليم الكل كمقروء</button></div>
-      <div id="inbox"></div>
+    <!-- الشركاء -->
+    <section id="vPartners" class="hidden">
+      <div class="chips" id="pSecChips">
+        <button class="chip on" data-s="car">مكاتب سيارات</button>
+        <button class="chip" data-s="hotel">فنادق</button>
+        <button class="chip" data-s="hall">قاعات</button>
+        <button class="chip" data-s="school">مدارس</button>
+      </div>
+      <div class="chips" id="pStChips">
+        <button class="chip on" data-f="all">الكل</button>
+        <button class="chip" data-f="pending">قيد المراجعة</button>
+        <button class="chip" data-f="active">مفعّل</button>
+        <button class="chip" data-f="blocked">موقوف</button>
+      </div>
+      <div id="partners"></div>
     </section>
 
-    <section id="vStock" class="hidden">
-      <div class="sec"><h2 id="stockT">الأسطول</h2>
-        <button class="btn btn-d" style="flex:none;min-width:auto;padding:10px 18px" id="btnAdd">إضافة</button></div>
-      <div id="stock" class="grid"></div>
-    </section>
-
-    <section id="vAcc" class="hidden">
-      <div class="sec"><h2>حسابي</h2></div>
+    <!-- النظام -->
+    <section id="vSys" class="hidden">
+      <div class="sec"><h2>المحرّك الذاتي</h2></div>
       <div class="card">
-        <div class="dl" style="margin:0">
-          <div><span>المعرّف</span><b class="num" id="aId">—</b></div>
-          <div><span>الهاتف</span><b class="num" id="aPhone">—</b></div>
-          <div><span>الحالة</span><b id="aStat">—</b></div>
-          <div><span>المنجزة</span><b class="num" id="aOrd">0</b></div>
-          <div><span>الإيرادات</span><b class="sum" id="aRev">0</b></div>
-          <div><span>المستحق للمنصة</span><b class="sum" id="aDebt" style="color:var(--rose)">0</b></div>
+        <div class="dl" style="margin:0 0 16px">
+          <div><span>المؤقّت</span><b id="eInst">—</b></div>
+          <div><span>الحالة</span><b id="eOn">—</b></div>
+          <div><span>آخر دورة</span><b id="eRun">—</b></div>
+          <div><span>آخر نتيجة</span><b id="eSum">—</b></div>
+        </div>
+        <div class="acts">
+          <button class="btn btn-d" id="eNow">شغّل دورة الآن</button>
+          <button class="btn btn-o" id="eToggle">إيقاف مؤقّت</button>
+          <button class="btn btn-q" id="eInstall">إعادة تركيب المؤقّت</button>
         </div>
       </div>
+
+      <div class="sec"><h2>الصيانة</h2></div>
       <div class="card">
-        <h3 style="font-size:17px;margin-bottom:16px">بيانات النشاط</h3>
-        <div id="profFields"></div>
-        <button class="btn btn-d btn-w" id="btnSave">حفظ التعديلات</button>
-        <p class="fine" style="text-align:start;margin-top:12px">الاسم والعمولة والحالة تعدّلها الإدارة فقط.</p>
+        <p style="margin:0 0 16px;color:var(--text-2);font-size:14px">
+          التقرير اليومي يعمل تلقائياً الساعة ٢ فجراً، والتنظيف الساعة ٧ صباحاً.
+          هذه الأزرار لتشغيلهما يدوياً عند الحاجة.</p>
+        <div class="acts">
+          <button class="btn btn-o" id="sysReport">تقرير اليوم الآن</button>
+          <button class="btn btn-o" id="sysClean">تنظيف Firebase</button>
+          <button class="btn btn-q" id="sysCache">إفراغ الذاكرة المؤقتة</button>
+        </div>
       </div>
-      <div class="card">
-        <h3 style="font-size:17px;margin-bottom:16px">كلمة المرور</h3>
-        <div class="fld"><label>كلمة المرور الجديدة</label><input id="np" type="password" placeholder="4 أحرف على الأقل"></div>
-        <button class="btn btn-o btn-w" id="btnPass">تغيير كلمة المرور</button>
-        <p class="fine" style="text-align:start;margin-top:12px">تغييرها يُخرج بقية أجهزتك تلقائياً.</p>
-      </div>
-      <button class="btn btn-q btn-w" id="btnOut" style="margin-bottom:24px">تسجيل الخروج</button>
+
+      <button class="btn btn-q btn-w" id="btnOut" style="margin-bottom:24px">قفل اللوحة</button>
     </section>
   </main>
 
   <nav class="nav">
     <div class="nav-in">
-      <button class="on" data-v="vOrders"><i>📋</i>الطلبات</button>
-      <button data-v="vInbox"><i>🔔</i>الإشعارات<span class="bdg hidden" id="bdgNav">0</span></button>
-      <button data-v="vStock" id="navStock"><i>🚗</i>الأسطول</button>
-      <button data-v="vAcc"><i>👤</i>حسابي</button>
+      <button class="on" data-v="vHome"><i>📊</i>نظرة عامة</button>
+      <button data-v="vOrders"><i>📋</i>الطلبات</button>
+      <button data-v="vPartners"><i>🤝</i>الشركاء</button>
+      <button data-v="vSys"><i>⚙️</i>النظام</button>
     </div>
   </nav>
 </div>
@@ -291,349 +251,253 @@ a{color:inherit}
 <div id="sheetHost"></div>
 <div id="toastHost"></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════════════
    ① الإعداد
-   لا سرّ في هذه الصفحة إطلاقاً. الدخول يتحقّق منه الخادم ويعيد رمزاً
-   موقّعاً، والصور ترفع عبر الخادم إلى ImgBB فالمفتاح يبقى هناك.
-   Firebase هنا للنبضة وحدها: عقدة hut_pulse تحمل أرقام وقت فقط
-   وهي العقدة الوحيدة المقروءة علناً في القاعدة.
+   ⚠️ API_TOKEN موجود في هذه الصفحة لأن نداءات الإدارة تحتاجه.
+   وحده لا يكفي: كل نداء هنا يحمل كلمة مرور الإدارة أيضاً، والخادم
+   يرفض أي قراءة لبيانات الزبائن بلا كلمة المرور.
+   لا تنشر هذه الصفحة على رابط يسهل تخمينه، وغيّر التوكن دورياً.
 ═══════════════════════════════════════════════════════════════ */
-const API = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
+const API   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
+const TOKEN = "ضع_التوكن_الجديد_هنا";
 
-const FB = {
-  databaseURL: "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app"
-};
-
-const IDLE_MS = 60000;
-const IMG = {MAX:1000, Q:.72};
-const CITIES = ["كركوك","بغداد","أربيل","السليمانية","الموصل","البصرة","الأنبار","ديالى"];
-
-const SEC = {
-  car   : {icon:"🚗", label:"مكتب سيارات",  stock:"الأسطول", sIcon:"🚗"},
-  hotel : {icon:"🏨", label:"فندق",          stock:"الغرف",   sIcon:"🛏️"},
-  hall  : {icon:"🥂", label:"قاعة مناسبات",  stock:null},
-  school: {icon:"🎓", label:"مدرسة سياقة",   stock:null}
-};
+const IDLE_MS = 45000;
 
 const ST = {
-  pending  :{t:"بانتظار ردّك", c:"wait"},
-  active   :{t:"قيد التنفيذ",  c:"ok"},
-  confirmed:{t:"مؤكَّد",        c:"ok"},
-  completed:{t:"منجز",         c:""},
-  cancelled:{t:"ملغى",         c:"no"},
-  rejected :{t:"معتذَر عنه",   c:"no"}
+  pending  :{t:"معلّق",       c:"wait"},
+  active   :{t:"قيد التنفيذ", c:"ok"},
+  confirmed:{t:"مؤكَّد",       c:"ok"},
+  completed:{t:"منجز",        c:""},
+  cancelled:{t:"ملغى",        c:"no"},
+  rejected :{t:"معتذَر عنه",  c:"no"}
+};
+const PST = {
+  pending:{t:"قيد المراجعة", c:"wait"},
+  active :{t:"مفعّل",         c:"ok"},
+  blocked:{t:"موقوف",         c:"no"}
 };
 
-const CATS = {economy:"اقتصادية", family:"عائلية", luxury:"فاخرة", wedding:"زفاف"};
-const NICO = {notify:"🆕", remind:"🔔", escalate:"🚨", confirm:"✅", done:"🌟"};
+/* خرائط القطاعات: الاسم العربي، مفتاح البيانات، ونوع الكيان في الخادم */
+const SECT = {
+  car   : {label:"سيارات", orders:"carOrders",     partners:"carOffices",   entity:"CarOffice",   del:"deleteOrder"},
+  hotel : {label:"فنادق",  orders:"hotelBookings", partners:"hotels",       entity:"Hotel",       del:"deleteBooking"},
+  hall  : {label:"قاعات",  orders:"hallBookings",  partners:"halls",        entity:"Hall",        del:"deleteHallBooking"},
+  school: {label:"سياقة",  orders:"driveStudents", partners:"driveSchools", entity:"DriveSchool", del:null}
+};
+
+/* الحقول التي تعدّلها الإدارة لكل نوع شريك */
+const EDIT = {
+  car   : [["name","اسم المكتب"],["phone","الهاتف"],["city","المدينة"],
+           ["radius","نطاق التغطية (كم)","number"],["comm_val","قيمة العمولة"]],
+  hotel : [["name","اسم الفندق"],["phone","الهاتف"],["city","المدينة"],
+           ["stars","النجوم","number"],["price_double","سعر المزدوجة","number"],["comm_val","قيمة العمولة"]],
+  hall  : [["name","اسم القاعة"],["phone","الهاتف"],["city","المدينة"],
+           ["capacity","السعة"],["price","سعر السهرة","number"],["comm_val","قيمة العمولة"]],
+  school: [["name","اسم المدرسة"],["phone","الهاتف"],["city","المدينة"],
+           ["price_basic","سعر الأساسي","number"],["price_advanced","سعر المتقدم","number"],["comm_val","قيمة العمولة"]]
+};
 
 /* ═══════════════════════════════════════════════════════════════
    ② الحالة
 ═══════════════════════════════════════════════════════════════ */
 let S = {
-  session:"", me:null, sector:"car",
-  orders:[], inbox:[], stock:[], unread:0,
-  filter:"pending", view:"vOrders",
-  regSector:"car", seen:new Set(), warmed:false,
+  pass:"", data:null, view:"vHome",
+  oSector:"car", oFilter:"all",
+  pSector:"car", pFilter:"all",
   timer:null, busy:false
 };
-let db = null, pulseRef = null;
 
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money = n => (Number(n)||0).toLocaleString("en-US");
-const set = v => v && String(v).indexOf("PUT_YOUR") !== 0;
 
 /* ═══════════════════════════════════════════════════════════════
-   ③ الاتصال — POST أولاً، وJSONP احتياطياً
-   الرفع لا يستعمل JSONP: الصورة أكبر من أن تُحمل في رابط.
+   ③ الاتصال — POST فقط
+   كلمة المرور لا توضع في رابط GET أبداً: الروابط تُسجَّل في تاريخ
+   المتصفح وفي سجلات التنفيذ.
 ═══════════════════════════════════════════════════════════════ */
-async function send(payload, noJsonp){
-  try{
-    const res = await fetch(API, {
-      method:"POST",
-      headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body:JSON.stringify(payload)
-    });
-    const d = await res.json();
-    if(d && typeof d === "object") return d;
-  }catch(e){
-    if(noJsonp) throw new Error("تعذّر الوصول للخادم");
-  }
-  if(noJsonp) throw new Error("تعذّر الوصول للخادم");
-  return jsonp(payload);
-}
-
-function jsonp(params){
-  return new Promise((resolve, reject) => {
-    const cb = "hp_" + Date.now() + Math.floor(Math.random()*1000);
-    const flat = {};
-    Object.keys(params).forEach(k => {
-      flat[k] = (typeof params[k] === "object") ? JSON.stringify(params[k]) : params[k];
-    });
-    const q = new URLSearchParams(Object.assign({callback:cb}, flat));
-    const sc = document.createElement("script");
-    const t = setTimeout(() => { done(); reject(new Error("انتهت مهلة الاتصال")); }, 30000);
-    function done(){ clearTimeout(t); delete window[cb]; sc.remove(); }
-    window[cb] = d => { done(); resolve(d); };
-    sc.onerror = () => { done(); reject(new Error("تعذّر الوصول للخادم")); };
-    sc.src = API + "?" + q.toString();
-    document.body.appendChild(sc);
+async function api(action, extra){
+  const body = Object.assign({token:TOKEN, action:action, pass:S.pass}, extra || {});
+  const res = await fetch(API, {
+    method:"POST",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(body)
   });
+  return await res.json();
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   ④ شاشة الدخول والتسجيل
+   ④ الدخول
 ═══════════════════════════════════════════════════════════════ */
-function paintSectorPickers(){
-  const html = cur => Object.keys(SEC).map(k =>
-    `<button data-s="${k}" class="${k===cur?"on":""}"><i>${SEC[k].icon}</i><span>${SEC[k].label}</span></button>`).join("");
-  $("#secIn").innerHTML = html(S.sector);
-  $("#secUp").innerHTML = html(S.regSector);
-  $$("#secIn button").forEach(b => b.onclick = () => {
-    S.sector = b.dataset.s;
-    $$("#secIn button").forEach(x => x.classList.toggle("on", x === b));
-  });
-  $$("#secUp button").forEach(b => b.onclick = () => {
-    S.regSector = b.dataset.s;
-    $$("#secUp button").forEach(x => x.classList.toggle("on", x === b));
-    paintExtra();
-  });
-  $("#upCity").innerHTML = CITIES.map(c => `<option>${c}</option>`).join("");
-}
-
-const EXTRA = {
-  car   : [],
-  hotel : [["stars","عدد النجوم","number"],["price_double","سعر الغرفة المزدوجة","number"]],
-  hall  : [["capacity","السعة (عدد الضيوف)","number"],["price","سعر السهرة","number"]],
-  school: [["price_basic","سعر الكورس الأساسي","number"],["price_advanced","سعر الكورس المتقدم","number"]]
-};
-
-function paintExtra(){
-  const f = EXTRA[S.regSector] || [];
-  $("#upExtra").innerHTML = f.length
-    ? `<div class="two">${f.map(([k,l,t]) =>
-        `<div class="fld"><label>${l}</label><input id="up_${k}" type="${t}" inputmode="numeric"></div>`).join("")}</div>`
-    : "";
-}
-
-$("#segIn").onclick = () => segTo(true);
-$("#segUp").onclick = () => segTo(false);
-function segTo(login){
-  $("#segIn").classList.toggle("on", login);
-  $("#segUp").classList.toggle("on", !login);
-  $("#formIn").classList.toggle("hidden", !login);
-  $("#formUp").classList.toggle("hidden", login);
-  $("#authMsg").classList.add("hidden");
-}
+$("#btnIn").onclick = doLogin;
+$("#pw").addEventListener("keydown", e => { if(e.key === "Enter") doLogin(); });
 
 function authMsg(text, kind){
   const el = $("#authMsg");
   el.className = "msg " + (kind || "no");
   el.textContent = text;
   el.classList.remove("hidden");
-  el.scrollIntoView({block:"nearest", behavior:"smooth"});
 }
 
-$("#btnIn").onclick = doLogin;
-$("#inPass").addEventListener("keydown", e => { if(e.key === "Enter") doLogin(); });
-
 async function doLogin(){
-  const phone = $("#inPhone").value.trim();
-  const pass  = $("#inPass").value.trim();
+  const p = $("#pw").value.trim();
   $("#authMsg").classList.add("hidden");
-  if(!phone) return authMsg("اكتب رقم هاتفك.");
-  if(!pass)  return authMsg("اكتب كلمة المرور.");
-  if(!set(API)) return authMsg("ضع رابط النشر في المتغيّر API أعلى الملف.");
+  if(!p) return authMsg("اكتب كلمة المرور.");
+  if(TOKEN.indexOf("ضع_") === 0) return authMsg("ضع التوكن في المتغيّر TOKEN أعلى الملف.");
 
   const b = $("#btnIn");
   b.innerHTML = '<span class="sp"></span>'; b.disabled = true;
   try{
-    const r = await send({action:"partnerLogin", sector:S.sector, phone, pass});
-    if(!r || !r.success)
-      return authMsg((r && r.msg) || "تعذّر الدخول.", r && r.reason === "pending" ? "wait" : "no");
-    S.session = r.session; S.me = r.profile;
-    localStorage.setItem("hut_ps", r.session);
+    S.pass = p;
+    const r = await api("VERIFY_MASTER_PASS");
+    if(!r || !r.success){ S.pass = ""; return authMsg((r && r.msg) || "كلمة المرور غير صحيحة."); }
+    sessionStorage.setItem("hut_ap", p);
     start();
-  }catch(e){ authMsg(e.message); }
+  }catch(e){ S.pass = ""; authMsg("تعذّر الوصول للخادم."); }
   finally{ b.textContent = "دخول"; b.disabled = false; }
 }
 
-$("#btnUp").onclick = async () => {
-  const body = {
-    action:"partnerRegister", sector:S.regSector,
-    name:$("#upName").value.trim(), city:$("#upCity").value,
-    phone:$("#upPhone").value.trim(), pass:$("#upPass").value.trim()
-  };
-  (EXTRA[S.regSector] || []).forEach(([k]) => { body[k] = $("#up_" + k).value; });
-
-  $("#authMsg").classList.add("hidden");
-  if(!body.name) return authMsg("اكتب اسم نشاطك.");
-  if(!body.phone) return authMsg("اكتب رقم هاتفك.");
-  if(body.pass.length < 4) return authMsg("كلمة المرور 4 أحرف على الأقل.");
-
-  const b = $("#btnUp");
-  b.innerHTML = '<span class="sp"></span>'; b.disabled = true;
-  try{
-    const r = await send(body);
-    if(!r || !r.success) return authMsg((r && r.msg) || "تعذّر التسجيل.");
-    authMsg(r.msg, "ok");
-    $("#formUp").querySelectorAll("input").forEach(i => i.value = "");
-  }catch(e){ authMsg(e.message); }
-  finally{ b.textContent = "إنشاء الحساب"; b.disabled = false; }
-};
-
-paintSectorPickers();
-paintExtra();
-
 (function resume(){
-  const s = localStorage.getItem("hut_ps");
-  if(s){ S.session = s; start(true); }
+  const p = sessionStorage.getItem("hut_ap");
+  if(p){ S.pass = p; start(); }
 })();
 
-/* ═══════════════════════════════════════════════════════════════
-   ⑤ الإقلاع والتحديث
-═══════════════════════════════════════════════════════════════ */
-async function start(silent){
+async function start(){
   $("#auth").classList.add("hidden");
   $("#app").classList.remove("hidden");
-  if(S.me) applyProfile();
   await refresh(true);
-  if(!S.me) return;
-  connectPulse();
+  loadEngine();
   clearInterval(S.timer);
   S.timer = setInterval(() => { if(!document.hidden) refresh(); }, IDLE_MS);
-  setTimeout(() => S.warmed = true, 2500);
 }
 
-function applyProfile(){
-  S.sector = S.me.sector;
-  $("#pName").textContent = S.me.name;
-  const st = SEC[S.sector];
-  if(st.stock){
-    $("#navStock").classList.remove("hidden");
-    $("#navStock").querySelector("i").textContent = st.sIcon;
-    $("#navStock").childNodes[1].textContent = st.stock;
-    $("#stockT").textContent = st.stock;
-  } else $("#navStock").classList.add("hidden");
-}
+/* ═══════════════════════════════════════════════════════════════
+   ⑤ التحديث
+═══════════════════════════════════════════════════════════════ */
+$("#btnSync").onclick = () => { refresh(); loadEngine(); toast("يُحدَّث…"); };
 
 async function refresh(first){
   if(S.busy) return;
   S.busy = true;
   try{
-    const d = await send({action:"partnerSnapshot", session:S.session});
+    const d = await api("GET_ADMIN_DATA");
     if(!d || !d.success){
-      if(d && d.reason === "session") return logout(true);
+      if(d && /كلمة مرور|محظور/.test(d.msg || "")) return lock(true);
       throw new Error((d && d.msg) || "تعذّر التحديث");
     }
-    const firstLoad = !S.me;
-    S.me = d.profile; S.orders = d.orders || []; S.stock = d.stock || [];
-    S.inbox = d.inbox || []; S.unread = d.unread || 0;
-    if(firstLoad) applyProfile();
-    detectNew();
-    paintBadges();
+    S.data = d;
     render();
     setLive(true);
   }catch(e){
     setLive(false);
-    if(first) $("#orders").innerHTML = `<div class="msg no">${esc(e.message)}</div>`;
+    if(first) $("#kpis").innerHTML = `<div class="msg no" style="grid-column:1/-1">${esc(e.message)}</div>`;
   }finally{ S.busy = false; }
 }
 
 function setLive(on){
-  $("#live").className = "pulse-dot " + (on ? "" : "off");
+  $("#live").className = "dot " + (on ? "" : "off");
   $("#liveTxt").textContent = on ? "متصل" : "غير متصل";
 }
 
-/* النبضة: عقدة تحمل رقم وقت فقط — تصل فوراً فنطلب لقطة جديدة */
-function connectPulse(){
-  if(!FB.databaseURL || !S.me) return;
-  try{
-    if(!firebase.apps.length) firebase.initializeApp(FB);
-    db = firebase.database();
-    const key = (S.sector === "car" ? "city_" + (S.me.city || "") : S.me.id)
-                  .replace(/[.#$/[\]\s]/g, "_");
-    if(pulseRef) pulseRef.off();
-    pulseRef = db.ref("hut_pulse/" + key);
-    let firstTick = true;
-    pulseRef.on("value", () => {
-      if(firstTick){ firstTick = false; return; }
-      refresh();
-    }, () => { /* لو رُفضت القراءة نكتفي بالتحديث الدوري */ });
-  }catch(e){}
-}
-
 /* ═══════════════════════════════════════════════════════════════
-   ⑥ التنبيه على الطلبات الجديدة
-═══════════════════════════════════════════════════════════════ */
-function detectNew(){
-  let n = 0;
-  S.orders.forEach(o => {
-    if(!S.seen.has(o.id)){
-      S.seen.add(o.id);
-      if(S.warmed && o.status === "pending") n++;
-    }
-  });
-  if(n > 0) alertNew(n);
-}
-
-function alertNew(n){
-  beep();
-  if(navigator.vibrate) navigator.vibrate([200,80,200]);
-  const body = n === 1 ? "طلب جديد وصل الآن" : n + " طلبات جديدة بانتظارك";
-  if("Notification" in window && Notification.permission === "granted"){
-    try{ new Notification("منصة الحوت", {body, tag:"hut", renotify:true}); }catch(e){}
-  }
-  toast(body);
-}
-
-function beep(){
-  try{
-    const C = window.AudioContext || window.webkitAudioContext, c = new C();
-    [0,.17].forEach((t,i) => {
-      const o = c.createOscillator(), g = c.createGain();
-      o.type = "sine";
-      o.frequency.setValueAtTime(i ? 1046 : 784, c.currentTime + t);
-      g.gain.setValueAtTime(.0001, c.currentTime + t);
-      g.gain.exponentialRampToValueAtTime(.3, c.currentTime + t + .02);
-      g.gain.exponentialRampToValueAtTime(.0001, c.currentTime + t + .15);
-      o.connect(g); g.connect(c.destination);
-      o.start(c.currentTime + t); o.stop(c.currentTime + t + .17);
-    });
-  }catch(e){}
-}
-
-$("#btnBell").onclick = async () => {
-  if("Notification" in window && Notification.permission === "default"){
-    const p = await Notification.requestPermission();
-    toast(p === "granted" ? "سيصلك تنبيه فور وصول طلب." : "التنبيه الصوتي فقط.");
-  }
-  go("vInbox");
-};
-
-/* ═══════════════════════════════════════════════════════════════
-   ⑦ العرض
+   ⑥ العرض
 ═══════════════════════════════════════════════════════════════ */
 function render(){
-  if(S.view === "vOrders") renderOrders();
-  if(S.view === "vInbox")  renderInbox();
-  if(S.view === "vStock")  renderStock();
-  if(S.view === "vAcc")    renderAcc();
+  if(!S.data) return;
+  if(S.view === "vHome")     renderHome();
+  if(S.view === "vOrders")   renderOrders();
+  if(S.view === "vPartners") renderPartners();
 }
 
-$$("#chips .chip").forEach(b => b.onclick = () => {
-  $$("#chips .chip").forEach(x => x.classList.remove("on"));
-  b.classList.add("on"); S.filter = b.dataset.f; renderOrders();
+function renderHome(){
+  const s = S.data.stats || {};
+  const rev = (s.total_car_revenue||0) + (s.total_hotel_revenue||0) + (s.total_hall_revenue||0);
+  const debt = ["carOffices","hotels","halls","driveSchools"]
+    .reduce((t,k) => t + (S.data[k]||[]).reduce((x,p) => x + (Number(p.debt)||0), 0), 0);
+  const pendingPartners = ["carOffices","hotels","halls","driveSchools"]
+    .reduce((t,k) => t + (S.data[k]||[]).filter(p => p.status === "pending").length, 0);
+  const pendingOrders = (s.car_pending||0) + (s.hotel_pending||0) + (s.hall_pending||0);
+
+  $("#kpis").innerHTML = [
+    ["إيرادات منجزة", money(rev) + " د.ع", "من كل القطاعات"],
+    ["مستحق للمنصة",  money(debt) + " د.ع", "ديون الشركاء"],
+    ["طلبات معلّقة",   pendingOrders, "بانتظار رد الشريك"],
+    ["شركاء للمراجعة", pendingPartners, "بانتظار تفعيلك"],
+    ["طلبات سيارات",  s.car_orders_total || 0, (s.car_completed||0) + " منجز"],
+    ["حجوزات فنادق",  s.hotel_bookings || 0,   (s.hotel_completed||0) + " منجز"],
+    ["حجوزات قاعات",  s.hall_bookings || 0,    (s.hall_completed||0) + " منجز"],
+    ["طلاب سياقة",    s.drive_students || 0,   "إجمالي المسجّلين"]
+  ].map(([l,v,sub]) => `<div class="kpi"><span>${l}</span><b>${v}</b><small>${sub}</small></div>`).join("");
+
+  /* الشركاء المنتظرون أولاً، ثم الطلبات العالقة أكثر من ٦ ساعات */
+  const waiting = [];
+  Object.keys(SECT).forEach(k => {
+    (S.data[SECT[k].partners] || []).filter(p => p.status === "pending")
+      .forEach(p => waiting.push({sector:k, p:p}));
+  });
+
+  const stale = (S.data.carOrders || []).filter(o =>
+    o.status === "pending" && (Date.now() - new Date(o.created_at||0)) > 6*3600000);
+
+  const box = $("#attention");
+  if(!waiting.length && !stale.length){
+    box.innerHTML = `<div class="void"><span class="i">✅</span><b>كل شيء تحت السيطرة</b>
+      <p>لا شركاء بانتظار المراجعة ولا طلبات عالقة.</p></div>`;
+    return;
+  }
+
+  box.innerHTML =
+    waiting.map(w => `<article class="card">
+      <div class="card-hd">
+        <div style="min-width:0"><h3>${esc(w.p.name)}</h3>
+          <div class="meta">${esc(w.p.id)} · ${SECT[w.sector].label} · ${esc(w.p.city||"—")}</div></div>
+        <span class="state wait">قيد المراجعة</span>
+      </div>
+      <div class="dl">
+        <div><span>الهاتف</span><b><a class="tel" href="tel:${esc(w.p.phone)}">${esc(w.p.phone||"—")}</a></b></div>
+        <div><span>العمولة</span><b>${esc(w.p.comm_val||"—")}</b></div>
+      </div>
+      <div class="acts">
+        <button class="btn btn-d" onclick="setStatus('${w.sector}','${esc(w.p.id)}','active')">تفعيل الحساب</button>
+        <button class="btn btn-x" onclick="setStatus('${w.sector}','${esc(w.p.id)}','blocked')">رفض</button>
+      </div>
+    </article>`).join("") +
+    (stale.length ? `<article class="card">
+      <div class="card-hd"><div><h3>${stale.length} طلب سيارة عالق</h3>
+        <div class="meta">مضى عليها أكثر من ٦ ساعات بلا استلام</div></div>
+        <span class="state no">يحتاج اتصالاً</span></div>
+      <div class="acts"><button class="btn btn-o" onclick="go('vOrders')">افتح الطلبات</button></div>
+    </article>` : "");
+}
+
+$$("#secChips .chip").forEach(b => b.onclick = () => {
+  $$("#secChips .chip").forEach(x => x.classList.remove("on"));
+  b.classList.add("on"); S.oSector = b.dataset.s; renderOrders();
+});
+$$("#stChips .chip").forEach(b => b.onclick = () => {
+  $$("#stChips .chip").forEach(x => x.classList.remove("on"));
+  b.classList.add("on"); S.oFilter = b.dataset.f; renderOrders();
 });
 
+/* توحيد شكل الطلب عبر القطاعات الأربعة */
+function normalize(sector, o){
+  if(sector === "car")   return {id:o.id, title:o.car || "تأجير سيارة", who:o.name, phone:o.phone,
+    city:o.city, date:o.date, qty:(o.days||1) + " يوم", total:o.total, status:o.status, partner:o.office};
+  if(sector === "hotel") return {id:o.id, title:"غرفة " + (o.room_type||""), who:o.guest_name, phone:o.phone,
+    city:o.city, date:o.date_arrive, qty:(o.nights||1) + " ليلة", total:o.total, status:o.status, partner:o.hotel_name};
+  if(sector === "hall")  return {id:o.id, title:o.event_type || "مناسبة", who:o.name, phone:o.phone,
+    city:o.city, date:o.date, qty:(o.guests||0) + " ضيف", total:o.total, status:o.status, partner:o.hall_name};
+  return {id:o.id, title:o.course || "كورس سياقة", who:o.name, phone:o.phone,
+    city:o.city, date:o.date, qty:"—", total:o.price, status:o.status, partner:o.school_id};
+}
+
 function renderOrders(){
-  const f = S.filter;
-  const list = S.orders.filter(o =>
+  const cfg = SECT[S.oSector];
+  const raw = S.data[cfg.orders] || [];
+  const f = S.oFilter;
+  const list = raw.map(o => normalize(S.oSector, o)).filter(o =>
     f === "all"     ? true :
     f === "pending" ? o.status === "pending" :
     f === "live"    ? ["active","confirmed"].includes(o.status) :
@@ -641,356 +505,221 @@ function renderOrders(){
 
   const box = $("#orders");
   if(!list.length){
-    box.innerHTML = `<div class="void"><span class="i">📭</span><b>لا شيء هنا بعد</b>
-      <p>${f === "pending" ? "ستظهر الطلبات الجديدة تلقائياً فور وصولها." : "لا توجد طلبات في هذا التصنيف."}</p></div>`;
+    box.innerHTML = `<div class="void"><span class="i">📭</span><b>لا طلبات</b>
+      <p>لا يوجد شيء في هذا التصنيف حالياً.</p></div>`;
     return;
   }
 
-  box.innerHTML = list.map(o => {
+  box.innerHTML = list.slice(0, 120).map(o => {
     const s = ST[o.status] || {t:o.status, c:""};
-    /* هاتف الزبون يصل من الخادم فارغاً قبل الاستلام — يظهر للمكتب المستلم وحده */
-    const tel = o.phone
-      ? `<a class="tel" href="tel:${esc(o.phone)}">${esc(o.phone)}</a>`
-      : `<span class="masked">يظهر بعد الاستلام</span>`;
+    const canDelete = !!cfg.del;
     return `<article class="card">
       <div class="card-hd">
-        <div style="min-width:0">
-          <h3>${esc(o.title)}</h3>
-          <div class="meta">#${esc(o.id)}</div>
-        </div>
+        <div style="min-width:0"><h3>${esc(o.title)}</h3><div class="meta">#${esc(o.id)}</div></div>
         <span class="state ${s.c}">${s.t}</span>
       </div>
       <div class="dl">
-        <div><span>الزبون</span><b>${esc(o.customer||"—")}</b></div>
-        <div><span>الهاتف</span><b>${tel}</b></div>
+        <div><span>الزبون</span><b>${esc(o.who||"—")}</b></div>
+        <div><span>الهاتف</span><b>${o.phone ? `<a class="tel" href="tel:${esc(o.phone)}">${esc(o.phone)}</a>` : "—"}</b></div>
+        <div><span>الشريك</span><b>${esc(o.partner||"لم يُسنَد")}</b></div>
         <div><span>التاريخ</span><b>${esc(o.date||"—")}</b></div>
-        <div><span>المدة</span><b>${esc(o.qty||"—")}</b></div>
-        <div><span>المدينة</span><b>${esc(o.city||"—")}</b></div>
+        <div><span>المدة</span><b>${esc(o.qty)}</b></div>
         <div><span>الإجمالي</span><b class="sum">${money(o.total)} د.ع</b></div>
       </div>
-      ${o.note ? `<div class="req">${esc(o.note)}</div>` : ""}
-      <div class="acts">${actions(o)}</div>
+      ${canDelete ? `<div class="acts">
+        <button class="btn btn-x" onclick="delOrder('${S.oSector}','${esc(o.id)}')">حذف الطلب</button></div>` : ""}
     </article>`;
   }).join("");
 }
 
-function actions(o){
-  const id = esc(o.id);
-  if(o.status === "pending"){
-    return S.sector === "car"
-      ? `<button class="btn btn-p" onclick="op('claim','${id}')">استلام الطلب</button>`
-      : `<button class="btn btn-p" onclick="op('confirm','${id}')">تأكيد الحجز</button>
-         <button class="btn btn-q" onclick="op('reject','${id}')">اعتذار</button>`;
-  }
-  if(["active","confirmed"].includes(o.status))
-    return `<button class="btn btn-d" onclick="op('complete','${id}')">إنهاء الخدمة</button>`;
-  return `<button class="btn btn-q" disabled>لا إجراء مطلوب</button>`;
-}
+$$("#pSecChips .chip").forEach(b => b.onclick = () => {
+  $$("#pSecChips .chip").forEach(x => x.classList.remove("on"));
+  b.classList.add("on"); S.pSector = b.dataset.s; renderPartners();
+});
+$$("#pStChips .chip").forEach(b => b.onclick = () => {
+  $$("#pStChips .chip").forEach(x => x.classList.remove("on"));
+  b.classList.add("on"); S.pFilter = b.dataset.f; renderPartners();
+});
 
-async function op(kind, id){
-  if(kind === "reject" && !confirm("سيُبلَّغ الزبون بالاعتذار. متأكد؟")) return;
-  toast("يُرسل…");
-  try{
-    const r = await send({action:"partnerAction", session:S.session, op:kind, id});
-    if(r && r.reason === "session") return logout(true);
-    toast(r && r.success ? "تم" : ((r && r.msg) || "لم ينجح"), !(r && r.success));
-    refresh();
-  }catch(e){ toast("تعذّر الإرسال", true); }
-}
+function renderPartners(){
+  const cfg = SECT[S.pSector];
+  const raw = S.data[cfg.partners] || [];
+  const list = S.pFilter === "all" ? raw : raw.filter(p => p.status === S.pFilter);
 
-function renderInbox(){
-  const box = $("#inbox");
-  if(!S.inbox.length){
-    box.innerHTML = `<div class="void"><span class="i">🔔</span><b>لا إشعارات</b>
-      <p>يصلك تنبيه هنا عند إسناد طلب لك أو تأخّر ردّك عليه.</p></div>`;
+  const box = $("#partners");
+  if(!list.length){
+    box.innerHTML = `<div class="void"><span class="i">🤝</span><b>لا شركاء</b>
+      <p>لا يوجد شريك في هذا التصنيف.</p></div>`;
     return;
   }
-  box.innerHTML = S.inbox.map(m => `
-    <div class="note ${m.read ? "" : "new"}">
-      <div class="note-i">${NICO[m.intent] || "📨"}</div>
-      <div style="flex:1;min-width:0">
-        <p>${esc(m.text)}</p>
-        <small>${ago(m.ts)} · #${esc(m.order_id||"")}</small>
+
+  box.innerHTML = list.map(p => {
+    const s = PST[p.status] || {t:p.status, c:""};
+    const orders = p.total_orders ?? p.total_bookings ?? 0;
+    const sec = S.pSector;
+    return `<article class="card">
+      <div class="card-hd">
+        <div style="min-width:0"><h3>${esc(p.name)}</h3>
+          <div class="meta">${esc(p.id)} · ${esc(p.city||"—")}</div></div>
+        <span class="state ${s.c}">${s.t}</span>
       </div>
-    </div>`).join("");
-}
-
-function ago(iso){
-  const d = new Date(iso);
-  if(isNaN(d)) return "";
-  const m = Math.floor((Date.now() - d) / 60000);
-  if(m < 1) return "الآن";
-  if(m < 60) return "قبل " + m + " دقيقة";
-  if(m < 1440) return "قبل " + Math.floor(m/60) + " ساعة";
-  return d.toLocaleDateString("ar-IQ");
-}
-
-$("#btnRead").onclick = async () => {
-  await send({action:"partnerAction", session:S.session, op:"inboxRead"});
-  toast("عُلّمت كمقروءة"); refresh();
-};
-
-function paintBadges(){
-  [$("#bdgTop"), $("#bdgNav")].forEach(b => {
-    b.textContent = S.unread > 99 ? "99+" : S.unread;
-    b.classList.toggle("hidden", S.unread < 1);
-  });
-}
-
-function renderStock(){
-  const isCar = S.sector === "car";
-  const box = $("#stock");
-  if(!S.stock.length){
-    box.innerHTML = `<div class="void" style="grid-column:1/-1"><span class="i">${isCar?"🚗":"🛏️"}</span>
-      <b>${isCar ? "أسطولك فارغ" : "لا غرف مضافة"}</b>
-      <p>${isCar ? "أضف سياراتك ليرشّحك النظام للطلبات المناسبة." : "أضف غرفك ليختارها الزبون مباشرة."}</p></div>`;
-    return;
-  }
-  box.innerHTML = S.stock.map(it => {
-    const nm = isCar ? it.name : it.room_name;
-    const on = it.status === "available";
-    return `<div class="tile">
-      ${it.photo_url ? `<img class="tile-img" src="${esc(it.photo_url)}" alt="${esc(nm)}" loading="lazy">`
-                     : `<div class="tile-ph">${isCar?"🚗":"🛏️"}</div>`}
-      <h4>${esc(nm)}</h4>
-      <div class="p"><b>${money(it.price)}</b> د.ع ${isCar ? "/ يوم" : "/ ليلة"}</div>
-      <div class="${on?"tile-on":"tile-off"}">${on ? "متاحة" : "موقوفة"}</div>
-      <div class="tile-acts">
-        <button onclick="flip('${esc(it.id)}',${on})">${on ? "إيقاف" : "تفعيل"}</button>
-        <button onclick="drop('${esc(it.id)}')" style="color:var(--red)">حذف</button>
+      <div class="dl">
+        <div><span>الهاتف</span><b><a class="tel" href="tel:${esc(p.phone)}">${esc(p.phone||"—")}</a></b></div>
+        <div><span>العمولة</span><b>${esc(p.comm_val||"—")}</b></div>
+        <div><span>المنجزة</span><b class="num">${money(orders)}</b></div>
+        <div><span>الإيرادات</span><b class="sum">${money(p.total_rev||0)} د.ع</b></div>
+        <div><span>الديون</span><b class="sum" style="color:${Number(p.debt)>0?"var(--rose)":"inherit"}">${money(p.debt||0)} د.ع</b></div>
       </div>
-    </div>`;
+      <div class="acts">
+        ${p.status !== "active"
+          ? `<button class="btn btn-d" onclick="setStatus('${sec}','${esc(p.id)}','active')">تفعيل</button>`
+          : `<button class="btn btn-x" onclick="setStatus('${sec}','${esc(p.id)}','blocked')">إيقاف</button>`}
+        <button class="btn btn-o" onclick="editSheet('${sec}','${esc(p.id)}')">تعديل</button>
+        ${Number(p.debt) > 0
+          ? `<button class="btn btn-q" onclick="clearDebt('${sec}','${esc(p.id)}')">تصفية الدين</button>` : ""}
+      </div>
+    </article>`;
   }).join("");
 }
 
-async function flip(id, on){
-  const r = await send({action:"partnerAction", session:S.session,
-    op:S.sector === "car" ? "carStatus" : "roomStatus", id, status: on ? "inactive" : "available"});
-  toast(r && r.success ? "تم التحديث" : ((r && r.msg) || "لم ينجح"), !(r && r.success));
+/* ═══════════════════════════════════════════════════════════════
+   ⑦ إجراءات الإدارة
+═══════════════════════════════════════════════════════════════ */
+async function setStatus(sector, id, status){
+  const word = status === "active" ? "تفعيل" : "إيقاف";
+  if(!confirm(word + " هذا الحساب؟")) return;
+  const r = await api("ADMIN_UPDATE_STATUS", {entityType:SECT[sector].entity, id:id, status:status});
+  toast(r && r.success ? "تم " + word : ((r && r.msg) || "لم ينجح"), !(r && r.success));
   refresh();
 }
 
-async function drop(id){
-  if(!confirm("سيُحذف نهائياً. متأكد؟")) return;
-  const r = await send({action:"partnerAction", session:S.session,
-    op:S.sector === "car" ? "deleteCar" : "deleteRoom", id});
-  toast(r && r.success ? "حُذف" : ((r && r.msg) || "لم ينجح"), !(r && r.success));
+async function clearDebt(sector, id){
+  if(!confirm("تصفية الدين تعني أن الشريك سدّد. متأكد؟")) return;
+  const r = await api("resetDebt", {entityType:SECT[sector].entity, id:id});
+  toast(r && r.success ? "صُفّي الدين (" + money(r.prev_debt) + " د.ع)" : ((r && r.msg) || "لم ينجح"), !(r && r.success));
   refresh();
+}
+
+async function delOrder(sector, id){
+  const act = SECT[sector].del;
+  if(!act) return toast("لا يمكن حذف هذا النوع", true);
+  if(!confirm("سيُحذف نهائياً من الشيت ومن Firebase. متأكد؟")) return;
+  const r = await api(act, {id:id});
+  toast(r && r.success ? "حُذف الطلب" : ((r && r.msg) || "لم ينجح"), !(r && r.success));
+  refresh();
+}
+
+function editSheet(sector, id){
+  const p = (S.data[SECT[sector].partners] || []).find(x => String(x.id) === String(id));
+  if(!p) return toast("الشريك غير موجود", true);
+  const fields = EDIT[sector] || [];
+
+  sheet("تعديل " + p.name, `
+    ${fields.map(([k,l,t]) =>
+      `<div class="fld"><label>${l}</label>
+        <input id="ef_${k}" type="${t||"text"}" value="${esc(p[k] ?? "")}"></div>`).join("")}
+    <div class="fld"><label>كلمة مرور جديدة للشريك (اتركها فارغة لإبقائها)</label>
+      <input id="ef_pass" type="text" placeholder="مثال: 4821"></div>
+    <button class="btn btn-d btn-w" id="efSave">حفظ</button>`, () => {
+
+    $("#efSave").onclick = async () => {
+      const up = {};
+      fields.forEach(([k]) => {
+        const v = $("#ef_" + k).value.trim();
+        if(v !== "" && String(p[k] ?? "") !== v) up[k] = v;
+      });
+      const np = $("#ef_pass").value.trim();
+      if(np){
+        if(np.length < 4) return toast("كلمة المرور 4 أحرف على الأقل", true);
+        up.pass = np;
+      }
+      if(!Object.keys(up).length) return toast("لا تغييرات لحفظها");
+
+      const btn = $("#efSave");
+      btn.innerHTML = '<span class="sp"></span>'; btn.disabled = true;
+      const r = await api("updateEntityInfo", {entityType:SECT[sector].entity, id:id, updates:up});
+      if(r && r.success){ closeSheet(); toast("حُفظت التعديلات"); refresh(); }
+      else { toast((r && r.msg) || "لم ينجح", true); btn.disabled = false; btn.textContent = "إعادة المحاولة"; }
+    };
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   ⑧ الإضافة مع رفع الصور عبر ImgBB
+   ⑧ المحرّك والصيانة
 ═══════════════════════════════════════════════════════════════ */
-$("#btnAdd").onclick = () => S.sector === "car" ? carSheet() : roomSheet();
+let engineOn = true;
 
-function carSheet(){
-  sheet("إضافة سيارة", `
-    <div class="fld"><label>الاسم والموديل</label><input id="x1" placeholder="تويوتا كورولا 2024"></div>
-    <div class="two">
-      <div class="fld"><label>الفئة</label><select id="x2">
-        ${Object.keys(CATS).map(k => `<option value="${k}">${CATS[k]}</option>`).join("")}</select></div>
-      <div class="fld"><label>السعر / يوم</label><input id="x3" type="number" inputmode="numeric" placeholder="45000"></div>
-    </div>
-    <div class="two">
-      <div class="fld"><label>اللون</label><input id="x4" placeholder="أبيض"></div>
-      <div class="fld"><label>رقم اللوحة</label><input id="x5" placeholder="كركوك 12345"></div>
-    </div>
-    <div class="fld"><label>صورة السيارة</label>${picker()}</div>
-    <button class="btn btn-p btn-w" id="xSave">إضافة السيارة</button>`, () => {
-    wire();
-    $("#xSave").onclick = () => {
-      const b = {op:"addCar", name:$("#x1").value.trim(), cat:$("#x2").value, price:$("#x3").value,
-        color:$("#x4").value.trim(), plate:$("#x5").value.trim(), photo_url:window.__ph || ""};
-      if(!b.name || !b.plate) return toast("الاسم ورقم اللوحة مطلوبان", true);
-      save(b, "أُضيفت السيارة");
-    };
-  });
-}
-
-function roomSheet(){
-  sheet("إضافة غرفة", `
-    <div class="fld"><label>اسم الغرفة</label><input id="x1" placeholder="جناح ديلوكس"></div>
-    <div class="two">
-      <div class="fld"><label>النوع</label><select id="x2">
-        <option value="single">مفردة</option><option value="double">مزدوجة</option><option value="suite">جناح</option>
-      </select></div>
-      <div class="fld"><label>السعر / ليلة</label><input id="x3" type="number" inputmode="numeric" placeholder="90000"></div>
-    </div>
-    <div class="fld"><label>وصف مختصر</label><textarea id="x4" rows="2" placeholder="إطلالة، تكييف، إفطار"></textarea></div>
-    <div class="fld"><label>صورة الغرفة</label>${picker()}</div>
-    <button class="btn btn-p btn-w" id="xSave">إضافة الغرفة</button>`, () => {
-    wire();
-    $("#xSave").onclick = () => {
-      const b = {op:"addRoom", room_name:$("#x1").value.trim(), room_type:$("#x2").value,
-        price:$("#x3").value, description:$("#x4").value.trim(), photo_url:window.__ph || ""};
-      if(!b.room_name || !Number(b.price)) return toast("الاسم والسعر مطلوبان", true);
-      save(b, "أُضيفت الغرفة");
-    };
-  });
-}
-
-async function save(body, ok){
-  const btn = $("#xSave");
-  btn.innerHTML = '<span class="sp"></span>'; btn.disabled = true;
+async function loadEngine(){
   try{
-    const r = await send(Object.assign({action:"partnerAction", session:S.session}, body));
-    if(r && r.success){ closeSheet(); toast(ok); refresh(); }
-    else { toast((r && r.msg) || "لم ينجح الحفظ", true); btn.disabled = false; btn.textContent = "إعادة المحاولة"; }
-  }catch(e){ toast("تعذّر الاتصال", true); btn.disabled = false; btn.textContent = "إعادة المحاولة"; }
+    const r = await api("ENGINE_STATUS");
+    if(!r || !r.success) return;
+    engineOn = r.enabled !== false;
+    $("#eInst").textContent = r.installed ? "مركّب" : "غير مركّب";
+    $("#eOn").textContent   = engineOn ? "يعمل" : "متوقّف";
+    $("#eRun").textContent  = r.last_run ? new Date(r.last_run).toLocaleString("ar-IQ") : "—";
+    $("#eSum").textContent  = r.last_summary || "—";
+    $("#eToggle").textContent = engineOn ? "إيقاف مؤقّت" : "استئناف";
+  }catch(e){}
 }
 
-function picker(){
-  return `<div class="pick" id="pk"><span class="i">📷</span>
-    <b>اختر صورة من هاتفك</b>
-    <small>المعرض أو الكاميرا · تُضغط تلقائياً قبل الرفع</small>
-    <input type="file" accept="image/*" id="pkF"></div>
-    <div class="bar hidden" id="pkB"><i></i></div><div id="pkP"></div>`;
-}
-
-/* الصورة تُضغط في المتصفح ثم تُرسل إلى الخادم، وهو يرفعها إلى ImgBB.
-   المفتاح يبقى على الخادم — لو كان هنا لاستطاع أي زائر الرفع إلى الحساب. */
-function wire(){
-  window.__ph = "";
-  const inp = $("#pkF");
-  if(!inp) return;
-
-  inp.onchange = async e => {
-    const f = e.target.files[0];
-    if(!f) return;
-    const bar = $("#pkB"), fill = bar.querySelector("i");
-    bar.classList.remove("hidden");
-    fill.style.width = "15%";
-
-    try{
-      const blob = await shrink(f);
-      fill.style.width = "35%";
-      const b64 = await toBase64(blob);
-      fill.style.width = "55%";
-
-      const r = await send({
-        action:"partnerAction", session:S.session,
-        op:"upload", image:b64, name:"hut_" + Date.now()
-      }, true);
-
-      if(!r || !r.success) throw new Error((r && r.msg) || "رفض الخادم الصورة");
-
-      window.__ph = r.url;
-      fill.style.width = "100%";
-      $("#pkP").innerHTML = `<div class="prev"><img src="${esc(r.url)}" alt="معاينة">
-        <button class="x" onclick="unpick()" aria-label="إزالة الصورة">✕</button></div>`;
-      $("#pk").classList.add("hidden");
-      bar.classList.add("hidden");
-      toast("رُفعت الصورة (" + Math.round(blob.size/1024) + " ك.ب)");
-
-    }catch(err){
-      bar.classList.add("hidden");
-      inp.value = "";
-      toast("تعذّر الرفع: " + err.message, true);
-    }
-  };
-}
-
-/* Blob → base64 نقي بلا بادئة data: */
-function toBase64(blob){
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload  = () => { const s = String(r.result); res(s.substring(s.indexOf(",") + 1)); };
-    r.onerror = () => rej(new Error("تعذّرت قراءة الملف"));
-    r.readAsDataURL(blob);
-  });
-}
-
-function unpick(){ window.__ph = ""; $("#pkP").innerHTML = ""; $("#pk").classList.remove("hidden"); }
-
-function shrink(file){
-  return new Promise((res, rej) => {
-    const img = new Image(), url = URL.createObjectURL(file);
-    img.onload = () => {
-      URL.revokeObjectURL(url);
-      const k = Math.min(1, IMG.MAX / Math.max(img.width, img.height));
-      const cv = document.createElement("canvas");
-      cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
-      cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
-      cv.toBlob(b => b ? res(b) : rej(new Error("فشل الضغط")), "image/jpeg", IMG.Q);
-    };
-    img.onerror = () => rej(new Error("ملف صورة غير صالح"));
-    img.src = url;
-  });
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   ⑨ الحساب
-═══════════════════════════════════════════════════════════════ */
-const PROF = {
-  car   : [["phone","الهاتف"],["city","المدينة"],["radius","نطاق التغطية (كم)","number"]],
-  hotel : [["phone","الهاتف"],["city","المدينة"],["stars","النجوم","number"],
-           ["price_single","سعر المفردة","number"],["price_double","سعر المزدوجة","number"],
-           ["price_suite","سعر الجناح","number"],["features","المميزات"]],
-  hall  : [["phone","الهاتف"],["city","المدينة"],["capacity","السعة"],
-           ["price","سعر السهرة","number"],["features","المميزات"]],
-  school: [["phone","الهاتف"],["city","المدينة"],["price_basic","سعر الأساسي","number"],
-           ["price_advanced","سعر المتقدم","number"],["features","المميزات"]]
+$("#eNow").onclick = async () => {
+  toast("تُنفَّذ دورة…");
+  const r = await api("ENGINE_RUN_NOW");
+  toast(r && r.success ? (r.msg || "نُفّذت") : "لم تنجح", !(r && r.success));
+  loadEngine();
 };
 
-function renderAcc(){
-  const m = S.me;
-  $("#aId").textContent    = m.id;
-  $("#aPhone").textContent = m.phone || "—";
-  $("#aStat").textContent  = m.status === "active" ? "مفعّل" : m.status;
-  $("#aOrd").textContent   = money(m.total_orders || m.total_bookings || 0);
-  $("#aRev").textContent   = money(m.total_rev || 0) + " د.ع";
-  $("#aDebt").textContent  = money(m.debt || 0) + " د.ع";
-  $("#profFields").innerHTML = (PROF[S.sector] || []).map(([k,l,t]) =>
-    `<div class="fld"><label>${l}</label><input id="pf_${k}" type="${t||"text"}" value="${esc(m[k] ?? "")}"></div>`).join("");
-}
-
-$("#btnSave").onclick = async () => {
-  const up = {};
-  (PROF[S.sector] || []).forEach(([k]) => {
-    const v = $("#pf_" + k).value.trim();
-    if(v !== "" && String(S.me[k] ?? "") !== v) up[k] = v;
-  });
-  if(!Object.keys(up).length) return toast("لا تغييرات لحفظها");
-  const r = await send({action:"partnerAction", session:S.session, op:"updateProfile", updates:up});
-  toast(r && r.success ? "حُفظت التعديلات" : ((r && r.msg) || "لم ينجح"), !(r && r.success));
-  refresh();
+$("#eToggle").onclick = async () => {
+  const r = await api("ENGINE_TOGGLE", {enabled: !engineOn});
+  toast(r && r.success ? r.msg : "لم ينجح", !(r && r.success));
+  loadEngine();
 };
 
-$("#btnPass").onclick = async () => {
-  const np = $("#np").value.trim();
-  if(np.length < 4) return toast("4 أحرف على الأقل", true);
-  const r = await send({action:"partnerAction", session:S.session, op:"changePass", new_pass:np});
-  if(r && r.success){
-    S.session = r.session;
-    localStorage.setItem("hut_ps", r.session);
-    $("#np").value = "";
-    toast(r.msg || "تغيّرت كلمة المرور");
-  } else toast((r && r.msg) || "لم ينجح", true);
+$("#eInstall").onclick = async () => {
+  if(!confirm("سيُعاد تركيب مؤقّت المحرّك. متابعة؟")) return;
+  const r = await api("ENGINE_INSTALL");
+  toast(r && r.success ? r.msg : "لم ينجح", !(r && r.success));
+  loadEngine();
 };
 
-$("#btnOut").onclick = () => { if(confirm("تسجيل الخروج من هذا الجهاز؟")) logout(); };
+$("#sysReport").onclick = async () => {
+  toast("يُحسب التقرير…");
+  const r = await api("RUN_NIGHTLY");
+  toast(r && r.success ? "كُتب تقرير " + r.date : ((r && r.msg) || "لم ينجح"), !(r && r.success));
+};
 
-function logout(expired){
-  localStorage.removeItem("hut_ps");
+$("#sysClean").onclick = async () => {
+  toast("يُنظَّف…");
+  const r = await api("FB_CLEANUP");
+  toast(r && r.success ? "حُذف " + r.removed + " عنصر منتهٍ" : ((r && r.msg) || "لم ينجح"), !(r && r.success));
+};
+
+$("#sysCache").onclick = async () => {
+  const r = await api("adminReset");
+  toast(r && r.success ? "أُفرغت الذاكرة" : "لم ينجح", !(r && r.success));
+};
+
+$("#btnOut").onclick = () => { if(confirm("قفل اللوحة؟")) lock(); };
+
+function lock(expired){
+  sessionStorage.removeItem("hut_ap");
   clearInterval(S.timer);
-  if(pulseRef){ try{ pulseRef.off(); }catch(e){} pulseRef = null; }
-  S = {session:"", me:null, sector:"car", orders:[], inbox:[], stock:[], unread:0,
-       filter:"pending", view:"vOrders", regSector:"car", seen:new Set(), warmed:false,
-       timer:null, busy:false};
+  S = {pass:"", data:null, view:"vHome", oSector:"car", oFilter:"all",
+       pSector:"car", pFilter:"all", timer:null, busy:false};
   $("#app").classList.add("hidden");
   $("#auth").classList.remove("hidden");
-  paintSectorPickers(); paintExtra(); segTo(true);
-  if(expired) authMsg("انتهت الجلسة — سجّل الدخول من جديد.", "wait");
+  $("#pw").value = "";
+  if(expired) authMsg("انتهت الجلسة — أدخل كلمة المرور من جديد.", "wait");
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   ⑩ التنقّل والطبقات
+   ⑨ التنقّل والطبقات
 ═══════════════════════════════════════════════════════════════ */
 $$(".nav button").forEach(b => b.onclick = () => go(b.dataset.v));
 
 function go(view){
   S.view = view;
-  ["vOrders","vInbox","vStock","vAcc"].forEach(v =>
+  ["vHome","vOrders","vPartners","vSys"].forEach(v =>
     $("#" + v).classList.toggle("hidden", v !== view));
   $$(".nav button").forEach(b => b.classList.toggle("on", b.dataset.v === view));
   render();
@@ -1009,7 +738,7 @@ function sheet(title, html, after){
   if(after) after();
 }
 
-function closeSheet(){ $("#sheetHost").innerHTML = ""; window.__ph = ""; }
+function closeSheet(){ $("#sheetHost").innerHTML = ""; }
 
 let toastT = null;
 function toast(text, bad){
@@ -1019,7 +748,7 @@ function toast(text, bad){
 }
 
 document.addEventListener("keydown", e => { if(e.key === "Escape") closeSheet(); });
-document.addEventListener("visibilitychange", () => { if(!document.hidden && S.session) refresh(); });
+document.addEventListener("visibilitychange", () => { if(!document.hidden && S.pass) refresh(); });
 </script>
 </body>
 </html>

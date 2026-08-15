@@ -3,29 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<title>الحوت · مدارس تعليم القيادة</title>
-<meta name="theme-color" content="#0066CC">
-<meta name="description" content="سجّل في أفضل مدارس تعليم القيادة عبر منصة الحوت — باقات واضحة، مدرّبون محترفون، تسجيل فوري.">
-
+<title>مدارس تعليم القيادة في العراق · منصة الحوت</title>
+<meta name="theme-color" content="#FF385C">
+<meta name="description" content="سجّل في مدرسة تعليم قيادة معتمدة في كل محافظات العراق — كورسات وأسعار واضحة ومدرّبات للنساء.">
+<meta property="og:title" content="مدارس تعليم القيادة في العراق · منصة الحوت">
+<meta property="og:description" content="سجّل في مدرسة تعليم قيادة معتمدة في كل محافظات العراق — كورسات وأسعار واضحة ومدرّبات للنساء.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
-
 <style>
 :root{
-  --bg:#F7F7F7;--white:#FFFFFF;--border:#E4E4E4;--line:#EFEFEF;
-  --red:#FF385C;--red-l:#FFF0F2;
-  --blue:#0066CC;--blue-d:#004C99;--blue-l:#EEF5FF;--blue-m:rgba(0,102,204,.1);
-  --blue-g:linear-gradient(135deg,#1E88E5 0%,#004C99 100%);
-  --green:#00A699;--green-l:#E6F7F6;
-  --amber:#FC642D;--amber-l:#FFF3EE;
-  --gold:#F5A623;--gold-l:#FFF8EC;
-  --tx0:#1A1A1A;--tx1:#484848;--tx2:#717171;--tx3:#A8A8A8;--tx4:#CFCFCF;
-  --sh-sm:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);
-  --sh-md:0 2px 6px rgba(0,0,0,.07),0 8px 24px rgba(0,0,0,.06);
-  --sh-lg:0 8px 28px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.08);
-  --sh-bl:0 6px 20px rgba(0,102,204,.3);
-  --r2:8px;--r3:12px;--r4:16px;--r5:20px;--r6:28px;--r-pill:999px;
-  --nav-h:64px;
+--bg:#F7F7F7;--white:#FFFFFF;--border:#E4E4E4;--line:#EFEFEF;
+--red:#FF385C;--red-d:#E31C5F;--red-l:#FFF0F2;--red-m:rgba(255,56,92,.1);
+--red-g:linear-gradient(135deg,#FF385C 0%,#E31C5F 100%);
+--green:#00A699;--green-l:#E6F7F6;
+--amber:#FC642D;--amber-l:#FFF3EE;
+--blue:#0066CC;--blue-l:#EEF5FF;
+--violet:#6B46C1;--violet-l:#F3F0FF;
+--gold:#F5A623;--gold-l:#FFF8EC;
+--tx0:#1A1A1A;--tx1:#484848;--tx2:#717171;--tx3:#A8A8A8;--tx4:#CFCFCF;
+--sh-sm:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);
+--sh-md:0 2px 6px rgba(0,0,0,.07),0 8px 24px rgba(0,0,0,.06);
+--sh-lg:0 8px 28px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.08);
+--sh-red:0 6px 20px rgba(255,56,92,.32);
+--r2:8px;--r3:12px;--r4:16px;--r5:20px;--r6:28px;--r-pill:999px;
+--nav-h:64px;
 }
 *,::before,::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
@@ -38,22 +40,13 @@ img{display:block;max-width:100%;}
 .dn{display:none!important;}
 ::-webkit-scrollbar{width:7px;height:7px;}
 ::-webkit-scrollbar-thumb{background:var(--tx4);border-radius:99px;}
-.mono{font-family:'IBM Plex Mono',monospace;}
+.mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums;}
 
-/* SPLASH */
-#splash{position:fixed;inset:0;z-index:9999;background:var(--white);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s,visibility .5s;}
-#splash.gone{opacity:0;visibility:hidden;}
-.sp-whale{font-size:3.4rem;animation:spB 1.5s ease-in-out infinite;}
-@keyframes spB{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
-.sp-bar{width:130px;height:3px;background:var(--line);border-radius:99px;overflow:hidden;}
-.sp-fill{height:100%;width:40%;background:var(--blue-g);border-radius:99px;animation:spF 1.3s ease-in-out infinite;}
-@keyframes spF{0%{margin-left:-40%}100%{margin-left:100%}}
-
-/* NAV */
-.nav{position:sticky;top:0;z-index:500;height:var(--nav-h);background:rgba(255,255,255,.88);backdrop-filter:blur(18px) saturate(180%);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,40px);}
+/* NAV — مطابق للصفحة الرئيسية */
+.nav{position:sticky;top:0;z-index:500;height:var(--nav-h);background:rgba(255,255,255,.88);backdrop-filter:blur(18px) saturate(180%);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,40px);transition:box-shadow .3s;}
+.nav.scrolled{box-shadow:var(--sh-sm);}
 .nav-logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.15rem;letter-spacing:-.02em;}
-.nav-logo .whale{width:38px;height:38px;border-radius:11px;background:var(--blue-g);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:var(--sh-bl);}
-.nav-logo .sub{font-size:.6rem;font-weight:700;color:var(--tx2);letter-spacing:.04em;}
+.nav-logo .whale{width:38px;height:38px;border-radius:11px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:var(--sh-red);}
 .nav-right{display:flex;align-items:center;gap:10px;}
 .lang-wrap{position:relative;}
 .lang-btn{display:flex;align-items:center;gap:6px;padding:8px 13px;border-radius:var(--r-pill);background:var(--bg);border:1px solid var(--border);font-size:.78rem;font-weight:800;transition:.18s;}
@@ -62,219 +55,173 @@ img{display:block;max-width:100%;}
 .lang-menu.open{opacity:1;visibility:visible;transform:none;}
 .lang-opt{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:var(--r2);font-size:.82rem;font-weight:700;width:100%;text-align:start;transition:.15s;}
 .lang-opt:hover{background:var(--bg);}
-.lang-opt.on{background:var(--blue-l);color:var(--blue);font-weight:900;}
-.lang-opt .flag{font-size:1.05rem;}
+.lang-opt.on{background:var(--red-l);color:var(--red);font-weight:900;}
 .nav-partner{padding:9px 16px;border-radius:var(--r-pill);background:var(--tx0);color:#fff;font-size:.78rem;font-weight:800;transition:.2s;white-space:nowrap;}
 .nav-partner:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.18);}
 
-/* HERO */
-.hero{position:relative;padding:clamp(36px,7vw,76px) clamp(16px,4vw,40px) clamp(60px,9vw,96px);overflow:hidden;background:var(--white);}
-.hero::before{content:'';position:absolute;inset:0;background:var(--blue-g);opacity:.06;}
-.hero-wave{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:90px;z-index:1;}
-.hero-inner{position:relative;z-index:2;max-width:980px;margin:0 auto;text-align:center;}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;padding:6px 15px;border-radius:var(--r-pill);background:var(--white);border:1px solid var(--border);box-shadow:var(--sh-sm);font-size:.74rem;font-weight:800;color:var(--blue);margin-bottom:20px;}
-.hero-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px var(--green-l);animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 3px var(--green-l)}50%{box-shadow:0 0 0 6px transparent}}
-.hero-h1{font-size:clamp(2rem,6vw,3.5rem);font-weight:900;letter-spacing:-.03em;line-height:1.08;margin-bottom:14px;}
-.hero-h1 .grad{background:var(--blue-g);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
-.hero-p{font-size:clamp(.92rem,2.2vw,1.1rem);font-weight:600;color:var(--tx2);max-width:560px;margin:0 auto 32px;}
+/* شريط الفلترة */
+.wrap{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,40px);}
+.pagehead{background:var(--white);border-bottom:1px solid var(--line);padding:clamp(20px,4vw,32px) 0 0;}
+.ph-inner{max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,40px);}
+.ph-title{font-size:clamp(1.4rem,3.6vw,2rem);font-weight:900;letter-spacing:-.02em;display:flex;align-items:center;gap:10px;}
+.ph-sub{font-size:.86rem;font-weight:600;color:var(--tx2);margin-top:4px;}
+.filters{display:grid;grid-template-columns:1.2fr 1fr auto;gap:0;background:var(--white);border:1px solid var(--border);border-radius:var(--r6);box-shadow:var(--sh-md);overflow:hidden;margin:20px 0 0;}
+.ff{padding:14px 20px;border-inline-start:1px solid var(--line);position:relative;transition:background .18s;}
+.ff:first-child{border-inline-start:none;}
+.ff:hover{background:var(--bg);}
+.ff label{display:block;font-size:.64rem;font-weight:900;color:var(--tx2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;}
+.ff select,.ff input{border:none;outline:none;font-size:.94rem;font-weight:800;background:transparent;width:100%;}
+.ff select{appearance:none;cursor:pointer;}
+.ff-go{display:flex;align-items:center;justify-content:center;padding:10px;}
+.ff-go button{background:var(--red-g);color:#fff;border-radius:var(--r4);width:52px;height:52px;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:var(--sh-red);transition:.25s;}
+.ff-go button:hover{transform:scale(1.05);}
+.cats{display:flex;gap:9px;overflow-x:auto;scrollbar-width:none;padding:16px 0 18px;}
+.cats::-webkit-scrollbar{display:none;}
+.cat{padding:9px 16px;border-radius:var(--r-pill);background:var(--white);border:1.5px solid var(--border);font-size:.82rem;font-weight:800;color:var(--tx2);white-space:nowrap;transition:.2s;}
+.cat:hover{border-color:var(--tx3);}
+.cat.on{background:var(--tx0);border-color:var(--tx0);color:#fff;}
 
-/* SEARCH CARD */
-.search-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r6);box-shadow:var(--sh-lg);padding:14px;display:flex;align-items:stretch;gap:10px;max-width:620px;margin:0 auto;flex-wrap:wrap;}
-.sf{flex:1;min-width:160px;display:flex;flex-direction:column;gap:5px;padding:10px 16px;border-radius:var(--r4);transition:.18s;position:relative;text-align:start;}
-.sf:hover{background:var(--bg);}
-.sf+.sf{border-inline-start:1px solid var(--line);}
-.sf-lbl{font-size:.64rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;}
-.sf-ctl{border:none;background:transparent;font-size:.92rem;font-weight:800;color:var(--tx0);outline:none;width:100%;padding:0;}
-.sf-ctl::placeholder{color:var(--tx3);font-weight:600;}
-select.sf-ctl{cursor:pointer;appearance:none;}
-.search-go{flex:0 0 auto;align-self:center;width:54px;height:54px;border-radius:var(--r4);background:var(--blue-g);color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:var(--sh-bl);transition:.2s;}
-.search-go:hover{transform:scale(1.05);}
-.search-go:active{transform:scale(.95);}
+/* بطاقات النتائج */
+.sec{padding:clamp(24px,4vw,38px) 0;}
+.count{font-size:.84rem;font-weight:700;color:var(--tx2);margin-bottom:16px;}
+.count b{color:var(--tx0);font-weight:900;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r5);overflow:hidden;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.3,.64,1),box-shadow .25s,border-color .25s;display:flex;flex-direction:column;}
+.card:hover{transform:translateY(-5px);box-shadow:var(--sh-md);border-color:var(--tx4);}
+.card-img{position:relative;aspect-ratio:4/3;background:var(--line);overflow:hidden;}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.card:hover .card-img img{transform:scale(1.05);}
+.card-img .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:.25;}
+.card-tag{position:absolute;top:12px;inset-inline-start:12px;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);padding:5px 11px;border-radius:var(--r-pill);font-size:.7rem;font-weight:900;box-shadow:var(--sh-sm);}
+.card-n{position:absolute;bottom:12px;inset-inline-end:12px;background:rgba(26,26,26,.82);color:#fff;padding:4px 10px;border-radius:var(--r-pill);font-size:.68rem;font-weight:800;}
+.card-b{padding:16px 18px 18px;flex:1;display:flex;flex-direction:column;}
+.card-t{font-weight:900;font-size:1rem;letter-spacing:-.01em;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.card-s{font-size:.78rem;font-weight:600;color:var(--tx2);margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.card-f{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+.card-f span{font-size:.68rem;font-weight:700;color:var(--tx1);background:var(--bg);padding:4px 9px;border-radius:var(--r-pill);}
+.card-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:auto;padding-top:12px;border-top:1px solid var(--line);}
+.price{display:flex;align-items:baseline;gap:4px;}
+.price b{font-size:1.15rem;font-weight:900;letter-spacing:-.02em;}
+.price small{font-size:.7rem;font-weight:700;color:var(--tx2);}
+.card-go{padding:9px 17px;border-radius:var(--r3);background:var(--red-g);color:#fff;font-size:.8rem;font-weight:900;box-shadow:var(--sh-red);transition:.2s;flex-shrink:0;}
+.card-go:hover{transform:translateY(-1px);}
 
-/* TRUST STRIP */
-.trust{display:flex;justify-content:center;gap:clamp(16px,5vw,48px);flex-wrap:wrap;margin-top:30px;}
-.trust-item{display:flex;flex-direction:column;align-items:center;gap:3px;}
-.trust-v{font-size:clamp(1.3rem,3.5vw,1.8rem);font-weight:900;color:var(--blue);line-height:1;}
-.trust-l{font-size:.68rem;font-weight:700;color:var(--tx2);}
+/* حالات */
+.state{text-align:center;padding:clamp(50px,10vw,90px) 20px;}
+.state .i{font-size:3.2rem;margin-bottom:16px;opacity:.3;}
+.state b{display:block;font-size:1.15rem;font-weight:900;margin-bottom:8px;}
+.state p{font-size:.88rem;font-weight:600;color:var(--tx2);max-width:340px;margin:0 auto 20px;line-height:1.7;}
+.state .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:var(--r3);background:var(--tx0);color:#fff;font-size:.85rem;font-weight:900;}
+.skel{background:var(--white);border:1px solid var(--border);border-radius:var(--r5);overflow:hidden;}
+.skel .a{aspect-ratio:4/3;background:linear-gradient(90deg,var(--line) 25%,#F7F7F7 50%,var(--line) 75%);background-size:200% 100%;animation:sk 1.3s infinite;}
+.skel .b{padding:16px 18px;}
+.skel .l{height:12px;border-radius:6px;background:var(--line);margin-bottom:9px;}
+.skel .l.s{width:55%;}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-/* SECTION SHELL */
-.wrap{max-width:1220px;margin:0 auto;padding:0 clamp(16px,4vw,40px);}
-.sec{padding:clamp(28px,5vw,48px) 0;}
-.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:24px;flex-wrap:wrap;}
-.sec-title{font-size:clamp(1.4rem,3.5vw,2rem);font-weight:900;letter-spacing:-.02em;}
-.sec-sub{font-size:.82rem;font-weight:600;color:var(--tx2);margin-top:4px;}
-.count-chip{font-size:.74rem;font-weight:800;color:var(--tx2);background:var(--white);border:1px solid var(--border);border-radius:var(--r-pill);padding:6px 14px;white-space:nowrap;}
+/* الطبقة السفلية */
+.sheet{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;opacity:0;animation:fade .25s forwards;}
+@keyframes fade{to{opacity:1}}
+.sheet-in{background:var(--white);width:100%;max-width:640px;border-radius:var(--r6) var(--r6) 0 0;max-height:94vh;overflow-y:auto;transform:translateY(100%);animation:up .35s cubic-bezier(.2,.9,.3,1) forwards;}
+@keyframes up{to{transform:none}}
+.sheet-x{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+.sheet-x h3{font-size:1.05rem;font-weight:900;letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sheet-x button{width:36px;height:36px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.sheet-b{padding:20px;}
 
-/* FILTER BAR */
-.filter-bar{display:flex;align-items:center;gap:12px;margin-bottom:26px;flex-wrap:wrap;justify-content:flex-end;}
-.search-mini{display:flex;align-items:center;gap:8px;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r-pill);padding:8px 16px;min-width:220px;transition:.18s;}
-.search-mini:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-m);}
-.search-mini input{border:none;background:transparent;outline:none;font-size:.82rem;font-weight:700;width:100%;}
-.search-mini .ic{color:var(--tx3);font-size:15px;}
+/* معرض الصور */
+.gal{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin:-20px -20px 18px;padding:0 20px;scroll-snap-type:x mandatory;}
+.gal::-webkit-scrollbar{display:none;}
+.gal img{width:82%;max-width:340px;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r4);flex-shrink:0;scroll-snap-align:center;background:var(--line);}
+.gal .k{position:relative;flex-shrink:0;}
+.gal .k span{position:absolute;bottom:9px;inset-inline-start:9px;background:rgba(26,26,26,.8);color:#fff;font-size:.66rem;font-weight:800;padding:3px 9px;border-radius:var(--r-pill);}
 
-/* GRID + SCHOOL CARD */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;}
-.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r5);overflow:hidden;box-shadow:var(--sh-sm);transition:transform .25s cubic-bezier(.34,1.3,.64,1),box-shadow .25s;display:flex;flex-direction:column;opacity:0;animation:cardIn .5s forwards;}
-@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-.card:hover{transform:translateY(-5px);box-shadow:var(--sh-md);}
-.card-img-wrap{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--bg);}
-.card-img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
-.card:hover .card-img{transform:scale(1.06);}
-.card-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.4rem;color:var(--tx4);background:linear-gradient(135deg,#f5f9ff,#e6f0ff);}
-.card-badge{position:absolute;top:12px;inset-inline-start:12px;padding:5px 12px;border-radius:var(--r-pill);font-size:.68rem;font-weight:900;backdrop-filter:blur(8px);background:rgba(0,102,204,.92);color:#fff;display:flex;align-items:center;gap:5px;}
-.card-fav{position:absolute;top:12px;inset-inline-end:12px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--tx2);transition:.18s;box-shadow:var(--sh-sm);}
-.card-fav:hover{color:var(--blue);transform:scale(1.12);}
-.card-fav.on{color:var(--blue);}
-.card-city-chip{position:absolute;bottom:12px;inset-inline-start:12px;padding:4px 11px;border-radius:var(--r-pill);font-size:.68rem;font-weight:800;backdrop-filter:blur(8px);background:rgba(26,26,26,.7);color:#fff;display:flex;align-items:center;gap:4px;}
-.card-body{padding:16px 18px 14px;flex:1;}
-.card-name{font-size:1.1rem;font-weight:900;letter-spacing:-.01em;margin-bottom:10px;line-height:1.25;}
-.feats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-.feat{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;font-weight:700;color:var(--blue);background:var(--blue-l);border:1px solid rgba(0,102,204,.12);border-radius:var(--r2);padding:4px 9px;}
-.pkg-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-.pkg{background:var(--bg);border:1px solid var(--line);border-radius:var(--r3);padding:10px 12px;text-align:center;}
-.pkg.adv{background:var(--blue-l);border-color:rgba(0,102,204,.15);}
-.pkg-name{font-size:.64rem;font-weight:800;color:var(--tx2);margin-bottom:3px;}
-.pkg.adv .pkg-name{color:var(--blue);}
-.pkg-price{font-size:1.02rem;font-weight:900;color:var(--tx0);line-height:1.1;}
-.pkg-price .cur{font-size:.6rem;font-weight:700;color:var(--tx2);}
-.card-foot{padding:14px 18px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;}
-.foot-hint{font-size:.7rem;font-weight:700;color:var(--tx2);display:flex;align-items:center;gap:5px;}
-.btn-book{padding:11px 22px;border-radius:var(--r3);background:var(--blue-g);color:#fff;font-size:.84rem;font-weight:900;box-shadow:var(--sh-bl);transition:.2s;white-space:nowrap;}
-.btn-book:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,102,204,.4);}
-.btn-book:active{transform:scale(.96);}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px;}
+.spec div{background:var(--bg);border-radius:var(--r3);padding:11px 13px;}
+.spec dt{font-size:.66rem;font-weight:800;color:var(--tx2);margin-bottom:2px;}
+.spec dd{font-size:.86rem;font-weight:800;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;}
+.chips span{font-size:.74rem;font-weight:700;background:var(--green-l);color:#00857A;padding:6px 12px;border-radius:var(--r-pill);}
+.blk{margin-bottom:18px;}
+.blk h4{font-size:.7rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.blk p{font-size:.88rem;font-weight:600;color:var(--tx1);line-height:1.75;}
+.item{display:flex;gap:12px;align-items:center;padding:11px;border:1px solid var(--border);border-radius:var(--r3);margin-bottom:9px;transition:.18s;cursor:pointer;width:100%;text-align:start;}
+.item:hover{border-color:var(--red);box-shadow:var(--sh-sm);}
+.item img{width:62px;height:62px;border-radius:var(--r2);object-fit:cover;background:var(--line);flex-shrink:0;}
+.item .ph{width:62px;height:62px;border-radius:var(--r2);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.4rem;opacity:.35;flex-shrink:0;}
+.item .m{flex:1;min-width:0;}
+.item .m b{display:block;font-size:.9rem;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.item .m span{display:block;font-size:.74rem;font-weight:600;color:var(--tx2);}
+.item .p{font-size:.92rem;font-weight:900;flex-shrink:0;}
+.mapbox{border:1px solid var(--border);border-radius:var(--r4);overflow:hidden;margin-bottom:18px;}
+.mapbox iframe{display:block;width:100%;height:180px;border:0;}
+.bar{position:sticky;bottom:0;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:14px 20px calc(14px + env(safe-area-inset-bottom));margin:0 -20px -20px;display:flex;gap:12px;align-items:center;}
+.bar .p{flex:1;min-width:0;}
+.bar .p b{display:block;font-size:1.15rem;font-weight:900;letter-spacing:-.02em;}
+.bar .p small{font-size:.7rem;font-weight:700;color:var(--tx2);}
+.bar .go{padding:14px 28px;border-radius:var(--r3);background:var(--red-g);color:#fff;font-size:.92rem;font-weight:900;box-shadow:var(--sh-red);flex-shrink:0;transition:.2s;}
+.bar .go:hover{transform:translateY(-1px);}
+.bar .go:disabled{opacity:.5;transform:none;}
 
-/* SKELETON */
-.sk{background:var(--white);border:1px solid var(--border);border-radius:var(--r5);overflow:hidden;}
-.sk-img{aspect-ratio:16/9;background:linear-gradient(100deg,#f0f0f0 30%,#f8f8f8 50%,#f0f0f0 70%);background-size:200% 100%;animation:shim 1.4s infinite;}
-.sk-line{height:13px;border-radius:6px;background:linear-gradient(100deg,#f0f0f0 30%,#f8f8f8 50%,#f0f0f0 70%);background-size:200% 100%;animation:shim 1.4s infinite;margin:14px 18px;}
-@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* الاستمارة */
+.fld{margin-bottom:15px;}
+.fld label{display:block;font-size:.7rem;font-weight:900;color:var(--tx2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
+.fld label i{color:var(--red);font-style:normal;}
+.fld input,.fld select,.fld textarea{width:100%;padding:13px 15px;border:1.5px solid var(--border);border-radius:var(--r3);font-size:.94rem;font-weight:700;background:var(--white);outline:none;transition:.18s;}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-m);}
+.fld textarea{min-height:78px;resize:vertical;font-weight:600;}
+.fld .tel{direction:ltr;text-align:start;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.total{background:var(--red-l);border:1px solid rgba(255,56,92,.2);border-radius:var(--r4);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.total span{font-size:.82rem;font-weight:800;color:var(--tx1);}
+.total b{font-size:1.35rem;font-weight:900;color:var(--red);letter-spacing:-.02em;}
+.note{background:var(--blue-l);border-radius:var(--r3);padding:12px 14px;font-size:.78rem;font-weight:700;color:#00478F;line-height:1.6;margin-bottom:16px;}
+.ok{text-align:center;padding:26px 8px;}
+.ok .i{font-size:3.4rem;margin-bottom:14px;}
+.ok b{display:block;font-size:1.25rem;font-weight:900;margin-bottom:8px;}
+.ok p{font-size:.88rem;font-weight:600;color:var(--tx2);line-height:1.75;margin-bottom:8px;}
+.ok .id{display:inline-block;background:var(--bg);border-radius:var(--r-pill);padding:7px 16px;font-size:.8rem;font-weight:900;margin-bottom:20px;}
+.wa{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:15px;border-radius:var(--r3);background:#25D366;color:#fff;font-size:.95rem;font-weight:900;box-shadow:0 6px 18px rgba(37,211,102,.32);transition:.2s;}
+.wa:hover{transform:translateY(-1px);}
+.spin{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:inline-block;}
+@keyframes sp{to{transform:rotate(360deg)}}
 
-/* EMPTY */
-.empty{grid-column:1/-1;text-align:center;padding:72px 20px;}
-.empty-ic{font-size:3.4rem;margin-bottom:14px;opacity:.6;}
-.empty-t{font-size:1.05rem;font-weight:900;margin-bottom:6px;}
-.empty-s{font-size:.84rem;font-weight:600;color:var(--tx2);max-width:360px;margin:0 auto 18px;}
-.empty-btn{padding:10px 22px;border-radius:var(--r3);background:var(--tx0);color:#fff;font-size:.82rem;font-weight:800;}
+/* FOOTER — مطابق للرئيسية */
+.footer{background:var(--white);border-top:1px solid var(--line);padding:40px clamp(16px,4vw,40px) 28px;margin-top:30px;}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.footer-brand{display:flex;flex-direction:column;gap:8px;max-width:280px;}
+.footer-brand .row{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.1rem;}
+.footer-brand .whale{width:36px;height:36px;border-radius:11px;background:var(--red-g);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.footer-brand .desc{font-size:.78rem;font-weight:600;color:var(--tx2);line-height:1.6;}
+.footer-col h4{font-size:.7rem;font-weight:900;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;}
+.footer-col a{display:block;font-size:.84rem;font-weight:700;color:var(--tx1);padding:5px 0;transition:.15s;}
+.footer-col a:hover{color:var(--red);}
+.footer-copy{max-width:1200px;margin:26px auto 0;padding-top:22px;border-top:1px solid var(--line);font-size:.74rem;font-weight:600;color:var(--tx3);text-align:center;}
 
-/* MODAL */
-.modal-back{position:fixed;inset:0;z-index:800;background:rgba(26,26,26,.5);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:.28s;}
-.modal-back.open{opacity:1;visibility:visible;}
-.modal{background:var(--white);border-radius:var(--r6);width:100%;max-width:500px;max-height:92vh;overflow-y:auto;box-shadow:var(--sh-lg);transform:translateY(24px) scale(.97);transition:transform .3s cubic-bezier(.34,1.4,.64,1);}
-.modal-back.open .modal{transform:none;}
-.modal-hero{position:relative;height:170px;background:var(--bg);overflow:hidden;}
-.modal-hero img{width:100%;height:100%;object-fit:cover;}
-.modal-hero-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.8rem;color:var(--tx4);background:linear-gradient(135deg,#f5f9ff,#e0edff);}
-.modal-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.62),transparent 55%);}
-.modal-hero-info{position:absolute;bottom:14px;inset-inline-start:18px;inset-inline-end:18px;z-index:2;color:#fff;}
-.modal-hero-info h3{font-size:1.4rem;font-weight:900;letter-spacing:-.01em;text-shadow:0 1px 8px rgba(0,0,0,.4);}
-.modal-hero-info .loc{font-size:.78rem;font-weight:700;margin-top:3px;opacity:.95;display:flex;align-items:center;gap:4px;}
-.modal-close{position:absolute;top:14px;inset-inline-end:14px;z-index:3;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--tx0);box-shadow:var(--sh-sm);transition:.18s;}
-.modal-close:hover{transform:rotate(90deg);}
-.modal-body{padding:22px;}
-.modal-sec-title{font-size:.8rem;font-weight:900;color:var(--tx1);margin-bottom:11px;display:flex;align-items:center;gap:7px;}
-
-/* PACKAGE SELECT */
-.pkg-select{display:flex;flex-direction:column;gap:11px;margin-bottom:20px;}
-.pkg-opt{position:relative;display:flex;align-items:center;gap:14px;padding:15px 16px;border:1.5px solid var(--border);border-radius:var(--r4);cursor:pointer;transition:.18s;}
-.pkg-opt:hover{border-color:var(--tx3);}
-.pkg-opt.on{border-color:var(--blue);background:var(--blue-l);box-shadow:0 0 0 3px var(--blue-m);}
-.pkg-opt-ic{width:46px;height:46px;border-radius:var(--r3);background:var(--white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
-.pkg-opt.on .pkg-opt-ic{border-color:var(--blue);}
-.pkg-opt-info{flex:1;min-width:0;}
-.pkg-opt-name{font-size:.96rem;font-weight:900;}
-.pkg-opt-desc{font-size:.72rem;font-weight:600;color:var(--tx2);margin-top:2px;}
-.pkg-opt-price{text-align:end;flex-shrink:0;}
-.pkg-opt-price .amt{font-size:1.05rem;font-weight:900;color:var(--blue);line-height:1.1;}
-.pkg-opt-price .cur{font-size:.62rem;font-weight:700;color:var(--tx2);}
-.pkg-radio{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.15s;}
-.pkg-opt.on .pkg-radio{border-color:var(--blue);}
-.pkg-opt.on .pkg-radio::after{content:'';width:11px;height:11px;border-radius:50%;background:var(--blue);}
-.best-tag{position:absolute;top:-9px;inset-inline-end:14px;background:var(--gold);color:#fff;font-size:.6rem;font-weight:900;padding:2px 9px;border-radius:var(--r-pill);}
-
-/* FIELDS */
-.field{margin-bottom:16px;}
-.field-lbl{font-size:.72rem;font-weight:900;color:var(--tx1);margin-bottom:7px;display:block;}
-.field-input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r3);padding:13px 15px;font-size:.92rem;font-weight:700;outline:none;transition:.18s;}
-.field-input:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 3px var(--blue-m);}
-.field-input::placeholder{color:var(--tx3);font-weight:600;}
-textarea.field-input{resize:vertical;min-height:60px;font-family:inherit;}
-select.field-input{cursor:pointer;}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.gender-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.gender-opt{display:flex;align-items:center;justify-content:center;gap:7px;padding:12px;border:1.5px solid var(--border);border-radius:var(--r3);cursor:pointer;font-size:.86rem;font-weight:800;color:var(--tx1);transition:.18s;}
-.gender-opt:hover{border-color:var(--tx3);}
-.gender-opt.on{border-color:var(--blue);background:var(--blue-l);color:var(--blue);}
-.total-bar{background:var(--tx0);border-radius:var(--r4);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;margin:18px 0;}
-.total-bar .lbl{color:rgba(255,255,255,.7);font-size:.78rem;font-weight:700;}
-.total-bar .sub{color:rgba(255,255,255,.5);font-size:.64rem;font-weight:600;margin-top:2px;}
-.total-bar .amt{color:#fff;font-size:1.5rem;font-weight:900;}
-.total-bar .amt .cur{font-size:.78rem;font-weight:700;opacity:.7;}
-.btn-confirm{width:100%;padding:15px;border-radius:var(--r4);background:var(--blue-g);color:#fff;font-size:.96rem;font-weight:900;box-shadow:var(--sh-bl);transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.btn-confirm:hover{transform:translateY(-2px);}
-.btn-confirm:active{transform:scale(.98);}
-.btn-confirm:disabled{opacity:.6;pointer-events:none;}
-.btn-confirm.loading{color:transparent;position:relative;}
-.btn-confirm.loading::after{content:'';position:absolute;width:20px;height:20px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* SUCCESS */
-.success-wrap{text-align:center;padding:30px 24px 8px;}
-.success-ring{width:88px;height:88px;border-radius:50%;background:var(--blue-l);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;position:relative;animation:popIn .5s cubic-bezier(.34,1.6,.64,1);}
-.success-ring::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--blue);opacity:.3;animation:ring 1.4s ease-out infinite;}
-@keyframes ring{0%{transform:scale(.9);opacity:.5}100%{transform:scale(1.3);opacity:0}}
-@keyframes popIn{0%{transform:scale(0)}100%{transform:scale(1)}}
-.success-check{font-size:2.6rem;}
-.success-t{font-size:1.5rem;font-weight:900;margin-bottom:8px;}
-.success-s{font-size:.88rem;font-weight:600;color:var(--tx2);margin-bottom:20px;}
-.order-box{background:var(--bg);border:1.5px dashed var(--border);border-radius:var(--r4);padding:16px;margin-bottom:20px;}
-.order-box .lbl{font-size:.68rem;font-weight:800;color:var(--tx2);text-transform:uppercase;letter-spacing:.08em;}
-.order-box .id{font-size:1.4rem;font-weight:900;color:var(--blue);margin-top:4px;letter-spacing:.02em;}
-.success-acts{display:flex;flex-direction:column;gap:10px;}
-.btn-wa{padding:14px;border-radius:var(--r4);background:#25D366;color:#fff;font-size:.9rem;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;transition:.18s;}
-.btn-wa:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(37,211,102,.35);}
-.btn-ghost{padding:13px;border-radius:var(--r4);background:var(--bg);border:1.5px solid var(--border);font-size:.88rem;font-weight:800;color:var(--tx1);transition:.18s;}
-.btn-ghost:hover{background:var(--line);}
-
-/* TOAST */
 #toast-wrap{position:fixed;top:calc(var(--nav-h) + 14px);inset-inline:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:1000;pointer-events:none;}
 .toast{background:var(--tx0);color:#fff;padding:12px 20px;border-radius:var(--r-pill);font-size:.82rem;font-weight:800;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:9px;animation:tIn .35s cubic-bezier(.34,1.5,.64,1);max-width:90vw;}
 .toast.err{background:var(--red);}
 @keyframes tIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
 
-/* FOOTER */
-.footer{background:var(--white);border-top:1px solid var(--line);padding:36px clamp(16px,4vw,40px) 28px;margin-top:30px;}
-.footer-inner{max-width:1220px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
-.footer-brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.05rem;}
-.footer-brand .whale{width:34px;height:34px;border-radius:10px;background:var(--blue-g);display:flex;align-items:center;justify-content:center;font-size:17px;}
-.footer-links{display:flex;gap:8px;flex-wrap:wrap;}
-.footer-link{padding:8px 15px;border-radius:var(--r-pill);background:var(--bg);font-size:.78rem;font-weight:800;color:var(--tx1);transition:.15s;}
-.footer-link:hover{background:var(--blue-l);color:var(--blue);}
-.footer-copy{font-size:.72rem;font-weight:600;color:var(--tx3);width:100%;text-align:center;margin-top:22px;}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s;}
+.reveal.in{opacity:1;transform:none;}
 
-/* RESPONSIVE */
-@media(max-width:640px){
-  .search-card{flex-direction:column;border-radius:var(--r5);gap:4px;padding:10px;}
-  .sf+.sf{border-inline-start:none;border-top:1px solid var(--line);}
-  .search-go{width:100%;height:50px;border-radius:var(--r4);margin-top:8px;}
-  .grid{grid-template-columns:1fr;gap:18px;}
-  .nav-partner{display:none;}
-  .field-row{grid-template-columns:1fr;}
-  .modal{border-radius:var(--r6) var(--r6) 0 0;max-height:94vh;align-self:flex-end;}
-  .modal-back{align-items:flex-end;padding:0;}
+@media(max-width:680px){
+.filters{grid-template-columns:1fr 1fr;}
+.ff-go{grid-column:1/-1;border-top:1px solid var(--line);}
+.ff-go button{width:100%;border-radius:var(--r4);}
+.nav-partner{display:none;}
+.footer-inner{flex-direction:column;gap:20px;}
+.two{grid-template-columns:1fr;}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
 </head>
 <body>
-<div id="splash"><div class="sp-whale">🐋</div><div class="sp-bar"><div class="sp-fill"></div></div></div>
 <div id="toast-wrap"></div>
 
-<nav class="nav">
-  <a href="index.html" class="nav-logo">
-    <span class="whale">🐋</span>
-    <span>الحوت<br><span class="sub" data-i18n="nav_sub">مدارس القيادة</span></span>
-  </a>
+<nav class="nav" id="nav">
+  <a href="index.html" class="nav-logo"><span class="whale">🐋</span> الحوت</a>
   <div class="nav-right">
     <div class="lang-wrap">
       <button class="lang-btn" onclick="toggleLangMenu(event)">
@@ -291,194 +238,205 @@ select.field-input{cursor:pointer;}
   </div>
 </nav>
 
-<header class="hero">
-  <svg class="hero-wave" viewBox="0 0 1440 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0,40 C240,90 480,0 720,35 C960,70 1200,10 1440,45 L1440,90 L0,90 Z" fill="#F7F7F7"/>
-  </svg>
-  <div class="hero-inner">
-    <div class="hero-eyebrow"><span class="dot"></span><span data-i18n="hero_eyebrow">مدرّبون معتمدون · رخصتك أقرب مما تظن</span></div>
-    <h1 class="hero-h1"><span data-i18n="hero_h1_a">تعلّم القيادة</span> <span class="grad" data-i18n="hero_h1_b">بثقة وأمان</span></h1>
-    <p class="hero-p" data-i18n="hero_p">اختر مدينتك، قارن مدارس تعليم القيادة وباقاتها بأسعار واضحة، وسجّل اليوم لتبدأ طريقك نحو الرخصة.</p>
-
-    <div class="search-card">
-      <label class="sf">
-        <span class="sf-lbl" data-i18n="f_city">المدينة</span>
-        <select class="sf-ctl" id="searchCity" onchange="applySearch()"></select>
-      </label>
-      <label class="sf">
-        <span class="sf-lbl" data-i18n="f_pkg">الباقة</span>
-        <select class="sf-ctl" id="searchPkg">
-          <option value="" data-i18n="pkg_any">الكل</option>
-          <option value="basic" data-i18n="pkg_basic">أساسية</option>
-          <option value="advanced" data-i18n="pkg_advanced">متقدمة</option>
-        </select>
-      </label>
-      <button class="search-go" onclick="applySearch()" aria-label="search">🔍</button>
+<header class="pagehead">
+  <div class="ph-inner">
+    <h1 class="ph-title"><span>🎓</span> <span data-i18n="page_t">مدارس تعليم القيادة</span></h1>
+    <p class="ph-sub" data-i18n="page_s">كورسات معتمدة بأسعار واضحة، ومدرّبات للنساء</p>
+    <div class="filters">
+      <div class="ff">
+        <label data-i18n="f_city">المدينة</label>
+        <select id="citySel" onchange="applyFilters()"></select>
+      </div>
+      <div class="ff">
+        <label data-i18n="f_search">ابحث</label>
+        <input id="qIn" type="search" data-i18n-ph="ph_search" placeholder="اسم أو ميزة" oninput="debounced()">
+      </div>
+      <div class="ff-go"><button onclick="applyFilters()" aria-label="search">🔍</button></div>
     </div>
-
-    <div class="trust">
-      <div class="trust-item"><span class="trust-v" id="tCount">0</span><span class="trust-l" data-i18n="trust_schools">مدرسة معتمدة</span></div>
-      <div class="trust-item"><span class="trust-v">100%</span><span class="trust-l" data-i18n="trust_certified">مدرّبون مرخّصون</span></div>
-      <div class="trust-item"><span class="trust-v">⭐ 4.8</span><span class="trust-l" data-i18n="trust_rating">تقييم المتدرّبين</span></div>
-    </div>
+    <div class="cats" id="cats"></div>
   </div>
 </header>
 
-<main class="wrap">
-  <section class="sec">
-    <div class="sec-head">
-      <div>
-        <h2 class="sec-title"><span data-i18n="sec_title">مدارس القيادة في</span> <span id="cityName"></span></h2>
-        <p class="sec-sub" data-i18n="sec_sub">مدارس شريكة معتمدة — تواصل مباشر بعد التسجيل</p>
-      </div>
-      <div class="count-chip"><span id="countNum">0</span> <span data-i18n="schools_word">مدرسة</span></div>
-    </div>
-
-    <div class="filter-bar">
-      <div class="search-mini">
-        <span class="ic">🔍</span>
-        <input type="text" id="miniSearch" data-i18n-ph="search_ph" placeholder="ابحث عن مدرسة..." oninput="renderSchools()">
-      </div>
-    </div>
-
-    <div class="grid" id="schoolGrid"></div>
-  </section>
+<main class="wrap sec">
+  <div class="count" id="count"></div>
+  <div class="grid" id="grid"></div>
 </main>
 
 <footer class="footer">
   <div class="footer-inner">
-    <div class="footer-brand"><span class="whale">🐋</span> الحوت</div>
-    <div class="footer-links">
-      <a href="fleet.html" class="footer-link" data-i18n="nav_cars">السيارات</a>
-      <a href="hotels.html" class="footer-link" data-i18n="nav_hotels">الفنادق</a>
-      <a href="halls.html" class="footer-link" data-i18n="nav_halls">القاعات</a>
-      <a href="schools.html" class="footer-link" data-i18n="nav_schools">مدارس القيادة</a>
+    <div class="footer-brand">
+      <div class="row"><span class="whale">🐋</span> الحوت</div>
+      <div class="desc" data-i18n="footer_desc">منصتك الأولى في العراق للسيارات والفنادق وقاعات الأعراس ومدارس القيادة.</div>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer_services">الخدمات</h4>
+      <a href="fleet.html" data-i18n="nav_cars">السيارات</a>
+      <a href="hotels.html" data-i18n="nav_hotels">الفنادق</a>
+      <a href="halls.html" data-i18n="nav_halls">القاعات</a>
+      <a href="schools.html" data-i18n="nav_schools">مدارس القيادة</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer_company">المنصة</h4>
+      <a href="partners.html" data-i18n="nav_partner">كن شريكاً</a>
+      <a href="index.html" data-i18n="nav_home">الرئيسية</a>
     </div>
   </div>
-  <div class="footer-copy">© 2026 منصة الحوت · جميع الحقوق محفوظة</div>
+  <div class="footer-copy">© 2026 منصة الحوت · جميع الحقوق محفوظة 🐋</div>
 </footer>
 
-<div class="modal-back" id="bookModal" onclick="if(event.target===this)closeBook()">
-  <div class="modal"><div id="bookContent"></div></div>
-</div>
+<div id="sheetHost"></div>
 
 <script>
-/* ═══════════════ CONFIG ═══════════════ */
-const API_URL   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
-const API_TOKEN = "HUT_CLOUD_2026";
-const WA_SUPPORT = "9647700000000";
-const CITIES = ["بغداد","البصرة","أربيل","السليمانية","كركوك","نينوى","النجف","كربلاء","ديالى","الأنبار","دهوك","ذي قار","بابل","واسط","صلاح الدين","ميسان","المثنى","القادسية"];
+/* ═══════════════════════════════════════════════════════════════════
+   منصة الحوت — صفحة كتالوج
+   ───────────────────────────────────────────────────────────────────
+   تقرأ الكتالوج من Firebase مباشرةً (عقدة catalog مقروءة علناً)، فلا
+   يعمل Apps Script إطلاقاً أثناء التصفّح. Apps Script يُستدعى مرة
+   واحدة فقط: لحظة إرسال الطلب.
+═══════════════════════════════════════════════════════════════════ */
 
-/* ═══════════════ i18n ═══════════════ */
+const SECTOR = "school";
+
+const FB_URL = "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app";
+const API    = "ضع_رابط_النشر_هنا";
+const TOKEN  = "ضع_التوكن_هنا";
+
+/* أثناء التجربة تذهب كل رسائل واتساب إلى هذا الرقم بدل أرقام الشركاء.
+   اجعل TEST_MODE=false يوم الإطلاق — مفتاح واحد لا رقم مبعثر في الصفحات. */
+const TEST_MODE  = true;
+const TEST_PHONE = "9647713225471";
+
+/* مفاتيح المدن — يجب أن تطابق حرفياً ما في index.html ولوحة الإدخال */
+const CITIES = [
+  {key:"بغداد", ic:"🏰", ar:"بغداد", ku:"بەغداد", tr:"Bağdat", en:"Baghdad"},
+  {key:"كركوك", ic:"💎", ar:"كركوك", ku:"کەرکوک", tr:"Kerkük", en:"Kirkuk"},
+  {key:"أربيل", ic:"🏔️", ar:"أربيل", ku:"هەولێر", tr:"Erbil", en:"Erbil"},
+  {key:"السليمانية", ic:"🌲", ar:"السليمانية", ku:"سلێمانی", tr:"Süleymaniye", en:"Sulaymaniyah"},
+  {key:"نينوى", ic:"🏹", ar:"نينوى / الموصل", ku:"نەینەوا", tr:"Musul", en:"Mosul"},
+  {key:"البصرة", ic:"⚓", ar:"البصرة", ku:"بەسرە", tr:"Basra", en:"Basra"},
+  {key:"النجف", ic:"🕌", ar:"النجف", ku:"نەجەف", tr:"Necef", en:"Najaf"},
+  {key:"كربلاء", ic:"🕌", ar:"كربلاء", ku:"کەربەلا", tr:"Kerbela", en:"Karbala"},
+  {key:"ديالى", ic:"🍊", ar:"ديالى", ku:"دیالە", tr:"Diyala", en:"Diyala"},
+  {key:"الأنبار", ic:"🌴", ar:"الأنبار", ku:"ئەنبار", tr:"Anbar", en:"Anbar"},
+  {key:"دهوك", ic:"⛰️", ar:"دهوك", ku:"دهۆک", tr:"Dahuk", en:"Duhok"},
+  {key:"بابل", ic:"🦁", ar:"بابل", ku:"بابل", tr:"Babil", en:"Babylon"}
+];
+
+/* إعداد القطاع: هل الشبكة تعرض العناصر أم الشركاء؟
+   السيارات: الزبون يختار سيارة بعينها → نعرض العناصر.
+   البقية: يختار المكان أولاً ثم الغرفة أو الباقة. */
+const CFG = {
+  car:    {primary:"items",    icon:"🚗", unitKey:"u_day",   qtyKey:"f_days",   cats:["اقتصادية","عائلية","فاخرة","دفع رباعي","زفاف","حمل / بيك أب","باص"], action:"NEW_CAR_ORDER"},
+  hotel:  {primary:"partners", icon:"🏨", unitKey:"u_night", qtyKey:"f_nights", cats:["اقتصادي","متوسط","فاخر","شقق فندقية"], catFrom:"specs.cat", action:"NEW_HOTEL_BOOKING"},
+  hall:   {primary:"partners", icon:"🥂", unitKey:"u_night", qtyKey:"f_guests", cats:["زفاف","خطوبة","تخرّج","عيد ميلاد","مؤتمر"], action:"NEW_HALL_BOOKING"},
+  school: {primary:"partners", icon:"🎓", unitKey:"u_course",qtyKey:null,       cats:["أساسي","متقدم","مكثّف","نساء فقط"], action:"NEW_DRIVE_STUDENT"}
+};
+const C = CFG[SECTOR];
+
+/* ═══════════ i18n ═══════════ */
 const I18N = {
-  ar:{ dir:"rtl", flag:"🇮🇶", name:"عربي",
-    nav_sub:"مدارس القيادة", nav_partner:"كن شريكاً", nav_cars:"السيارات", nav_hotels:"الفنادق", nav_halls:"القاعات", nav_schools:"مدارس القيادة",
-    hero_eyebrow:"مدرّبون معتمدون · رخصتك أقرب مما تظن", hero_h1_a:"تعلّم القيادة", hero_h1_b:"بثقة وأمان",
-    hero_p:"اختر مدينتك، قارن مدارس تعليم القيادة وباقاتها بأسعار واضحة، وسجّل اليوم لتبدأ طريقك نحو الرخصة.",
-    f_city:"المدينة", f_pkg:"الباقة", pkg_any:"الكل", pkg_basic:"أساسية", pkg_advanced:"متقدمة",
-    trust_schools:"مدرسة معتمدة", trust_certified:"مدرّبون مرخّصون", trust_rating:"تقييم المتدرّبين",
-    sec_title:"مدارس القيادة في", sec_sub:"مدارس شريكة معتمدة — تواصل مباشر بعد التسجيل", schools_word:"مدرسة",
-    search_ph:"ابحث عن مدرسة...", cur:"د.ع", pkg_from:"تبدأ من", students_word:"متدرّب",
-    pkg_basic_d:"تعليم القيادة الأساسي وقواعد المرور", pkg_advanced_d:"دورة شاملة + تدريب مكثّف للرخصة",
-    register:"سجّل الآن", choose_pkg:"اختر الباقة",
-    empty_t:"لا توجد مدارس في هذه المدينة", empty_s:"جرّب اختيار مدينة أخرى، أو امسح البحث لعرض كل المدارس المتاحة.", empty_btn:"عرض الكل",
-    bk_pkg:"الباقة المختارة", bk_details:"بيانات المتدرّب",
-    bk_name:"الاسم الكامل", bk_name_ph:"مثال: أحمد علي", bk_phone:"رقم الهاتف", bk_phone_ph:"07XXXXXXXXX",
-    bk_age:"العمر", bk_age_ph:"18", bk_gender:"الجنس", gender_male:"ذكر", gender_female:"أنثى",
-    bk_notes:"ملاحظات (اختياري)", bk_notes_ph:"الوقت المفضّل، خبرة سابقة، احتياجات خاصة...",
-    total:"قيمة الباقة", confirm:"تأكيد التسجيل",
-    succ_t:"تم تسجيلك بنجاح!", succ_s:"ستتواصل معك المدرسة لتحديد موعد بدء الدورة وإكمال الإجراءات.", order_no:"رقم التسجيل", wa_btn:"تواصل عبر واتساب", done:"تصفّح المزيد",
-    err_fields:"يرجى إدخال الاسم ورقم الهاتف", err_phone:"رقم هاتف غير صحيح", err_net:"تعذّر الاتصال، حاول مجدداً",
-    loading:"جاري التحميل..." },
+ar:{dir:"rtl",flag:"🇮🇶",name:"عربي",
+  nav_partner:"كن شريكاً",nav_cars:"السيارات",nav_hotels:"الفنادق",nav_halls:"القاعات",nav_schools:"مدارس القيادة",nav_home:"الرئيسية",
+  page_t:"مدارس تعليم القيادة",page_s:"كورسات معتمدة بأسعار واضحة، ومدرّبات للنساء",
+  f_city:"المدينة",f_search:"ابحث",ph_search:"اسم أو ميزة",f_date:"التاريخ",f_days:"عدد الأيام",f_nights:"عدد الليالي",f_guests:"عدد الضيوف",
+  all:"الكل",results:"نتيجة متاحة",loading:"يُحمَّل…",
+  empty_t:"لا نتائج في هذه المدينة",empty_p:"جرّب مدينة أخرى أو أزِل الفلاتر. نضيف شركاء جدداً باستمرار.",
+  empty_b:"عرض كل المدن",err_t:"تعذّر التحميل",err_p:"تحقّق من اتصالك بالإنترنت ثم أعد المحاولة.",err_b:"إعادة المحاولة",
+  u_day:"/ يوم",u_night:"/ ليلة",u_course:"للكورس",iqd:"د.ع",from:"يبدأ من",
+  book:"احجز الآن",details:"التفاصيل",features:"المميزات",about:"نبذة",location:"الموقع",openmap:"افتح في الخرائط",
+  items_car:"الأسطول المتاح",items_hotel:"الغرف المتاحة",items_hall:"الباقات",items_school:"الكورسات",
+  no_items:"لا عناصر متاحة حالياً",
+  form_t:"إتمام الحجز",f_name:"الاسم الثلاثي",f_phone:"رقم الهاتف",f_nid:"رقم الهوية",f_notes:"ملاحظات إضافية",
+  ph_name:"كما في الهوية",ph_phone:"07XX XXX XXXX",ph_nid:"اختياري",ph_notes:"أي طلب خاص…",
+  total:"الإجمالي التقديري",send:"تأكيد الطلب",
+  note_wa:"بعد التأكيد يُفتح واتساب برسالة جاهزة إلى مقدّم الخدمة. السعر النهائي يؤكّده هو مباشرةً.",
+  e_name:"اكتب اسمك الثلاثي",e_phone:"رقم هاتف غير صالح",e_date:"اختر التاريخ",
+  ok_t:"وصل طلبك 🎉",ok_p:"احتفظ برقم الطلب. سيتواصل معك مقدّم الخدمة لتأكيد التفاصيل.",ok_wa:"أرسل التفاصيل عبر واتساب",
+  sending:"يُرسَل…",fail:"تعذّر الإرسال — أعد المحاولة",
+  footer_desc:"منصتك الأولى في العراق للسيارات والفنادق وقاعات الأعراس ومدارس القيادة.",footer_services:"الخدمات",footer_company:"المنصة"},
 
-  ku:{ dir:"rtl", flag:"🌞", name:"کوردی",
-    nav_sub:"خوێندنگەی لێخوڕین", nav_partner:"ببە بە هاوبەش", nav_cars:"ئۆتۆمبێل", nav_hotels:"هۆتێل", nav_halls:"هۆڵ", nav_schools:"خوێندنگەی لێخوڕین",
-    hero_eyebrow:"مەشقپێکەری پەسەندکراو · مۆڵەتەکەت نزیکترە لەوەی بیردەکەیتەوە", hero_h1_a:"فێری لێخوڕین بە", hero_h1_b:"متمانە و سەلامەتی",
-    hero_p:"شارەکەت هەڵبژێرە، خوێندنگەکانی لێخوڕین و پاکێجەکانیان بەراورد بکە بە نرخی ڕوون، و ئەمڕۆ خۆت تۆمار بکە.",
-    f_city:"شار", f_pkg:"پاکێج", pkg_any:"هەموو", pkg_basic:"بنەڕەتی", pkg_advanced:"پێشکەوتوو",
-    trust_schools:"خوێندنگەی پەسەند", trust_certified:"مەشقپێکەری مۆڵەتدار", trust_rating:"هەڵسەنگاندنی خوێندکاران",
-    sec_title:"خوێندنگەکانی لێخوڕین لە", sec_sub:"خوێندنگەی هاوبەشی پەسەندکراو — پەیوەندی ڕاستەوخۆ دوای تۆمارکردن", schools_word:"خوێندنگە",
-    search_ph:"بەدوای خوێندنگەدا بگەڕێ...", cur:"د.ع", pkg_from:"دەستپێدەکات لە", students_word:"خوێندکار",
-    pkg_basic_d:"فێرکردنی بنەڕەتی لێخوڕین و یاساکانی هاتووچۆ", pkg_advanced_d:"کۆرسی تەواو + ڕاهێنانی چڕ بۆ مۆڵەت",
-    register:"ئێستا تۆمار بکە", choose_pkg:"پاکێج هەڵبژێرە",
-    empty_t:"هیچ خوێندنگەیەک لەم شارەدا نییە", empty_s:"شارێکی تر هەڵبژێرە، یان گەڕان بسڕەوە بۆ پیشاندانی هەموو خوێندنگەکان.", empty_btn:"پیشاندانی هەموو",
-    bk_pkg:"پاکێجی هەڵبژێردراو", bk_details:"زانیاری خوێندکار",
-    bk_name:"ناوی تەواو", bk_name_ph:"نموونە: ئەحمەد عەلی", bk_phone:"ژمارەی مۆبایل", bk_phone_ph:"07XXXXXXXXX",
-    bk_age:"تەمەن", bk_age_ph:"18", bk_gender:"ڕەگەز", gender_male:"نێر", gender_female:"مێ",
-    bk_notes:"تێبینی (ئارەزوومەندانە)", bk_notes_ph:"کاتی گونجاو، ئەزموونی پێشوو، پێداویستی تایبەت...",
-    total:"نرخی پاکێج", confirm:"دڵنیاکردنەوەی تۆمار",
-    succ_t:"بە سەرکەوتوویی تۆمار کرایت!", succ_s:"خوێندنگەکە پەیوەندیت پێوە دەکات بۆ دیاریکردنی کاتی دەستپێکی کۆرس.", order_no:"ژمارەی تۆمار", wa_btn:"پەیوەندی بە واتساپ", done:"زیاتر ببینە",
-    err_fields:"تکایە ناو و ژمارەی مۆبایل بنووسە", err_phone:"ژمارەی مۆبایل هەڵەیە", err_net:"پەیوەندی نەکرا، دووبارە هەوڵبدە",
-    loading:"بارکردن..." },
+ku:{dir:"rtl",flag:"🌞",name:"کوردی",
+  nav_partner:"ببە بە هاوبەش",nav_cars:"ئۆتۆمبێل",nav_hotels:"هۆتێل",nav_halls:"هۆڵ",nav_schools:"خوێندنگەی لێخوڕین",nav_home:"سەرەکی",
+  page_t:"خوێندنگەی فێربوونی شۆفێری",page_s:"کۆرسی پەسەندکراو و ڕاهێنەری ئافرەت",
+  f_city:"شار",f_search:"بگەڕێ",ph_search:"ناو یان تایبەتمەندی",f_date:"بەروار",f_days:"ژمارەی ڕۆژ",f_nights:"ژمارەی شەو",f_guests:"ژمارەی میوان",
+  all:"هەموو",results:"ئەنجامی بەردەست",loading:"باردەکرێت…",
+  empty_t:"هیچ ئەنجامێک لەم شارەدا نییە",empty_p:"شارێکی تر تاقی بکەرەوە. بەردەوام هاوبەشی نوێ زیاد دەکەین.",
+  empty_b:"هەموو شارەکان",err_t:"بارکردن سەرکەوتوو نەبوو",err_p:"پەیوەندی ئینتەرنێت بپشکنە و دووبارە هەوڵ بدە.",err_b:"دووبارە",
+  u_day:"/ ڕۆژ",u_night:"/ شەو",u_course:"بۆ کۆرس",iqd:"د.ع",from:"دەست پێدەکات لە",
+  book:"ئێستا حیجز بکە",details:"وردەکاری",features:"تایبەتمەندی",about:"دەربارە",location:"شوێن",openmap:"لە نەخشەدا بکەرەوە",
+  items_car:"ئۆتۆمبێلە بەردەستەکان",items_hotel:"ژوورە بەردەستەکان",items_hall:"پاکێجەکان",items_school:"کۆرسەکان",
+  no_items:"هیچ بەردەست نییە",
+  form_t:"تەواوکردنی حیجز",f_name:"ناوی سێیانە",f_phone:"ژمارەی مۆبایل",f_nid:"ژمارەی ناسنامە",f_notes:"تێبینی",
+  ph_name:"وەک لە ناسنامەدا",ph_phone:"07XX XXX XXXX",ph_nid:"ئارەزوومەندانە",ph_notes:"هەر داواکارییەکی تایبەت…",
+  total:"کۆی گشتی",send:"دڵنیاکردنەوەی داواکاری",
+  note_wa:"دوای دڵنیاکردنەوە واتسئاپ دەکرێتەوە بە نامەیەکی ئامادە. نرخی کۆتایی لەلایەن دابینکەرەوە پشتڕاست دەکرێتەوە.",
+  e_name:"ناوی سێیانەت بنووسە",e_phone:"ژمارەی مۆبایل نادروستە",e_date:"بەروار هەڵبژێرە",
+  ok_t:"داواکارییەکەت گەیشت 🎉",ok_p:"ژمارەی داواکاری بپارێزە. دابینکەر پەیوەندیت پێوە دەکات.",ok_wa:"بە واتسئاپ بنێرە",
+  sending:"دەنێردرێت…",fail:"نێردن سەرکەوتوو نەبوو",
+  footer_desc:"یەکەم پلاتفۆرمت لە عێراق بۆ سەیارە و هۆتێل و هۆڵ و خوێندنگەی شۆفێری.",footer_services:"خزمەتگوزاری",footer_company:"پلاتفۆرم"},
 
-  tr:{ dir:"ltr", flag:"🇹🇷", name:"Türkçe",
-    nav_sub:"Sürücü Kursları", nav_partner:"Ortak Ol", nav_cars:"Araçlar", nav_hotels:"Oteller", nav_halls:"Salonlar", nav_schools:"Sürücü Kursu",
-    hero_eyebrow:"Sertifikalı eğitmenler · Ehliyetiniz sandığınızdan yakın", hero_h1_a:"Güvenle ve emniyetle", hero_h1_b:"araç kullanmayı öğren",
-    hero_p:"Şehrinizi seçin, sürücü kurslarını ve paketlerini şeffaf fiyatlarla karşılaştırın, ehliyet yolculuğunuza bugün başlamak için kaydolun.",
-    f_city:"Şehir", f_pkg:"Paket", pkg_any:"Tümü", pkg_basic:"Temel", pkg_advanced:"İleri",
-    trust_schools:"onaylı kurs", trust_certified:"lisanslı eğitmen", trust_rating:"kursiyer puanı",
-    sec_title:"Sürücü kursları —", sec_sub:"Onaylı ortak kurslar — kayıttan sonra doğrudan iletişim", schools_word:"kurs",
-    search_ph:"Kurs ara...", cur:"IQD", pkg_from:"başlangıç", students_word:"kursiyer",
-    pkg_basic_d:"Temel sürüş eğitimi ve trafik kuralları", pkg_advanced_d:"Kapsamlı kurs + ehliyet için yoğun eğitim",
-    register:"Kaydol", choose_pkg:"Paket seçin",
-    empty_t:"Bu şehirde kurs yok", empty_s:"Başka bir şehir seçin veya tüm kursları görmek için aramayı temizleyin.", empty_btn:"Tümünü göster",
-    bk_pkg:"Seçilen paket", bk_details:"Kursiyer bilgileri",
-    bk_name:"Ad soyad", bk_name_ph:"Örn: Ahmed Ali", bk_phone:"Telefon", bk_phone_ph:"07XXXXXXXXX",
-    bk_age:"Yaş", bk_age_ph:"18", bk_gender:"Cinsiyet", gender_male:"Erkek", gender_female:"Kadın",
-    bk_notes:"Notlar (isteğe bağlı)", bk_notes_ph:"Tercih edilen saat, önceki deneyim, özel ihtiyaçlar...",
-    total:"Paket ücreti", confirm:"Kaydı onayla",
-    succ_t:"Kaydınız başarılı!", succ_s:"Kurs, ders başlangıç tarihini belirlemek için sizinle iletişime geçecek.", order_no:"Kayıt no", wa_btn:"WhatsApp ile iletişim", done:"Daha fazla göz at",
-    err_fields:"Lütfen ad ve telefon girin", err_phone:"Geçersiz telefon", err_net:"Bağlantı kurulamadı, tekrar deneyin",
-    loading:"Yükleniyor..." },
+tr:{dir:"ltr",flag:"🇹🇷",name:"Türkçe",
+  nav_partner:"Ortak Ol",nav_cars:"Araçlar",nav_hotels:"Oteller",nav_halls:"Salonlar",nav_schools:"Sürücü Kursu",nav_home:"Ana Sayfa",
+  page_t:"Sürücü Kursları",page_s:"Sertifikalı kurslar, kadın eğitmenler",
+  f_city:"Şehir",f_search:"Ara",ph_search:"İsim veya özellik",f_date:"Tarih",f_days:"Gün Sayısı",f_nights:"Gece Sayısı",f_guests:"Misafir Sayısı",
+  all:"Hepsi",results:"sonuç",loading:"Yükleniyor…",
+  empty_t:"Bu şehirde sonuç yok",empty_p:"Başka bir şehir deneyin. Sürekli yeni ortaklar ekliyoruz.",
+  empty_b:"Tüm şehirler",err_t:"Yüklenemedi",err_p:"Bağlantınızı kontrol edip tekrar deneyin.",err_b:"Tekrar dene",
+  u_day:"/ gün",u_night:"/ gece",u_course:"kurs",iqd:"IQD",from:"başlangıç",
+  book:"Hemen rezerve et",details:"Detaylar",features:"Özellikler",about:"Hakkında",location:"Konum",openmap:"Haritada aç",
+  items_car:"Mevcut filo",items_hotel:"Mevcut odalar",items_hall:"Paketler",items_school:"Kurslar",
+  no_items:"Şu anda mevcut değil",
+  form_t:"Rezervasyonu tamamla",f_name:"Ad Soyad",f_phone:"Telefon",f_nid:"Kimlik No",f_notes:"Notlar",
+  ph_name:"Kimlikteki gibi",ph_phone:"07XX XXX XXXX",ph_nid:"İsteğe bağlı",ph_notes:"Özel bir talep…",
+  total:"Tahmini toplam",send:"Talebi onayla",
+  note_wa:"Onaydan sonra hazır bir mesajla WhatsApp açılır. Nihai fiyatı sağlayıcı onaylar.",
+  e_name:"Adınızı yazın",e_phone:"Geçersiz telefon",e_date:"Tarih seçin",
+  ok_t:"Talebiniz alındı 🎉",ok_p:"Talep numaranızı saklayın. Sağlayıcı sizinle iletişime geçecek.",ok_wa:"WhatsApp ile gönder",
+  sending:"Gönderiliyor…",fail:"Gönderilemedi",
+  footer_desc:"Araç, otel, düğün salonu ve sürücü kursları için Irak'taki ilk platformunuz.",footer_services:"Hizmetler",footer_company:"Platform"},
 
-  en:{ dir:"ltr", flag:"🇬🇧", name:"English",
-    nav_sub:"Driving Schools", nav_partner:"Become a partner", nav_cars:"Cars", nav_hotels:"Hotels", nav_halls:"Halls", nav_schools:"Driving schools",
-    hero_eyebrow:"Certified instructors · Your license is closer than you think", hero_h1_a:"Learn to drive", hero_h1_b:"with confidence & safety",
-    hero_p:"Pick your city, compare driving schools and their packages at clear prices, and enroll today to start your journey to a license.",
-    f_city:"City", f_pkg:"Package", pkg_any:"All", pkg_basic:"Basic", pkg_advanced:"Advanced",
-    trust_schools:"certified schools", trust_certified:"licensed instructors", trust_rating:"trainee rating",
-    sec_title:"Driving schools in", sec_sub:"Verified partner schools — direct contact after enrollment", schools_word:"schools",
-    search_ph:"Search for a school...", cur:"IQD", pkg_from:"from", students_word:"trainees",
-    pkg_basic_d:"Basic driving instruction and traffic rules", pkg_advanced_d:"Comprehensive course + intensive license training",
-    register:"Enroll now", choose_pkg:"Choose a package",
-    empty_t:"No schools in this city", empty_s:"Try a different city, or clear the search to see all available schools.", empty_btn:"Show all",
-    bk_pkg:"Selected package", bk_details:"Trainee details",
-    bk_name:"Full name", bk_name_ph:"e.g. Ahmed Ali", bk_phone:"Phone number", bk_phone_ph:"07XXXXXXXXX",
-    bk_age:"Age", bk_age_ph:"18", bk_gender:"Gender", gender_male:"Male", gender_female:"Female",
-    bk_notes:"Notes (optional)", bk_notes_ph:"Preferred time, prior experience, special needs...",
-    total:"Package price", confirm:"Confirm enrollment",
-    succ_t:"You're enrolled!", succ_s:"The school will contact you to schedule your course start and complete the paperwork.", order_no:"Enrollment number", wa_btn:"Contact via WhatsApp", done:"Browse more",
-    err_fields:"Please enter name and phone", err_phone:"Invalid phone number", err_net:"Connection failed, try again",
-    loading:"Loading..." }
+en:{dir:"ltr",flag:"🇬🇧",name:"English",
+  nav_partner:"Become a partner",nav_cars:"Cars",nav_hotels:"Hotels",nav_halls:"Halls",nav_schools:"Driving schools",nav_home:"Home",
+  page_t:"Driving Schools",page_s:"Certified courses with female instructors",
+  f_city:"City",f_search:"Search",ph_search:"Name or feature",f_date:"Date",f_days:"Days",f_nights:"Nights",f_guests:"Guests",
+  all:"All",results:"available",loading:"Loading…",
+  empty_t:"No results in this city",empty_p:"Try another city or clear the filters. We add new partners regularly.",
+  empty_b:"Show all cities",err_t:"Could not load",err_p:"Check your connection and try again.",err_b:"Retry",
+  u_day:"/ day",u_night:"/ night",u_course:"per course",iqd:"IQD",from:"from",
+  book:"Book now",details:"Details",features:"Features",about:"About",location:"Location",openmap:"Open in Maps",
+  items_car:"Available fleet",items_hotel:"Available rooms",items_hall:"Packages",items_school:"Courses",
+  no_items:"Nothing available right now",
+  form_t:"Complete booking",f_name:"Full name",f_phone:"Phone number",f_nid:"ID number",f_notes:"Notes",
+  ph_name:"As in your ID",ph_phone:"07XX XXX XXXX",ph_nid:"Optional",ph_notes:"Any special request…",
+  total:"Estimated total",send:"Confirm request",
+  note_wa:"After confirming, WhatsApp opens with a ready message. The provider confirms the final price.",
+  e_name:"Enter your full name",e_phone:"Invalid phone number",e_date:"Pick a date",
+  ok_t:"Request received 🎉",ok_p:"Keep your request number. The provider will contact you shortly.",ok_wa:"Send via WhatsApp",
+  sending:"Sending…",fail:"Could not send — try again",
+  footer_desc:"Your #1 platform in Iraq for cars, hotels, wedding halls, and driving schools.",footer_services:"Services",footer_company:"Platform"}
 };
 
 let LANG = "ar";
-
-/* ═══════════════ STATE ═══════════════ */
-let allSchools = [];
-let pkgFilter = "";
-let favorites = new Set();
-let bookCtx = null;
-
-/* ═══════════════ HELPERS ═══════════════ */
-const $ = id => document.getElementById(id);
-const cleanN = v => { const n=Number(String(v||"").replace(/[^\d.-]/g,"")); return isNaN(n)?0:n; };
 const T = k => (I18N[LANG][k] ?? I18N.ar[k] ?? k);
-function fmt(n){ return Math.round(cleanN(n)).toLocaleString(LANG==="ar"||LANG==="ku"?"ar-EG":"en-US"); }
-function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
-function normPhone(p){ p=String(p||"").replace(/\D/g,""); if(p.startsWith("00964"))p=p.slice(2); if(p.startsWith("0"))p="964"+p.slice(1); else if(p.startsWith("7"))p="964"+p; return p; }
-function validPhone(p){ const n=normPhone(p); return n.length>=12 && n.startsWith("9647"); }
+
+/* ═══════════ الحالة ═══════════ */
+let S = {city:"", cat:"", q:"", date:"", qty:1, data:[], loading:true, err:false, cur:null, curItem:null};
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = n => (Number(n)||0).toLocaleString("en-US");
+const fbKey = s => String(s||"").replace(/[.#$/[\]\s]/g,"_");
+const nP = p => { let c=String(p||"").replace(/\D/g,""); if(c.startsWith("964"))c=c.slice(3); if(c.startsWith("0"))c=c.slice(1); return c; };
 
 function toast(msg, err){
-  const w=$("toast-wrap");
-  const el=document.createElement("div");
+  const w=$("toast-wrap"), el=document.createElement("div");
   el.className="toast"+(err?" err":"");
   el.innerHTML=`<span>${err?"⚠️":"✅"}</span><span>${esc(msg)}</span>`;
   w.appendChild(el);
-  setTimeout(()=>{el.style.opacity="0";el.style.transition=".3s";setTimeout(()=>el.remove(),300);},3200);
+  setTimeout(()=>{el.style.opacity="0";el.style.transition=".3s";setTimeout(()=>el.remove(),300);},3000);
 }
 
-/* ═══════════════ LANGUAGE ═══════════════ */
+/* ═══════════ اللغة ═══════════ */
 window.toggleLangMenu = e => { e.stopPropagation(); $("lang-menu").classList.toggle("open"); };
 document.addEventListener("click", ()=>$("lang-menu")?.classList.remove("open"));
 
@@ -491,275 +449,446 @@ window.setLang = function(lang){
   $("lang-flag").textContent = cfg.flag;
   $("lang-name").textContent = cfg.name;
   document.querySelectorAll(".lang-opt").forEach(o=>o.classList.remove("on"));
-  event?.target?.closest(".lang-opt")?.classList.add("on");
-  document.querySelectorAll("[data-i18n]").forEach(el=>{ const k=el.getAttribute("data-i18n"); if(I18N[lang][k]!==undefined) el.textContent=I18N[lang][k]; });
-  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{ const k=el.getAttribute("data-i18n-ph"); if(I18N[lang][k]!==undefined) el.placeholder=I18N[lang][k]; });
+  document.querySelectorAll(".lang-opt").forEach(o=>{ if(o.getAttribute("onclick")==="setLang('"+lang+"')") o.classList.add("on"); });
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const k=el.getAttribute("data-i18n");
+    if(I18N[lang][k]!==undefined) el.textContent=I18N[lang][k];
+  });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{
+    const k=el.getAttribute("data-i18n-ph");
+    if(I18N[lang][k]!==undefined) el.placeholder=I18N[lang][k];
+  });
   try{ localStorage.setItem("hut_lang", lang); }catch(e){}
   $("lang-menu").classList.remove("open");
-  renderSchools();
-  if(bookCtx) openBook(bookCtx.school.id);
+  renderCitySelect();
+  renderCats();
+  render();
 };
 
-/* ═══════════════ INIT ═══════════════ */
-function initControls(){
-  const sel=$("searchCity");
-  const params=new URLSearchParams(location.search);
-  sel.innerHTML = CITIES.map(c=>`<option value="${c}">${c}</option>`).join("");
-  const urlCity=params.get("city");
-  if(urlCity && CITIES.includes(urlCity)) sel.value=urlCity;
-  let saved="ar"; try{ saved=localStorage.getItem("hut_lang")||params.get("lang")||"ar"; }catch(e){ saved=params.get("lang")||"ar"; }
-  if(I18N[saved]) setLang(saved);
+function renderCitySelect(){
+  $("citySel").innerHTML = `<option value="">${esc(T("all"))}</option>` +
+    CITIES.map(c=>`<option value="${esc(c.key)}">${c.ic} ${esc(c[LANG]||c.ar)}</option>`).join("");
+  $("citySel").value = S.city;
 }
 
-async function loadSchools(){
-  const city=$("searchCity").value;
-  $("cityName").textContent=city;
-  $("schoolGrid").innerHTML=Array(6).fill(`<div class="sk"><div class="sk-img"></div><div class="sk-line" style="width:70%"></div><div class="sk-line" style="width:45%"></div></div>`).join("");
+function renderCats(){
+  $("cats").innerHTML = `<button class="cat ${S.cat?"":"on"}" onclick="pickCat('')">${esc(T("all"))}</button>` +
+    C.cats.map(c=>`<button class="cat ${S.cat===c?"on":""}" onclick="pickCat('${esc(c)}')">${esc(c)}</button>`).join("");
+}
+window.pickCat = c => { S.cat = c; renderCats(); render(); };
+
+let dT=null;
+window.debounced = () => { clearTimeout(dT); dT=setTimeout(()=>{ S.q=$("qIn").value.trim(); render(); },250); };
+window.applyFilters = () => { S.city = $("citySel").value; load(); };
+
+/* ═══════════ التحميل من Firebase ═══════════
+   عقدة catalog مقروءة علناً وتحمل بيانات الأنشطة فقط — لا زبائن ولا
+   أسعار داخلية. لذلك لا نحتاج SDK ولا مصادقة، مجرد fetch. */
+async function load(){
+  S.loading = true; S.err = false; render();
   try{
-    const res=await fetch(`${API_URL}?action=getSchoolsForCity&city=${encodeURIComponent(city)}&token=${API_TOKEN}&_t=${Date.now()}`);
-    const data=await res.json();
-    allSchools=Array.isArray(data)?data:(data.schools||data.driveSchools||[]);
-    renderSchools();
+    let list = [];
+    if(S.city){
+      const r = await fetch(`${FB_URL}/catalog/${SECTOR}/${encodeURIComponent(fbKey(S.city))}.json`);
+      const d = await r.json();
+      list = d ? Object.keys(d).map(k=>d[k]) : [];
+    }else{
+      const r = await fetch(`${FB_URL}/catalog/${SECTOR}.json`);
+      const d = await r.json();
+      if(d) Object.keys(d).forEach(city=>{
+        const node = d[city] || {};
+        Object.keys(node).forEach(k=>list.push(node[k]));
+      });
+    }
+    S.data = list.filter(p=>p && p.id);
+    S.loading = false;
+    render();
   }catch(e){
-    allSchools=[];
-    $("schoolGrid").innerHTML=`<div class="empty"><div class="empty-ic">📡</div><div class="empty-t">${T("err_net")}</div><div class="empty-s">${T("empty_s")}</div></div>`;
-  }finally{
-    setTimeout(()=>$("splash").classList.add("gone"),350);
+    S.loading = false; S.err = true; render();
   }
 }
 
-window.applySearch = function(){
-  pkgFilter=$("searchPkg").value;
-  loadSchools();
-  document.querySelector(".sec")?.scrollIntoView({behavior:"smooth",block:"start"});
-};
+/* ═══════════ العرض ═══════════ */
+function partnerCity(p){
+  const c = CITIES.find(x=>x.key===p.city);
+  return c ? (c[LANG]||c.ar) : (p.city||"");
+}
 
-/* ═══════════════ RENDER SCHOOLS ═══════════════ */
-function renderSchools(){
-  const grid=$("schoolGrid");
-  const q=($("miniSearch")?.value||"").toLowerCase().trim();
-  let list=allSchools.slice();
-  if(pkgFilter==="basic")    list=list.filter(s=>cleanN(s.price_basic)>0);
-  if(pkgFilter==="advanced") list=list.filter(s=>cleanN(s.price_advanced)>0);
-  if(q) list=list.filter(s=>String(s.name).toLowerCase().includes(q));
+function flatten(){
+  /* السيارات: نفرد العناصر لتظهر كل سيارة بطاقة مستقلة */
+  if(C.primary !== "items") return S.data.slice();
+  const out = [];
+  S.data.forEach(p=>(p.items||[]).forEach(it=>{
+    out.push(Object.assign({}, it, {_p:p}));
+  }));
+  return out;
+}
 
-  $("countNum").textContent=list.length;
-  $("tCount").textContent=allSchools.length;
+function matches(x){
+  const q = S.q.toLowerCase();
+  if(S.cat){
+    if(C.primary==="items"){ if(String(x.type||"") !== S.cat) return false; }
+    else{
+      const cat = (x.specs||{}).cat;
+      const hasType = (x.items||[]).some(i=>String(i.type||"")===S.cat);
+      if(String(cat||"") !== S.cat && !hasType) return false;
+    }
+  }
+  if(!q) return true;
+  const hay = C.primary==="items"
+    ? [x.name, x.type, x._p.name, x._p.area, JSON.stringify(x.features||[]), JSON.stringify(x.specs||{})]
+    : [x.name, x.area, x.desc, JSON.stringify(x.features||[]), (x.items||[]).map(i=>i.name).join(" ")];
+  return hay.join(" ").toLowerCase().includes(q);
+}
 
-  if(!list.length){
-    grid.innerHTML=`<div class="empty"><div class="empty-ic">🎓</div><div class="empty-t">${T("empty_t")}</div><div class="empty-s">${T("empty_s")}</div><button class="empty-btn" onclick="clearFilters()">${T("empty_btn")}</button></div>`;
+function render(){
+  const g = $("grid"), cnt = $("count");
+
+  if(S.loading){
+    cnt.textContent = T("loading");
+    g.innerHTML = Array(6).fill(`<div class="skel"><div class="a"></div><div class="b"><div class="l"></div><div class="l s"></div></div></div>`).join("");
+    return;
+  }
+  if(S.err){
+    cnt.textContent = "";
+    g.innerHTML = `<div class="state" style="grid-column:1/-1"><div class="i">📡</div>
+      <b>${esc(T("err_t"))}</b><p>${esc(T("err_p"))}</p>
+      <button class="btn" onclick="load()">${esc(T("err_b"))}</button></div>`;
     return;
   }
 
-  grid.innerHTML=list.map((s,i)=>{
-    const img = s.photo_url
-      ? `<img class="card-img" src="${esc(s.photo_url)}" alt="${esc(s.name)}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\\'card-noimg\\'>🎓</div>'">`
-      : `<div class="card-noimg">🚗</div>`;
-    const fav=favorites.has(String(s.id))?"on":"";
-    const feats=String(s.features||"").split(/[,،]/).map(x=>x.trim()).filter(Boolean).slice(0,3);
-    const featHtml=feats.length
-      ? `<div class="feats">${feats.map(f=>`<span class="feat">✦ ${esc(f)}</span>`).join("")}</div>`
-      : `<div class="feats"><span class="feat">🎓 ${T("schools_word")}</span><span class="feat">✓ ${T("trust_certified")}</span></div>`;
-    const pb=cleanN(s.price_basic), pa=cleanN(s.price_advanced);
-    return `
-    <article class="card" style="animation-delay:${Math.min(i*55,500)}ms">
-      <div class="card-img-wrap">
-        ${img}
-        <span class="card-badge">🎓 ${T("schools_word")}</span>
-        <button class="card-fav ${fav}" onclick="toggleFav('${esc(s.id)}',this)" aria-label="favorite">♥</button>
-        <span class="card-city-chip">📍 ${esc(s.city)}</span>
-      </div>
-      <div class="card-body">
-        <h3 class="card-name">${esc(s.name)}</h3>
-        ${featHtml}
-        <div class="pkg-row">
-          <div class="pkg"><div class="pkg-name">📘 ${T("pkg_basic")}</div><div class="pkg-price">${pb>0?fmt(pb):"—"} <span class="cur">${T("cur")}</span></div></div>
-          <div class="pkg adv"><div class="pkg-name">📗 ${T("pkg_advanced")}</div><div class="pkg-price">${pa>0?fmt(pa):"—"} <span class="cur">${T("cur")}</span></div></div>
-        </div>
-      </div>
-      <div class="card-foot">
-        <div class="foot-hint">📞 ${esc(s.phone||"—")}</div>
-        <button class="btn-book" onclick="openBook('${esc(s.id)}')">${T("register")}</button>
-      </div>
-    </article>`;
-  }).join("");
+  const list = flatten().filter(matches);
+  cnt.innerHTML = `<b>${list.length}</b> ${esc(T("results"))}`;
+
+  if(!list.length){
+    g.innerHTML = `<div class="state" style="grid-column:1/-1"><div class="i">${C.icon}</div>
+      <b>${esc(T("empty_t"))}</b><p>${esc(T("empty_p"))}</p>
+      ${S.city?`<button class="btn" onclick="clearCity()">${esc(T("empty_b"))}</button>`:""}</div>`;
+    return;
+  }
+
+  g.innerHTML = list.map((x,i)=> C.primary==="items" ? itemCard(x,i) : partnerCard(x,i)).join("");
 }
 
-window.clearFilters = function(){
-  pkgFilter=""; $("miniSearch").value=""; $("searchPkg").value="";
-  renderSchools();
-};
-window.toggleFav = function(id, btn){
-  id=String(id);
-  if(favorites.has(id)){ favorites.delete(id); btn.classList.remove("on"); }
-  else { favorites.add(id); btn.classList.add("on"); }
-};
+window.clearCity = () => { S.city=""; $("citySel").value=""; load(); };
 
-/* ═══════════════ ENROLLMENT FLOW ═══════════════ */
-function openBook(schoolId){
-  const school=allSchools.find(s=>String(s.id)===String(schoolId));
-  if(!school) return;
-  const pb=cleanN(school.price_basic), pa=cleanN(school.price_advanced);
-  // الباقة الافتراضية: أول باقة متاحة (تحترم فلتر البحث)
-  let defPkg = pkgFilter || (pb>0?"basic":"advanced");
-  if(defPkg==="basic" && pb<=0) defPkg="advanced";
-  if(defPkg==="advanced" && pa<=0 && pb>0) defPkg="basic";
-  bookCtx={ school, pkg:defPkg, gender:"male" };
-
-  const img = school.photo_url
-    ? `<img src="${esc(school.photo_url)}" alt="${esc(school.name)}" onerror="this.parentNode.innerHTML='<div class=\\'modal-hero-noimg\\'>🎓</div>'">`
-    : `<div class="modal-hero-noimg">🎓</div>`;
-
-  // بطاقات الباقات (فقط المتاحة)
-  let pkgOpts="";
-  if(pb>0){
-    pkgOpts+=`<div class="pkg-opt ${defPkg==="basic"?"on":""}" id="pkg-basic" onclick="selectPkg('basic')">
-      <div class="pkg-opt-ic">📘</div>
-      <div class="pkg-opt-info"><div class="pkg-opt-name">${T("pkg_basic")}</div><div class="pkg-opt-desc">${T("pkg_basic_d")}</div></div>
-      <div class="pkg-opt-price"><div class="amt">${fmt(pb)}</div><div class="cur">${T("cur")}</div></div>
-      <div class="pkg-radio"></div>
-    </div>`;
-  }
-  if(pa>0){
-    pkgOpts+=`<div class="pkg-opt ${defPkg==="advanced"?"on":""}" id="pkg-advanced" onclick="selectPkg('advanced')">
-      <span class="best-tag">★ ${T("pkg_advanced")}</span>
-      <div class="pkg-opt-ic">📗</div>
-      <div class="pkg-opt-info"><div class="pkg-opt-name">${T("pkg_advanced")}</div><div class="pkg-opt-desc">${T("pkg_advanced_d")}</div></div>
-      <div class="pkg-opt-price"><div class="amt">${fmt(pa)}</div><div class="cur">${T("cur")}</div></div>
-      <div class="pkg-radio"></div>
-    </div>`;
-  }
-
-  $("bookContent").innerHTML=`
-    <div class="modal-hero">
-      ${img}
-      <button class="modal-close" onclick="closeBook()" aria-label="close">✕</button>
-      <div class="modal-hero-info">
-        <h3>${esc(school.name)}</h3>
-        <div class="loc">📍 ${esc(school.city)}</div>
-      </div>
+function itemCard(it, i){
+  const p = it._p, s = it.specs||{};
+  const bits = [];
+  if(s.year)  bits.push(s.year);
+  if(s.trans) bits.push(s.trans);
+  if(s.seats) bits.push(s.seats + " مقاعد");
+  if(s.fuel)  bits.push(s.fuel);
+  const img = it.cover || (it.media&&it.media[0]&&it.media[0].u) || "";
+  return `<article class="card" onclick="openItem('${esc(p.id)}','${esc(it.id)}')">
+    <div class="card-img">
+      ${img?`<img src="${esc(img)}" alt="${esc(it.name)}" loading="${i<4?"eager":"lazy"}">`:`<div class="ph">${C.icon}</div>`}
+      ${it.type?`<span class="card-tag">${esc(it.type)}</span>`:""}
+      ${(it.media&&it.media.length>1)?`<span class="card-n">📷 ${it.media.length}</span>`:""}
     </div>
-    <div class="modal-body">
-      <div class="modal-sec-title">🎯 ${T("choose_pkg")}</div>
-      <div class="pkg-select">${pkgOpts}</div>
-
-      <div class="modal-sec-title">📝 ${T("bk_details")}</div>
-      <div class="field">
-        <label class="field-lbl">${T("bk_name")}</label>
-        <input type="text" class="field-input" id="bkName" placeholder="${T("bk_name_ph")}">
+    <div class="card-b">
+      <div class="card-t">${esc(it.name)}</div>
+      <div class="card-s">${esc(p.name)} · ${esc(p.area||partnerCity(p))}</div>
+      <div class="card-f">${bits.slice(0,3).map(b=>`<span>${esc(b)}</span>`).join("")}</div>
+      <div class="card-foot">
+        <div class="price"><b class="mono">${money(it.price)}</b><small>${esc(T("iqd"))} ${esc(T(C.unitKey))}</small></div>
+        <span class="card-go">${esc(T("book"))}</span>
       </div>
-      <div class="field">
-        <label class="field-lbl">${T("bk_phone")}</label>
-        <input type="tel" class="field-input mono" id="bkPhone" placeholder="${T("bk_phone_ph")}" dir="ltr">
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label class="field-lbl">${T("bk_age")}</label>
-          <input type="number" class="field-input" id="bkAge" placeholder="${T("bk_age_ph")}" min="16" max="90">
-        </div>
-        <div class="field">
-          <label class="field-lbl">${T("bk_gender")}</label>
-          <div class="gender-row">
-            <div class="gender-opt on" id="gender-male" onclick="selectGender('male')">👨 ${T("gender_male")}</div>
-            <div class="gender-opt" id="gender-female" onclick="selectGender('female')">👩 ${T("gender_female")}</div>
-          </div>
-        </div>
-      </div>
-      <div class="field">
-        <label class="field-lbl">${T("bk_notes")}</label>
-        <textarea class="field-input" id="bkNotes" placeholder="${T("bk_notes_ph")}"></textarea>
-      </div>
-      <div class="total-bar">
-        <div><div class="lbl">${T("total")}</div><div class="sub" id="pkgLabel">—</div></div>
-        <span class="amt" id="bkTotal">0 <span class="cur">${T("cur")}</span></span>
-      </div>
-      <button class="btn-confirm" id="bkConfirm" onclick="submitEnroll()">🎓 ${T("confirm")}</button>
-    </div>`;
-
-  calcTotal();
-  $("bookModal").classList.add("open");
-  document.body.style.overflow="hidden";
-}
-window.openBook=openBook;
-
-window.selectPkg=function(pkg){
-  if(!bookCtx) return;
-  bookCtx.pkg=pkg;
-  document.querySelectorAll(".pkg-opt").forEach(o=>o.classList.remove("on"));
-  $("pkg-"+pkg)?.classList.add("on");
-  calcTotal();
-};
-window.selectGender=function(g){
-  if(!bookCtx) return;
-  bookCtx.gender=g;
-  document.querySelectorAll(".gender-opt").forEach(o=>o.classList.remove("on"));
-  $("gender-"+g)?.classList.add("on");
-};
-function calcTotal(){
-  if(!bookCtx) return 0;
-  const price = bookCtx.pkg==="advanced" ? cleanN(bookCtx.school.price_advanced) : cleanN(bookCtx.school.price_basic);
-  $("bkTotal").innerHTML=`${fmt(price)} <span class="cur">${T("cur")}</span>`;
-  $("pkgLabel").textContent = bookCtx.pkg==="advanced" ? T("pkg_advanced") : T("pkg_basic");
-  return price;
+    </div></article>`;
 }
 
-window.closeBook=function(){ $("bookModal").classList.remove("open"); document.body.style.overflow=""; bookCtx=null; };
+function partnerCard(p, i){
+  const s = p.specs||{};
+  const bits = (p.features||[]).slice(0,3);
+  const img = p.cover || (p.media&&p.media[0]&&p.media[0].u) || "";
+  const price = p.min_price && p.min_price < 999999999 ? p.min_price : 0;
+  const stars = s.stars ? "⭐".repeat(Math.min(5, parseInt(s.stars)||0)) : "";
+  return `<article class="card" onclick="openPartner('${esc(p.id)}')">
+    <div class="card-img">
+      ${img?`<img src="${esc(img)}" alt="${esc(p.name)}" loading="${i<4?"eager":"lazy"}">`:`<div class="ph">${C.icon}</div>`}
+      ${stars?`<span class="card-tag">${stars}</span>`:(s.cat?`<span class="card-tag">${esc(s.cat)}</span>`:"")}
+      ${p.item_count?`<span class="card-n">${p.item_count} ${esc(T("items_"+SECTOR).split(" ")[0])}</span>`:""}
+    </div>
+    <div class="card-b">
+      <div class="card-t">${esc(p.name)}</div>
+      <div class="card-s">${esc(p.area||"")} ${p.area?"·":""} ${esc(partnerCity(p))}</div>
+      <div class="card-f">${bits.map(b=>`<span>${esc(b)}</span>`).join("")}</div>
+      <div class="card-foot">
+        ${price?`<div class="price"><small>${esc(T("from"))}</small><b class="mono">${money(price)}</b><small>${esc(T("iqd"))}</small></div>`
+               :`<div class="price"><small>${esc(T("details"))}</small></div>`}
+        <span class="card-go">${esc(T("book"))}</span>
+      </div>
+    </div></article>`;
+}
 
-window.submitEnroll=async function(){
-  if(!bookCtx) return;
-  const name=$("bkName").value.trim();
-  const phone=$("bkPhone").value.trim();
-  if(!name||!phone){ toast(T("err_fields"),true); return; }
-  if(!validPhone(phone)){ toast(T("err_phone"),true); $("bkPhone").focus(); return; }
+/* ═══════════ التفاصيل ═══════════ */
+function findPartner(id){ return S.data.find(p=>String(p.id)===String(id)); }
 
-  const btn=$("bkConfirm");
-  btn.classList.add("loading"); btn.disabled=true;
-  const price=calcTotal();
-  const pkgName = bookCtx.pkg==="advanced" ? T("pkg_advanced") : T("pkg_basic");
+window.openItem = function(pid, iid){
+  const p = findPartner(pid);
+  if(!p) return;
+  const it = (p.items||[]).find(x=>String(x.id)===String(iid));
+  if(!it) return;
+  S.cur = p; S.curItem = it;
+  showDetail(p, it);
+};
 
-  const payload={
-    action:"NEW_DRIVE_STUDENT",
-    token:API_TOKEN,
-    name, phone,
-    school_name:bookCtx.school.name,
-    school_id:bookCtx.school.id,
-    city:bookCtx.school.city,
-    package:bookCtx.pkg,
-    package_name:pkgName,
-    price,
-    total_price:price,
-    age:$("bkAge").value.trim(),
-    gender:T("gender_"+bookCtx.gender),
-    notes:$("bkNotes").value.trim(),
-    source:"web_schools"
+window.openPartner = function(pid){
+  const p = findPartner(pid);
+  if(!p) return;
+  S.cur = p; S.curItem = null;
+  showDetail(p, null);
+};
+
+function specRows(obj, only){
+  const LBL = {
+    year:"سنة الصنع",trans:"ناقل الحركة",fuel:"الوقود",engine:"المحرك",seats:"عدد الركاب",
+    color:"اللون",km_limit:"حدّ الكيلومترات",deposit:"التأمين",price_week:"سعر الأسبوع",price_month:"سعر الشهر",
+    stars:"النجوم",cat:"الفئة",rooms_count:"عدد الغرف",checkin:"الدخول",checkout:"الخروج",
+    breakfast:"إفطار مشمول",parking:"الموقف",extra_bed:"سرير إضافي",child_free:"مجاني للأطفال حتى",
+    beds:"الأسرّة",max_guests:"أقصى عدد",size_m2:"المساحة",view:"الإطلالة",price_weekend:"سعر نهاية الأسبوع",
+    cap_min:"أقل عدد ضيوف",cap_max:"أقصى عدد ضيوف",price_night:"سعر السهرة",catering:"الضيافة",
+    meal_price:"سعر الوجبة",sound:"الصوت والإضاءة",deposit_pct:"العربون",hours:"المدة",
+    license:"أنواع الإجازات",instructors:"عدد المدرّبين",female_inst:"مدرّبات نساء",cars_count:"سيارات التدريب",
+    pickup:"نقل من البيت",pickup_fee:"أجرة النقل",theory:"دروس نظرية",exam_help:"مرافقة الامتحان",
+    gov_fee:"رسوم الدائرة",level:"المستوى",lessons:"عدد الدروس",days:"مدة الكورس",car_type:"نوع السيارة",
+    age_min:"أقل عمر",gender:"مخصّص لـ",min_guests:"أقل عدد ضيوف",per_person:"السعر للفرد",
+    payment:"طرق الدفع",smoking:"التدخين",floor:"الطابق"
   };
+  const out = [];
+  Object.keys(obj||{}).forEach(k=>{
+    if(only && only.indexOf(k) === -1) return;
+    let v = obj[k];
+    if(v === "" || v === null || v === undefined) return;
+    if(Array.isArray(v)){ if(!v.length) return; v = v.join("، "); }
+    if(v === true) v = "نعم";
+    if(v === false) return;
+    out.push(`<div><dt>${esc(LBL[k]||k)}</dt><dd>${esc(v)}</dd></div>`);
+  });
+  return out.join("");
+}
+
+function showDetail(p, it){
+  const media = it ? (it.media||[]) : (p.media||[]);
+  const title = it ? it.name : p.name;
+  const price = it ? it.price : (p.min_price && p.min_price<999999999 ? p.min_price : 0);
+  const s = it ? (it.specs||{}) : (p.specs||{});
+  const feats = it ? (it.features||[]) : (p.features||[]);
+
+  const mapHtml = (p.lat && p.lng) ? `
+    <div class="blk"><h4>${esc(T("location"))}</h4>
+      <div class="mapbox"><iframe loading="lazy" title="map"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=${p.lng-0.004},${p.lat-0.004},${p.lng+0.004},${p.lat+0.004}&layer=mapnik&marker=${p.lat},${p.lng}"></iframe></div>
+      <p style="font-size:.82rem;font-weight:700;color:var(--tx2)">${esc(p.address||"")}</p>
+      <a href="https://www.google.com/maps?q=${p.lat},${p.lng}" target="_blank" rel="noopener"
+         style="display:inline-block;margin-top:8px;font-size:.8rem;font-weight:900;color:var(--red)">${esc(T("openmap"))} ←</a>
+    </div>` : "";
+
+  const itemsHtml = (!it && (p.items||[]).length) ? `
+    <div class="blk"><h4>${esc(T("items_"+SECTOR))}</h4>
+      ${(p.items||[]).map(x=>{
+        const im = x.cover || (x.media&&x.media[0]&&x.media[0].u) || "";
+        return `<button class="item" onclick="pickItem('${esc(x.id)}')">
+          ${im?`<img src="${esc(im)}" alt="" loading="lazy">`:`<div class="ph">${C.icon}</div>`}
+          <div class="m"><b>${esc(x.name)}</b><span>${esc(x.type||"")}</span></div>
+          <div class="p mono">${money(x.price)}</div>
+        </button>`;
+      }).join("")}
+    </div>` : (!it ? `<div class="blk"><p style="color:var(--tx3)">${esc(T("no_items"))}</p></div>` : "");
+
+  sheet(title, `
+    ${media.length?`<div class="gal">${media.slice(0,12).map(m=>
+      `<div class="k"><img src="${esc(m.u||m.url)}" alt="" loading="lazy">${m.k?`<span>${esc(m.k)}</span>`:""}</div>`).join("")}</div>`:""}
+    <div style="font-size:.82rem;font-weight:700;color:var(--tx2);margin-bottom:14px">
+      ${it?esc(p.name)+" · ":""}${esc(p.area||"")} ${p.area?"·":""} ${esc(partnerCity(p))}
+    </div>
+    ${(p.desc && !it)?`<div class="blk"><h4>${esc(T("about"))}</h4><p>${esc(p.desc)}</p></div>`:""}
+    ${(it && it.desc)?`<div class="blk"><h4>${esc(T("about"))}</h4><p>${esc(it.desc)}</p></div>`:""}
+    ${specRows(s)?`<div class="spec">${specRows(s)}</div>`:""}
+    ${feats.length?`<div class="blk"><h4>${esc(T("features"))}</h4>
+      <div class="chips">${feats.map(f=>`<span>${esc(f)}</span>`).join("")}</div></div>`:""}
+    ${itemsHtml}
+    ${mapHtml}
+    <div class="bar">
+      <div class="p">
+        ${price?`<b class="mono">${money(price)} <span style="font-size:.8rem">${esc(T("iqd"))}</span></b>
+                 <small>${esc(T(C.unitKey))}</small>`:`<b style="font-size:.95rem">${esc(T("book"))}</b>`}
+      </div>
+      <button class="go" onclick="openForm()">${esc(T("book"))}</button>
+    </div>`);
+}
+
+window.pickItem = function(iid){
+  const it = (S.cur.items||[]).find(x=>String(x.id)===String(iid));
+  if(!it) return;
+  S.curItem = it;
+  showDetail(S.cur, it);
+};
+
+/* ═══════════ الاستمارة ═══════════ */
+window.openForm = function(){
+  const p = S.cur, it = S.curItem;
+  const unit = it ? it.price : (p.min_price && p.min_price<999999999 ? p.min_price : 0);
+  const qtyField = C.qtyKey ? `
+    <div class="fld"><label data-i18n="${C.qtyKey}">${esc(T(C.qtyKey))}</label>
+      <input id="fQty" type="number" min="1" max="${SECTOR==="hall"?"2000":"90"}" value="${SECTOR==="hall"?"200":"1"}" oninput="calcTotal()"></div>` : "";
+
+  sheet(T("form_t"), `
+    <div class="fld"><label>${esc(T("f_name"))} <i>*</i></label>
+      <input id="fName" placeholder="${esc(T("ph_name"))}" autocomplete="name"></div>
+    <div class="fld"><label>${esc(T("f_phone"))} <i>*</i></label>
+      <input id="fPhone" class="tel" type="tel" inputmode="numeric" placeholder="${esc(T("ph_phone"))}" autocomplete="tel"></div>
+    <div class="two">
+      <div class="fld"><label>${esc(T("f_date"))} <i>*</i></label>
+        <input id="fDate" type="date" value="${esc(S.date||todayStr())}" min="${todayStr()}"></div>
+      ${qtyField}
+    </div>
+    ${SECTOR==="car"||SECTOR==="hotel"?`<div class="fld"><label>${esc(T("f_nid"))}</label>
+      <input id="fNid" placeholder="${esc(T("ph_nid"))}" inputmode="numeric"></div>`:""}
+    <div class="fld"><label>${esc(T("f_notes"))}</label>
+      <textarea id="fNotes" placeholder="${esc(T("ph_notes"))}"></textarea></div>
+    ${unit?`<div class="total"><span>${esc(T("total"))}</span><b class="mono" id="fTotal">${money(unit)} ${esc(T("iqd"))}</b></div>`:""}
+    <div class="note">${esc(T("note_wa"))}</div>
+    <button class="wa" id="fSend" style="background:var(--red-g);box-shadow:var(--sh-red)" onclick="submitOrder()">${esc(T("send"))}</button>`);
+
+  setTimeout(()=>{ $("fName")?.focus(); }, 320);
+};
+
+function todayStr(){ return new Date().toISOString().split("T")[0]; }
+
+window.calcTotal = function(){
+  const el = $("fTotal");
+  if(!el) return;
+  const it = S.curItem;
+  const unit = it ? it.price : (S.cur.min_price||0);
+  const q = SECTOR==="hall" ? 1 : Math.max(1, parseInt(($("fQty")||{}).value)||1);
+  el.textContent = money(unit*q) + " " + T("iqd");
+};
+
+async function submitOrder(){
+  const p = S.cur, it = S.curItem;
+  const name  = ($("fName").value||"").trim();
+  const phone = nP($("fPhone").value);
+  const date  = ($("fDate").value||"").trim();
+  const qty   = Math.max(1, parseInt(($("fQty")||{}).value)||1);
+  const nid   = ($("fNid")||{}).value || "";
+  const notes = ($("fNotes")||{}).value || "";
+
+  if(name.length < 3)   return toast(T("e_name"), true);
+  if(phone.length < 9)  return toast(T("e_phone"), true);
+  if(!date)             return toast(T("e_date"), true);
+
+  const unit  = it ? it.price : (p.min_price||0);
+  const total = SECTOR==="hall" ? unit : unit*qty;
+
+  const body = {token:TOKEN, action:C.action, source:"web",
+    name:name, phone:phone, city:p.city, province:p.city, date:date,
+    total_price:total, national_id:nid, special_req:notes};
+
+  if(SECTOR==="car"){
+    body.car = it ? it.name : "";
+    body.days = qty;
+    body.service = "شخصي";
+    body.office = p.name;
+    body.partner_id = p.id;
+    body.addon_display = notes;
+  }else if(SECTOR==="hotel"){
+    body.hotel_name = p.name; body.hotel_id = p.id;
+    body.room_type = it ? (it.type||it.name) : "";
+    body.nights = qty; body.guests = (it && it.specs && it.specs.max_guests) || 1;
+  }else if(SECTOR==="hall"){
+    body.hall_name = p.name; body.hall_id = p.id;
+    body.event_type = it ? it.name : "مناسبة";
+    body.guests = qty;
+  }else{
+    body.school_id = p.id; body.school_name = p.name;
+    body.course = it ? it.name : "كورس";
+  }
+
+  const btn = $("fSend");
+  btn.innerHTML = `<span class="spin"></span> ${esc(T("sending"))}`;
+  btn.disabled = true;
 
   try{
-    const res=await fetch(API_URL,{method:"POST",body:JSON.stringify(payload)});
-    const d=await res.json();
-    if(d.success){ showSuccess(d.order_id || d.student_id); }
-    else { toast(d.msg||T("err_net"),true); btn.classList.remove("loading"); btn.disabled=false; }
-  }catch(e){ toast(T("err_net"),true); btn.classList.remove("loading"); btn.disabled=false; }
-};
-
-function showSuccess(orderId){
-  const waMsg=encodeURIComponent(`${T("succ_t")} ${orderId||""} — ${bookCtx.school.name}`);
-  $("bookContent").innerHTML=`
-    <div class="success-wrap">
-      <div class="success-ring"><span class="success-check">🎉</span></div>
-      <div class="success-t">${T("succ_t")}</div>
-      <div class="success-s">${T("succ_s")}</div>
-      <div class="order-box"><div class="lbl">${T("order_no")}</div><div class="id mono">#${esc(orderId||"—")}</div></div>
-      <div class="success-acts">
-        <a class="btn-wa" href="https://wa.me/${WA_SUPPORT}?text=${waMsg}" target="_blank">💬 ${T("wa_btn")}</a>
-        <button class="btn-ghost" onclick="closeBook()">${T("done")}</button>
-      </div>
-    </div>`;
+    const r = await fetch(API, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify(body)});
+    const d = await r.json();
+    if(!d || !d.success) throw new Error((d&&d.msg)||T("fail"));
+    showSuccess(d.order_id, p, it, {name, phone, date, qty, total, notes});
+  }catch(e){
+    btn.innerHTML = esc(T("send"));
+    btn.disabled = false;
+    toast(e.message || T("fail"), true);
+  }
 }
 
-/* ═══════════════ BOOT ═══════════════ */
-initControls();
-loadSchools();
+function showSuccess(orderId, p, it, f){
+  const svc = it ? it.name : p.name;
+  const unitTxt = T(C.unitKey);
+  const lines = [
+    "🐋 منصة الحوت",
+    "طلب جديد #" + orderId,
+    "",
+    "الخدمة: " + svc,
+    "مقدّم الخدمة: " + p.name,
+    "المدينة: " + p.city + (p.area ? " — " + p.area : ""),
+    "التاريخ: " + f.date,
+    (C.qtyKey ? T(C.qtyKey) + ": " + f.qty : ""),
+    "الإجمالي التقديري: " + money(f.total) + " د.ع " + unitTxt,
+    "",
+    "الاسم: " + f.name,
+    "الهاتف: 0" + f.phone,
+    (f.notes ? "ملاحظات: " + f.notes : "")
+  ].filter(Boolean).join("\n");
+
+  const target = TEST_MODE ? TEST_PHONE : ("964" + nP(p.phone));
+  const link = "https://wa.me/" + target + "?text=" + encodeURIComponent(lines);
+
+  sheet(T("ok_t"), `
+    <div class="ok">
+      <div class="i">🎉</div>
+      <b>${esc(T("ok_t"))}</b>
+      <p>${esc(T("ok_p"))}</p>
+      <div class="id mono">#${esc(orderId)}</div>
+      <a class="wa" href="${link}" target="_blank" rel="noopener">
+        <span style="font-size:1.15rem">💬</span> ${esc(T("ok_wa"))}
+      </a>
+      ${TEST_MODE?`<p style="margin-top:14px;font-size:.72rem;color:var(--tx3)">
+        وضع التجربة: الرسالة تذهب لرقم الاختبار لا للشريك.</p>`:""}
+    </div>`);
+}
+
+/* ═══════════ الطبقة ═══════════ */
+function sheet(title, html){
+  $("sheetHost").innerHTML = `<div class="sheet" id="sh">
+    <div class="sheet-in" role="dialog" aria-modal="true">
+      <div class="sheet-x"><h3>${esc(title)}</h3>
+        <button onclick="closeSheet()" aria-label="close">✕</button></div>
+      <div class="sheet-b">${html}</div>
+    </div></div>`;
+  document.body.style.overflow = "hidden";
+  $("sh").onclick = e => { if(e.target.id==="sh") closeSheet(); };
+}
+window.closeSheet = function(){ $("sheetHost").innerHTML=""; document.body.style.overflow=""; };
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeSheet(); });
+
+window.addEventListener("scroll", ()=>{ $("nav").classList.toggle("scrolled", window.scrollY>10); });
+
+/* ═══════════ الإقلاع ═══════════ */
+(function init(){
+  const q = new URLSearchParams(location.search);
+  S.city = q.get("city") || "";
+  S.date = q.get("date") || "";
+  S.qty  = parseInt(q.get("days")||q.get("nights")||"1") || 1;
+
+  let saved = "ar";
+  try{ saved = q.get("lang") || localStorage.getItem("hut_lang") || "ar"; }catch(e){ saved = q.get("lang")||"ar"; }
+  if(!I18N[saved]) saved = "ar";
+  setLang(saved);
+
+  if(API.indexOf("ضع_")===0) toast("املأ API و TOKEN في أعلى الملف", true);
+  load();
+})();
 </script>
 </body>
 </html>

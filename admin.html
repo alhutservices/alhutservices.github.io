@@ -11,71 +11,81 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#FFFFFF; --bg-soft:#F7F7F7; --line:#DDDDDD; --line-soft:#EBEBEB;
-  --text:#222222; --text-2:#717171; --text-3:#A0A0A0;
-  --rose:#FF385C; --green:#008A05; --amber:#B35309; --red:#C13515;
-  --r-s:8px; --r-m:12px; --r-l:16px; --r-pill:999px;
-  --sh:0 2px 8px rgba(0,0,0,.08); --sh-up:0 6px 20px rgba(0,0,0,.14);
-  --ar:"Tajawal",system-ui,sans-serif; --num:"Poppins",ui-monospace,monospace;
-  --nav:66px;
+  --bg:#FFFFFF;--bg-soft:#F7F7F7;--bg-2:#F0F0EF;--line:#DDDDDD;--line-soft:#EBEBEB;
+  --text:#222222;--text-2:#717171;--text-3:#A0A0A0;
+  --rose:#FF385C;--green:#008A05;--amber:#B35309;--red:#C13515;--blue:#185FA5;
+  --r-s:8px;--r-m:12px;--r-l:16px;--r-p:999px;
+  --sh:0 2px 8px rgba(0,0,0,.08);--sh-up:0 6px 20px rgba(0,0,0,.14);
+  --ar:"Tajawal",system-ui,sans-serif;--num:"Poppins",ui-monospace,monospace;--nav:64px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:var(--ar);font-size:15px;line-height:1.6;
-  padding-bottom:calc(var(--nav) + env(safe-area-inset-bottom))}
-h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.01em}
+body{background:var(--bg);color:var(--text);font-family:var(--ar);font-size:15px;line-height:1.6}
+h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.01em}
 button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
 button{cursor:pointer;border:none;background:none}
 .num{font-family:var(--num);font-variant-numeric:tabular-nums}
 :focus-visible{outline:2px solid var(--text);outline-offset:2px;border-radius:6px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .hidden{display:none!important}
-.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px calc(var(--nav) + 24px)}
 
 .hdr{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--line-soft);padding-top:env(safe-area-inset-top)}
-.hdr-in{max-width:960px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:12px}
-.mark{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;flex:none}
-.mark em{font-style:normal;font-size:21px}
+.hdr-in{max-width:960px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.mark{font-size:20px;flex:none}
 .hdr-mid{flex:1;min-width:0}
 .hdr-mid b{display:block;font-size:15px}
-.hdr-mid span{font-size:12.5px;color:var(--text-2)}
-.ic{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
-  display:grid;place-items:center;font-size:17px;flex:none;transition:box-shadow .18s}
+.hdr-mid span{font-size:12px;color:var(--text-2)}
+.ic{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--bg);display:grid;place-items:center;font-size:16px;flex:none}
 .ic:hover{box-shadow:var(--sh)}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;vertical-align:1px;margin-inline-end:4px}
 .dot.off{background:var(--text-3)}
 
-.chips{display:flex;gap:8px;overflow-x:auto;padding:14px 0 6px;scrollbar-width:none}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{padding:8px 16px;border-radius:var(--r-pill);border:1px solid var(--line);background:var(--bg);
-  font-size:14px;white-space:nowrap;color:var(--text-2);transition:.15s}
+.chip{padding:7px 14px;border-radius:var(--r-p);border:1px solid var(--line);background:var(--bg);font-size:13.5px;white-space:nowrap;color:var(--text-2);transition:.15s;display:inline-flex;gap:6px;align-items:center}
 .chip.on{background:var(--text);color:#fff;border-color:var(--text);font-weight:500}
+.chip .n{font-family:var(--num);font-size:11.5px;opacity:.7}
 
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.search{position:relative;margin:12px 0 4px}
+.search input{width:100%;padding:13px 44px 13px 14px;border-radius:var(--r-p);border:1px solid var(--line);font-size:15px}
+.search input:focus{border-color:var(--text);outline:none;box-shadow:0 0 0 1px var(--text)}
+.search .i{position:absolute;inset-inline-end:16px;top:50%;transform:translateY(-50%);opacity:.4}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;margin:16px 0}
 .kpi{border:1px solid var(--line-soft);border-radius:var(--r-l);padding:16px}
 .kpi span{display:block;font-size:12.5px;color:var(--text-2);margin-bottom:4px}
 .kpi b{font-size:24px;font-family:var(--num);font-weight:600;letter-spacing:-.02em}
 .kpi small{display:block;font-size:12px;color:var(--text-3);margin-top:2px}
+.kpi.hot{border-color:var(--rose);background:#FFF7F8}
 
-.card{border:1px solid var(--line-soft);border-radius:var(--r-l);padding:18px;margin-bottom:14px;transition:box-shadow .2s}
+.card{border:1px solid var(--line-soft);border-radius:var(--r-l);padding:16px;margin-bottom:12px;transition:.2s}
 .card:hover{box-shadow:var(--sh)}
-.card-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
-.card-hd h3{font-size:16.5px;line-height:1.4}
+.card-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px}
+.card-hd h3{font-size:16px;line-height:1.4}
 .meta{font-size:12.5px;color:var(--text-3);font-family:var(--num)}
-.state{font-size:12px;padding:5px 11px;border-radius:var(--r-pill);white-space:nowrap;flex:none;font-weight:500;background:var(--bg-soft);color:var(--text-2)}
+.state{font-size:11.5px;padding:4px 10px;border-radius:var(--r-p);white-space:nowrap;flex:none;font-weight:500;background:var(--bg-soft);color:var(--text-2)}
 .state.wait{background:#FFF4E5;color:var(--amber)}
 .state.ok{background:#E9F5EA;color:var(--green)}
 .state.no{background:#FDEAE6;color:var(--red)}
-.dl{display:grid;grid-template-columns:1fr 1fr;gap:9px 18px;margin:14px 0}
-.dl div{display:flex;justify-content:space-between;gap:10px;font-size:14px;min-width:0;border-bottom:1px solid var(--line-soft);padding-bottom:7px}
+.dl{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;margin:12px 0}
+.dl div{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;min-width:0;border-bottom:1px solid var(--line-soft);padding-bottom:6px}
 .dl span{color:var(--text-2);flex:none}
 .dl b{font-weight:500;text-align:end;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sum{font-family:var(--num);font-weight:600}
 .tel{color:var(--rose);text-decoration:none;font-family:var(--num);font-weight:500}
 
-.acts{display:flex;gap:10px;flex-wrap:wrap}
-.btn{flex:1;min-width:110px;padding:12px 16px;border-radius:var(--r-s);font-weight:700;font-size:14.5px;
-  text-align:center;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.15s}
+.prow{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid var(--line-soft);border-radius:var(--r-m);margin-bottom:10px;background:var(--bg)}
+.prow:hover{box-shadow:var(--sh)}
+.prow img{width:56px;height:56px;border-radius:var(--r-s);object-fit:cover;background:var(--bg-2);flex:none}
+.prow .ph{width:56px;height:56px;border-radius:var(--r-s);background:var(--bg-2);display:grid;place-items:center;font-size:20px;opacity:.45;flex:none}
+.prow .mid{flex:1;min-width:0}
+.prow .mid b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow .mid span{display:block;font-size:12.5px;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pct{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-family:var(--num);font-weight:600}
+
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn{flex:1;min-width:100px;padding:11px 14px;border-radius:var(--r-s);font-weight:700;font-size:14px;text-align:center;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:.15s}
 .btn:active{transform:scale(.985)}
 .btn:disabled{opacity:.4;pointer-events:none}
 .btn-d{background:var(--text);color:#fff}
@@ -83,103 +93,86 @@ button{cursor:pointer;border:none;background:none}
 .btn-q{background:var(--bg);color:var(--text-2);border:1px solid var(--line)}
 .btn-x{background:var(--bg);color:var(--red);border:1px solid #F0BDB0}
 .btn-w{width:100%;flex:none}
+.btn-s{padding:8px 13px;font-size:13px;min-width:auto;flex:none}
 
-.fld{margin-bottom:15px}
-.fld label{display:block;font-size:13px;color:var(--text-2);margin-bottom:6px;font-weight:500}
-.fld input,.fld select{width:100%;padding:14px;border-radius:var(--r-s);border:1px solid var(--line);background:var(--bg);font-size:15px}
+.fld{margin-bottom:14px}
+.fld label{display:block;font-size:12.5px;color:var(--text-2);margin-bottom:5px;font-weight:500}
+.fld input,.fld select{width:100%;padding:12px;border-radius:var(--r-s);border:1px solid var(--line);font-size:15px}
 .fld input:focus,.fld select:focus{border-color:var(--text);outline:none;box-shadow:0 0 0 1px var(--text)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-.sec{display:flex;align-items:center;justify-content:space-between;margin:22px 0 14px;gap:12px}
-.sec h2{font-size:22px}
-.void{text-align:center;padding:56px 24px}
-.void .i{font-size:38px;display:block;margin-bottom:14px;opacity:.35}
-.void b{display:block;font-size:17px;margin-bottom:6px}
-.void p{margin:0;color:var(--text-2);font-size:14px;max-width:300px;margin-inline:auto}
-
-.nav{position:fixed;bottom:0;inset-inline:0;z-index:50;background:var(--bg);border-top:1px solid var(--line-soft);padding-bottom:env(safe-area-inset-bottom)}
-.nav-in{display:flex;max-width:960px;margin:0 auto}
-.nav button{flex:1;height:var(--nav);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--text-3);font-size:10.5px}
-.nav button.on{color:var(--text);font-weight:700}
-.nav button i{font-style:normal;font-size:20px}
-
-.sheet{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.42);display:flex;align-items:flex-end;justify-content:center}
-.sheet-in{background:var(--bg);width:100%;max-width:560px;border-radius:var(--r-l) var(--r-l) 0 0;
-  padding:20px 20px calc(24px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto;
-  animation:up .28s cubic-bezier(.2,.9,.3,1)}
-@keyframes up{from{transform:translateY(100%)}}
-.grab{width:34px;height:4px;background:var(--line);border-radius:var(--r-pill);margin:0 auto 16px}
-.sheet-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.sheet-hd h3{font-size:19px}
-.toast{position:fixed;bottom:calc(var(--nav) + 20px);inset-inline:20px;z-index:99;background:var(--text);
-  color:#fff;padding:14px 18px;border-radius:var(--r-s);font-weight:500;font-size:14.5px;text-align:center;box-shadow:var(--sh-up)}
-.toast.no{background:var(--red)}
-
-.auth{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:28px 20px}
-.auth-in{width:100%;max-width:400px;margin:0 auto}
-.auth-mark{text-align:center;margin-bottom:26px}
-.auth-mark em{font-style:normal;font-size:44px;display:block;margin-bottom:10px}
-.auth-mark h1{font-size:25px;margin-bottom:6px}
-.auth-mark p{color:var(--text-2);font-size:14.5px;margin:0}
-.msg{padding:13px 15px;border-radius:var(--r-s);font-size:14px;margin-bottom:16px;line-height:1.55}
+.sec{display:flex;align-items:center;justify-content:space-between;margin:20px 0 12px;gap:12px}
+.sec h2{font-size:21px}
+.void{text-align:center;padding:52px 20px}
+.void .i{font-size:36px;display:block;margin-bottom:12px;opacity:.35}
+.void b{display:block;font-size:16.5px;margin-bottom:6px}
+.void p{margin:0 auto;color:var(--text-2);font-size:14px;max-width:300px}
+.msg{padding:12px 14px;border-radius:var(--r-s);font-size:13.5px;margin-bottom:14px;line-height:1.55}
 .msg.no{background:#FDEAE6;color:var(--red)}
 .msg.ok{background:#E9F5EA;color:var(--green)}
 .msg.wait{background:#FFF4E5;color:var(--amber)}
-.fine{font-size:12.5px;color:var(--text-3);text-align:center;margin-top:18px;line-height:1.8}
-.sp{width:17px;height:17px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite;display:inline-block}
+.fine{font-size:12.5px;color:var(--text-3);line-height:1.75}
+
+.nav{position:fixed;bottom:0;inset-inline:0;z-index:50;background:var(--bg);border-top:1px solid var(--line-soft);padding-bottom:env(safe-area-inset-bottom)}
+.nav-in{display:flex;max-width:960px;margin:0 auto}
+.nav button{flex:1;height:var(--nav);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-3);font-size:10.5px;position:relative}
+.nav button.on{color:var(--text);font-weight:700}
+.nav button i{font-style:normal;font-size:19px}
+.bdg{position:absolute;top:9px;inset-inline-start:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:var(--r-p);background:var(--rose);color:#fff;font-size:10.5px;font-weight:700;display:grid;place-items:center;font-family:var(--num);border:2px solid var(--bg)}
+
+.sheet{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.42);display:flex;align-items:flex-end;justify-content:center}
+.sheet-in{background:var(--bg);width:100%;max-width:520px;border-radius:var(--r-l) var(--r-l) 0 0;padding:20px 16px calc(24px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto}
+.sheet-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.sheet-hd h3{font-size:19px}
+.toast{position:fixed;bottom:88px;inset-inline:16px;z-index:99;background:var(--text);color:#fff;padding:13px 16px;border-radius:var(--r-s);font-weight:500;font-size:14px;text-align:center;box-shadow:var(--sh-up)}
+.toast.no{background:var(--red)}
+.toast.ok{background:#0B6B14}
+
+.auth{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;padding:28px 20px}
+.auth-in{width:100%;max-width:380px;margin:0 auto}
+.auth-mark{text-align:center;margin-bottom:24px}
+.auth-mark em{font-style:normal;font-size:42px;display:block;margin-bottom:10px}
+.auth-mark h1{font-size:24px;margin-bottom:6px}
+.auth-mark p{color:var(--text-2);font-size:14px;margin:0}
+.sp{width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite;display:inline-block}
 .btn-o .sp,.btn-q .sp{border-color:var(--line-soft);border-top-color:var(--text)}
 @keyframes s{to{transform:rotate(360deg)}}
-@media(min-width:720px){ .dl{grid-template-columns:repeat(3,1fr)} }
+@media(min-width:720px){.dl{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
 
-<!-- ══════════ الدخول ══════════ -->
 <div id="auth" class="auth">
   <div class="auth-in">
-    <div class="auth-mark">
-      <em>🐋</em>
-      <h1>لوحة الإدارة</h1>
-      <p>الطلبات والشركاء والمحرّك في مكان واحد</p>
-    </div>
+    <div class="auth-mark"><em>🐋</em><h1>لوحة الإدارة</h1><p>الطلبات والشركاء والمحرّك</p></div>
     <div id="authMsg" class="msg hidden"></div>
     <div class="fld"><label>كلمة مرور الإدارة</label>
       <input id="pw" type="password" autocomplete="current-password" placeholder="••••••••"></div>
     <button class="btn btn-d btn-w" id="btnIn">دخول</button>
-    <p class="fine">تُحفظ كلمة المرور في هذه النافذة فقط، وتُمحى عند إغلاقها.</p>
+    <p class="fine" style="text-align:center;margin-top:16px">تُحفظ في هذه النافذة فقط وتُمحى عند إغلاقها.</p>
   </div>
 </div>
 
-<!-- ══════════ التطبيق ══════════ -->
 <div id="app" class="hidden">
   <header class="hdr">
     <div class="hdr-in">
-      <div class="mark"><em>🐋</em></div>
-      <div class="hdr-mid">
-        <b>لوحة الإدارة</b>
-        <span><i class="dot off" id="live"></i><span id="liveTxt">يتصل…</span></span>
-      </div>
+      <div class="mark">🐋</div>
+      <div class="hdr-mid"><b id="hTitle">نظرة عامة</b>
+        <span><i class="dot off" id="live"></i><span id="liveTxt">يتصل…</span></span></div>
       <button class="ic" id="btnSync" aria-label="تحديث">↻</button>
     </div>
   </header>
 
   <main class="wrap">
-    <!-- نظرة عامة -->
     <section id="vHome">
       <div class="kpis" id="kpis"></div>
       <div class="sec"><h2>يحتاج انتباهك</h2></div>
       <div id="attention"></div>
     </section>
 
-    <!-- الطلبات -->
     <section id="vOrders" class="hidden">
-      <div class="chips" id="secChips">
-        <button class="chip on" data-s="car">سيارات</button>
-        <button class="chip" data-s="hotel">فنادق</button>
-        <button class="chip" data-s="hall">قاعات</button>
-        <button class="chip" data-s="school">سياقة</button>
-      </div>
-      <div class="chips" id="stChips">
+      <div class="chips" id="oSec"></div>
+      <div class="chips" id="oSt">
         <button class="chip on" data-f="all">الكل</button>
         <button class="chip" data-f="pending">معلّق</button>
         <button class="chip" data-f="live">قيد التنفيذ</button>
@@ -188,28 +181,23 @@ button{cursor:pointer;border:none;background:none}
       <div id="orders"></div>
     </section>
 
-    <!-- الشركاء -->
     <section id="vPartners" class="hidden">
-      <div class="chips" id="pSecChips">
-        <button class="chip on" data-s="car">مكاتب سيارات</button>
-        <button class="chip" data-s="hotel">فنادق</button>
-        <button class="chip" data-s="hall">قاعات</button>
-        <button class="chip" data-s="school">مدارس</button>
-      </div>
-      <div class="chips" id="pStChips">
+      <div class="search"><input id="q" type="search" placeholder="ابحث باسم الشريك أو الهاتف أو المدينة"><span class="i">🔍</span></div>
+      <div class="chips" id="pSec"></div>
+      <div class="chips" id="pSt">
         <button class="chip on" data-f="all">الكل</button>
         <button class="chip" data-f="pending">قيد المراجعة</button>
         <button class="chip" data-f="active">مفعّل</button>
         <button class="chip" data-f="blocked">موقوف</button>
+        <button class="chip" data-f="debt">عليه دين</button>
       </div>
       <div id="partners"></div>
     </section>
 
-    <!-- النظام -->
     <section id="vSys" class="hidden">
       <div class="sec"><h2>المحرّك الذاتي</h2></div>
       <div class="card">
-        <div class="dl" style="margin:0 0 16px">
+        <div class="dl" style="margin:0 0 14px">
           <div><span>المؤقّت</span><b id="eInst">—</b></div>
           <div><span>الحالة</span><b id="eOn">—</b></div>
           <div><span>آخر دورة</span><b id="eRun">—</b></div>
@@ -217,538 +205,418 @@ button{cursor:pointer;border:none;background:none}
         </div>
         <div class="acts">
           <button class="btn btn-d" id="eNow">شغّل دورة الآن</button>
-          <button class="btn btn-o" id="eToggle">إيقاف مؤقّت</button>
-          <button class="btn btn-q" id="eInstall">إعادة تركيب المؤقّت</button>
+          <button class="btn btn-o" id="eTog">إيقاف مؤقّت</button>
+          <button class="btn btn-q" id="eIns">إعادة تركيب المؤقّت</button>
         </div>
       </div>
 
-      <div class="sec"><h2>الصيانة</h2></div>
+      <div class="sec"><h2>الكتالوج والصيانة</h2></div>
       <div class="card">
-        <p style="margin:0 0 16px;color:var(--text-2);font-size:14px">
-          التقرير اليومي يعمل تلقائياً الساعة ٢ فجراً، والتنظيف الساعة ٧ صباحاً.
-          هذه الأزرار لتشغيلهما يدوياً عند الحاجة.</p>
+        <p style="margin:0 0 14px;color:var(--text-2);font-size:13.5px">
+          الكتالوج هو النسخة التي يقرأها الزبون من Firebase مباشرةً. يُحدَّث تلقائياً
+          عند كل حفظ، وإعادة البناء لإصلاح أي تفاوت.</p>
         <div class="acts">
-          <button class="btn btn-o" id="sysReport">تقرير اليوم الآن</button>
-          <button class="btn btn-o" id="sysClean">تنظيف Firebase</button>
-          <button class="btn btn-q" id="sysCache">إفراغ الذاكرة المؤقتة</button>
+          <button class="btn btn-o" id="sCat">إعادة بناء الكتالوج</button>
+          <button class="btn btn-o" id="sRep">تقرير اليوم الآن</button>
+          <button class="btn btn-q" id="sCln">تنظيف Firebase</button>
         </div>
       </div>
-
-      <button class="btn btn-q btn-w" id="btnOut" style="margin-bottom:24px">قفل اللوحة</button>
+      <button class="btn btn-q btn-w" id="btnOut" style="margin-top:8px">قفل اللوحة</button>
     </section>
   </main>
 
-  <nav class="nav">
-    <div class="nav-in">
-      <button class="on" data-v="vHome"><i>📊</i>نظرة عامة</button>
-      <button data-v="vOrders"><i>📋</i>الطلبات</button>
-      <button data-v="vPartners"><i>🤝</i>الشركاء</button>
-      <button data-v="vSys"><i>⚙️</i>النظام</button>
-    </div>
-  </nav>
+  <nav class="nav"><div class="nav-in">
+    <button class="on" data-v="vHome"><i>📊</i>نظرة عامة</button>
+    <button data-v="vOrders"><i>📋</i>الطلبات<span class="bdg hidden" id="bdgO">0</span></button>
+    <button data-v="vPartners"><i>🤝</i>الشركاء<span class="bdg hidden" id="bdgP">0</span></button>
+    <button data-v="vSys"><i>⚙️</i>النظام</button>
+  </div></nav>
 </div>
 
-<div id="sheetHost"></div>
-<div id="toastHost"></div>
+<div id="sheetHost"></div><div id="toastHost"></div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════════
-   ① الإعداد
-   ⚠️ API_TOKEN موجود في هذه الصفحة لأن نداءات الإدارة تحتاجه.
-   وحده لا يكفي: كل نداء هنا يحمل كلمة مرور الإدارة أيضاً، والخادم
-   يرفض أي قراءة لبيانات الزبائن بلا كلمة المرور.
-   لا تنشر هذه الصفحة على رابط يسهل تخمينه، وغيّر التوكن دورياً.
-═══════════════════════════════════════════════════════════════ */
-const API   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
-const TOKEN = "ضع_التوكن_الجديد_هنا";
+/* ═══════════════════════════════════════════════════════════════════
+   لوحة الإدارة — V13
+   ⚠️ التوكن موجود هنا لأن نداءات الإدارة تحتاجه، لكنه وحده لا يفتح شيئاً:
+   كل نداء يحمل كلمة مرور الإدارة أيضاً. لا تنشر هذه الصفحة على رابط
+   سهل التخمين، وغيّر التوكن دورياً.
+═══════════════════════════════════════════════════════════════════ */
+const API   = "ضع_رابط_النشر_هنا";
+const TOKEN = "ضع_التوكن_هنا";
+const IDLE  = 45000;
 
-const IDLE_MS = 45000;
-
+const SEC = {
+  car   : {label:"سيارات", icon:"🚗", one:"سيارة"},
+  hotel : {label:"فنادق",  icon:"🏨", one:"غرفة"},
+  hall  : {label:"قاعات",  icon:"🥂", one:"باقة"},
+  school: {label:"سياقة",  icon:"🎓", one:"كورس"}
+};
 const ST = {
-  pending  :{t:"معلّق",       c:"wait"},
-  active   :{t:"قيد التنفيذ", c:"ok"},
-  confirmed:{t:"مؤكَّد",       c:"ok"},
-  completed:{t:"منجز",        c:""},
-  cancelled:{t:"ملغى",        c:"no"},
-  rejected :{t:"معتذَر عنه",  c:"no"}
+  pending:{t:"معلّق",c:"wait"}, active:{t:"قيد التنفيذ",c:"ok"}, confirmed:{t:"مؤكَّد",c:"ok"},
+  completed:{t:"منجز",c:""}, cancelled:{t:"ملغى",c:"no"}, rejected:{t:"معتذَر عنه",c:"no"}
 };
-const PST = {
-  pending:{t:"قيد المراجعة", c:"wait"},
-  active :{t:"مفعّل",         c:"ok"},
-  blocked:{t:"موقوف",         c:"no"}
-};
+const PST = {pending:{t:"قيد المراجعة",c:"wait"}, active:{t:"مفعّل",c:"ok"}, blocked:{t:"موقوف",c:"no"}};
+const OKEY = {car:"carOrders", hotel:"hotelBookings", hall:"hallBookings", school:"driveStudents"};
 
-/* خرائط القطاعات: الاسم العربي، مفتاح البيانات، ونوع الكيان في الخادم */
-const SECT = {
-  car   : {label:"سيارات", orders:"carOrders",     partners:"carOffices",   entity:"CarOffice",   del:"deleteOrder"},
-  hotel : {label:"فنادق",  orders:"hotelBookings", partners:"hotels",       entity:"Hotel",       del:"deleteBooking"},
-  hall  : {label:"قاعات",  orders:"hallBookings",  partners:"halls",        entity:"Hall",        del:"deleteHallBooking"},
-  school: {label:"سياقة",  orders:"driveStudents", partners:"driveSchools", entity:"DriveSchool", del:null}
-};
+let S = {pass:"", d:null, view:"vHome", oSec:"car", oF:"all", pSec:"all", pF:"all", q:"", t:null, busy:false};
 
-/* الحقول التي تعدّلها الإدارة لكل نوع شريك */
-const EDIT = {
-  car   : [["name","اسم المكتب"],["phone","الهاتف"],["city","المدينة"],
-           ["radius","نطاق التغطية (كم)","number"],["comm_val","قيمة العمولة"]],
-  hotel : [["name","اسم الفندق"],["phone","الهاتف"],["city","المدينة"],
-           ["stars","النجوم","number"],["price_double","سعر المزدوجة","number"],["comm_val","قيمة العمولة"]],
-  hall  : [["name","اسم القاعة"],["phone","الهاتف"],["city","المدينة"],
-           ["capacity","السعة"],["price","سعر السهرة","number"],["comm_val","قيمة العمولة"]],
-  school: [["name","اسم المدرسة"],["phone","الهاتف"],["city","المدينة"],
-           ["price_basic","سعر الأساسي","number"],["price_advanced","سعر المتقدم","number"],["comm_val","قيمة العمولة"]]
-};
-
-/* ═══════════════════════════════════════════════════════════════
-   ② الحالة
-═══════════════════════════════════════════════════════════════ */
-let S = {
-  pass:"", data:null, view:"vHome",
-  oSector:"car", oFilter:"all",
-  pSector:"car", pFilter:"all",
-  timer:null, busy:false
-};
-
-const $  = s => document.querySelector(s);
+const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
-const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money = n => (Number(n)||0).toLocaleString("en-US");
+const pc = n => n>=80?"var(--green)":n>=50?"var(--amber)":"var(--red)";
 
-/* ═══════════════════════════════════════════════════════════════
-   ③ الاتصال — POST فقط
-   كلمة المرور لا توضع في رابط GET أبداً: الروابط تُسجَّل في تاريخ
-   المتصفح وفي سجلات التنفيذ.
-═══════════════════════════════════════════════════════════════ */
 async function api(action, extra){
-  const body = Object.assign({token:TOKEN, action:action, pass:S.pass}, extra || {});
-  const res = await fetch(API, {
-    method:"POST",
-    headers:{"Content-Type":"text/plain;charset=utf-8"},
-    body:JSON.stringify(body)
-  });
-  return await res.json();
+  const r = await fetch(API, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(Object.assign({token:TOKEN, action:action, pass:S.pass}, extra||{}))});
+  return await r.json();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   ④ الدخول
-═══════════════════════════════════════════════════════════════ */
-$("#btnIn").onclick = doLogin;
-$("#pw").addEventListener("keydown", e => { if(e.key === "Enter") doLogin(); });
+/* ── الدخول ── */
+$("#btnIn").onclick = login;
+$("#pw").addEventListener("keydown", e => { if(e.key==="Enter") login(); });
+function authMsg(t,k){ const e=$("#authMsg"); e.className="msg "+(k||"no"); e.textContent=t; e.classList.remove("hidden"); }
 
-function authMsg(text, kind){
-  const el = $("#authMsg");
-  el.className = "msg " + (kind || "no");
-  el.textContent = text;
-  el.classList.remove("hidden");
-}
-
-async function doLogin(){
+async function login(){
   const p = $("#pw").value.trim();
   $("#authMsg").classList.add("hidden");
   if(!p) return authMsg("اكتب كلمة المرور.");
-  if(TOKEN.indexOf("ضع_") === 0) return authMsg("ضع التوكن في المتغيّر TOKEN أعلى الملف.");
-
-  const b = $("#btnIn");
-  b.innerHTML = '<span class="sp"></span>'; b.disabled = true;
+  if(API.indexOf("ضع_")===0 || TOKEN.indexOf("ضع_")===0) return authMsg("املأ API و TOKEN أعلى الملف.");
+  const b = $("#btnIn"); b.innerHTML='<span class="sp"></span>'; b.disabled=true;
   try{
     S.pass = p;
-    const r = await api("VERIFY_MASTER_PASS");
-    if(!r || !r.success){ S.pass = ""; return authMsg((r && r.msg) || "كلمة المرور غير صحيحة."); }
+    const r = await api("VERIFY_ADMIN");
+    if(!r || !r.success){ S.pass=""; return authMsg((r&&r.msg)||"كلمة المرور غير صحيحة."); }
     sessionStorage.setItem("hut_ap", p);
     start();
-  }catch(e){ S.pass = ""; authMsg("تعذّر الوصول للخادم."); }
-  finally{ b.textContent = "دخول"; b.disabled = false; }
+  }catch(e){ S.pass=""; authMsg("تعذّر الوصول للخادم."); }
+  finally{ b.textContent="دخول"; b.disabled=false; }
 }
-
-(function resume(){
-  const p = sessionStorage.getItem("hut_ap");
-  if(p){ S.pass = p; start(); }
-})();
+(function(){ const p=sessionStorage.getItem("hut_ap"); if(p){ S.pass=p; start(); } })();
 
 async function start(){
   $("#auth").classList.add("hidden");
   $("#app").classList.remove("hidden");
-  await refresh(true);
-  loadEngine();
-  clearInterval(S.timer);
-  S.timer = setInterval(() => { if(!document.hidden) refresh(); }, IDLE_MS);
+  paintChips();
+  await load();
+  engine();
+  clearInterval(S.t);
+  S.t = setInterval(()=>{ if(!document.hidden) load(); }, IDLE);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   ⑤ التحديث
-═══════════════════════════════════════════════════════════════ */
-$("#btnSync").onclick = () => { refresh(); loadEngine(); toast("يُحدَّث…"); };
+function lock(exp){
+  sessionStorage.removeItem("hut_ap");
+  clearInterval(S.t);
+  S = {pass:"", d:null, view:"vHome", oSec:"car", oF:"all", pSec:"all", pF:"all", q:"", t:null, busy:false};
+  $("#app").classList.add("hidden"); $("#auth").classList.remove("hidden"); $("#pw").value="";
+  if(exp) authMsg("انتهت الجلسة — أدخل كلمة المرور من جديد.","wait");
+}
+$("#btnOut").onclick = ()=>{ if(confirm("قفل اللوحة؟")) lock(); };
 
-async function refresh(first){
-  if(S.busy) return;
-  S.busy = true;
+/* ── التحميل ── */
+$("#btnSync").onclick = ()=>{ load(); engine(); toast("يُحدَّث…"); };
+
+async function load(){
+  if(S.busy) return; S.busy = true;
   try{
     const d = await api("GET_ADMIN_DATA");
     if(!d || !d.success){
-      if(d && /كلمة مرور|محظور/.test(d.msg || "")) return lock(true);
-      throw new Error((d && d.msg) || "تعذّر التحديث");
+      if(d && /كلمة مرور|محظور/.test(d.msg||"")) return lock(true);
+      throw new Error((d&&d.msg)||"تعذّر التحميل");
     }
-    S.data = d;
-    render();
-    setLive(true);
-  }catch(e){
-    setLive(false);
-    if(first) $("#kpis").innerHTML = `<div class="msg no" style="grid-column:1/-1">${esc(e.message)}</div>`;
-  }finally{ S.busy = false; }
+    S.d = d; setLive(true); badges(); render();
+  }catch(e){ setLive(false); $("#kpis").innerHTML = `<div class="msg no" style="grid-column:1/-1">${esc(e.message)}</div>`; }
+  finally{ S.busy=false; }
+}
+function setLive(on){ $("#live").className="dot "+(on?"":"off"); $("#liveTxt").textContent=on?"متصل":"غير متصل"; }
+
+function paintChips(){
+  const html = (cur, withAll) =>
+    (withAll ? `<button class="chip ${cur==="all"?"on":""}" data-s="all">الكل</button>` : "") +
+    Object.keys(SEC).map(k=>`<button class="chip ${k===cur?"on":""}" data-s="${k}">${SEC[k].icon} ${SEC[k].label} <span class="n" id="${withAll?"pc":"oc"}_${k}">0</span></button>`).join("");
+  $("#oSec").innerHTML = html(S.oSec, false);
+  $("#pSec").innerHTML = html(S.pSec, true);
+  $$("#oSec .chip").forEach(b=>b.onclick=()=>{ $$("#oSec .chip").forEach(x=>x.classList.remove("on")); b.classList.add("on"); S.oSec=b.dataset.s; renderOrders(); });
+  $$("#pSec .chip").forEach(b=>b.onclick=()=>{ $$("#pSec .chip").forEach(x=>x.classList.remove("on")); b.classList.add("on"); S.pSec=b.dataset.s; renderPartners(); });
+}
+$$("#oSt .chip").forEach(b=>b.onclick=()=>{ $$("#oSt .chip").forEach(x=>x.classList.remove("on")); b.classList.add("on"); S.oF=b.dataset.f; renderOrders(); });
+$$("#pSt .chip").forEach(b=>b.onclick=()=>{ $$("#pSt .chip").forEach(x=>x.classList.remove("on")); b.classList.add("on"); S.pF=b.dataset.f; renderPartners(); });
+let qT=null;
+$("#q").oninput = e=>{ clearTimeout(qT); qT=setTimeout(()=>{ S.q=e.target.value.trim(); renderPartners(); },220); };
+
+function badges(){
+  const s = S.d.stats || {};
+  const op = (s.car_pending||0)+(s.hotel_pending||0)+(s.hall_pending||0)+(s.school_pending||0);
+  const pp = s.partners_pending || 0;
+  [["#bdgO",op],["#bdgP",pp]].forEach(([id,n])=>{
+    const el=$(id); el.textContent=n>99?"99+":n; el.classList.toggle("hidden", n<1);
+  });
+  Object.keys(SEC).forEach(k=>{
+    const a=$("#oc_"+k), b=$("#pc_"+k);
+    if(a) a.textContent = (S.d[OKEY[k]]||[]).length;
+    if(b) b.textContent = (S.d.partners||[]).filter(p=>p.sector===k).length;
+  });
 }
 
-function setLive(on){
-  $("#live").className = "dot " + (on ? "" : "off");
-  $("#liveTxt").textContent = on ? "متصل" : "غير متصل";
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   ⑥ العرض
-═══════════════════════════════════════════════════════════════ */
 function render(){
-  if(!S.data) return;
-  if(S.view === "vHome")     renderHome();
-  if(S.view === "vOrders")   renderOrders();
-  if(S.view === "vPartners") renderPartners();
+  if(!S.d) return;
+  if(S.view==="vHome") renderHome();
+  if(S.view==="vOrders") renderOrders();
+  if(S.view==="vPartners") renderPartners();
 }
 
+/* ── نظرة عامة ── */
 function renderHome(){
-  const s = S.data.stats || {};
-  const rev = (s.total_car_revenue||0) + (s.total_hotel_revenue||0) + (s.total_hall_revenue||0);
-  const debt = ["carOffices","hotels","halls","driveSchools"]
-    .reduce((t,k) => t + (S.data[k]||[]).reduce((x,p) => x + (Number(p.debt)||0), 0), 0);
-  const pendingPartners = ["carOffices","hotels","halls","driveSchools"]
-    .reduce((t,k) => t + (S.data[k]||[]).filter(p => p.status === "pending").length, 0);
-  const pendingOrders = (s.car_pending||0) + (s.hotel_pending||0) + (s.hall_pending||0);
+  const s = S.d.stats||{};
+  const rev = (s.total_car_revenue||0)+(s.total_hotel_revenue||0)+(s.total_hall_revenue||0);
+  const op = (s.car_pending||0)+(s.hotel_pending||0)+(s.hall_pending||0)+(s.school_pending||0);
 
   $("#kpis").innerHTML = [
-    ["إيرادات منجزة", money(rev) + " د.ع", "من كل القطاعات"],
-    ["مستحق للمنصة",  money(debt) + " د.ع", "ديون الشركاء"],
-    ["طلبات معلّقة",   pendingOrders, "بانتظار رد الشريك"],
-    ["شركاء للمراجعة", pendingPartners, "بانتظار تفعيلك"],
-    ["طلبات سيارات",  s.car_orders_total || 0, (s.car_completed||0) + " منجز"],
-    ["حجوزات فنادق",  s.hotel_bookings || 0,   (s.hotel_completed||0) + " منجز"],
-    ["حجوزات قاعات",  s.hall_bookings || 0,    (s.hall_completed||0) + " منجز"],
-    ["طلاب سياقة",    s.drive_students || 0,   "إجمالي المسجّلين"]
-  ].map(([l,v,sub]) => `<div class="kpi"><span>${l}</span><b>${v}</b><small>${sub}</small></div>`).join("");
+    ["إيرادات منجزة", money(rev)+" د.ع", "من كل القطاعات", 0],
+    ["مستحق للمنصة", money(s.total_debt)+" د.ع", "ديون الشركاء", 0],
+    ["طلبات معلّقة", op, "بانتظار رد", op>0?1:0],
+    ["شركاء للمراجعة", s.partners_pending||0, "بانتظار تفعيلك", (s.partners_pending||0)>0?1:0],
+    ["شركاء مفعّلون", s.partners_active||0, "من "+(s.partners_total||0), 0],
+    ["عناصر معروضة", s.offerings||0, "سيارات وغرف وباقات", 0],
+    ["طلبات سيارات", s.car_orders||0, (s.car_completed||0)+" منجز", 0],
+    ["حجوزات فنادق", s.hotel_bookings||0, (s.hotel_completed||0)+" منجز", 0]
+  ].map(([l,v,sub,hot])=>`<div class="kpi ${hot?"hot":""}"><span>${l}</span><b>${v}</b><small>${sub}</small></div>`).join("");
 
-  /* الشركاء المنتظرون أولاً، ثم الطلبات العالقة أكثر من ٦ ساعات */
-  const waiting = [];
-  Object.keys(SECT).forEach(k => {
-    (S.data[SECT[k].partners] || []).filter(p => p.status === "pending")
-      .forEach(p => waiting.push({sector:k, p:p}));
-  });
-
-  const stale = (S.data.carOrders || []).filter(o =>
-    o.status === "pending" && (Date.now() - new Date(o.created_at||0)) > 6*3600000);
+  const waiting = (S.d.partners||[]).filter(p=>p.status==="pending");
+  const weak = (S.d.partners||[]).filter(p=>p.status==="active" && (p.completeness||0)<50);
+  const noItems = (S.d.partners||[]).filter(p=>p.status==="active" && !p.items);
+  const stale = (S.d.carOrders||[]).filter(o=>o.status==="pending" &&
+    (Date.now()-new Date(o.created_at||0))>6*3600000);
 
   const box = $("#attention");
-  if(!waiting.length && !stale.length){
+  if(!waiting.length && !weak.length && !noItems.length && !stale.length){
     box.innerHTML = `<div class="void"><span class="i">✅</span><b>كل شيء تحت السيطرة</b>
-      <p>لا شركاء بانتظار المراجعة ولا طلبات عالقة.</p></div>`;
+      <p>لا شركاء بانتظار المراجعة ولا طلبات عالقة ولا ملفات ناقصة.</p></div>`;
     return;
   }
 
   box.innerHTML =
-    waiting.map(w => `<article class="card">
-      <div class="card-hd">
-        <div style="min-width:0"><h3>${esc(w.p.name)}</h3>
-          <div class="meta">${esc(w.p.id)} · ${SECT[w.sector].label} · ${esc(w.p.city||"—")}</div></div>
-        <span class="state wait">قيد المراجعة</span>
-      </div>
+    waiting.map(p=>`<article class="card">
+      <div class="card-hd"><div style="min-width:0"><h3>${esc(p.name)}</h3>
+        <div class="meta">${esc(p.id)} · ${SEC[p.sector]?SEC[p.sector].label:p.sector} · ${esc(p.city||"—")}</div></div>
+        <span class="state wait">قيد المراجعة</span></div>
       <div class="dl">
-        <div><span>الهاتف</span><b><a class="tel" href="tel:${esc(w.p.phone)}">${esc(w.p.phone||"—")}</a></b></div>
-        <div><span>العمولة</span><b>${esc(w.p.comm_val||"—")}</b></div>
+        <div><span>الهاتف</span><b><a class="tel" href="tel:${esc(p.phone)}">${esc(p.phone||"—")}</a></b></div>
+        <div><span>اكتمال الملف</span><b style="color:${pc(p.completeness)}">${p.completeness||0}٪</b></div>
+        <div><span>العناصر</span><b class="num">${p.items||0}</b></div>
       </div>
       <div class="acts">
-        <button class="btn btn-d" onclick="setStatus('${w.sector}','${esc(w.p.id)}','active')">تفعيل الحساب</button>
-        <button class="btn btn-x" onclick="setStatus('${w.sector}','${esc(w.p.id)}','blocked')">رفض</button>
-      </div>
-    </article>`).join("") +
-    (stale.length ? `<article class="card">
-      <div class="card-hd"><div><h3>${stale.length} طلب سيارة عالق</h3>
-        <div class="meta">مضى عليها أكثر من ٦ ساعات بلا استلام</div></div>
-        <span class="state no">يحتاج اتصالاً</span></div>
-      <div class="acts"><button class="btn btn-o" onclick="go('vOrders')">افتح الطلبات</button></div>
-    </article>` : "");
+        <button class="btn btn-d" onclick="pStatus('${esc(p.id)}','active')">تفعيل</button>
+        <button class="btn btn-x" onclick="pStatus('${esc(p.id)}','blocked')">رفض</button>
+      </div></article>`).join("") +
+
+    (stale.length?`<article class="card"><div class="card-hd">
+      <div><h3>${stale.length} طلب سيارة عالق</h3><div class="meta">مضى أكثر من ٦ ساعات بلا استلام</div></div>
+      <span class="state no">يحتاج اتصالاً</span></div>
+      <div class="acts"><button class="btn btn-o" onclick="go('vOrders')">افتح الطلبات</button></div></article>`:"") +
+
+    (weak.length?`<article class="card"><div class="card-hd">
+      <div><h3>${weak.length} شريك مفعّل بملف ناقص</h3>
+      <div class="meta">أقل من ٥٠٪ — الزبون يرى صفحة شبه فارغة</div></div>
+      <span class="state wait">${weak.slice(0,3).map(p=>esc(p.name)).join("، ")}${weak.length>3?"…":""}</span></div>
+      <div class="acts"><button class="btn btn-o" onclick="go('vPartners')">افتح الشركاء</button></div></article>`:"") +
+
+    (noItems.length?`<article class="card"><div class="card-hd">
+      <div><h3>${noItems.length} شريك مفعّل بلا عناصر</h3>
+      <div class="meta">لا سيارات ولا غرف ولا باقات — لن يظهر في نتائج البحث</div></div>
+      <span class="state no">فارغ</span></div></article>`:"");
 }
 
-$$("#secChips .chip").forEach(b => b.onclick = () => {
-  $$("#secChips .chip").forEach(x => x.classList.remove("on"));
-  b.classList.add("on"); S.oSector = b.dataset.s; renderOrders();
-});
-$$("#stChips .chip").forEach(b => b.onclick = () => {
-  $$("#stChips .chip").forEach(x => x.classList.remove("on"));
-  b.classList.add("on"); S.oFilter = b.dataset.f; renderOrders();
-});
-
-/* توحيد شكل الطلب عبر القطاعات الأربعة */
-function normalize(sector, o){
-  if(sector === "car")   return {id:o.id, title:o.car || "تأجير سيارة", who:o.name, phone:o.phone,
-    city:o.city, date:o.date, qty:(o.days||1) + " يوم", total:o.total, status:o.status, partner:o.office};
-  if(sector === "hotel") return {id:o.id, title:"غرفة " + (o.room_type||""), who:o.guest_name, phone:o.phone,
-    city:o.city, date:o.date_arrive, qty:(o.nights||1) + " ليلة", total:o.total, status:o.status, partner:o.hotel_name};
-  if(sector === "hall")  return {id:o.id, title:o.event_type || "مناسبة", who:o.name, phone:o.phone,
-    city:o.city, date:o.date, qty:(o.guests||0) + " ضيف", total:o.total, status:o.status, partner:o.hall_name};
-  return {id:o.id, title:o.course || "كورس سياقة", who:o.name, phone:o.phone,
-    city:o.city, date:o.date, qty:"—", total:o.price, status:o.status, partner:o.school_id};
+/* ── الطلبات ── */
+function norm(sector, o){
+  if(sector==="car")   return {id:o.id,title:o.car||"تأجير سيارة",who:o.name,phone:o.phone,city:o.city,date:o.date,qty:(o.days||1)+" يوم",total:o.total,status:o.status,partner:o.office};
+  if(sector==="hotel") return {id:o.id,title:"غرفة "+(o.room_type||""),who:o.guest_name,phone:o.phone,city:o.city,date:o.date_arrive,qty:(o.nights||1)+" ليلة",total:o.total,status:o.status,partner:o.hotel_name};
+  if(sector==="hall")  return {id:o.id,title:o.event_type||"مناسبة",who:o.name,phone:o.phone,city:o.city,date:o.date,qty:(o.guests||0)+" ضيف",total:o.total,status:o.status,partner:o.hall_name};
+  return {id:o.id,title:o.course||"كورس سياقة",who:o.name,phone:o.phone,city:o.city,date:o.date,qty:"—",total:o.price,status:o.status,partner:o.school_id};
 }
 
 function renderOrders(){
-  const cfg = SECT[S.oSector];
-  const raw = S.data[cfg.orders] || [];
-  const f = S.oFilter;
-  const list = raw.map(o => normalize(S.oSector, o)).filter(o =>
-    f === "all"     ? true :
-    f === "pending" ? o.status === "pending" :
-    f === "live"    ? ["active","confirmed"].includes(o.status) :
-                      ["completed","cancelled","rejected"].includes(o.status));
+  const raw = S.d[OKEY[S.oSec]] || [];
+  const f = S.oF;
+  const list = raw.map(o=>norm(S.oSec,o)).filter(o=>
+    f==="all" ? true :
+    f==="pending" ? o.status==="pending" :
+    f==="live" ? ["active","confirmed"].includes(o.status) :
+    ["completed","cancelled","rejected"].includes(o.status));
 
   const box = $("#orders");
-  if(!list.length){
-    box.innerHTML = `<div class="void"><span class="i">📭</span><b>لا طلبات</b>
-      <p>لا يوجد شيء في هذا التصنيف حالياً.</p></div>`;
-    return;
-  }
+  if(!list.length) return box.innerHTML = `<div class="void"><span class="i">📭</span><b>لا طلبات</b><p>لا شيء في هذا التصنيف.</p></div>`;
 
-  box.innerHTML = list.slice(0, 120).map(o => {
-    const s = ST[o.status] || {t:o.status, c:""};
-    const canDelete = !!cfg.del;
+  box.innerHTML = list.slice(0,120).map(o=>{
+    const s = ST[o.status]||{t:o.status,c:""};
+    const canEnd = ["pending","active","confirmed"].includes(o.status);
     return `<article class="card">
-      <div class="card-hd">
-        <div style="min-width:0"><h3>${esc(o.title)}</h3><div class="meta">#${esc(o.id)}</div></div>
-        <span class="state ${s.c}">${s.t}</span>
-      </div>
+      <div class="card-hd"><div style="min-width:0"><h3>${esc(o.title)}</h3>
+        <div class="meta">#${esc(o.id)}</div></div><span class="state ${s.c}">${s.t}</span></div>
       <div class="dl">
         <div><span>الزبون</span><b>${esc(o.who||"—")}</b></div>
-        <div><span>الهاتف</span><b>${o.phone ? `<a class="tel" href="tel:${esc(o.phone)}">${esc(o.phone)}</a>` : "—"}</b></div>
+        <div><span>الهاتف</span><b>${o.phone?`<a class="tel" href="tel:${esc(o.phone)}">${esc(o.phone)}</a>`:"—"}</b></div>
         <div><span>الشريك</span><b>${esc(o.partner||"لم يُسنَد")}</b></div>
         <div><span>التاريخ</span><b>${esc(o.date||"—")}</b></div>
         <div><span>المدة</span><b>${esc(o.qty)}</b></div>
         <div><span>الإجمالي</span><b class="sum">${money(o.total)} د.ع</b></div>
       </div>
-      ${canDelete ? `<div class="acts">
-        <button class="btn btn-x" onclick="delOrder('${S.oSector}','${esc(o.id)}')">حذف الطلب</button></div>` : ""}
-    </article>`;
+      <div class="acts">
+        ${canEnd?`<button class="btn btn-d" onclick="oStatus('${esc(o.id)}','completed')">إنهاء</button>
+                  <button class="btn btn-q" onclick="oStatus('${esc(o.id)}','cancelled')">إلغاء</button>`:""}
+        ${S.oSec!=="school"?`<button class="btn btn-x btn-s" onclick="oDel('${esc(o.id)}')">حذف</button>`:""}
+      </div></article>`;
   }).join("");
 }
 
-$$("#pSecChips .chip").forEach(b => b.onclick = () => {
-  $$("#pSecChips .chip").forEach(x => x.classList.remove("on"));
-  b.classList.add("on"); S.pSector = b.dataset.s; renderPartners();
-});
-$$("#pStChips .chip").forEach(b => b.onclick = () => {
-  $$("#pStChips .chip").forEach(x => x.classList.remove("on"));
-  b.classList.add("on"); S.pFilter = b.dataset.f; renderPartners();
-});
+async function oStatus(id, status){
+  const w = status==="completed"?"إنهاء":"إلغاء";
+  if(!confirm(w+" هذا الطلب؟")) return;
+  const r = await api("SET_ORDER_STATUS", {sector:S.oSec, id:id, status:status});
+  toast(r&&r.success?"تم "+w:((r&&r.msg)||"لم ينجح"), !(r&&r.success)); load();
+}
+async function oDel(id){
+  if(!confirm("سيُحذف نهائياً من الشيت ومن Firebase. متأكد؟")) return;
+  const r = await api("DELETE_ORDER", {sector:S.oSec, id:id});
+  toast(r&&r.success?"حُذف":((r&&r.msg)||"لم ينجح"), !(r&&r.success)); load();
+}
 
+/* ── الشركاء ── */
 function renderPartners(){
-  const cfg = SECT[S.pSector];
-  const raw = S.data[cfg.partners] || [];
-  const list = S.pFilter === "all" ? raw : raw.filter(p => p.status === S.pFilter);
+  const q = S.q.toLowerCase();
+  const list = (S.d.partners||[]).filter(p=>{
+    if(S.pSec!=="all" && p.sector!==S.pSec) return false;
+    if(S.pF==="debt"){ if(!(Number(p.debt)>0)) return false; }
+    else if(S.pF!=="all" && p.status!==S.pF) return false;
+    if(!q) return true;
+    return [p.name,p.phone,p.city,p.area,p.id].join(" ").toLowerCase().includes(q);
+  });
 
   const box = $("#partners");
-  if(!list.length){
-    box.innerHTML = `<div class="void"><span class="i">🤝</span><b>لا شركاء</b>
-      <p>لا يوجد شريك في هذا التصنيف.</p></div>`;
-    return;
-  }
+  if(!list.length) return box.innerHTML = `<div class="void"><span class="i">🤝</span><b>لا شركاء</b><p>لا نتيجة في هذا التصنيف.</p></div>`;
 
-  box.innerHTML = list.map(p => {
-    const s = PST[p.status] || {t:p.status, c:""};
-    const orders = p.total_orders ?? p.total_bookings ?? 0;
-    const sec = S.pSector;
-    return `<article class="card">
-      <div class="card-hd">
-        <div style="min-width:0"><h3>${esc(p.name)}</h3>
-          <div class="meta">${esc(p.id)} · ${esc(p.city||"—")}</div></div>
-        <span class="state ${s.c}">${s.t}</span>
+  box.innerHTML = list.map(p=>{
+    const s = PST[p.status]||{t:p.status,c:""};
+    const sk = SEC[p.sector]||{icon:"•",label:p.sector,one:"عنصر"};
+    return `<div class="prow">
+      ${p.cover?`<img src="${esc(p.cover)}" alt="" loading="lazy">`:`<div class="ph">${sk.icon}</div>`}
+      <div class="mid">
+        <b>${esc(p.name)}</b>
+        <span>${sk.label} · ${esc(p.city||"—")}${p.area?" · "+esc(p.area):""}</span>
+        <span class="num" style="direction:ltr;text-align:start">${esc(p.phone||"")} · ${p.items||0} ${esc(sk.one)}</span>
       </div>
-      <div class="dl">
-        <div><span>الهاتف</span><b><a class="tel" href="tel:${esc(p.phone)}">${esc(p.phone||"—")}</a></b></div>
-        <div><span>العمولة</span><b>${esc(p.comm_val||"—")}</b></div>
-        <div><span>المنجزة</span><b class="num">${money(orders)}</b></div>
-        <div><span>الإيرادات</span><b class="sum">${money(p.total_rev||0)} د.ع</b></div>
-        <div><span>الديون</span><b class="sum" style="color:${Number(p.debt)>0?"var(--rose)":"inherit"}">${money(p.debt||0)} د.ع</b></div>
+      <div style="flex:none;text-align:end">
+        <div class="pct" style="color:${pc(p.completeness)};border:2px solid ${pc(p.completeness)};margin-inline-start:auto">${p.completeness||0}٪</div>
+        <span class="state ${s.c}" style="margin-top:6px;display:inline-block">${s.t}</span>
       </div>
-      <div class="acts">
-        ${p.status !== "active"
-          ? `<button class="btn btn-d" onclick="setStatus('${sec}','${esc(p.id)}','active')">تفعيل</button>`
-          : `<button class="btn btn-x" onclick="setStatus('${sec}','${esc(p.id)}','blocked')">إيقاف</button>`}
-        <button class="btn btn-o" onclick="editSheet('${sec}','${esc(p.id)}')">تعديل</button>
-        ${Number(p.debt) > 0
-          ? `<button class="btn btn-q" onclick="clearDebt('${sec}','${esc(p.id)}')">تصفية الدين</button>` : ""}
-      </div>
-    </article>`;
+    </div>
+    <div class="acts" style="margin:-4px 0 14px">
+      ${p.status!=="active"
+        ? `<button class="btn btn-d btn-s" onclick="pStatus('${esc(p.id)}','active')">تفعيل</button>`
+        : `<button class="btn btn-x btn-s" onclick="pStatus('${esc(p.id)}','blocked')">إيقاف</button>`}
+      ${Number(p.debt)>0?`<button class="btn btn-o btn-s" onclick="pDebt('${esc(p.id)}',${Number(p.debt)})">تصفية ${money(p.debt)} د.ع</button>`:""}
+      <button class="btn btn-q btn-s" onclick="pInfo('${esc(p.id)}')">تفاصيل</button>
+    </div>`;
   }).join("");
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   ⑦ إجراءات الإدارة
-═══════════════════════════════════════════════════════════════ */
-async function setStatus(sector, id, status){
-  const word = status === "active" ? "تفعيل" : "إيقاف";
-  if(!confirm(word + " هذا الحساب؟")) return;
-  const r = await api("ADMIN_UPDATE_STATUS", {entityType:SECT[sector].entity, id:id, status:status});
-  toast(r && r.success ? "تم " + word : ((r && r.msg) || "لم ينجح"), !(r && r.success));
-  refresh();
+async function pStatus(id, status){
+  const w = status==="active"?"تفعيل":"إيقاف";
+  if(!confirm(w+" هذا الحساب؟")) return;
+  const r = await api("SET_PARTNER_STATUS", {id:id, status:status});
+  toast(r&&r.success?"تم "+w:((r&&r.msg)||"لم ينجح"), !(r&&r.success)); load();
 }
 
-async function clearDebt(sector, id){
-  if(!confirm("تصفية الدين تعني أن الشريك سدّد. متأكد؟")) return;
-  const r = await api("resetDebt", {entityType:SECT[sector].entity, id:id});
-  toast(r && r.success ? "صُفّي الدين (" + money(r.prev_debt) + " د.ع)" : ((r && r.msg) || "لم ينجح"), !(r && r.success));
-  refresh();
+async function pDebt(id, amount){
+  if(!confirm("تصفية الدين تعني أن الشريك سدّد "+money(amount)+" د.ع. متأكد؟")) return;
+  const r = await api("RESET_DEBT", {id:id});
+  toast(r&&r.success?"صُفّي الدين ("+money(r.prev_debt)+" د.ع)":((r&&r.msg)||"لم ينجح"), !(r&&r.success)); load();
 }
 
-async function delOrder(sector, id){
-  const act = SECT[sector].del;
-  if(!act) return toast("لا يمكن حذف هذا النوع", true);
-  if(!confirm("سيُحذف نهائياً من الشيت ومن Firebase. متأكد؟")) return;
-  const r = await api(act, {id:id});
-  toast(r && r.success ? "حُذف الطلب" : ((r && r.msg) || "لم ينجح"), !(r && r.success));
-  refresh();
+function pInfo(id){
+  const p = (S.d.partners||[]).find(x=>String(x.id)===String(id));
+  if(!p) return;
+  const sk = SEC[p.sector]||{label:p.sector};
+  const comm = p.comm_type==="monthly" ? "اشتراك شهري "+money(p.comm_val)+" د.ع"
+             : p.comm_type==="split"   ? "مناصفة "+money(p.comm_val)
+             : money(p.comm_val)+" د.ع لكل طلب";
+  sheet(p.name, `
+    <div class="dl" style="margin:0 0 16px">
+      <div><span>المعرّف</span><b class="num">${esc(p.id)}</b></div>
+      <div><span>القطاع</span><b>${sk.label}</b></div>
+      <div><span>المدينة</span><b>${esc(p.city||"—")}</b></div>
+      <div><span>المنطقة</span><b>${esc(p.area||"—")}</b></div>
+      <div><span>الهاتف</span><b><a class="tel" href="tel:${esc(p.phone)}">${esc(p.phone||"—")}</a></b></div>
+      <div><span>يستقبل حجوزات</span><b>${p.open?"نعم":"لا"}</b></div>
+      <div><span>العمولة</span><b>${comm}</b></div>
+      <div><span>المنجزة</span><b class="num">${money(p.orders)}</b></div>
+      <div><span>الإيرادات</span><b class="sum">${money(p.revenue)} د.ع</b></div>
+      <div><span>الديون</span><b class="sum" style="color:${Number(p.debt)>0?"var(--rose)":"inherit"}">${money(p.debt)} د.ع</b></div>
+      <div><span>العناصر</span><b class="num">${p.items||0}</b></div>
+      <div><span>اكتمال الملف</span><b style="color:${pc(p.completeness)}">${p.completeness||0}٪</b></div>
+    </div>
+    <p class="fine" style="margin-bottom:14px">لتعديل البيانات والصور والمواصفات استعمل لوحة الإدخال.</p>
+    <button class="btn btn-x btn-w" onclick="pDel('${esc(p.id)}')">حذف الشريك وكل عناصره</button>`);
 }
 
-function editSheet(sector, id){
-  const p = (S.data[SECT[sector].partners] || []).find(x => String(x.id) === String(id));
-  if(!p) return toast("الشريك غير موجود", true);
-  const fields = EDIT[sector] || [];
-
-  sheet("تعديل " + p.name, `
-    ${fields.map(([k,l,t]) =>
-      `<div class="fld"><label>${l}</label>
-        <input id="ef_${k}" type="${t||"text"}" value="${esc(p[k] ?? "")}"></div>`).join("")}
-    <div class="fld"><label>كلمة مرور جديدة للشريك (اتركها فارغة لإبقائها)</label>
-      <input id="ef_pass" type="text" placeholder="مثال: 4821"></div>
-    <button class="btn btn-d btn-w" id="efSave">حفظ</button>`, () => {
-
-    $("#efSave").onclick = async () => {
-      const up = {};
-      fields.forEach(([k]) => {
-        const v = $("#ef_" + k).value.trim();
-        if(v !== "" && String(p[k] ?? "") !== v) up[k] = v;
-      });
-      const np = $("#ef_pass").value.trim();
-      if(np){
-        if(np.length < 4) return toast("كلمة المرور 4 أحرف على الأقل", true);
-        up.pass = np;
-      }
-      if(!Object.keys(up).length) return toast("لا تغييرات لحفظها");
-
-      const btn = $("#efSave");
-      btn.innerHTML = '<span class="sp"></span>'; btn.disabled = true;
-      const r = await api("updateEntityInfo", {entityType:SECT[sector].entity, id:id, updates:up});
-      if(r && r.success){ closeSheet(); toast("حُفظت التعديلات"); refresh(); }
-      else { toast((r && r.msg) || "لم ينجح", true); btn.disabled = false; btn.textContent = "إعادة المحاولة"; }
-    };
-  });
+async function pDel(id){
+  if(!confirm("سيُحذف الشريك وكل عناصره نهائياً. متأكد؟")) return;
+  if(prompt('اكتب كلمة "حذف" للتأكيد') !== "حذف") return;
+  const r = await api("DELETE_PARTNER", {id:id});
+  if(r&&r.success){ closeSheet(); toast("حُذف الشريك",false,"ok"); load(); }
+  else toast((r&&r.msg)||"لم ينجح", true);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   ⑧ المحرّك والصيانة
-═══════════════════════════════════════════════════════════════ */
-let engineOn = true;
-
-async function loadEngine(){
+/* ── المحرّك والصيانة ── */
+let engOn = true;
+async function engine(){
   try{
     const r = await api("ENGINE_STATUS");
     if(!r || !r.success) return;
-    engineOn = r.enabled !== false;
-    $("#eInst").textContent = r.installed ? "مركّب" : "غير مركّب";
-    $("#eOn").textContent   = engineOn ? "يعمل" : "متوقّف";
-    $("#eRun").textContent  = r.last_run ? new Date(r.last_run).toLocaleString("ar-IQ") : "—";
-    $("#eSum").textContent  = r.last_summary || "—";
-    $("#eToggle").textContent = engineOn ? "إيقاف مؤقّت" : "استئناف";
+    engOn = r.enabled !== false;
+    $("#eInst").textContent = r.installed?"مركّب":"غير مركّب";
+    $("#eOn").textContent = engOn?"يعمل":"متوقّف";
+    $("#eRun").textContent = r.last_run ? new Date(r.last_run).toLocaleString("ar-IQ") : "—";
+    $("#eSum").textContent = r.last_summary || "—";
+    $("#eTog").textContent = engOn?"إيقاف مؤقّت":"استئناف";
   }catch(e){}
 }
+$("#eNow").onclick = async()=>{ toast("تُنفَّذ دورة…"); const r=await api("ENGINE_RUN_NOW"); toast(r&&r.success?r.msg:"لم تنجح",!(r&&r.success)); engine(); };
+$("#eTog").onclick = async()=>{ const r=await api("ENGINE_TOGGLE",{enabled:!engOn}); toast(r&&r.success?r.msg:"لم ينجح",!(r&&r.success)); engine(); };
+$("#eIns").onclick = async()=>{ if(!confirm("إعادة تركيب مؤقّت المحرّك؟")) return; const r=await api("ENGINE_INSTALL"); toast(r&&r.success?r.msg:"لم ينجح",!(r&&r.success)); engine(); };
+$("#sCat").onclick = async()=>{ toast("يُعاد بناء الكتالوج…"); const r=await api("REBUILD_CATALOG"); toast(r&&r.success?("نُشر "+r.published+" شريك من "+r.total):"لم ينجح",!(r&&r.success)); };
+$("#sRep").onclick = async()=>{ toast("يُحسب التقرير…"); const r=await api("RUN_NIGHTLY"); toast(r&&r.success?("كُتب تقرير "+r.date):((r&&r.msg)||"لم ينجح"),!(r&&r.success)); };
+$("#sCln").onclick = async()=>{ toast("يُنظَّف…"); const r=await api("FB_CLEANUP"); toast(r&&r.success?("حُذف "+r.removed+" عنصر منتهٍ"):((r&&r.msg)||"لم ينجح"),!(r&&r.success)); };
 
-$("#eNow").onclick = async () => {
-  toast("تُنفَّذ دورة…");
-  const r = await api("ENGINE_RUN_NOW");
-  toast(r && r.success ? (r.msg || "نُفّذت") : "لم تنجح", !(r && r.success));
-  loadEngine();
-};
-
-$("#eToggle").onclick = async () => {
-  const r = await api("ENGINE_TOGGLE", {enabled: !engineOn});
-  toast(r && r.success ? r.msg : "لم ينجح", !(r && r.success));
-  loadEngine();
-};
-
-$("#eInstall").onclick = async () => {
-  if(!confirm("سيُعاد تركيب مؤقّت المحرّك. متابعة؟")) return;
-  const r = await api("ENGINE_INSTALL");
-  toast(r && r.success ? r.msg : "لم ينجح", !(r && r.success));
-  loadEngine();
-};
-
-$("#sysReport").onclick = async () => {
-  toast("يُحسب التقرير…");
-  const r = await api("RUN_NIGHTLY");
-  toast(r && r.success ? "كُتب تقرير " + r.date : ((r && r.msg) || "لم ينجح"), !(r && r.success));
-};
-
-$("#sysClean").onclick = async () => {
-  toast("يُنظَّف…");
-  const r = await api("FB_CLEANUP");
-  toast(r && r.success ? "حُذف " + r.removed + " عنصر منتهٍ" : ((r && r.msg) || "لم ينجح"), !(r && r.success));
-};
-
-$("#sysCache").onclick = async () => {
-  const r = await api("adminReset");
-  toast(r && r.success ? "أُفرغت الذاكرة" : "لم ينجح", !(r && r.success));
-};
-
-$("#btnOut").onclick = () => { if(confirm("قفل اللوحة؟")) lock(); };
-
-function lock(expired){
-  sessionStorage.removeItem("hut_ap");
-  clearInterval(S.timer);
-  S = {pass:"", data:null, view:"vHome", oSector:"car", oFilter:"all",
-       pSector:"car", pFilter:"all", timer:null, busy:false};
-  $("#app").classList.add("hidden");
-  $("#auth").classList.remove("hidden");
-  $("#pw").value = "";
-  if(expired) authMsg("انتهت الجلسة — أدخل كلمة المرور من جديد.", "wait");
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   ⑨ التنقّل والطبقات
-═══════════════════════════════════════════════════════════════ */
-$$(".nav button").forEach(b => b.onclick = () => go(b.dataset.v));
-
-function go(view){
-  S.view = view;
-  ["vHome","vOrders","vPartners","vSys"].forEach(v =>
-    $("#" + v).classList.toggle("hidden", v !== view));
-  $$(".nav button").forEach(b => b.classList.toggle("on", b.dataset.v === view));
+/* ── التنقّل والطبقات ── */
+const TITLES = {vHome:"نظرة عامة", vOrders:"الطلبات", vPartners:"الشركاء", vSys:"النظام"};
+$$(".nav button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+function go(v){
+  S.view = v;
+  Object.keys(TITLES).forEach(x=>$("#"+x).classList.toggle("hidden", x!==v));
+  $$(".nav button").forEach(b=>b.classList.toggle("on", b.dataset.v===v));
+  $("#hTitle").textContent = TITLES[v];
   render();
-  window.scrollTo({top:0, behavior:"smooth"});
+  if(v==="vSys") engine();
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-function sheet(title, html, after){
-  $("#sheetHost").innerHTML = `<div class="sheet" id="sh">
-    <div class="sheet-in" role="dialog" aria-modal="true">
-      <div class="grab"></div>
-      <div class="sheet-hd"><h3>${esc(title)}</h3>
-        <button class="ic" onclick="closeSheet()" aria-label="إغلاق">✕</button></div>
-      ${html}
-    </div></div>`;
-  $("#sh").onclick = e => { if(e.target.id === "sh") closeSheet(); };
-  if(after) after();
+function sheet(title, html){
+  $("#sheetHost").innerHTML = `<div class="sheet" id="sh"><div class="sheet-in" role="dialog" aria-modal="true">
+    <div class="sheet-hd"><h3>${esc(title)}</h3><button class="ic" onclick="closeSheet()" aria-label="إغلاق">✕</button></div>
+    ${html}</div></div>`;
+  $("#sh").onclick = e=>{ if(e.target.id==="sh") closeSheet(); };
 }
+function closeSheet(){ $("#sheetHost").innerHTML=""; }
 
-function closeSheet(){ $("#sheetHost").innerHTML = ""; }
-
-let toastT = null;
-function toast(text, bad){
-  $("#toastHost").innerHTML = `<div class="toast ${bad ? "no" : ""}" role="status">${esc(text)}</div>`;
-  clearTimeout(toastT);
-  toastT = setTimeout(() => $("#toastHost").innerHTML = "", 2600);
+let tT=null;
+function toast(t,bad,k){
+  $("#toastHost").innerHTML = `<div class="toast ${bad?"no":(k||"")}" role="status">${esc(t)}</div>`;
+  clearTimeout(tT); tT=setTimeout(()=>$("#toastHost").innerHTML="",2600);
 }
-
-document.addEventListener("keydown", e => { if(e.key === "Escape") closeSheet(); });
-document.addEventListener("visibilitychange", () => { if(!document.hidden && S.pass) refresh(); });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeSheet(); });
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden && S.pass) load(); });
 </script>
 </body>
 </html>

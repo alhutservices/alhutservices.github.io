@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
-<title>الحوت · سيارات وفنادق وقاعات ومدارس قيادة في العراق</title>
+<title>الحوت · سيارات وفنادق وقاعات ومدارس قيادة ومغاسل في العراق</title>
 <meta name="theme-color" content="#FF385C">
-<meta name="description" content="منصة الحوت — الخيار الأول في العراق لتأجير السيارات، حجز الفنادق، قاعات الأعراس، ومدارس تعليم القيادة. أسعار واضحة وحجز فوري في كل المحافظات.">
+<meta name="description" content="منصة الحوت — الخيار الأول في العراق لتأجير السيارات، حجز الفنادق، قاعات الأعراس، مدارس تعليم القيادة، ومغاسل السيارات. أسعار واضحة وحجز فوري في كل المحافظات.">
 <meta property="og:title" content="منصة الحوت 🐋 — كل خدماتك في مكان واحد">
-<meta property="og:description" content="سيارات · فنادق · قاعات أعراس · مدارس قيادة — في بغداد وكركوك وأربيل وكل العراق.">
+<meta property="og:description" content="سيارات · فنادق · قاعات أعراس · مدارس قيادة · مغاسل سيارات — في بغداد وكركوك وأربيل وكل العراق.">
 <meta property="og:type" content="website">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -120,14 +120,15 @@ img{display:block;max-width:100%;}
 .cat-card.c-hotel:hover{border-color:var(--green);} .cat-card.c-hotel::before{background:linear-gradient(135deg,#00C2B3,#00A699);}
 .cat-card.c-hall:hover{border-color:var(--violet);} .cat-card.c-hall::before{background:linear-gradient(135deg,#7C5CD6,#553C9A);}
 .cat-card.c-school:hover{border-color:var(--blue);} .cat-card.c-school::before{background:linear-gradient(135deg,#1E88E5,#004C99);}
+.cat-card.c-wash:hover{border-color:var(--amber);} .cat-card.c-wash::before{background:linear-gradient(135deg,#FF8A4C,#FC642D);}
 .cat-card:hover::before{transform:scaleX(1);}
 .cat-icon{width:72px;height:72px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin:0 auto 16px;transition:transform .3s;}
-.cat-card.c-car .cat-icon{background:var(--red-l);} .cat-card.c-hotel .cat-icon{background:var(--green-l);} .cat-card.c-hall .cat-icon{background:var(--violet-l);} .cat-card.c-school .cat-icon{background:var(--blue-l);}
+.cat-card.c-car .cat-icon{background:var(--red-l);} .cat-card.c-hotel .cat-icon{background:var(--green-l);} .cat-card.c-hall .cat-icon{background:var(--violet-l);} .cat-card.c-school .cat-icon{background:var(--blue-l);} .cat-card.c-wash .cat-icon{background:var(--amber-l);}
 .cat-card:hover .cat-icon{transform:scale(1.1) rotate(-5deg);}
 .cat-name{font-weight:900;font-size:1.08rem;margin-bottom:5px;}
 .cat-sub{font-size:.78rem;font-weight:600;color:var(--tx2);}
 .cat-arrow{margin-top:14px;display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:800;color:var(--red);opacity:0;transform:translateY(4px);transition:.25s;}
-.cat-card.c-hotel .cat-arrow{color:var(--green);} .cat-card.c-hall .cat-arrow{color:var(--violet);} .cat-card.c-school .cat-arrow{color:var(--blue);}
+.cat-card.c-hotel .cat-arrow{color:var(--green);} .cat-card.c-hall .cat-arrow{color:var(--violet);} .cat-card.c-school .cat-arrow{color:var(--blue);} .cat-card.c-wash .cat-arrow{color:var(--amber);}
 .cat-card:hover .cat-arrow{opacity:1;transform:none;}
 
 /* CITIES */
@@ -228,7 +229,7 @@ img{display:block;max-width:100%;}
   <div class="hero-inner">
     <div class="hero-eyebrow"><span class="star">★</span><span data-i18n="hero_eyebrow">الأول في العراق لعام 2026</span></div>
     <h1 class="hero-h1"><span data-i18n="hero_h1_a">ابحث، احجز،</span> <span class="grad" data-i18n="hero_h1_b">واستمتع بتجربتك</span></h1>
-    <p class="hero-p" data-i18n="hero_p">سيارات للإيجار، فنادق فاخرة، قاعات أعراس، ومدارس قيادة احترافية في بغداد وكركوك وأربيل وكل محافظات العراق.</p>
+    <p class="hero-p" data-i18n="hero_p">سيارات للإيجار، فنادق فاخرة، قاعات أعراس، مدارس قيادة احترافية، ومغاسل سيارات بموعد — في بغداد وكركوك وأربيل وكل محافظات العراق.</p>
 
     <div class="search-box">
       <div class="search-tabs">
@@ -236,6 +237,7 @@ img{display:block;max-width:100%;}
         <div class="search-tab" id="tab-hotel" onclick="setService('hotel')"><span class="ic">🏨</span> <span data-i18n="tab_hotel">حجز فنادق</span></div>
         <div class="search-tab" id="tab-hall" onclick="setService('hall')"><span class="ic">🥂</span> <span data-i18n="tab_hall">قاعات أعراس</span></div>
         <div class="search-tab" id="tab-school" onclick="setService('school')"><span class="ic">🎓</span> <span data-i18n="tab_school">مدارس قيادة</span></div>
+        <div class="search-tab" id="tab-wash" onclick="setService('wash')"><span class="ic">🚿</span> <span data-i18n="tab_wash">مغاسل سيارات</span></div>
       </div>
       <div class="search-fields">
         <div class="sf">
@@ -257,7 +259,7 @@ img{display:block;max-width:100%;}
     </div>
 
     <div class="trust">
-      <div class="trust-item"><span class="trust-v">4</span><span class="trust-l" data-i18n="trust_services">خدمات متكاملة</span></div>
+      <div class="trust-item"><span class="trust-v">5</span><span class="trust-l" data-i18n="trust_services">خدمات متكاملة</span></div>
       <div class="trust-item"><span class="trust-v">18+</span><span class="trust-l" data-i18n="trust_cities">محافظة</span></div>
       <div class="trust-item"><span class="trust-v">⭐ 4.8</span><span class="trust-l" data-i18n="trust_rating">تقييم العملاء</span></div>
     </div>
@@ -294,6 +296,12 @@ img{display:block;max-width:100%;}
         <div class="cat-icon">🎓</div>
         <div class="cat-name" data-i18n="cat4">مدارس القيادة</div>
         <div class="cat-sub" data-i18n="cat4_sub">مدرّبون معتمدون</div>
+        <div class="cat-arrow"><span data-i18n="explore">تصفّح الآن</span> ←</div>
+      </a>
+      <a class="cat-card c-wash" onclick="goService('wash')">
+        <div class="cat-icon">🚿</div>
+        <div class="cat-name" data-i18n="cat5">مغاسل السيارات</div>
+        <div class="cat-sub" data-i18n="cat5_sub">احجز موعدك بلا انتظار</div>
         <div class="cat-arrow"><span data-i18n="explore">تصفّح الآن</span> ←</div>
       </a>
     </div>
@@ -333,7 +341,7 @@ img{display:block;max-width:100%;}
   <!-- PARTNER CTA -->
   <section class="sec wrap reveal">
     <div class="cta">
-      <h2 class="cta-h" data-i18n="cta_h">هل تملك مكتباً أو فندقاً أو قاعة؟</h2>
+      <h2 class="cta-h" data-i18n="cta_h">هل تملك مكتباً أو فندقاً أو قاعة أو مغسلة؟</h2>
       <p class="cta-p" data-i18n="cta_p">انضمّ إلى منصة الحوت ووسّع أعمالك — اعرض خدماتك أمام آلاف العملاء في كل العراق.</p>
       <a href="partners.html" class="cta-btn">🤝 <span data-i18n="cta_btn">سجّل كشريك الآن</span></a>
     </div>
@@ -344,7 +352,7 @@ img{display:block;max-width:100%;}
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="row"><span class="whale">🐋</span> الحوت</div>
-      <div class="desc" data-i18n="footer_desc">منصتك الأولى في العراق للسيارات والفنادق وقاعات الأعراس ومدارس القيادة.</div>
+      <div class="desc" data-i18n="footer_desc">منصتك الأولى في العراق للسيارات والفنادق وقاعات الأعراس ومدارس القيادة ومغاسل السيارات.</div>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer_services">الخدمات</h4>
@@ -352,6 +360,7 @@ img{display:block;max-width:100%;}
       <a href="hotels.html" data-i18n="nav_hotels">الفنادق</a>
       <a href="halls.html" data-i18n="nav_halls">القاعات</a>
       <a href="schools.html" data-i18n="nav_schools">مدارس القيادة</a>
+      <a href="carwash.html" data-i18n="nav_wash">مغاسل السيارات</a>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer_company">المنصة</h4>
@@ -382,10 +391,10 @@ const CITIES = [
 /* ═══════════════ i18n ═══════════════ */
 const I18N = {
   ar:{ dir:"rtl", flag:"🇮🇶", name:"عربي",
-    nav_partner:"كن شريكاً", nav_cars:"السيارات", nav_hotels:"الفنادق", nav_halls:"القاعات", nav_schools:"مدارس القيادة",
+    nav_partner:"كن شريكاً", nav_cars:"السيارات", nav_hotels:"الفنادق", nav_halls:"القاعات", nav_schools:"مدارس القيادة", nav_wash:"مغاسل السيارات",
     hero_eyebrow:"الأول في العراق لعام 2026", hero_h1_a:"ابحث، احجز،", hero_h1_b:"واستمتع بتجربتك",
-    hero_p:"سيارات للإيجار، فنادق فاخرة، قاعات أعراس، ومدارس قيادة احترافية في بغداد وكركوك وأربيل وكل محافظات العراق.",
-    tab_car:"تأجير سيارات", tab_hotel:"حجز فنادق", tab_hall:"قاعات أعراس", tab_school:"مدارس قيادة",
+    hero_p:"سيارات للإيجار، فنادق فاخرة، قاعات أعراس، مدارس قيادة احترافية، ومغاسل سيارات بموعد — في بغداد وكركوك وأربيل وكل محافظات العراق.",
+    tab_car:"تأجير سيارات", tab_hotel:"حجز فنادق", tab_hall:"قاعات أعراس", tab_school:"مدارس قيادة", tab_wash:"مغاسل سيارات",
     f_city:"المدينة", f_date:"التاريخ", f_days:"عدد الأيام",
     trust_services:"خدمات متكاملة", trust_cities:"محافظة", trust_rating:"تقييم العملاء",
     cat_title:"استكشف خدماتنا", cat_sub:"كل ما تحتاجه في مكان واحد", explore:"تصفّح الآن",
@@ -393,29 +402,31 @@ const I18N = {
     cat2:"حجز فنادق", cat2_sub:"فنادق مختارة بعناية",
     cat3:"قاعات أعراس", cat3_sub:"أجمل ليالي العمر",
     cat4:"مدارس القيادة", cat4_sub:"مدرّبون معتمدون",
+    cat5:"مغاسل السيارات", cat5_sub:"احجز موعدك بلا انتظار",
     how_title:"كيف يعمل الحوت؟", how_sub:"ثلاث خطوات تفصلك عن خدمتك",
     step1_t:"اختر وابحث", step1_d:"حدّد الخدمة ومدينتك والتاريخ، وتصفّح الخيارات المتاحة بأسعار واضحة.",
     step2_t:"احجز فوراً", step2_d:"أكمل طلبك في خطوات بسيطة دون أي تعقيد أو رسوم خفية.",
     step3_t:"تواصل مباشر", step3_d:"يتواصل معك الشريك مباشرةً لتأكيد التفاصيل وإتمام الخدمة.",
     cities_title:"نخدم جميع المحافظات", cities_sub:"اختر مدينتك لعرض الخيارات المتاحة",
     faq_title:"الأسئلة الشائعة", faq_sub:"كل ما تريد معرفته عن الحوت",
-    cta_h:"هل تملك مكتباً أو فندقاً أو قاعة؟", cta_p:"انضمّ إلى منصة الحوت ووسّع أعمالك — اعرض خدماتك أمام آلاف العملاء في كل العراق.", cta_btn:"سجّل كشريك الآن",
-    footer_desc:"منصتك الأولى في العراق للسيارات والفنادق وقاعات الأعراس ومدارس القيادة.", footer_services:"الخدمات", footer_company:"المنصة",
+    cta_h:"هل تملك مكتباً أو فندقاً أو قاعة أو مغسلة؟", cta_p:"انضمّ إلى منصة الحوت ووسّع أعمالك — اعرض خدماتك أمام آلاف العملاء في كل العراق.", cta_btn:"سجّل كشريك الآن",
+    footer_desc:"منصتك الأولى في العراق للسيارات والفنادق وقاعات الأعراس ومدارس القيادة ومغاسل السيارات.", footer_services:"الخدمات", footer_company:"المنصة",
     err_date:"يرجى اختيار التاريخ أولاً 🐋",
     faqs:[
       {q:"كيف أجد أرخص مكتب تأجير سيارات في بغداد وكركوك؟", a:"منصة الحوت تعرض أسطول المنصة بأسعار يومية واضحة في بغداد وكركوك وأربيل وكل المحافظات، لتختار الأنسب لك بسهولة."},
       {q:"هل يتوفر حجز فنادق في جميع المدن؟", a:"نعم، نوفّر خيارات فنادق متنوعة من الاقتصادية إلى الفاخرة في كافة محافظات العراق، مع تأكيد مباشر من الفندق."},
       {q:"هل يمكنني تصفّح قاعات الأعراس وحجزها عبر المنصة؟", a:"نعم، نوفّر دليلاً كاملاً لأفخم قاعات الأعراس والمناسبات مع السعة والأسعار، وتحجز موعدك مباشرةً عبر المنصة."},
+      {q:"هل أستطيع حجز موعد في مغسلة سيارات؟", a:"نعم، اختر المغسلة والخدمة التي تريدها وحدّد اليوم والساعة، فتصل إلى موعدك المحجوز بلا انتظار بالدور. وبعض المغاسل توفّر الغسيل في موقعك."},
       {q:"هل يتوفر تدريب قيادة للنساء؟", a:"نعم، العديد من المدارس الشريكة توفّر مدرّبات لتعليم السياقة للنساء، ويمكنك تحديد ذلك عند التسجيل."},
       {q:"هل الحجز عبر الحوت يكلّف رسوماً إضافية؟", a:"لا، الأسعار المعروضة واضحة وشفافة، وتتعامل مباشرةً مع الشريك دون رسوم خفية من المنصة."},
-      {q:"كيف أصبح شريكاً في المنصة؟", a:"إن كنت تملك مكتب سيارات أو فندقاً أو قاعة أو مدرسة قيادة، سجّل عبر صفحة \"كن شريكاً\" وسيتم تفعيل حسابك بعد المراجعة."}
+      {q:"كيف أصبح شريكاً في المنصة؟", a:"إن كنت تملك مكتب سيارات أو فندقاً أو قاعة أو مدرسة قيادة أو مغسلة سيارات، سجّل عبر صفحة \"كن شريكاً\" وسيتم تفعيل حسابك بعد المراجعة."}
     ]},
 
   ku:{ dir:"rtl", flag:"🌞", name:"کوردی",
-    nav_partner:"ببە بە هاوبەش", nav_cars:"ئۆتۆمبێل", nav_hotels:"هۆتێل", nav_halls:"هۆڵ", nav_schools:"خوێندنگەی لێخوڕین",
+    nav_partner:"ببە بە هاوبەش", nav_cars:"ئۆتۆمبێل", nav_hotels:"هۆتێل", nav_halls:"هۆڵ", nav_schools:"خوێندنگەی لێخوڕین", nav_wash:"شوشتنگە",
     hero_eyebrow:"یەکەم لە عێراق ٢٠٢٦", hero_h1_a:"بگەڕێ، حیجز بکە،", hero_h1_b:"چێژ لە کاتەکەت ببینە",
-    hero_p:"ئۆتۆمبێلی کرێ، هۆتێلی ناوازە، هۆڵی زەماوەند، و خوێندنگەی شۆفێری پیشەیی لە هەموو پارێزگاکانی عێراق.",
-    tab_car:"بەکرێگرتنی سەیارە", tab_hotel:"هۆتێل", tab_hall:"هۆڵی زەماوەند", tab_school:"خوێندنگەی شۆفێری",
+    hero_p:"ئۆتۆمبێلی کرێ، هۆتێلی ناوازە، هۆڵی زەماوەند، خوێندنگەی شۆفێری، و شوشتنگەی ئۆتۆمبێل بە ژوان لە هەموو پارێزگاکانی عێراق.",
+    tab_car:"بەکرێگرتنی سەیارە", tab_hotel:"هۆتێل", tab_hall:"هۆڵی زەماوەند", tab_school:"خوێندنگەی شۆفێری", tab_wash:"شوشتنگە",
     f_city:"شار", f_date:"بەروار", f_days:"ژمارەی ڕۆژ",
     trust_services:"خزمەتگوزاری", trust_cities:"پارێزگا", trust_rating:"هەڵسەنگاندنی کڕیار",
     cat_title:"خزمەتگوزارییەکان", cat_sub:"هەموو پێداویستییەکانت لەیەک شوێندا", explore:"ئێستا بگەڕێ",
@@ -423,29 +434,31 @@ const I18N = {
     cat2:"هۆتێل", cat2_sub:"هۆتێلی هەڵبژێردراو",
     cat3:"هۆڵی زەماوەند", cat3_sub:"جوانترین شەوەکان",
     cat4:"خوێندنگەی شۆفێری", cat4_sub:"ڕاهێنەری پەسەندکراو",
+    cat5:"شوشتنگەی ئۆتۆمبێل", cat5_sub:"ژوان بەبێ چاوەڕوانی",
     how_title:"حوت چۆن کاردەکات؟", how_sub:"سێ هەنگاو دەتگەیەنێت بە خزمەتگوزارییەکەت",
     step1_t:"هەڵبژێرە و بگەڕێ", step1_d:"خزمەتگوزاری و شار و بەروار دیاری بکە، و هەڵبژاردنە بەردەستەکان ببینە بە نرخی ڕوون.",
     step2_t:"یەکسەر حیجز بکە", step2_d:"داواکارییەکەت تەواو بکە بە چەند هەنگاوێکی سادە بەبێ هیچ ئاڵۆزییەک.",
     step3_t:"پەیوەندی ڕاستەوخۆ", step3_d:"هاوبەشەکە ڕاستەوخۆ پەیوەندیت پێوە دەکات بۆ دڵنیاکردنەوەی وردەکارییەکان.",
     cities_title:"خزمەتی هەموو پارێزگاکان", cities_sub:"شارەکەت هەڵبژێرە بۆ بینینی هەڵبژاردنەکان",
     faq_title:"پرسیارە باوەکان", faq_sub:"هەموو شتێک دەربارەی حوت",
-    cta_h:"خاوەنی نووسینگە یان هۆتێل یان هۆڵیت؟", cta_p:"بەشداربە لە پلاتفۆرمی حوت و کارەکەت فراوان بکە — خزمەتگوزارییەکانت پیشان بدە بە هەزاران کڕیار.", cta_btn:"ئێستا وەک هاوبەش تۆمار بکە",
-    footer_desc:"یەکەم پلاتفۆرمت لە عێراق بۆ سەیارە و هۆتێل و هۆڵی زەماوەند و خوێندنگەی شۆفێری.", footer_services:"خزمەتگوزاری", footer_company:"پلاتفۆرم",
+    cta_h:"خاوەنی نووسینگە یان هۆتێل یان هۆڵ یان شوشتنگەیت؟", cta_p:"بەشداربە لە پلاتفۆرمی حوت و کارەکەت فراوان بکە — خزمەتگوزارییەکانت پیشان بدە بە هەزاران کڕیار.", cta_btn:"ئێستا وەک هاوبەش تۆمار بکە",
+    footer_desc:"یەکەم پلاتفۆرمت لە عێراق بۆ سەیارە و هۆتێل و هۆڵ و خوێندنگەی شۆفێری و شوشتنگە.", footer_services:"خزمەتگوزاری", footer_company:"پلاتفۆرم",
     err_date:"تکایە سەرەتا بەروار هەڵبژێرە 🐋",
     faqs:[
       {q:"چۆن هەرزانترین نووسینگەی کرێی سەیارە بدۆزمەوە؟", a:"حوت هێزی پلاتفۆرم بە نرخی ڕۆژانەی ڕوون پیشان دەدات لە هەموو پارێزگاکاندا، تا بە ئاسانی باشترین هەڵبژاردن بکەیت."},
       {q:"ئایا حیجزی هۆتێل لە هەموو شارەکاندا هەیە؟", a:"بەڵێ، جۆرەجۆر هۆتێل لە ئابوورییەوە تا ناوازە لە هەموو پارێزگاکاندا، لەگەڵ دڵنیاکردنەوەی ڕاستەوخۆ."},
       {q:"دەتوانم هۆڵی زەماوەند بەکرێ بگرم؟", a:"بەڵێ، لیستی تەواوی باشترین هۆڵەکان بەردەستە لەگەڵ گونجایش و نرخ، و ڕاستەوخۆ حیجز دەکەیت."},
+      {q:"دەتوانم ژوان لە شوشتنگە بگرم؟", a:"بەڵێ، شوشتنگە و خزمەتگوزارییەکە هەڵبژێرە و ڕۆژ و کات دیاری بکە، بەبێ چاوەڕوانی. هەندێک شوشتنگە لە شوێنی تۆشدا کار دەکەن."},
       {q:"فێربوونی شۆفێری بۆ ئافرەتان هەیە؟", a:"بەڵێ، زۆرێک لە خوێندنگە هاوبەشەکان ڕاهێنەری ئافرەت دابین دەکەن، دەتوانیت لە کاتی تۆمارکردندا دیاری بکەیت."},
       {q:"ئایا حیجز لە حوت کرێی زیادە دەوێت؟", a:"نەخێر، نرخەکان ڕوون و ئاشکران، و ڕاستەوخۆ لەگەڵ هاوبەشەکە مامەڵە دەکەیت بەبێ کرێی شاراوە."},
-      {q:"چۆن ببم بە هاوبەش؟", a:"ئەگەر خاوەنی نووسینگەی سەیارە یان هۆتێل یان هۆڵ یان خوێندنگەی شۆفێریت، لە پەڕەی \"ببە بە هاوبەش\" تۆمار بکە و دوای پێداچوونەوە چالاک دەکرێت."}
+      {q:"چۆن ببم بە هاوبەش؟", a:"ئەگەر خاوەنی نووسینگەی سەیارە یان هۆتێل یان هۆڵ یان خوێندنگە یان شوشتنگەیت، لە پەڕەی \"ببە بە هاوبەش\" تۆمار بکە و دوای پێداچوونەوە چالاک دەکرێت."}
     ]},
 
   tr:{ dir:"ltr", flag:"🇹🇷", name:"Türkçe",
-    nav_partner:"Ortak Ol", nav_cars:"Araçlar", nav_hotels:"Oteller", nav_halls:"Salonlar", nav_schools:"Sürücü Kursu",
+    nav_partner:"Ortak Ol", nav_cars:"Araçlar", nav_hotels:"Oteller", nav_halls:"Salonlar", nav_schools:"Sürücü Kursu", nav_wash:"Oto Yıkama",
     hero_eyebrow:"Irak'ın 1 Numarası — 2026", hero_h1_a:"Ara, rezervasyon yap,", hero_h1_b:"deneyimini yaşa",
-    hero_p:"Bağdat, Kerkük, Erbil ve Irak'ın tüm illerinde araç kiralama, otel rezervasyonu, düğün salonları ve profesyonel sürücü kursları.",
-    tab_car:"Araç Kiralama", tab_hotel:"Otel Rezervasyonu", tab_hall:"Düğün Salonları", tab_school:"Sürücü Kursu",
+    hero_p:"Bağdat, Kerkük, Erbil ve Irak'ın tüm illerinde araç kiralama, otel rezervasyonu, düğün salonları, sürücü kursları ve randevulu oto yıkama.",
+    tab_car:"Araç Kiralama", tab_hotel:"Otel Rezervasyonu", tab_hall:"Düğün Salonları", tab_school:"Sürücü Kursu", tab_wash:"Oto Yıkama",
     f_city:"Şehir", f_date:"Tarih", f_days:"Gün Sayısı",
     trust_services:"entegre hizmet", trust_cities:"il", trust_rating:"müşteri puanı",
     cat_title:"Hizmetlerimizi Keşfedin", cat_sub:"İhtiyacınız olan her şey tek yerde", explore:"Şimdi göz at",
@@ -453,29 +466,31 @@ const I18N = {
     cat2:"Otel Rezervasyonu", cat2_sub:"Özenle seçilmiş oteller",
     cat3:"Düğün Salonları", cat3_sub:"En güzel geceler için",
     cat4:"Sürücü Kursu", cat4_sub:"Sertifikalı eğitmenler",
+    cat5:"Oto Yıkama", cat5_sub:"Randevu alın, beklemeyin",
     how_title:"Al-Hut nasıl çalışır?", how_sub:"Hizmetinize üç adım kaldı",
     step1_t:"Seç ve ara", step1_d:"Hizmeti, şehri ve tarihi belirleyin, mevcut seçenekleri net fiyatlarla inceleyin.",
     step2_t:"Hemen rezervasyon", step2_d:"Talebinizi gizli ücret olmadan birkaç basit adımda tamamlayın.",
     step3_t:"Doğrudan iletişim", step3_d:"Ortak, detayları onaylamak için sizinle doğrudan iletişime geçer.",
     cities_title:"Tüm İllere Hizmet", cities_sub:"Seçenekleri görmek için şehrinizi seçin",
     faq_title:"Sıkça Sorulan Sorular", faq_sub:"Al-Hut hakkında merak ettikleriniz",
-    cta_h:"Ofisiniz, oteliniz veya salonunuz mu var?", cta_p:"Al-Hut platformuna katılın ve işinizi büyütün — hizmetlerinizi binlerce müşteriye sunun.", cta_btn:"Hemen ortak olarak kaydol",
-    footer_desc:"Araç, otel, düğün salonu ve sürücü kursları için Irak'taki ilk platformunuz.", footer_services:"Hizmetler", footer_company:"Platform",
+    cta_h:"Ofisiniz, oteliniz, salonunuz veya yıkamanız mı var?", cta_p:"Al-Hut platformuna katılın ve işinizi büyütün — hizmetlerinizi binlerce müşteriye sunun.", cta_btn:"Hemen ortak olarak kaydol",
+    footer_desc:"Araç, otel, düğün salonu, sürücü kursu ve oto yıkama için Irak'taki ilk platformunuz.", footer_services:"Hizmetler", footer_company:"Platform",
     err_date:"Lütfen önce tarih seçin 🐋",
     faqs:[
       {q:"En ucuz araç kiralama nerede bulunur?", a:"Al-Hut, tüm illerde net günlük fiyatlarla platform filosunu sunarak size en uygun seçeneği kolayca seçtirir."},
       {q:"Tüm şehirlerde otel rezervasyonu var mı?", a:"Evet, Irak'ın tüm illerinde ekonomikten lükse otel seçenekleri ve otelden doğrudan onay sunuyoruz."},
       {q:"Platform üzerinden düğün salonu rezerve edebilir miyim?", a:"Evet, kapasite ve fiyatlarla en iyi salonların tam bir rehberini sunuyoruz ve tarihinizi doğrudan rezerve edersiniz."},
+      {q:"Oto yıkama randevusu alabilir miyim?", a:"Evet, yıkamayı ve hizmeti seçin, gün ve saati belirleyin; sıra beklemeden randevunuza gidin. Bazı yıkamalar bulunduğunuz yere de gelir."},
       {q:"Kadınlar için sürücü eğitimi var mı?", a:"Evet, birçok ortak kurs kadın eğitmenler sunar, kayıt sırasında bunu belirtebilirsiniz."},
       {q:"Al-Hut üzerinden rezervasyon ek ücret gerektirir mi?", a:"Hayır, gösterilen fiyatlar net ve şeffaftır, gizli ücret olmadan doğrudan ortakla işlem yaparsınız."},
-      {q:"Nasıl ortak olabilirim?", a:"Bir araç ofisi, otel, salon veya sürücü kursunuz varsa \"Ortak Ol\" sayfasından kaydolun, inceleme sonrası hesabınız etkinleştirilir."}
+      {q:"Nasıl ortak olabilirim?", a:"Bir araç ofisi, otel, salon, sürücü kursu veya oto yıkamanız varsa \"Ortak Ol\" sayfasından kaydolun, inceleme sonrası hesabınız etkinleştirilir."}
     ]},
 
   en:{ dir:"ltr", flag:"🇬🇧", name:"English",
-    nav_partner:"Become a partner", nav_cars:"Cars", nav_hotels:"Hotels", nav_halls:"Halls", nav_schools:"Driving schools",
+    nav_partner:"Become a partner", nav_cars:"Cars", nav_hotels:"Hotels", nav_halls:"Halls", nav_schools:"Driving schools", nav_wash:"Car wash",
     hero_eyebrow:"Iraq's #1 platform — 2026", hero_h1_a:"Search, book,", hero_h1_b:"enjoy your experience",
-    hero_p:"Car rentals, luxury hotels, wedding halls, and professional driving schools across Baghdad, Kirkuk, Erbil and all of Iraq.",
-    tab_car:"Car Rental", tab_hotel:"Hotel Booking", tab_hall:"Wedding Halls", tab_school:"Driving School",
+    hero_p:"Car rentals, luxury hotels, wedding halls, professional driving schools, and car wash by appointment across Baghdad, Kirkuk, Erbil and all of Iraq.",
+    tab_car:"Car Rental", tab_hotel:"Hotel Booking", tab_hall:"Wedding Halls", tab_school:"Driving School", tab_wash:"Car Wash",
     f_city:"City", f_date:"Date", f_days:"Number of Days",
     trust_services:"integrated services", trust_cities:"provinces", trust_rating:"customer rating",
     cat_title:"Explore Our Services", cat_sub:"Everything you need in one place", explore:"Browse now",
@@ -483,22 +498,24 @@ const I18N = {
     cat2:"Hotel Booking", cat2_sub:"Handpicked hotels",
     cat3:"Wedding Halls", cat3_sub:"For unforgettable nights",
     cat4:"Driving School", cat4_sub:"Certified instructors",
+    cat5:"Car Wash", cat5_sub:"Book a slot, skip the line",
     how_title:"How does Al-Hut work?", how_sub:"Three steps to your service",
     step1_t:"Choose & search", step1_d:"Pick the service, your city and date, and browse available options at clear prices.",
     step2_t:"Book instantly", step2_d:"Complete your request in a few simple steps with no hidden fees.",
     step3_t:"Direct contact", step3_d:"The partner contacts you directly to confirm details and complete the service.",
     cities_title:"We Serve All Provinces", cities_sub:"Select your city to see available options",
     faq_title:"FAQ", faq_sub:"Everything you want to know about Al-Hut",
-    cta_h:"Own a car office, hotel, or hall?", cta_p:"Join the Al-Hut platform and grow your business — showcase your services to thousands of customers across Iraq.", cta_btn:"Register as a partner now",
-    footer_desc:"Your #1 platform in Iraq for cars, hotels, wedding halls, and driving schools.", footer_services:"Services", footer_company:"Platform",
+    cta_h:"Own a car office, hotel, hall, or car wash?", cta_p:"Join the Al-Hut platform and grow your business — showcase your services to thousands of customers across Iraq.", cta_btn:"Register as a partner now",
+    footer_desc:"Your #1 platform in Iraq for cars, hotels, wedding halls, driving schools, and car wash.", footer_services:"Services", footer_company:"Platform",
     err_date:"Please select a date first 🐋",
     faqs:[
       {q:"How do I find the cheapest car rental in Iraq?", a:"Al-Hut shows the platform fleet at clear daily prices across all provinces, so you can easily choose what suits you best."},
       {q:"Is hotel booking available in all cities?", a:"Yes, we offer a variety of hotel options from budget to luxury across all Iraqi provinces, with direct confirmation from the hotel."},
       {q:"Can I browse and book wedding halls via the platform?", a:"Yes, we provide a complete directory of the finest halls with capacity and prices, and you reserve your date directly."},
+      {q:"Can I book a car wash appointment?", a:"Yes, pick the wash and the service you want, choose your day and time, and arrive to a reserved slot with no queue. Some washes also come to your location."},
       {q:"Is there driving training for women?", a:"Yes, many partner schools provide female instructors, and you can specify this when enrolling."},
       {q:"Does booking via Al-Hut cost extra fees?", a:"No, the displayed prices are clear and transparent, and you deal directly with the partner with no hidden platform fees."},
-      {q:"How do I become a partner?", a:"If you own a car office, hotel, hall, or driving school, register via the \"Become a partner\" page and your account will be activated after review."}
+      {q:"How do I become a partner?", a:"If you own a car office, hotel, hall, driving school, or car wash, register via the \"Become a partner\" page and your account will be activated after review."}
     ]}
 };
 
@@ -585,11 +602,12 @@ window.setService = function(svc){
   currentService = svc;
   document.querySelectorAll(".search-tab").forEach(t=>t.classList.remove("on"));
   $("tab-"+svc)?.classList.add("on");
-  // إخفاء "عدد الأيام" للقاعات والمدارس (تُحجز بالتاريخ/الباقة لا بالأيام)
-  $("daysField").style.display = (svc==="school"||svc==="hall") ? "none" : "block";
+  // "عدد الأيام" للسيارات والفنادق فقط — القاعة تُحجز بالتاريخ،
+  // المدرسة بالكورس، والمغسلة بموعد وساعة تُختار في صفحة المغاسل.
+  $("daysField").style.display = (svc==="school"||svc==="hall"||svc==="wash") ? "none" : "block";
 };
 
-/* ═══════════════ ROUTING (متطابق مع الصفحات الأربع) ═══════════════ */
+/* ═══════════════ ROUTING (متطابق مع صفحات الكتالوج الخمس) ═══════════════ */
 function buildURL(page, extra){
   const city=encodeURIComponent($("citySelect").value);
   const date=$("dateInput").value;
@@ -611,6 +629,8 @@ window.startBooking = function(){
     location.href = buildURL("schools.html");
   } else if(currentService==="hall"){
     location.href = buildURL("halls.html");
+  } else if(currentService==="wash"){
+    location.href = buildURL("carwash.html");
   } else {
     // السيارات: fleet.html يقرأ cat (الفئة) لا type — نتركها فارغة لعرض كل الأسطول
     const days=$("daysInput").value;

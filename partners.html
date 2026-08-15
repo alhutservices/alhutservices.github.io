@@ -58,6 +58,11 @@ a{color:inherit}
 .search input:focus{border-color:var(--text);outline:none;box-shadow:0 0 0 1px var(--text)}
 .search .i{position:absolute;inset-inline-end:16px;top:50%;transform:translateY(-50%);opacity:.4;font-size:16px}
 
+.quick{width:100%;margin:-6px 0 12px;padding:11px;border-radius:var(--r-s);
+  border:1px dashed var(--rose);background:#FFF6F8;color:var(--rose-d);font-size:13.5px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:7px;transition:.15s}
+.quick:hover{background:#FFEDF1}
+.quick span{font-size:16px;font-weight:800}
 .row{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid var(--line-soft);
   border-radius:var(--r-m);margin-bottom:10px;transition:.15s;text-align:start;width:100%;background:var(--bg)}
 .row:hover{box-shadow:var(--sh);border-color:var(--line)}
@@ -251,6 +256,7 @@ a{color:inherit}
         <button class="chip" data-f="pending">قيد المراجعة</button>
         <button class="chip" data-f="active">مفعّل</button>
         <button class="chip" data-f="blocked">موقوف</button>
+        <button class="chip" data-f="noitems">بلا عناصر</button>
         <button class="chip" data-f="weak">ناقص البيانات</button>
       </div>
       <div id="list"></div>
@@ -276,6 +282,7 @@ a{color:inherit}
       <div id="itemForm"></div>
       <div class="savebar">
         <div class="meter"><b id="iTxt">اكتمال العنصر ٠٪</b><i><u id="iBar"></u></i></div>
+        <button class="btn btn-o btn-s" id="btnSaveNext">حفظ وآخر</button>
         <button class="btn btn-d btn-s" id="btnSaveItem">حفظ</button>
       </div>
     </section>
@@ -336,7 +343,7 @@ const CITIES = ["بغداد","كركوك","أربيل","السليمانية","�
    الكتالوج يُخزَّن تحت اسم المدينة، فأي اختلاف يخفي الشريك عن الزبون. */
 const DAYS = ["السبت","الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"];
 const PAY  = ["نقد","زين كاش","آسيا حوالة","سوبر كي","تحويل بنكي","فيزا"];
-const IMG  = {MAX:1400, Q:.74};
+const IMG  = {MAX:1100, Q:.68};   // أصغر = رفع أسرع وأقل فشلاً
 
 /* ═══════════════════════════════════════════════════════════════════════
    سجلّ المواصفات — مصدر الحقيقة الوحيد لكل حقل في النظام
@@ -569,7 +576,17 @@ async function api(action, extra){
     headers:{"Content-Type":"text/plain;charset=utf-8"},
     body:JSON.stringify(Object.assign({action:action, session:S.session}, extra || {}))
   });
-  const d = await res.json();
+  const txt = await res.text();
+  let d;
+  try { d = JSON.parse(txt); }
+  catch(e){
+    /* Apps Script يعيد صفحة HTML عند انتهاء المهلة أو نفاد الحصة أو خطأ نشر.
+       نُظهر أول سطر منها بدل رسالة "JSON غير صالح" المبهمة. */
+    const plain = txt.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim();
+    throw new Error(res.status === 200
+      ? ("ردّ غير متوقّع من الخادم: " + plain.substring(0,80))
+      : ("الخادم أعاد الرمز " + res.status + " — راجع النشر"));
+  }
   if(d && d.reason === "session"){ lock(true); throw new Error("انتهت الجلسة"); }
   return d;
 }
@@ -687,7 +704,8 @@ function renderList(){
   const q = S.q.toLowerCase();
   const list = S.partners.filter(p => {
     if(S.sector !== "all" && p.sector !== S.sector) return false;
-    if(S.filter === "weak"){ if(Number(p.completeness||0) >= 70) return false; }
+    if(S.filter === "noitems"){ if(Number(p.items||0) > 0) return false; }
+    else if(S.filter === "weak"){ if(Number(p.completeness||0) >= 70) return false; }
     else if(S.filter !== "all" && p.status !== S.filter) return false;
     if(!q) return true;
     return [p.name, p.phone, p.city, p.area, p.id].join(" ").toLowerCase().includes(q);
@@ -716,7 +734,9 @@ function renderList(){
         <div class="pct" style="color:${pctColor(pc)};border:2px solid ${pctColor(pc)}">${pc}٪</div>
         <span class="state ${st[0]}" style="margin-top:6px">${st[1]}</span>
       </div>
-    </button>`;
+    </button>
+    ${(p.items||0) === 0 ? `<button class="quick" onclick="quickAdd('${esc(p.id)}',event)">
+        <span>＋</span> أضف ${esc(sk.itemOne)} لـ«${esc(p.name)}»</button>` : ""}`;
   }).join("");
 }
 
@@ -813,6 +833,25 @@ function newPartner(sector){
   renderEdit(true);
   go("vEdit");
 }
+
+/* الطريق السريع: من قائمة الشركاء إلى إضافة عنصر بضغطة واحدة،
+   بدل فتح الشريك ثم التمرير ثم فتح العناصر ثم الإضافة. */
+window.quickAdd = async function(pid, ev){
+  if(ev) ev.stopPropagation();
+  toast("يُفتح…");
+  try{
+    const d = await api("opGet", {id:pid});
+    if(!d || !d.success) return toast((d && d.msg) || "تعذّر التحميل", true);
+    const p = d.partner;
+    p.features = Array.isArray(p.features) ? p.features : [];
+    p.specs = p.specs || {};
+    S.cur = p;
+    S.curItems = d.offerings || [];
+    S.media = Array.isArray(p.media) ? p.media.slice() : [];
+    S.dirty = false;
+    openItem(-1);
+  }catch(e){ toast(e.message, true); }
+};
 
 async function openPartner(id){
   toast("يُحمَّل…");
@@ -997,30 +1036,38 @@ async function queueUpload(scope, files){
   if(!files.length) return;
   const arr = mediaOf(scope), kinds = kindsOf(scope);
   const q = $("#upq_" + scope);
-  let done = 0;
+  let done = 0, failed = 0;
   S.uploading += files.length;
 
-  for(const f of files){
-    if(q) q.textContent = `يُرفع ${done+1} من ${files.length}…`;
-    try{
-      const blob = await shrink(f);
-      const b64  = await toBase64(blob);
-      const r = await api("opUpload", {image:b64, name:"hut_" + Date.now()});
-      if(!r || !r.success) throw new Error((r && r.msg) || "رفض الخادم الصورة");
-      arr.push({url:r.url, thumb:r.thumb || r.url, del:r.del || "", kind:kinds[0]});
-      done++;
-      S.dirty = true;
-      paintGallery(scope);
-    }catch(err){
-      S.uploading -= (files.length - done);
-      if(q) q.textContent = "";
-      toast("تعذّر رفع صورة: " + err.message, true);
-      scoreNow();
-      return;
+  for(let i = 0; i < files.length; i++){
+    const f = files[i];
+    if(q) q.textContent = "يُرفع " + (i+1) + " من " + files.length + "…";
+    let ok = false, lastErr = "";
+
+    /* محاولتان: أغلب حالات الفشل عابرة (مهلة أو شبكة) */
+    for(let attempt = 0; attempt < 2 && !ok; attempt++){
+      try{
+        const blob = await shrink(f);
+        if(blob.size > 3500000) throw new Error("الصورة كبيرة جداً حتى بعد الضغط");
+        const b64 = await toBase64(blob);
+        const r = await api("opUpload", {image:b64, name:"hut_" + Date.now()});
+        if(!r || !r.success) throw new Error((r && r.msg) || "رفض الخادم الصورة");
+        arr.push({url:r.url, thumb:r.thumb || r.url, del:r.del || "", kind:kinds[0]});
+        ok = true; done++; S.dirty = true;
+        paintGallery(scope);
+      }catch(err){
+        lastErr = err.message;
+        if(attempt === 0){ if(q) q.textContent = "تعذّرت " + (i+1) + " — إعادة المحاولة…"; await new Promise(r2=>setTimeout(r2,900)); }
+      }
     }
+    if(!ok){ failed++; toast("فشلت صورة: " + lastErr, true); }
   }
+
   S.uploading -= files.length;
-  if(q){ q.textContent = done + " صورة جاهزة"; setTimeout(() => { if(q) q.textContent = ""; }, 2500); }
+  if(q){
+    q.textContent = failed ? (done + " نجحت · " + failed + " فشلت") : (done + " صورة جاهزة");
+    setTimeout(()=>{ if(q) q.textContent = ""; }, 4000);
+  }
   scoreNow();
 }
 
@@ -1231,6 +1278,8 @@ function openItem(idx){
   $$("#itemForm input, #itemForm select, #itemForm textarea").forEach(el =>
     el.addEventListener("input", () => { S.dirty = true; scoreNow(); }));
 
+  const nx = $("#btnSaveNext");
+  if(nx) nx.classList.toggle("hidden", idx >= 0);
   go("vItem");
   paintGallery("im");
   $("#hTitle").textContent = idx >= 0 ? it.name : "عنصر جديد";
@@ -1238,7 +1287,7 @@ function openItem(idx){
   scoreNow();
 }
 
-$("#btnSaveItem").onclick = async () => {
+async function saveItem(again){
   if(S.uploading > 0) return toast("انتظر انتهاء رفع الصور", true);
   const sk = SK(S.cur.sector).item;
   const base = ITEM_BASE.map(f => f.k === "type" ? Object.assign({}, f, {opts:sk.types}) : f);
@@ -1269,7 +1318,8 @@ $("#btnSaveItem").onclick = async () => {
   }
   $("#itemMsg").innerHTML = "";
 
-  const b = $("#btnSaveItem");
+  const b = again ? $("#btnSaveNext") : $("#btnSaveItem");
+  const label = b.textContent;
   b.innerHTML = '<span class="sp"></span>'; b.disabled = true;
   try{
     const r = await api("opSaveOffering", {offering:it});
@@ -1277,12 +1327,20 @@ $("#btnSaveItem").onclick = async () => {
     it.id = r.id;
     if(idx >= 0) S.curItems[idx] = it; else S.curItems.push(it);
     S.dirty = false;
-    toast("حُفظ", false, "ok");
-    openItems();
     load();
+    if(again){
+      toast("حُفظ — أضف التالي", false, "ok");
+      openItem(-1);
+    }else{
+      toast("حُفظ", false, "ok");
+      openItems();
+    }
   }catch(e){ toast(e.message, true); }
-  finally{ b.textContent = "حفظ"; b.disabled = false; }
-};
+  finally{ b.textContent = label; b.disabled = false; }
+}
+
+$("#btnSaveItem").onclick = () => saveItem(false);
+$("#btnSaveNext").onclick = () => saveItem(true);
 
 async function delItem(){
   if(!confirm("حذف هذا العنصر نهائياً؟")) return;

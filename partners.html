@@ -58,6 +58,32 @@ a{color:inherit}
 .search input:focus{border-color:var(--text);outline:none;box-shadow:0 0 0 1px var(--text)}
 .search .i{position:absolute;inset-inline-end:16px;top:50%;transform:translateY(-50%);opacity:.4;font-size:16px}
 
+
+/* ═══ بطاقة الشريك في القائمة ═══ */
+.row{position:relative;display:flex;gap:13px;align-items:center;padding:13px;padding-inline-start:17px;
+  border:1px solid var(--line-soft);border-radius:var(--r-l);margin-bottom:11px;
+  transition:transform .18s cubic-bezier(.34,1.3,.64,1),box-shadow .18s,border-color .18s;
+  text-align:start;width:100%;background:var(--bg);overflow:hidden}
+.row::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:4px;background:var(--line)}
+.row[data-st="active"]::before{background:var(--green)}
+.row[data-st="pending"]::before{background:var(--amber)}
+.row[data-st="blocked"]::before{background:var(--red)}
+.row:hover{transform:translateY(-2px);box-shadow:var(--sh-up);border-color:var(--line)}
+.row:active{transform:none}
+.row-img{width:66px;height:66px;border-radius:var(--r-m);object-fit:cover;background:var(--bg-2);flex:none}
+.row-ph{width:66px;height:66px;border-radius:var(--r-m);display:grid;place-items:center;font-size:24px;flex:none}
+.row-mid{flex:1;min-width:0}
+.row-mid b{display:block;font-size:15.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px}
+.rmeta{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.rmeta span{font-size:11.5px;font-weight:600;color:var(--text-2);background:var(--bg-soft);
+  padding:3px 8px;border-radius:var(--r-pill);white-space:nowrap}
+.rmeta span.warn{background:#FFF4E5;color:var(--amber)}
+.rmeta span.num{font-family:var(--num);direction:ltr}
+.ring2{width:42px;height:42px;position:relative;display:grid;place-items:center;flex:none}
+.ring2 svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring2 circle{fill:none;stroke-width:3}
+.ring2 b{font-size:11px;font-family:var(--num);font-weight:700}
+
 .quick{width:100%;margin:-6px 0 12px;padding:11px;border-radius:var(--r-s);
   border:1px dashed var(--rose);background:#FFF6F8;color:var(--rose-d);font-size:13.5px;font-weight:700;
   display:flex;align-items:center;justify-content:center;gap:7px;transition:.15s}
@@ -80,6 +106,48 @@ a{color:inherit}
 .state.ok{background:#E9F5EA;color:var(--green)}
 .state.no{background:#FDEAE6;color:var(--red)}
 
+
+
+/* ═══ بطاقات فرعية داخل القسم ═══ */
+.sub{border:1px solid var(--line-soft);border-radius:var(--r-l);margin-bottom:12px;overflow:hidden;
+  background:var(--bg);opacity:0;transform:translateY(10px);animation:subIn .34s cubic-bezier(.2,.9,.3,1) forwards}
+.sub:nth-child(1){animation-delay:.02s} .sub:nth-child(2){animation-delay:.07s}
+.sub:nth-child(3){animation-delay:.12s} .sub:nth-child(4){animation-delay:.17s}
+.sub:nth-child(5){animation-delay:.22s} .sub:nth-child(6){animation-delay:.27s}
+@keyframes subIn{to{opacity:1;transform:none}}
+.sub-h{display:flex;align-items:center;gap:10px;padding:13px 15px;border-bottom:1px solid var(--line-soft)}
+.sub-i{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15px;flex:none}
+.sub-h b{flex:1;font-size:14.5px;font-weight:700;letter-spacing:-.01em}
+.sub-h .n{font-size:11.5px;color:var(--text-3);font-family:var(--num)}
+.sub-b{padding:15px}
+
+/* لون لكل قسم — يثبّت المكان في ذهن الموظف */
+.pane[data-a="rose"]  .sub-i{background:#FFF0F3;color:var(--rose-d)}
+.pane[data-a="blue"]  .sub-i{background:#EDF3FA;color:var(--blue)}
+.pane[data-a="green"] .sub-i{background:#E9F5EA;color:#00700B}
+.pane[data-a="amber"] .sub-i{background:#FFF4E5;color:var(--amber)}
+.pane[data-a="violet"].sub-i,.pane[data-a="violet"] .sub-i{background:#F3F0FF;color:#5B3FA8}
+.pane[data-a="slate"] .sub-i{background:var(--bg-2);color:var(--text-1,#484848)}
+.pane[data-a="rose"]  .pane-h h3::after{background:var(--rose)}
+.pane[data-a="blue"]  .pane-h h3::after{background:var(--blue)}
+.pane[data-a="green"] .pane-h h3::after{background:var(--green)}
+.pane[data-a="amber"] .pane-h h3::after{background:var(--amber)}
+.pane[data-a="violet"].pane-h h3::after,.pane[data-a="violet"] .pane-h h3::after{background:#6B46C1}
+.pane[data-a="slate"] .pane-h h3::after{background:var(--text-3)}
+.pane-h h3{position:relative;padding-inline-start:13px}
+.pane-h h3::after{content:"";position:absolute;inset-inline-start:0;top:5px;bottom:5px;width:4px;border-radius:3px}
+
+/* حركات */
+.tab{transition:transform .14s,background .15s,border-color .15s}
+.tab:active{transform:scale(.95)}
+.pill{transition:transform .13s,background .13s,border-color .13s,color .13s}
+.pill:active{transform:scale(.94)}
+.pill.on{animation:pillPop .26s cubic-bezier(.34,1.5,.64,1)}
+@keyframes pillPop{0%{transform:scale(1)}45%{transform:scale(1.09)}100%{transform:scale(1)}}
+.ering circle{transition:stroke-dashoffset .5s cubic-bezier(.2,.9,.3,1),stroke .3s}
+.savebar .meter i u{transition:width .45s cubic-bezier(.2,.9,.3,1),background .3s}
+.ph{animation:phIn .3s ease}
+@keyframes phIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 
 /* ═══ محرّر مقسّم: قسم واحد على الشاشة + ملاحة دائمة ═══ */
 .ehead{position:sticky;top:calc(var(--nav) + env(safe-area-inset-top));z-index:30;background:var(--bg);
@@ -673,6 +741,84 @@ farm: {
 }
 };
 
+
+/* ═══════════════════════════════════════════════════════════════════════
+   تجميع الحقول داخل كل قسم — لا تُكدَّس في صندوق واحد.
+   المفاتيح غير المذكورة تسقط تلقائياً في «تفاصيل أخرى»، فإضافة حقل
+   جديد في SCHEMA لا تكسر شيئاً ولا تحتاج تعديلاً هنا.
+═══════════════════════════════════════════════════════════════════════ */
+const SPEC_GROUPS = {
+  car: [
+    {t:"الملكية",          i:"👤", k:["owner_name","founded"]},
+    {t:"الأسطول والأسعار", i:"🚗", k:["fleet_size","min_days","deposit"]},
+    {t:"التوصيل والسائق",  i:"🚚", k:["delivery","delivery_fee","delivery_km","driver_fee"]},
+    {t:"الشروط والدفع",    i:"📋", k:["insurance","docs","payment"]},
+    {t:"أوقات الدوام",     i:"🕐", k:["open_from","open_to","closed_days"]}
+  ],
+  hotel: [
+    {t:"التصنيف والحجم",   i:"⭐", k:["stars","cat","rooms_count","floors"]},
+    {t:"مواعيد الدخول",    i:"🕐", k:["checkin","checkout"]},
+    {t:"الخدمات والأسعار", i:"🥐", k:["breakfast","breakfast_price","parking","extra_bed","child_free"]},
+    {t:"الدفع والسياسات",  i:"📋", k:["payment","cancel","rules"]}
+  ],
+  hall: [
+    {t:"السعة",            i:"👥", k:["cap_min","cap_max","halls_count"]},
+    {t:"الأسعار",          i:"💰", k:["price_night","price_weekend","meal_price","deposit_pct","hours"]},
+    {t:"الخدمات",          i:"🍽️", k:["catering","sound","parking"]},
+    {t:"الدفع والسياسات",  i:"📋", k:["payment","cancel"]}
+  ],
+  school: [
+    {t:"التراخيص والفريق", i:"🎓", k:["license","instructors","female_inst","cars_count"]},
+    {t:"الخدمات",          i:"🚐", k:["pickup","pickup_fee","theory","exam_help","gov_fee"]},
+    {t:"الدفع والدوام",    i:"🕐", k:["payment","open_from","open_to","closed_days"]}
+  ],
+  wash: [
+    {t:"الطاقة الاستيعابية", i:"⚙️", k:["owner_name","bays","capacity_h","avg_minutes"]},
+    {t:"نظام المواعيد",    i:"⏰", k:["booking","slot_step"]},
+    {t:"نوع الخدمة",       i:"💧", k:["wash_type","home_service","home_fee","wait_area","sizes"]},
+    {t:"الدفع والدوام",    i:"🕐", k:["payment","open_from","open_to","closed_days"]}
+  ],
+  farm: [
+    {t:"التعريف والسعة",   i:"🌴", k:["owner_name","kind","area_size","units_count","capacity"]},
+    {t:"الوصول والطريق",   i:"🛣️", k:["distance_city","road"]},
+    {t:"المسابح",          i:"🏊", k:["pool","pool_private"]},
+    {t:"المواعيد والعربون", i:"🕐", k:["checkin","checkout","day_from","day_to","min_nights","deposit"]},
+    {t:"القواعد والدفع",   i:"📋", k:["families_only","parties","payment","cancel","rules"]}
+  ]
+};
+
+const ITEM_GROUPS = {
+  car:    [{t:"الهوية", i:"🚗", k:["brand","model","year","color","plate"]},
+           {t:"الميكانيك", i:"⚙️", k:["trans","fuel","engine","seats","doors"]},
+           {t:"الأسعار والحدود", i:"💰", k:["price_week","price_month","km_limit","km_extra","deposit"]}],
+  hotel:  [{t:"الغرفة", i:"🛏️", k:["beds","max_guests","size_m2","floor","view","rooms_same"]},
+           {t:"الأسعار", i:"💰", k:["price_weekend","price_month"]},
+           {t:"القواعد", i:"📋", k:["smoking"]}],
+  hall:   [{t:"السعة والمدة", i:"👥", k:["min_guests","max_guests","hours"]},
+           {t:"الأسعار", i:"💰", k:["per_person","deposit"]}],
+  school: [{t:"الكورس", i:"📘", k:["level","hours","lessons","days"]},
+           {t:"الشروط", i:"📋", k:["car_type","age_min","gender"]}],
+  wash:   [{t:"الخدمة", i:"🧽", k:["duration","car_size","includes"]},
+           {t:"الأسعار والضمان", i:"💰", k:["warranty","price_suv","monthly"]}],
+  farm:   [{t:"الوحدة", i:"🏡", k:["capacity","bedrooms","beds","bathrooms","size_m2"]},
+           {t:"المرافق", i:"🏊", k:["has_pool","kitchen","ac"]},
+           {t:"الأسعار", i:"💰", k:["price_day","price_weekend","extra_person"]}]
+};
+
+/** يوزّع حقول القطاع على مجموعاته، وما لم يُذكر يذهب لـ«تفاصيل أخرى» */
+function groupFields(defs, groups){
+  const used = {}, out = [];
+  (groups||[]).forEach(function(g){
+    const fs = g.k.map(function(k){ return defs.find(function(f){ return f.k === k; }); })
+                  .filter(Boolean);
+    fs.forEach(function(f){ used[f.k] = 1; });
+    if(fs.length) out.push({t:g.t, i:g.i, fs:fs});
+  });
+  const rest = defs.filter(function(f){ return !used[f.k]; });
+  if(rest.length) out.push({t:"تفاصيل أخرى", i:"➕", fs:rest});
+  return out;
+}
+
 /* الحقول المشتركة بين كل القطاعات */
 const BASE = [
   {k:"name",  l:"اسم النشاط",   t:"text", req:1, w:1, hint:"كما يعرفه الزبون"},
@@ -905,21 +1051,33 @@ function renderList(){
   box.innerHTML = list.map(p => {
     const sk = SK(p.sector);
     const pc = Number(p.completeness || 0);
+    const col = pctColor(pc), circ = 2*Math.PI*18;
     const st = {pending:["wait","قيد المراجعة"], active:["ok","مفعّل"], blocked:["no","موقوف"]}[p.status] || ["","—"];
-    return `<button class="row" onclick="openPartner('${esc(p.id)}')">
-      ${p.cover ? `<img class="row-img" src="${esc(p.cover)}" alt="" loading="lazy">`
-                : `<div class="row-ph">${sk.icon}</div>`}
+    const items = Number(p.items||0);
+    return `<button class="row" data-st="${esc(p.status)}" onclick="openPartner('${esc(p.id)}')">
+      ${p.cover
+        ? `<img class="row-img" src="${esc(p.cover)}" alt="" loading="lazy">`
+        : `<div class="row-ph" style="background:${col}12;color:${col}">${sk.icon}</div>`}
       <div class="row-mid">
         <b>${esc(p.name)}</b>
-        <span>${sk.label} · ${esc(p.city||"—")}${p.area ? " · " + esc(p.area) : ""}</span>
-        <span class="num" style="direction:ltr;text-align:start">${esc(p.phone||"")} · ${p.items||0} ${esc(sk.itemOne)}</span>
+        <div class="rmeta">
+          <span>${sk.icon} ${esc(sk.label)}</span>
+          <span>${esc(p.city||"—")}${p.area ? " · " + esc(p.area) : ""}</span>
+        </div>
+        <div class="rmeta">
+          <span class="num">${esc(p.phone||"بلا هاتف")}</span>
+          <span class="${items?"":"warn"}">${items ? items + " " + esc(sk.itemOne) : "بلا " + esc(sk.itemOne)}</span>
+          <span class="state ${st[0]}">${st[1]}</span>
+        </div>
       </div>
-      <div class="row-end">
-        <div class="pct" style="color:${pctColor(pc)};border:2px solid ${pctColor(pc)}">${pc}٪</div>
-        <span class="state ${st[0]}" style="margin-top:6px">${st[1]}</span>
+      <div class="ring2" style="color:${col}">
+        <svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="18" stroke="var(--line-soft)"></circle>
+        <circle cx="21" cy="21" r="18" stroke="${col}" stroke-linecap="round"
+          stroke-dasharray="${circ}" stroke-dashoffset="${circ*(1-pc/100)}"></circle></svg>
+        <b>${pc}</b>
       </div>
     </button>
-    ${(p.items||0) === 0 ? `<button class="quick" onclick="quickAdd('${esc(p.id)}',event)">
+    ${items === 0 ? `<button class="quick" onclick="quickAdd('${esc(p.id)}',event)">
         <span>＋</span> أضف ${esc(sk.itemOne)} لـ«${esc(p.name)}»</button>` : ""}`;
   }).join("");
 }
@@ -1065,17 +1223,17 @@ async function openPartner(id){
 function editSections(p, isNew){
   const sk = SK(p.sector);
   return [
-    {id:"base", t:"الأساسيات", d:"ما يراه الزبون أولاً: الاسم والمدينة ورقم التواصل.",
+    {id:"base", t:"الأساسيات", a:"rose", d:"ما يراه الزبون أولاً: الاسم والمدينة ورقم التواصل.",
      req:BASE.filter(f=>f.req).map(f=>({k:f.k, pre:"f_", l:f.l}))},
-    {id:"loc", t:"الموقع", d:"العنوان والإحداثيات — الزبون يسأل «وين؟» قبل السعر.",
+    {id:"loc", t:"الموقع", a:"blue", d:"العنوان والإحداثيات — الزبون يسأل «وين؟» قبل السعر.",
      req:LOCF.filter(f=>f.req).map(f=>({k:f.k, pre:"f_", l:f.l}))},
-    {id:"spec", t:"المواصفات", d:"تفاصيل " + sk.label + " التي تظهر في صفحة التفاصيل.",
+    {id:"spec", t:"المواصفات", a:"violet", d:"تفاصيل " + sk.label + " التي تظهر في صفحة التفاصيل.",
      req:sk.specs.filter(f=>f.req).map(f=>({k:f.k, pre:"s_", l:f.l}))},
-    {id:"feat", t:"المميزات", d:"اختر ما يوفّره فعلاً — تظهر بأيقونات عند الزبون.", req:[], soft:"features"},
-    {id:"media", t:"الصور", d:"ثلاث صور فأكثر ترفع الحجز كثيراً. أول صورة هي الغلاف.", req:[], soft:"media"},
-    {id:"adm", t:"الإدارة", d:"الحالة والعمولة وملاحظاتك الداخلية.",
+    {id:"feat", t:"المميزات", a:"green", d:"اختر ما يوفّره فعلاً — تظهر بأيقونات عند الزبون.", req:[], soft:"features"},
+    {id:"media", t:"الصور", a:"amber", d:"ثلاث صور فأكثر ترفع الحجز كثيراً. أول صورة هي الغلاف.", req:[], soft:"media"},
+    {id:"adm", t:"الإدارة", a:"slate", d:"الحالة والعمولة وملاحظاتك الداخلية.",
      req:[{k:"status", pre:"f_", l:"حالة الحساب"}]},
-    {id:"items", t:sk.itemMany, d:"لكل " + sk.itemOne + " صوره ومواصفاته وسعره.", req:[], locked:isNew}
+    {id:"items", t:sk.itemMany, a:"rose", d:"لكل " + sk.itemOne + " صوره ومواصفاته وسعره.", req:[], locked:isNew}
   ];
 }
 
@@ -1152,9 +1310,22 @@ function renderEdit(isNew){
           `<option value="${k}" ${k===p.sector?"selected":""}>${SCHEMA[k].icon} ${SCHEMA[k].label}</option>`).join("")}</select></div>`
     : "";
 
+  /* بطاقة فرعية معنونة — بدل كدس كل الحقول في صندوق واحد */
+  const card = function(icon, title, inner, count){
+    return `<div class="sub">
+      <div class="sub-h"><span class="sub-i">${icon}</span><b>${esc(title)}</b>
+        ${count!==undefined?`<span class="n">${count}</span>`:""}</div>
+      <div class="sub-b">${inner}</div></div>`;
+  };
+  const cardsFor = function(defs, groups, pre, vals){
+    return groupFields(defs, groups).map(function(g){
+      return card(g.i, g.t, `<div class="fg">${g.fs.map(function(f){
+        return fieldHTML(f, (vals||{})[f.k], pre); }).join("")}</div>`);
+    }).join("");
+  };
   const pane = function(i, inner){
     const sec = S.secs[i];
-    return `<div class="pane ${i===S.tab?"on":""}">
+    return `<div class="pane ${i===S.tab?"on":""}" data-a="${sec.a||"slate"}">
       <div class="pane-h"><h3>${esc(sec.t)}</h3><p>${esc(sec.d)}</p></div>
       ${inner}</div>`;
   };
@@ -1170,33 +1341,47 @@ function renderEdit(isNew){
       <div class="tabs" id="eTabs"></div>
       <div class="ework-main">
 
-      ${pane(0, `<div class="pane-body"><div class="fg">${secSel}${BASE.map(f => fieldHTML(f, p[f.k], "f_")).join("")}</div></div>`)}
+      ${pane(0,
+        (isNew ? card("🏷️","نوع النشاط",`<div class="fg">${secSel}</div>`) : "") +
+        card("📛","التعريف", `<div class="fg">${["name"].map(k=>fieldHTML(BASE.find(f=>f.k===k), p[k], "f_")).join("")}</div>`) +
+        card("📍","المحافظة والمنطقة", `<div class="fg">${["city","area"].map(k=>fieldHTML(BASE.find(f=>f.k===k), p[k], "f_")).join("")}</div>`) +
+        card("📞","أرقام التواصل", `<div class="fg">${["phone","phone2"].map(k=>fieldHTML(BASE.find(f=>f.k===k), p[k], "f_")).join("")}</div>`) +
+        card("📝","الوصف الظاهر للزبون", `<div class="fg">${["desc"].map(k=>fieldHTML(BASE.find(f=>f.k===k), p[k], "f_")).join("")}</div>`)
+      )}
 
-      ${pane(1, `<div class="pane-body">
-        <div class="fg">${LOCF.map(f => fieldHTML(f, p[f.k], "f_")).join("")}</div>
-        <div class="acts" style="margin-top:12px">
-          <button type="button" class="btn btn-o btn-s" onclick="geoNow()">📍 التقط موقعي الآن</button>
-          <button type="button" class="btn btn-q btn-s" onclick="openMaps()">فتح في خرائط جوجل</button>
-        </div>
-        <div id="mapBox"></div></div>`)}
+      ${pane(1,
+        card("🏠","العنوان", `<div class="fg">${["address","maps_url"].map(k=>fieldHTML(LOCF.find(f=>f.k===k), p[k], "f_")).join("")}</div>`) +
+        card("🧭","الإحداثيات",
+          `<div class="fg">${["lat","lng"].map(k=>fieldHTML(LOCF.find(f=>f.k===k), p[k], "f_")).join("")}</div>
+           <div class="acts" style="margin-top:12px">
+             <button type="button" class="btn btn-o btn-s" onclick="geoNow()">📍 التقط موقعي الآن</button>
+             <button type="button" class="btn btn-q btn-s" onclick="openMaps()">فتح في الخرائط</button>
+           </div>
+           <div id="mapBox"></div>`)
+      )}
 
-      ${pane(2, `<div class="pane-body"><div class="fg">${sk.specs.map(f => fieldHTML(f, (p.specs||{})[f.k], "s_")).join("")}</div></div>`)}
+      ${pane(2, cardsFor(sk.specs, SPEC_GROUPS[p.sector], "s_", p.specs||{}))}
 
-      ${pane(3, `<div class="pane-body">
-        <div class="pills" id="f_features">${sk.features.map(o =>
+      ${pane(3, card("✨","ما يوفّره هذا الشريك",
+        `<div class="pills" id="f_features">${sk.features.map(o =>
           `<button type="button" class="pill ${(p.features||[]).includes(o)?"on":""}" data-o="${esc(o)}"
-            onclick="this.classList.toggle('on');scoreNow();paintTabs()">${esc(o)}</button>`).join("")}</div></div>`)}
+            onclick="this.classList.toggle('on');scoreNow();paintTabs()">${esc(o)}</button>`).join("")}</div>`,
+        sk.features.length))}
 
-      ${pane(4, `<div class="pane-body">${galleryHTML("pm")}</div>`)}
+      ${pane(4, card("🖼️","معرض الصور", galleryHTML("pm")))}
 
-      ${pane(5, `<div class="pane-body"><div class="fg">${ADMINF.map(f => fieldHTML(f, p[f.k], "f_")).join("")}</div></div>
-        ${p.id ? `<div class="acts"><button type="button" class="btn btn-x" onclick="delPartner()">حذف الشريك نهائياً</button></div>` : ""}`)}
+      ${pane(5,
+        card("🚦","الحالة والتوفّر", `<div class="fg">${["status","open"].map(k=>fieldHTML(ADMINF.find(f=>f.k===k), p[k], "f_")).join("")}</div>`) +
+        card("💰","العمولة", `<div class="fg">${["comm_type","comm_val"].map(k=>fieldHTML(ADMINF.find(f=>f.k===k), p[k], "f_")).join("")}</div>`) +
+        card("🔑","الدخول والملاحظات", `<div class="fg">${["pass","note"].map(k=>fieldHTML(ADMINF.find(f=>f.k===k), p[k], "f_")).join("")}</div>`) +
+        (p.id ? `<div class="acts"><button type="button" class="btn btn-x" onclick="delPartner()">حذف الشريك نهائياً</button></div>` : "")
+      )}
 
       ${pane(6, p.id
-        ? `<div class="pane-body">
-             <p class="fine" style="margin:0 0 14px">${esc(S.curItems.length)} ${esc(sk.itemOne)} مضاف حالياً.</p>
-             <button type="button" class="btn btn-d btn-w" onclick="openItems()">فتح ${esc(sk.itemMany)}</button>
-           </div>`
+        ? card(sk.itemIcon, sk.itemMany,
+            `<p class="fine" style="margin:0 0 14px">${S.curItems.length} ${esc(sk.itemOne)} مضاف حالياً.</p>
+             <button type="button" class="btn btn-d btn-w" onclick="openItems()">فتح ${esc(sk.itemMany)}</button>`,
+            S.curItems.length)
         : `<div class="msg info">احفظ الشريك أولاً، ثم تُفتح لك صفحة ${esc(sk.itemMany)} تلقائياً.</div>`)}
 
       <div class="stepnav" id="eNav"></div>
@@ -1635,8 +1820,12 @@ function openItem(idx){
       `<div class="pills" id="i_features">${sk.features.map(o =>
         `<button type="button" class="pill ${(it.features||[]).includes(o)?"on":""}" data-o="${esc(o)}"
           onclick="this.classList.toggle('on');scoreNow()">${esc(o)}</button>`).join("")}</div>`, true) +
-    group("ispec", "المواصفات التفصيلية",
-      `<div class="fg">${sk.specs.map(f => fieldHTML(f, (it.specs||{})[f.k], "is_")).join("")}</div>`, true) +
+    `<div class="pane on" data-a="violet">${
+      groupFields(sk.specs, ITEM_GROUPS[S.cur.sector]).map(function(g){
+        return `<div class="sub"><div class="sub-h"><span class="sub-i">${g.i}</span><b>${esc(g.t)}</b></div>
+          <div class="sub-b"><div class="fg">${g.fs.map(function(f){
+            return fieldHTML(f, (it.specs||{})[f.k], "is_"); }).join("")}</div></div></div>`;
+      }).join("")}</div>` +
     group("imedia", "الصور", galleryHTML("im"), true) +
     (it.id ? `<div class="acts" style="margin:16px 0 24px">
       <button type="button" class="btn btn-x" onclick="delItem()">حذف نهائياً</button></div>` : "");

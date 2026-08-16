@@ -71,6 +71,19 @@ img{display:block;max-width:100%;}
 .ff:hover{background:var(--bg);}
 .ff label{display:block;font-size:.64rem;font-weight:900;color:var(--tx2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em;}
 .ff select,.ff input{border:none;outline:none;font-size:.94rem;font-weight:800;background:transparent;width:100%;}
+.cityrow{display:flex;align-items:center;gap:8px;}
+.cityrow select{flex:1;min-width:0;}
+.loc{width:32px;height:32px;border-radius:50%;background:var(--bg);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:.18s;}
+.loc:hover{border-color:var(--red);background:var(--red-l);}
+.loc.busy{animation:spinLoc .9s linear infinite;}
+.loc.hint{border-color:var(--red);background:var(--red-l);animation:hintLoc 2s ease-in-out 3;}
+@keyframes hintLoc{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+@keyframes spinLoc{to{transform:rotate(360deg)}}
+.locbar{display:flex;align-items:center;gap:9px;background:var(--blue-l);border-radius:var(--r3);
+  padding:10px 14px;margin:12px 0 0;font-size:.82rem;font-weight:700;color:#00478F;}
+.locbar b{font-weight:900;}
+.locbar button{margin-inline-start:auto;font-size:.76rem;font-weight:800;color:#00478F;text-decoration:underline;flex-shrink:0;}
 .ff select{appearance:none;cursor:pointer;}
 .ff-go{display:flex;align-items:center;justify-content:center;padding:10px;}
 .ff-go button{background:var(--red-g);color:#fff;border-radius:var(--r4);width:52px;height:52px;display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:var(--sh-red);transition:.25s;}
@@ -186,6 +199,119 @@ img{display:block;max-width:100%;}
 .spin{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:inline-block;}
 @keyframes sp{to{transform:rotate(360deg)}}
 
+
+/* ═══ عرض التفاصيل: شاشة كاملة بمستوى Airbnb ═══ */
+.dsheet{position:fixed;inset:0;z-index:900;background:var(--white);display:flex;flex-direction:column;animation:dIn .3s cubic-bezier(.2,.9,.3,1);}
+@keyframes dIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.dhead{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;padding:12px 16px;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);flex-shrink:0;}
+.dhead button{width:38px;height:38px;border-radius:50%;background:var(--bg);display:flex;align-items:center;
+  justify-content:center;font-size:16px;flex-shrink:0;transition:.18s;}
+.dhead button:hover{background:var(--line);}
+.dhead h3{flex:1;font-size:1rem;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.dscroll{flex:1;overflow-y:auto;overscroll-behavior:contain;}
+.dwrap{max-width:820px;margin:0 auto;padding:0 clamp(16px,4vw,28px);}
+
+.gal2{position:relative;background:var(--line);}
+.gal2 .strip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
+.gal2 .strip::-webkit-scrollbar{display:none;}
+.gal2 .strip>div{flex:0 0 100%;scroll-snap-align:center;position:relative;}
+.gal2 img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;cursor:zoom-in;}
+.gal2 .ph{width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:4rem;opacity:.22;background:var(--bg);}
+.gal2 .cnt{position:absolute;bottom:14px;inset-inline-end:14px;background:rgba(26,26,26,.78);color:#fff;
+  padding:5px 13px;border-radius:var(--r-pill);font-size:.75rem;font-weight:800;font-family:'IBM Plex Mono',monospace;}
+.gal2 .kind{position:absolute;bottom:14px;inset-inline-start:14px;background:rgba(255,255,255,.94);
+  padding:5px 12px;border-radius:var(--r-pill);font-size:.72rem;font-weight:800;}
+
+.dtitle{font-size:clamp(1.35rem,4vw,1.8rem);font-weight:900;letter-spacing:-.025em;line-height:1.25;margin:20px 0 6px;}
+.dmeta{font-size:.88rem;font-weight:600;color:var(--tx1);margin-bottom:14px;}
+.dmeta b{font-weight:800;color:var(--tx0);}
+.pills2{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px;}
+.pills2 span{font-size:.74rem;font-weight:800;padding:6px 12px;border-radius:var(--r-pill);background:var(--bg);color:var(--tx1);}
+.pills2 span.hi{background:var(--red-l);color:var(--red-d);}
+.hr{height:1px;background:var(--line);margin:24px 0;}
+.blk2{margin-bottom:4px;}
+.blk2 h4{font-size:1.05rem;font-weight:900;letter-spacing:-.015em;margin-bottom:14px;}
+.blk2 p{font-size:.92rem;font-weight:600;color:var(--tx1);line-height:1.8;white-space:pre-line;}
+
+.amen{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2px 18px;}
+.amen div{display:flex;align-items:center;gap:11px;padding:10px 0;font-size:.9rem;font-weight:600;color:var(--tx1);}
+.amen div em{font-style:normal;font-size:1.15rem;width:24px;text-align:center;flex-shrink:0;}
+
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;}
+.facts div{background:var(--bg);border-radius:var(--r3);padding:13px 15px;}
+.facts dt{font-size:.68rem;font-weight:800;color:var(--tx2);margin-bottom:3px;}
+.facts dd{font-size:.92rem;font-weight:800;line-height:1.4;}
+
+.unit{display:flex;gap:14px;align-items:stretch;padding:12px;border:1px solid var(--border);border-radius:var(--r4);
+  margin-bottom:11px;cursor:pointer;transition:.2s;width:100%;text-align:start;background:var(--white);}
+.unit:hover{border-color:var(--tx0);box-shadow:var(--sh-md);transform:translateY(-2px);}
+.unit.on{border-color:var(--red);border-width:2px;background:var(--red-l);}
+.unit .ui{width:88px;height:88px;border-radius:var(--r3);object-fit:cover;background:var(--line);flex-shrink:0;}
+.unit .up{width:88px;height:88px;border-radius:var(--r3);background:var(--bg);display:flex;align-items:center;
+  justify-content:center;font-size:1.8rem;opacity:.3;flex-shrink:0;}
+.unit .um{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:3px;}
+.unit .um b{font-size:.98rem;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.unit .um span{font-size:.78rem;font-weight:600;color:var(--tx2);}
+.unit .um i{font-style:normal;font-size:.72rem;font-weight:700;color:var(--tx2);}
+.unit .ue{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;flex-shrink:0;gap:2px;}
+.unit .ue b{font-size:1.05rem;font-weight:900;font-family:'IBM Plex Mono',monospace;}
+.unit .ue small{font-size:.68rem;font-weight:700;color:var(--tx2);}
+
+.bookbar{position:sticky;bottom:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);padding:14px clamp(16px,4vw,28px) calc(14px + env(safe-area-inset-bottom));
+  display:flex;align-items:center;gap:14px;flex-shrink:0;}
+.bookbar .bp{flex:1;min-width:0;}
+.bookbar .bp b{display:block;font-size:1.25rem;font-weight:900;letter-spacing:-.02em;font-family:'IBM Plex Mono',monospace;}
+.bookbar .bp b span{font-family:'Cairo',sans-serif;font-size:.8rem;}
+.bookbar .bp small{font-size:.74rem;font-weight:700;color:var(--tx2);}
+.bookbar .bgo{padding:15px 32px;border-radius:var(--r3);background:var(--red-g);color:#fff;font-size:.95rem;
+  font-weight:900;box-shadow:var(--sh-red);flex-shrink:0;transition:.2s;}
+.bookbar .bgo:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(255,56,92,.4);}
+.bookbar .bgo:active{transform:none;}
+.bookbar .bgo:disabled{opacity:.55;transform:none;box-shadow:none;}
+
+/* عارض الصور */
+.lb{position:fixed;inset:0;z-index:1200;background:#000;display:flex;flex-direction:column;animation:fade .2s;}
+.lb-top{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;color:#fff;flex-shrink:0;}
+.lb-top button{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:16px;}
+.lb-top span{font-size:.8rem;font-weight:800;font-family:'IBM Plex Mono',monospace;}
+.lb-strip{flex:1;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;align-items:center;}
+.lb-strip::-webkit-scrollbar{display:none;}
+.lb-strip img{flex:0 0 100%;scroll-snap-align:center;max-height:100%;object-fit:contain;}
+
+/* استمارة الحجز */
+.fwrap{max-width:520px;margin:0 auto;padding:22px clamp(16px,4vw,28px) 0;}
+.fsum{display:flex;gap:13px;align-items:center;padding:13px;border:1px solid var(--border);border-radius:var(--r4);margin-bottom:22px;}
+.fsum img{width:64px;height:64px;border-radius:var(--r3);object-fit:cover;background:var(--line);flex-shrink:0;}
+.fsum .fp{width:64px;height:64px;border-radius:var(--r3);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.5rem;opacity:.3;flex-shrink:0;}
+.fsum div{flex:1;min-width:0;}
+.fsum b{display:block;font-size:.95rem;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fsum span{display:block;font-size:.78rem;font-weight:600;color:var(--tx2);}
+.bd{border:1px solid var(--border);border-radius:var(--r4);padding:16px 18px;margin-bottom:18px;}
+.bd .r{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:.9rem;font-weight:600;color:var(--tx1);padding:7px 0;}
+.bd .r b{font-weight:700;font-family:'IBM Plex Mono',monospace;}
+.bd .t{border-top:1px solid var(--line);margin-top:9px;padding-top:14px;font-size:1rem;font-weight:900;color:var(--tx0);}
+.bd .t b{font-size:1.15rem;}
+.wnote{display:flex;gap:11px;align-items:flex-start;background:#F0FBF3;border:1px solid #BFE8CC;border-radius:var(--r3);
+  padding:13px 15px;font-size:.82rem;font-weight:700;color:#0B6B24;line-height:1.65;margin-bottom:18px;}
+.wnote em{font-style:normal;font-size:1.1rem;flex-shrink:0;}
+.gowa{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;border-radius:var(--r3);
+  background:#25D366;color:#fff;font-size:1rem;font-weight:900;box-shadow:0 6px 20px rgba(37,211,102,.34);transition:.2s;}
+.gowa:hover{transform:translateY(-2px);}
+.gowa:disabled{opacity:.55;transform:none;}
+.fine2{font-size:.74rem;font-weight:600;color:var(--tx3);text-align:center;line-height:1.7;margin:14px 0 30px;}
+
+/* شاشة التحويل */
+.redir{position:fixed;inset:0;z-index:1300;background:var(--white);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:32px 24px;animation:fade .2s;}
+.redir .ic{width:78px;height:78px;border-radius:50%;background:#E9FBEF;display:flex;align-items:center;
+  justify-content:center;font-size:2.3rem;margin-bottom:20px;}
+.redir h3{font-size:1.25rem;font-weight:900;margin-bottom:10px;letter-spacing:-.02em;}
+.redir p{font-size:.9rem;font-weight:600;color:var(--tx2);max-width:330px;line-height:1.75;margin-bottom:24px;}
+.redir .num{display:inline-block;background:var(--bg);border-radius:var(--r-pill);padding:7px 16px;
+  font-size:.78rem;font-weight:800;margin-bottom:20px;font-family:'IBM Plex Mono',monospace;}
+
 /* FOOTER — مطابق للرئيسية */
 .footer{background:var(--white);border-top:1px solid var(--line);padding:40px clamp(16px,4vw,40px) 28px;margin-top:30px;}
 .footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;}
@@ -245,7 +371,10 @@ img{display:block;max-width:100%;}
     <div class="filters">
       <div class="ff">
         <label data-i18n="f_city">المدينة</label>
-        <select id="citySel" onchange="applyFilters()"></select>
+        <div class="cityrow">
+          <select id="citySel" onchange="pickCityManual()"></select>
+          <button class="loc" id="locBtn" onclick="locate(false)" title="حدّد موقعي">📍</button>
+        </div>
       </div>
       <div class="ff">
         <label data-i18n="f_search">ابحث</label>
@@ -253,6 +382,7 @@ img{display:block;max-width:100%;}
       </div>
       <div class="ff-go"><button onclick="applyFilters()" aria-label="search">🔍</button></div>
     </div>
+    <div id="locBar"></div>
     <div class="cats" id="cats"></div>
   </div>
 </header>
@@ -274,6 +404,8 @@ img{display:block;max-width:100%;}
       <a href="hotels.html" data-i18n="nav_hotels">الفنادق</a>
       <a href="halls.html" data-i18n="nav_halls">القاعات</a>
       <a href="schools.html" data-i18n="nav_schools">مدارس القيادة</a>
+      <a href="carwash.html" data-i18n="nav_wash">مغاسل السيارات</a>
+      <a href="farms.html" data-i18n="nav_farm">المزارع والشاليهات</a>
     </div>
     <div class="footer-col">
       <h4 data-i18n="footer_company">المنصة</h4>
@@ -298,13 +430,13 @@ img{display:block;max-width:100%;}
 const SECTOR = "school";
 
 const FB_URL = "https://alhut-for-rent-default-rtdb.europe-west1.firebasedatabase.app";
-const API   = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
-const TOKEN = "HUT_29E366AC2165450BA4D16456A4AFA7D5";
+const API    = "https://script.google.com/macros/s/AKfycbwOZXSohTDG9nayqJ3caUqI6q50rGXaKiAYbBr-W6Xksq8qSQH_mxVU_o-7CJQrpUWa9A/exec";
+const TOKEN  = "HUT_29E366AC2165450BA4D16456A4AFA7D5";
 
-/* أثناء التجربة تذهب كل رسائل واتساب إلى هذا الرقم بدل أرقام الشركاء.
-   اجعل TEST_MODE=false يوم الإطلاق — مفتاح واحد لا رقم مبعثر في الصفحات. */
-const TEST_MODE  = true;
-const TEST_PHONE = "9647713225471";
+/* كل الحجوزات تمرّ عبر موظف حجوزات المنصة — لا تذهب للشريك مباشرةً.
+   السبب: الحجز لا يكتمل إلا بتأكيد بشري، والمنصة تضمن للزبون متابعة
+   واحدة مهما تعدّد الشركاء. رقم واحد هنا، لا أرقام مبعثرة في الصفحات. */
+const BOOKING_PHONE = "9647749546562";
 
 /* مفاتيح المدن — يجب أن تطابق حرفياً ما في index.html ولوحة الإدخال */
 const CITIES = [
@@ -329,89 +461,185 @@ const CFG = {
   car:    {primary:"items",    icon:"🚗", unitKey:"u_day",   qtyKey:"f_days",   cats:["اقتصادية","عائلية","فاخرة","دفع رباعي","زفاف","حمل / بيك أب","باص"], action:"NEW_CAR_ORDER"},
   hotel:  {primary:"partners", icon:"🏨", unitKey:"u_night", qtyKey:"f_nights", cats:["اقتصادي","متوسط","فاخر","شقق فندقية"], catFrom:"specs.cat", action:"NEW_HOTEL_BOOKING"},
   hall:   {primary:"partners", icon:"🥂", unitKey:"u_night", qtyKey:"f_guests", cats:["زفاف","خطوبة","تخرّج","عيد ميلاد","مؤتمر"], action:"NEW_HALL_BOOKING"},
-  school: {primary:"partners", icon:"🎓", unitKey:"u_course",qtyKey:null,       cats:["أساسي","متقدم","مكثّف","نساء فقط"], action:"NEW_DRIVE_STUDENT"}
+  school: {primary:"partners", icon:"🎓", unitKey:"u_course",qtyKey:null,       cats:["أساسي","متقدم","مكثّف","نساء فقط"], action:"NEW_DRIVE_STUDENT"},
+  /* المغسلة تحجز وقتاً لا مدة — لذلك حقل ساعة بدل عدد الأيام */
+  wash:   {primary:"partners", icon:"🚿", unitKey:"u_wash", qtyKey:null, timeField:true,
+           cats:["غسيل خارجي","غسيل شامل","تلميع","تنظيف داخلي","بخار","حماية سيراميك"],
+           action:"NEW_WASH_BOOKING"},
+  /* المزرعة تُحجز بالليلة أو بالنهار — تمييز جوهري في السوق العراقي */
+  farm:   {primary:"partners", icon:"🌴", unitKey:"u_night", qtyKey:"f_nights", stayType:true,
+           cats:["مزرعة","شاليه","استراحة","بيت ريفي","مسبح خاص","كرفان"],
+           action:"NEW_FARM_BOOKING"}
 };
 const C = CFG[SECTOR];
+
+/* أيقونة لكل ميزة — الرمز يُقرأ أسرع من النص عند المسح البصري */
+const ICO = {
+  "مسبح":"🏊","مسبح مدفّأ":"♨️","مسبح أطفال":"🛟","مسبح خاص":"🏊","واي فاي":"📶","واي فاي مجاني":"📶",
+  "تكييف":"❄️","تكييف مركزي":"❄️","تدفئة":"🔥","موقف سيارات":"🅿️","موقف واسع":"🅿️","مواقف واسعة":"🅿️",
+  "مطعم":"🍽️","إفطار مشمول":"🥐","خدمة غرف":"🛎️","مصعد":"🛗","صالة رياضة":"🏋️","غسيل ملابس":"🧺",
+  "استقبال ٢٤ ساعة":"🕐","خدمة ٢٤ ساعة":"🕐","قاعة اجتماعات":"💼","نقل من المطار":"✈️",
+  "استلام من المطار":"✈️","حارس ليلي":"🛡️","حراسة":"🛡️","حراسة ليلية":"🛡️","كاميرات مراقبة":"📹",
+  "مولّدة كهرباء":"⚡","للعوائل فقط":"👨‍👩‍👧","توصيل للعميل":"🚚","سائق اختياري":"🧑‍✈️",
+  "تأمين شامل":"🛡️","عقود شهرية":"📅","سيارات زفاف":"💐","بديل عند العطل":"🔄","صيانة مجانية":"🔧",
+  "تسليم خارج المحافظة":"🛣️","كوشة":"💒","إضاءة وصوت":"🔊","دي جي":"🎧","تصوير":"📸",
+  "خدمة تنسيق":"🎀","غرفة عروس":"👰","قسم نساء منفصل":"🚺","بوفيه مفتوح":"🍽️","شاشة عرض":"📺",
+  "مدرّبات نساء":"👩‍🏫","سيارة أوتوماتيك":"🚗","سيارة عادي":"🚙","نقل من وإلى البيت":"🚐",
+  "دروس نظرية":"📘","تدريب ليلي":"🌙","مساعدة في الامتحان":"✅","شهادة معتمدة":"🎖️",
+  "ساحة تدريب خاصة":"🅿️","تدريب على الطريق السريع":"🛣️","غسيل بخار":"💨","تلميع":"✨",
+  "تنظيف داخلي":"🧽","تعقيم":"🧴","صالة انتظار":"🛋️","غسيل محرك":"🔧","تلميع زجاج":"🪟",
+  "حماية سيراميك":"💎","غسيل تحت الشاسيه":"🚿","خدمة في موقعك":"📍","قهوة مجانية":"☕",
+  "حجز بموعد":"⏰","غسيل دراجات نارية":"🏍️","ألعاب أطفال":"🎠","ملعب كرة قدم":"⚽",
+  "منطقة شواء":"🔥","شواية":"🔥","مطبخ مجهّز":"🍳","مطبخ":"🍳","جلسة خارجية":"🪑","نافورة":"⛲",
+  "حديقة واسعة":"🌳","أشجار مثمرة":"🍊","مسموح الحفلات":"🎉","بحيرة أو نهر قريب":"🌊",
+  "خدمة تنظيف":"🧹","حمام خاص":"🚻","حمّام خاص":"🚻","تلفزيون":"📺","ثلاجة":"🧊",
+  "مطبخ صغير":"🍳","شرفة":"🪟","خزنة":"🔒","مجفف شعر":"💨","مكتب":"🖥️","إطلالة":"🏞️",
+  "ماء ساخن ٢٤ ساعة":"🚿","سخّان ماء":"🚿","غسالة":"🌀","بطانيات وفرش":"🛏️","أدوات طبخ":"🍴",
+  "GPS":"🧭","بلوتوث":"📱","كاميرا خلفية":"📷","حساسات ركن":"📡","فتحة سقف":"☀️",
+  "مقاعد جلد":"💺","كرسي أطفال":"👶","مثبت سرعة":"🎯","دفع رباعي":"🏔️","شاشة لمس":"📱",
+  "شحن لاسلكي":"🔋","شامبو مستورد":"🧴","مناشف مايكروفايبر":"🧻","شفط داخلي":"🌀",
+  "تلميع إطارات":"⚫","تنظيف زجاج":"🪟","معطر":"🌸","قاعة":"🏛️","عشاء":"🍽️",
+  "تصوير فوتو":"📸","تصوير فيديو":"🎥","تنسيق ورد":"💐","حلويات":"🍰","مشروبات":"🥤",
+  "دخلة عروس":"👰","ألعاب نارية":"🎆","سيارة زفة":"🚘"
+};
+const icoOf = f => ICO[f] || "✓";
+
+/* إحداثيات مراكز المحافظات — تحديد الأقرب يجري في الصفحة نفسها،
+   بلا خدمة عكس-ترميز ولا مفتاح ولا نداء شبكة. */
+const CITY_GEO = {
+  "بغداد":[33.3152,44.3661], "كركوك":[35.4681,44.3922], "أربيل":[36.1911,44.0092],
+  "السليمانية":[35.5556,45.4351], "نينوى":[36.3350,43.1189], "البصرة":[30.5081,47.7835],
+  "النجف":[32.0000,44.3350], "كربلاء":[32.6160,44.0249], "ديالى":[33.7500,44.6417],
+  "الأنبار":[33.4258,43.3089], "دهوك":[36.8669,42.9503], "بابل":[32.4637,44.4197]
+};
+
+function distKm(a1,b1,a2,b2){
+  const R=6371, p1=a1*Math.PI/180, p2=a2*Math.PI/180;
+  const dp=(a2-a1)*Math.PI/180, dl=(b2-b1)*Math.PI/180;
+  const h=Math.sin(dp/2)**2 + Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
+  return R*2*Math.atan2(Math.sqrt(h), Math.sqrt(1-h));
+}
+
+function nearestCity(lat,lng){
+  let best=null, bd=Infinity;
+  Object.keys(CITY_GEO).forEach(function(k){
+    const g=CITY_GEO[k], d=distKm(lat,lng,g[0],g[1]);
+    if(d<bd){ bd=d; best=k; }
+  });
+  return {city:best, km:Math.round(bd)};
+}
 
 /* ═══════════ i18n ═══════════ */
 const I18N = {
 ar:{dir:"rtl",flag:"🇮🇶",name:"عربي",
-  nav_partner:"كن شريكاً",nav_cars:"السيارات",nav_hotels:"الفنادق",nav_halls:"القاعات",nav_schools:"مدارس القيادة",nav_home:"الرئيسية",
+  nav_partner:"كن شريكاً",nav_cars:"السيارات",nav_hotels:"الفنادق",nav_halls:"القاعات",nav_schools:"مدارس القيادة",nav_wash:"مغاسل السيارات",nav_farm:"المزارع والشاليهات",nav_home:"الرئيسية",
   page_t:"مدارس تعليم القيادة",page_s:"كورسات معتمدة بأسعار واضحة، ومدرّبات للنساء",
-  f_city:"المدينة",f_search:"ابحث",ph_search:"اسم أو ميزة",f_date:"التاريخ",f_days:"عدد الأيام",f_nights:"عدد الليالي",f_guests:"عدد الضيوف",
+  loc_finding:"جارٍ تحديد موقعك…",loc_found:"موقعك في",loc_near:"أقرب محافظة مخدومة:",loc_change:"تغيير",loc_denied:"لم تسمح بالوصول للموقع — اختر مدينتك يدوياً",loc_failed:"تعذّر تحديد الموقع",loc_unsupported:"جهازك لا يدعم تحديد الموقع",f_city:"المدينة",f_search:"ابحث",ph_search:"اسم أو ميزة",f_date:"التاريخ",f_days:"عدد الأيام",f_nights:"عدد الليالي",f_guests:"عدد الضيوف",
   all:"الكل",results:"نتيجة متاحة",loading:"يُحمَّل…",
   empty_t:"لا نتائج في هذه المدينة",empty_p:"جرّب مدينة أخرى أو أزِل الفلاتر. نضيف شركاء جدداً باستمرار.",
   empty_b:"عرض كل المدن",err_t:"تعذّر التحميل",err_p:"تحقّق من اتصالك بالإنترنت ثم أعد المحاولة.",err_b:"إعادة المحاولة",
+  f_time:"الوقت",e_time:"اختر وقت الموعد",u_wash:"للغسلة",items_wash:"خدمات الغسيل",items_farm:"الوحدات المتاحة",f_time:"الوقت",e_time:"اختر وقت الموعد",f_stay:"نوع الحجز",stay_night:"بياتي (ليلة)",stay_day:"نهاري فقط",fee_platform:"عمولة المنصة",free:"مجاناً",
+  fine_free:"الحوت لا يتقاضى أي رسوم من الزبون. تدفع لمقدّم الخدمة مباشرةً عند الاستلام.",
+  note_wa:"لن يُحجز مكانك إلا بعد تأكيد موظف الحجوزات معك على واتساب. اضغط الزر لإرسال التفاصيل.",
+  redir_t:"طلبك بانتظار التأكيد",
+  redir_p:"لم يُحجز مكانك بعد. أرسل التفاصيل على واتساب ليؤكّد لك موظف الحجوزات التوفّر والسعر النهائي.",
+  redir_btn:"أكمل على واتساب",
+  redir_note:"إن لم يفتح واتساب تلقائياً اضغط الزر أعلاه.",
+  send:"إرسال إلى واتساب",
   u_day:"/ يوم",u_night:"/ ليلة",u_course:"للكورس",iqd:"د.ع",from:"يبدأ من",
   book:"احجز الآن",details:"التفاصيل",features:"المميزات",about:"نبذة",location:"الموقع",openmap:"افتح في الخرائط",
   items_car:"الأسطول المتاح",items_hotel:"الغرف المتاحة",items_hall:"الباقات",items_school:"الكورسات",
   no_items:"لا عناصر متاحة حالياً",
   form_t:"إتمام الحجز",f_name:"الاسم الثلاثي",f_phone:"رقم الهاتف",f_nid:"رقم الهوية",f_notes:"ملاحظات إضافية",
   ph_name:"كما في الهوية",ph_phone:"07XX XXX XXXX",ph_nid:"اختياري",ph_notes:"أي طلب خاص…",
-  total:"الإجمالي التقديري",send:"تأكيد الطلب",
-  note_wa:"بعد التأكيد يُفتح واتساب برسالة جاهزة إلى مقدّم الخدمة. السعر النهائي يؤكّده هو مباشرةً.",
+  total:"الإجمالي التقديري",
+  
   e_name:"اكتب اسمك الثلاثي",e_phone:"رقم هاتف غير صالح",e_date:"اختر التاريخ",
-  ok_t:"وصل طلبك 🎉",ok_p:"احتفظ برقم الطلب. سيتواصل معك مقدّم الخدمة لتأكيد التفاصيل.",ok_wa:"أرسل التفاصيل عبر واتساب",
+  
   sending:"يُرسَل…",fail:"تعذّر الإرسال — أعد المحاولة",
   footer_desc:"منصتك الأولى في العراق للسيارات والفنادق وقاعات الأعراس ومدارس القيادة.",footer_services:"الخدمات",footer_company:"المنصة"},
 
 ku:{dir:"rtl",flag:"🌞",name:"کوردی",
-  nav_partner:"ببە بە هاوبەش",nav_cars:"ئۆتۆمبێل",nav_hotels:"هۆتێل",nav_halls:"هۆڵ",nav_schools:"خوێندنگەی لێخوڕین",nav_home:"سەرەکی",
+  nav_partner:"ببە بە هاوبەش",nav_cars:"ئۆتۆمبێل",nav_hotels:"هۆتێل",nav_halls:"هۆڵ",nav_schools:"خوێندنگەی لێخوڕین",nav_wash:"شوشتنگە",nav_farm:"کێڵگە و شالێ",nav_home:"سەرەکی",
   page_t:"خوێندنگەی فێربوونی شۆفێری",page_s:"کۆرسی پەسەندکراو و ڕاهێنەری ئافرەت",
-  f_city:"شار",f_search:"بگەڕێ",ph_search:"ناو یان تایبەتمەندی",f_date:"بەروار",f_days:"ژمارەی ڕۆژ",f_nights:"ژمارەی شەو",f_guests:"ژمارەی میوان",
+  loc_finding:"شوێنت دیاری دەکرێت…",loc_found:"شوێنت لە",loc_near:"نزیکترین پارێزگا:",loc_change:"گۆڕین",loc_denied:"ڕێگەت نەدا بە شوێن — شارەکەت دەستی هەڵبژێرە",loc_failed:"شوێن دیاری نەکرا",loc_unsupported:"ئامێرەکەت پاڵپشتی ناکات",f_city:"شار",f_search:"بگەڕێ",ph_search:"ناو یان تایبەتمەندی",f_date:"بەروار",f_days:"ژمارەی ڕۆژ",f_nights:"ژمارەی شەو",f_guests:"ژمارەی میوان",
   all:"هەموو",results:"ئەنجامی بەردەست",loading:"باردەکرێت…",
   empty_t:"هیچ ئەنجامێک لەم شارەدا نییە",empty_p:"شارێکی تر تاقی بکەرەوە. بەردەوام هاوبەشی نوێ زیاد دەکەین.",
   empty_b:"هەموو شارەکان",err_t:"بارکردن سەرکەوتوو نەبوو",err_p:"پەیوەندی ئینتەرنێت بپشکنە و دووبارە هەوڵ بدە.",err_b:"دووبارە",
+  f_time:"کات",e_time:"کاتی ژووان هەڵبژێرە",u_wash:"بۆ شوشتن",items_wash:"خزمەتی شوشتن",items_farm:"یەکە بەردەستەکان",f_time:"کات",e_time:"کاتی ژووان هەڵبژێرە",f_stay:"جۆری حیجز",stay_night:"شەوانە",stay_day:"ڕۆژانە",fee_platform:"کۆمیسیۆنی پلاتفۆرم",free:"بەخۆڕایی",
+  fine_free:"حوت هیچ کرێیەک لە کڕیار وەرناگرێت. ڕاستەوخۆ بە دابینکەر دەدەیت.",
+  note_wa:"شوێنەکەت حیجز نابێت تا کارمەندی حیجز لە واتسئاپ پشتڕاستی نەکاتەوە.",
+  redir_t:"داواکارییەکەت چاوەڕێی پشتڕاستکردنەوەیە",
+  redir_p:"هێشتا شوێنت حیجز نەکراوە. وردەکارییەکان بە واتسئاپ بنێرە بۆ پشتڕاستکردنەوە.",
+  redir_btn:"لە واتسئاپ تەواو بکە",
+  redir_note:"ئەگەر واتسئاپ خۆکار نەکرایەوە، دوگمەکەی سەرەوە دابگرە.",
+  send:"ناردن بۆ واتسئاپ",
   u_day:"/ ڕۆژ",u_night:"/ شەو",u_course:"بۆ کۆرس",iqd:"د.ع",from:"دەست پێدەکات لە",
   book:"ئێستا حیجز بکە",details:"وردەکاری",features:"تایبەتمەندی",about:"دەربارە",location:"شوێن",openmap:"لە نەخشەدا بکەرەوە",
   items_car:"ئۆتۆمبێلە بەردەستەکان",items_hotel:"ژوورە بەردەستەکان",items_hall:"پاکێجەکان",items_school:"کۆرسەکان",
   no_items:"هیچ بەردەست نییە",
   form_t:"تەواوکردنی حیجز",f_name:"ناوی سێیانە",f_phone:"ژمارەی مۆبایل",f_nid:"ژمارەی ناسنامە",f_notes:"تێبینی",
   ph_name:"وەک لە ناسنامەدا",ph_phone:"07XX XXX XXXX",ph_nid:"ئارەزوومەندانە",ph_notes:"هەر داواکارییەکی تایبەت…",
-  total:"کۆی گشتی",send:"دڵنیاکردنەوەی داواکاری",
-  note_wa:"دوای دڵنیاکردنەوە واتسئاپ دەکرێتەوە بە نامەیەکی ئامادە. نرخی کۆتایی لەلایەن دابینکەرەوە پشتڕاست دەکرێتەوە.",
+  total:"کۆی گشتی",
+  
   e_name:"ناوی سێیانەت بنووسە",e_phone:"ژمارەی مۆبایل نادروستە",e_date:"بەروار هەڵبژێرە",
-  ok_t:"داواکارییەکەت گەیشت 🎉",ok_p:"ژمارەی داواکاری بپارێزە. دابینکەر پەیوەندیت پێوە دەکات.",ok_wa:"بە واتسئاپ بنێرە",
+  
   sending:"دەنێردرێت…",fail:"نێردن سەرکەوتوو نەبوو",
   footer_desc:"یەکەم پلاتفۆرمت لە عێراق بۆ سەیارە و هۆتێل و هۆڵ و خوێندنگەی شۆفێری.",footer_services:"خزمەتگوزاری",footer_company:"پلاتفۆرم"},
 
 tr:{dir:"ltr",flag:"🇹🇷",name:"Türkçe",
-  nav_partner:"Ortak Ol",nav_cars:"Araçlar",nav_hotels:"Oteller",nav_halls:"Salonlar",nav_schools:"Sürücü Kursu",nav_home:"Ana Sayfa",
+  nav_partner:"Ortak Ol",nav_cars:"Araçlar",nav_hotels:"Oteller",nav_halls:"Salonlar",nav_schools:"Sürücü Kursu",nav_wash:"Oto Yıkama",nav_farm:"Çiftlik & Şale",nav_home:"Ana Sayfa",
   page_t:"Sürücü Kursları",page_s:"Sertifikalı kurslar, kadın eğitmenler",
-  f_city:"Şehir",f_search:"Ara",ph_search:"İsim veya özellik",f_date:"Tarih",f_days:"Gün Sayısı",f_nights:"Gece Sayısı",f_guests:"Misafir Sayısı",
+  loc_finding:"Konumunuz belirleniyor…",loc_found:"Konumunuz:",loc_near:"En yakın il:",loc_change:"Değiştir",loc_denied:"Konum izni verilmedi — şehri elle seçin",loc_failed:"Konum belirlenemedi",loc_unsupported:"Cihazınız desteklemiyor",f_city:"Şehir",f_search:"Ara",ph_search:"İsim veya özellik",f_date:"Tarih",f_days:"Gün Sayısı",f_nights:"Gece Sayısı",f_guests:"Misafir Sayısı",
   all:"Hepsi",results:"sonuç",loading:"Yükleniyor…",
   empty_t:"Bu şehirde sonuç yok",empty_p:"Başka bir şehir deneyin. Sürekli yeni ortaklar ekliyoruz.",
   empty_b:"Tüm şehirler",err_t:"Yüklenemedi",err_p:"Bağlantınızı kontrol edip tekrar deneyin.",err_b:"Tekrar dene",
+  f_time:"Saat",e_time:"Randevu saati seçin",u_wash:"yıkama",items_wash:"Yıkama hizmetleri",items_farm:"Mevcut üniteler",f_time:"Saat",e_time:"Randevu saati seçin",f_stay:"Rezervasyon türü",stay_night:"Geceleme",stay_day:"Sadece gündüz",fee_platform:"Platform komisyonu",free:"Ücretsiz",
+  fine_free:"Al-Hut müşteriden ücret almaz. Ödemeyi doğrudan hizmet sağlayıcıya yaparsınız.",
+  note_wa:"Rezervasyon görevlisi WhatsApp'ta onaylamadan yeriniz ayrılmaz.",
+  redir_t:"Talebiniz onay bekliyor",
+  redir_p:"Yeriniz henüz ayrılmadı. Detayları WhatsApp'tan gönderin, görevli müsaitlik ve fiyatı onaylasın.",
+  redir_btn:"WhatsApp'ta tamamla",
+  redir_note:"WhatsApp otomatik açılmazsa yukarıdaki düğmeye basın.",
+  send:"WhatsApp'a gönder",
   u_day:"/ gün",u_night:"/ gece",u_course:"kurs",iqd:"IQD",from:"başlangıç",
   book:"Hemen rezerve et",details:"Detaylar",features:"Özellikler",about:"Hakkında",location:"Konum",openmap:"Haritada aç",
   items_car:"Mevcut filo",items_hotel:"Mevcut odalar",items_hall:"Paketler",items_school:"Kurslar",
   no_items:"Şu anda mevcut değil",
   form_t:"Rezervasyonu tamamla",f_name:"Ad Soyad",f_phone:"Telefon",f_nid:"Kimlik No",f_notes:"Notlar",
   ph_name:"Kimlikteki gibi",ph_phone:"07XX XXX XXXX",ph_nid:"İsteğe bağlı",ph_notes:"Özel bir talep…",
-  total:"Tahmini toplam",send:"Talebi onayla",
-  note_wa:"Onaydan sonra hazır bir mesajla WhatsApp açılır. Nihai fiyatı sağlayıcı onaylar.",
+  total:"Tahmini toplam",
+  
   e_name:"Adınızı yazın",e_phone:"Geçersiz telefon",e_date:"Tarih seçin",
-  ok_t:"Talebiniz alındı 🎉",ok_p:"Talep numaranızı saklayın. Sağlayıcı sizinle iletişime geçecek.",ok_wa:"WhatsApp ile gönder",
+  
   sending:"Gönderiliyor…",fail:"Gönderilemedi",
   footer_desc:"Araç, otel, düğün salonu ve sürücü kursları için Irak'taki ilk platformunuz.",footer_services:"Hizmetler",footer_company:"Platform"},
 
 en:{dir:"ltr",flag:"🇬🇧",name:"English",
-  nav_partner:"Become a partner",nav_cars:"Cars",nav_hotels:"Hotels",nav_halls:"Halls",nav_schools:"Driving schools",nav_home:"Home",
+  nav_partner:"Become a partner",nav_cars:"Cars",nav_hotels:"Hotels",nav_halls:"Halls",nav_schools:"Driving schools",nav_wash:"Car wash",nav_farm:"Farms & Chalets",nav_home:"Home",
   page_t:"Driving Schools",page_s:"Certified courses with female instructors",
-  f_city:"City",f_search:"Search",ph_search:"Name or feature",f_date:"Date",f_days:"Days",f_nights:"Nights",f_guests:"Guests",
+  loc_finding:"Finding your location…",loc_found:"You are in",loc_near:"Nearest served province:",loc_change:"Change",loc_denied:"Location permission denied — pick your city manually",loc_failed:"Could not get your location",loc_unsupported:"Your device does not support this",f_city:"City",f_search:"Search",ph_search:"Name or feature",f_date:"Date",f_days:"Days",f_nights:"Nights",f_guests:"Guests",
   all:"All",results:"available",loading:"Loading…",
   empty_t:"No results in this city",empty_p:"Try another city or clear the filters. We add new partners regularly.",
   empty_b:"Show all cities",err_t:"Could not load",err_p:"Check your connection and try again.",err_b:"Retry",
+  f_time:"Time",e_time:"Pick an appointment time",u_wash:"per wash",items_wash:"Wash services",items_farm:"Available units",f_time:"Time",e_time:"Pick an appointment time",f_stay:"Booking type",stay_night:"Overnight",stay_day:"Day use only",fee_platform:"Platform fee",free:"Free",
+  fine_free:"Al-Hut charges you nothing. You pay the provider directly.",
+  note_wa:"Your place is not held until our booking agent confirms with you on WhatsApp.",
+  redir_t:"Your request awaits confirmation",
+  redir_p:"Nothing is reserved yet. Send the details on WhatsApp so our agent can confirm availability and the final price.",
+  redir_btn:"Continue on WhatsApp",
+  redir_note:"If WhatsApp does not open automatically, tap the button above.",
+  send:"Send to WhatsApp",
   u_day:"/ day",u_night:"/ night",u_course:"per course",iqd:"IQD",from:"from",
   book:"Book now",details:"Details",features:"Features",about:"About",location:"Location",openmap:"Open in Maps",
   items_car:"Available fleet",items_hotel:"Available rooms",items_hall:"Packages",items_school:"Courses",
   no_items:"Nothing available right now",
   form_t:"Complete booking",f_name:"Full name",f_phone:"Phone number",f_nid:"ID number",f_notes:"Notes",
   ph_name:"As in your ID",ph_phone:"07XX XXX XXXX",ph_nid:"Optional",ph_notes:"Any special request…",
-  total:"Estimated total",send:"Confirm request",
-  note_wa:"After confirming, WhatsApp opens with a ready message. The provider confirms the final price.",
+  total:"Estimated total",
+  
   e_name:"Enter your full name",e_phone:"Invalid phone number",e_date:"Pick a date",
-  ok_t:"Request received 🎉",ok_p:"Keep your request number. The provider will contact you shortly.",ok_wa:"Send via WhatsApp",
+  
   sending:"Sending…",fail:"Could not send — try again",
   footer_desc:"Your #1 platform in Iraq for cars, hotels, wedding halls, and driving schools.",footer_services:"Services",footer_company:"Platform"}
 };
@@ -420,13 +648,26 @@ let LANG = "ar";
 const T = k => (I18N[LANG][k] ?? I18N.ar[k] ?? k);
 
 /* ═══════════ الحالة ═══════════ */
-let S = {city:"", cat:"", q:"", date:"", qty:1, data:[], loading:true, err:false, cur:null, curItem:null};
+let S = {city:"", cat:"", q:"", date:"", qty:1, data:[], loading:true, err:false,
+         cur:null, curItem:null, located:false, lbMedia:[]};
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money = n => (Number(n)||0).toLocaleString("en-US");
 const fbKey = s => String(s||"").replace(/[.#$/[\]\s]/g,"_");
 const nP = p => { let c=String(p||"").replace(/\D/g,""); if(c.startsWith("964"))c=c.slice(3); if(c.startsWith("0"))c=c.slice(1); return c; };
+
+/* أي صورة تفشل تُستبدل بأيقونة القطاع — لا رمز كسر أمام الزبون أبداً */
+window.imgFail = function(el){
+  const box = el.parentNode;
+  if(!box) return;
+  el.remove();
+  if(box.querySelector(".ph")) return;
+  const d = document.createElement("div");
+  d.className = "ph";
+  d.textContent = C.icon;
+  box.appendChild(d);
+};
 
 function toast(msg, err){
   const w=$("toast-wrap"), el=document.createElement("div");
@@ -479,7 +720,62 @@ window.pickCat = c => { S.cat = c; renderCats(); render(); };
 
 let dT=null;
 window.debounced = () => { clearTimeout(dT); dT=setTimeout(()=>{ S.q=$("qIn").value.trim(); render(); },250); };
+window.pickCityManual = function(){
+  S.city = $("citySel").value;
+  S.located = false;
+  try{ localStorage.setItem("hut_city", S.city); }catch(e){}
+  $("locBar").innerHTML = "";
+  load();
+};
+
 window.applyFilters = () => { S.city = $("citySel").value; load(); };
+
+/**
+ * تحديد المدينة من موقع الجهاز.
+ * auto=true عند الإقلاع حين يكون الإذن ممنوحاً مسبقاً — فلا نزعج
+ * الزائر بنافذة إذن قبل أن يفهم الصفحة. الضغط اليدوي يطلب الإذن.
+ */
+window.locate = function(auto){
+  if(!navigator.geolocation){ if(!auto) toast(T("loc_unsupported"), true); return; }
+  const btn = $("locBtn");
+  if(btn) btn.classList.add("busy");
+  if(!auto) toast(T("loc_finding"));
+
+  navigator.geolocation.getCurrentPosition(function(pos){
+    if(btn) btn.classList.remove("busy");
+    const r = nearestCity(pos.coords.latitude, pos.coords.longitude);
+    S.city = r.city;
+    S.located = true;
+    $("citySel").value = r.city;
+    try{ localStorage.setItem("hut_city", r.city); }catch(e){}
+
+    const c = CITIES.find(function(x){ return x.key === r.city; });
+    const nm = c ? (c[LANG] || c.ar) : r.city;
+    /* المسافة الكبيرة تعني أن الزبون خارج المحافظات المخدومة —
+       نعرضها بصراحة بدل أن نوهمه بأننا وجدنا مكانه بالضبط. */
+    const far = r.km > 120;
+    $("locBar").innerHTML = `<div class="locbar">
+      <span>📍</span>
+      <span>${far ? esc(T("loc_near")) : esc(T("loc_found"))} <b>${esc(nm)}</b>${far ? " (" + r.km + " كم)" : ""}</span>
+      <button onclick="clearLoc()">${esc(T("loc_change"))}</button>
+    </div>`;
+    load();
+  }, function(err){
+    if(btn) btn.classList.remove("busy");
+    /* الرفض التلقائي لا يستحق إزعاجاً — نكتفي بإبراز الزر ليضغطه متى شاء */
+    if(auto){
+      if(err.code === 1 && btn) btn.classList.add("hint");
+      return;
+    }
+    toast(err.code === 1 ? T("loc_denied") : T("loc_failed"), true);
+  }, {enableHighAccuracy:false, timeout:10000, maximumAge:600000});
+};
+
+window.clearLoc = function(){
+  $("locBar").innerHTML = "";
+  S.located = false;
+  $("citySel").focus();
+};
 
 /* ═══════════ التحميل من Firebase ═══════════
    عقدة catalog مقروءة علناً وتحمل بيانات الأنشطة فقط — لا زبائن ولا
@@ -668,54 +964,163 @@ function specRows(obj, only){
   return out.join("");
 }
 
+function galleryHTML(media, kinds){
+  if(!media.length)
+    return `<div class="gal2"><div class="ph">${C.icon}</div></div>`;
+  return `<div class="gal2">
+    <div class="strip" id="gStrip" onscroll="galScroll(this)">
+      ${media.slice(0,20).map((m,i)=>`<div>
+        <img src="${esc(m.u||m.url)}" alt="" loading="${i?"lazy":"eager"}"
+             onclick="openLB(${i})" onerror="imgFail(this)">
+        ${m.k?`<span class="kind">${esc(m.k)}</span>`:""}
+      </div>`).join("")}
+    </div>
+    ${media.length>1?`<span class="cnt" id="gCnt">1 / ${media.length}</span>`:""}
+  </div>`;
+}
+
+window.galScroll = function(el){
+  const n = Math.round(el.scrollLeft / el.clientWidth);
+  const c = $("gCnt");
+  if(c) c.textContent = (Math.abs(n)+1) + " / " + S.lbMedia.length;
+};
+
+window.openLB = function(i){
+  const media = S.lbMedia || [];
+  if(!media.length) return;
+  const host = document.createElement("div");
+  host.id = "lbHost";
+  host.innerHTML = `<div class="lb">
+    <div class="lb-top">
+      <button onclick="closeLB()" aria-label="close">✕</button>
+      <span id="lbCnt">${i+1} / ${media.length}</span>
+      <span style="width:38px"></span>
+    </div>
+    <div class="lb-strip" id="lbStrip" onscroll="lbScroll(this)">
+      ${media.map(m=>`<img src="${esc(m.u||m.url)}" alt="">`).join("")}
+    </div>
+  </div>`;
+  document.body.appendChild(host);
+  const st = $("lbStrip");
+  st.scrollLeft = (document.dir==="rtl" ? -1 : 1) * i * st.clientWidth;
+};
+window.lbScroll = function(el){
+  const n = Math.abs(Math.round(el.scrollLeft / el.clientWidth));
+  const c = $("lbCnt");
+  if(c) c.textContent = (n+1) + " / " + S.lbMedia.length;
+};
+window.closeLB = function(){ const h=$("lbHost"); if(h) h.remove(); };
+
+/* ملصقات بارزة تختصر ما يهمّ الزبون قبل أن يقرأ سطراً */
+function highlights(p, it, s){
+  const out = [];
+  if(SECTOR==="hotel" && s.stars) out.push({t:"⭐".repeat(Math.min(5,parseInt(s.stars)||0)), hi:1});
+  if(s.cat)  out.push({t:esc(s.cat)});
+  if(SECTOR==="farm"){
+    if(s.distance_city) out.push({t:"📍 " + s.distance_city + " كم عن المدينة", hi:1});
+    if(s.road)          out.push({t:"🛣️ طريق " + esc(s.road)});
+    if(s.capacity)      out.push({t:"👥 حتى " + s.capacity + " شخص"});
+    if(s.pool && s.pool!=="لا يوجد") out.push({t:"🏊 " + esc(s.pool)});
+  }
+  if(SECTOR==="wash"){
+    if(s.avg_minutes) out.push({t:"⏱️ " + s.avg_minutes + " دقيقة", hi:1});
+    if(s.booking)     out.push({t:esc(s.booking)});
+    if(s.home_service===true || s.home_service==="نعم") out.push({t:"📍 يأتي لموقعك"});
+  }
+  if(SECTOR==="hall"){
+    if(s.cap_max)  out.push({t:"👥 حتى " + s.cap_max + " ضيف", hi:1});
+    if(s.catering) out.push({t:"🍽️ " + esc(s.catering)});
+  }
+  if(SECTOR==="school" && Array.isArray(s.license) && s.license.length)
+    out.push({t:"🎓 " + s.license.slice(0,3).join("، ")});
+  if(SECTOR==="car" && it){
+    const q = it.specs || {};
+    if(q.year)  out.push({t:q.year, hi:1});
+    if(q.trans) out.push({t:esc(q.trans)});
+    if(q.seats) out.push({t:"👥 " + q.seats + " مقاعد"});
+    if(q.fuel)  out.push({t:esc(q.fuel)});
+  }
+  if(p.open === false) out.push({t:"⏸ لا يستقبل حجوزات حالياً", hi:1});
+  return out;
+}
+
 function showDetail(p, it){
   const media = it ? (it.media||[]) : (p.media||[]);
+  const s     = it ? (it.specs||{}) : (p.specs||{});
+  const feats = it ? (it.features||[]) : (p.features||[]);
   const title = it ? it.name : p.name;
   const price = it ? it.price : (p.min_price && p.min_price<999999999 ? p.min_price : 0);
-  const s = it ? (it.specs||{}) : (p.specs||{});
-  const feats = it ? (it.features||[]) : (p.features||[]);
+  S.lbMedia = media;
+
+  const hl = highlights(p, it, s);
+  const facts = specRows(s);
 
   const mapHtml = (p.lat && p.lng) ? `
-    <div class="blk"><h4>${esc(T("location"))}</h4>
+    <div class="hr"></div>
+    <div class="blk2"><h4>${esc(T("location"))}</h4>
       <div class="mapbox"><iframe loading="lazy" title="map"
         src="https://www.openstreetmap.org/export/embed.html?bbox=${p.lng-0.004},${p.lat-0.004},${p.lng+0.004},${p.lat+0.004}&layer=mapnik&marker=${p.lat},${p.lng}"></iframe></div>
-      <p style="font-size:.82rem;font-weight:700;color:var(--tx2)">${esc(p.address||"")}</p>
+      ${p.address?`<p style="font-size:.86rem;margin-top:10px">${esc(p.address)}</p>`:""}
       <a href="https://www.google.com/maps?q=${p.lat},${p.lng}" target="_blank" rel="noopener"
-         style="display:inline-block;margin-top:8px;font-size:.8rem;font-weight:900;color:var(--red)">${esc(T("openmap"))} ←</a>
+         style="display:inline-block;margin-top:10px;font-size:.85rem;font-weight:900;color:var(--red)">${esc(T("openmap"))} ←</a>
     </div>` : "";
 
-  const itemsHtml = (!it && (p.items||[]).length) ? `
-    <div class="blk"><h4>${esc(T("items_"+SECTOR))}</h4>
-      ${(p.items||[]).map(x=>{
+  const unitsHtml = (!it && (p.items||[]).length) ? `
+    <div class="hr"></div>
+    <div class="blk2"><h4>${esc(T("items_"+SECTOR))}</h4>
+      ${(p.items||[]).map(function(x){
         const im = x.cover || (x.media&&x.media[0]&&x.media[0].u) || "";
-        return `<button class="item" onclick="pickItem('${esc(x.id)}')">
-          ${im?`<img src="${esc(im)}" alt="" loading="lazy">`:`<div class="ph">${C.icon}</div>`}
-          <div class="m"><b>${esc(x.name)}</b><span>${esc(x.type||"")}</span></div>
-          <div class="p mono">${money(x.price)}</div>
+        const q  = x.specs || {};
+        const bits = [];
+        if(SECTOR==="hotel"){ if(q.beds) bits.push(q.beds); if(q.max_guests) bits.push(q.max_guests+" نزلاء"); if(q.size_m2) bits.push(q.size_m2+" م²"); }
+        if(SECTOR==="farm"){ if(q.capacity) bits.push(q.capacity+" شخص"); if(q.bedrooms) bits.push(q.bedrooms+" غرف"); if(q.has_pool===true) bits.push("مسبح خاص"); }
+        if(SECTOR==="hall"){ if(q.max_guests) bits.push("حتى "+q.max_guests+" ضيف"); if(q.hours) bits.push(q.hours+" ساعات"); }
+        if(SECTOR==="school"){ if(q.hours) bits.push(q.hours+" ساعة"); if(q.car_type) bits.push(q.car_type); }
+        if(SECTOR==="wash"){ if(q.duration) bits.push(q.duration+" دقيقة"); if(q.car_size) bits.push(q.car_size); }
+        return `<button class="unit" onclick="pickItem('${esc(x.id)}')">
+          ${im?`<img class="ui" src="${esc(im)}" alt="" loading="lazy" onerror="imgFail(this)">`
+              :`<div class="up">${C.icon}</div>`}
+          <div class="um"><b>${esc(x.name)}</b>
+            <span>${esc(x.type||"")}</span>
+            ${bits.length?`<i>${esc(bits.join(" · "))}</i>`:""}</div>
+          <div class="ue"><b>${money(x.price)}</b><small>${esc(T("iqd"))} ${esc(T(C.unitKey))}</small></div>
         </button>`;
       }).join("")}
-    </div>` : (!it ? `<div class="blk"><p style="color:var(--tx3)">${esc(T("no_items"))}</p></div>` : "");
+    </div>` : (!it ? `<div class="hr"></div><div class="blk2"><p style="color:var(--tx3)">${esc(T("no_items"))}</p></div>` : "");
 
-  sheet(title, `
-    ${media.length?`<div class="gal">${media.slice(0,12).map(m=>
-      `<div class="k"><img src="${esc(m.u||m.url)}" alt="" loading="lazy">${m.k?`<span>${esc(m.k)}</span>`:""}</div>`).join("")}</div>`:""}
-    <div style="font-size:.82rem;font-weight:700;color:var(--tx2);margin-bottom:14px">
-      ${it?esc(p.name)+" · ":""}${esc(p.area||"")} ${p.area?"·":""} ${esc(partnerCity(p))}
+  const desc = it ? it.desc : p.desc;
+
+  $("sheetHost").innerHTML = `<div class="dsheet" id="dsh">
+    <div class="dhead">
+      <button onclick="${it && (p.items||[]).length ? "openPartner('"+esc(p.id)+"')" : "closeSheet()"}" aria-label="back">→</button>
+      <h3>${esc(title)}</h3>
+      <button onclick="closeSheet()" aria-label="close">✕</button>
     </div>
-    ${(p.desc && !it)?`<div class="blk"><h4>${esc(T("about"))}</h4><p>${esc(p.desc)}</p></div>`:""}
-    ${(it && it.desc)?`<div class="blk"><h4>${esc(T("about"))}</h4><p>${esc(it.desc)}</p></div>`:""}
-    ${specRows(s)?`<div class="spec">${specRows(s)}</div>`:""}
-    ${feats.length?`<div class="blk"><h4>${esc(T("features"))}</h4>
-      <div class="chips">${feats.map(f=>`<span>${esc(f)}</span>`).join("")}</div></div>`:""}
-    ${itemsHtml}
-    ${mapHtml}
-    <div class="bar">
-      <div class="p">
-        ${price?`<b class="mono">${money(price)} <span style="font-size:.8rem">${esc(T("iqd"))}</span></b>
-                 <small>${esc(T(C.unitKey))}</small>`:`<b style="font-size:.95rem">${esc(T("book"))}</b>`}
+    <div class="dscroll">
+      ${galleryHTML(media)}
+      <div class="dwrap">
+        <h2 class="dtitle">${esc(title)}</h2>
+        <div class="dmeta">${it?`<b>${esc(p.name)}</b> · `:""}${esc(p.area||"")}${p.area?" · ":""}${esc(partnerCity(p))}</div>
+        ${hl.length?`<div class="pills2">${hl.map(x=>`<span class="${x.hi?"hi":""}">${x.t}</span>`).join("")}</div>`:""}
+
+        ${desc?`<div class="hr"></div><div class="blk2"><h4>${esc(T("about"))}</h4><p>${esc(desc)}</p></div>`:""}
+        ${facts?`<div class="hr"></div><div class="blk2"><h4>${esc(T("details"))}</h4><div class="facts">${facts}</div></div>`:""}
+        ${feats.length?`<div class="hr"></div><div class="blk2"><h4>${esc(T("features"))}</h4>
+          <div class="amen">${feats.map(f=>`<div><em>${icoOf(f)}</em><span>${esc(f)}</span></div>`).join("")}</div></div>`:""}
+        ${unitsHtml}
+        ${mapHtml}
+        <div style="height:20px"></div>
       </div>
-      <button class="go" onclick="openForm()">${esc(T("book"))}</button>
-    </div>`);
+    </div>
+    <div class="bookbar">
+      <div class="bp">
+        ${price?`<b>${money(price)} <span>${esc(T("iqd"))}</span></b><small>${esc(T(C.unitKey))}</small>`
+               :`<b style="font-size:1rem">${esc(T("book"))}</b><small>${esc(T("details"))}</small>`}
+      </div>
+      <button class="bgo" onclick="openForm()" ${p.open===false?"disabled":""}>${esc(T("book"))}</button>
+    </div>
+  </div>`;
+  document.body.style.overflow = "hidden";
 }
 
 window.pickItem = function(iid){
@@ -728,41 +1133,97 @@ window.pickItem = function(iid){
 /* ═══════════ الاستمارة ═══════════ */
 window.openForm = function(){
   const p = S.cur, it = S.curItem;
+  const cover = it ? (it.cover || (it.media&&it.media[0]&&it.media[0].u) || "")
+                   : (p.cover || (p.media&&p.media[0]&&p.media[0].u) || "");
   const unit = it ? it.price : (p.min_price && p.min_price<999999999 ? p.min_price : 0);
+
   const qtyField = C.qtyKey ? `
-    <div class="fld"><label data-i18n="${C.qtyKey}">${esc(T(C.qtyKey))}</label>
-      <input id="fQty" type="number" min="1" max="${SECTOR==="hall"?"2000":"90"}" value="${SECTOR==="hall"?"200":"1"}" oninput="calcTotal()"></div>` : "";
+    <div class="fld"><label>${esc(T(C.qtyKey))}</label>
+      <input id="fQty" type="number" min="1" max="${SECTOR==="hall"?"2000":"90"}"
+             value="${SECTOR==="hall"?"200":(S.qty||1)}" oninput="calcTotal()"></div>` : "";
+  const stayField = C.stayType ? `
+    <div class="fld"><label>${esc(T("f_stay"))} <i>*</i></label>
+      <select id="fStay" onchange="calcTotal()">
+        <option value="night">${esc(T("stay_night"))}</option>
+        <option value="day">${esc(T("stay_day"))}</option>
+      </select></div>` : "";
+  const timeField = C.timeField ? `
+    <div class="fld"><label>${esc(T("f_time"))} <i>*</i></label>
+      <input id="fTime" type="time" value="10:00" step="900"></div>` : "";
 
-  sheet(T("form_t"), `
-    <div class="fld"><label>${esc(T("f_name"))} <i>*</i></label>
-      <input id="fName" placeholder="${esc(T("ph_name"))}" autocomplete="name"></div>
-    <div class="fld"><label>${esc(T("f_phone"))} <i>*</i></label>
-      <input id="fPhone" class="tel" type="tel" inputmode="numeric" placeholder="${esc(T("ph_phone"))}" autocomplete="tel"></div>
-    <div class="two">
-      <div class="fld"><label>${esc(T("f_date"))} <i>*</i></label>
-        <input id="fDate" type="date" value="${esc(S.date||todayStr())}" min="${todayStr()}"></div>
-      ${qtyField}
+  $("sheetHost").innerHTML = `<div class="dsheet" id="dsh">
+    <div class="dhead">
+      <button onclick="backToDetail()" aria-label="back">→</button>
+      <h3>${esc(T("form_t"))}</h3>
+      <button onclick="closeSheet()" aria-label="close">✕</button>
     </div>
-    ${SECTOR==="car"||SECTOR==="hotel"?`<div class="fld"><label>${esc(T("f_nid"))}</label>
-      <input id="fNid" placeholder="${esc(T("ph_nid"))}" inputmode="numeric"></div>`:""}
-    <div class="fld"><label>${esc(T("f_notes"))}</label>
-      <textarea id="fNotes" placeholder="${esc(T("ph_notes"))}"></textarea></div>
-    ${unit?`<div class="total"><span>${esc(T("total"))}</span><b class="mono" id="fTotal">${money(unit)} ${esc(T("iqd"))}</b></div>`:""}
-    <div class="note">${esc(T("note_wa"))}</div>
-    <button class="wa" id="fSend" style="background:var(--red-g);box-shadow:var(--sh-red)" onclick="submitOrder()">${esc(T("send"))}</button>`);
+    <div class="dscroll">
+      <div class="fwrap">
+        <div class="fsum">
+          ${cover?`<img src="${esc(cover)}" alt="" onerror="imgFail(this)">`:`<div class="fp">${C.icon}</div>`}
+          <div><b>${esc(it?it.name:p.name)}</b>
+            <span>${it?esc(p.name)+" · ":""}${esc(partnerCity(p))}</span></div>
+        </div>
 
-  setTimeout(()=>{ $("fName")?.focus(); }, 320);
+        <div class="fld"><label>${esc(T("f_name"))} <i>*</i></label>
+          <input id="fName" placeholder="${esc(T("ph_name"))}" autocomplete="name"></div>
+        <div class="fld"><label>${esc(T("f_phone"))} <i>*</i></label>
+          <input id="fPhone" class="tel" type="tel" inputmode="numeric"
+                 placeholder="${esc(T("ph_phone"))}" autocomplete="tel"></div>
+        <div class="two">
+          <div class="fld"><label>${esc(T("f_date"))} <i>*</i></label>
+            <input id="fDate" type="date" value="${esc(S.date||todayStr())}" min="${todayStr()}"></div>
+          ${qtyField}
+        </div>
+        ${stayField}${timeField}
+        ${(SECTOR==="car"||SECTOR==="hotel")?`<div class="fld"><label>${esc(T("f_nid"))}</label>
+          <input id="fNid" placeholder="${esc(T("ph_nid"))}" inputmode="numeric"></div>`:""}
+        <div class="fld"><label>${esc(T("f_notes"))}</label>
+          <textarea id="fNotes" placeholder="${esc(T("ph_notes"))}"></textarea></div>
+
+        ${unit?`<div class="bd" id="fBd"></div>`:""}
+
+        <div class="wnote"><em>💬</em><span>${esc(T("note_wa"))}</span></div>
+        <button class="gowa" id="fSend" onclick="submitOrder()">
+          <span style="font-size:1.2rem">💬</span> ${esc(T("send"))}
+        </button>
+        <p class="fine2">${esc(T("fine_free"))}</p>
+      </div>
+    </div>
+  </div>`;
+
+  calcTotal();
+  setTimeout(()=>{ $("fName") && $("fName").focus(); }, 320);
+};
+
+window.backToDetail = function(){
+  if(S.curItem) showDetail(S.cur, S.curItem);
+  else showDetail(S.cur, null);
 };
 
 function todayStr(){ return new Date().toISOString().split("T")[0]; }
 
+/* تفصيل السعر سطراً سطراً — الرقم المجمّع وحده يثير الشكّ */
 window.calcTotal = function(){
-  const el = $("fTotal");
-  if(!el) return;
-  const it = S.curItem;
-  const unit = it ? it.price : (S.cur.min_price||0);
-  const q = SECTOR==="hall" ? 1 : Math.max(1, parseInt(($("fQty")||{}).value)||1);
-  el.textContent = money(unit*q) + " " + T("iqd");
+  const box = $("fBd");
+  if(!box) return;
+  const it = S.curItem, p = S.cur;
+  let unit = it ? it.price : (p.min_price || 0);
+  const stay = ($("fStay")||{}).value || "";
+  let unitLbl = T(C.unitKey);
+  if(stay === "day" && it && it.specs && Number(it.specs.price_day) > 0){
+    unit = Number(it.specs.price_day);
+    unitLbl = T("stay_day");
+  }
+  const q = (SECTOR==="hall" || !C.qtyKey) ? 1 : Math.max(1, parseInt(($("fQty")||{}).value)||1);
+  const total = unit * q;
+
+  const rows = [];
+  if(q > 1) rows.push(`<div class="r"><span>${money(unit)} ${esc(T("iqd"))} ${esc(unitLbl)} × ${q}</span><b>${money(total)}</b></div>`);
+  else      rows.push(`<div class="r"><span>${esc(unitLbl)}</span><b>${money(unit)}</b></div>`);
+  rows.push(`<div class="r"><span>${esc(T("fee_platform"))}</span><b>${esc(T("free"))}</b></div>`);
+  rows.push(`<div class="r t"><span>${esc(T("total"))}</span><b>${money(total)} ${esc(T("iqd"))}</b></div>`);
+  box.innerHTML = rows.join("");
 };
 
 async function submitOrder(){
@@ -772,13 +1233,17 @@ async function submitOrder(){
   const date  = ($("fDate").value||"").trim();
   const qty   = Math.max(1, parseInt(($("fQty")||{}).value)||1);
   const nid   = ($("fNid")||{}).value || "";
+  const time  = ($("fTime")||{}).value || "";
+  const stay  = ($("fStay")||{}).value || "";
   const notes = ($("fNotes")||{}).value || "";
 
   if(name.length < 3)   return toast(T("e_name"), true);
   if(phone.length < 9)  return toast(T("e_phone"), true);
   if(!date)             return toast(T("e_date"), true);
+  if(C.timeField && !time) return toast(T("e_time"), true);
 
-  const unit  = it ? it.price : (p.min_price||0);
+  let unit = it ? it.price : (p.min_price||0);
+  if(stay === "day" && it && it.specs && Number(it.specs.price_day) > 0) unit = Number(it.specs.price_day);
   const total = SECTOR==="hall" ? unit : unit*qty;
 
   const body = {token:TOKEN, action:C.action, source:"web",
@@ -800,9 +1265,20 @@ async function submitOrder(){
     body.hall_name = p.name; body.hall_id = p.id;
     body.event_type = it ? it.name : "مناسبة";
     body.guests = qty;
-  }else{
+  }else if(SECTOR === "school"){
     body.school_id = p.id; body.school_name = p.name;
     body.course = it ? it.name : "كورس";
+  }else if(SECTOR === "wash"){
+    body.wash_id = p.id; body.wash_name = p.name;
+    body.service_name = it ? it.name : "غسيل";
+    body.time = time;
+  }else{
+    body.farm_id = p.id; body.farm_name = p.name;
+    body.unit_name = it ? it.name : "وحدة";
+    body.stay_type = stay;
+    body.nights = stay === "day" ? 0 : qty;
+    body.days = stay === "day" ? qty : 0;
+    body.guests = (it && it.specs && it.specs.capacity) || 0;
   }
 
   const btn = $("fSend");
@@ -814,48 +1290,58 @@ async function submitOrder(){
       body:JSON.stringify(body)});
     const d = await r.json();
     if(!d || !d.success) throw new Error((d&&d.msg)||T("fail"));
-    showSuccess(d.order_id, p, it, {name, phone, date, qty, total, notes});
+    goWhatsApp(d.order_id, p, it, {name, phone, date, qty, total, notes, time, stay});
   }catch(e){
-    btn.innerHTML = esc(T("send"));
+    btn.innerHTML = `<span style="font-size:1.2rem">💬</span> ${esc(T("send"))}`;
     btn.disabled = false;
     toast(e.message || T("fail"), true);
   }
 }
 
-function showSuccess(orderId, p, it, f){
+/**
+ * لا شاشة «تم الحجز بنجاح».
+ * الطلب سُجّل عندنا فقط — والحجز لا يكتمل إلا بتأكيد موظف الحجوزات على
+ * واتساب. إظهار نجاح هنا يوهم الزبون بأن مكانه محجوز، فيصل يوم الموعد
+ * ولا يجد شيئاً. نقول الحقيقة ونحوّله فوراً.
+ */
+function goWhatsApp(orderId, p, it, f){
   const svc = it ? it.name : p.name;
-  const unitTxt = T(C.unitKey);
   const lines = [
-    "🐋 منصة الحوت",
-    "طلب جديد #" + orderId,
+    "🐋 منصة الحوت — طلب حجز",
+    "رقم الطلب: #" + orderId,
     "",
     "الخدمة: " + svc,
     "مقدّم الخدمة: " + p.name,
     "المدينة: " + p.city + (p.area ? " — " + p.area : ""),
     "التاريخ: " + f.date,
-    (C.qtyKey ? T(C.qtyKey) + ": " + f.qty : ""),
-    "الإجمالي التقديري: " + money(f.total) + " د.ع " + unitTxt,
+    (f.time ? "الوقت: " + f.time : ""),
+    (f.stay ? "نوع الحجز: " + (f.stay === "day" ? "نهاري فقط" : "بياتي") : ""),
+    (C.qtyKey && f.qty > 1 ? T(C.qtyKey) + ": " + f.qty : ""),
+    "المبلغ التقديري: " + money(f.total) + " د.ع",
     "",
     "الاسم: " + f.name,
     "الهاتف: 0" + f.phone,
-    (f.notes ? "ملاحظات: " + f.notes : "")
+    (f.notes ? "ملاحظات: " + f.notes : ""),
+    "",
+    "أرجو تأكيد التوفّر والسعر النهائي."
   ].filter(Boolean).join("\n");
 
-  const target = TEST_MODE ? TEST_PHONE : ("964" + nP(p.phone));
-  const link = "https://wa.me/" + target + "?text=" + encodeURIComponent(lines);
+  const link = "https://wa.me/" + BOOKING_PHONE + "?text=" + encodeURIComponent(lines);
 
-  sheet(T("ok_t"), `
-    <div class="ok">
-      <div class="i">🎉</div>
-      <b>${esc(T("ok_t"))}</b>
-      <p>${esc(T("ok_p"))}</p>
-      <div class="id mono">#${esc(orderId)}</div>
-      <a class="wa" href="${link}" target="_blank" rel="noopener">
-        <span style="font-size:1.15rem">💬</span> ${esc(T("ok_wa"))}
-      </a>
-      ${TEST_MODE?`<p style="margin-top:14px;font-size:.72rem;color:var(--tx3)">
-        وضع التجربة: الرسالة تذهب لرقم الاختبار لا للشريك.</p>`:""}
-    </div>`);
+  $("sheetHost").innerHTML = `<div class="redir">
+    <div class="ic">💬</div>
+    <h3>${esc(T("redir_t"))}</h3>
+    <p>${esc(T("redir_p"))}</p>
+    <div class="num">#${esc(orderId)}</div>
+    <a class="gowa" style="max-width:340px" href="${link}" target="_blank" rel="noopener"
+       onclick="setTimeout(closeSheet,600)">
+      <span style="font-size:1.2rem">💬</span> ${esc(T("redir_btn"))}
+    </a>
+    <p class="fine2" style="margin-top:18px;max-width:320px">${esc(T("redir_note"))}</p>
+  </div>`;
+
+  /* تحويل تلقائي: التنقّل في نفس التبويب لا يحجبه المتصفح كما يحجب النوافذ */
+  setTimeout(function(){ location.href = link; }, 900);
 }
 
 /* ═══════════ الطبقة ═══════════ */
@@ -869,15 +1355,25 @@ function sheet(title, html){
   document.body.style.overflow = "hidden";
   $("sh").onclick = e => { if(e.target.id==="sh") closeSheet(); };
 }
-window.closeSheet = function(){ $("sheetHost").innerHTML=""; document.body.style.overflow=""; };
-document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeSheet(); });
+window.closeSheet = function(){
+  closeLB();
+  $("sheetHost").innerHTML = "";
+  document.body.style.overflow = "";
+};
+document.addEventListener("keydown", e=>{
+  if(e.key !== "Escape") return;
+  if($("lbHost")) closeLB(); else closeSheet();
+});
 
 window.addEventListener("scroll", ()=>{ $("nav").classList.toggle("scrolled", window.scrollY>10); });
 
 /* ═══════════ الإقلاع ═══════════ */
 (function init(){
   const q = new URLSearchParams(location.search);
-  S.city = q.get("city") || "";
+  let savedCity = "";
+  try{ savedCity = localStorage.getItem("hut_city") || ""; }catch(e){}
+  /* الأولوية: ما جاء من الرابط، ثم آخر اختيار للزائر، ثم موقعه */
+  S.city = q.get("city") || savedCity || "";
   S.date = q.get("date") || "";
   S.qty  = parseInt(q.get("days")||q.get("nights")||"1") || 1;
 
@@ -888,6 +1384,12 @@ window.addEventListener("scroll", ()=>{ $("nav").classList.toggle("scrolled", wi
 
   if(API.indexOf("ضع_")===0) toast("املأ API و TOKEN في أعلى الملف", true);
   load();
+
+  /* طلب الموقع تلقائياً.
+     نؤخّره نصف ثانية ليرى الزائر الصفحة أولاً — نافذة إذن تظهر على شاشة
+     بيضاء تُرفض غالباً، وظهورها فوق محتوى مفهوم تُقبل أكثر.
+     ولا نطلبه إن جاءت المدينة من الرابط، فذلك اختيار صريح لا نتجاوزه. */
+  if(!q.get("city")) setTimeout(function(){ locate(true); }, 600);
 })();
 </script>
 </body>

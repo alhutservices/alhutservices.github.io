@@ -93,6 +93,15 @@ img{display:block;max-width:100%;}
 .sf label{display:block;font-size:.64rem;font-weight:900;color:var(--tx2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;}
 .sf select,.sf input{border:none;outline:none;font-family:inherit;font-size:.95rem;font-weight:800;color:var(--tx0);background:transparent;width:100%;cursor:pointer;}
 .sf select{appearance:none;}
+.cityrow{display:flex;align-items:center;gap:8px;}
+.cityrow select{flex:1;min-width:0;}
+.loc{width:34px;height:34px;border-radius:50%;background:var(--bg);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;transition:.18s;}
+.loc:hover{border-color:var(--red);background:var(--red-l);}
+.loc.busy{animation:spinLoc .9s linear infinite;}
+.loc.hint{border-color:var(--red);background:var(--red-l);animation:hintLoc 2s ease-in-out 3;}
+@keyframes hintLoc{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+@keyframes spinLoc{to{transform:rotate(360deg)}}
 .search-go-wrap{display:flex;align-items:center;justify-content:center;padding:12px;}
 .search-go{background:var(--red-g);color:#fff;border-radius:var(--r4);width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:var(--sh-red);transition:.25s;flex-shrink:0;}
 .search-go:hover{transform:scale(1.05);}
@@ -244,7 +253,10 @@ img{display:block;max-width:100%;}
       <div class="search-fields">
         <div class="sf">
           <label data-i18n="f_city">المدينة</label>
-          <select id="citySelect"></select>
+          <div class="cityrow">
+            <select id="citySelect" onchange="rememberCity()"></select>
+            <button class="loc" id="locBtn" onclick="locate(false)" title="حدّد موقعي" aria-label="حدد موقعي">📍</button>
+          </div>
         </div>
         <div class="sf">
           <label data-i18n="f_date">التاريخ</label>
@@ -404,7 +416,7 @@ const I18N = {
     hero_eyebrow:"الأول في العراق لعام 2026", hero_h1_a:"ابحث، احجز،", hero_h1_b:"واستمتع بتجربتك",
     hero_p:"سيارات للإيجار، فنادق فاخرة، قاعات أعراس، مدارس قيادة احترافية، مغاسل سيارات، ومزارع وشاليهات — في بغداد وكركوك وأربيل وكل محافظات العراق.",
     tab_car:"تأجير سيارات", tab_hotel:"حجز فنادق", tab_hall:"قاعات أعراس", tab_school:"مدارس قيادة", tab_wash:"مغاسل سيارات", tab_farm:"مزارع وشاليهات",
-    f_city:"المدينة", f_date:"التاريخ", f_days:"عدد الأيام",
+    loc_finding:"جارٍ تحديد موقعك…", loc_found:"موقعك في", loc_denied:"لم تسمح بالوصول للموقع — اختر مدينتك يدوياً", loc_failed:"تعذّر تحديد الموقع", loc_unsupported:"جهازك لا يدعم تحديد الموقع", f_city:"المدينة", f_date:"التاريخ", f_days:"عدد الأيام",
     trust_services:"خدمات متكاملة", trust_cities:"محافظة", trust_rating:"تقييم العملاء",
     cat_title:"استكشف خدماتنا", cat_sub:"كل ما تحتاجه في مكان واحد", explore:"تصفّح الآن",
     cat1:"تأجير سيارات", cat1_sub:"أسطول واسع بأسعار واضحة",
@@ -437,7 +449,7 @@ const I18N = {
     hero_eyebrow:"یەکەم لە عێراق ٢٠٢٦", hero_h1_a:"بگەڕێ، حیجز بکە،", hero_h1_b:"چێژ لە کاتەکەت ببینە",
     hero_p:"ئۆتۆمبێلی کرێ، هۆتێلی ناوازە، هۆڵی زەماوەند، خوێندنگەی شۆفێری، شوشتنگە و کێڵگە و شالێ لە هەموو پارێزگاکانی عێراق.",
     tab_car:"بەکرێگرتنی سەیارە", tab_hotel:"هۆتێل", tab_hall:"هۆڵی زەماوەند", tab_school:"خوێندنگەی شۆفێری", tab_wash:"شوشتنگە", tab_farm:"کێڵگە و شالێ",
-    f_city:"شار", f_date:"بەروار", f_days:"ژمارەی ڕۆژ",
+    loc_finding:"شوێنت دیاری دەکرێت…", loc_found:"شوێنت لە", loc_denied:"ڕێگەت نەدا بە شوێن", loc_failed:"شوێن دیاری نەکرا", loc_unsupported:"ئامێرەکەت پاڵپشتی ناکات", f_city:"شار", f_date:"بەروار", f_days:"ژمارەی ڕۆژ",
     trust_services:"خزمەتگوزاری", trust_cities:"پارێزگا", trust_rating:"هەڵسەنگاندنی کڕیار",
     cat_title:"خزمەتگوزارییەکان", cat_sub:"هەموو پێداویستییەکانت لەیەک شوێندا", explore:"ئێستا بگەڕێ",
     cat1:"بەکرێگرتنی سەیارە", cat1_sub:"هێزی فراوان بە نرخی ڕوون",
@@ -470,7 +482,7 @@ const I18N = {
     hero_eyebrow:"Irak'ın 1 Numarası — 2026", hero_h1_a:"Ara, rezervasyon yap,", hero_h1_b:"deneyimini yaşa",
     hero_p:"Bağdat, Kerkük, Erbil ve Irak'ın tüm illerinde araç kiralama, otel rezervasyonu, düğün salonları, sürücü kursları, oto yıkama, çiftlik ve şaleler.",
     tab_car:"Araç Kiralama", tab_hotel:"Otel Rezervasyonu", tab_hall:"Düğün Salonları", tab_school:"Sürücü Kursu", tab_wash:"Oto Yıkama", tab_farm:"Çiftlik & Şale",
-    f_city:"Şehir", f_date:"Tarih", f_days:"Gün Sayısı",
+    loc_finding:"Konumunuz belirleniyor…", loc_found:"Konumunuz:", loc_denied:"Konum izni verilmedi", loc_failed:"Konum belirlenemedi", loc_unsupported:"Cihazınız desteklemiyor", f_city:"Şehir", f_date:"Tarih", f_days:"Gün Sayısı",
     trust_services:"entegre hizmet", trust_cities:"il", trust_rating:"müşteri puanı",
     cat_title:"Hizmetlerimizi Keşfedin", cat_sub:"İhtiyacınız olan her şey tek yerde", explore:"Şimdi göz at",
     cat1:"Araç Kiralama", cat1_sub:"Net fiyatlarla geniş filo",
@@ -503,7 +515,7 @@ const I18N = {
     hero_eyebrow:"Iraq's #1 platform — 2026", hero_h1_a:"Search, book,", hero_h1_b:"enjoy your experience",
     hero_p:"Car rentals, luxury hotels, wedding halls, professional driving schools, car wash, farms and chalets across Baghdad, Kirkuk, Erbil and all of Iraq.",
     tab_car:"Car Rental", tab_hotel:"Hotel Booking", tab_hall:"Wedding Halls", tab_school:"Driving School", tab_wash:"Car Wash", tab_farm:"Farms & Chalets",
-    f_city:"City", f_date:"Date", f_days:"Number of Days",
+    loc_finding:"Finding your location…", loc_found:"You are in", loc_denied:"Location permission denied", loc_failed:"Could not get your location", loc_unsupported:"Not supported on your device", f_city:"City", f_date:"Date", f_days:"Number of Days",
     trust_services:"integrated services", trust_cities:"provinces", trust_rating:"customer rating",
     cat_title:"Explore Our Services", cat_sub:"Everything you need in one place", explore:"Browse now",
     cat1:"Car Rental", cat1_sub:"A wide fleet at clear prices",
@@ -534,6 +546,52 @@ const I18N = {
 
 let LANG = "ar";
 let currentService = "personal";
+let located = false;
+
+/* إحداثيات مراكز المحافظات — الأقرب يُحسب في الصفحة، بلا خدمة خارجية */
+const CITY_GEO = {
+  "بغداد":[33.3152,44.3661], "كركوك":[35.4681,44.3922], "أربيل":[36.1911,44.0092],
+  "السليمانية":[35.5556,45.4351], "نينوى":[36.3350,43.1189], "البصرة":[30.5081,47.7835],
+  "النجف":[32.0000,44.3350], "كربلاء":[32.6160,44.0249], "ديالى":[33.7500,44.6417],
+  "الأنبار":[33.4258,43.3089], "دهوك":[36.8669,42.9503], "بابل":[32.4637,44.4197]
+};
+function distKm(a1,b1,a2,b2){
+  const R=6371, p1=a1*Math.PI/180, p2=a2*Math.PI/180;
+  const dp=(a2-a1)*Math.PI/180, dl=(b2-b1)*Math.PI/180;
+  const h=Math.sin(dp/2)**2 + Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
+  return R*2*Math.atan2(Math.sqrt(h), Math.sqrt(1-h));
+}
+function nearestCity(lat,lng){
+  let best=null, bd=Infinity;
+  Object.keys(CITY_GEO).forEach(function(k){
+    const g=CITY_GEO[k], d=distKm(lat,lng,g[0],g[1]);
+    if(d<bd){ bd=d; best=k; }
+  });
+  return {city:best, km:Math.round(bd)};
+}
+
+window.locate = function(auto){
+  if(!navigator.geolocation){ if(!auto) toast(T("loc_unsupported"), true); return; }
+  const btn = $("locBtn");
+  if(btn) btn.classList.add("busy");
+  if(!auto) toast(T("loc_finding"));
+  navigator.geolocation.getCurrentPosition(function(pos){
+    if(btn) btn.classList.remove("busy");
+    const r = nearestCity(pos.coords.latitude, pos.coords.longitude);
+    $("citySelect").value = r.city;
+    located = true;
+    try{ localStorage.setItem("hut_city", r.city); }catch(e){}
+    const c = CITIES.find(function(x){ return x.key === r.city; });
+    toast("📍 " + T("loc_found") + " " + (c ? (c[LANG]||c.ar) : r.city));
+  }, function(err){
+    if(btn) btn.classList.remove("busy");
+    if(auto){
+      if(err.code === 1 && btn) btn.classList.add("hint");
+      return;
+    }
+    toast(err.code === 1 ? T("loc_denied") : T("loc_failed"), true);
+  }, {enableHighAccuracy:false, timeout:10000, maximumAge:600000});
+};
 
 /* ═══════════════ HELPERS ═══════════════ */
 const $ = id => document.getElementById(id);
@@ -584,8 +642,14 @@ function renderCities(){
       <span class="ci-ic">${c.ic}</span><span>${esc(c[LANG])}</span>
     </div>`).join("");
 }
+window.rememberCity = function(){
+  located = false;
+  try{ localStorage.setItem("hut_city", $("citySelect").value); }catch(e){}
+};
+
 window.pickCity = function(key){
   $("citySelect").value=key;
+  try{ localStorage.setItem("hut_city", key); }catch(e){}
   document.querySelector(".search-box")?.scrollIntoView({behavior:"smooth",block:"center"});
   toast(T("f_city")+": "+key);
 };
@@ -682,9 +746,14 @@ document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
   try{ saved=params.get("lang")||localStorage.getItem("hut_lang")||"ar"; }catch(e){ saved=params.get("lang")||"ar"; }
   if(!I18N[saved]) saved="ar";
   setLang(saved);
-  // المدينة من الرابط إن وُجدت
-  const urlCity=params.get("city");
+  // المدينة: الرابط ثم آخر اختيار للزائر
+  let savedCity=""; try{ savedCity=localStorage.getItem("hut_city")||""; }catch(e){}
+  const urlCity=params.get("city")||savedCity;
   if(urlCity && CITIES.some(c=>c.key===urlCity)) $("citySelect").value=urlCity;
+
+  /* طلب الموقع تلقائياً بعد نصف ثانية — ليرى الزائر الصفحة قبل نافذة الإذن.
+     ولا نطلبه إن جاءت المدينة من الرابط، فذلك اختيار صريح لا نتجاوزه. */
+  if(!params.get("city")) setTimeout(function(){ locate(true); }, 600);
 })();
 </script>
 </body>

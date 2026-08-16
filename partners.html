@@ -155,6 +155,10 @@ a{color:inherit}
   padding:12px 16px calc(12px + env(safe-area-inset-bottom));margin:0 -16px;display:flex;gap:10px;align-items:center}
 .savebar .meter{flex:1;min-width:0}
 .savebar .meter b{display:block;font-size:12.5px;font-weight:500}
+.unsaved{flex:none;padding:6px 11px;border-radius:var(--r-pill);background:#FFF0F3;
+  color:var(--rose-d);font-size:11.5px;font-weight:700;white-space:nowrap;
+  border:1px solid var(--rose);animation:pulseU 1.6s ease-in-out infinite}
+@keyframes pulseU{0%,100%{opacity:1}50%{opacity:.55}}
 .savebar .meter i{display:block;height:4px;background:var(--line-soft);border-radius:var(--r-pill);margin-top:5px;overflow:hidden}
 .savebar .meter i u{display:block;height:100%;width:0;transition:width .3s}
 
@@ -267,6 +271,7 @@ a{color:inherit}
       <div id="form"></div>
       <div class="savebar">
         <div class="meter"><b id="mTxt">اكتمال الملف ٠٪</b><i><u id="mBar"></u></i></div>
+        <span class="unsaved hidden" id="pmUnsaved"></span>
         <button class="btn btn-d btn-s" id="btnSave">حفظ</button>
       </div>
     </section>
@@ -282,6 +287,7 @@ a{color:inherit}
       <div id="itemForm"></div>
       <div class="savebar">
         <div class="meter"><b id="iTxt">اكتمال العنصر ٠٪</b><i><u id="iBar"></u></i></div>
+        <span class="unsaved hidden" id="imUnsaved"></span>
         <button class="btn btn-o btn-s" id="btnSaveNext">حفظ وآخر</button>
         <button class="btn btn-d btn-s" id="btnSaveItem">حفظ</button>
       </div>
@@ -1015,6 +1021,7 @@ function renderEdit(isNew){
   paintGallery("pm");
   drawMap();
   scoreNow();
+  markUnsaved();
   updateHeader();
 }
 
@@ -1160,6 +1167,60 @@ async function queueUpload(scope, files){
     setTimeout(()=>{ if(q) q.textContent = ""; }, 4000);
   }
   scoreNow();
+  markUnsaved();
+
+  /* ★ حفظ تلقائي: أكثر ما يضيّع العمل أن ترفع الصور ثم تغادر بلا حفظ.
+     إن كان السجل محفوظاً مسبقاً (له معرّف) نثبّت الصور فوراً بلا انتظار ضغطة. */
+  if(done && !failed) autoSaveMedia(scope);
+}
+
+/** يحفظ الصور وحدها فور رفعها — بلا لمس بقية الحقول التي يكتبها الموظف */
+async function autoSaveMedia(scope){
+  try{
+    if(scope === "pm"){
+      if(!S.cur || !S.cur.id) return;          // شريك جديد: ينتظر الحفظ الأول
+      const snap = collectInto(Object.assign({}, S.cur));
+      const r = await api("opSavePartner", {partner:snap});
+      if(r && r.success){
+        S.cur = snap;
+        toast("حُفظت الصور تلقائياً", false, "ok");
+        markUnsaved();
+        load();
+      }
+    }else{
+      if(!S.curItem || !S.curItem.id) return;  // عنصر جديد: ينتظر الحفظ الأول
+      const it = Object.assign({}, S.curItem);
+      it.media = S.itemMedia;
+      it.partner_id = S.cur.id;
+      it.sector = S.cur.sector;
+      delete it._idx;
+      const r = await api("opSaveOffering", {offering:it});
+      if(r && r.success){
+        S.curItem.media = S.itemMedia;
+        toast("حُفظت الصور تلقائياً", false, "ok");
+        markUnsaved();
+        load();
+      }
+    }
+  }catch(e){ /* الحفظ اليدوي يبقى متاحاً */ }
+}
+
+/** يُظهر كم صورة ما زالت في المتصفح ولم تصل الشيت */
+function markUnsaved(){
+  const setBadge = function(id, n){
+    const el = $(id);
+    if(!el) return;
+    el.textContent = n + (n === 1 ? " صورة غير محفوظة" : " صور غير محفوظة");
+    el.classList.toggle("hidden", n < 1);
+  };
+  if(S.view === "vEdit"){
+    const saved = (S.cur && Array.isArray(S.cur.media)) ? S.cur.media.length : 0;
+    setBadge("#pmUnsaved", Math.max(0, S.media.length - saved));
+  }
+  if(S.view === "vItem"){
+    const saved = (S.curItem && Array.isArray(S.curItem.media)) ? S.curItem.media.length : 0;
+    setBadge("#imUnsaved", Math.max(0, S.itemMedia.length - saved));
+  }
 }
 
 function setKind(scope, i, v){ mediaOf(scope)[i].kind = v; S.dirty = true; }
@@ -1170,6 +1231,7 @@ function makeCover(scope, i){
   arr.unshift(m);
   S.dirty = true;
   paintGallery(scope);
+  markUnsaved();
 }
 
 function rmPhoto(scope, i){
@@ -1178,6 +1240,7 @@ function rmPhoto(scope, i){
   S.dirty = true;
   paintGallery(scope);
   scoreNow();
+  markUnsaved();
 }
 
 function toBase64(blob){
@@ -1292,6 +1355,7 @@ $("#btnSave").onclick = async () => {
     p.id = r.id;
     S.cur = p;
     S.dirty = false;
+    markUnsaved();
     toast(isNew ? "أُضيف الشريك — أضف الآن " + SK(p.sector).itemMany : "حُفظت التعديلات", false, "ok");
     await load();
     renderEdit(false);
@@ -1373,6 +1437,7 @@ function openItem(idx){
   if(nx) nx.classList.toggle("hidden", idx >= 0);
   go("vItem");
   paintGallery("im");
+  markUnsaved();
   $("#hTitle").textContent = idx >= 0 ? it.name : "عنصر جديد";
   $("#hSub").textContent = S.cur.name || "";
   scoreNow();
@@ -1417,7 +1482,9 @@ async function saveItem(again){
     if(!r || !r.success) throw new Error((r && r.msg) || "لم ينجح الحفظ");
     it.id = r.id;
     if(idx >= 0) S.curItems[idx] = it; else S.curItems.push(it);
+    S.curItem = it;
     S.dirty = false;
+    markUnsaved();
     load();
     if(again){
       toast("حُفظ — أضف التالي", false, "ok");
@@ -1464,9 +1531,27 @@ $("#btnBack").onclick = () => {
   go(t);
 };
 
+function unsavedPhotos(){
+  if(S.view === "vEdit"){
+    const saved = (S.cur && Array.isArray(S.cur.media)) ? S.cur.media.length : 0;
+    return Math.max(0, S.media.length - saved);
+  }
+  if(S.view === "vItem"){
+    const saved = (S.curItem && Array.isArray(S.curItem.media)) ? S.curItem.media.length : 0;
+    return Math.max(0, S.itemMedia.length - saved);
+  }
+  return 0;
+}
+
 function guardLeave(){
-  if(!S.dirty) return true;
-  if(confirm("لديك تغييرات لم تُحفظ. الخروج بدون حفظ؟")){ S.dirty = false; return true; }
+  const ph = unsavedPhotos();
+  if(!S.dirty && !ph) return true;
+  /* الصورة المرفوعة وغير المحفوظة أثمن من حقل نصّي — نسمّيها صراحةً */
+  const msg = ph
+    ? "لديك " + ph + (ph === 1 ? " صورة مرفوعة" : " صور مرفوعة") +
+      " لم تُحفظ بعد.\nالخروج الآن يفقدها ويجب رفعها من جديد.\n\nالخروج بدون حفظ؟"
+    : "لديك تغييرات لم تُحفظ. الخروج بدون حفظ؟";
+  if(confirm(msg)){ S.dirty = false; return true; }
   return false;
 }
 
@@ -1513,7 +1598,7 @@ function toast(text, bad, kind){
 }
 
 window.addEventListener("beforeunload", e => {
-  if(S.dirty){ e.preventDefault(); e.returnValue = ""; }
+  if(S.dirty || unsavedPhotos()){ e.preventDefault(); e.returnValue = ""; }
 });
 document.addEventListener("keydown", e => { if(e.key === "Escape") closeSheet(); });
 </script>

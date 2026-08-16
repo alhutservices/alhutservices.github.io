@@ -194,10 +194,11 @@ a{color:inherit}
 .miss-note em{font-style:normal;flex:none}
 
 /* شريط إحصاء القائمة */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 4px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0 4px}
 .stats button{border:1px solid var(--line-soft);border-radius:var(--r-m);padding:11px 8px;text-align:center;transition:.15s}
 .stats button:hover{border-color:var(--text-3)}
 .stats button.on{border-color:var(--text);border-width:2px;background:var(--bg-soft)}
+.listcount{font-size:12.5px;color:var(--text-2);font-weight:500;margin:12px 0 2px}
 .stats b{display:block;font-size:19px;font-family:var(--num);font-weight:600;line-height:1.2}
 .stats span{display:block;font-size:11px;color:var(--text-2);margin-top:2px}
 
@@ -347,6 +348,114 @@ a{color:inherit}
 @keyframes s{to{transform:rotate(360deg)}}
 
 @media(max-width:520px){ .fg{grid-template-columns:1fr} }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ثيمة Claymorphism
+   ───────────────────────────────────────────────────────────────────────
+   المبدأ: لا حدود ولا خطوط فاصلة — العمق يأتي من ظلّين متقابلين.
+   ظلّ داكن أسفل-يمين وضوء أبيض أعلى-يسار يجعلان السطح يبدو ناتئاً
+   كقطعة طين. والحقول تُقلب فتبدو مضغوطة للداخل، فيفهم الموظف بلا
+   تفكير أين يكتب وأين يضغط.
+   الأنصاف الكبيرة (٢٠–٢٨ بكسل) ضرورية — الطين لا زوايا حادّة له.
+═══════════════════════════════════════════════════════════════════════ */
+:root{
+  --clay-bg:#ECEEF4;
+  --clay-up:#F7F8FC;
+  --lt:rgba(255,255,255,.95);
+  --dk:rgba(157,170,196,.48);
+  --dk2:rgba(157,170,196,.30);
+  --pop: 7px 7px 15px var(--dk), -6px -6px 14px var(--lt);
+  --pop-sm: 4px 4px 9px var(--dk2), -3px -3px 8px var(--lt);
+  --press: inset 4px 4px 9px var(--dk), inset -4px -4px 9px var(--lt);
+  --press-sm: inset 3px 3px 6px var(--dk2), inset -2px -2px 5px var(--lt);
+}
+body{background:var(--clay-bg)}
+
+/* الأسطح ترتفع، والحدود تختفي */
+.hdr{background:var(--clay-bg);border-bottom:none;box-shadow:0 4px 18px rgba(157,170,196,.22)}
+.nav{background:var(--clay-bg);border-top:none;box-shadow:0 -4px 18px rgba(157,170,196,.22)}
+.ehead{background:var(--clay-bg);border-bottom:none}
+
+.row,.sub,.pane-body,.card,.stats button,.item,.grp,.note{
+  background:var(--clay-up);border:none!important;border-radius:22px;box-shadow:var(--pop)}
+.sub{border-radius:24px}
+.sub-h{border-bottom:none;padding:15px 17px 4px}
+.sub-i{border-radius:13px;box-shadow:var(--pop-sm)}
+.row{border-radius:24px;padding-inline-start:13px}
+.row::before{inset-inline-start:9px;top:15px;bottom:15px;width:5px;border-radius:99px;box-shadow:var(--pop-sm)}
+.row:hover{transform:translateY(-3px);box-shadow:9px 9px 20px var(--dk), -7px -7px 16px var(--lt)}
+.row:active{transform:translateY(0);box-shadow:var(--press)}
+
+/* الحقول مضغوطة للداخل */
+.fld input,.fld select,.fld textarea,.search input,.sw{
+  background:var(--clay-bg);border:none!important;border-radius:16px;box-shadow:var(--press-sm);
+  transition:box-shadow .2s}
+.fld input:focus,.fld select:focus,.fld textarea:focus,.search input:focus{
+  outline:none;box-shadow:var(--press-sm), 0 0 0 2.5px rgba(255,56,92,.32)}
+.fld label{font-weight:600;color:var(--text-2);padding-inline-start:4px}
+.sw i{background:var(--clay-bg);box-shadow:var(--press-sm)}
+.sw i::after{box-shadow:var(--pop-sm)}
+.sw.on i{background:linear-gradient(145deg,#00A312,#008A05);box-shadow:none}
+
+/* الأزرار ناتئة، وتنضغط عند اللمس */
+.btn,.chip,.pill,.ic,.tab,.quick,.stats button,.ph-bar button,.tile-acts button{
+  border:none!important;transition:box-shadow .18s,transform .14s,background .18s,color .18s}
+.btn{border-radius:18px;box-shadow:var(--pop)}
+.btn:active{box-shadow:var(--press);transform:translateY(1px)}
+.btn-d{background:linear-gradient(145deg,#2E2E2E,#1A1A1A);color:#fff}
+.btn-p{background:linear-gradient(145deg,#FF4A6B,#DF0B57)}
+.btn-o,.btn-q{background:var(--clay-up);color:var(--text)}
+.btn-x{background:var(--clay-up);color:var(--red)}
+.btn-s{border-radius:14px;box-shadow:var(--pop-sm)}
+
+.chip,.pill{background:var(--clay-up);box-shadow:var(--pop-sm);border-radius:var(--r-pill)}
+.chip:active,.pill:active{box-shadow:var(--press-sm);transform:scale(.96)}
+.chip.on{background:linear-gradient(145deg,#2E2E2E,#1A1A1A);color:#fff;box-shadow:var(--pop-sm)}
+.pill.on{background:linear-gradient(145deg,#FFE3EA,#FFD0DC);color:var(--rose-d);box-shadow:var(--press-sm)}
+.ic{background:var(--clay-up);box-shadow:var(--pop-sm);border-radius:50%}
+.ic:hover{box-shadow:var(--pop)}
+.ic:active{box-shadow:var(--press-sm)}
+
+.tab{background:var(--clay-up);box-shadow:var(--pop-sm);border-radius:16px}
+.tab.on{background:linear-gradient(145deg,#2E2E2E,#1A1A1A);color:#fff;box-shadow:var(--press-sm)}
+.tab:active{transform:scale(.96)}
+
+.stats button{border-radius:20px;padding:14px 8px}
+.stats button:active{box-shadow:var(--press)}
+.stats button.on{box-shadow:var(--press);background:var(--clay-bg)}
+
+.stepnav button{background:var(--clay-up);border:none!important;border-radius:16px;box-shadow:var(--pop-sm)}
+.stepnav button:active:not(:disabled){box-shadow:var(--press-sm)}
+.stepnav button.next{background:linear-gradient(145deg,#2E2E2E,#1A1A1A);color:#fff}
+.stepnav button:disabled{box-shadow:var(--press-sm);opacity:.45}
+
+.quick{background:var(--clay-up);box-shadow:var(--pop-sm);border-radius:18px;border:none!important}
+.quick:active{box-shadow:var(--press-sm)}
+
+/* الصور والمعرض */
+.ph,.up,.row-img,.row-ph,.item img,.item .nop,.tile-img,.tile-ph,.prev,.map{
+  border:none!important;border-radius:18px}
+.ph{box-shadow:var(--pop-sm);overflow:hidden}
+.ph img{border-radius:0}
+.up{background:var(--clay-bg);box-shadow:var(--press-sm)}
+.up:hover{box-shadow:var(--press)}
+.row-img,.row-ph{box-shadow:var(--pop-sm)}
+.map{box-shadow:var(--pop-sm);overflow:hidden}
+
+/* الأشرطة والرسائل */
+.savebar{background:var(--clay-bg);border-top:none;box-shadow:0 -5px 20px rgba(157,170,196,.25)}
+.savebar .meter i{background:var(--clay-bg);box-shadow:var(--press-sm);height:7px;border-radius:99px}
+.savebar .meter i u{border-radius:99px}
+.msg,.miss-note,.unsaved{border:none!important;border-radius:16px;box-shadow:var(--pop-sm)}
+.toast{border-radius:18px;box-shadow:8px 8px 20px rgba(0,0,0,.28)}
+.state{box-shadow:var(--pop-sm);border-radius:var(--r-pill)}
+.sheet-in{border-radius:28px 28px 0 0;background:var(--clay-bg)}
+.pick4 button{background:var(--clay-up);border:none!important;border-radius:20px;box-shadow:var(--pop)}
+.pick4 button:active{box-shadow:var(--press);transform:scale(.97)}
+
+/* الحلقات تبقى واضحة على الخلفية الرمادية */
+.ering,.ring2{filter:drop-shadow(2px 2px 4px var(--dk2))}
+
 </style>
 </head>
 <body>
@@ -385,15 +494,8 @@ a{color:inherit}
     <section id="vList">
       <div class="search"><input id="q" type="search" placeholder="ابحث باسم الشريك أو الهاتف أو المدينة"><span class="i">🔍</span></div>
       <div class="stats" id="stats"></div>
+      <div class="listcount" id="listCount"></div>
       <div class="chips" id="secChips"></div>
-      <div class="chips" id="stChips">
-        <button class="chip on" data-f="all">الكل</button>
-        <button class="chip" data-f="pending">قيد المراجعة</button>
-        <button class="chip" data-f="active">مفعّل</button>
-        <button class="chip" data-f="blocked">موقوف</button>
-        <button class="chip" data-f="noitems">بلا عناصر</button>
-        <button class="chip" data-f="weak">ناقص البيانات</button>
-      </div>
       <div id="list"></div>
     </section>
 
@@ -957,20 +1059,17 @@ $("#btnOut").onclick = () => { if(confirm("قفل اللوحة؟")) lock(); };
    القائمة
 ═══════════════════════════════════════════════════════════════════════ */
 function paintSectorChips(){
-  $("#secChips").innerHTML =
-    `<button class="chip on" data-s="all">الكل <span class="n" id="c_all">0</span></button>` +
-    Object.keys(SCHEMA).map(k =>
-      `<button class="chip" data-s="${k}">${SCHEMA[k].icon} ${SCHEMA[k].label} <span class="n" id="c_${k}">0</span></button>`).join("");
+  $("#secChips").innerHTML = Object.keys(SCHEMA).map(k =>
+    `<button class="chip" data-s="${k}">${SCHEMA[k].icon} ${SCHEMA[k].label} <span class="n" id="c_${k}">0</span></button>`).join("");
   $$("#secChips .chip").forEach(b => b.onclick = () => {
-    $$("#secChips .chip").forEach(x => x.classList.remove("on"));
-    b.classList.add("on"); S.sector = b.dataset.s; renderStats(); renderList();
+    /* إعادة الضغط تعيدك لكل القطاعات — أبسط من زرّ «الكل» */
+    const same = S.sector === b.dataset.s;
+    S.sector = same ? "all" : b.dataset.s;
+    $$("#secChips .chip").forEach(x => x.classList.toggle("on", !same && x === b));
+    renderStats(); renderList();
   });
 }
 
-$$("#stChips .chip").forEach(b => b.onclick = () => {
-  $$("#stChips .chip").forEach(x => x.classList.remove("on"));
-  b.classList.add("on"); S.filter = b.dataset.f; renderStats(); renderList();
-});
 
 let qT = null;
 $("#q").oninput = e => { clearTimeout(qT); qT = setTimeout(() => { S.q = e.target.value.trim(); renderList(); }, 220); };
@@ -1000,7 +1099,6 @@ function setLive(on){
 }
 
 function renderCounts(){
-  const el = $("#c_all"); if(el) el.textContent = S.partners.length;
   Object.keys(SCHEMA).forEach(k => {
     const e2 = $("#c_" + k);
     if(e2) e2.textContent = S.partners.filter(p => p.sector === k).length;
@@ -1011,21 +1109,23 @@ function renderCounts(){
 function renderStats(){
   const all = S.partners;
   const inSector = S.sector === "all" ? all : all.filter(p => p.sector === S.sector);
+  /* بلا بطاقة «الكل» — الافتراضي هو الكل، وكل بطاقة مفتاح يُطفأ بإعادة الضغط */
   const cards = [
-    {f:"all",     n:inSector.length,                                              l:"الكل"},
-    {f:"pending", n:inSector.filter(p=>p.status==="pending").length,              l:"قيد المراجعة"},
-    {f:"noitems", n:inSector.filter(p=>!Number(p.items||0)).length,               l:"بلا عناصر"},
-    {f:"weak",    n:inSector.filter(p=>Number(p.completeness||0)<70).length,      l:"ناقص"}
+    {f:"pending", n:inSector.filter(p=>p.status==="pending").length,         l:"قيد المراجعة"},
+    {f:"noitems", n:inSector.filter(p=>!Number(p.items||0)).length,          l:"بلا عناصر"},
+    {f:"weak",    n:inSector.filter(p=>Number(p.completeness||0)<70).length, l:"ناقص البيانات"}
   ];
   $("#stats").innerHTML = cards.map(c=>`
     <button class="${S.filter===c.f?"on":""}" onclick="pickFilter('${c.f}')">
-      <b style="${c.f!=="all"&&c.n?"color:var(--rose)":""}">${c.n}</b><span>${c.l}</span>
+      <b style="${c.n?"color:var(--rose)":""}">${c.n}</b><span>${c.l}</span>
     </button>`).join("");
+  const t = $("#listCount");
+  if(t) t.textContent = inSector.length + " شريك" + (S.filter!=="all" ? " · مفلتر" : "");
 }
 
+/** الضغط على فلتر مفعّل يلغيه — لا نحتاج زرّ «الكل» */
 window.pickFilter = function(f){
-  S.filter = f;
-  $$("#stChips .chip").forEach(x => x.classList.toggle("on", x.dataset.f === f));
+  S.filter = (S.filter === f) ? "all" : f;
   renderStats();
   renderList();
 };

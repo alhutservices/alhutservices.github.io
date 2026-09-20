@@ -456,6 +456,68 @@ body{background:var(--clay-bg)}
 /* الحلقات تبقى واضحة على الخلفية الرمادية */
 .ering,.ring2{filter:drop-shadow(2px 2px 4px var(--dk2))}
 
+/* ═══════════════════════════════════════════════════════════════════════
+   الاستيراد من ملف
+   ───────────────────────────────────────────────────────────────────────
+   ثلاث خطوات ظاهرة دائماً: ملف ← مطابقة ← مراجعة.
+   الموظف يرى أين هو وكم بقي، ولا يضغط «استورد» إلا وقد رأى ما سيدخل.
+═══════════════════════════════════════════════════════════════════════ */
+.imp-steps{display:flex;gap:8px;margin:14px 0 18px}
+.imp-steps div{flex:1;text-align:center;padding:10px 6px;border-radius:16px;font-size:12.5px;
+  font-weight:600;color:var(--text-3);background:var(--clay-bg);box-shadow:var(--press-sm)}
+.imp-steps div.on{background:linear-gradient(145deg,#2E2E2E,#1A1A1A);color:#fff;box-shadow:var(--pop-sm)}
+.imp-steps div.done{color:var(--green);background:var(--clay-up);box-shadow:var(--pop-sm)}
+.imp-steps b{display:block;font-family:var(--num);font-size:15px;margin-bottom:2px}
+
+.drop{border-radius:22px;background:var(--clay-bg);box-shadow:var(--press);padding:38px 20px;
+  text-align:center;position:relative;transition:box-shadow .2s}
+.drop.over{box-shadow:var(--press), 0 0 0 3px rgba(255,56,92,.4)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop em{font-style:normal;font-size:40px;display:block;opacity:.4;margin-bottom:10px}
+.drop b{display:block;font-size:16px;margin-bottom:5px}
+.drop p{margin:0;color:var(--text-2);font-size:13px;line-height:1.7}
+
+.map-row{display:grid;grid-template-columns:1fr 1.3fr;gap:10px;align-items:center;
+  padding:10px 13px;border-radius:16px;background:var(--clay-up);box-shadow:var(--pop-sm);margin-bottom:8px}
+.map-row label{font-size:13.5px;font-weight:600;margin:0}
+.map-row label .rq{color:var(--rose)}
+.map-row label span{display:block;font-size:11.5px;color:var(--text-3);font-weight:400}
+.map-row select{width:100%;padding:10px;border-radius:13px;border:none!important;
+  background:var(--clay-bg);box-shadow:var(--press-sm);font-size:14px}
+.map-row.miss{box-shadow:var(--pop-sm), 0 0 0 2px var(--rose)}
+
+.imp-tbl{border-radius:20px;background:var(--clay-up);box-shadow:var(--pop);overflow:hidden;margin-top:12px}
+.imp-tbl .th,.imp-tbl .tr{display:grid;grid-template-columns:26px 1fr 84px 78px 92px;gap:8px;
+  padding:9px 13px;align-items:center;font-size:12.5px}
+.imp-tbl .th{background:var(--clay-bg);font-weight:700;color:var(--text-2);font-size:11.5px}
+.imp-tbl .tr+.tr{box-shadow:inset 0 1px 0 rgba(157,170,196,.22)}
+.imp-tbl .tr b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+.imp-tbl .tr span{color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.imp-tbl .tr.bad{background:#FFF3F0}
+.imp-tbl .tr.dup{background:#FFF9EC}
+.imp-tbl .mk{font-size:14px;text-align:center}
+.imp-more{padding:11px;text-align:center;font-size:12.5px;color:var(--text-3);background:var(--clay-bg)}
+
+.imp-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0}
+.imp-sum div{padding:13px 8px;border-radius:18px;text-align:center;background:var(--clay-up);box-shadow:var(--pop-sm)}
+.imp-sum b{display:block;font-size:21px;font-family:var(--num);font-weight:600;line-height:1.2}
+.imp-sum span{display:block;font-size:11px;color:var(--text-2);margin-top:3px}
+.imp-sum div.g b{color:var(--green)} .imp-sum div.a b{color:var(--amber)} .imp-sum div.r b{color:var(--red)}
+
+.imp-bar{height:9px;border-radius:99px;background:var(--clay-bg);box-shadow:var(--press-sm);
+  overflow:hidden;margin:10px 0 6px}
+.imp-bar u{display:block;height:100%;width:0;border-radius:99px;
+  background:linear-gradient(145deg,#00A312,#008A05);transition:width .3s}
+.imp-log{max-height:200px;overflow-y:auto;font-size:12.5px;line-height:1.9;color:var(--text-2);
+  background:var(--clay-bg);box-shadow:var(--press-sm);border-radius:16px;padding:12px 14px;margin-top:12px}
+.imp-log i{font-style:normal;font-family:var(--num)}
+
+@media(max-width:560px){
+  .map-row{grid-template-columns:1fr;gap:6px}
+  .imp-tbl .th,.imp-tbl .tr{grid-template-columns:22px 1fr 70px;font-size:12px}
+  .imp-tbl .th>*:nth-child(n+4),.imp-tbl .tr>*:nth-child(n+4){display:none}
+}
+
 </style>
 </head>
 <body>
@@ -526,6 +588,64 @@ body{background:var(--clay-bg)}
       </div>
     </section>
 
+    <!-- ══════════ استيراد من ملف ══════════ -->
+    <section id="vImport" class="hidden">
+      <div class="sec"><h2>استيراد شركاء</h2></div>
+
+      <div class="imp-steps" id="impSteps">
+        <div class="on"><b>١</b>الملف</div>
+        <div><b>٢</b>مطابقة الأعمدة</div>
+        <div><b>٣</b>المراجعة</div>
+      </div>
+
+      <div id="impMsg"></div>
+
+      <!-- خطوة ١ -->
+      <div id="impStep1">
+        <div class="drop" id="drop">
+          <input type="file" id="impFile" accept=".csv,.tsv,.txt,.json">
+          <em>📄</em>
+          <b>اختر ملفاً أو أفلته هنا</b>
+          <p>CSV أو TSV أو JSON — بأي ترتيب أعمدة.<br>
+             نقرأ العناوين ونطابقها معك في الخطوة التالية.</p>
+        </div>
+        <p class="fine" style="margin-top:14px">
+          أكبر ملف: ٨ ميغابايت. الترميز UTF-8. الصفّ الأول عناوين الأعمدة.
+        </p>
+      </div>
+
+      <!-- خطوة ٢ -->
+      <div id="impStep2" class="hidden">
+        <div class="msg info" id="impFileInfo"></div>
+        <h3 style="font-size:16px;margin:16px 0 10px">طابِق أعمدة ملفك</h3>
+        <div id="impMap"></div>
+
+        <h3 style="font-size:16px;margin:20px 0 10px">قيم افتراضية</h3>
+        <p class="fine" style="margin:-6px 0 10px">تُستعمل للصفوف التي لا يحمل ملفك فيها هذه القيمة.</p>
+        <div id="impDefaults"></div>
+
+        <div class="acts" style="margin-top:18px">
+          <button class="btn btn-q" id="impBack1">رجوع</button>
+          <button class="btn btn-d" id="impToReview">راجع النتيجة</button>
+        </div>
+      </div>
+
+      <!-- خطوة ٣ -->
+      <div id="impStep3" class="hidden">
+        <div class="imp-sum" id="impSum"></div>
+        <div id="impPreview"></div>
+        <div id="impProgress" class="hidden">
+          <div class="imp-bar"><u id="impBarU"></u></div>
+          <div class="fine" id="impBarTxt"></div>
+          <div class="imp-log" id="impLog"></div>
+        </div>
+        <div class="acts" style="margin-top:18px" id="impActs">
+          <button class="btn btn-q" id="impBack2">رجوع</button>
+          <button class="btn btn-d" id="impRun">استورد</button>
+        </div>
+      </div>
+    </section>
+
     <section id="vSys" class="hidden">
       <div class="sec"><h2>الحساب</h2></div>
       <div id="sysStats"></div>
@@ -538,7 +658,8 @@ body{background:var(--clay-bg)}
   <nav class="nav">
     <div class="nav-in">
       <button class="on" data-v="vList"><i>🗂️</i>الشركاء</button>
-      <button id="navNew"><i>➕</i>إضافة شريك</button>
+      <button id="navNew"><i>➕</i>إضافة</button>
+      <button data-v="vImport"><i>📄</i>استيراد</button>
       <button data-v="vSys"><i>⚙️</i>الحساب</button>
     </div>
   </nav>
@@ -2057,7 +2178,7 @@ function guardLeave(){
 
 function go(view){
   S.view = view;
-  ["vList","vEdit","vItems","vItem","vSys"].forEach(v => $("#" + v).classList.toggle("hidden", v !== view));
+  ["vList","vEdit","vItems","vItem","vSys","vImport"].forEach(v => $("#" + v).classList.toggle("hidden", v !== view));
   $$(".nav button").forEach(b => b.classList.toggle("on", b.dataset.v === view));
   $("#btnBack").classList.toggle("hidden", !BACKMAP[view]);
   if(view === "vList"){
@@ -2067,6 +2188,7 @@ function go(view){
   }
   if(view === "vEdit") updateHeader();
   if(view === "vSys"){ $("#hTitle").textContent = "الحساب"; $("#hSub").textContent = ""; renderSys(); }
+  if(view === "vImport"){ $("#hTitle").textContent = "استيراد شركاء"; $("#hSub").textContent = "من ملف CSV أو JSON"; }
   window.scrollTo({top:0});
 }
 
@@ -2086,6 +2208,438 @@ function renderSys(){
       <div class="row-mid"><b>${l}</b></div>
       <div class="row-end"><b class="num" style="font-size:20px">${v}</b></div></div>`).join("");
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   الاستيراد من ملف
+   ───────────────────────────────────────────────────────────────────────
+   لماذا دفعات لا صفّاً صفّاً؟
+   opSavePartner يقرأ شيت Partners كاملاً ويكتب فيه في كل نداء. ألفا شريك
+   = ألفا قراءة كاملة ≈ ساعة من زمن التنفيذ اليومي المسموح (٩٠ دقيقة).
+   opImportBatch يكتب مئة صفّ بنداء setValues واحد، فينزل الزمن إلى ثوانٍ.
+
+   ولماذا pending دائماً؟
+   المحرّك الذاتي يُسند طلبات الزبائن إلى مكاتب السيارات المفعّلة. تفعيل
+   ملف كامل دفعةً واحدة يرسل زبوناً حقيقياً إلى مكتب لم يوافق على الانضمام.
+═══════════════════════════════════════════════════════════════════════ */
+const IMP = {
+  raw:[], head:[], rows:[], map:{}, def:{}, parsed:[], name:"", running:false
+};
+
+const IMP_BATCH = 100;   // صفّاً لكل نداء
+
+/* الحقول التي نستوردها — key: {label, hint, req} */
+const IMP_FIELDS = {
+  name:    {l:"اسم الشريك",   h:"إلزامي — بلا اسم يُرفض الصفّ", req:1},
+  sector:  {l:"القطاع",       h:"car / hotel / hall / school / wash / farm أو اسمه بالعربية"},
+  city:    {l:"المحافظة",     h:"يجب أن تطابق مفاتيح المدن"},
+  area:    {l:"المنطقة",      h:"الحيّ أو القضاء"},
+  phone:   {l:"الهاتف",       h:"أي صيغة — نُنظّفها"},
+  phone2:  {l:"هاتف بديل",    h:""},
+  address: {l:"العنوان",      h:""},
+  lat:     {l:"خط العرض",     h:""},
+  lng:     {l:"خط الطول",     h:""},
+  maps_url:{l:"رابط الخريطة", h:""},
+  desc:    {l:"الوصف",        h:"يظهر للزبون"},
+  note:    {l:"ملاحظة داخلية",h:"لا تظهر للزبون"},
+  cover:   {l:"الغلاف",       h:"رابط صورة"},
+};
+
+/* أسماء أعمدة نعرفها — تُطابَق تلقائياً */
+const IMP_ALIASES = {
+  name:["الاسم","اسم الشريك","اسم المنشأة","اسم المحل","المحل","businessname","name","title","shopname"],
+  sector:["القطاع","النشاط","نوع النشاط","نوع الخدمة","sector","category","type","business"],
+  city:["المحافظة","المدينة","city","governorate","gov","province","state"],
+  area:["المنطقة","الحي","القضاء","الناحية","area","district","suburb","neighbourhood","neighborhood"],
+  phone:["الهاتف","رقم الهاتف","الموبايل","الجوال","phone","mobile","tel","phonenumber","whatsapp"],
+  phone2:["هاتف بديل","هاتف 2","phone2","mobile2"],
+  address:["العنوان","address","addr"],
+  lat:["خط العرض","lat","latitude"],
+  lng:["خط الطول","lng","lon","long","longitude"],
+  maps_url:["رابط الخريطة","الخريطة","maps","maps_url","map"],
+  desc:["الوصف","نبذة","desc","description"],
+  note:["ملاحظة داخلية","ملاحظة","note","notes"],
+  cover:["الغلاف","صورة","cover","image","photo"],
+};
+
+/* القطاع قد يأتي بالعربية */
+const IMP_SECTOR_AR = {};
+Object.keys(SCHEMA).forEach(k => {
+  IMP_SECTOR_AR[SCHEMA[k].label] = k;
+  IMP_SECTOR_AR[k] = k;
+});
+IMP_SECTOR_AR["مكتب سيارات"]="car"; IMP_SECTOR_AR["سيارات"]="car"; IMP_SECTOR_AR["تأجير سيارات"]="car";
+IMP_SECTOR_AR["فندق"]="hotel"; IMP_SECTOR_AR["فنادق"]="hotel";
+IMP_SECTOR_AR["قاعة"]="hall"; IMP_SECTOR_AR["قاعات"]="hall"; IMP_SECTOR_AR["قاعة مناسبات"]="hall";
+IMP_SECTOR_AR["مدرسة سياقة"]="school"; IMP_SECTOR_AR["مدارس السياقة"]="school"; IMP_SECTOR_AR["تعليم سياقة"]="school";
+IMP_SECTOR_AR["مغسلة"]="wash"; IMP_SECTOR_AR["مغسلة سيارات"]="wash";
+IMP_SECTOR_AR["مزرعة"]="farm"; IMP_SECTOR_AR["شاليه"]="farm"; IMP_SECTOR_AR["مزرعة / شاليه"]="farm";
+
+/* ── محلّل CSV/TSV يحترم الاقتباس المزدوج والأسطر داخل الخلايا ── */
+function impParseDelimited(text, delim){
+  const rows = []; let row = [], cur = "", q = false;
+  for(let i = 0; i < text.length; i++){
+    const c = text[i];
+    if(q){
+      if(c === '"'){ if(text[i+1] === '"'){ cur += '"'; i++; } else q = false; }
+      else cur += c;
+    }
+    else if(c === '"') q = true;
+    else if(c === delim){ row.push(cur); cur = ""; }
+    else if(c === "\r"){ /* تجاهل */ }
+    else if(c === "\n"){ row.push(cur); rows.push(row); row = []; cur = ""; }
+    else cur += c;
+  }
+  if(cur !== "" || row.length){ row.push(cur); rows.push(row); }
+  return rows.filter(r => r.some(c => String(c).trim() !== ""));
+}
+
+function impSniff(text){
+  const first = text.split("\n")[0] || "";
+  const counts = {",": (first.match(/,/g)||[]).length,
+                  "\t":(first.match(/\t/g)||[]).length,
+                  ";": (first.match(/;/g)||[]).length};
+  return Object.keys(counts).sort((a,b) => counts[b]-counts[a])[0] || ",";
+}
+
+/* ── قراءة الملف ── */
+function impReadFile(file){
+  if(!file) return;
+  if(file.size > 8 * 1024 * 1024)
+    return impMsg("الملف أكبر من ٨ ميغابايت. قسّمه أو احذف أعمدة لا تحتاجها.", "no");
+
+  const fr = new FileReader();
+  fr.onerror = () => impMsg("تعذّرت قراءة الملف.", "no");
+  fr.onload = () => {
+    try{
+      let text = String(fr.result || "").replace(/^﻿/, "");
+      let head, rows;
+
+      if(/\.json$/i.test(file.name) || text.trim()[0] === "[" || text.trim()[0] === "{"){
+        let j = JSON.parse(text);
+        if(!Array.isArray(j)) j = j.partners || j.rows || j.data || j.leads || [];
+        if(!Array.isArray(j) || !j.length) throw new Error("JSON بلا مصفوفة سجلات.");
+        const keys = [];
+        j.slice(0, 200).forEach(o => Object.keys(o||{}).forEach(k => {
+          if(keys.indexOf(k) === -1 && typeof o[k] !== "object") keys.push(k);
+        }));
+        head = keys;
+        rows = j.map(o => keys.map(k => (o && o[k] != null) ? String(o[k]) : ""));
+      } else {
+        const all = impParseDelimited(text, impSniff(text));
+        if(all.length < 2) throw new Error("الملف فيه أقل من صفّين.");
+        head = all[0].map(h => String(h).trim());
+        rows = all.slice(1);
+      }
+
+      if(!head.length) throw new Error("لا عناوين أعمدة.");
+      IMP.head = head;
+      IMP.rows = rows;
+      IMP.name = file.name;
+      impAutoMap();
+      impStep(2);
+    }catch(e){ impMsg("تعذّر تحليل الملف: " + e.message, "no"); }
+  };
+  fr.readAsText(file, "utf-8");
+}
+
+/* ── مطابقة تلقائية بالعناوين المعروفة ── */
+function impAutoMap(){
+  IMP.map = {};
+  const norm = s => String(s).trim().toLowerCase().replace(/[_\-\s]+/g, "");
+  const heads = IMP.head.map(norm);
+  Object.keys(IMP_FIELDS).forEach(f => {
+    const cands = (IMP_ALIASES[f] || []).map(norm);
+    for(let i = 0; i < heads.length; i++){
+      if(cands.indexOf(heads[i]) !== -1){ IMP.map[f] = i; return; }
+    }
+  });
+}
+
+function impMsg(t, k){
+  $("#impMsg").innerHTML = t ? `<div class="msg ${k||"no"}">${esc(t)}</div>` : "";
+}
+
+function impStep(n){
+  [1,2,3].forEach(i => $("#impStep" + i).classList.toggle("hidden", i !== n));
+  $$("#impSteps div").forEach((d, i) => {
+    d.classList.toggle("on", i === n - 1);
+    d.classList.toggle("done", i < n - 1);
+  });
+  if(n === 2) impRenderMap();
+  if(n === 1){ IMP.head = []; IMP.rows = []; IMP.parsed = []; }
+  impMsg("");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function impRenderMap(){
+  $("#impFileInfo").innerHTML =
+    `<b>${esc(IMP.name)}</b> — ${IMP.rows.length} صفّاً · ${IMP.head.length} عموداً`;
+
+  const opts = i => `<option value="">— لا شيء —</option>` + IMP.head.map((h, j) =>
+    `<option value="${j}" ${i === j ? "selected" : ""}>${esc(h || ("عمود " + (j+1)))}</option>`).join("");
+
+  $("#impMap").innerHTML = Object.keys(IMP_FIELDS).map(f => {
+    const d = IMP_FIELDS[f];
+    const sel = IMP.map[f];
+    return `<div class="map-row ${d.req && sel === undefined ? "miss" : ""}" id="mr_${f}">
+      <label>${esc(d.l)}${d.req ? ' <span class="rq">*</span>' : ""}
+        ${d.h ? `<span>${esc(d.h)}</span>` : ""}</label>
+      <select data-f="${f}">${opts(sel === undefined ? -1 : sel)}</select>
+    </div>`;
+  }).join("");
+
+  $$("#impMap select").forEach(s => s.onchange = () => {
+    const f = s.dataset.f;
+    if(s.value === "") delete IMP.map[f]; else IMP.map[f] = Number(s.value);
+    $("#mr_" + f).classList.toggle("miss", !!IMP_FIELDS[f].req && s.value === "");
+  });
+
+  $("#impDefaults").innerHTML = `
+    <div class="map-row">
+      <label>القطاع الافتراضي <span>للصفوف بلا قطاع صالح</span></label>
+      <select id="impDefSector">
+        <option value="">— تخطَّ الصفّ —</option>
+        ${Object.keys(SCHEMA).map(k =>
+          `<option value="${k}">${SCHEMA[k].icon} ${esc(SCHEMA[k].label)}</option>`).join("")}
+      </select>
+    </div>
+    <div class="map-row">
+      <label>المحافظة الافتراضية <span>للصفوف بلا محافظة صالحة</span></label>
+      <select id="impDefCity">
+        <option value="">— تخطَّ الصفّ —</option>
+        ${CITIES.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}
+      </select>
+    </div>
+    <div class="map-row">
+      <label>الحالة عند الاستيراد <span>pending لا يظهر للزبون حتى تفعّله</span></label>
+      <select id="impDefStatus">
+        <option value="pending" selected>قيد المراجعة (مُوصى به)</option>
+        <option value="blocked">موقوف</option>
+      </select>
+    </div>`;
+}
+
+/* ── التحقّق وبناء السجلات ── */
+function impBuild(){
+  const g = (row, f) => {
+    const i = IMP.map[f];
+    return (i === undefined || i < 0) ? "" : String(row[i] == null ? "" : row[i]).trim();
+  };
+  const defSector = $("#impDefSector") ? $("#impDefSector").value : "";
+  const defCity   = $("#impDefCity")   ? $("#impDefCity").value   : "";
+  const status    = $("#impDefStatus") ? $("#impDefStatus").value : "pending";
+
+  /* فهرسا الشركاء الحاليين — بالهاتف وبالاسم.
+     الاسم ضروري: أغلب المستورَد بلا هاتف، وبالهاتف وحده تمرّ إعادة
+     استيراد نفس الملف فتتضاعف القاعدة صامتةً. */
+  const have = {}, haveName = {};
+  const nameKey = (sec, nm) => sec + "|" +
+    String(nm||"").trim().toLowerCase().replace(/\s+/g,"").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه");
+  S.partners.forEach(p => {
+    if(p.phone) have[String(p.phone).slice(-9)] = p.name;
+    if(p.name)  haveName[nameKey(p.sector, p.name)] = p.name;
+  });
+  const seenPhone = {}, seenName = {};
+
+  const out = [];
+  IMP.rows.forEach((row, idx) => {
+    const rec = {_line: idx + 2, _issues: [], _dup: ""};
+
+    rec.name = g(row, "name").substring(0, 120);
+    if(!rec.name || rec.name.length < 2) rec._issues.push("بلا اسم");
+
+    const rawSec = g(row, "sector");
+    rec.sector = IMP_SECTOR_AR[rawSec] || IMP_SECTOR_AR[rawSec.toLowerCase()] || defSector;
+    if(!rec.sector) rec._issues.push("قطاع غير معروف");
+
+    const rawCity = g(row, "city");
+    rec.city = CITIES.indexOf(rawCity) !== -1 ? rawCity : defCity;
+    if(!rec.city) rec._issues.push("محافظة غير معروفة");
+
+    rec.phone  = nPhone(g(row, "phone"));
+    rec.phone2 = nPhone(g(row, "phone2"));
+    if(rec.phone2 === rec.phone) rec.phone2 = "";
+
+    rec.area     = g(row, "area").substring(0, 60);
+    rec.address  = g(row, "address").substring(0, 200);
+    rec.desc     = g(row, "desc").substring(0, 800);
+    rec.note     = g(row, "note").substring(0, 400);
+    rec.maps_url = g(row, "maps_url").substring(0, 300);
+    rec.cover    = g(row, "cover").substring(0, 300);
+
+    const la = parseFloat(g(row, "lat")), ln = parseFloat(g(row, "lng"));
+    rec.lat = isFinite(la) ? la : "";
+    rec.lng = isFinite(ln) ? ln : "";
+
+    rec.status = status;
+    rec.open = false;
+    rec.features = [];
+    rec.specs = {};
+    rec.media = rec.cover ? [{url:rec.cover, thumb:rec.cover, kind:"", del:""}] : [];
+
+    /* التكرار — أربع طبقات بالترتيب:
+       هاتف مسجّل ← هاتف مكرّر في الملف ← اسم مسجّل ← اسم مكرّر في الملف */
+    const nk = nameKey(rec.sector, rec.name);
+    if(rec.phone && have[rec.phone.slice(-9)]){
+      rec._dup = "الرقم مسجّل: " + have[rec.phone.slice(-9)];
+    } else if(rec.phone && seenPhone[rec.phone.slice(-9)]){
+      rec._dup = "رقم مكرّر في الملف (سطر " + seenPhone[rec.phone.slice(-9)] + ")";
+    } else if(rec.name && haveName[nk]){
+      rec._dup = "الاسم مسجّل في هذا القطاع";
+    } else if(rec.name && seenName[nk]){
+      rec._dup = "اسم مكرّر في الملف (سطر " + seenName[nk] + ")";
+    } else {
+      if(rec.phone) seenPhone[rec.phone.slice(-9)] = rec._line;
+      if(rec.name)  seenName[nk] = rec._line;
+    }
+
+    out.push(rec);
+  });
+
+  IMP.parsed = out;
+  return out;
+}
+
+/* تنظيف الرقم — نفس منطق nP() في الخادم */
+function nPhone(v){
+  if(!v) return "";
+  let p = String(v).split(/[;,/]/)[0].trim();
+  "٠١٢٣٤٥٦٧٨٩".split("").forEach((a, i) => { p = p.split(a).join(String(i)); });
+  let c = p.replace(/\D/g, "");
+  if(c.indexOf("00964") === 0) c = c.slice(5);
+  if(c.indexOf("964") === 0)   c = c.slice(3);
+  if(c.indexOf("0") === 0)     c = c.slice(1);
+  return /^7[3-9]\d{8}$/.test(c) ? c : "";
+}
+
+function impReview(){
+  const rows = impBuild();
+  const ok   = rows.filter(r => !r._issues.length && !r._dup);
+  const dup  = rows.filter(r => !r._issues.length && r._dup);
+  const bad  = rows.filter(r => r._issues.length);
+
+  $("#impSum").innerHTML = `
+    <div class="g"><b>${ok.length}</b><span>سيُضاف</span></div>
+    <div class="a"><b>${dup.length}</b><span>مكرّر — يُتخطّى</span></div>
+    <div class="r"><b>${bad.length}</b><span>مرفوض</span></div>`;
+
+  const show = rows.slice(0, 60);
+  $("#impPreview").innerHTML = `
+    <div class="imp-tbl">
+      <div class="th"><span></span><span>الاسم</span><span>القطاع</span><span>المحافظة</span><span>الهاتف</span></div>
+      ${show.map(r => {
+        const cls = r._issues.length ? "bad" : (r._dup ? "dup" : "");
+        const mk  = r._issues.length ? "✕" : (r._dup ? "⚠" : "✓");
+        const sk  = SCHEMA[r.sector];
+        return `<div class="tr ${cls}" title="${esc(r._issues.join("، ") || r._dup || "")}">
+          <span class="mk">${mk}</span>
+          <b>${esc(r.name || "(بلا اسم)")}${
+            r._issues.length ? ` <span style="color:var(--red);font-weight:400">— ${esc(r._issues.join("، "))}</span>`
+            : (r._dup ? ` <span style="color:var(--amber);font-weight:400">— ${esc(r._dup)}</span>` : "")}</b>
+          <span>${sk ? sk.icon + " " + esc(sk.label) : "—"}</span>
+          <span>${esc(r.city || "—")}</span>
+          <span class="num" style="direction:ltr">${esc(r.phone || "—")}</span>
+        </div>`;
+      }).join("")}
+      ${rows.length > show.length
+        ? `<div class="imp-more">وأخرى… إجمالي ${rows.length} صفّاً</div>` : ""}
+    </div>`;
+
+  $("#impRun").disabled = ok.length === 0;
+  $("#impRun").textContent = ok.length ? `استورد ${ok.length} شريكاً` : "لا شيء صالح";
+  impStep(3);
+  if(!ok.length) impMsg("لا صفّ صالح. راجع المطابقة أو اضبط القيم الافتراضية.", "wait");
+}
+
+/* ── التنفيذ على دفعات ── */
+async function impRun(){
+  if(IMP.running) return;
+  const ready = IMP.parsed.filter(r => !r._issues.length && !r._dup);
+  if(!ready.length) return;
+
+  if(!confirm(`سيُضاف ${ready.length} شريكاً بحالة «${ready[0].status === "pending" ? "قيد المراجعة" : "موقوف"}».\n\nلن يظهروا للزبائن حتى تفعّل كلاً منهم.\n\nمتابعة؟`)) return;
+
+  IMP.running = true;
+  $("#impActs").classList.add("hidden");
+  $("#impProgress").classList.remove("hidden");
+  const log = $("#impLog");
+  log.innerHTML = "";
+  let added = 0, skipped = 0, failed = 0, done = 0;
+
+  const clean = r => {
+    const o = {};
+    Object.keys(r).forEach(k => { if(k[0] !== "_") o[k] = r[k]; });
+    return o;
+  };
+
+  for(let i = 0; i < ready.length; i += IMP_BATCH){
+    const chunk = ready.slice(i, i + IMP_BATCH).map(clean);
+    let attempt = 0, okRes = null;
+
+    while(attempt < 3 && !okRes){
+      attempt++;
+      try{
+        const d = await api("opImportBatch", {partners: chunk});
+        if(!d || !d.success) throw new Error((d && d.msg) || "ردّ غير ناجح");
+        okRes = d;
+      }catch(e){
+        if(attempt >= 3){
+          failed += chunk.length;
+          log.innerHTML += `<div style="color:var(--red)">✕ دفعة <i>${i+1}–${i+chunk.length}</i> — ${esc(e.message)}</div>`;
+        } else {
+          log.innerHTML += `<div style="color:var(--amber)">↻ إعادة محاولة <i>${attempt}</i> للدفعة <i>${i+1}</i>…</div>`;
+          await new Promise(r2 => setTimeout(r2, 1500 * attempt));
+        }
+      }
+    }
+
+    if(okRes){
+      added   += okRes.added   || 0;
+      skipped += okRes.skipped || 0;
+      log.innerHTML += `<div style="color:var(--green)">✓ دفعة <i>${i+1}–${i+chunk.length}</i> — أُضيف <i>${okRes.added||0}</i>${
+        okRes.skipped ? ` · تُخطّي <i>${okRes.skipped}</i>` : ""}</div>`;
+    }
+
+    done += chunk.length;
+    const pc = Math.round(done / ready.length * 100);
+    $("#impBarU").style.width = pc + "%";
+    $("#impBarTxt").textContent = `${done} من ${ready.length} · ${pc}٪`;
+    log.scrollTop = log.scrollHeight;
+  }
+
+  IMP.running = false;
+  $("#impBarTxt").textContent = `اكتمل — أُضيف ${added}${skipped?` · تُخطّي ${skipped}`:""}${failed?` · فشل ${failed}`:""}`;
+  impMsg(failed
+    ? `أُضيف ${added} شريكاً وفشل ${failed}. أعد المحاولة للفاشلين بملف منفصل.`
+    : `✅ أُضيف ${added} شريكاً بحالة قيد المراجعة. فعّل من تتأكّد منه هاتفياً من صفحته.`,
+    failed ? "wait" : "ok");
+
+  await load();
+  $("#impActs").classList.remove("hidden");
+  $("#impRun").disabled = true;
+  $("#impRun").textContent = "تم";
+}
+
+/* ── الربط ── */
+$("#impFile").onchange = e => { impReadFile(e.target.files[0]); e.target.value = ""; };
+(function(){
+  const d = $("#drop");
+  ["dragenter","dragover"].forEach(ev => d.addEventListener(ev, e => {
+    e.preventDefault(); d.classList.add("over"); }));
+  ["dragleave","drop"].forEach(ev => d.addEventListener(ev, e => {
+    e.preventDefault(); d.classList.remove("over"); }));
+  d.addEventListener("drop", e => {
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if(f) impReadFile(f);
+  });
+})();
+$("#impBack1").onclick    = () => impStep(1);
+$("#impBack2").onclick    = () => impStep(2);
+$("#impToReview").onclick = () => {
+  if(IMP.map.name === undefined) return impMsg("طابِق عمود «اسم الشريك» — بلا اسم لا يمكن الاستيراد.", "no");
+  impReview();
+};
+$("#impRun").onclick = impRun;
 
 /* ═══════════════════════════════════════════════════════════════════════
    أدوات

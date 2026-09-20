@@ -657,6 +657,57 @@ const money = n => (Number(n)||0).toLocaleString("en-US");
 const fbKey = s => String(s||"").replace(/[.#$/[\]\s]/g,"_");
 const nP = p => { let c=String(p||"").replace(/\D/g,""); if(c.startsWith("964"))c=c.slice(3); if(c.startsWith("0"))c=c.slice(1); return c; };
 
+
+/* ═══════════════════════════════════════════════════════════════════
+   صورة رمزية مولّدة داخل الصفحة
+   ───────────────────────────────────────────────────────────────────
+   لا تحتاج ملفاً على المستودع ولا نداء شبكة: SVG يُبنى هنا ويُحقن
+   كـdata URI. سببها أن أغلفة الشركاء المستوردين تشير إلى ملفات لم
+   تُرفع بعد، فكانت البطاقات تعرض رمز الكسر.
+   التنويعة تُشتقّ من معرّف الشريك فتثبت له، ولا تبدو الشبكة ورق حائط.
+═══════════════════════════════════════════════════════════════════ */
+const PH_ICON = {"car":"<g fill=\"#fff\" fill-opacity=\".92\"> <path d=\"M232 300 L258 246 Q268 226 292 226 L508 226 Q532 226 544 246 L572 300 L596 308 Q616 315 616 336 L616 368 Q616 380 604 380 L568 380 A40 40 0 0 0 488 380 L312 380 A40 40 0 0 0 232 380 L196 380 Q184 380 184 368 L184 336 Q184 312 206 306 Z\"/> <path d=\"M296 250 L290 296 L392 296 L392 250 Z\" fill=\"#000\" fill-opacity=\".22\"/> <path d=\"M416 250 L416 296 L530 296 L502 250 Z\" fill=\"#000\" fill-opacity=\".22\"/> </g> <circle cx=\"272\" cy=\"380\" r=\"42\" fill=\"#fff\" fill-opacity=\".92\"/> <circle cx=\"272\" cy=\"380\" r=\"19\" fill=\"#000\" fill-opacity=\".28\"/> <circle cx=\"528\" cy=\"380\" r=\"42\" fill=\"#fff\" fill-opacity=\".92\"/> <circle cx=\"528\" cy=\"380\" r=\"19\" fill=\"#000\" fill-opacity=\".28\"/>","hotel":"<g fill=\"#fff\" fill-opacity=\".92\"> <rect x=\"286\" y=\"150\" width=\"228\" height=\"268\" rx=\"8\"/> <rect x=\"250\" y=\"404\" width=\"300\" height=\"22\" rx=\"8\"/> </g> <g fill=\"#000\" fill-opacity=\".26\"> <rect x=\"314\" y=\"182\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"362\" y=\"182\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"410\" y=\"182\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"458\" y=\"182\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"314\" y=\"234\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"362\" y=\"234\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"410\" y=\"234\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"458\" y=\"234\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"314\" y=\"286\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"362\" y=\"286\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"410\" y=\"286\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"458\" y=\"286\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"314\" y=\"338\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"362\" y=\"338\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"410\" y=\"338\" width=\"30\" height=\"34\" rx=\"4\"/><rect x=\"458\" y=\"338\" width=\"30\" height=\"34\" rx=\"4\"/> </g> <path d=\"M366 418 L366 356 Q400 330 434 356 L434 418 Z\" fill=\"#000\" fill-opacity=\".26\"/>","hall":"<g fill=\"#fff\" fill-opacity=\".92\"> <path d=\"M220 420 L220 300 Q400 160 580 300 L580 420 L530 420 L530 320 Q400 224 270 320 L270 420 Z\"/> <rect x=\"196\" y=\"420\" width=\"408\" height=\"22\" rx=\"8\"/> </g> <g fill=\"#fff\" fill-opacity=\".88\"> <rect x=\"392\" y=\"236\" width=\"16\" height=\"44\" rx=\"6\"/> <path d=\"M340 284 Q400 248 460 284 Q400 352 340 284 Z\"/> <circle cx=\"356\" cy=\"318\" r=\"9\"/><circle cx=\"400\" cy=\"330\" r=\"9\"/><circle cx=\"444\" cy=\"318\" r=\"9\"/> </g>","school":"<g fill=\"none\" stroke=\"#fff\" stroke-opacity=\".92\" stroke-width=\"26\"> <circle cx=\"400\" cy=\"290\" r=\"150\"/> <circle cx=\"400\" cy=\"290\" r=\"52\"/> <path d=\"M400 238 L400 150\"/> <path d=\"M355 318 L268 372\"/> <path d=\"M445 318 L532 372\"/> </g>","farm":"<g fill=\"#fff\" fill-opacity=\".92\"> <path d=\"M214 300 L318 214 L422 300 L422 396 L214 396 Z\"/> <rect x=\"292\" y=\"330\" width=\"56\" height=\"66\" rx=\"4\" fill=\"#000\" fill-opacity=\".26\"/> <rect x=\"540\" y=\"278\" width=\"22\" height=\"120\" rx=\"8\"/> </g> <g fill=\"#fff\" fill-opacity=\".86\"> <ellipse cx=\"500\" cy=\"262\" rx=\"58\" ry=\"17\" transform=\"rotate(-22 500 262)\"/> <ellipse cx=\"602\" cy=\"262\" rx=\"58\" ry=\"17\" transform=\"rotate(22 602 262)\"/> <ellipse cx=\"516\" cy=\"232\" rx=\"52\" ry=\"15\" transform=\"rotate(-52 516 232)\"/> <ellipse cx=\"586\" cy=\"232\" rx=\"52\" ry=\"15\" transform=\"rotate(52 586 232)\"/> </g> <path d=\"M170 410 Q250 392 330 410 Q410 428 490 410 Q570 392 650 410 L650 440 L170 440 Z\" fill=\"#fff\" fill-opacity=\".34\"/>","wash":"<g fill=\"#fff\" fill-opacity=\".92\"> <path d=\"M232 300 L258 246 Q268 226 292 226 L508 226 Q532 226 544 246 L572 300 L596 308 Q616 315 616 336 L616 368 Q616 380 604 380 L568 380 A40 40 0 0 0 488 380 L312 380 A40 40 0 0 0 232 380 L196 380 Q184 380 184 368 L184 336 Q184 312 206 306 Z\"/> <path d=\"M296 250 L290 296 L392 296 L392 250 Z\" fill=\"#000\" fill-opacity=\".22\"/> <path d=\"M416 250 L416 296 L530 296 L502 250 Z\" fill=\"#000\" fill-opacity=\".22\"/> </g> <circle cx=\"272\" cy=\"380\" r=\"42\" fill=\"#fff\" fill-opacity=\".92\"/> <circle cx=\"272\" cy=\"380\" r=\"19\" fill=\"#000\" fill-opacity=\".28\"/> <circle cx=\"528\" cy=\"380\" r=\"42\" fill=\"#fff\" fill-opacity=\".92\"/> <circle cx=\"528\" cy=\"380\" r=\"19\" fill=\"#000\" fill-opacity=\".28\"/>"};
+const PH_PAL = {"car":[["#FF385C","#C2185B"],["#E03150","#A31447"],["#FF5C7A","#D62E58"],["#D62246","#8E1038"]],"hotel":[["#2E7D9A","#1A4F63"],["#3B93B2","#226075"],["#26687F","#143F50"],["#4AA3C0","#2A7290"]],"hall":[["#8E44AD","#5B2C6F"],["#A055C0","#6B3583"],["#7A3595","#4A2259"],["#B267CE","#7B3E96"]],"school":[["#E67E22","#A85B12"],["#F0913C","#B86A18"],["#CE6D18","#93500E"],["#FFA45C","#CC7A28"]],"farm":[["#27AE60","#167940"],["#2FC46E","#1B8E4C"],["#1E9350","#126336"],["#48D183","#25A15E"]],"wash":[["#0EA5A5","#07706F"],["#16BDBC","#0C8E8D"],["#0B8A89","#065957"],["#3DD6D4","#199C9A"]]};
+
+function phVariant(seed){
+  let h = 0, s = String(seed||"x");
+  for(let i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i)) >>> 0;
+  return h % 4;
+}
+
+/** يعيد data URI لصورة رمزية بلون ثابت لهذا المعرّف */
+function phData(seed, sector){
+  const sec = sector || SECTOR;
+  const pal = PH_PAL[sec] || PH_PAL.hotel;
+  const c = pal[phVariant(seed)];
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560">' +
+    '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+    '<stop offset="0" stop-color="' + c[0] + '"/><stop offset="1" stop-color="' + c[1] + '"/>' +
+    '</linearGradient><pattern id="p" width="34" height="34" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">' +
+    '<rect width="17" height="34" fill="#fff" fill-opacity=".045"/></pattern></defs>' +
+    '<rect width="800" height="560" fill="url(#g)"/><rect width="800" height="560" fill="url(#p)"/>' +
+    (PH_ICON[sec] || PH_ICON.hotel) +
+    '<rect y="550" width="800" height="10" fill="#000" fill-opacity=".18"/></svg>';
+  return "data:image/svg+xml," + encodeURIComponent(svg);
+}
+window.phData = phData;
+
+/** تُستدعى من onerror: تستبدل الصورة المكسورة بالرمزية بدل حذفها */
+window.phSwap = function(el, seed){
+  if(el.dataset.ph) return;          // مرة واحدة، تفادياً للدوران
+  el.dataset.ph = "1";
+  el.src = phData(seed);
+};
+
+/** يختار المصدر: الحقيقية إن وُجدت، وإلا الرمزية مباشرةً.
+    الأغلفة المشيرة إلى img/placeholder/ لم تُرفع للمستودع، فنتخطّى
+    طلبها ونولّدها فوراً — بلا رحلة شبكة تنتهي بـ404. */
+function phSrc(url, seed){
+  if(!url || url.indexOf("/img/placeholder/") !== -1) return phData(seed);
+  return url;
+}
+window.phSrc = phSrc;
+
 /* أي صورة تفشل تُستبدل بأيقونة القطاع — لا رمز كسر أمام الزبون أبداً */
 window.imgFail = function(el){
   const box = el.parentNode;
@@ -878,7 +929,7 @@ function itemCard(it, i){
   const img = it.cover || (it.media&&it.media[0]&&it.media[0].u) || "";
   return `<article class="card" onclick="openItem('${esc(p.id)}','${esc(it.id)}')">
     <div class="card-img">
-      ${img?`<img src="${esc(img)}" alt="${esc(it.name)}" loading="${i<4?"eager":"lazy"}">`:`<div class="ph">${C.icon}</div>`}
+      <img src="${esc(phSrc(img, it.id))}" alt="${esc(it.name)}" loading="${i<4?"eager":"lazy"}" onerror="phSwap(this,'${esc(it.id)}')">
       ${it.type?`<span class="card-tag">${esc(it.type)}</span>`:""}
       ${(it.media&&it.media.length>1)?`<span class="card-n">📷 ${it.media.length}</span>`:""}
     </div>
@@ -901,7 +952,7 @@ function partnerCard(p, i){
   const stars = s.stars ? "⭐".repeat(Math.min(5, parseInt(s.stars)||0)) : "";
   return `<article class="card" onclick="openPartner('${esc(p.id)}')">
     <div class="card-img">
-      ${img?`<img src="${esc(img)}" alt="${esc(p.name)}" loading="${i<4?"eager":"lazy"}">`:`<div class="ph">${C.icon}</div>`}
+      <img src="${esc(phSrc(img, p.id))}" alt="${esc(p.name)}" loading="${i<4?"eager":"lazy"}" onerror="phSwap(this,'${esc(p.id)}')">
       ${stars?`<span class="card-tag">${stars}</span>`:(s.cat?`<span class="card-tag">${esc(s.cat)}</span>`:"")}
       ${p.item_count?`<span class="card-n">${p.item_count} ${esc(T("items_"+SECTOR).split(" ")[0])}</span>`:""}
     </div>
@@ -1078,7 +1129,7 @@ function showDetail(p, it){
         if(SECTOR==="school"){ if(q.hours) bits.push(q.hours+" ساعة"); if(q.car_type) bits.push(q.car_type); }
         if(SECTOR==="wash"){ if(q.duration) bits.push(q.duration+" دقيقة"); if(q.car_size) bits.push(q.car_size); }
         return `<button class="unit" onclick="pickItem('${esc(x.id)}')">
-          ${im?`<img class="ui" src="${esc(im)}" alt="" loading="lazy" onerror="imgFail(this)">`
+          ${true?`<img class="ui" src="${esc(phSrc(im, x.id))}" alt="" loading="lazy" onerror="phSwap(this,'${esc(x.id)}')">`
               :`<div class="up">${C.icon}</div>`}
           <div class="um"><b>${esc(x.name)}</b>
             <span>${esc(x.type||"")}</span>
@@ -1160,7 +1211,7 @@ window.openForm = function(){
     <div class="dscroll">
       <div class="fwrap">
         <div class="fsum">
-          ${cover?`<img src="${esc(cover)}" alt="" onerror="imgFail(this)">`:`<div class="fp">${C.icon}</div>`}
+          <img src="${esc(phSrc(cover, p.id))}" alt="" onerror="phSwap(this,'${esc(p.id)}')">
           <div><b>${esc(it?it.name:p.name)}</b>
             <span>${it?esc(p.name)+" · ":""}${esc(partnerCity(p))}</span></div>
         </div>

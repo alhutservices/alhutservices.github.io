@@ -105,6 +105,14 @@ img{display:block;max-width:100%;}
 .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
 .card:hover .card-img img{transform:scale(1.05);}
 .card-img .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:.25;}
+.ctc{display:flex;gap:10px;flex-wrap:wrap;}
+.ctc-b{flex:1;min-width:140px;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 16px;border-radius:14px;font-size:.88rem;font-weight:900;text-decoration:none;}
+.ctc-b.wa{background:#25D366;color:#fff;}
+.ctc-b.tel{background:var(--bg2,#F3F4F6);color:var(--tx,#111);border:1px solid var(--line,#E5E7EB);
+  font-family:'IBM Plex Mono',monospace;direction:ltr;}
+.bookbar .bgo.wa{background:#25D366;box-shadow:0 6px 18px rgba(37,211,102,.35);}
+.bookbar .bgo.wa:hover{box-shadow:0 10px 26px rgba(37,211,102,.45);}
 .card-src{position:absolute;top:12px;inset-inline-end:12px;background:rgba(180,83,9,.94);color:#fff;padding:5px 10px;border-radius:var(--r-pill);font-size:.64rem;font-weight:900;letter-spacing:.2px;box-shadow:var(--sh-sm);}
 .impnote{margin-top:14px;padding:13px 15px;border-radius:14px;background:#FEF3C7;border:1px solid #FCD34D;}
 .impnote b{display:block;font-size:.84rem;color:#92400E;margin-bottom:5px;}
@@ -861,6 +869,39 @@ async function load(){
 }
 
 /* ═══════════ العرض ═══════════ */
+
+/* ═══════════════════════════════════════════════════════════════════
+   تواصل مباشر مع الجهات المستوردة
+   ───────────────────────────────────────────────────────────────────
+   الجهة المستوردة ليست متعاقدة معنا، فلا محلّ لاستمارة حجز تُنشئ طلباً
+   لا يستقبله أحد. زرّها يفتح واتساب الجهة برسالة تذكر الحوت، فيعرف
+   صاحب المكان من أين جاء الزبون — وهذا نفسه بابنا لتحويله إلى شريك.
+═══════════════════════════════════════════════════════════════════ */
+function isImported(p){ return !!((p||{}).specs||{}).src; }
+
+/** الرقم مخزَّن بلا صفر: 7XXXXXXXXX */
+function telOf(p){ const c = nP((p||{}).phone); return c ? "0" + c : ""; }
+function waNum(p){ const c = nP((p||{}).phone); return c ? "964" + c : ""; }
+
+function waText(p){
+  const NL = String.fromCharCode(10);
+  return [
+    "السلام عليكم 👋",
+    "وصلتكم عن طريق منصّة الحوت — alhutservices.github.io",
+    "أودّ الاستفسار عن: " + (p.name||"") + (p.city?" — "+p.city:""),
+    "هل يمكنكم تزويدي بالتفاصيل والسعر وتأكيد التوفّر؟"
+  ].join(NL);
+}
+function waHref(p){
+  const n = waNum(p);
+  return n ? "https://wa.me/" + n + "?text=" + encodeURIComponent(waText(p)) : "";
+}
+window.waOpen = function(){
+  const p = S.cur; if(!p) return;
+  const h = waHref(p);
+  if(h) window.open(h, "_blank", "noopener");
+};
+
 function partnerCity(p){
   const c = CITIES.find(x=>x.key===p.city);
   return c ? (c[LANG]||c.ar) : (p.city||"");
@@ -968,7 +1009,8 @@ function partnerCard(p, i){
       <div class="card-f">${bits.map(b=>`<span>${esc(b)}</span>`).join("")}</div>
       <div class="card-foot">
         ${price?`<div class="price"><small>${esc(T("from"))}</small><b class="mono">${money(price)}</b><small>${esc(T("iqd"))}</small></div>`
-               :`<div class="price"><small>${esc(T("details"))}</small></div>`}
+               :(s.g_price?`<div class="price"><small>≈ الليلة</small><b class="mono">${money(s.g_price)}</b><small>${esc(T("iqd"))}</small></div>`
+               :`<div class="price"><small>${esc(T("details"))}</small></div>`)}
         <span class="card-go">${esc(T("book"))}</span>
       </div>
     </div></article>`;
@@ -1007,7 +1049,8 @@ function specRows(obj, only){
     gov_fee:"رسوم الدائرة",level:"المستوى",lessons:"عدد الدروس",days:"مدة الكورس",car_type:"نوع السيارة",
     age_min:"أقل عمر",gender:"مخصّص لـ",min_guests:"أقل عدد ضيوف",per_person:"السعر للفرد",
     payment:"طرق الدفع",smoking:"التدخين",floor:"الطابق",
-    g_rate:"تقييم خرائط جوجل",g_revs:"عدد المراجعات هناك",g_cat:"تصنيف خرائط جوجل"
+    g_rate:"تقييم خرائط جوجل",g_revs:"عدد المراجعات هناك",g_cat:"تصنيف خرائط جوجل",
+    g_price:"سعر الليلة التقريبي (مصدر خارجي)"
   };
   /* مفاتيح داخلية لا تُعرض كسطر مواصفات */
   const HIDE = ["src"];
@@ -1101,7 +1144,7 @@ function highlights(p, it, s){
     if(q.seats) out.push({t:"👥 " + q.seats + " مقاعد"});
     if(q.fuel)  out.push({t:esc(q.fuel)});
   }
-  if(p.open === false) out.push({t:"⏸ لا يستقبل حجوزات حالياً", hi:1});
+  if(p.open === false && !isImported(p)) out.push({t:"⏸ لا يستقبل حجوزات حالياً", hi:1});
   return out;
 }
 
@@ -1165,6 +1208,11 @@ function showDetail(p, it){
         ${hl.length?`<div class="pills2">${hl.map(x=>`<span class="${x.hi?"hi":""}">${x.t}</span>`).join("")}</div>`:""}
 
         ${(p.specs||{}).src?`<div class="impnote"><b>⚠️ بيانات مستوردة — غير مؤكّدة</b><p>الصورة ورقم الهاتف والعنوان هنا مأخوذة من مصادر عامة على الإنترنت (خرائط جوجل)، لم يزوّدنا بها صاحب المنشأة ولم يؤكّدها، وقد تكون قديمة أو ناقصة. هذه المنشأة ليست شريكاً متعاقداً مع منصّة الحوت بعد — اتصل بها للتأكّد قبل الاعتماد على أي تفصيل، وأبلغنا إن كنت صاحبها لنصحّح أو نحذف.</p></div>`:""}
+        ${isImported(p)&&telOf(p)?`<div class="hr"></div><div class="blk2"><h4>التواصل</h4>
+          <div class="ctc">
+            <a class="ctc-b wa" href="${esc(waHref(p))}" target="_blank" rel="noopener">💬 واتساب</a>
+            <a class="ctc-b tel" href="tel:${esc(telOf(p))}">📞 ${esc(telOf(p))}</a>
+          </div></div>`:""}
         ${desc?`<div class="hr"></div><div class="blk2"><h4>${esc(T("about"))}</h4><p>${esc(desc)}</p></div>`:""}
         ${facts?`<div class="hr"></div><div class="blk2"><h4>${esc(T("details"))}</h4><div class="facts">${facts}</div></div>`:""}
         ${feats.length?`<div class="hr"></div><div class="blk2"><h4>${esc(T("features"))}</h4>
@@ -1175,11 +1223,17 @@ function showDetail(p, it){
       </div>
     </div>
     <div class="bookbar">
+      ${isImported(p) ? `
+      <div class="bp">
+        ${(p.specs||{}).g_price?`<b>${money((p.specs||{}).g_price)} <span>${esc(T("iqd"))}</span></b><small>≈ سعر الليلة · مصدر خارجي، غير مؤكّد</small>`
+                             :`<b style="font-size:1rem">${esc(telOf(p))}</b><small>تواصل مباشرة مع المكان</small>`}
+      </div>
+      <button class="bgo wa" onclick="waOpen()">💬 واتساب</button>` : `
       <div class="bp">
         ${price?`<b>${money(price)} <span>${esc(T("iqd"))}</span></b><small>${esc(T(C.unitKey))}</small>`
                :`<b style="font-size:1rem">${esc(T("book"))}</b><small>${esc(T("details"))}</small>`}
       </div>
-      <button class="bgo" onclick="openForm()" ${p.open===false?"disabled":""}>${esc(T("book"))}</button>
+      <button class="bgo" onclick="openForm()" ${p.open===false?"disabled":""}>${esc(T("book"))}</button>`}
     </div>
   </div>`;
   document.body.style.overflow = "hidden";

@@ -108,11 +108,11 @@ img{display:block;max-width:100%;}
 .ctc{display:flex;gap:10px;flex-wrap:wrap;}
 .ctc-b{flex:1;min-width:140px;display:flex;align-items:center;justify-content:center;gap:8px;
   padding:13px 16px;border-radius:14px;font-size:.88rem;font-weight:900;text-decoration:none;}
-.ctc-b.wa{background:#25D366;color:#fff;}
-.ctc-b.tel{background:var(--bg2,#F3F4F6);color:var(--tx,#111);border:1px solid var(--line,#E5E7EB);
+.ctc-b.ctcwa{background:#25D366;color:#fff;}
+.ctc-b.ctctel{background:var(--bg2,#F3F4F6);color:var(--tx,#111);border:1px solid var(--line,#E5E7EB);
   font-family:'IBM Plex Mono',monospace;direction:ltr;}
-.bookbar .bgo.wa{background:#25D366;box-shadow:0 6px 18px rgba(37,211,102,.35);}
-.bookbar .bgo.wa:hover{box-shadow:0 10px 26px rgba(37,211,102,.45);}
+.bookbar .bgo.bgowa{background:#25D366;box-shadow:0 6px 18px rgba(37,211,102,.35);}
+.bookbar .bgo.bgowa:hover{box-shadow:0 10px 26px rgba(37,211,102,.45);}
 .card-src{position:absolute;top:12px;inset-inline-end:12px;background:rgba(180,83,9,.94);color:#fff;padding:5px 10px;border-radius:var(--r-pill);font-size:.64rem;font-weight:900;letter-spacing:.2px;box-shadow:var(--sh-sm);}
 .impnote{margin-top:14px;padding:13px 15px;border-radius:14px;background:#FEF3C7;border:1px solid #FCD34D;}
 .impnote b{display:block;font-size:.84rem;color:#92400E;margin-bottom:5px;}
@@ -276,7 +276,8 @@ img{display:block;max-width:100%;}
 .bookbar .bp{flex:1;min-width:0;}
 .bookbar .bp b{display:block;font-size:1.25rem;font-weight:900;letter-spacing:-.02em;font-family:'IBM Plex Mono',monospace;}
 .bookbar .bp b span{font-family:'Cairo',sans-serif;font-size:.8rem;}
-.bookbar .bp small{font-size:.74rem;font-weight:700;color:var(--tx2);}
+.bookbar .bp small{font-size:.74rem;font-weight:700;color:var(--tx2);
+  display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .bookbar .bgo{padding:15px 32px;border-radius:var(--r3);background:var(--red-g);color:#fff;font-size:.95rem;
   font-weight:900;box-shadow:var(--sh-red);flex-shrink:0;transition:.2s;}
 .bookbar .bgo:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(255,56,92,.4);}
@@ -1218,8 +1219,8 @@ function showDetail(p, it){
         ${(p.specs||{}).src?`<div class="impnote"><b>⚠️ بيانات مستوردة — غير مؤكّدة</b><p>الصورة ورقم الهاتف والعنوان هنا مأخوذة من مصادر عامة على الإنترنت (خرائط جوجل)، لم يزوّدنا بها صاحب المنشأة ولم يؤكّدها، وقد تكون قديمة أو ناقصة. هذه المنشأة ليست شريكاً متعاقداً مع منصّة الحوت بعد — اتصل بها للتأكّد قبل الاعتماد على أي تفصيل، وأبلغنا إن كنت صاحبها لنصحّح أو نحذف.</p></div>`:""}
         ${isImported(p)&&telOf(p)?`<div class="hr"></div><div class="blk2"><h4>التواصل</h4>
           <div class="ctc">
-            <a class="ctc-b wa" href="${esc(waHref(p))}" target="_blank" rel="noopener">💬 واتساب</a>
-            <a class="ctc-b tel" href="tel:${esc(telOf(p))}">📞 ${esc(telOf(p))}</a>
+            <a class="ctc-b ctcwa" href="${esc(waHref(p))}" target="_blank" rel="noopener">💬 واتساب</a>
+            <a class="ctc-b ctctel" href="tel:${esc(telOf(p))}">📞 ${esc(telOf(p))}</a>
           </div></div>`:""}
         ${desc?`<div class="hr"></div><div class="blk2"><h4>${esc(T("about"))}</h4><p>${esc(desc)}</p></div>`:""}
         ${facts?`<div class="hr"></div><div class="blk2"><h4>${esc(T("details"))}</h4><div class="facts">${facts}</div></div>`:""}
@@ -1233,10 +1234,10 @@ function showDetail(p, it){
     <div class="bookbar">
       ${isImported(p) ? `
       <div class="bp">
-        ${(p.specs||{}).g_price?`<b>${money((p.specs||{}).g_price)} <span>${esc(T("iqd"))}</span></b><small>≈ سعر الليلة · مصدر خارجي، غير مؤكّد</small>`
+        ${(p.specs||{}).g_price?`<b>${money((p.specs||{}).g_price)} <span>${esc(T("iqd"))}</span></b><small>≈ سعر الليلة · مصدر خارجي</small>`
                              :`<b style="font-size:1rem">${esc(telOf(p))}</b><small>تواصل مباشرة مع المكان</small>`}
       </div>
-      <button class="bgo wa" onclick="waOpen()">💬 واتساب</button>` : `
+      <button class="bgo bgowa" onclick="waOpen()">💬 واتساب</button>` : `
       <div class="bp">
         ${price?`<b>${money(price)} <span>${esc(T("iqd"))}</span></b><small>${esc(T(C.unitKey))}</small>`
                :`<b style="font-size:1rem">${esc(T("book"))}</b><small>${esc(T("details"))}</small>`}

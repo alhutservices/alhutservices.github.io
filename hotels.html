@@ -105,6 +105,10 @@ img{display:block;max-width:100%;}
 .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
 .card:hover .card-img img{transform:scale(1.05);}
 .card-img .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:.25;}
+.card-src{position:absolute;top:12px;inset-inline-end:12px;background:rgba(180,83,9,.94);color:#fff;padding:5px 10px;border-radius:var(--r-pill);font-size:.64rem;font-weight:900;letter-spacing:.2px;box-shadow:var(--sh-sm);}
+.impnote{margin-top:14px;padding:13px 15px;border-radius:14px;background:#FEF3C7;border:1px solid #FCD34D;}
+.impnote b{display:block;font-size:.84rem;color:#92400E;margin-bottom:5px;}
+.impnote p{font-size:.79rem;line-height:1.75;color:#78350F;margin:0;}
 .card-tag{position:absolute;top:12px;inset-inline-start:12px;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);padding:5px 11px;border-radius:var(--r-pill);font-size:.7rem;font-weight:900;box-shadow:var(--sh-sm);}
 .card-n{position:absolute;bottom:12px;inset-inline-end:12px;background:rgba(26,26,26,.82);color:#fff;padding:4px 10px;border-radius:var(--r-pill);font-size:.68rem;font-weight:800;}
 .card-b{padding:16px 18px 18px;flex:1;display:flex;flex-direction:column;}
@@ -451,6 +455,7 @@ const CITIES = [
   {key:"ديالى", ic:"🍊", ar:"ديالى", ku:"دیالە", tr:"Diyala", en:"Diyala"},
   {key:"الأنبار", ic:"🌴", ar:"الأنبار", ku:"ئەنبار", tr:"Anbar", en:"Anbar"},
   {key:"دهوك", ic:"⛰️", ar:"دهوك", ku:"دهۆک", tr:"Dahuk", en:"Duhok"},
+  {key:"صلاح الدين", ic:"🏛️", ar:"صلاح الدين", ku:"سەلاحەدین", tr:"Selahaddin", en:"Salahuddin"},
   {key:"بابل", ic:"🦁", ar:"بابل", ku:"بابل", tr:"Babil", en:"Babylon"}
 ];
 
@@ -510,7 +515,7 @@ const CITY_GEO = {
   "بغداد":[33.3152,44.3661], "كركوك":[35.4681,44.3922], "أربيل":[36.1911,44.0092],
   "السليمانية":[35.5556,45.4351], "نينوى":[36.3350,43.1189], "البصرة":[30.5081,47.7835],
   "النجف":[32.0000,44.3350], "كربلاء":[32.6160,44.0249], "ديالى":[33.7500,44.6417],
-  "الأنبار":[33.4258,43.3089], "دهوك":[36.8669,42.9503], "بابل":[32.4637,44.4197]
+  "الأنبار":[33.4258,43.3089], "دهوك":[36.8669,42.9503], "صلاح الدين":[34.6000,43.6833], "بابل":[32.4637,44.4197]
 };
 
 function distKm(a1,b1,a2,b2){
@@ -954,6 +959,7 @@ function partnerCard(p, i){
     <div class="card-img">
       <img src="${esc(phSrc(img, p.id))}" alt="${esc(p.name)}" loading="${i<4?"eager":"lazy"}" onerror="phSwap(this,'${esc(p.id)}')">
       ${stars?`<span class="card-tag">${stars}</span>`:(s.cat?`<span class="card-tag">${esc(s.cat)}</span>`:"")}
+      ${s.src?`<span class="card-src">بيانات مستوردة</span>`:""}
       ${p.item_count?`<span class="card-n">${p.item_count} ${esc(T("items_"+SECTOR).split(" ")[0])}</span>`:""}
     </div>
     <div class="card-b">
@@ -1000,10 +1006,14 @@ function specRows(obj, only){
     pickup:"نقل من البيت",pickup_fee:"أجرة النقل",theory:"دروس نظرية",exam_help:"مرافقة الامتحان",
     gov_fee:"رسوم الدائرة",level:"المستوى",lessons:"عدد الدروس",days:"مدة الكورس",car_type:"نوع السيارة",
     age_min:"أقل عمر",gender:"مخصّص لـ",min_guests:"أقل عدد ضيوف",per_person:"السعر للفرد",
-    payment:"طرق الدفع",smoking:"التدخين",floor:"الطابق"
+    payment:"طرق الدفع",smoking:"التدخين",floor:"الطابق",
+    g_rate:"تقييم خرائط جوجل",g_revs:"عدد المراجعات هناك",g_cat:"تصنيف خرائط جوجل"
   };
+  /* مفاتيح داخلية لا تُعرض كسطر مواصفات */
+  const HIDE = ["src"];
   const out = [];
   Object.keys(obj||{}).forEach(k=>{
+    if(HIDE.indexOf(k) !== -1) return;
     if(only && only.indexOf(k) === -1) return;
     let v = obj[k];
     if(v === "" || v === null || v === undefined) return;
@@ -1154,6 +1164,7 @@ function showDetail(p, it){
         <div class="dmeta">${it?`<b>${esc(p.name)}</b> · `:""}${esc(p.area||"")}${p.area?" · ":""}${esc(partnerCity(p))}</div>
         ${hl.length?`<div class="pills2">${hl.map(x=>`<span class="${x.hi?"hi":""}">${x.t}</span>`).join("")}</div>`:""}
 
+        ${(p.specs||{}).src?`<div class="impnote"><b>⚠️ بيانات مستوردة — غير مؤكّدة</b><p>الصورة ورقم الهاتف والعنوان هنا مأخوذة من مصادر عامة على الإنترنت (خرائط جوجل)، لم يزوّدنا بها صاحب المنشأة ولم يؤكّدها، وقد تكون قديمة أو ناقصة. هذه المنشأة ليست شريكاً متعاقداً مع منصّة الحوت بعد — اتصل بها للتأكّد قبل الاعتماد على أي تفصيل، وأبلغنا إن كنت صاحبها لنصحّح أو نحذف.</p></div>`:""}
         ${desc?`<div class="hr"></div><div class="blk2"><h4>${esc(T("about"))}</h4><p>${esc(desc)}</p></div>`:""}
         ${facts?`<div class="hr"></div><div class="blk2"><h4>${esc(T("details"))}</h4><div class="facts">${facts}</div></div>`:""}
         ${feats.length?`<div class="hr"></div><div class="blk2"><h4>${esc(T("features"))}</h4>

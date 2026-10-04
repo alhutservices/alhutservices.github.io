@@ -113,6 +113,41 @@ img{display:block;max-width:100%;}
   font-family:'IBM Plex Mono',monospace;direction:ltr;}
 .bookbar .bgo.bgowa{background:#25D366;box-shadow:0 6px 18px rgba(37,211,102,.35);}
 .bookbar .bgo.bgowa:hover{box-shadow:0 10px 26px rgba(37,211,102,.45);}
+.card-offer{position:absolute;bottom:12px;inset-inline-start:12px;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:#DC2626;color:#fff;padding:5px 11px;border-radius:var(--r-pill);font-size:.68rem;font-weight:900;box-shadow:var(--sh-sm);}
+.card-rate{font-size:.74rem;font-weight:800;color:var(--tx2);margin-top:2px;}
+.card-rate.own{color:#B45309;}
+.offerbox{margin-top:14px;padding:13px 15px;border-radius:14px;background:#FEE2E2;border:1px solid #FCA5A5;color:#7F1D1D;}
+.offerbox b{display:block;font-size:.86rem;margin-bottom:3px;}
+.offerbox p{margin:0;font-size:.86rem;font-weight:700;}
+.offerbox small{display:block;margin-top:5px;font-size:.72rem;opacity:.8;}
+.vid{position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;background:#000;}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.fresh{margin:4px 0 10px;font-size:.78rem;font-weight:800;color:#166534;}
+.fresh.old{color:#B45309;}
+.rv-sum{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;}
+.rv-sum b{font-size:1.8rem;font-weight:900;}
+.rv-sum span{color:#F59E0B;letter-spacing:2px;}
+.rv-sum small{color:var(--tx2);font-size:.78rem;}
+.rv-none{color:var(--tx2);font-size:.86rem;margin-bottom:10px;}
+.rv{padding:11px 0;border-bottom:1px solid var(--line);}
+.rv-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.rv-h b{font-size:.88rem;}
+.rv-ok{font-size:.66rem;font-weight:900;color:#166534;background:#DCFCE7;border-radius:999px;padding:2px 8px;}
+.rv-st{margin-inline-start:auto;color:#F59E0B;letter-spacing:1px;font-size:.82rem;}
+.rv p{margin:6px 0 2px;font-size:.84rem;line-height:1.7;}
+.rv small{color:var(--tx3,#94A3B8);font-size:.7rem;}
+.rv-form{margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:14px;display:grid;gap:9px;}
+.rv-form h5{font-size:.9rem;font-weight:900;margin:0;}
+.rv-stars{display:flex;gap:4px;direction:ltr;justify-content:flex-end;}
+.rv-stars button{font-size:1.7rem;line-height:1;color:#CBD5E1;background:none;border:0;cursor:pointer;padding:0 2px;}
+.rv-stars button.on{color:#F59E0B;}
+.rv-form input,.rv-form textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:11px;font:inherit;font-size:.86rem;background:var(--bg,#fff);color:inherit;}
+.rv-form textarea{min-height:76px;resize:vertical;}
+.rv-send{padding:12px;border-radius:12px;background:var(--red-g,#FF385C);color:#fff;font-weight:900;font-size:.9rem;border:0;cursor:pointer;}
+.rv-send:disabled{opacity:.6;}
+.rv-note{color:var(--tx2);font-size:.7rem;line-height:1.6;}
+.rv-done{font-weight:800;color:#166534;}
+.footer-free{margin-top:8px;font-size:.76rem;font-weight:800;color:#166534;}
 .card-src{position:absolute;top:12px;inset-inline-end:12px;background:rgba(180,83,9,.94);color:#fff;padding:5px 10px;border-radius:var(--r-pill);font-size:.64rem;font-weight:900;letter-spacing:.2px;box-shadow:var(--sh-sm);}
 .impnote{margin-top:14px;padding:13px 15px;border-radius:14px;background:#FEF3C7;border:1px solid #FCD34D;}
 .impnote b{display:block;font-size:.84rem;color:#92400E;margin-bottom:5px;}
@@ -339,6 +374,7 @@ img{display:block;max-width:100%;}
 .footer-cities{max-width:none}
 .footer-book{display:block;margin-top:10px;font-size:.84rem;font-weight:900;color:var(--red);text-decoration:none;direction:ltr;text-align:start;font-family:ui-monospace,monospace}
 .footer-book span{font-family:Cairo,sans-serif;color:var(--tx2);font-weight:700;font-size:.76rem;display:block;direction:rtl}
+.footer-free{margin-top:8px;font-size:.76rem;font-weight:800;color:#166534;}
 .footer-copy{max-width:1200px;margin:26px auto 0;padding-top:22px;border-top:1px solid var(--line);font-size:.74rem;font-weight:600;color:var(--tx3);text-align:center;}
 
 #toast-wrap{position:fixed;top:calc(var(--nav-h) + 14px);inset-inline:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:1000;pointer-events:none;}
@@ -423,6 +459,7 @@ img{display:block;max-width:100%;}
       <div class="row"><span class="whale">🐋</span> الحوت</div>
       <div class="desc" data-i18n="footer_desc">منصتك الأولى في العراق للسيارات والفنادق وقاعات الأعراس ومدارس القيادة.</div>
       <a class="footer-book" href="tel:07713225471"><span>للحجز في كل المحافظات</span>07713225471</a>
+      <div class="footer-free">🎁 الخدمة مجانية للزبائن — بلا رسوم ولا عمولة عليك</div>
 
     </div>
     <div class="footer-col">
@@ -906,6 +943,93 @@ async function load(){
    لا يستقبله أحد. زرّها يفتح واتساب الجهة برسالة تذكر الحوت، فيعرف
    صاحب المكان من أين جاء الزبون — وهذا نفسه بابنا لتحويله إلى شريك.
 ═══════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════
+   تقييمات الحوت · العروض · الفيديو · حداثة الأسعار
+   ───────────────────────────────────────────────────────────────────
+   التقييم هنا كتبه زبون لنا، لا منسوخ من جوجل: رقم كاتبه يُقارَن
+   بحجوزاتنا، فإن طابق ظهر فوراً بعلامة «زبون مؤكَّد».
+   وختم «آخر تحديث للأسعار» يقول للزبون الحقيقة: سعر لم يُلمس منذ
+   شهر قد تغيّر — والصدق في هذا هو ما يجعله يعود.
+═══════════════════════════════════════════════════════════════════ */
+const STALE_DAYS = 30;
+function stars(n){ const r = Math.max(0, Math.min(5, Math.round(n||0))); return "★".repeat(r) + "☆".repeat(5-r); }
+function ratingChip(p){
+  if(p.h_count) return {t:"★ " + Number(p.h_rate).toFixed(1) + " (" + p.h_count + ")", own:true};
+  const s = p.specs||{};
+  if(s.g_rate) return {t:"★ " + s.g_rate + " · جوجل", own:false};
+  return null;
+}
+function daysAgo(iso){ const t = Date.parse(iso); return isNaN(t) ? null : Math.max(0, Math.floor((Date.now()-t)/86400000)); }
+function pricesAt(p){ let m = ""; (p.items||[]).forEach(function(i){ if(i.updated_at && i.updated_at > m) m = i.updated_at; }); return m; }
+
+/** رابط فيديو عادي ← رابط تضمين رسمي. غير المعروف يُتجاهَل لا يُضمَّن */
+function videoEmbed(u){
+  u = String(u||"").trim(); let m;
+  if((m = u.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{6,})/))) return "https://www.youtube.com/embed/" + m[1];
+  if((m = u.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/))) return "https://www.tiktok.com/embed/v2/" + m[1];
+  if((m = u.match(/instagram\.com\/(?:p|reel|tv)\/([\w-]+)/))) return "https://www.instagram.com/p/" + m[1] + "/embed";
+  if(/facebook\.com\/.+\/videos\/|fb\.watch\//.test(u)) return "https://www.facebook.com/plugins/video.php?href=" + encodeURIComponent(u);
+  return "";
+}
+
+function freshHtml(p){
+  const at = pricesAt(p); if(!at) return "";
+  const d = daysAgo(at); if(d === null) return "";
+  const old = d > STALE_DAYS;
+  return '<div class="fresh' + (old ? ' old' : '') + '">' +
+    (d === 0 ? "🟢 الأسعار محدّثة اليوم" : (old ? "🟠 " : "🟢 ") + "آخر تحديث للأسعار: قبل " + d + " يوماً") +
+    (old ? " — قد تكون تغيّرت، تأكّد عند الحجز" : "") + '</div>';
+}
+
+function reviewsHtml(p){
+  S.rv = 0;
+  const list = p.reviews || [];
+  const head = p.h_count
+    ? '<div class="rv-sum"><b>' + Number(p.h_rate).toFixed(1) + '</b><span>' + stars(p.h_rate) + '</span><small>' +
+      p.h_count + ' تقييم من زبائن الحوت</small></div>'
+    : '<p class="rv-none">لا تقييمات بعد — كن أول من يقيّم.</p>';
+  const items = list.map(function(r){
+    return '<div class="rv"><div class="rv-h"><b>' + esc(r.n) + '</b>' +
+      (r.v ? '<span class="rv-ok">✓ زبون مؤكَّد</span>' : '') +
+      '<span class="rv-st">' + stars(r.r) + '</span></div>' +
+      (r.t ? '<p>' + esc(r.t) + '</p>' : '') + '<small>' + esc(r.d) + '</small></div>';
+  }).join("");
+  return '<div class="hr"></div><div class="blk2"><h4>تقييمات الزبائن</h4>' + head + items +
+    '<div id="rvBox" class="rv-form"><h5>قيّم تجربتك</h5>' +
+    '<div id="rvStars" class="rv-stars">' + [1,2,3,4,5].map(function(n){
+      return '<button type="button" onclick="rvPick(' + n + ')" aria-label="' + n + ' نجوم">★</button>'; }).join("") + '</div>' +
+    '<input id="rvName" placeholder="اسمك" maxlength="40" autocomplete="name">' +
+    '<input id="rvPhone" class="tel" type="tel" inputmode="numeric" placeholder="07XX XXX XXXX" autocomplete="tel">' +
+    '<textarea id="rvText" placeholder="ماذا أعجبك؟ وماذا يحتاج تحسيناً؟ (اختياري)" maxlength="600"></textarea>' +
+    '<button id="rvSend" type="button" class="rv-send" onclick="rvSend()">أرسل التقييم</button>' +
+    '<small class="rv-note">رقمك لا يُنشر. إن كان لك حجز سابق مع هذا المكان يظهر تقييمك فوراً بعلامة «زبون مؤكَّد»، وإلا يُراجَع أولاً.</small>' +
+    '</div></div>';
+}
+
+window.rvPick = function(n){
+  S.rv = n;
+  document.querySelectorAll("#rvStars button").forEach(function(b, i){ b.classList.toggle("on", i < n); });
+};
+window.rvSend = async function(){
+  const p = S.cur; if(!p) return;
+  const name = $("rvName").value.trim(), phone = $("rvPhone").value.replace(/[\s-]/g, ""), text = $("rvText").value.trim();
+  if(!S.rv) return toast("اختر عدد النجوم", true);
+  if(name.length < 2) return toast("اكتب اسمك", true);
+  if(!/^(\+?964|0)?7[5-9]\d{8}$/.test(phone)) return toast("رقم الهاتف غير صحيح", true);
+  const btn = $("rvSend"); btn.disabled = true; btn.textContent = "جارٍ الإرسال…";
+  try{
+    const r = await fetch(API, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body: JSON.stringify({token:TOKEN, action:"NEW_REVIEW", partner_id:p.id, rating:S.rv, name:name, phone:phone, text:text})});
+    const d = await r.json();
+    if(!d || !d.success) throw new Error((d && d.msg) || "تعذّر الإرسال");
+    $("rvBox").innerHTML = '<p class="rv-done">✅ ' + esc(d.msg) + '</p>';
+  }catch(e){
+    btn.disabled = false; btn.textContent = "أرسل التقييم";
+    toast(e.message || "تعذّر الإرسال", true);
+  }
+};
+
 function isImported(p){ return !!((p||{}).specs||{}).src; }
 
 /** الرقم مخزَّن بلا صفر: 7XXXXXXXXX */
@@ -1038,10 +1162,12 @@ function partnerCard(p, i){
       <img src="${esc(phSrc(img, p.id))}" alt="${esc(p.name)}" loading="${i<4?"eager":"lazy"}" onerror="phSwap(this,'${esc(p.id)}')">
       ${stars?`<span class="card-tag">${stars}</span>`:(s.cat?`<span class="card-tag">${esc(s.cat)}</span>`:"")}
       ${s.src?`<span class="card-src">بيانات مستوردة</span>`:""}
+      ${s.offer?`<span class="card-offer">🔥 ${esc(s.offer)}</span>`:""}
       ${p.item_count?`<span class="card-n">${p.item_count} ${esc(T("items_"+SECTOR).split(" ")[0])}</span>`:""}
     </div>
     <div class="card-b">
       <div class="card-t">${esc(p.name)}</div>
+      ${(()=>{const rc=ratingChip(p); return rc?`<div class="card-rate${rc.own?" own":""}">${esc(rc.t)}</div>`:"";})()}
       <div class="card-s">${esc(p.area||"")} ${p.area?"·":""} ${esc(partnerCity(p))}</div>
       <div class="card-f">${bits.map(b=>`<span>${esc(b)}</span>`).join("")}</div>
       <div class="card-foot">
@@ -1090,7 +1216,7 @@ function specRows(obj, only){
     g_price:"سعر الليلة التقريبي (مصدر خارجي)"
   };
   /* مفاتيح داخلية لا تُعرض كسطر مواصفات */
-  const HIDE = ["src"];
+  const HIDE = ["src","offer","offer_until","video"];
   const out = [];
   Object.keys(obj||{}).forEach(k=>{
     if(HIDE.indexOf(k) !== -1) return;
@@ -1250,12 +1376,16 @@ function showDetail(p, it){
             <a class="ctc-b ctcwa" href="${esc(waHref(p))}" target="_blank" rel="noopener">💬 واتساب</a>
             <a class="ctc-b ctctel" href="tel:${esc(telOf(p))}">📞 ${esc(telOf(p))}</a>
           </div></div>`:""}
+        ${(!it&&(p.specs||{}).offer)?`<div class="offerbox"><b>🔥 عرض حالي</b><p>${esc(p.specs.offer)}</p>${p.specs.offer_until?`<small>ساري حتى ${esc(p.specs.offer_until)}</small>`:""}</div>`:""}
+        ${(!it&&videoEmbed((p.specs||{}).video))?`<div class="hr"></div><div class="blk2"><h4>فيديو</h4><div class="vid"><iframe src="${esc(videoEmbed(p.specs.video))}" loading="lazy" allowfullscreen allow="encrypted-media; picture-in-picture"></iframe></div></div>`:""}
         ${desc?`<div class="hr"></div><div class="blk2"><h4>${esc(T("about"))}</h4><p>${esc(desc)}</p></div>`:""}
         ${facts?`<div class="hr"></div><div class="blk2"><h4>${esc(T("details"))}</h4><div class="facts">${facts}</div></div>`:""}
         ${feats.length?`<div class="hr"></div><div class="blk2"><h4>${esc(T("features"))}</h4>
           <div class="amen">${feats.map(f=>`<div><em>${icoOf(f)}</em><span>${esc(f)}</span></div>`).join("")}</div></div>`:""}
+        ${!it?freshHtml(p):""}
         ${unitsHtml}
         ${mapHtml}
+        ${!it?reviewsHtml(p):""}
         <div style="height:20px"></div>
       </div>
     </div>

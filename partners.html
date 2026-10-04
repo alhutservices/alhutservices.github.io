@@ -1010,6 +1010,31 @@ const SPEC_GROUPS = {
   ]
 };
 
+/* ═══════════════════════════════════════════════════════════════════════
+   العروض والفيديو — مشتركة بين القطاعات كلها
+   ───────────────────────────────────────────────────────────────────────
+   تُلحق هنا برمجياً لا في كل قطاع يدوياً: حقل جديد مستقبلاً يُضاف
+   في مكان واحد. الخادم يُسقط العرض وحده بعد offer_until، فلا يبقى
+   «خصم» منتهٍ معروضاً على زبون يتصل فيُخذَل.
+═══════════════════════════════════════════════════════════════════════ */
+const PROMO_FIELDS = [
+  {k:"offer",       l:"عرض حالي يظهر للزبائن", t:"text", w:1, pub:1,
+   hint:"مثال: خصم ٢٠٪ على الحجز الأسبوعي"},
+  {k:"offer_until", l:"العرض ساري حتى",        t:"date", pub:1,
+   hint:"يختفي العرض تلقائياً بعد هذا اليوم"},
+  {k:"video",       l:"رابط فيديو",            t:"url",  w:1, pub:1,
+   hint:"يوتيوب أو تيك توك أو إنستغرام أو فيسبوك"}
+];
+Object.keys(SCHEMA).forEach(function(sec){
+  const s = SCHEMA[sec];
+  if (!s || !Array.isArray(s.specs)) return;
+  PROMO_FIELDS.forEach(function(f){
+    if (!s.specs.some(function(x){ return x.k === f.k; })) s.specs.push(Object.assign({}, f));
+  });
+  if (SPEC_GROUPS[sec] && !SPEC_GROUPS[sec].some(function(g){ return g.k.indexOf("offer") !== -1; }))
+    SPEC_GROUPS[sec].push({t:"العروض والفيديو", i:"🔥", k:["offer","offer_until","video"]});
+});
+
 const ITEM_GROUPS = {
   car:    [{t:"الهوية", i:"🚗", k:["brand","model","year","color","plate"]},
            {t:"الميكانيك", i:"⚙️", k:["trans","fuel","engine","seats","doors"]},
@@ -1337,7 +1362,8 @@ function fieldHTML(f, val, pre){
   if(f.t === "area")
     return `<div class="fld w">${lbl}<textarea id="${id}" rows="3">${esc(v)}</textarea></div>`;
 
-  const type = (f.t === "num" || f.t === "money") ? "number" : f.t === "time" ? "time" : f.t === "tel" ? "tel" : "text";
+  const type = (f.t === "num" || f.t === "money") ? "number" : f.t === "time" ? "time" : f.t === "tel" ? "tel"
+             : f.t === "date" ? "date" : f.t === "url" ? "url" : "text";
   const cls  = f.t === "tel" ? "tel-in" : "";
   const im   = (f.t === "num" || f.t === "money" || f.t === "tel") ? 'inputmode="numeric"' : "";
   const unit = f.t === "money" ? "د.ع" : (f.u || "");

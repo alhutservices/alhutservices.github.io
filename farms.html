@@ -146,6 +146,8 @@ img{display:block;max-width:100%;}
 .rv-send{padding:12px;border-radius:12px;background:var(--red-g,#FF385C);color:#fff;font-weight:900;font-size:.9rem;border:0;cursor:pointer;}
 .rv-send:disabled{opacity:.6;}
 .rv-note{color:var(--tx2);font-size:.7rem;line-height:1.6;}
+.rv-focus{box-shadow:0 0 0 3px #F59E0B;animation:rvPulse 1.4s ease 2;}
+@keyframes rvPulse{50%{box-shadow:0 0 0 7px rgba(245,158,11,.25);}}
 .rv-done{font-weight:800;color:#166534;}
 .footer-free{margin-top:8px;font-size:.76rem;font-weight:800;color:#166534;}
 .card-src{position:absolute;top:12px;inset-inline-end:12px;background:rgba(180,83,9,.94);color:#fff;padding:5px 10px;border-radius:var(--r-pill);font-size:.64rem;font-weight:900;letter-spacing:.2px;box-shadow:var(--sh-sm);}
@@ -929,6 +931,7 @@ async function load(){
     S.data = list.filter(p=>p && p.id);
     S.loading = false;
     render();
+    openFromLink();
   }catch(e){
     S.loading = false; S.err = true; render();
   }
@@ -1172,6 +1175,25 @@ function partnerCard(p, i){
 }
 
 /* ═══════════ التفاصيل ═══════════ */
+
+/* رابط «قيّم تجربتك» من رسالة واتساب: ?p=<id>&rate=1
+   يفتح المكان ويقفز إلى نموذج التقييم، مرة واحدة عند أول تحميل. */
+function openFromLink(){
+  if(S._linked) return;
+  const q = new URLSearchParams(location.search);
+  const pid = q.get("p"); if(!pid) return;
+  S._linked = true;
+  if(!findPartner(pid)) return;
+  window.openPartner(pid);
+  if(q.get("rate") !== "1") return;
+  setTimeout(function(){
+    const b = $("rvBox"); if(!b) return;
+    b.scrollIntoView({behavior:"smooth", block:"center"});
+    b.classList.add("rv-focus");
+    const n = $("rvName"); if(n) n.focus({preventScroll:true});
+  }, 400);
+}
+
 function findPartner(id){ return S.data.find(p=>String(p.id)===String(id)); }
 
 window.openItem = function(pid, iid){

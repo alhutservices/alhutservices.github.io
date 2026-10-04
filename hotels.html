@@ -1187,12 +1187,19 @@ function openFromLink(){
   if(!findPartner(pid)) return;
   window.openPartner(pid);
   if(q.get("rate") !== "1") return;
+  /* تمرير فوري لا ناعم: الناعم لا يعمل في تبويب لم يُعرض بعد. ثم تصحيح
+     ثانٍ بعد ثانية، فصور المعرض تتحمّل متأخرة وتدفع النموذج للأسفل. */
+  const go = function(){
+    const b = $("rvBox"), sc = document.querySelector("#sheetHost .dscroll");
+    if(!b || !sc) return;
+    sc.scrollTop += (b.getBoundingClientRect().top - sc.getBoundingClientRect().top) - sc.clientHeight/4;
+  };
   setTimeout(function(){
     const b = $("rvBox"); if(!b) return;
-    b.scrollIntoView({behavior:"smooth", block:"center"});
-    b.classList.add("rv-focus");
+    go(); b.classList.add("rv-focus");
     const n = $("rvName"); if(n) n.focus({preventScroll:true});
-  }, 400);
+    setTimeout(go, 1000);
+  }, 300);
 }
 
 function findPartner(id){ return S.data.find(p=>String(p.id)===String(id)); }
